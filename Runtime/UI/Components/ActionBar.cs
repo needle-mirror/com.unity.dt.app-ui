@@ -11,6 +11,13 @@ namespace UnityEngine.Dt.App.UI
     /// </summary>
     public class ActionBar : VisualElement
     {
+        
+#if UNITY_LOCALIZATION_PRESENT
+        const string k_DefaultMessage = "@AppUI:selectedItemsMessage";
+#else
+        const string k_DefaultMessage = "{0} Selected item(s)";
+#endif
+        
         /// <summary>
         /// The ActionBar main styling class.
         /// </summary>
@@ -25,13 +32,22 @@ namespace UnityEngine.Dt.App.UI
         /// The ActionBar checkbox styling class.
         /// </summary>
         public static readonly string checkboxUssClassName = ussClassName + "__checkbox";
+        
+        /// <summary>
+        /// The ActionBar label styling class.
+        /// </summary>
+        public static readonly string labelUssClassName = ussClassName + "__label";
 
         readonly ActionGroup m_ActionGroup;
 
         readonly Checkbox m_SelectAllCheckbox;
 
         BaseVerticalCollectionView m_CollectionView;
-        
+
+        readonly Text m_Label;
+
+        string m_Message;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -46,11 +62,22 @@ namespace UnityEngine.Dt.App.UI
             hierarchy.Add(m_SelectAllCheckbox);
             m_SelectAllCheckbox.RegisterValueChangedCallback(OnCheckboxValueChanged);
 
+            m_Label = new Text
+            {
+                name = labelUssClassName, 
+                text = k_DefaultMessage, 
+                size = TextSize.S,
+                pickingMode = PickingMode.Ignore
+            };
+            m_Label.AddToClassList(labelUssClassName);
+            hierarchy.Add(m_Label);
+
             m_ActionGroup = new ActionGroup { name = actionGroupUssClassName };
             m_ActionGroup.AddToClassList(actionGroupUssClassName);
             hierarchy.Add(m_ActionGroup);
 
             collectionView = null;
+            message = k_DefaultMessage;
         }
 
         /// <summary>
@@ -97,8 +124,12 @@ namespace UnityEngine.Dt.App.UI
         /// </summary>
         public string message
         {
-            get => m_SelectAllCheckbox.label;
-            set => m_SelectAllCheckbox.label = value;
+            get => m_Message;
+            set
+            {
+                m_Message = value;
+                RefreshUI();
+            }
         }
 
         /// <summary>
@@ -155,6 +186,22 @@ namespace UnityEngine.Dt.App.UI
                     : CheckboxState.Intermediate;
             }
             m_SelectAllCheckbox.SetValueWithoutNotify(checkboxValue);
+
+#if UNITY_LOCALIZATION_PRESENT
+            m_Label.variables = new object[]
+            {
+                new Dictionary<string, object>
+                {
+                    {"itemCount", selectionCount}
+                }
+            };
+            m_Label.text = m_Message;
+#else 
+            if (string.IsNullOrEmpty(m_Message))
+                m_Label.text = string.Format(k_DefaultMessage, selectionCount);
+            else
+                m_Label.text = string.Format(m_Message, selectionCount);
+#endif
         }
 
         /// <summary>
@@ -171,7 +218,7 @@ namespace UnityEngine.Dt.App.UI
             readonly UxmlStringAttributeDescription m_Message = new UxmlStringAttributeDescription
             {
                 name = "message",
-                defaultValue = null
+                defaultValue = k_DefaultMessage
             };
 
             /// <summary>

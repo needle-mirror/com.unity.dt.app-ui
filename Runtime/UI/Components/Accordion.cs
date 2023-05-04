@@ -1,6 +1,7 @@
 using System;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+using UnityEngine.UIElements.Experimental;
 
 namespace UnityEngine.Dt.App.UI
 {
@@ -46,6 +47,8 @@ namespace UnityEngine.Dt.App.UI
         readonly Pressable m_Clickable;
 
         readonly ExVisualElement m_HeaderElement;
+
+        ValueAnimation<float> m_Anim;
 
         /// <summary>
         /// Default constructor.
@@ -142,6 +145,40 @@ namespace UnityEngine.Dt.App.UI
         /// <param name="newValue">The new open state of the item.</param>
         public void SetValueWithoutNotify(bool newValue)
         {
+            m_Anim?.Stop();
+            m_Anim?.Recycle();
+            m_Anim = null;
+            
+            if (newValue)
+            {
+                m_ContentElement.style.height = new StyleLength(StyleKeyword.Auto);
+                m_ContentElement.style.maxHeight = 500;
+                m_ContentElement.style.visibility = Visibility.Hidden;
+                m_ContentElement.style.position = Position.Absolute;
+
+                m_ContentElement.schedule.Execute(() =>
+                {
+                    var height = Mathf.Min(m_ContentElement.resolvedStyle.height, 500);
+                    m_ContentElement.style.height = 0;
+                    m_ContentElement.style.maxHeight = new StyleLength(StyleKeyword.Null);
+                    m_ContentElement.style.visibility = new StyleEnum<Visibility>(StyleKeyword.Null);
+                    m_ContentElement.style.position = new StyleEnum<Position>(StyleKeyword.Null);
+
+                    m_Anim = m_ContentElement.experimental.animation.Start(0, height, 125, (element, f) =>
+                    {
+                        element.style.height = f;
+                    }).Ease(Easing.OutQuad).KeepAlive();
+                }).ExecuteLater(1L);
+            }
+            else
+            {
+                var startHeight = m_ContentElement.resolvedStyle.height;
+                startHeight = float.IsNaN(startHeight) ? 0 : startHeight;
+                m_Anim = m_ContentElement.experimental.animation.Start(startHeight, 0, 125, (element, f) =>
+                {
+                    element.style.height = f;
+                }).Ease(Easing.OutQuad).KeepAlive();
+            }
             EnableInClassList(Styles.openUssClassName, newValue);
         }
 

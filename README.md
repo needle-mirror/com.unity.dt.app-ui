@@ -1,6 +1,6 @@
-# Replica App UI
+# App UI
 
-## What is Replica App UI?
+## What is App UI?
 
 This package is the UI Toolkit implementation of the **App UI Design System**.
 It is intended to use this package in runtime apps development.
@@ -23,7 +23,7 @@ As any others Unity packages, the easiest way to install this package is to use 
 - Inside the Unity Editor, go to **Windows > Package Manager**.
 - Make sure your scope is set to **Unity Registry**.<br/>
   ![unity-registry-scope](Documentation~/images/unity-registry-scope.png)
-- Look for the **Replica App UI** package then click **Install**.
+- Look for the **App UI** package then click **Install**.
 
 ## Samples
 

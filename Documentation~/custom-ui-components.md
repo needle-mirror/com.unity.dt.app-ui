@@ -36,7 +36,7 @@ public class MyCustomControl : VisualElement
 
 ### Pressable
 
-The [Pressable](xref:Unity.Replica.AppUI.UI.Pressable) 
+The [Pressable](xref:UnityEngine.Dt.App.UI.Pressable) 
 class is used to manage the pressing of an [actionable](xref:actions) 
 element.
 

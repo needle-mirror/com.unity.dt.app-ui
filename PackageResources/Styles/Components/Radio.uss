@@ -98,6 +98,11 @@
     border-width: 0;
 }
 
+.appui-radio--emphasized .appui-radio__checkmark,
+.is-invalid .appui-radio__checkmark {
+    background-color: var(--appui-color-white);
+}
+
 .appui-radio.is-checked > .appui-radio__button  > .appui-radio__checkmark {
     opacity: 1;
 }

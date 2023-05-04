@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
-  "displayName": "Replica App UI",
-  "version": "0.2.7",
+  "displayName": "App UI",
+  "version": "0.2.9",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -20,7 +20,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "4390d16866eb4831702897c335e856b226c6c53f"
+    "revision": "d31810fc8b672038b8245c4d143385fa6ded4c23"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -41,10 +41,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added `Refresh` method to the `Dropdown` component.\n- Added AutoPlay to the `SwipeView` component.\n\n### Fixed\n\n- Fixed the support of the New Input System.\n- Fixed the box-shadow shader with portrait aspect ratio.\n- Fixed async operations on LocalizedTextElement."
+    "changelog": "### Changed\n\n- Removed `Replica` word from the documentation."
   },
   "upmCi": {
-    "footprint": "531349031c118202e639f5cffebb018fb0a7c5dd"
+    "footprint": "dce3fa6c98ffd60fc5cc69340fc15bc3403fa7fa"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.2/manual/index.html"
 }

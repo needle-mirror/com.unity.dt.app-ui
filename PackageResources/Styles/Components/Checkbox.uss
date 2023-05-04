@@ -31,6 +31,9 @@
 .appui-checkbox__label {
     flex: 1;
     font-size: var(--appui-font-sizes-body-sm);
+    overflow: hidden;
+    -unity-text-overflow-position: end;
+    text-overflow: ellipsis;
 }
 
 .appui-checkbox__box > .appui-icon {
@@ -70,14 +73,9 @@
     display: flex;
 }
 
-.appui-checkbox .appui-icon {
-    /*fill: inherit;*/
-}
-
 .appui-checkbox__box {
     background-color: var(--appui-base-100);
     border-color: var(--appui-base-400);
-    --unity-image-tint-color: var(--appui-foregrounds-100);
 }
 
 .appui-checkbox.is-hovered {
@@ -87,7 +85,6 @@
 .appui-checkbox.is-hovered > .appui-checkbox__box {
     background-color: var(--appui-base-200);
     border-color: var(--appui-base-500);
-    --unity-image-tint-color: var(--appui-foregrounds-200);
 }
 
 .appui-checkbox.keyboard-focus > .appui-checkbox__box {
@@ -110,19 +107,23 @@
 .appui-checkbox--emphasized.is-intermediate > .appui-checkbox__box {
     background-color: var(--appui-accent-100);
     border-color: var(--appui-accent-100);
-    color: var(--appui-color-white);
+}
+
+.appui-checkbox--emphasized .appui-icon,
+.is-invalid .appui-checkbox .appui-icon,
+.is-invalid.appui-checkbox .appui-icon {
     --unity-image-tint-color: var(--appui-color-white);
 }
 
-.appui-checkbox--emphasized .appui-icon {
-    --unity-image-tint-color: var(--appui-color-white);
+.appui-checkbox--emphasized:disabled .appui-icon,
+.is-invalid .appui-checkbox:disabled .appui-icon,
+.is-invalid.appui-checkbox:disabled .appui-icon {
+    --unity-image-tint-color: var(--appui-foregrounds-25);
 }
 
 .appui-checkbox:disabled > .appui-checkbox__box /*.appui-checkbox.is-disabled > .appui-checkbox__box*/ {
     background-color: var(--appui-base-100);
     border-color: var(--appui-base-300);
-    color: var(--appui-foregrounds-25);
-    --unity-image-tint-color: var(--appui-foregrounds-25);  /*fill: var(--appui-alias-icon-disabled);*/
 }
 
 .appui-checkbox.is-invalid > .appui-checkbox__box {
@@ -137,8 +138,6 @@
 .appui-checkbox.is-invalid:disabled > .appui-checkbox__box {
     background-color: var(--appui-base-100);
     border-color: var(--appui-base-300);
-    color: var(--appui-foregrounds-25);
-    --unity-image-tint-color: var(--appui-foregrounds-25);
 }
 
 .appui-checkbox:disabled  /*.appui-checkbox.is-disabled */{

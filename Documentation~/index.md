@@ -2,40 +2,38 @@
 uid: overview
 ---
 
-# Replica App UI
+# App UI
 
 <p align="center">
-![Replica App UI](images/replica-app-ui.png)
+![App UI](images/replica-app-ui.png)
 </p>
 
 > [!IMPORTANT]
-> This package is experimental, you can use it at your own risk. The process to become a
-production package is in progress as the App UI Design System takes shape.
-
+> This package is experimental.
 
 ## Introduction
 
-Welcome to Replica App UI, a powerful and flexible framework for building beautiful, high-performance user interfaces in Unity.
+Welcome to App UI, a powerful and flexible framework for building beautiful, high-performance user interfaces in Unity.
 The App UI framework is designed to help you create great apps with ease, by providing a set of UI components and patterns that
 you can use to quickly build and customize your app's interface.
 
-With the Replica App UI, you can build apps for a wide range of platforms, including Android, iOS, Windows, MacOS, and the web.
+With App UI, you can build apps for a wide range of platforms, including Android, iOS, Windows, MacOS, and the web.
 The framework is built on top of the Unity UI-Toolkit, which provides a powerful and flexible foundation for building UI elements that
 work seamlessly across all platforms.
 
-Whether you're an experienced developer or just getting started with Unity, the Replica App UI has everything you need to create amazing user interfaces for your apps.
+Whether you're an experienced developer or just getting started with Unity, the App UI package has everything you need to create amazing user interfaces for your apps.
 From simple buttons and text boxes to more complex patterns like state management and navigation, the framework provides
 a comprehensive set of tools and best practices to help you build great UIs in no time.
 
-In this documentation, you'll learn how to get started with the Replica App UI, including how to set up a new project,
+In this documentation, you'll learn how to get started with App UI, including how to set up a new project,
 how to use the various UI components and patterns, and how to customize your app's interface to meet your specific needs.
 You'll also find tips and best practices for working with the framework, as well as sample code and projects that demonstrate how to use the various features and patterns.
 
-We hope that you find the Replica App UI to be a powerful and valuable tool for building great user interfaces in Unity.
+We hope that you find the App UI package to be a powerful and valuable tool for building great user interfaces in Unity.
 Let's get started!
 
 
-## Overview of the Replica App UI
+## Overview of App UI
 
 The App UI package is a collection of UI components and patterns that can be used to build a user interface for your Unity project.
 But it also comes with a set of useful resources and tools.

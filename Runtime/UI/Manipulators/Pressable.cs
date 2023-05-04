@@ -20,9 +20,30 @@ namespace UnityEngine.Dt.App.UI
         public event Action<EventBase> clickedWithEventInfo;
 
         /// <summary>
+        /// The event invoked when the element is pressed for a long time.
+        /// </summary>
+        public event Action longClicked;
+
+        /// <summary>
         /// Check if the element is currently pressed.
         /// </summary>
         public bool active { get; private set; }
+        
+        /// <summary>
+        /// The duration of a long press in milliseconds.
+        /// <para>
+        /// The default value is -1.
+        /// </para>
+        /// <remarks>
+        /// Using a negative value will disable long press.
+        /// </remarks>
+        /// </summary>
+        public int longPressDuration { get; set; } = -1;
+
+        /// <summary>
+        /// When true, the event propagation will not be stopped when the element is pressed.
+        /// </summary>
+        public bool keepEventPropagation { get; set; } = true;
 
         Event m_MoveEvent;
 
@@ -32,7 +53,9 @@ namespace UnityEngine.Dt.App.UI
 
         Touch m_TouchUpEvent;
 
-        IVisualElementScheduledItem m_DeferActivate;
+        IVisualElementScheduledItem m_DeferDeactivate;
+        
+        IVisualElementScheduledItem m_DeferLongPress;
 
         /// <summary>
         /// Constructor.
@@ -75,6 +98,14 @@ namespace UnityEngine.Dt.App.UI
         {
             clicked?.Invoke();
             clickedWithEventInfo?.Invoke(evt);
+        }
+        
+        /// <summary>
+        /// Invoke the LongPressed event.
+        /// </summary>
+        internal void InvokeLongPressed()
+        {
+            longClicked?.Invoke();
         }
 
         /// <summary>
@@ -233,6 +264,12 @@ namespace UnityEngine.Dt.App.UI
             
             ProcessMoveEvent(evt, evt.localPosition);
 
+            if (!active)
+                return;
+            
+            if (!keepEventPropagation)
+                return;
+            
             m_MoveEvent.mousePosition = evt.originalMousePosition;
             m_MoveEvent.delta = evt.deltaPosition;
             m_MoveEvent.button = evt.button;
@@ -260,10 +297,11 @@ namespace UnityEngine.Dt.App.UI
 
         void OnPointerUp(PointerUpEvent evt)
         {
+            ProcessUpEvent(evt, evt.localPosition, evt.pointerId);
+            
             if (!active)
                 return;
-
-            ProcessUpEvent(evt, evt.localPosition, evt.pointerId);
+            
             InvokePressed(evt);
             Deactivate(evt.pointerId);
 
@@ -312,8 +350,15 @@ namespace UnityEngine.Dt.App.UI
             ForceActivePseudoState();
             target.AddToClassList(Styles.activeUssClassName);
             m_PointerId = pointerId;
-            m_DeferActivate = target.schedule.Execute(DeferDeactivate);
-            m_DeferActivate.ExecuteLater(50L);
+            m_DeferDeactivate = target.schedule.Execute(DeferDeactivate);
+            m_DeferDeactivate.ExecuteLater(50L);
+            m_DeferLongPress?.Pause();
+            m_DeferLongPress = null;
+            if (longPressDuration > 0)
+            {
+                m_DeferLongPress = target.schedule.Execute(OnLongPress);
+                m_DeferLongPress.ExecuteLater(longPressDuration);
+            }
             active = true;
         }
 
@@ -322,7 +367,7 @@ namespace UnityEngine.Dt.App.UI
             active = false;
             target.ReleasePointer(pointerId);
             
-            if (m_DeferActivate != null)
+            if (m_DeferDeactivate != null)
                 return;
             
             var pseudoStates = (PseudoStates)(int)Clickable.pseudoStateProperty.GetValue(target);
@@ -331,12 +376,23 @@ namespace UnityEngine.Dt.App.UI
         }
 
         int m_PointerId;
-        
+
         void DeferDeactivate()
         {
-            m_DeferActivate = null;
+            m_DeferDeactivate = null;
             if (!active)
                 Deactivate(m_PointerId);
+        }
+
+        void OnLongPress()
+        {
+            m_DeferLongPress?.Pause();
+            m_DeferLongPress = null;
+            if (active)
+            {
+                InvokeLongPressed();
+                Deactivate(m_PointerId);
+            }
         }
     }
 }

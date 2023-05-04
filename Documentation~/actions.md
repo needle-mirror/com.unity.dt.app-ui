@@ -10,7 +10,7 @@ App UI provides several pre-built components for these types of interactions, ea
 ## Handling events from Action components
 
 An Action component can be triggered from multiple sources, such as a mouse click, a keyboard shortcut, or even a voice command.
-In order to handle the trigger of the Action as a single event, we use a special manipulator called [`Pressable`](xref:Unity.Replica.AppUI.UI.Pressable).
+In order to handle the trigger of the Action as a single event, we use a special manipulator called [`Pressable`](xref:UnityEngine.Dt.App.UI.Pressable).
 
 This manipulator can be usually accessed on these components via a `clickable` property.
 

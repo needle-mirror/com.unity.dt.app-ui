@@ -4,7 +4,31 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.2.7] - 2021-04-19
+## [0.2.9] - 2023-05-04
+
+### Changed
+
+- Removed `Replica` word from the documentation.
+
+## [0.2.8] - 2023-04-30
+
+### Added
+
+- Added transition animations to sliders components.
+- Added a `swipeable` property to the `SwipeView` component to be able to disable swipe interaction.
+- Added `Preloader` component to the UI Kit sample.
+- Added `Breadcrumbs` component to the UI Kit sample.
+- Added `Toolbar` component to the UI Kit sample.
+
+### Fixed
+
+- Fixed `Pressable` event propagation.
+
+### Changed
+
+- Updated USS vars to use the new version of App UI Design Tokens.
+
+## [0.2.7] - 2023-04-27
 
 ### Added
 
@@ -17,7 +41,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed the box-shadow shader with portrait aspect ratio.
 - Fixed async operations on LocalizedTextElement.
 
-## [0.2.6] - 2021-04-17
+## [0.2.6] - 2023-04-17
 
 ### Added
 
@@ -27,7 +51,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed the RenderTexture format of the World-Space UI Kit sample.
 
-## [0.2.5] - 2021-03-30
+## [0.2.5] - 2023-03-30
 
 ### Added
 
@@ -44,7 +68,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - SwipeView now uses the Scrollable Manipulator instead of Draggable.
 
-## [0.2.4] - 2021-03-23
+## [0.2.4] - 2023-03-23
 
 ### Fixed
 
@@ -53,7 +77,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed Focusable property in constructor for newer versions of Unity.
 - Fixed UnityEngine namespace import for newer versions of Unity.
 
-## [0.2.3] - 2021-03-22
+## [0.2.3] - 2023-03-22
 
 ### Fixed
 
@@ -63,13 +87,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed flex-shrink value on multiple components.
 - Fixed TextField UXML construction.
 
-## [0.2.2] - 2021-03-20
+## [0.2.2] - 2023-03-20
 
 ### Fixed
 
 - Fixed NullReferenceException in invalid AnchorPopup updates.
 
-## [0.2.1] - 2021-03-17
+## [0.2.1] - 2023-03-17
 
 ### Fixed
 

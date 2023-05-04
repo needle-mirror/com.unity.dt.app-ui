@@ -328,6 +328,7 @@ namespace UnityEngine.Dt.App.Samples
 
             var tabViewTabs = root.Q<Tabs>("tabview-tabs");
             var tabViewSwiperView = root.Q<SwipeView>("tabview-swipeview");
+            tabViewSwiperView.swipeable = false;
             tabViewTabs.RegisterValueChangedCallback(evt =>
             {
                 tabViewSwiperView.SetValueWithoutNotify(evt.newValue);

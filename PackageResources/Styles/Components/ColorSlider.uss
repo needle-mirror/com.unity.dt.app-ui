@@ -21,6 +21,7 @@
 .appui-colorslider__thumbcontainer {
     position: absolute;
     display: flex;
+    transition: left var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
 }
 
 .appui-colorslider__thumb {

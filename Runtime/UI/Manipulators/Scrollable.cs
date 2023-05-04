@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace UnityEngine.Dt.App.UI
@@ -13,7 +14,7 @@ namespace UnityEngine.Dt.App.UI
         readonly Action<Scrollable> m_DragHandler;
 
         readonly Action<Scrollable> m_UpHandler;
-        
+
         readonly Action<Scrollable> m_CancelHandler;
 
         bool m_IsDown;
@@ -21,6 +22,11 @@ namespace UnityEngine.Dt.App.UI
         Vector2 m_LastPos = Vector2.zero;
 
         int m_PointerId = PointerId.invalidPointerId;
+
+        /// <summary>
+        /// The direction of the scroll.
+        /// </summary>
+        public ScrollViewMode direction { get; set; } = ScrollViewMode.Vertical;
         
         /// <summary>
         /// Construct a Scrollable manipulator.
@@ -60,11 +66,11 @@ namespace UnityEngine.Dt.App.UI
         /// Has the pointer moved.
         /// </summary>
         internal bool hasMoved { get; set; }
-        
+
         /// <summary>
-        /// The threshold to consider a drag operation. Default is 32f.
+        /// The threshold to consider a drag operation. Default is 8f.
         /// </summary>
-        public float threshold { get; set; } = 32f;
+        public float threshold { get; set; } = 8f;
 
         /// <summary>
         /// Called to register event callbacks on the target element.
@@ -88,32 +94,32 @@ namespace UnityEngine.Dt.App.UI
             hasMoved = false;
             m_DownHandler?.Invoke(this);
         }
-        
+
         void OnPointerUp(PointerUpEvent evt)
         {
             m_UpHandler?.Invoke(this);
-            
+
             target.ReleasePointer(evt.pointerId);
             m_PointerId = PointerId.invalidPointerId;
-            
+
             Clickable.pseudoStateProperty.SetValue(target,
                 (int) ((PseudoStates) (int) Clickable.pseudoStateProperty.GetValue(target) & ~PseudoStates.Active));
-            
+
             m_IsDown = false;
             deltaPos = Vector2.zero;
             localPosition = evt.localPosition;
             position = evt.position;
             m_LastPos = Vector3.zero;
-            
+
             evt.StopPropagation();
         }
-        
+
         void OnPointerMove(PointerMoveEvent evt)
         {
             if (!m_IsDown)
                 return;
             
-            if (m_PointerId != evt.pointerId && Vector3.Distance(m_LastPos, evt.position) > threshold)
+            if (m_PointerId != evt.pointerId && HasMovedEnoughInRightDirection(evt.position))
             {
                 m_PointerId = evt.pointerId;
                 m_LastPos = evt.position;
@@ -124,7 +130,7 @@ namespace UnityEngine.Dt.App.UI
 
             if (m_PointerId != evt.pointerId)
                 return;
-            
+
             localPosition = evt.localPosition;
             position = evt.position;
             deltaPos = position - m_LastPos;
@@ -134,45 +140,65 @@ namespace UnityEngine.Dt.App.UI
 
             m_DragHandler?.Invoke(this);
             hasMoved = true;
-            
+
             evt.StopPropagation();
         }
-        
+
         void OnPointerCancel(PointerCancelEvent evt)
         {
             var inside = evt.target != target && target.FindCommonAncestor(evt.target as VisualElement) == target;
             if (inside || evt.pointerId != m_PointerId)
                 return;
-            
+
             Cancel(evt, evt.pointerId);
         }
-        
+
         void OnPointerCaptureOut(PointerCaptureOutEvent evt)
         {
             var inside = evt.target != target && target.FindCommonAncestor(evt.target as VisualElement) == target;
             if (inside || evt.pointerId != m_PointerId)
                 return;
-            
+
             Cancel(evt, evt.pointerId);
         }
-        
+
         void Cancel(EventBase evt, int pointerId)
         {
-            m_CancelHandler?.Invoke(this);
-
             target.ReleasePointer(pointerId);
+            Cancel();
+            evt.StopPropagation();
+        }
+
+        /// <summary>
+        /// Cancel the current drag operation.
+        /// </summary>
+        public void Cancel()
+        {
+            m_CancelHandler?.Invoke(this);
             m_PointerId = PointerId.invalidPointerId;
 
             Clickable.pseudoStateProperty.SetValue(target,
                 (int) ((PseudoStates) (int) Clickable.pseudoStateProperty.GetValue(target) & ~PseudoStates.Active));
-            
+
             m_IsDown = false;
             deltaPos = Vector2.zero;
             m_LastPos = Vector3.zero;
             position = Vector2.zero;
             localPosition = Vector2.zero;
-            
-            evt.StopPropagation();
+        }
+        
+        bool HasMovedEnoughInRightDirection(Vector2 pos)
+        {
+            switch (direction)
+            {
+                case ScrollViewMode.Vertical:
+                    return Mathf.Abs(m_LastPos.y - pos.y) > threshold;
+                case ScrollViewMode.Horizontal:
+                    return Mathf.Abs(m_LastPos.x - pos.x) > threshold;
+                case ScrollViewMode.VerticalAndHorizontal:
+                    return Vector3.Distance(m_LastPos, pos) > threshold;
+            }
+            return false;
         }
 
         /// <summary>

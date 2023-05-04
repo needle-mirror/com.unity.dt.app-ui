@@ -38,11 +38,11 @@
     text-overflow: ellipsis;
 }
 
-.appui-accordionitem__header:hover {
+.appui-accordionitem__header.is-hovered {
     color: var(--appui-foregrounds-200);
 }
 
-.appui-accordionitem__header:hover .appui-accordionitem__indicator {
+.appui-accordionitem__header.is-hovered .appui-accordionitem__indicator {
     --unity-image-tint-color:  var(--appui-foregrounds-200); /*fill: var(--appui-foregrounds-200);*/
 }
 
@@ -64,7 +64,7 @@
     color: var(--appui-foregrounds-25);
 }
 
-.appui-accordionitem__header:hover .appui-accordionitem__indicator:disabled /*.is-disabled .appui-accordionitem__header:hover .appui-accordionitem__indicator*/ {
+.appui-accordionitem__header.is-hovered .appui-accordionitem__indicator:disabled /*.is-disabled .appui-accordionitem__header.is-hovered .appui-accordionitem__indicator*/ {
     --unity-image-tint-color:  var(--appui-foregrounds-25); /* converted from : fill: var(--appui-foregrounds-25); */
 }
 
@@ -82,18 +82,15 @@
 }
 
 .appui-accordionitem__content {
-    transition: max-height var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
     padding: 0;
-    max-height: 0px;
+    height: 0;
     opacity: 0;
+    transition: opacity var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
 }
 
 .is-open > .appui-accordionitem__content {
-    display: flex;
-    flex-direction: column;
-    transition: all var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
-    max-height: 500px;
     opacity: 1;
-    padding: var(--appui-spacing-100) 0;
 }

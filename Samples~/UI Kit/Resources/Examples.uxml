@@ -294,6 +294,21 @@
                             <appui:Badge text="99+" text-color="#000" background-color="#ffcc00" />
                         </ui:VisualElement>
 
+                        <!-- BreadCrumbs -->
+                        <appui:Header text="BREADCRUMBS" class="example-title" />
+                        <appui:Text text="Default" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:Breadcrumbs>
+                                <appui:BreadcrumbItem text="Home" />
+                                <appui:BreadcrumbSeparator />
+                                <appui:BreadcrumbItem text="Library" />
+                                <appui:BreadcrumbSeparator />
+                                <appui:BreadcrumbItem text="Assets" />
+                                <appui:BreadcrumbSeparator />
+                                <appui:BreadcrumbItem text="MyAsset" is-current="true" />
+                            </appui:Breadcrumbs>
+                        </ui:VisualElement>
+
                         <!-- Button -->
                         <appui:Header text="BUTTON" class="example-title" />
                         <appui:Text text="Sizing" class="example-subtitle" />
@@ -1260,6 +1275,13 @@
                                 </appui:SwipeViewItem>
                             </appui:PageView>
                         </ui:VisualElement>
+                        
+                        <!-- Preloader -->
+                        <appui:Header text="PRELOADER" class="example-title" />
+                        <appui:Text text="Default" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:Preloader style="width: 300px; height: 200px;" />
+                        </ui:VisualElement>
 
                         <!-- Progress -->
                         <appui:Header text="PROGRESS" class="example-title" />
@@ -1791,6 +1813,68 @@
                             <appui:Toggle size="M" label="True Invalid" value="true" class="is-invalid" />
                             <appui:Text text="Unchecked And Invalid And Disabled" class="example-subtitle" />
                             <appui:Toggle size="M" label="False Disabled Invalid" value="false" disabled="true" class="is-invalid" />
+                        </ui:VisualElement>
+
+                        <!-- Toolbar -->
+                        <appui:Header text="TOOLBAR" class="example-title" />
+                        <appui:Text text="Floating" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:Toolbar dock-mode="Floating">
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:Divider vertical="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:Divider vertical="true" />
+                                <appui:ActionGroup quiet="true">
+                                    <appui:ActionButton icon="info" quiet="true" />
+                                    <appui:ActionButton icon="info" quiet="true" />
+                                    <appui:ActionButton icon="info" quiet="true" />
+                                </appui:ActionGroup>
+                            </appui:Toolbar>
+                        </ui:VisualElement>
+                        <appui:Text text="Draggable" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:Toolbar draggable="true" dock-mode="Floating">
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                            </appui:Toolbar>
+                        </ui:VisualElement>
+                        <appui:Text text="Docked Top And Bottom" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:Toolbar dock-mode="Top">
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                            </appui:Toolbar>
+                            <appui:Toolbar dock-mode="Bottom">
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                            </appui:Toolbar>
+                        </ui:VisualElement>
+                        <appui:Text text="Vertical" class="example-subtitle" />
+                        <ui:VisualElement class="example-section" style="flex-direction: row; justify-content: space-between; align-items: flex-start;">
+                            <appui:Toolbar direction="Vertical">
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                            </appui:Toolbar>
+                            <appui:Toolbar direction="Vertical" draggable="true">
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                            </appui:Toolbar>
+                            <appui:Toolbar direction="Vertical" dock-mode="Left">
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                            </appui:Toolbar>
+                            <appui:Toolbar direction="Vertical" dock-mode="Right">
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                                <appui:ActionButton icon="info" quiet="true" />
+                            </appui:Toolbar>
                         </ui:VisualElement>
 
                         <!-- Tooltip -->

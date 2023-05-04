@@ -110,6 +110,8 @@ namespace UnityEngine.Dt.App.UI
 
         IVisualElementScheduledItem m_AutoPlayAnimation;
 
+        bool m_Swipeable;
+
         /// <summary>
         /// The container of the SwipeView.
         /// </summary>
@@ -182,6 +184,7 @@ namespace UnityEngine.Dt.App.UI
             {
                 RemoveFromClassList(variantUssClassName + m_Direction.ToString().ToLower());
                 m_Direction = value;
+                m_Scrollable.direction = value == Direction.Horizontal ? ScrollViewMode.Horizontal : ScrollViewMode.Vertical;
                 AddToClassList(variantUssClassName + m_Direction.ToString().ToLower());
                 SetValueWithoutNotify(this.value);
             }
@@ -287,6 +290,26 @@ namespace UnityEngine.Dt.App.UI
         }
 
         /// <summary>
+        /// Whether or not the SwipeView is swipeable.
+        /// <para>
+        /// By default, the SwipeView is swipeable. If you set this property to <see langword="false" />, you won't be
+        /// able to interact with the SwipeView (except programmatically).
+        /// </para>
+        /// </summary>
+        public bool swipeable
+        {
+            get => m_Swipeable;
+            set
+            {
+                m_Swipeable = value;
+                if (m_Swipeable)
+                    this.AddManipulator(m_Scrollable);
+                else
+                    this.RemoveManipulator(m_Scrollable);
+            }
+        }
+
+        /// <summary>
         /// This property determines the threshold at which the animation will be skipped.
         /// </summary>
         public int skipAnimationThreshold { get; set; } = 2;
@@ -312,10 +335,12 @@ namespace UnityEngine.Dt.App.UI
             m_PollHierarchyItem = schedule.Execute(PollHierarchy).Every(50L);
 
             m_Scrollable = new Scrollable(OnDrag, OnUp, OnDown);
-            this.AddManipulator(m_Scrollable);
             RegisterCallback<KeyDownEvent>(OnKeyDown);
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             m_Container.RegisterCallback<GeometryChangedEvent>(OnContainerGeometryChanged);
+            
+            swipeable = true;
+            direction = Direction.Horizontal;
         }
 
         void OnGeometryChanged(GeometryChangedEvent evt)
@@ -851,13 +876,19 @@ namespace UnityEngine.Dt.App.UI
             readonly UxmlFloatAttributeDescription m_StartSwipeThreshold = new UxmlFloatAttributeDescription()
             {
                 name = "start-swipe-threshold",
-                defaultValue = 24f,
+                defaultValue = 8f,
             };
             
             readonly UxmlIntAttributeDescription m_AutoPlayDuration = new UxmlIntAttributeDescription()
             {
                 name = "auto-play-duration",
                 defaultValue = -1,
+            };
+            
+            readonly UxmlBoolAttributeDescription m_Swipeable = new UxmlBoolAttributeDescription()
+            {
+                name = "swipeable",
+                defaultValue = true,
             };
 
             /// <summary>
@@ -887,6 +918,7 @@ namespace UnityEngine.Dt.App.UI
                 el.snapAnimationSpeed = m_AnimationSpeed.GetValueFromBag(bag, cc);
                 el.startSwipeThreshold = m_StartSwipeThreshold.GetValueFromBag(bag, cc);
                 el.autoPlayDuration = m_AutoPlayDuration.GetValueFromBag(bag, cc);
+                el.swipeable = m_Swipeable.GetValueFromBag(bag, cc);
             }
         }
     }

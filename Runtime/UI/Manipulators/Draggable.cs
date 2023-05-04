@@ -34,6 +34,9 @@ namespace UnityEngine.Dt.App.UI
             m_DragHandler = dragHandler;
             m_UpHandler = upHandler;
             m_DownHandler = downHandler;
+            
+            longPressDuration = -1;
+            keepEventPropagation = false;
         }
 
         /// <summary>

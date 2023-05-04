@@ -191,7 +191,6 @@ namespace UnityEngine.Dt.App.UI
 
         void OnFocusedIn(FocusInEvent evt)
         {
-            Debug.Log("OnFocusedIn");
             AddToClassList(Styles.focusedUssClassName);
             m_Placeholder.AddToClassList(Styles.hiddenUssClassName);
             passMask = 0;
@@ -199,7 +198,6 @@ namespace UnityEngine.Dt.App.UI
 
         void OnKeyboardFocusedIn(FocusInEvent evt)
         {
-            Debug.Log("OnKeyboardFocusedIn");
             AddToClassList(Styles.focusedUssClassName);
             AddToClassList(Styles.keyboardFocusUssClassName);
             m_Placeholder.AddToClassList(Styles.hiddenUssClassName);

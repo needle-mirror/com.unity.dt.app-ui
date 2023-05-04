@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
@@ -51,7 +52,7 @@ namespace UnityEngine.Dt.App.UI
 
         DrawerVariant m_Variant;
 
-        readonly Draggable m_SwipeManipulator;
+        readonly Scrollable m_SwipeManipulator;
 
         bool m_InSwipeAreaToOpen;
 
@@ -64,6 +65,10 @@ namespace UnityEngine.Dt.App.UI
         bool m_IsOpen;
 
         float m_Elevation;
+
+        Vector2 m_DownPosition;
+
+        Vector2 m_UpPosition;
 
         /// <summary>
         /// Event fired when the drawer is closed.
@@ -293,6 +298,7 @@ namespace UnityEngine.Dt.App.UI
         /// </summary>
         public Drawer()
         {
+            pickingMode = PickingMode.Position;
             AddToClassList(ussClassName);
 
             m_Backdrop = new VisualElement
@@ -322,7 +328,7 @@ namespace UnityEngine.Dt.App.UI
             hierarchy.Add(m_DrawerElement);
             m_DrawerElement.hierarchy.Add(m_DrawerContainer);
 
-            m_SwipeManipulator = new Draggable(OnClick, OnDrag, OnUp, OnDown);
+            m_SwipeManipulator = new Scrollable(OnDrag, OnUp, OnDown, OnCancel) { direction = ScrollViewMode.Horizontal };
             this.AddManipulator(m_SwipeManipulator);
 
             anchor = DrawerAnchor.Left;
@@ -436,25 +442,41 @@ namespace UnityEngine.Dt.App.UI
                 return pos.x > contentRect.width - swipeAreaWidth;
         }
 
-        void OnDown(Draggable manipulator)
+        void OnDown(Scrollable manipulator)
         {
             m_InSwipeAreaToOpen = false;
             m_SwipeToOpenVector = Vector2.zero;
+            m_DownPosition = manipulator.position;
 
             if (!isOpen && swipeable && variant == DrawerVariant.Temporary)
             {
                 m_InSwipeAreaToOpen = InSwipeArea(manipulator.localPosition);
             }
         }
-
-        void OnUp(Draggable manipulator)
+        
+        bool IsDirectionToClose()
         {
-            var closing = m_SwipeToOpenVector.sqrMagnitude == 0 && !m_InSwipeAreaToOpen && isOpen;
+            if (anchor == DrawerAnchor.Left)
+                return m_UpPosition.x - m_DownPosition.x < 0;
+            else
+                return m_UpPosition.x - m_DownPosition.x > 0;
+        }
+
+        void OnUp(Scrollable manipulator)
+        {
+            m_UpPosition = manipulator.position;
+            var closing = m_SwipeToOpenVector.sqrMagnitude == 0 && !m_InSwipeAreaToOpen && isOpen && IsDirectionToClose();
             m_InSwipeAreaToOpen = false;
             m_SwipeToOpenVector = Vector2.zero;
 
-            if (!manipulator.hasMoved || variant == DrawerVariant.Permanent)
+            if (variant == DrawerVariant.Permanent)
                 return;
+
+            if (!manipulator.hasMoved)
+            {
+                OnClick();
+                return;
+            }
 
             if (closing)
             {
@@ -465,8 +487,13 @@ namespace UnityEngine.Dt.App.UI
                 FinishOpenAnimation();
             }
         }
+        
+        void OnCancel(Scrollable manipulator)
+        {
+            OnUp(manipulator);
+        }
 
-        void OnDrag(Draggable manipulator)
+        void OnDrag(Scrollable manipulator)
         {
             if (!swipeable)
                 return;
@@ -534,7 +561,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<Drawer, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="Drawer"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Drawer"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

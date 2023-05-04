@@ -8,7 +8,7 @@ namespace UnityEngine.Dt.App.UI
     /// Sizing values for <see cref="Icon"/> elements.
     /// </summary>
     public enum IconSize
-    {
+    {       
         /// <summary>
         /// Small
         /// </summary>

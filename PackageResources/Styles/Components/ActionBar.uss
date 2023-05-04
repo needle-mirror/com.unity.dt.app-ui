@@ -2,12 +2,27 @@
 .appui-actionbar {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     padding: var(--appui-alias-control-gap-md);
     flex-shrink: 0;
 }
 
-.appui-actionbar__actiongroup {
-    margin-left: var(--appui-sizing-500); /*margin-inline-start: var(--appui-sizing-500);*/
+.appui-actionbar__checkbox.appui-checkbox {
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.appui-actionbar__label.appui-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1;
+    flex-grow: 1;
+}
+
+.appui-actionbar__actiongroup.appui-actiongroup {
+    margin-left: var(--appui-sizing-100); /*margin-inline-start: var(--appui-sizing-100);*/
+    flex-shrink: 0;
+    flex-grow: 0;
 }

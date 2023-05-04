@@ -58,11 +58,9 @@
 
 .appui-slider__handle-container {
     position: absolute;
-}
-
-.appui-slider__handle-container {
     width: var(--appui-sizing-250);
     height: var(--appui-sizing-250);
+    transition: left var(--appui-animation-easing-ease-out) var(--appui-animation-duration-50);
 }
 
 .appui-slider__handle {
@@ -167,6 +165,7 @@
     background-color: var(--appui-accent-100);
     position: absolute;
     top: 5px;
+    transition: width var(--appui-animation-easing-ease-out) var(--appui-animation-duration-50), left var(--appui-animation-easing-ease-out) var(--appui-animation-duration-50);
 }
 
 .appui-slider__tick {

@@ -18,13 +18,13 @@ To use the UI Kit sample, you will need to have this package installed in your p
 To install the package, follow the instructions in the [Installation and Setup](xref:setup)
 section of the documentation.
 
-Inside the Unity Package Manager window, select the **Replica App UI** package, then 
+Inside the Unity Package Manager window, select the **App UI** package, then 
 go to **Samples** and select **UI Kit**. Click **Install** to install the sample.
 
 ### Usage
 
 To open the sample, in your Project panel go to 
-**Assets > Samples > Replica App UI > UI Kit > Scenes**.
+**Assets > Samples > App UI > UI Kit > Scenes**.
 
 The folder contains 3 different scenes:
 * **UI Kit** - This scene contains all the UI components and features of the package.
