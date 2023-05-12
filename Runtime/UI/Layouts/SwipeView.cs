@@ -241,6 +241,25 @@ namespace UnityEngine.Dt.App.UI
         /// </summary>
         internal bool shouldWrap => count > visibleItemCount && wrap && !m_ForceDisableWrap;
 
+        bool ShouldResist(Vector2 delta)
+        {
+            if (wrap)
+                return false;
+
+            if (direction == Direction.Horizontal)
+            {
+                var left = m_Container.resolvedStyle.left;
+                var width = m_Container.resolvedStyle.width - resolvedStyle.width ;
+                return (left > 0 && delta.x >= 0) || (left < -width && delta.x <= 0);
+            }
+            else
+            {
+                var top = m_Container.resolvedStyle.top;
+                var height = m_Container.resolvedStyle.height - resolvedStyle.height;
+                return (top > 0 && delta.y >= 0) || (top < -height && delta.y <= 0);
+            }
+        }
+
         /// <summary>
         /// The current item.
         /// </summary>
@@ -288,6 +307,18 @@ namespace UnityEngine.Dt.App.UI
                 }
             }
         }
+        
+        /// <summary>
+        /// The resistance of the SwipeView.
+        /// <para>
+        /// By default, the SwipeView has a resistance of 1.
+        /// </para>
+        /// <para>
+        /// If you set this property to more than 1, the SwipeView will
+        /// be harder to swipe. If you set this property to less than 1, the SwipeView will be easier to swipe.
+        /// </para>
+        /// </summary>
+        public float resistance { get; set; } = 1f;
 
         /// <summary>
         /// Whether or not the SwipeView is swipeable.
@@ -402,6 +433,8 @@ namespace UnityEngine.Dt.App.UI
                     var distance = direction == Direction.Horizontal ? draggable.position.x - m_PointerDistance.x : draggable.position.y - m_PointerDistance.y;
                     var threshold = direction == Direction.Horizontal ? resolvedStyle.width : resolvedStyle.height;
                     threshold /= 4;
+                    var previousSpeed = snapAnimationSpeed;
+                    snapAnimationSpeed *= ShouldResist(Vector2.zero) ? resistance : 1;
                     if (Mathf.Abs(distance) > threshold)
                     {
                         var res = distance > 0 ? GoToPrevious() : GoToNext();
@@ -412,6 +445,7 @@ namespace UnityEngine.Dt.App.UI
                     {
                         value = closestIndex;
                     }
+                    snapAnimationSpeed = previousSpeed;
                 }
             }
             else
@@ -436,11 +470,13 @@ namespace UnityEngine.Dt.App.UI
         {
             if (m_Animation != null && !((bool)k_Recycled!.GetValue(m_Animation)))
                 m_Animation?.Recycle();
-
+            
+            var multiplier = ShouldResist(drag.deltaPos) ? 1f / resistance : 1f;
+            
             if (direction == Direction.Horizontal)
-                m_Container.style.left = m_Container.resolvedStyle.left + drag.deltaPos.x;
+                m_Container.style.left = m_Container.resolvedStyle.left + drag.deltaPos.x * multiplier;
             else
-                m_Container.style.top = m_Container.resolvedStyle.top + drag.deltaPos.y;
+                m_Container.style.top = m_Container.resolvedStyle.top + drag.deltaPos.y * multiplier;
         }
 
         SwipeViewItem GetClosestElement()
@@ -890,6 +926,12 @@ namespace UnityEngine.Dt.App.UI
                 name = "swipeable",
                 defaultValue = true,
             };
+            
+            readonly UxmlFloatAttributeDescription m_Resistance = new UxmlFloatAttributeDescription()
+            {
+                name = "resistance",
+                defaultValue = 1f,
+            };
 
             /// <summary>
             /// Returns an enumerable containing UxmlChildElementDescription(typeof(VisualElement)), since VisualElements can contain other VisualElements.
@@ -919,6 +961,7 @@ namespace UnityEngine.Dt.App.UI
                 el.startSwipeThreshold = m_StartSwipeThreshold.GetValueFromBag(bag, cc);
                 el.autoPlayDuration = m_AutoPlayDuration.GetValueFromBag(bag, cc);
                 el.swipeable = m_Swipeable.GetValueFromBag(bag, cc);
+                el.resistance = m_Resistance.GetValueFromBag(bag, cc);
             }
         }
     }

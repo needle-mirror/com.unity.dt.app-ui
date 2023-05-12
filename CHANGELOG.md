@@ -4,6 +4,22 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.2.11] - 2023-05-12
+
+### Added
+
+- Added `maxDistance` property to the World-Space UI Document component.
+
+## [0.2.10] - 2023-05-08
+
+### Added
+
+- Added resistance property to the `SwipeView` component.
+
+### Fixed
+
+- Fixed `Pressable` PointerDown event propagation.
+
 ## [0.2.9] - 2023-05-04
 
 ### Changed
@@ -105,7 +121,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.2.0] - 2023-03-05
 
-## Added
+### Added
 
 - Added support of Native features such as system themes and scale.
   The support has been done for Android, iOS, MacOS, and Windows.
@@ -155,8 +171,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added the ability for Popover element to use a modal backdrop (Pointer events are blocked).
 - Added a simple implementation of a [Storybook](xref:storybook)-like tool to display and test UI components.
 
-
-## Changed
+### Changed
 
 - The **Application** UI element is now called [Panel](xref:UnityEngine.Dt.App.UI.Panel).
 - Improved the Slider UI component to display the current value.
@@ -165,8 +180,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The App UI main Looper is now part of the App UI manager and is
   not present in the Application UI element anymore.
 
-
-## Fixed
+### Fixed
 
 - Fixed the Notification system when the Notificiation UI element has been destroyed without being dismissed.
 - Fixed the Menu system to handle sub-menus.
@@ -175,10 +189,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed the formatting of numerical fields.
 - Fixed the handle of some edge-cases in TooltipManipulator.
 
-
 ## [0.1.0] - 2022-08-19
 
 ### Added
+
 - Package Structure
 - First draft of User Manual documentation
 - Accordion UI Component

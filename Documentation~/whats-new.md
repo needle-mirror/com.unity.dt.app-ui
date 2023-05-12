@@ -2,7 +2,7 @@
 uid: whats-new
 ---
 
-# What's New in **0.2.9**
+# What's New in **0.2.11**
 
 This section contains information about new features, improvements, and issues fixed.
 
@@ -10,6 +10,6 @@ For a complete list of changes made, refer to the **Changelog** directly.
 
 The main updates in this release include:
 
-### Changed
+### Added
 
-- Removed `Replica` word from the documentation.
+- Added `maxDistance` property to the World-Space UI Document component.

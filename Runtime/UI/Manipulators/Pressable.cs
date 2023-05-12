@@ -254,6 +254,7 @@ namespace UnityEngine.Dt.App.UI
         {
             Activate(evt.pointerId);
             ProcessDownEvent(evt, evt.localPosition, evt.pointerId);
+            evt.StopPropagation();
         }
 
         void OnPointerMove(PointerMoveEvent evt)
@@ -294,7 +295,7 @@ namespace UnityEngine.Dt.App.UI
             e.target = parent;
             parent.SendEvent(e);
         }
-
+    
         void OnPointerUp(PointerUpEvent evt)
         {
             ProcessUpEvent(evt, evt.localPosition, evt.pointerId);

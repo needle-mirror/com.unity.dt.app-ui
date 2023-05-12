@@ -77,7 +77,7 @@ namespace UnityEngine.Dt.App.UI
         /// </summary>
         protected override void RegisterCallbacksOnTarget()
         {
-            target.RegisterCallback<PointerDownEvent>(OnPointerDown);
+            target.RegisterCallback<PointerDownEvent>(OnPointerDown, TrickleDown.TrickleDown);
             target.RegisterCallback<PointerUpEvent>(OnPointerUp);
             target.RegisterCallback<PointerMoveEvent>(OnPointerMove);
             target.RegisterCallback<PointerCancelEvent>(OnPointerCancel);
@@ -206,7 +206,7 @@ namespace UnityEngine.Dt.App.UI
         /// </summary>
         protected override void UnregisterCallbacksFromTarget()
         {
-            target.UnregisterCallback<PointerDownEvent>(OnPointerDown);
+            target.UnregisterCallback<PointerDownEvent>(OnPointerDown, TrickleDown.TrickleDown);
             target.UnregisterCallback<PointerUpEvent>(OnPointerUp);
             target.UnregisterCallback<PointerMoveEvent>(OnPointerMove);
             target.UnregisterCallback<PointerCancelEvent>(OnPointerCancel);

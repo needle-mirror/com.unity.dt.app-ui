@@ -30,6 +30,12 @@ namespace UnityEngine.Dt.App.Core
         /// A custom method to compute a Ray used as reference to raycast against World-Space UI Panels.
         /// </summary>
         public Func<Ray> customRayFunc;
+        
+        /// <summary>
+        /// The maximum distance used with raycasts against World-Space UI Panels.
+        /// </summary>
+        [Tooltip("The maximum distance used with raycasts against World-Space UI Panels.")]
+        public float maxDistance = 1000f;
 
         PanelSettings m_PanelSettings;
 
@@ -55,9 +61,8 @@ namespace UnityEngine.Dt.App.Core
 
             screenPosition.y = Screen.height - screenPosition.y;
             var cameraRay = customRayFunc?.Invoke() ?? targetCamera.ScreenPointToRay(screenPosition);
-            var dist = customRayFunc != null ? cameraRay.direction.magnitude : targetCamera.farClipPlane;
 
-            if (!Physics.Raycast(cameraRay, out var hit, dist, layerMask))
+            if (!Physics.Raycast(cameraRay, out var hit, maxDistance, layerMask))
                 return invalidPosition;
 
             var targetTexture = m_PanelSettings.targetTexture;

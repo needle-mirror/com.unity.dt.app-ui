@@ -1531,7 +1531,7 @@
                         <ui:VisualElement class="example-section">
                             <appui:SwipeView skip-animation-threshold="2" name="swipeview-horizontal" style="width: 200px; height: 400px;" direction="Horizontal">
                                 <appui:SwipeViewItem>
-                                    <appui:Text text="Item 1" />
+                                    <appui:Button title="Item 1" />
                                 </appui:SwipeViewItem>
                                 <appui:SwipeViewItem>
                                     <appui:Text text="Item 2" />
@@ -1571,9 +1571,9 @@
                                 <appui:ActionButton name="swipeview-hw-next" label="Next" />
                             </appui:ActionGroup>
                         </ui:VisualElement>
-                        <appui:Text text="Horizontal - 2 visible items" class="example-subtitle" />
+                        <appui:Text text="Horizontal - 2 visible items - Resistance = 7" class="example-subtitle" />
                         <ui:VisualElement class="example-section">
-                            <appui:SwipeView style="width: 400px; height: 200px;" direction="Horizontal" visible-item-count="2">
+                            <appui:SwipeView style="width: 400px; height: 200px;" resistance="7" direction="Horizontal" visible-item-count="2">
                                 <appui:SwipeViewItem>
                                     <appui:Text text="Item 1" />
                                 </appui:SwipeViewItem>
