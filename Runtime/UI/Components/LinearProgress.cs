@@ -1,11 +1,12 @@
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// LinearProgress UI element.
@@ -115,7 +116,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<LinearProgress, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="LinearProgress"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="LinearProgress"/>.
         /// </summary>
         public new class UxmlTraits : Progress.UxmlTraits { }
     }

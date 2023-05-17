@@ -1,12 +1,12 @@
 using System;
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.UI;
 #if UNITY_LOCALIZATION_PRESENT
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.ResourceManagement.AsyncOperations;
 #endif
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     /// <summary>
     /// The ApplicationContext provides the current context of the application.

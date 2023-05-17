@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Vector3Int Field UI element.
@@ -178,7 +178,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<Vector3IntField, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="Vector3IntField"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Vector3IntField"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

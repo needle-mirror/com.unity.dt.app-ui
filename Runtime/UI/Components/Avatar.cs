@@ -1,7 +1,8 @@
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Avatar UI element.
@@ -19,49 +20,24 @@ namespace UnityEngine.Dt.App.UI
         public static readonly string containerUssClassName = ussClassName + "__container";
 
         /// <summary>
-        /// The Avatar notification badge styling class.
-        /// </summary>
-        public static readonly string notificationBadgeUssClassName = ussClassName + "__notification";
-
-        /// <summary>
-        /// The Avatar notification container styling class.
-        /// </summary>
-        public static readonly string notificationContainerBadgeUssClassName = ussClassName + "__notificationcontainer";
-
-        /// <summary>
-        /// The Avatar icon container styling class.
-        /// </summary>
-        public static readonly string iconContainerUssClassName = ussClassName + "__iconcontainer";
-
-        /// <summary>
-        /// The Avatar icon styling class.
-        /// </summary>
-        public static readonly string iconUssClassName = ussClassName + "__icon";
-
-        /// <summary>
-        /// The Avatar label styling class.
-        /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
-
-        /// <summary>
         /// The Avatar size styling class.
         /// </summary>
         public static readonly string sizeUssClassName = ussClassName + "--size-";
 
         Size m_Size = Size.M;
 
-        readonly VisualElement m_IconContainer;
-
-        readonly VisualElement m_NotificationContainer;
-
         readonly ExVisualElement m_Container;
 
-        readonly LocalizedTextElement m_LabelElement;
+        Color? m_BackgroundColor;
+
+        Color? m_OutlineColor;
+
+        float m_OutlineWidth;
 
         /// <summary>
         /// The content container of the Avatar.
         /// </summary>
-        public override VisualElement contentContainer => null;
+        public override VisualElement contentContainer => m_Container;
 
         /// <summary>
         /// The Avatar size.
@@ -76,63 +52,76 @@ namespace UnityEngine.Dt.App.UI
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
             }
         }
-
+        
         /// <summary>
-        /// The Avatar notification badge.
+        /// The Avatar source image.
         /// </summary>
-        public Badge notificationBadge { get; private set; }
-
-        /// <summary>
-        /// Set the Avatar notification badge visibility.
-        /// </summary>
-        public bool withNotification
+        public StyleBackground src
         {
-            get => !notificationBadge.ClassListContains(Styles.hiddenUssClassName);
-            set => notificationBadge.EnableInClassList(Styles.hiddenUssClassName, !value);
-        }
-
-        /// <summary>
-        /// The Avatar icon.
-        /// </summary>
-        public Icon icon { get; private set; }
-
-        /// <summary>
-        /// The Avatar outline color.
-        /// </summary>
-        public Color outlineColor
-        {
-            get => m_Container.outlineColor ?? Color.clear;
-            set => m_Container.outlineColor = value;
-        }
-
-        /// <summary>
-        /// The Avatar text color.
-        /// </summary>
-        public Color textColor
-        {
-            get => m_LabelElement.resolvedStyle.color;
-            set => m_LabelElement.style.color = value;
+            get => m_Container.style.backgroundImage;
+            set => m_Container.style.backgroundImage = value;
         }
 
         /// <summary>
         /// The Avatar background color.
         /// </summary>
-        public Color backgroundColor
+        public Color? backgroundColor
         {
-            get => m_Container.resolvedStyle.backgroundColor;
-            set => m_Container.style.backgroundColor = value;
+            get => m_BackgroundColor;
+            set
+            {
+                m_BackgroundColor = value;
+                m_Container.style.backgroundColor = m_BackgroundColor ?? new StyleColor(StyleKeyword.Null);
+            }
         }
 
         /// <summary>
-        /// The Avatar text.
+        /// The Avatar outline width.
         /// </summary>
-        public string text
+        public float outlineWidth
         {
-            get => m_LabelElement.text;
+            get => m_OutlineWidth;
             set
             {
-                m_LabelElement.text = value;
-                m_LabelElement.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
+                m_OutlineWidth = value;
+                RefreshBorders();
+            }
+        }
+
+        /// <summary>
+        /// Refresh the Avatar borders.
+        /// </summary>
+        void RefreshBorders()
+        {
+            style.borderBottomWidth = m_OutlineColor.HasValue ? m_OutlineWidth : 0;
+            style.borderLeftWidth = m_OutlineColor.HasValue ? m_OutlineWidth : 0;
+            style.borderRightWidth = m_OutlineColor.HasValue ? m_OutlineWidth : 0;
+            style.borderTopWidth = m_OutlineColor.HasValue ? m_OutlineWidth : 0;
+        }
+
+        /// <summary>
+        /// The Avatar outline color.
+        /// </summary>
+        public Color? outlineColor
+        {
+            get => m_OutlineColor;
+            set
+            {
+                m_OutlineColor = value;
+                
+                style.borderBottomColor = m_OutlineColor ?? new StyleColor(StyleKeyword.Null);
+                style.borderLeftColor = m_OutlineColor ?? new StyleColor(StyleKeyword.Null);
+                style.borderRightColor = m_OutlineColor ?? new StyleColor(StyleKeyword.Null);
+                style.borderTopColor = m_OutlineColor ?? new StyleColor(StyleKeyword.Null);
+                
+                const float paddingValue = 1;
+                
+                style.paddingBottom = m_OutlineColor.HasValue ? paddingValue : 0;
+                style.paddingLeft = m_OutlineColor.HasValue ? paddingValue : 0;
+                style.paddingRight = m_OutlineColor.HasValue ? paddingValue : 0;
+                style.paddingTop = m_OutlineColor.HasValue ? paddingValue : 0;
+                
+                RefreshBorders();
             }
         }
 
@@ -150,7 +139,7 @@ namespace UnityEngine.Dt.App.UI
         /// </summary>
         public Avatar()
         {
-            AddToClassList(ussClassName); ;
+            AddToClassList(ussClassName);
             pickingMode = PickingMode.Position;
             focusable = false;
 
@@ -158,34 +147,11 @@ namespace UnityEngine.Dt.App.UI
             m_Container.AddToClassList(containerUssClassName);
             hierarchy.Add(m_Container);
 
-            m_LabelElement = new LocalizedTextElement { name = labelUssClassName, pickingMode = PickingMode.Ignore };
-            m_LabelElement.AddToClassList(labelUssClassName);
-            m_Container.hierarchy.Add(m_LabelElement);
-
-            m_IconContainer = new VisualElement { name = iconContainerUssClassName, pickingMode = PickingMode.Ignore };
-            m_IconContainer.AddToClassList(iconContainerUssClassName);
-            m_Container.hierarchy.Add(m_IconContainer);
-
-            icon = new Icon { name = iconUssClassName, pickingMode = PickingMode.Ignore, primary = true };
-            icon.AddToClassList(iconUssClassName);
-            m_IconContainer.hierarchy.Add(icon);
-
-            m_NotificationContainer = new VisualElement { name = notificationContainerBadgeUssClassName, pickingMode = PickingMode.Ignore };
-            m_NotificationContainer.AddToClassList(notificationContainerBadgeUssClassName);
-            m_Container.hierarchy.Add(m_NotificationContainer);
-
-            notificationBadge = new Badge { name = notificationBadgeUssClassName, pickingMode = PickingMode.Ignore };
-            notificationBadge.AddToClassList(notificationBadgeUssClassName);
-            m_NotificationContainer.hierarchy.Add(notificationBadge);
-
             size = Size.M;
-            backgroundColor = Color.gray;
-            textColor = Color.white;
-            text = null;
-            icon.iconName = null;
-            withNotification = false;
-            notificationBadge.text = null;
-            outlineColor = Color.clear;
+            backgroundColor = null;
+            outlineColor = null;
+            outlineWidth = 2;
+            src = null;
         }
 
         /// <summary>
@@ -195,7 +161,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<Avatar, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="Avatar"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Avatar"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {
@@ -210,47 +176,29 @@ namespace UnityEngine.Dt.App.UI
                 name = "background-color",
                 defaultValue = Color.gray
             };
-
-            readonly UxmlColorAttributeDescription m_TextColor = new UxmlColorAttributeDescription
-            {
-                name = "text-color",
-                defaultValue = Color.white
-            };
-
+            
             readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
             {
                 name = "size",
                 defaultValue = Size.M,
             };
-
-            readonly UxmlStringAttributeDescription m_Text = new UxmlStringAttributeDescription
+            
+            readonly UxmlStringAttributeDescription m_Src = new UxmlStringAttributeDescription
             {
-                name = "text",
+                name = "src",
                 defaultValue = null
             };
-
-            readonly UxmlStringAttributeDescription m_Icon = new UxmlStringAttributeDescription
-            {
-                name = "icon",
-                defaultValue = null
-            };
-
-            readonly UxmlBoolAttributeDescription m_WithNotification = new UxmlBoolAttributeDescription
-            {
-                name = "with-notification",
-                defaultValue = false
-            };
-
-            readonly UxmlStringAttributeDescription m_NotificationText = new UxmlStringAttributeDescription
-            {
-                name = "notification-text",
-                defaultValue = null
-            };
-
+            
             readonly UxmlColorAttributeDescription m_OutlineColor = new UxmlColorAttributeDescription
             {
                 name = "outline-color",
-                defaultValue = Color.clear
+                defaultValue = Color.gray
+            };
+            
+            readonly UxmlFloatAttributeDescription m_OutlineWidth = new UxmlFloatAttributeDescription
+            {
+                name = "outline-width",
+                defaultValue = 2
             };
 
             /// <summary>
@@ -265,13 +213,15 @@ namespace UnityEngine.Dt.App.UI
 
                 var element = (Avatar)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
-                element.text = m_Text.GetValueFromBag(bag, cc);
-                element.textColor = m_TextColor.GetValueFromBag(bag, cc);
-                element.backgroundColor = m_BackgroundColor.GetValueFromBag(bag, cc);
-                element.outlineColor = m_OutlineColor.GetValueFromBag(bag, cc);
-                element.icon.iconName = m_Icon.GetValueFromBag(bag, cc);
-                element.withNotification = m_WithNotification.GetValueFromBag(bag, cc);
-                element.notificationBadge.text = m_NotificationText.GetValueFromBag(bag, cc);
+                var bgColor = Color.gray;
+                if (m_BackgroundColor.TryGetValueFromBag(bag, cc, ref bgColor))
+                    element.backgroundColor = bgColor;
+                if (m_OutlineColor.TryGetValueFromBag(bag, cc, ref bgColor))
+                    element.outlineColor = bgColor;
+                string src = null;
+                if (m_Src.TryGetValueFromBag(bag, cc, ref src))
+                    element.src = new StyleBackground(Resources.Load<Texture2D>(src));
+                element.outlineWidth = m_OutlineWidth.GetValueFromBag(bag, cc);
                 element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
             }
         }

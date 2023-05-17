@@ -1,11 +1,11 @@
 using System;
 using NUnit.Framework;
-using UnityEngine.Dt.App.Core;
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.Core;
+using Unity.AppUI.UI;
 using UnityEngine.UIElements;
-using VisualElementExtensions = UnityEngine.Dt.App.UI.VisualElementExtensions;
+using VisualElementExtensions = Unity.AppUI.UI.VisualElementExtensions;
 
-namespace UnityEngine.Dt.App.Tests.UI
+namespace Unity.AppUI.Tests.UI
 {
     [TestFixture]
     [TestOf(typeof(VisualElementExtensions))]
@@ -28,14 +28,14 @@ namespace UnityEngine.Dt.App.Tests.UI
             Assert.DoesNotThrow(() =>
             {
                 var ctx = v.GetContext();
-                Assertions.Assert.AreEqual(default(ApplicationContext), ctx);
+                UnityEngine.Assertions.Assert.AreEqual(default(ApplicationContext), ctx);
             });
         }
 
         [Test]
         public void VisualElementExtensions_GetContext_ShouldReturnContextFromApplication()
         {
-            var v = new UnityEngine.Dt.App.UI.Panel();
+            var v = new Panel();
             ApplicationContext ctx = default;
             Assert.DoesNotThrow(() =>
             {
@@ -54,7 +54,7 @@ namespace UnityEngine.Dt.App.Tests.UI
         [TestCase("en", "dark")]
         public void VisualElementExtensions_GetContext_ShouldComputeContextWithOverrides(string lang, string theme)
         {
-            var v = new UnityEngine.Dt.App.UI.Panel();
+            var v = new Panel();
             var overrideElement = new ContextProvider
             {
                 lang = lang,

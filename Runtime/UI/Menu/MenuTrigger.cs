@@ -1,8 +1,9 @@
 using System;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A wrapper to display a menu when a trigger has been activated.
@@ -43,14 +44,14 @@ namespace UnityEngine.Dt.App.UI
             {
                 if (childMenu == null && child is Menu m)
                     childMenu = m;
-                
+
                 if (ve == null && !(child is Menu))
                     ve = child;
-                
+
                 if (childMenu != null && ve != null)
                     break;
             }
-            
+
             if (childMenu != null && childMenu != menu)
             {
                 // New Dialog attached as child
@@ -91,7 +92,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<MenuTrigger, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="MenuTrigger"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="MenuTrigger"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

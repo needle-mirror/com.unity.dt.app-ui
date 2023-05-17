@@ -113,7 +113,9 @@
     --border-color: var(--appui-color-white);
 
     scale: 1.0;
-    transition: scale var(--appui-animation-easing-ease-out) var(--appui-animation-duration-50), left var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125), top var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
+    transition-property: scale, left, top;
+    transition-duration: var(--appui-animation-duration-125);
+    transition-timing-function: var(--appui-animation-easing-ease-out);
 }
 
 .appui-svsquare__thumbswatch {

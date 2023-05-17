@@ -2,8 +2,9 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using NUnit.Framework;
+using UnityEngine;
 
-namespace UnityEngine.Dt.App.Tests
+namespace Unity.AppUI.Tests
 {
     /// <summary>
     /// A custom yield instruction that waits until a predicate is true or a timeout is reached.

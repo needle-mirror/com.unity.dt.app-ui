@@ -1,9 +1,10 @@
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.UI;
+using UnityEngine;
 
-namespace UnityEngine.Dt.App.Tests.UI
+namespace Unity.AppUI.Tests.UI
 {
-    class AnchorPopupTests<T> : PopupTests<T> where T : Popup
+    class AnchorPopupTests<T> : PopupTests<AnchorPopup<T>> where T : AnchorPopup<T>
     {
-
+        
     }
 }

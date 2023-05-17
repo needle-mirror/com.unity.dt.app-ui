@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A color swatch is a visual element that displays a color or a gradient.
@@ -88,25 +89,22 @@ namespace UnityEngine.Dt.App.UI
                 if (m_Value == value)
                     return;
 
-                if (m_Value != null && value != null)
+                if (m_Value != null && value != null && m_Value.Count == value.Count)
                 {
-                    if (m_Value.Count == value.Count)
+                    var equal = true;
+                    for (var i = 0; i < m_Value.Count; i++)
                     {
-                        var equal = true;
-                        for (var i = 0; i < m_Value.Count; i++)
+                        if (!m_Value[i].Equals(value[i]))
                         {
-                            if (!m_Value[i].Equals(value[i]))
-                            {
-                                equal = false;
-                                break;
-                            }
+                            equal = false;
+                            break;
                         }
-
-                        if (equal)
-                            return;
                     }
-                }
 
+                    if (equal)
+                        return;
+                }
+                
                 using var evt = ChangeEvent<List<ColorEntry>>.GetPooled(m_Value, value);
                 SetValueWithoutNotify(value);
                 evt.target = this;
@@ -339,7 +337,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<ColorSwatch, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="ColorSwatch"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ColorSwatch"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

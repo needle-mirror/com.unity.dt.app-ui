@@ -1,10 +1,12 @@
 using System;
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.UI;
+using UnityEngine;
+using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     /// <summary>
     /// A dummy object used to store some data in the editor.
@@ -68,7 +70,7 @@ namespace UnityEngine.Dt.App.Core
         /// The main looper of the App UI system.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown if the App UI system is not ready.</exception>
-        internal static Looper mainLooper
+        public static Looper mainLooper
         {
             get
             {

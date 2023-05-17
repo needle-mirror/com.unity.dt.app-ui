@@ -3,8 +3,8 @@ using System.Runtime.CompilerServices;
 using UnityEditor.UIElements;
 #endif
 
-[assembly: InternalsVisibleTo("Unity.DigitalTwins.AppUI.Tests")]
-[assembly: InternalsVisibleTo("Unity.DigitalTwins.AppUI.Editor")]
+[assembly: InternalsVisibleTo("Unity.AppUI.Tests")]
+[assembly: InternalsVisibleTo("Unity.AppUI.Editor")]
 #if UNITY_EDITOR
-[assembly: UxmlNamespacePrefix("UnityEngine.Dt.App.UI", "appui")]
+[assembly: UxmlNamespacePrefix("Unity.AppUI.UI", "appui")]
 #endif

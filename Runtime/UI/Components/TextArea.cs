@@ -1,13 +1,14 @@
 using System;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Text Area UI element.
     /// </summary>
-    public class TextArea : ExVisualElement, IValidatableElement<string>
+    public class TextArea : ExVisualElement, IValidatableElement<string>, INotifyValueChanging<string>
     {
         /// <summary>
         /// The TextArea main styling class.
@@ -34,7 +35,7 @@ namespace UnityEngine.Dt.App.UI
         /// </summary>
         public static readonly string placeholderUssClassName = ussClassName + "__placeholder";
 
-        readonly UIElements.TextField m_InputField;
+        readonly UnityEngine.UIElements.TextField m_InputField;
 
         readonly LocalizedTextElement m_Placeholder;
 
@@ -47,6 +48,8 @@ namespace UnityEngine.Dt.App.UI
         int m_VisualInputTabIndex;
 
         readonly VisualElement m_ResizeHandle;
+
+        string m_PreviousValue;
 
         /// <summary>
         /// Default constructor.
@@ -90,7 +93,7 @@ namespace UnityEngine.Dt.App.UI
             m_Placeholder.AddToClassList(placeholderUssClassName);
             hierarchy.Add(m_Placeholder);
 
-            m_InputField = new UIElements.TextField { name = inputUssClassName, multiline = true };
+            m_InputField = new UnityEngine.UIElements.TextField { name = inputUssClassName, multiline = true };
             m_InputField.AddToClassList(inputUssClassName);
             m_InputField.BlinkingCursor();
             m_ScrollView.Add(m_InputField);
@@ -107,6 +110,7 @@ namespace UnityEngine.Dt.App.UI
 
             SetValueWithoutNotify(value);
             m_InputField.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
+            m_InputField.RegisterValueChangedCallback(OnInputValueChanged);
             m_Placeholder.RegisterValueChangedCallback(OnPlaceholderValueChanged);
         }
 
@@ -114,6 +118,21 @@ namespace UnityEngine.Dt.App.UI
         {
             evt.PreventDefault();
             evt.StopPropagation();
+        }
+
+        void OnInputValueChanged(ChangeEvent<string> e)
+        {
+            e.PreventDefault();
+            e.StopPropagation();
+            
+            using var evt = ChangingEvent<string>.GetPooled();
+            evt.target = this;
+            evt.previousValue = m_Value;
+            m_Value = e.newValue;
+            evt.newValue = m_Value;
+            
+            if (validateValue != null) invalid = !validateValue(m_Value);
+            SendEvent(evt);
         }
 
         void OnDrag(Draggable draggable)
@@ -169,20 +188,21 @@ namespace UnityEngine.Dt.App.UI
             get => m_Value;
             set
             {
-                if (m_Value == value)
+                if (m_Value == value && m_PreviousValue == value)
                 {
                     RefreshUI();
                     return;
                 }
 
-                using var evt = ChangeEvent<string>.GetPooled(m_Value, value);
+                using var evt = ChangeEvent<string>.GetPooled(m_PreviousValue, value);
+                m_PreviousValue = m_Value;
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
             }
         }
 
-        void OnFocusedOut(FocusOutEvent evt)
+        void OnFocusedOut(FocusOutEvent e)
         {
             RemoveFromClassList(Styles.focusedUssClassName);
             RemoveFromClassList(Styles.keyboardFocusUssClassName);
@@ -194,6 +214,7 @@ namespace UnityEngine.Dt.App.UI
             AddToClassList(Styles.focusedUssClassName);
             m_Placeholder.AddToClassList(Styles.hiddenUssClassName);
             passMask = 0;
+            m_PreviousValue = m_Value;
         }
 
         void OnKeyboardFocusedIn(FocusInEvent evt)
@@ -202,6 +223,7 @@ namespace UnityEngine.Dt.App.UI
             AddToClassList(Styles.keyboardFocusUssClassName);
             m_Placeholder.AddToClassList(Styles.hiddenUssClassName);
             passMask = Passes.Clear | Passes.Outline;
+            m_PreviousValue = m_Value;
         }
 
         void RefreshUI()
@@ -216,7 +238,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<TextArea, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="TextArea"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TextArea"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

@@ -1,16 +1,13 @@
 apiRules:
   - exclude:
-      uidRegex: UnityEngine\.Dt\.App\..*Tests
+      uidRegex: Unity\.AppUI\.Tests\..*
       type: Namespace
   - exclude:
-      uidRegex: UnityEngine\.Dt\.App\..*\.UxmlFactory
+      uidRegex: Unity\.AppUI\..*\.UxmlFactory
       type: Class
   - exclude:
-      uidRegex: UnityEngine\.Dt\.App\..*\.UxmlTraits
+      uidRegex: Unity\.AppUI\..*\.UxmlTraits
       type: Class
   - exclude:
-      uidRegex: Samples\..*
-      type: Namespace
-  - exclude:
-      uidRegex: UnityEngine\.Dt\.App\.Samples.*
+      uidRegex: Unity\.AppUI\.Samples\..*
       type: Namespace

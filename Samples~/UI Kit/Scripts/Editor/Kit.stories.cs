@@ -1,7 +1,8 @@
 using System;
+using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.Editor
+namespace Unity.AppUI.Editor
 {
     public class KitPage : StoryBookPage
     {

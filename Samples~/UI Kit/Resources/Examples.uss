@@ -66,6 +66,7 @@
   flex-grow: 0;
   flex-shrink: 0;
   max-width: 100%;
+  padding: var(--appui-alias-control-gap-md) 0;
 }
 
 .example-item {
@@ -159,4 +160,16 @@
 
 .example-elevation-card > .appui-text {
   color: rgb(143, 143, 143);
+}
+
+.badge-container-example {
+  width: 40px;
+  height: 40px;
+  align-items: stretch;
+  border-radius: var(--appui-alias-control-border-radius);
+  background-color: var(--appui-backgrounds-200);
+}
+
+.badge-container-circular-example {
+  border-radius: 40px;
 }

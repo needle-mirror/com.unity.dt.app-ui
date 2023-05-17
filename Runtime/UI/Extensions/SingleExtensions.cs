@@ -1,7 +1,8 @@
 using System;
 using System.Globalization;
+using UnityEngine;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Extension methods for Single and Double.

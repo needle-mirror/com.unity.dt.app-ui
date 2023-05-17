@@ -3,12 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
-using UnityEditor.PackageManager;
-using UnityEditor.PackageManager.UI;
-using UnityEngine.Dt.App.Core;
-using PackageInfo = UnityEditor.PackageInfo;
+using Unity.AppUI.Core;
+using UnityEngine;
 
-namespace UnityEngine.Dt.App.Editor
+namespace Unity.AppUI.Editor
 {
     class AppUISettingsProvider : SettingsProvider, IDisposable
     {
@@ -47,7 +45,7 @@ namespace UnityEngine.Dt.App.Editor
                 menu.AddSeparator("");
                 for (var i = 0; i < m_AvailableSettingsAssetsOptions.Length; i++)
                     menu.AddItem(new GUIContent(m_AvailableSettingsAssetsOptions[i]), m_CurrentSelectedInputSettingsAsset == i, (path) => {
-                        AppUI.settings = AssetDatabase.LoadAssetAtPath<AppUISettings>((string)path);
+                        Core.AppUI.settings = AssetDatabase.LoadAssetAtPath<AppUISettings>((string)path);
                     }, m_AvailableInputSettingsAssets[i]);
                 menu.AddSeparator("");
                 menu.AddItem(new GUIContent("New Settings Asset…"), false, CreateNewSettingsAsset);
@@ -59,8 +57,6 @@ namespace UnityEngine.Dt.App.Editor
         public override void OnGUI(string searchContext)
         {
             InitializeWithCurrentSettingsIfNecessary();
-            
-            DrawHelpGUI();
 
             EditorGUIUtility.labelWidth = 200;
 
@@ -122,25 +118,6 @@ namespace UnityEngine.Dt.App.Editor
             }
         }
 
-        void DrawHelpGUI()
-        {
-            GUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-
-            var iconSize = EditorStyles.iconButton.CalcSize(m_HelpIcon);
-            var rect = GUILayoutUtility.GetRect(iconSize.x, iconSize.y);
-
-            if (GUI.Button(rect, m_HelpIcon, EditorStyles.iconButton))
-            {
-                var packageInfo = UnityEditor.PackageManager.PackageInfo.FindForAssetPath($"Packages/{AppUISettings.configName}");
-                string shortVersion = packageInfo.version.Substring(0, packageInfo.version.IndexOf('.', packageInfo.version.IndexOf('.') + 1));
-                string documentationUrl = $"https://docs.unity3d.com/Packages/{AppUISettings.configName}@{shortVersion}";
-                Help.ShowHelpPage(documentationUrl);        
-            }
-
-            GUILayout.EndHorizontal();
-        }
-
         internal static void CreateNewSettingsAsset(string relativePath)
         {
             var existingGuid = AssetDatabase.AssetPathToGUID(relativePath, AssetPathToGUIDOptions.OnlyExistingAssets);
@@ -152,7 +129,7 @@ namespace UnityEngine.Dt.App.Editor
                 EditorGUIUtility.PingObject(settings);
                 // Install the settings. This will lead to an AppUI.settingsChanged event which in turn
                 // will cause us to re-initialize.
-                AppUI.settings = settings;
+                Core.AppUI.settings = settings;
             }
         }
 
@@ -185,14 +162,14 @@ namespace UnityEngine.Dt.App.Editor
 
         void InitializeWithCurrentSettingsIfNecessary()
         {
-            if (AppUI.settings == m_Settings && m_Settings != null && m_SettingsDirtyCount == EditorUtility.GetDirtyCount(m_Settings))
+            if (Core.AppUI.settings == m_Settings && m_Settings != null && m_SettingsDirtyCount == EditorUtility.GetDirtyCount(m_Settings))
                 return;
 
             InitializeWithCurrentSettings();
         }
 
         /// <summary>
-        /// Grab <see cref="AppUI.settings"/> and set it up for editing.
+        /// Grab <see cref="AppUISettings"/> and set it up for editing.
         /// </summary>
         void InitializeWithCurrentSettings()
         {
@@ -200,7 +177,7 @@ namespace UnityEngine.Dt.App.Editor
             m_AvailableInputSettingsAssets = new List<string>(FindInputSettingsInProject());
 
             // See which is the active one.
-            m_Settings = AppUI.settings;
+            m_Settings = Core.AppUI.settings;
             m_SettingsDirtyCount = EditorUtility.GetDirtyCount(m_Settings);
             var currentSettingsPath = AssetDatabase.GetAssetPath(m_Settings);
             if (string.IsNullOrEmpty(currentSettingsPath))
@@ -209,7 +186,7 @@ namespace UnityEngine.Dt.App.Editor
                 {
                     m_CurrentSelectedInputSettingsAsset = 0;
                     m_Settings = AssetDatabase.LoadAssetAtPath<AppUISettings>(m_AvailableInputSettingsAssets[0]);
-                    AppUI.settings = m_Settings;
+                    Core.AppUI.settings = m_Settings;
                 }
             }
             else
@@ -238,8 +215,6 @@ namespace UnityEngine.Dt.App.Editor
                 // Ugly hack: GenericMenu interprets "/" as a submenu path. But luckily, "/" is not the only slash we have in Unicode.
                 m_AvailableSettingsAssetsOptions[i] = new GUIContent(name.Replace("/", "\u29f8"));
             }
-            
-            m_HelpIcon = EditorGUIUtility.IconContent("_Help");
 
             // Look up properties.
             m_SettingsObject = new SerializedObject(m_Settings);
@@ -278,13 +253,13 @@ namespace UnityEngine.Dt.App.Editor
             var guids = AssetDatabase.FindAssets("t:AppUISettings");
             
             var paths = new List<string>();
-            
+
             foreach (var guid in guids)
             {
                 var path = AssetDatabase.GUIDToAssetPath(guid);
                 paths.Add(path);
             }
-            
+
             return paths;
         }
 
@@ -303,8 +278,6 @@ namespace UnityEngine.Dt.App.Editor
         [NonSerialized] int m_CurrentSelectedInputSettingsAsset;
 
         [NonSerialized] GUIStyle m_NewAssetButtonStyle;
-        
-        GUIContent m_HelpIcon;
 
         GUIContent m_AutoScaleUIContent;
         GUIContent m_UseCustomEditorUpdateFrequencyContent;

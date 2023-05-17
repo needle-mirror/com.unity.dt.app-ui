@@ -1,18 +1,29 @@
 using System;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Sizing values for <see cref="Icon"/> elements.
     /// </summary>
     public enum IconSize
-    {       
+    {
+        /// <summary>
+        /// Extra extra small
+        /// </summary>
+        XXS,
+        
+        /// <summary>
+        /// Extra small
+        /// </summary>
+        XS,
+        
         /// <summary>
         /// Small
         /// </summary>
-        S = 1,
+        S,
 
         /// <summary>
         /// Medium
@@ -23,6 +34,42 @@ namespace UnityEngine.Dt.App.UI
         /// Large
         /// </summary>
         L
+    }
+
+    /// <summary>
+    /// Variant values for <see cref="Icon"/> elements.
+    /// </summary>
+    public enum IconVariant
+    {
+        /// <summary>
+        /// Regular
+        /// </summary>
+        Regular = 1,
+        
+        /// <summary>
+        /// Bold
+        /// </summary>
+        Bold,
+        
+        /// <summary>
+        /// DuoTone
+        /// </summary>
+        DuoTone,
+        
+        /// <summary>
+        /// Light
+        /// </summary>
+        Light,
+        
+        /// <summary>
+        /// Fill
+        /// </summary>
+        Fill,
+        
+        /// <summary>
+        /// Thin
+        /// </summary>
+        Thin
     }
 
     /// <summary>
@@ -48,6 +95,8 @@ namespace UnityEngine.Dt.App.UI
         string m_IconName;
 
         IconSize m_Size;
+
+        IconVariant m_Variant = IconVariant.Regular;
 
         /// <summary>
         /// Default constructor.
@@ -96,10 +145,28 @@ namespace UnityEngine.Dt.App.UI
             get => m_IconName;
             set
             {
+                RemoveFromClassList(ussClassName + "--" + m_IconName + "--" + m_Variant.ToString().ToLower());
                 RemoveFromClassList(ussClassName + "--" + m_IconName);
                 m_IconName = value;
+                AddToClassList(ussClassName + "--" + m_IconName + "--" + m_Variant.ToString().ToLower());
                 AddToClassList(ussClassName + "--" + m_IconName);
             }
+        }
+
+        /// <summary>
+        /// The variant of the Icon.
+        /// </summary>
+        public IconVariant variant
+        {
+            get => m_Variant;
+            set
+            {
+                RemoveFromClassList(ussClassName + "--" + m_IconName + "--" + m_Variant.ToString().ToLower());
+                RemoveFromClassList(ussClassName + "--" + m_IconName);
+                m_Variant = value;
+                AddToClassList(ussClassName + "--" + m_IconName + "--" + m_Variant.ToString().ToLower());
+                AddToClassList(ussClassName + "--" + m_IconName);
+            } 
         }
 
         /// <summary>
@@ -109,7 +176,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<Icon, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="Icon"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Icon"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {
@@ -129,6 +196,12 @@ namespace UnityEngine.Dt.App.UI
             {
                 name = "primary",
                 defaultValue = true,
+            };
+            
+            readonly UxmlEnumAttributeDescription<IconVariant> m_Variant = new UxmlEnumAttributeDescription<IconVariant>
+            {
+                name = "variant",
+                defaultValue = IconVariant.Regular,
             };
 
             readonly UxmlEnumAttributeDescription<IconSize> m_Size = new UxmlEnumAttributeDescription<IconSize>
@@ -152,6 +225,7 @@ namespace UnityEngine.Dt.App.UI
                 element.primary = m_Primary.GetValueFromBag(bag, cc);
                 element.size = m_Size.GetValueFromBag(bag, cc);
                 element.iconName = m_IconName.GetValueFromBag(bag, cc);
+                element.variant = m_Variant.GetValueFromBag(bag, cc);
                 element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
             }
         }

@@ -1,8 +1,9 @@
 using System;
 using System.Reflection;
+using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Manipulator which monitors Press, Hold and Release events in order to drag visuals.

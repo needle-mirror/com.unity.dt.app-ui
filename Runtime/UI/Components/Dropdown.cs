@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Dropdown UI element.
@@ -72,6 +72,13 @@ namespace UnityEngine.Dt.App.UI
 
         MenuBuilder m_MenuBuilder;
 
+        string m_DefaultMessage =
+#if UNITY_LOCALIZATION_PRESENT
+            "@AppUI:dropdownSelectMessage";
+#else 
+            "Select";
+#endif
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -134,6 +141,19 @@ namespace UnityEngine.Dt.App.UI
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
+            }
+        }
+
+        /// <summary>
+        /// The Dropdown default message when no item is selected.
+        /// </summary>
+        public string defaultMessage
+        {
+            get => m_DefaultMessage;
+            set
+            {
+                m_DefaultMessage = value;
+                RefreshUI();
             }
         }
 
@@ -214,18 +234,12 @@ namespace UnityEngine.Dt.App.UI
         {
             m_ValueSet = true;
             m_Value = newValue;
-            
-#if UNITY_LOCALIZATION_PRESENT
-            var selectText = "@AppUI:dropdownSelectMessage";
-#else
-            var selectText = "Select";
-#endif
 
             // Change dropdown UI
             if (m_Value >= 0 && m_Value < m_Items.Count)
                 m_Title.text = m_Items[m_Value].label;
             else
-                m_Title.text = selectText;
+                m_Title.text = m_DefaultMessage;
         }
 
         /// <summary>
@@ -327,7 +341,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<Dropdown, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="Dropdown"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Dropdown"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

@@ -10,7 +10,7 @@ The Icon UI component uses these USS classes to load the appropriate icon.
 
 ## Usage
 
-The [Icon](xref:UnityEngine.Dt.App.UI.Icon) UI component is used to display an icon.
+The [Icon](xref:Unity.AppUI.UI.Icon) UI component is used to display an icon.
 
 ```xml
 <Icon name="icon-name" />

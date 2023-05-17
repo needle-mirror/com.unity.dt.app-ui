@@ -1,13 +1,14 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace UnityEngine.Dt.App.Tests
+namespace Unity.AppUI.Tests
 {
     static class Utils
     {

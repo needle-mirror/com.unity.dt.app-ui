@@ -1,6 +1,6 @@
 using System;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// The sizing of UI components.
@@ -93,6 +93,11 @@ namespace UnityEngine.Dt.App.UI
         /// The styling class used to set a "hover" pseudo-state on a element.
         /// </summary>
         public const string hoveredUssClassName = "is-hovered";
+
+        /// <summary>
+        /// The styling class used to set an element's elevation.
+        /// </summary>
+        public const string elevationUssClassName = "unity-elevation-";
 
         /// <summary>
         /// The styling class used to set a ":last-child" pseudo-state on a element.

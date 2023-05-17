@@ -1,7 +1,8 @@
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace UnityEngine.Dt.App.Editor
+namespace Unity.AppUI.Editor
 {
     /// <summary>
     /// This class is used to add the App UI Shaders to the GraphicsSettings PreloadedShaders list.

@@ -1,4 +1,6 @@
-namespace UnityEngine.Dt.App.UI
+using UnityEngine;
+
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Extensions for the <see cref="KeyCode"/> enum.

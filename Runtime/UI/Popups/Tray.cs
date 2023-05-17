@@ -1,9 +1,10 @@
 using System;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// The position of the Tray.
@@ -63,7 +64,7 @@ namespace UnityEngine.Dt.App.UI
         /// Dismiss the <see cref="Popup"/>.
         /// </summary>
         /// <param name="reason">Why the element has been dismissed.</param>
-        /// <returns>True if the element has been dismissed, false otherwise.</returns>
+        /// <returns>True if the element has been dismissed.</returns>
         protected override bool ShouldDismiss(DismissType reason)
         {
             return true;

@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using NUnit.Framework;
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.UI;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.Tests.UI
+namespace Unity.AppUI.Tests.UI
 {
     [TestFixture]
     class NotifyValueChangingExtensionsTests
@@ -66,7 +66,7 @@ namespace UnityEngine.Dt.App.Tests.UI
         public void OneTimeTearDown()
         {
             if (m_TestUI)
-                Object.Destroy(m_TestUI.gameObject);
+                UnityEngine.Object.Destroy(m_TestUI.gameObject);
 
             m_TestUI = null;
         }

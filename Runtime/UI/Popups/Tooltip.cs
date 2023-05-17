@@ -1,9 +1,9 @@
 using System;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// The tooltip popup type.

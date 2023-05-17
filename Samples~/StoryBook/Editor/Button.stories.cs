@@ -1,7 +1,7 @@
 using System;
-using Button = UnityEngine.Dt.App.UI.Button;
+using Button = Unity.AppUI.UI.Button;
 
-namespace UnityEngine.Dt.App.Editor
+namespace Unity.AppUI.Editor
 {
     public class ButtonPage : StoryBookPage
     {

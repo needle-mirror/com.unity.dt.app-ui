@@ -2,11 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A SwipeViewItem is an item that must be used as a child of a <see cref="SwipeView"/>.
@@ -45,7 +46,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<SwipeViewItem, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="SwipeViewItem"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="SwipeViewItem"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {
@@ -126,7 +127,7 @@ namespace UnityEngine.Dt.App.UI
         /// The easing of the animation when snapping to an item.
         /// </summary>
         public Func<float, float> snapAnimationEasing { get; set; } = Easing.OutCubic;
-        
+
         /// <summary>
         /// The amount of pixels that must be swiped before the SwipeView begins to swipe.
         /// </summary>
@@ -875,7 +876,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<SwipeView, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="SwipeView"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="SwipeView"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

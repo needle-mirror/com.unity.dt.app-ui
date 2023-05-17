@@ -1,9 +1,10 @@
 using System;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// The animation used by Notification to appear and disappear.
@@ -63,12 +64,12 @@ namespace UnityEngine.Dt.App.UI
         /// <summary>
         /// Returns True if the bar is currently displayed on the screen, False otherwise.
         /// </summary>
-        public bool isShown => AppUI.notificationManager.IsCurrent(m_ManagerCallback);
+        public bool isShown => Core.AppUI.notificationManager.IsCurrent(m_ManagerCallback);
 
         /// <summary>
         /// Returns True if the bar is currently displayed or queued for display on the screen, False otherwise.
         /// </summary>
-        public bool isShownOrQueued => AppUI.notificationManager.IsCurrentOrNext(m_ManagerCallback);
+        public bool isShownOrQueued => Core.AppUI.notificationManager.IsCurrentOrNext(m_ManagerCallback);
 
         /// <summary>
         /// Returns the specified display duration of the bar.
@@ -151,27 +152,27 @@ namespace UnityEngine.Dt.App.UI
         /// <inheritdoc cref="Popup{T}.InvokeShownEventHandlers"/>
         protected override void InvokeShownEventHandlers()
         {
-            AppUI.notificationManager.OnShown(m_ManagerCallback);
+            Core.AppUI.notificationManager.OnShown(m_ManagerCallback);
             base.InvokeShownEventHandlers(); // invoke callbacks if any
         }
 
         /// <inheritdoc cref="Popup{T}.InvokeDismissedEventHandlers"/>
         protected override void InvokeDismissedEventHandlers(DismissType reason)
         {
-            AppUI.notificationManager.OnDismissed(m_ManagerCallback);
+            Core.AppUI.notificationManager.OnDismissed(m_ManagerCallback);
             base.InvokeDismissedEventHandlers(reason); // invoke callbacks if any
         }
 
         /// <inheritdoc cref="Popup.Dismiss(DismissType)"/>
         public override void Dismiss(DismissType reason)
         {
-            AppUI.notificationManager.Dismiss(m_ManagerCallback, reason);
+            Core.AppUI.notificationManager.Dismiss(m_ManagerCallback, reason);
         }
 
         /// <inheritdoc cref="Popup.Show"/>
         public override void Show()
         {
-            AppUI.notificationManager.Show(duration, m_ManagerCallback);
+            Core.AppUI.notificationManager.Show(duration, m_ManagerCallback);
         }
 
         /// <inheritdoc cref="Popup.FindSuitableParent"/>

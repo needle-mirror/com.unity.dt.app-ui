@@ -1,9 +1,10 @@
 using System;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A visual element that can be used to mask color.
@@ -233,7 +234,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<Mask, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="ExVisualElement"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ExVisualElement"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

@@ -1,7 +1,7 @@
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A SplitView is a container that displays two children at a time and provides a UI to
@@ -29,7 +29,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<SplitView, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="SplitView"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="SplitView"/>.
         /// </summary>
         public new class UxmlTraits : TwoPaneSplitView.UxmlTraits
         {

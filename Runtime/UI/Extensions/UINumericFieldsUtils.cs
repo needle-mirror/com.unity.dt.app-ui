@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Utility class for the numeric fields.
@@ -30,6 +30,7 @@ namespace UnityEngine.Dt.App.UI
                 value = double.NaN;
             else
                 return ExpressionEvaluator.Evaluate(str, out value);
+            
             return true;
         }
 

@@ -1,7 +1,6 @@
-using System.Reflection;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A Manipulator that adds a class to the target element when it is keyboard focused.
@@ -19,9 +18,7 @@ namespace UnityEngine.Dt.App.UI
         readonly EventCallback<FocusInEvent> m_OtherFocusInEventCallback;
 
         readonly EventCallback<FocusOutEvent> m_FocusedOutCallback;
-
-        static MethodInfo s_FocusNextInDirection;
-
+        
         /// <summary>
         /// Construct a KeyboardFocusController.
         /// </summary>

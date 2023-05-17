@@ -1,6 +1,7 @@
 using System;
+using UnityEngine;
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     /// <summary>
     /// The type of haptic feedback to trigger.
@@ -188,7 +189,7 @@ namespace UnityEngine.Dt.App.Core
 #elif UNITY_ANDROID && !UNITY_EDITOR
             AndroidAppUI.RunHapticFeedback(feedbackType);
 #else
-            if (Application.isEditor)
+            if (UnityEngine.Application.isEditor)
                 Debug.LogWarning("Haptic Feedbacks are not supported in the Editor.");
             else
                 Debug.LogWarning("Haptic Feedbacks are not supported on the current platform.");

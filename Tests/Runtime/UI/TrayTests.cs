@@ -1,12 +1,17 @@
 using NUnit.Framework;
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.UI;
 
-namespace UnityEngine.Dt.App.Tests.UI
+namespace Unity.AppUI.Tests.UI
 {
     [TestFixture]
     [TestOf(typeof(Tray))]
     class TrayTests : PopupTests<Tray>
     {
-
+        protected override Tray CreatePopup()
+        {
+            return Tray.Build(GetReferenceElement(), GetContentElement());
+        }
+        
+        protected override bool shouldContainView => false;
     }
 }

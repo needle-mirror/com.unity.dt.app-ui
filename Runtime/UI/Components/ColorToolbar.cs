@@ -1,7 +1,8 @@
 using System;
+using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A toolbar that contains a color swatch for the previous color, a color swatch for the current color, and an eye dropper button.

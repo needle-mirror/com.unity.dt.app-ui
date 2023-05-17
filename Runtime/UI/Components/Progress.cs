@@ -1,14 +1,13 @@
+using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A base class for all progress UI elements. This class is not meant to be used directly.
     /// </summary>
     public abstract class Progress : VisualElement, ISizeableElement
-    {
-        const int k_MessageUpdateProgressAnim = 93;
-        
+    {       
         static readonly Vertex[] k_Vertices = new Vertex[4];
         static readonly ushort[] k_Indices = { 0, 1, 2, 2, 3, 0 };
         
@@ -72,7 +71,7 @@ namespace UnityEngine.Dt.App.UI
         /// <summary>
         /// The image that contains the rendered texture of the progress.
         /// </summary>
-        protected readonly VisualElement m_Image;
+        protected readonly Image m_Image;
 
         /// <summary>
         /// The rendered texture of the progress.
@@ -223,7 +222,7 @@ namespace UnityEngine.Dt.App.UI
         }
 
         /// <summary>
-        /// The progress value.
+        /// The progress value (normalized).
         /// </summary>
         public float value
         {
@@ -236,7 +235,7 @@ namespace UnityEngine.Dt.App.UI
         }
 
         /// <summary>
-        /// The secondary progress (buffer) value.
+        /// The secondary progress (buffer) value (normalized).
         /// </summary>
         public float bufferValue
         {
@@ -275,7 +274,7 @@ namespace UnityEngine.Dt.App.UI
         protected virtual void GenerateTextures() { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="Progress"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Progress"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

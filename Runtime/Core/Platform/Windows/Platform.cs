@@ -2,8 +2,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using UnityEngine;
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     public static partial class Platform
     {

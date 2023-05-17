@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using NUnit.Framework;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
+using UnityEngine;
 
-namespace UnityEngine.Dt.App.Tests.Core
+namespace Unity.AppUI.Tests.Core
 {
     [TestFixture]
     [TestOf(typeof(NotificationManager))]
@@ -13,7 +14,7 @@ namespace UnityEngine.Dt.App.Tests.Core
     {
         UIDocument m_TestUI;
 
-        UnityEngine.Dt.App.UI.Panel m_Panel;
+        Unity.AppUI.UI.Panel m_Panel;
 
         NotificationManager m_Manager;
 
@@ -21,7 +22,7 @@ namespace UnityEngine.Dt.App.Tests.Core
         public void OneTimeSetup()
         {
             m_TestUI = Utils.ConstructTestUI();
-            m_Panel = new UnityEngine.Dt.App.UI.Panel();
+            m_Panel = new Unity.AppUI.UI.Panel();
             m_TestUI.rootVisualElement.Add(m_Panel);
         }
 
@@ -29,7 +30,7 @@ namespace UnityEngine.Dt.App.Tests.Core
         public void OneTimeTearDown()
         {
             if (m_TestUI)
-                Object.Destroy(m_TestUI.gameObject);
+                UnityEngine.Object.Destroy(m_TestUI.gameObject);
 
             m_TestUI = null;
         }
@@ -39,7 +40,7 @@ namespace UnityEngine.Dt.App.Tests.Core
         {
             Assert.IsNull(m_Manager);
             Assert.Throws<ArgumentNullException>(() => m_Manager = new NotificationManager(null));
-            Assert.DoesNotThrow(() => m_Manager = new NotificationManager(AppUI.s_Manager));
+            Assert.DoesNotThrow(() => m_Manager = new NotificationManager(Unity.AppUI.Core.AppUI.s_Manager));
             Assert.IsNotNull(m_Manager);
         }
 

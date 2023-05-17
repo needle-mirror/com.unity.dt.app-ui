@@ -1,8 +1,8 @@
 using System;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// The FullScreen mode used by a <see cref="Modal"/> component.

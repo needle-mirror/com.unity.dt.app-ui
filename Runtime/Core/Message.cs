@@ -1,6 +1,6 @@
 using System;
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     /// <summary>
     /// An object passed in a message queue.

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// The style used to display the Notification element.

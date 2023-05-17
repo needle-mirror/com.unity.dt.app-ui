@@ -1,8 +1,9 @@
 using System;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// By providing a type prop, you can specify the type of Dialog that is rendered by your DialogTrigger.
@@ -222,14 +223,14 @@ namespace UnityEngine.Dt.App.UI
             {
                 if (dlg == null && child is Dialog d)
                     dlg = d;
-                
+
                 if (ve == null && !(child is Dialog))
                     ve = child;
-                
+
                 if (dlg != null && ve != null)
                     break;
             }
-            
+
             if (dlg != null && dlg != dialog)
             {
                 // New Dialog attached as child
@@ -305,7 +306,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<DialogTrigger, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="DialogTrigger"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="DialogTrigger"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace UnityEngine.Dt.App.Tests.UI
+namespace Unity.AppUI.Tests.UI
 {
     [TestFixture]
     class DraggableElementTests

@@ -1,11 +1,12 @@
 using System.Collections;
 using NUnit.Framework;
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.UI;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.Tests.UI
+namespace Unity.AppUI.Tests.UI
 {
     class VisualElementTests<T>
         where T : VisualElement, new()
@@ -15,6 +16,8 @@ namespace UnityEngine.Dt.App.Tests.UI
         protected virtual string mainUssClassName => null;
 
         protected virtual bool uxmlConstructable => true;
+
+        protected virtual string uxmlPrefix => "appui";
 
         protected T element => m_VisualElement as T;
 
@@ -78,8 +81,8 @@ namespace UnityEngine.Dt.App.Tests.UI
 
             Assert.DoesNotThrow(() =>
             {
-                var msg = "<appui:" + typeof(T).Name + " />";
-                var content = "<ui:UXML xmlns:ui=\"UnityEngine.UIElements\" xmlns:appui=\"UnityEngine.Dt.App.UI\" >" + msg + "</ui:UXML>";
+                var msg = $"<{uxmlPrefix}:" + typeof(T).Name + " />";
+                var content = "<ui:UXML xmlns:ui=\"UnityEngine.UIElements\" xmlns:appui=\"Unity.AppUI.UI\" xmlns:nav=\"Unity.AppUI.Navigation\" >" + msg + "</ui:UXML>";
                 var asset = Utils.LoadUxmlTemplateFromString(content);
                 m_TestUI.visualTreeAsset = asset;
             });

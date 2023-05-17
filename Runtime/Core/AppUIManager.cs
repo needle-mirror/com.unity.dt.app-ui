@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.UI;
+using UnityEngine;
 using UnityEngine.UIElements;
 #if UNITY_INPUTSYSTEM_PRESENT
 using UnityEngine.InputSystem;
@@ -8,7 +9,7 @@ using UnityEngine.InputSystem.UI;
 using UnityEngine.EventSystems;
 #endif
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     /// <summary>
     /// The main manager for the AppUI system.
@@ -27,7 +28,7 @@ namespace UnityEngine.Dt.App.Core
         NotificationManager m_NotificationManager;
 
         internal AppUISettings defaultSettings { get; private set; }
-        
+
         /// <summary>
         /// The current settings.
         /// </summary>
@@ -87,21 +88,21 @@ namespace UnityEngine.Dt.App.Core
             m_Settings = newSettings;
             m_MainLooper = new Looper();
             m_NotificationManager = new NotificationManager(this);
-            
+
             m_MainLooper.Loop();
 
             ApplySettings();
             
 #if UNITY_INPUTSYSTEM_PRESENT && ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
-            InputSystem.InputSystem.onActionChange -= OnActionChange;
-            InputSystem.InputSystem.onActionChange += OnActionChange;
+            InputSystem.onActionChange -= OnActionChange;
+            InputSystem.onActionChange += OnActionChange;
 #endif
         }
-        
+
 #if UNITY_INPUTSYSTEM_PRESENT && ENABLE_INPUT_SYSTEM
-        
+
         Vector2 m_PointerPosition = Vector2.zero;
-        
+
         void OnActionChange(object arg1, InputActionChange arg2)
         {
             var module = EventSystem.current ? EventSystem.current.currentInputModule as InputSystemUIInputModule : null;
@@ -169,7 +170,7 @@ namespace UnityEngine.Dt.App.Core
 
             m_MainLooper.LoopOnce();
         }
-
+        
         void HandlePointerDown(Vector2 position)
         {
             // Reverse Y axis for UIElements

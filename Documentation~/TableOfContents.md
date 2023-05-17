@@ -1,6 +1,7 @@
 * Getting Started
   * [Overview](xref:overview)
   * [What's New](xref:whats-new)
+  * [Migration Guide](xref:migrate)
   * [System Requirements](xref:system-requirements)
   * [Installation And Setup](xref:setup)
   * [Using App UI](xref:using-app-ui)
@@ -12,9 +13,16 @@
   * [Iconography](xref:iconography)
   * [Context Provider](xref:contexts)
   * [Overlays](xref:overlays)
+  * [Navigation](xref:navigation)
   * [Localization](xref:localization)
   * [Accessibility](xref:accessibility)
   * [Native Integration](xref:native-integration)
+  * Application Architecture
+    * [Introduction](xref:mvvm-intro)
+    * [Observables](xref:mvvm-observable)
+    * [Commanding](xref:mvvm-command)
+    * [Dependency Injection](xref:mvvm-di)
+    * [State Management](xref:state-management)
 * Customization
   * [Theming](xref:theming)
   * [Styling](xref:styling)
@@ -23,5 +31,10 @@
 * Samples
   * [UI Kit](xref:ui-kit)
   * [Storybook](xref:storybook)
+  * [Navigation](xref:navigation-sample)
+  * [MVVM](xref:mvvm-sample)
+  * [Redux](xref:redux-sample)
+  * [MVVM with Redux](xref:mvvm-redux-sample)
+  * [Undo/Redo](xref:undo-redo-sample)
 * Help
   * [FAQ](xref:faq)

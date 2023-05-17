@@ -1,9 +1,9 @@
 using System;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Semantic values used for <see cref="AlertDialog"/> variants.
@@ -192,7 +192,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<AlertDialog, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="AlertDialog"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="AlertDialog"/>.
         /// </summary>
         public new class UxmlTraits : BaseDialog.UxmlTraits
         {

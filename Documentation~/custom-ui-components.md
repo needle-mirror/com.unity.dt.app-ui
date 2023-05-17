@@ -18,7 +18,7 @@ Here are some links that can help you get started:
 
 ### KeyboardFocusController
 
-The [KeyboardFocusController](xref:UnityEngine.Dt.App.UI.KeyboardFocusController) class is used to manage keyboard focus in App UI.
+The [KeyboardFocusController](xref:Unity.AppUI.UI.KeyboardFocusController) class is used to manage keyboard focus in App UI.
 With this manipulator you will be able to differentiate a focus triggered by a mouse click from a focus triggered by a keyboard event.
 
 ```csharp
@@ -36,7 +36,7 @@ public class MyCustomControl : VisualElement
 
 ### Pressable
 
-The [Pressable](xref:UnityEngine.Dt.App.UI.Pressable) 
+The [Pressable](xref:Unity.AppUI.UI.Pressable) 
 class is used to manage the pressing of an [actionable](xref:actions) 
 element.
 
@@ -62,9 +62,9 @@ public class MyCustomControl : VisualElement
 
 ### IDismissInvocator
 
-The [IDismissInvocator](xref:UnityEngine.Dt.App.UI.IDismissInvocator)
+The [IDismissInvocator](xref:Unity.AppUI.UI.IDismissInvocator)
 interface is used on [VisualElement](xref:UnityEngine.UIElements.VisualElement)
-that serves as content for a [Popup](xref:UnityEngine.Dt.App.UI.Popup).
+that serves as content for a [Popup](xref:Unity.AppUI.UI.Popup).
 
 Implementing this interface allows you to dismiss the popup from the 
 content of the popup itself.
@@ -95,7 +95,7 @@ public class MyCustomControl : VisualElement, IDismissInvocator
 
 ### ExVisualElement
 
-The [ExVisualElement](xref:UnityEngine.Dt.App.UI.ExVisualElement)
+The [ExVisualElement](xref:Unity.AppUI.UI.ExVisualElement)
 class is derived from [VisualElement](xref:UnityEngine.UIElements.VisualElement)
 and provides more styling options, such as the support of `box-shadow` and `outline`.
 
@@ -129,7 +129,7 @@ public class MyCustomControl : ExVisualElement
 ### LocalizedTextElement
 
 If you work with the [Unity Localization](https://docs.unity3d.com/Packages/com.unity.localization@1.4/manual/index.html)
-package, you can use the [LocalizedTextElement](xref:UnityEngine.Dt.App.UI.LocalizedTextElement)
+package, you can use the [LocalizedTextElement](xref:Unity.AppUI.UI.LocalizedTextElement)
 class to display localized text in your UI.
 
 More information about localization can be found in the [Localization](xref:localization) section.

@@ -1,9 +1,10 @@
 using System;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// AssetTarget Field UI element.
@@ -178,7 +179,7 @@ namespace UnityEngine.Dt.App.UI
 
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="AssetTargetField"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="AssetTargetField"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

@@ -1,13 +1,13 @@
 using System;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Numerical Field UI element.
     /// </summary>
-    /// <typeparam name="TValueType">The type of the value.</typeparam>
-    public abstract class NumericalField<TValueType> : ExVisualElement, IValidatableElement<TValueType>, ISizeableElement
+    /// <typeparam name="TValueType">The type of the numerical value.</typeparam>
+    public abstract class NumericalField<TValueType> : ExVisualElement, IValidatableElement<TValueType>, ISizeableElement, INotifyValueChanging<TValueType>
         where TValueType : struct, IComparable, IComparable<TValueType>, IFormattable
     {
         /// <summary>
@@ -48,7 +48,7 @@ namespace UnityEngine.Dt.App.UI
         /// <summary>
         /// The input element.
         /// </summary>
-        protected readonly UIElements.TextField m_InputElement;
+        protected readonly UnityEngine.UIElements.TextField m_InputElement;
 
         /// <summary>
         /// The size of the element.
@@ -71,6 +71,8 @@ namespace UnityEngine.Dt.App.UI
         protected TValueType m_Value;
 
         string m_FormatString;
+
+        string m_PreviousValue;
 
         /// <summary>
         /// The format string of the element.
@@ -105,7 +107,7 @@ namespace UnityEngine.Dt.App.UI
             m_TrailingContainer = new VisualElement { name = trailingContainerUssClassName, pickingMode = PickingMode.Ignore };
             m_TrailingContainer.AddToClassList(trailingContainerUssClassName);
 
-            m_InputElement = new UIElements.TextField { name = inputUssClassName, pickingMode = PickingMode.Ignore };
+            m_InputElement = new UnityEngine.UIElements.TextField { name = inputUssClassName, pickingMode = PickingMode.Ignore };
             m_InputElement.AddToClassList(inputUssClassName);
             m_InputElement.BlinkingCursor();
             m_UnitElement = new LocalizedTextElement { name = unitUssClassName, pickingMode = PickingMode.Ignore };
@@ -118,6 +120,32 @@ namespace UnityEngine.Dt.App.UI
             hierarchy.Add(m_TrailingContainer);
 
             m_InputElement.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
+            m_InputElement.RegisterValueChangedCallback(OnInputValueChanged);
+        }
+
+        void OnInputValueChanged(ChangeEvent<string> evt)
+        {
+            evt.PreventDefault();
+            evt.StopPropagation();
+            if (ParseStringToValue(evt.newValue, out var newValue))
+            {
+                if (lowValue.HasValue)
+                    newValue = Max(newValue, lowValue.Value);
+                if (highValue.HasValue)
+                    newValue = Min(newValue, highValue.Value);
+
+                var previousValue = m_Value;
+                m_Value = newValue;
+                
+                if (previousValue.CompareTo(m_Value) == 0)
+                    return;
+
+                using var changeEvent = ChangingEvent<TValueType>.GetPooled();
+                changeEvent.target = this;
+                changeEvent.previousValue = previousValue;
+                changeEvent.newValue = m_Value;
+                SendEvent(changeEvent);
+            }
         }
 
         /// <summary>
@@ -277,28 +305,28 @@ namespace UnityEngine.Dt.App.UI
         /// <summary>
         /// Return the smallest value between a and b.
         /// </summary>
-        /// <param name="a"> A value. </param>
-        /// <param name="b"> A value. </param>
-        /// <returns> The smallest value between a and b. </returns>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         protected abstract TValueType Min(TValueType a, TValueType b);
 
         /// <summary>
         /// Return the biggest value between a and b.
         /// </summary>
-        /// <param name="a"> A value. </param>
-        /// <param name="b"> A value. </param>
-        /// <returns> The biggest value between a and b. </returns>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         protected abstract TValueType Max(TValueType a, TValueType b);
 
         /// <summary>
         /// Calculate the increment factor based on a base value.
         /// </summary>
-        /// <param name="baseValue"> The base value. </param>
-        /// <returns> The increment factor. </returns>
+        /// <param name="baseValue"></param>
+        /// <returns></returns>
         protected abstract float GetIncrementFactor(TValueType baseValue);
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="NumericalField{TValueType}"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="NumericalField{TValueType}"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

@@ -4,6 +4,57 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2023-05-17
+
+### Fixed
+
+- Fixed warning messages about styling.
+- Fixed warning messages about GUID conflicts in UI Kit samples.
+- Fixed warning messages about unused events in NavController.
+
+## [0.3.0] - 2023-05-17
+
+### Added
+
+- Added defaultMessage property on Dropdown component.
+- Added ChangingEvent on TextField, TextArea and NumericalField components.
+- Added the AppBar navigation component.
+- Added the variant property on the Icon component.
+- Added the support of Phosphor Icons through the `com.unity.replica.phosphor-icons` package.
+- Added the BottomNavBar component.
+- Added the FAB component.
+- Added the DrawerHeader component.
+- Added the NavHost component.
+- Added a ListViewItem component.
+- Added the Navigation System under the `Unity.AppUI.Navigation` namespace (in its own **non auto-referenced assembly**).
+- Added the support of nested Navigation graphs.
+- Added the INavVisualController interface to control the content of the navigation components.
+- Added the NavController, core component of the navigation system.
+- Added a sample called Navigation to demonstrate the navigation system.
+- Added the support of Enum properties in the Storybook editor window.
+- Added ObservableObject class to implement the INotifyPropertyChanged interface.
+- Host and App interfaces to create MVVM apps based on specific hosts.
+- Added UITK implementations of the Host and App interfaces.
+- Added Dependency Injection support for MVVM Toolkit via constructor injection.
+- Added an implementation of a ServiceProvider for MVVM Toolkit.
+- Added an App Builder utility MonoBehaviour to create MVVM apps as Unity component in a scene.
+- Added RelayCommand and RelayCommand<T> classes to implement the ICommand interface.
+- Added AsyncRelayCommand and AsyncRelayCommand<T> classes to implement the ICommand interface.
+- Added a sample project to show how to use MVVM Toolkit with App UI.
+- Added the MVVM implementation under the `Unity.AppUI.MVVM` namespace (in its own **non auto-referenced assembly**).
+- Added a Redux implementation under the `Unity.AppUI.Redux` namespace (in its own **non auto-referenced assembly**).
+- Added the UndoRedo system under the `Unity.AppUI.Undo` namespace (in its own **non auto-referenced assembly**).
+
+### Changed
+
+- The namespaces used by the package **has changed** from `UnityEngine.Dt.AppUI` to `Unity.AppUI`. See the migration guide in the documentation for more information.
+- `Header` component is now named `Heading`. The old name is still supported but will be removed in a future release.
+- CircularProgress innerRadius property is now publicly accessible.
+- App UI main Looper instance is now publicly accessible.
+- Improved StackView logic to support the navigation system.
+- Refactored Avatar component, there are no more containers for notifications and icons.
+- Refactored Badge component.
+
 ## [0.2.11] - 2023-05-12
 
 ### Added
@@ -22,7 +73,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.2.9] - 2023-05-04
 
-### Changed
+### Changed 
 
 - Removed `Replica` word from the documentation.
 
@@ -33,6 +84,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added transition animations to sliders components.
 - Added a `swipeable` property to the `SwipeView` component to be able to disable swipe interaction.
 - Added `Preloader` component to the UI Kit sample.
+- Added `Link` component.
 - Added `Breadcrumbs` component to the UI Kit sample.
 - Added `Toolbar` component to the UI Kit sample.
 
@@ -44,7 +96,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated USS vars to use the new version of App UI Design Tokens.
 
-## [0.2.7] - 2023-04-27
+## [0.2.7] - 2023-04-24
 
 ### Added
 
@@ -109,7 +161,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed NullReferenceException in invalid AnchorPopup updates.
 
-## [0.2.1] - 2023-03-17
+## [0.2.1] - 2023-03-07
 
 ### Fixed
 
@@ -127,7 +179,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   The support has been done for Android, iOS, MacOS, and Windows.
 - Added support of the [Unity Localization package](https://docs.unity3d.com/Packages/com.unity.localization@1.4/manual/index.html).
   You can localize strings from the Application Context or use a
-  [LocalizedTextElement](xref:UnityEngine.Dt.App.UI.LocalizedTextElement) component to localize strings from the UI.
+  [LocalizedTextElement](xref:Unity.AppUI.UI.LocalizedTextElement) component to localize strings from the UI.
 - Added a global UI component property `preferred-tooltip-position` to set the default tooltip position.
   The property is available by code and UXML.
 - Added a App UI manager with a singleton pattern to manage the App UI configuration and lifecycle.
@@ -148,7 +200,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added a ColorPicker UI component to choose a color from a color wheel and a color slider.
 - Added a DoubleField UI component to define a double value.
 - Added a Drawer UI component to display additional content from the sides of the screen.
-- Added the support of `box-shadow` and `outline` using custom USS properties (see [ExVisualElement](xref:UnityEngine.Dt.App.UI.ExVisualElement)).
+- Added the support of `box-shadow` and `outline` using custom USS properties (see [ExVisualElement](xref:Unity.AppUI.UI.ExVisualElement)).
 - Added a IconButton UI component to display an icon button.
 - Added a LocalizedTextElement UI component to display a localized text.
   Most of the App UI components have been updated to use this component.
@@ -159,13 +211,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added a RectIntField UI component to define a two-dimensional rectangular area with integer values.
 - Added a TextArea UI component to display a scrollable text area.
 - Added the support of expression evaluation in numeric fields (see [ExpressionEvaluator](xref:UnityEditor.ExpressionEvaluator)).
-- Added an [ActionTriggered UITK event](xref:UnityEngine.Dt.App.UI.ActionTriggeredEvent) that can be triggered by Menu items.
+- Added an [ActionTriggered UITK event](xref:Unity.AppUI.UI.ActionTriggeredEvent) that can be triggered by Menu items.
 - Added a StackView UI component to display and animate a stack of items.
 - Added a SwipeView UI component to display a list of items that can be swiped in a direction.
 - Added a PageView UI component which is the combination of a SwipeView and a PageIndicator.
-- Added the [Submittable](xref:UnityEngine.Dt.App.UI.Submittable)
-  UI-Toolkit manipulator to handle the submission of Action UI elements via keyboard/mouse/pointer.
-- Added the [KeyboardFocusController](xref:UnityEngine.Dt.App.UI.KeyboardFocusController)
+- Added the `Submittable` UI-Toolkit manipulator to handle the submission of Action UI elements via keyboard/mouse/pointer.
+- Added the [KeyboardFocusController](xref:Unity.AppUI.UI.KeyboardFocusController)
   UI-Toolkit manipulator to differentiate the focus of a UI element from the keyboard or the pointer.
 - Added a MenuBuilder class to create a Menu from code.
 - Added the ability for Popover element to use a modal backdrop (Pointer events are blocked).
@@ -173,7 +224,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- The **Application** UI element is now called [Panel](xref:UnityEngine.Dt.App.UI.Panel).
+- The **Application** UI element is now called [Panel](xref:Unity.AppUI.UI.Panel).
 - Improved the Slider UI component to display the current value.
 - Improved the Tray UI element to be resizable.
 - Ability to use the Modal component with any content derived from [VisualElement](xref:UnityEngine.UIElements.VisualElement).

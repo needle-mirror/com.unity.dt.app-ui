@@ -1,9 +1,9 @@
 using System;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Base class for Dialogs (<see cref="Dialog"/>, <see cref="AlertDialog"/>, etc).
@@ -63,7 +63,7 @@ namespace UnityEngine.Dt.App.UI
         /// <summary>
         /// The Dialog header.
         /// </summary>
-        protected readonly Header m_Header;
+        protected readonly Heading m_Header;
 
         /// <summary>
         /// The Dialog heading.
@@ -81,7 +81,7 @@ namespace UnityEngine.Dt.App.UI
 
             m_Heading = new VisualElement { name = headingUssClassName };
             m_Heading.AddToClassList(headingUssClassName);
-            m_Header = new Header { name = headerUssClassName };
+            m_Header = new Heading { name = headerUssClassName };
             m_Header.AddToClassList(headerUssClassName);
             m_Divider = new Divider { name = dividerUssClassName };
             m_Divider.AddToClassList(dividerUssClassName);
@@ -165,7 +165,7 @@ namespace UnityEngine.Dt.App.UI
         }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="BaseDialog"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="BaseDialog"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {
@@ -267,7 +267,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<Dialog, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="Dialog"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Dialog"/>.
         /// </summary>
         public new class UxmlTraits : BaseDialog.UxmlTraits
         {

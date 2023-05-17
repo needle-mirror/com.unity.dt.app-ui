@@ -1,8 +1,9 @@
 using System;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// This is the base class for any UI component that needs to be displayed over the rest of the user interface.
@@ -53,7 +54,7 @@ namespace UnityEngine.Dt.App.UI
             get
             {
                 if (m_Handler == null)
-                    m_Handler = new Handler(AppUI.mainLooper, message =>
+                    m_Handler = new Handler(Core.AppUI.mainLooper, message =>
                     {
                         switch (message.what)
                         {

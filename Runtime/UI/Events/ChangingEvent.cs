@@ -2,7 +2,7 @@ using System;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Interface that must be implemented to UI components which can change their value progressively, like a <see cref="Slider"/>.

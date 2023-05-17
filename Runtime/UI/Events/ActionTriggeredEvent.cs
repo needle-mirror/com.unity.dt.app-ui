@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// An Action has been triggered.
@@ -23,7 +23,8 @@ namespace UnityEngine.Dt.App.UI
 
         void LocalInit()
         {
-            k_Propagation.SetValue(this, 1 | 2 | 4);
+            k_Propagation.SetValue(this,
+                (int)(EventPropagations.Bubbles | EventPropagations.TricklesDown | EventPropagations.Cancellable));
         }
 
         /// <summary>

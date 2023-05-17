@@ -30,3 +30,22 @@
     color: var(--appui-foregrounds-25);
     cursor: var(--appui-alias-control-cursor-disabled);
 }
+
+.unity-collection-view__item {
+    color: var(--appui-foregrounds-100);
+}
+
+.appui .unity-collection-view__item:hover {
+    background-color: var(--appui-color-transparent-black-100);
+    color: var(--appui-foregrounds-200);
+}
+
+.unity-collection-view__item--selected:enabled {
+    background-color: var(--appui-color-transparent-black-200);
+    color: var(--appui-foregrounds-200);
+}
+
+.unity-collection-view:focus .unity-collection-view__item--selected {
+    background-color: rgba(8, 146, 255, 0.42);
+    color: var(--appui-foregrounds-200);
+}

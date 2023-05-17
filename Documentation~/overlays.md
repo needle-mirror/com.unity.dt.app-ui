@@ -24,7 +24,7 @@ The following layers are defined by default:
 
 ## Overlay components
 
-The [Popup](xref:UnityEngine.Dt.App.UI.Popup) 
+The [Popup](xref:Unity.AppUI.UI.Popup) 
 class is the base class for all overlay components in App UI. 
 It provides the basic functionality for displaying and hiding an overlay.
 
@@ -51,7 +51,7 @@ var modal = Modal.Build(content)
 
 ### Popover
 
-The [Popover](xref:UnityEngine.Dt.App.UI.Popover) 
+The [Popover](xref:Unity.AppUI.UI.Popover) 
 class is a popup that is displayed next to a target element.
 It can display a small arrow pointing to this target.
 
@@ -62,11 +62,11 @@ However, you can configure the popover to display a backdrop that works as a mod
 
 > [!IMPORTANT]
 > On small screen devices, it is recommended to use 
-> a [Tray](xref:UnityEngine.Dt.App.UI.Tray) instead of a Popover in most cases.
+> a [Tray](xref:Unity.AppUI.UI.Tray) instead of a Popover in most cases.
 
 ### Modal
 
-The [Modal](xref:UnityEngine.Dt.App.UI.Modal)
+The [Modal](xref:Unity.AppUI.UI.Modal)
 class is a popup that is displayed as a modal dialog.
 It displays a backdrop that blocks the user from interacting with the rest of the UI.
 The dialog is positioned in the center of the screen. Its size is configurable,
@@ -77,9 +77,32 @@ that requires user interaction/decision.
 
 See [Dialogs](xref:layouts#dialogs) for more information.
 
+### Menu
+
+The [MenuBuilder](xref:Unity.AppUI.UI.MenuBuilder) 
+class is a popover that is displayed next to a target element. 
+It displays a list of MenuItems, and can be used to display a submenus.
+The MenuBuilder class is used to create a Menu via a fluent API:
+
+```cs
+MenuBuilder.Build(anchor)
+    .AddAction(123, "An Item", "info", evt => Debug.Log("Item clicked"))
+    .PushSubMenu(456, "My Sub Menu", "help")
+        .AddAction(789, "Sub Menu Item", "info", evt => Debug.Log("Sub Item clicked"))
+        .PushSubMenu(3455, "Another Sub Menu", "help")
+            .AddAction(7823129, "Another Sub Menu Item", "info", evt => Debug.Log("Other Item clicked"))
+        .Pop()
+    .Pop()
+    .Show();
+```
+
+> [!NOTE]
+> Menus are displayed as Popovers on small screen devices for the moment.
+> This will be changed in the future to display them as a Tray.
+
 ### Tray
 
-The [Tray](xref:UnityEngine.Dt.App.UI.Tray)
+The [Tray](xref:Unity.AppUI.UI.Tray)
 class is a popup that is displayed at the bottom of the screen.
 It displays a backdrop that blocks the user from interacting with the rest of the UI.
 The tray is positioned at the bottom of the screen, and its height is configurable.
@@ -98,7 +121,7 @@ For now, only Toasts are supported.
 
 #### Toast
 
-The [Toast](xref:UnityEngine.Dt.App.UI.Toast)
+The [Toast](xref:Unity.AppUI.UI.Toast)
 class is a popup that is displayed at the edge of the screen.
 A Toast that doesn't require user interaction/decision is displayed for a few seconds,
 and then automatically hides itself.
@@ -112,7 +135,7 @@ A Toast that requires user interaction/decision is displayed until the user inte
 
 ### Tooltip
 
-The [Tooltip](xref:UnityEngine.Dt.App.UI.Tooltip)
+The [Tooltip](xref:Unity.AppUI.UI.Tooltip)
 class is a popup that is displayed next to a target element.
 The tooltip doesn't require user interaction/decision,
 and is displayed as long as the target element is hovered.

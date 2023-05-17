@@ -89,6 +89,10 @@
     margin-right: var(--appui-alias-control-gap-md);
 }
 
+.appui-menuitem--active > .appui-menuitem__label {
+    color: var(--appui-foregrounds-200);
+}
+
 .appui-menuitem--selectable.is-selected > .appui-menuitem__label {
     color: var(--appui-foregrounds-100);
 }

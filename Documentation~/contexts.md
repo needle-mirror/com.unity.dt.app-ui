@@ -12,16 +12,16 @@ more focused units called contexts.
 
 ## ApplicationContext
 
-The [ApplicationContext](xref:UnityEngine.Dt.App.Core.ApplicationContext)
+The [ApplicationContext](xref:Unity.AppUI.Core.ApplicationContext)
 is a special context in App UI that provides access to some 
 global settings of the application, such as the current theme, language, and scale. 
 You can use these settings to customize the appearance and behavior of your UI, 
 depending on the user's preferences.
 
 You can access the scoped 
-[ApplicationContext](xref:UnityEngine.Dt.App.Core.ApplicationContext)
+[ApplicationContext](xref:Unity.AppUI.Core.ApplicationContext)
 for a given component by calling the method 
-[GetContext](xref:UnityEngine.Dt.App.UI.VisualElementExtensions).
+[GetContext](xref:Unity.AppUI.UI.VisualElementExtensions).
 
 ### Theme
 
@@ -55,21 +55,21 @@ and the UI will automatically adjust to the appropriate size.
 
 ### Panel
 
-You can retrieve the instance of the root [App UI Panel](xref:UnityEngine.Dt.App.UI.Panel)
+You can retrieve the instance of the root [App UI Panel](xref:Unity.AppUI.UI.Panel)
 from the application context. This is useful if you want to access the panel's
 properties or methods from a component that is not a direct child of the panel.
 
 ## ContextProvider
 
-The [ContextProvider](xref:UnityEngine.Dt.App.UI.ContextProvider) 
+The [ContextProvider](xref:Unity.AppUI.UI.ContextProvider) 
 is a component that allows you to create and manage your own contexts. 
 You can use it to encapsulate state and behavior into smaller,
 more focused units that can be reused across your application.
 
 ## App UI Panel - The root context provider
 
-The [App UI Panel](xref:UnityEngine.Dt.App.UI.Panel) is a special
-[ContextProvider](xref:UnityEngine.Dt.App.UI.ContextProvider) that is
+The [App UI Panel](xref:Unity.AppUI.UI.Panel) is a special
+[ContextProvider](xref:Unity.AppUI.UI.ContextProvider) that is
 must be added to the root of the UI. It provides access to the global 
-[ApplicationContext](xref:UnityEngine.Dt.App.Core.ApplicationContext)
+[ApplicationContext](xref:Unity.AppUI.Core.ApplicationContext)
 for this visual tree.

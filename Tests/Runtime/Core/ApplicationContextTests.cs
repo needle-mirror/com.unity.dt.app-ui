@@ -1,8 +1,8 @@
 using NUnit.Framework;
-using UnityEngine.Dt.App.Core;
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.Core;
+using Unity.AppUI.UI;
 
-namespace UnityEngine.Dt.App.Tests.Core
+namespace Unity.AppUI.Tests.Core
 {
     [TestFixture]
     [TestOf(typeof(ApplicationContext))]
@@ -11,7 +11,7 @@ namespace UnityEngine.Dt.App.Tests.Core
         [Test]
         public void ApplicationContext_Constructor_FromApplication_ShouldSucceed()
         {
-            var app = new UnityEngine.Dt.App.UI.Panel();
+            var app = new Panel();
             var ctx = new ApplicationContext(app);
 
             Assert.AreEqual(app.context, ctx);
@@ -24,7 +24,7 @@ namespace UnityEngine.Dt.App.Tests.Core
         [TestCase("de", "dark", "large")]
         public void ApplicationContext_Constructor_FromOverride_ShouldSucceed(string lang, string theme, string scale)
         {
-            var app = new UnityEngine.Dt.App.UI.Panel();
+            var app = new Panel();
             var ctx = new ApplicationContext(app);
 
             var provider = new ContextProvider { lang = lang, theme = theme, scale = scale };

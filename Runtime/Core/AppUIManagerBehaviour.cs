@@ -1,6 +1,7 @@
 using System;
+using UnityEngine;
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     /// <summary>
     /// A <see cref="MonoBehaviour"/> which is responsible for updating the AppUI system every frame.
@@ -13,7 +14,7 @@ namespace UnityEngine.Dt.App.Core
     {
         void Update()
         {
-            if (!Application.isEditor)
+            if (!UnityEngine.Application.isEditor)
             {
                 AppUI.EnsureInitialized();
                 AppUI.Update();

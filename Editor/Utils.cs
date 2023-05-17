@@ -1,6 +1,7 @@
 using UnityEditor;
+using UnityEngine;
 
-namespace UnityEngine.Dt.App.Editor
+namespace Unity.AppUI.Editor
 {
     static class Utils
     {

@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Dt.App.Core;
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.Core;
+using Unity.AppUI.UI;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
-using Button = UnityEngine.Dt.App.UI.Button;
-using Toggle = UnityEngine.Dt.App.UI.Toggle;
-using Dropdown = UnityEngine.Dt.App.UI.Dropdown;
+using Button = Unity.AppUI.UI.Button;
+using Toggle = Unity.AppUI.UI.Toggle;
+using Dropdown = Unity.AppUI.UI.Dropdown;
 
-namespace UnityEngine.Dt.App.Samples
+namespace Unity.AppUI.Samples
 {
     public class Examples : MonoBehaviour
     {
@@ -179,7 +179,7 @@ namespace UnityEngine.Dt.App.Samples
                 .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Negative, NotificationDuration.Indefinite, AnimationMode.Slide, evt.target as VisualElement));
 
             var dropdownSrc = new List<string>();
-            
+
             for (var i = 1; i <= 100; i++)
             {
                 dropdownSrc.Add($"Choice {i}");
@@ -195,7 +195,7 @@ namespace UnityEngine.Dt.App.Samples
             dropdown2.sourceItems = dropdownSrc;
             dropdown2.SetValueWithoutNotify(1);
 
-            root.Q<UI.Avatar>("avatar-with-picture").backgroundImage = new StyleBackground(Resources.Load<Texture2D>("example-avatar-pic"));
+            root.Q<UI.Avatar>("avatar-with-picture").src = Resources.Load<Texture2D>("example-avatar-pic");
 
             root.Q<ColorSlider>("rainbow-slider").colorRange = new List<ColorEntry>
             {
@@ -248,13 +248,37 @@ namespace UnityEngine.Dt.App.Samples
                         break;
                 }
             });
+            
+            var badge1 = root.Q<Badge>("badge-1");
+            var badge2 = root.Q<Badge>("badge-2");
+            var badge3 = root.Q<Badge>("badge-3");
+            var badge4 = root.Q<Badge>("badge-4");
+
+            var hAnchorBadge = root.Q<RadioGroup>("h-anchor-badge");
+            hAnchorBadge.RegisterValueChangedCallback(evt =>
+            {
+                badge1.horizontalAnchor = (HorizontalAnchor)evt.newValue;
+                badge2.horizontalAnchor = (HorizontalAnchor)evt.newValue;
+                badge3.horizontalAnchor = (HorizontalAnchor)evt.newValue;
+                badge4.horizontalAnchor = (HorizontalAnchor)evt.newValue;
+            });
+            hAnchorBadge.value = (int)HorizontalAnchor.Right;
+            var vAnchorBadge = root.Q<RadioGroup>("v-anchor-badge");
+            vAnchorBadge.RegisterValueChangedCallback(evt =>
+            {
+                badge1.verticalAnchor = (VerticalAnchor)evt.newValue;
+                badge2.verticalAnchor = (VerticalAnchor)evt.newValue;
+                badge3.verticalAnchor = (VerticalAnchor)evt.newValue;
+                badge4.verticalAnchor = (VerticalAnchor)evt.newValue;
+            });
+            vAnchorBadge.value = (int)VerticalAnchor.Top;
 
             var swipeViewH = root.Q<SwipeView>("swipeview-horizontal");
             var swipePrevButtonH = root.Q<ActionButton>("swipeview-h-prev");
             var swipeNextButtonH = root.Q<ActionButton>("swipeview-h-next");
             var swipeFiveButtonH = root.Q<ActionButton>("swipeview-h-five");
             var swipeFiveSnapButtonH = root.Q<ActionButton>("swipeview-h-five-snap");
-            
+
             swipePrevButtonH.SetEnabled(swipeViewH.canGoToPrevious);
 
             swipeViewH.RegisterValueChangedCallback(evt =>
@@ -268,7 +292,8 @@ namespace UnityEngine.Dt.App.Samples
                 swipeViewH.GoToNext());
             swipeFiveButtonH.RegisterCallback<ClickEvent>(evt => swipeViewH.GoTo(4));
             swipeFiveSnapButtonH.RegisterCallback<ClickEvent>(evt => swipeViewH.SnapTo(4));
-            
+
+
             var swipeViewHW = root.Q<SwipeView>("swipeview-horizontal-wrap");
             var swipePrevButtonHW = root.Q<ActionButton>("swipeview-hw-prev");
             var swipeNextButtonHW = root.Q<ActionButton>("swipeview-hw-next");

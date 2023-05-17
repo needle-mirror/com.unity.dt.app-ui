@@ -15,8 +15,8 @@ Boolean inputs are used to get a boolean value from the user, typically through 
 ![Toggle](images/toggle.png)
 </p>
 
-In App UI, you can use the [Checkbox](xref:UnityEngine.Dt.App.UI.Checkbox) element to create a checkbox, 
-and the [Toggle](xref:UnityEngine.Dt.App.UI.Toggle) element to create a toggle.
+In App UI, you can use the [Checkbox](xref:Unity.AppUI.UI.Checkbox) element to create a checkbox, 
+and the [Toggle](xref:Unity.AppUI.UI.Toggle) element to create a toggle.
 
 ## Selection Inputs
 
@@ -26,8 +26,8 @@ Selection inputs are used to get a value from a list of pre-defined values.
 ![Dropdown](images/dropdown.png)
 </p>
 
-In App UI, you can use the [Dropdown](xref:UnityEngine.Dt.App.UI.Dropdown) element to create a dropdown list, 
-and the [RadioGroup](xref:UnityEngine.Dt.App.UI.RadioGroup) element to create a radio button group.
+In App UI, you can use the [Dropdown](xref:Unity.AppUI.UI.Dropdown) element to create a dropdown list, 
+and the [RadioGroup](xref:Unity.AppUI.UI.RadioGroup) element to create a radio button group.
 
 ## Color Inputs
 
@@ -46,8 +46,8 @@ Text inputs are used for entering text values.
 ![Text Field](images/text-field.png)
 </p>
 
-In App UI, you can use the [TextField](xref:UnityEngine.Dt.App.UI.TextField) element to create a text field,
-and the [TextArea](xref:UnityEngine.Dt.App.UI.TextArea) element to create a text area.
+In App UI, you can use the [TextField](xref:Unity.AppUI.UI.TextField) element to create a text field,
+and the [TextArea](xref:Unity.AppUI.UI.TextArea) element to create a text area.
 
 ## Numeric Inputs
 
@@ -63,10 +63,10 @@ Slider inputs are used for selecting a value from a range of values.
 ![Slider](images/slider.png)
 </p>
 
-In App UI, you can use the [SliderFloat](xref:UnityEngine.Dt.App.UI.SliderFloat) element to create a slider.
-You can also use the [SliderInt](xref:UnityEngine.Dt.App.UI.SliderInt) element to create a slider with integer values.
-For touch devices, you can use the [TouchSliderFloat](xref:UnityEngine.Dt.App.UI.TouchSliderFloat) element to create a slider.
-You can also use the [TouchSliderInt](xref:UnityEngine.Dt.App.UI.TouchSliderInt) element to create a slider with integer values.
+In App UI, you can use the [SliderFloat](xref:Unity.AppUI.UI.SliderFloat) element to create a slider.
+You can also use the [SliderInt](xref:Unity.AppUI.UI.SliderInt) element to create a slider with integer values.
+For touch devices, you can use the [TouchSliderFloat](xref:Unity.AppUI.UI.TouchSliderFloat) element to create a slider.
+You can also use the [TouchSliderInt](xref:Unity.AppUI.UI.TouchSliderInt) element to create a slider with integer values.
 
 ### Numerical Fields
 

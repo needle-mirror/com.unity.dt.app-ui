@@ -1,6 +1,6 @@
 using System;
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     /// <summary>
     /// An ActionItem provides meta information about a specific Action.

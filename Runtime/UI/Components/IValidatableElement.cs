@@ -1,7 +1,7 @@
 using System;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Interface used on UI elements which handle value validation.

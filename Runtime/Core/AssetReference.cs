@@ -1,6 +1,6 @@
 using System;
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     /// <summary>
     /// A object representing an asset for the AssetTargetField.

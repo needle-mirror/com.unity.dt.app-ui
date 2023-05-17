@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// ActionBar UI element.
@@ -177,7 +177,6 @@ namespace UnityEngine.Dt.App.UI
             {
                 selectionCount++;
             }
-            
             var checkboxValue = CheckboxState.Unchecked;
             if (selectionCount > 0)
             {
@@ -211,7 +210,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<ActionBar, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="ActionBar"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ActionBar"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

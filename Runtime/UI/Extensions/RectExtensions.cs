@@ -1,4 +1,6 @@
-namespace UnityEngine.Dt.App.UI
+using UnityEngine;
+
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Extension methods for the <see cref="Rect"/> class.

@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Direction of a UI container. This is used on <see cref="Tabs"/> UI elements for example.
@@ -140,7 +141,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<TabItem, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="TabItem"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TabItem"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {
@@ -569,7 +570,7 @@ namespace UnityEngine.Dt.App.UI
         }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="Tabs"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Tabs"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

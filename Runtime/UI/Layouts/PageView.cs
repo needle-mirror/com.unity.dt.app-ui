@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A PageView is a container that displays a single child at a time and provides a UI to
@@ -138,7 +138,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<PageView, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="PageView"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="PageView"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

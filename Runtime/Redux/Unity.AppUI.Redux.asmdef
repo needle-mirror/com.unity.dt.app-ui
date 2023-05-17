@@ -1,0 +1,14 @@
+{
+    "name": "Unity.AppUI.Redux",
+    "rootNamespace": "Unity.AppUI.Redux",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -2,9 +2,9 @@ using System.Collections;
 using NUnit.Framework;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
-using Clickable = UnityEngine.Dt.App.UI.Clickable;
+using Clickable = Unity.AppUI.UI.Clickable;
 
-namespace UnityEngine.Dt.App.Tests.UI
+namespace Unity.AppUI.Tests.UI
 {
     [TestFixture]
     class ClickableTests

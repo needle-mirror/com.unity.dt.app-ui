@@ -1,6 +1,6 @@
 using System;
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     /// <summary>
     /// Every possible reason why a Notification element can be dismissed.

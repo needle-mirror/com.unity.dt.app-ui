@@ -1,8 +1,9 @@
 using System;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Color Field UI element.
@@ -124,10 +125,13 @@ namespace UnityEngine.Dt.App.UI
                 {
                     RemoveFromClassList(Styles.focusedUssClassName);
                     m_Picker.UnregisterValueChangedCallback(OnPickerValueChanged);
-                    using var evt = ChangeEvent<Color>.GetPooled(m_PreviousValue, m_Picker.value);
-                    SetValueWithoutNotify(m_Picker.value);
-                    evt.target = this;
-                    SendEvent(evt);
+                    if (m_PreviousValue != m_Picker.value)
+                    {
+                        using var evt = ChangeEvent<Color>.GetPooled(m_PreviousValue, m_Picker.value);
+                        SetValueWithoutNotify(m_Picker.value);
+                        evt.target = this;
+                        SendEvent(evt);
+                    }
                     Focus();
                 };
                 popover.Show();
@@ -245,6 +249,7 @@ namespace UnityEngine.Dt.App.UI
             {
                 if (m_Value == value)
                     return;
+                
                 using var evt = ChangeEvent<Color>.GetPooled(m_Value, value);
                 evt.target = this;
                 SetValueWithoutNotify(value);
@@ -259,7 +264,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<ColorField, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="ColorField"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ColorField"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

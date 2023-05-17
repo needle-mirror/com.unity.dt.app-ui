@@ -1,8 +1,9 @@
 using System;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Possible placements for a Popover.
@@ -10,118 +11,118 @@ namespace UnityEngine.Dt.App.UI
     public enum PopoverPlacement
     {
         /// <summary>
-        /// Bottom placement.
+        /// The Popover will be placed at the bottom center of the target.
         /// </summary>
         Bottom,
 
         /// <summary>
-        /// Bottom left placement.
+        /// The Popover will be placed at the bottom-left of the target.
         /// </summary>
         BottomLeft,
-    
+
         /// <summary>
-        /// Bottom right placement.
+        /// The Popover will be placed at the bottom-right of the target.
         /// </summary>
         BottomRight,
 
         /// <summary>
-        /// Bottom start placement.
+        /// The Popover will be placed at the bottom-start of the target.
         /// </summary>
         BottomStart,
 
         /// <summary>
-        /// Bottom end placement.
+        /// The Popover will be placed at the bottom-end of the target.
         /// </summary>
         BottomEnd,
 
         /// <summary>
-        /// Top placement.
+        /// The Popover will be placed at the top center of the target.
         /// </summary>
         Top,
 
         /// <summary>
-        /// Top left placement.
+        /// The Popover will be placed at the top-left of the target.
         /// </summary>
         TopLeft,
 
         /// <summary>
-        /// Top right placement.
+        /// The Popover will be placed at the top-right of the target.
         /// </summary>
         TopRight,
 
         /// <summary>
-        /// Top start placement.
+        /// The Popover will be placed at the top-start of the target.
         /// </summary>
         TopStart,
 
         /// <summary>
-        /// Top end placement.
+        /// The Popover will be placed at the top-end of the target.
         /// </summary>
         TopEnd,
 
         /// <summary>
-        /// Left placement.
+        /// The Popover will be placed at the left center of the target.
         /// </summary>
         Left,
 
         /// <summary>
-        /// Left top placement.
+        /// The Popover will be placed at the left-top of the target.
         /// </summary>
         LeftTop,
 
         /// <summary>
-        /// Left bottom placement.
+        /// The Popover will be placed at the left-bottom of the target.
         /// </summary>
         LeftBottom,
 
         /// <summary>
-        /// Start placement.
+        /// The Popover will be placed at the start center of the target.
         /// </summary>
         Start,
 
         /// <summary>
-        /// Start top placement.
+        /// The Popover will be placed at the start-top of the target.
         /// </summary>
         StartTop,
 
         /// <summary>
-        /// Start bottom placement.
+        /// The Popover will be placed at the start-bottom of the target.
         /// </summary>
         StartBottom,
 
         /// <summary>
-        /// Right placement.
+        /// The Popover will be placed at the right center of the target.
         /// </summary>
         Right,
 
         /// <summary>
-        /// Right top placement.
+        /// The Popover will be placed at the right-top of the target.
         /// </summary>
         RightTop,
 
         /// <summary>
-        /// Right bottom placement.
+        /// The Popover will be placed at the right-bottom of the target.
         /// </summary>
         RightBottom,
 
         /// <summary>
-        /// End placement.
+        /// The Popover will be placed at the end center of the target.
         /// </summary>
         End,
 
         /// <summary>
-        /// End top placement.
+        /// The Popover will be placed at the end-top of the target.
         /// </summary>
         EndTop,
 
         /// <summary>
-        /// End bottom placement.
+        /// The Popover will be placed at the end-bottom of the target.
         /// </summary>
         EndBottom,
     }
 
     /// <summary>
-    /// The position result data structure returned in <see cref="AnchorPopup{T}.ComputePosition"/> utility method.
+    /// The position result data structure returned in <see cref="AnchorPopupUtils.ComputePosition"/> utility method.
     /// </summary>
     public struct PositionResult
     {
@@ -169,6 +170,54 @@ namespace UnityEngine.Dt.App.UI
         /// The USS bottom value for the tip element.
         /// </summary>
         public float tipBottom { get; set; }
+    }
+
+    /// <summary>
+    /// Options to pass as argument to <see cref="AnchorPopupUtils.ComputePosition"/> utility method.
+    /// </summary>
+    public struct PositionOptions
+    {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="preferredPlacement"> The preferred placement for the popover.</param>
+        /// <param name="offset"> The offset from the anchor element.</param>
+        /// <param name="crossOffset"> The cross offset from the anchor element.</param>
+        /// <param name="shouldFlip"> Whether the popover should flip if it doesn't fit in the viewport.</param>
+        /// <param name="crossSnap"> Whether the popover should snap not to go outside the viewport.</param>
+        public PositionOptions(PopoverPlacement preferredPlacement = PopoverPlacement.Top, int offset = 0, int crossOffset = 0, bool shouldFlip = true, bool crossSnap = true)
+        {
+            favoritePlacement = preferredPlacement;
+            this.offset = offset;
+            this.crossOffset = crossOffset;
+            this.shouldFlip = shouldFlip;
+            this.crossSnap = crossSnap;
+        }
+
+        /// <summary>
+        /// The preferred placement for the popover.
+        /// </summary>
+        public PopoverPlacement favoritePlacement { get; set; }
+        
+        /// <summary>
+        /// The offset from the anchor element.
+        /// </summary>
+        public int offset { get; set; }
+        
+        /// <summary>
+        /// The cross offset from the anchor element.
+        /// </summary>
+        public int crossOffset { get; set; }
+        
+        /// <summary>
+        /// Whether the popover should flip if it doesn't fit in the viewport.
+        /// </summary>
+        public bool shouldFlip { get; set; }
+        
+        /// <summary>
+        /// Whether the popover should snap not to go outside the viewport.
+        /// </summary>
+        public bool crossSnap { get; set; }
     }
 
     /// <summary>

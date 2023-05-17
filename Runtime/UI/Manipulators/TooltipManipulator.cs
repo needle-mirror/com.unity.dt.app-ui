@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Manipulator used to display a Tooltip UI component anchored to the currently hovered UI element.
@@ -23,13 +23,13 @@ namespace UnityEngine.Dt.App.UI
             m_ScheduledItem = target.schedule.Execute(StartFadeIn);
             m_ScheduledItem.Pause();
             target.RegisterCallback<PointerMoveEvent>(OnPointerMoved);
-            target.RegisterCallback<PointerDownEvent>(OnClick, TrickleDown.TrickleDown);
+            target.panel.visualTree.RegisterCallback<PointerDownEvent>(OnClick, TrickleDown.TrickleDown);
         }
 
         protected override void UnregisterCallbacksFromTarget()
         {
             target.UnregisterCallback<PointerMoveEvent>(OnPointerMoved);
-            target.UnregisterCallback<PointerDownEvent>(OnClick, TrickleDown.TrickleDown);
+            target.panel.visualTree.UnregisterCallback<PointerDownEvent>(OnClick, TrickleDown.TrickleDown);
         }
 
         void OnClick(PointerDownEvent evt)

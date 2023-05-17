@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using NUnit.Framework;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.Tests.Core
+namespace Unity.AppUI.Tests.Core
 {
     [TestFixture]
     [TestOf(typeof(Handler))]
@@ -27,7 +27,7 @@ namespace UnityEngine.Dt.App.Tests.Core
             m_Looper?.Quit();
 
             if (m_TestUI)
-                Object.Destroy(m_TestUI.gameObject);
+                UnityEngine.Object.Destroy(m_TestUI.gameObject);
 
             m_TestUI = null;
         }

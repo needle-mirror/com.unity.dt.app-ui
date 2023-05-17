@@ -1,12 +1,12 @@
 using NUnit.Framework;
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.UI;
 
-namespace UnityEngine.Dt.App.Tests.UI
+namespace Unity.AppUI.Tests.UI
 {
     [TestFixture]
-    [TestOf(typeof(App.UI.Avatar))]
-    class AvatarTests : VisualElementTests<App.UI.Avatar>
+    [TestOf(typeof(Avatar))]
+    class AvatarTests : VisualElementTests<Avatar>
     {
-        protected override string mainUssClassName => App.UI.Avatar.ussClassName;
+        protected override string mainUssClassName => Avatar.ussClassName;
     }
 }

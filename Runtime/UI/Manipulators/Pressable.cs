@@ -2,10 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Pressable Manipulator, used on <see cref="UnityEngine.UIElements.Button"/> elements.
+    /// Pressable Manipulator, used on <see cref="Button"/> elements.
     /// </summary>
     public class Pressable : Manipulator
     {

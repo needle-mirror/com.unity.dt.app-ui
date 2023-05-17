@@ -1,7 +1,7 @@
 using System.Reflection;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Extension methods for FocusController.

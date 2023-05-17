@@ -1,8 +1,9 @@
 using System;
 using System.Reflection;
+using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     [Flags]
     enum PseudoStates
@@ -24,7 +25,7 @@ namespace UnityEngine.Dt.App.UI
     /// <summary>
     /// Clickable Manipulator, used on <see cref="Button"/> elements.
     /// </summary>
-    public class Clickable : UIElements.Clickable
+    public class Clickable : UnityEngine.UIElements.Clickable
     {
         internal static readonly PropertyInfo pseudoStateProperty =
             typeof(VisualElement).GetProperty("pseudoStates", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -65,9 +66,9 @@ namespace UnityEngine.Dt.App.UI
         /// <param name="localPosition"> The local position of the pointer.</param>
         protected override void ProcessMoveEvent(EventBase evt, Vector2 localPosition)
         {
-            //evt.StopPropagation();
+            evt.StopPropagation();
         }
-
+        
         /// <summary>
         /// Invoke the click event.
         /// </summary>

@@ -1,4 +1,6 @@
-namespace UnityEngine.Dt.App.Core
+using UnityEngine;
+
+namespace Unity.AppUI.Core
 {
     /// <summary>
     /// The settings for the App UI system.

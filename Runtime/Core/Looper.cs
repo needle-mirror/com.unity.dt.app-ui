@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Concurrent;
+using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     /// <summary>
     /// An object that contains its own message queue and its own running loop for dequeuing messages to pass

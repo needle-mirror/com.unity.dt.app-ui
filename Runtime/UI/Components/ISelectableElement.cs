@@ -1,6 +1,6 @@
 using System;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Interface used on UI elements which handle a *selected* state.

@@ -1,0 +1,26 @@
+{
+    "name": "Unity.AppUI.Editor",
+    "rootNamespace": "Unity.AppUI.Editor",
+    "references": [
+        "GUID:343deaaf83e0cee4ca978e7df0b80d21",
+        "GUID:2bafac87e7f4b9b418d9448d219b01ab",
+        "Unity.AppUI"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "Unity",
+            "expression": "2022.2.0a9",
+            "define": "UNITY_2022_2_SIC"
+        }
+    ],
+    "noEngineReferences": false
+}

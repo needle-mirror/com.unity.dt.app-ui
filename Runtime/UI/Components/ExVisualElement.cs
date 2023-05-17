@@ -1,9 +1,10 @@
 using System;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Styling properties that can be applied to a <see cref="ExVisualElement"/>.
@@ -528,7 +529,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<ExVisualElement, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="ExVisualElement"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ExVisualElement"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits { }
     }

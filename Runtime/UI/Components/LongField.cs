@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A <see cref="NumericalField{T}"/> that only accepts long values.
@@ -70,7 +70,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<LongField, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="LongField"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="LongField"/>.
         /// </summary>
         public new class UxmlTraits : NumericalField<long>.UxmlTraits { }
     }

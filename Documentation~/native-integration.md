@@ -17,24 +17,24 @@ Thanks to the [Screen](xref:UnityEngine.Screen) class from Unity, you can get in
 However we found that the relationship between the [dpi](xref:UnityEngine.Screen.dpi) and 
 the [UI Toolkit PanelSettings](xref:UnityEngine.UIElements.PanelSettings) is different from a platform to another.
 
-We provide a [mainScreenScale](xref:UnityEngine.Dt.App.Core.Platform.mainScreenScale) property which gives an accurate scale factor
+We provide a [mainScreenScale](xref:Unity.AppUI.Core.Platform.mainScreenScale) property which gives an accurate scale factor
 that takes into account the dpi of the screen but also user-defined display scaling from the operating system.
 
 When you enable the [Auto Scale Mode](xref:setup#app-ui-settings-file) on the UI Toolkit PanelSettings,
-the UI elements will be scaled according to the [referenceDpi](xref:UnityEngine.Dt.App.Core.Platform.referenceDpi) value which is calculated
-using the [mainScreenScale](xref:UnityEngine.Dt.App.Core.Platform.mainScreenScale) property.
+the UI elements will be scaled according to the [referenceDpi](xref:Unity.AppUI.Core.Platform.referenceDpi) value which is calculated
+using the [mainScreenScale](xref:Unity.AppUI.Core.Platform.mainScreenScale) property.
 
 ## System Theme
 
-App UI provides a [systemTheme](xref:UnityEngine.Dt.App.Core.Platform.systemTheme) property that allows you to get the current system theme.
-We also provide a [systemThemeChanged](xref:UnityEngine.Dt.App.Core.Platform.systemThemeChanged) event that you can subscribe to in order to be notified
+App UI provides a [systemTheme](xref:Unity.AppUI.Core.Platform.systemTheme) property that allows you to get the current system theme.
+We also provide a [systemThemeChanged](xref:Unity.AppUI.Core.Platform.systemThemeChanged) event that you can subscribe to in order to be notified
 when the system theme changes.
 
 It is common to see apps that let the user choose between a light and a dark theme, or stick to the system theme.
-You can offer the same feature by using the [systemTheme](xref:UnityEngine.Dt.App.Core.Platform.systemTheme) property.
+You can offer the same feature by using the [systemTheme](xref:Unity.AppUI.Core.Platform.systemTheme) property.
 
-Here is an example using the [systemTheme](xref:UnityEngine.Dt.App.Core.Platform.systemTheme) property
-inside a [RadioGroup](xref:UnityEngine.Dt.App.UI.RadioGroup):
+Here is an example using the [systemTheme](xref:Unity.AppUI.Core.Platform.systemTheme) property
+inside a [RadioGroup](xref:Unity.AppUI.UI.RadioGroup):
 
 ```csharp
 // Get the closest provider, assuming you call this method from a UI Toolkit element
@@ -74,7 +74,7 @@ To know more about theming, see [the dedicated documentation page](xref:theming)
 
 ## Haptic Feedback
 
-App UI provides a [RunHapticFeedback](xref:UnityEngine.Dt.App.Core.Platform)
+App UI provides a [RunHapticFeedback](xref:Unity.AppUI.Core.Platform)
 method that allows you to trigger haptic feedback on supported platforms.
 For now, the only supported platforms are iOS and Android.
 

@@ -29,7 +29,7 @@ To open the sample, in your Project panel go to
 The folder contains 3 different scenes:
 * **UI Kit** - This scene contains all the UI components and features of the package.
 * **UI Kit WS** - This is the same scene as the **UI Kit** scene, but its UI Document 
-  is displayed in [World Space](xref:UnityEngine.Dt.App.Core.WorldSpaceUIDocument).
+  is displayed in [World Space](xref:Unity.AppUI.Core.WorldSpaceUIDocument).
 * **UI Kit Transparent** - A special scene where the app user-interface background is transparent
   and doesn't block raycast in the 3D scene. It's a good example for making 
   overlays and HUD.

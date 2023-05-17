@@ -1,6 +1,6 @@
 using System;
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     /// <summary>
     /// Handler gives you the ability to send and receive <see cref="Message"/> objects.

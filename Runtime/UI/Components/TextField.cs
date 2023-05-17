@@ -3,12 +3,12 @@ using System.Reflection;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Text Field UI element.
     /// </summary>
-    public class TextField : ExVisualElement, IValidatableElement<string>
+    public class TextField : ExVisualElement, IValidatableElement<string>, INotifyValueChanging<string>
     {
         /// <summary>
         /// The TextField main styling class.
@@ -54,8 +54,8 @@ namespace UnityEngine.Dt.App.UI
         /// The TextField trailing icon styling class.
         /// </summary>
         public static readonly string trailingIconUssClassName = ussClassName + "__trailingicon";
-
-        readonly UIElements.TextField m_InputField;
+        
+        readonly UnityEngine.UIElements.TextField m_InputField;
 
         readonly VisualElement m_LeadingContainer;
 
@@ -66,6 +66,8 @@ namespace UnityEngine.Dt.App.UI
         readonly VisualElement m_TrailingContainer;
 
         string m_Value;
+
+        string m_PreviousValue;
 
         int m_VisualInputTabIndex;
 
@@ -118,7 +120,7 @@ namespace UnityEngine.Dt.App.UI
             m_Placeholder.AddToClassList(placeholderUssClassName);
             inputContainer.hierarchy.Add(m_Placeholder);
 
-            m_InputField = new UIElements.TextField { name = inputUssClassName };
+            m_InputField = new UnityEngine.UIElements.TextField { name = inputUssClassName };
             m_InputField.AddToClassList(inputUssClassName);
             m_InputField.BlinkingCursor();
             inputContainer.hierarchy.Add(m_InputField);
@@ -139,10 +141,26 @@ namespace UnityEngine.Dt.App.UI
             size = Size.M;
 
             m_InputField.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
-            m_Placeholder.RegisterValueChangedCallback(OnPlaceholderChanged);
+            m_Placeholder.RegisterValueChangedCallback(OnPlaceholderValueChanged);
+            m_InputField.RegisterValueChangedCallback(OnInputValueChanged);
         }
 
-        void OnPlaceholderChanged(ChangeEvent<string> evt)
+        void OnInputValueChanged(ChangeEvent<string> e)
+        {
+            e.PreventDefault();
+            e.StopPropagation();
+            
+            using var evt = ChangingEvent<string>.GetPooled();
+            evt.target = this;
+            evt.previousValue = m_Value;
+            m_Value = e.newValue;
+            evt.newValue = m_Value;
+            
+            if (validateValue != null) invalid = !validateValue(m_Value);
+            SendEvent(evt);
+        }
+
+        void OnPlaceholderValueChanged(ChangeEvent<string> evt)
         {
             evt.PreventDefault();
             evt.StopPropagation();
@@ -316,20 +334,21 @@ namespace UnityEngine.Dt.App.UI
             get => m_Value;
             set
             {
-                if (m_Value == value)
+                if (m_Value == value && m_PreviousValue == value)
                 {
                     RefreshUI();
                     return;
                 }
 
-                using var evt = ChangeEvent<string>.GetPooled(m_Value, value);
+                using var evt = ChangeEvent<string>.GetPooled(m_PreviousValue, value);
+                m_PreviousValue = m_Value;
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
             }
         }
 
-        void OnFocusedOut(FocusOutEvent evt)
+        void OnFocusedOut(FocusOutEvent e)
         {
             RemoveFromClassList(Styles.focusedUssClassName);
             RemoveFromClassList(Styles.keyboardFocusUssClassName);
@@ -341,6 +360,7 @@ namespace UnityEngine.Dt.App.UI
             AddToClassList(Styles.focusedUssClassName);
             m_Placeholder.AddToClassList(Styles.hiddenUssClassName);
             passMask = 0;
+            m_PreviousValue = m_Value;
         }
 
         void OnKeyboardFocusedIn(FocusInEvent evt)
@@ -349,6 +369,7 @@ namespace UnityEngine.Dt.App.UI
             AddToClassList(Styles.keyboardFocusUssClassName);
             m_Placeholder.AddToClassList(Styles.hiddenUssClassName);
             passMask = Passes.Clear | Passes.Outline;
+            m_PreviousValue = m_Value;
         }
 
         void RefreshUI()
@@ -363,7 +384,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<TextField, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="TextField"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TextField"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {
@@ -415,23 +436,23 @@ namespace UnityEngine.Dt.App.UI
 
                 var el = (TextField)ve;
 
-                var size = m_Size.GetValueFromBag(bag, cc);
+                var size = Size.M;
                 if (m_Size.TryGetValueFromBag(bag, cc, ref size))
                     el.size = size;
                 
-                var placeholder = m_Placeholder.GetValueFromBag(bag, cc);
+                var placeholder = string.Empty;
                 if (m_Placeholder.TryGetValueFromBag(bag, cc, ref placeholder))
                     el.placeholder = placeholder;
                 
-                var value = m_Value.GetValueFromBag(bag, cc);
+                var value = string.Empty;
                 if (m_Value.TryGetValueFromBag(bag, cc, ref value))
                     el.value = value;
                 
-                var leadingIconName = m_LeadingIconName.GetValueFromBag(bag, cc);
+                var leadingIconName = string.Empty;
                 if (m_LeadingIconName.TryGetValueFromBag(bag, cc, ref leadingIconName))
                     el.leadingIconName = leadingIconName;
                 
-                var trailingIconName = m_TrailingIconName.GetValueFromBag(bag, cc);
+                var trailingIconName = string.Empty;
                 if (m_TrailingIconName.TryGetValueFromBag(bag, cc, ref trailingIconName))
                     el.trailingIconName = trailingIconName;
                 

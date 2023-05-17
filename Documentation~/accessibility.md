@@ -31,7 +31,7 @@ This property determines whether an element can receive focus from the keyboard.
 By default, most App UI components are not focusable, so you will need to set this property if you want to enable keyboard navigation.
 
 ```csharp
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.UI;
 
 var myButton = new Button();
 
@@ -78,7 +78,7 @@ ScreenReader.Announce("The form has been submitted");
 Here is a complete example of a UI element that uses semantic properties and screen reader announcements:
 
 ```csharp
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.UI;
 using UnityEngine.UIElements;
 using UnityEngine;
 

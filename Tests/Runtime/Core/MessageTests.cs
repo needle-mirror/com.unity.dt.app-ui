@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
 
-namespace UnityEngine.Dt.App.Tests.Core
+namespace Unity.AppUI.Tests.Core
 {
     [TestFixture]
     [TestOf(typeof(Message))]

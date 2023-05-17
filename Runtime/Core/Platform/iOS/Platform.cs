@@ -1,7 +1,8 @@
 #if UNITY_IOS
 using System.Runtime.InteropServices;
+using UnityEngine;
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     public static partial class Platform
     {

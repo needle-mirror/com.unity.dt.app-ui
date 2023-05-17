@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     /// <summary>
     /// A <see cref="MonoBehaviour"/> which allows to display a <see cref="UIDocument"/> in World-Space.

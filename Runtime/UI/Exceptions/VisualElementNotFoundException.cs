@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Exception thrown when a Visual Element hasn't been found.

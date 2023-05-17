@@ -1,10 +1,10 @@
 using System;
 using UnityEngine.Assertions;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// This element can be used in the visual tree to wrap a part of the user-interface where the context
@@ -100,7 +100,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<ContextProvider, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="ContextProvider"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ContextProvider"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

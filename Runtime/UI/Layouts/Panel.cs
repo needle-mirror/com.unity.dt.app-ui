@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine.Assertions;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// This is the main UI element of any Runtime App. The <see cref="Panel"/> class will create different
@@ -135,7 +136,7 @@ namespace UnityEngine.Dt.App.UI
             {
                 if (m_TooltipManipulator != null)
                     this.RemoveManipulator(m_TooltipManipulator);
-                AppUI.UnregisterPanel(this);
+                Core.AppUI.UnregisterPanel(this);
             }
         }
 
@@ -149,7 +150,7 @@ namespace UnityEngine.Dt.App.UI
                     this.AddManipulator(m_TooltipManipulator);
                 }
 
-                AppUI.RegisterPanel(this);
+                Core.AppUI.RegisterPanel(this);
             }
         }
 
@@ -205,7 +206,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<Panel, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="Panel"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Panel"/>.
         /// </summary>
         public new class UxmlTraits : ContextProvider.UxmlTraits
         {

@@ -1,12 +1,13 @@
 /* Avatar */
 .appui-avatar {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
-    align-items: center;
-    padding: var(--appui-sizing-60);
+    align-items: stretch;
     position: relative;
     flex-shrink: 0;
+    border-radius: 1000px;
+    transition: border-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
 }
 
 .appui-avatar--size-s {
@@ -25,76 +26,38 @@
 }
 
 .appui-avatar__container {
-    width: 100%;
-    height: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
     border-radius: 1000px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
-    /*background-position: center;*/
-    /*background-size: cover;*/
-    /*-unity-background-scale-mode: scale-and-crop;*/
-    /*kbackground-color: #5e5e5e;*/
-    /*--outline-style: solid;*/
-    --outline-offset: 2;
-    --outline-width: 2;
 }
 
-.appui-avatar__label {
-    /*font-weight: 600;*/
+.appui-avatar .appui-text {
     -unity-font-style: bold;
-    /*line-height: 110%;*/
     letter-spacing: -0.3px;
-    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -unity-text-overflow-position: end;
+    -unity-text-align: middle-center;
 }
 
-.appui-avatar--size-s .appui-avatar__label {
-    font-size: var(--appui-font-sizes-75);
+.appui-avatar--size-s .appui-text {
+    font-size: var(--appui-font-sizes-50);
 }
 
-.appui-avatar--size-m .appui-avatar__label {
+.appui-avatar--size-m .appui-text {
     font-size: var(--appui-font-sizes-100);
 }
 
-.appui-avatar--size-l .appui-avatar__label {
+.appui-avatar--size-l .appui-text {
     font-size: var(--appui-font-sizes-200);
-}
-
-.appui-avatar__iconcontainer {
-    position: absolute;
-    bottom: -1px;
-    right: -1px;
-    width: var(--appui-sizing-160);
-    height: var(--appui-sizing-160);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.appui-avatar__notificationcontainer {
-    position: absolute;
-    width: var(--appui-sizing-160);
-    height: var(--appui-sizing-160);
-    top: -1px;
-    right: -1px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-.appui-avatar__notification {
-    position: absolute;
 }
 
 .appui-avatar:disabled {
     opacity: var(--appui-opacity-25);
-}
-
-.appui-avatar:disabled .appui-avatar__notificationcontainer,
-.appui-avatar:disabled .appui-avatar__iconcontainer {
-    display: none;
 }

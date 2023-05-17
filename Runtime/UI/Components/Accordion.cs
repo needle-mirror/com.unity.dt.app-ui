@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements.Experimental;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Item used inside an <see cref="Accordion"/> element.
@@ -194,7 +196,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<AccordionItem, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="AccordionItem"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="AccordionItem"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {
@@ -255,7 +257,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<Accordion, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="Accordion"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Accordion"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

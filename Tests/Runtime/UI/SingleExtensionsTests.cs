@@ -1,8 +1,8 @@
 using System.Globalization;
 using NUnit.Framework;
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.UI;
 
-namespace UnityEngine.Dt.App.Tests.UI
+namespace Unity.AppUI.Tests.UI
 {
     [TestFixture]
     class SingleExtensionsTests

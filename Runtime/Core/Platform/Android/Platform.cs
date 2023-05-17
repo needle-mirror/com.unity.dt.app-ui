@@ -1,7 +1,7 @@
 #if UNITY_ANDROID && !UNITY_EDITOR
 using UnityEngine;
 
-namespace UnityEngine.Dt.App.Core
+namespace Unity.AppUI.Core
 {
     public static partial class Platform
     {

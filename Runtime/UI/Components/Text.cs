@@ -1,7 +1,7 @@
 using System;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Sizing values for <see cref="Text"/> UI element.
@@ -116,7 +116,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<Text, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="Text"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Text"/>.
         /// </summary>
         public new class UxmlTraits : LocalizedTextElement.UxmlTraits
         {

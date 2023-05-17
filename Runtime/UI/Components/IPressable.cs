@@ -1,4 +1,6 @@
-namespace UnityEngine.Dt.App.UI
+using System;
+
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Interface for pressable elements.

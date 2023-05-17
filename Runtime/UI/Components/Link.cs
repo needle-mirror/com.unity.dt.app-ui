@@ -1,7 +1,7 @@
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A link visual element.
@@ -22,6 +22,9 @@ namespace UnityEngine.Dt.App.UI
 
         TextSize m_Size;
 
+        /// <summary>
+        /// The clickable manipulator.
+        /// </summary>
         public Pressable clickable
         {
             get => m_Clickable;

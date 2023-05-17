@@ -2,11 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.Toolbars;
 using UnityEditor.UIElements;
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.UI;
+using UnityEngine;
 using UnityEngine.UIElements;
+using TextField = UnityEngine.UIElements.TextField;
+using Toggle = UnityEngine.UIElements.Toggle;
+using Toolbar = UnityEditor.UIElements.Toolbar;
 
-namespace UnityEngine.Dt.App.Editor
+namespace Unity.AppUI.Editor
 {
     /// <summary>
     /// This class defines a property for a StoryBookComponent.
@@ -17,6 +22,35 @@ namespace UnityEngine.Dt.App.Editor
         /// The name of the property.
         /// </summary>
         public string name { get; protected set; }
+    }
+    
+    /// <summary>
+    /// This class defines a Enum property for a StoryBookComponent.
+    /// </summary>
+    public class StoryBookEnumProperty : StoryBookComponentProperty
+    {
+        /// <summary>
+        /// The getter of the property.
+        /// </summary>
+        public Func<VisualElement, Enum> getter { get; set; }
+
+        /// <summary>
+        /// The setter of the property.
+        /// </summary>
+        public Action<VisualElement, Enum> setter { get; set; }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="name"> The name of the property. </param>
+        /// <param name="getter"> The getter of the property. </param>
+        /// <param name="setter"> The setter of the property. </param>
+        public StoryBookEnumProperty(string name, Func<VisualElement, Enum> getter, Action<VisualElement, Enum> setter)
+        {
+            this.name = name;
+            this.getter = getter;
+            this.setter = setter;
+        }
     }
 
     /// <summary>
@@ -86,6 +120,12 @@ namespace UnityEngine.Dt.App.Editor
         /// The type of the UI element.
         /// </summary>
         public virtual Type uiElementType { get; }
+        
+        /// <summary>
+        /// Setup the component.
+        /// </summary>
+        /// <param name="element"> The element to setup. </param>
+        public virtual void Setup(VisualElement element) {}
 
         /// <summary>
         /// The properties of the component.
@@ -173,6 +213,14 @@ namespace UnityEngine.Dt.App.Editor
         ScrollView m_Inspector;
 
         TwoPaneSplitView m_VerticalPane;
+        
+        string m_CurrentTheme = "dark";
+        
+        string m_CurrentScale = "medium";
+
+        EditorToolbarDropdown m_ThemeDropdown;
+        
+        EditorToolbarDropdown m_ScaleDropdown;
 
         /// <summary>
         /// Open the StoryBook window.
@@ -191,21 +239,21 @@ namespace UnityEngine.Dt.App.Editor
             {
                 foreach (var type in assembly.GetTypes())
                 {
-                    if ((type.Namespace?.StartsWith("UnityEngine.Dt.App.UI") ?? false)
+                    if ((type.Namespace?.StartsWith("Unity.AppUI.UI") ?? false)
                         && !type.IsAbstract && type.IsClass && type.IsPublic && !type.IsGenericType)
                     {
                         types.Add(type);
                     }
                 }
             }
-            
+
             return types;
         }
 
         static IEnumerable<StoryBookPage> GetStories()
         {
             var stories = new List<StoryBookPage>();
-            
+
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 foreach (var type in assembly.GetTypes())
@@ -255,9 +303,11 @@ namespace UnityEngine.Dt.App.Editor
 
         void OnSelectionChanged(IEnumerable<int> indices)
         {
-            var indicesList = new List<int>(indices);
-            if (indicesList.Count > 0)
-                RefreshStoryList(m_StoriesList[indicesList[0]]);
+            foreach (var idx in indices)
+            {
+                RefreshStoryList(m_StoriesList[idx]);
+                break;
+            }
         }
 
         void RefreshStoryList(StoryBookPage page)
@@ -271,18 +321,58 @@ namespace UnityEngine.Dt.App.Editor
 
         void OnStorySelectionChanged(IEnumerable<int> indices)
         {
-            var indicesList = new List<int>(indices);
-            if (indicesList.Count > 0)
-                RefreshDetailPage(((List<StoryBookStory>)m_StoryListView.itemsSource)[indicesList[0]]);
+            foreach (var idx in indices)
+            {
+                RefreshDetailPage(((List<StoryBookStory>)m_StoryListView.itemsSource)[idx]);
+                break;
+            }
         }
 
         VisualElement CreateDetailPage()
         {
+            var detailPage = new VisualElement();
+            var toolbar = new Toolbar();
+            var panel = new Panel { theme = m_CurrentTheme };
+            m_ThemeDropdown = new EditorToolbarDropdown("Theme", () =>
+            {
+                var menu = new GenericMenu();
+                menu.AddItem(new GUIContent("Dark"), m_CurrentTheme == "dark", () =>
+                {
+                    m_CurrentTheme = "dark";
+                    panel.theme = m_CurrentTheme;
+                });
+                menu.AddItem(new GUIContent("Light"), m_CurrentTheme == "light", () =>
+                {
+                    m_CurrentTheme = "light";
+                    panel.theme = m_CurrentTheme;
+                });
+                menu.DropDown(m_ThemeDropdown.worldBound);
+            });
+            toolbar.Add(m_ThemeDropdown);
+            
+            m_ScaleDropdown = new EditorToolbarDropdown("Scale", () =>
+            {
+                var menu = new GenericMenu();
+                menu.AddItem(new GUIContent("Medium"), m_CurrentScale == "medium", () =>
+                {
+                    m_CurrentScale = "medium";
+                    panel.scale = m_CurrentScale;
+                });
+                menu.AddItem(new GUIContent("Large"), m_CurrentScale == "large", () =>
+                {
+                    m_CurrentScale = "large";
+                    panel.scale = m_CurrentScale;
+                });
+                menu.DropDown(m_ScaleDropdown.worldBound);
+            });
+            toolbar.Add(m_ScaleDropdown);
+            
+            detailPage.Add(toolbar);
+
             m_VerticalPane = new TwoPaneSplitView(1, 150, TwoPaneSplitViewOrientation.Vertical);
 
             var canvas = new VisualElement();
             canvas.styleSheets.Add(AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(k_DefaultTheme));
-            var panel = new Panel();
             var container = new VisualElement { name = "canvas-container" };
             container.style.alignItems = Align.Center;
             canvas.Add(panel);
@@ -308,14 +398,21 @@ namespace UnityEngine.Dt.App.Editor
             var inspectorContainer = new VisualElement { name = "inspector-container" };
             m_Inspector.Add(inspectorContainer);
             m_VerticalPane.Add(m_Inspector);
+            
+            detailPage.Add(m_VerticalPane);
 
-            return m_VerticalPane;
+            return detailPage;
         }
 
         void RefreshDetailPage(StoryBookStory story)
         {
             var container = rootVisualElement.Q<VisualElement>("canvas-container");
-            container.Clear();
+            var parent = container.parent;
+            container.RemoveFromHierarchy();
+            container = new VisualElement { name = "canvas-container" };
+            container.style.alignItems = Align.Center;
+            container.StretchToParentSize();
+            parent.Add(container);
 
             var inspectorContainer = rootVisualElement.Q<VisualElement>("inspector-container");
             inspectorContainer.Clear();
@@ -333,8 +430,8 @@ namespace UnityEngine.Dt.App.Editor
                 // Update component page
                 var component = (StoryBookComponent)Activator.CreateInstance(m_StoriesList[m_ListView.selectedIndex].componentType);
                 var uiElement = (VisualElement)Activator.CreateInstance(component.uiElementType);
-
                 container.Add(uiElement);
+                component.Setup(uiElement);
 
                 foreach (var prop in component.properties)
                 {
@@ -342,16 +439,22 @@ namespace UnityEngine.Dt.App.Editor
                     switch (prop)
                     {
                         case StoryBookBooleanProperty boolProp:
-                            var toggle = new UIElements.Toggle(boolProp.name);
+                            var toggle = new Toggle(boolProp.name);
                             toggle.SetValueWithoutNotify(boolProp.getter?.Invoke(uiElement) ?? false);
                             toggle.RegisterValueChangedCallback(evt => boolProp.setter?.Invoke(uiElement, evt.newValue));
                             field = toggle;
                             break;
                         case StoryBookStringProperty strProp:
-                            var textField = new UIElements.TextField(strProp.name);
+                            var textField = new TextField(strProp.name);
                             textField.SetValueWithoutNotify(strProp.getter?.Invoke(uiElement));
                             textField.RegisterValueChangedCallback(evt => strProp.setter?.Invoke(uiElement, evt.newValue));
                             field = textField;
+                            break;
+                        case StoryBookEnumProperty enumProp:
+                            var enumField = new EnumField(enumProp.name, enumProp.getter?.Invoke(uiElement));
+                            enumField.SetValueWithoutNotify(enumProp.getter?.Invoke(uiElement));
+                            enumField.RegisterValueChangedCallback(evt => enumProp.setter?.Invoke(uiElement, evt.newValue));
+                            field = enumField;
                             break;
                         default:
                             break;
@@ -370,70 +473,6 @@ namespace UnityEngine.Dt.App.Editor
                 container.Add(uiElement);
             }
 
-        }
-
-        void RefreshPreview(Type componentType)
-        {
-            var instance = Activator.CreateInstance(componentType) as VisualElement;
-            m_Preview.Clear();
-            m_Preview.Add(new Label($"Properties for {componentType.Name}"));
-            foreach (var propertyInfo in componentType.GetProperties(BindingFlags.Default | BindingFlags.Instance | BindingFlags.Public /*| BindingFlags.DeclaredOnly*/))
-            {
-                if (!propertyInfo.CanRead || !propertyInfo.CanWrite)
-                    continue;
-
-                VisualElement prop = null;
-                switch (propertyInfo.PropertyType.Name)
-                {
-                    case "Boolean":
-                        var toggle = new UIElements.Toggle(propertyInfo.Name);
-                        toggle.RegisterValueChangedCallback((evt) => propertyInfo.SetValue(instance, evt.newValue));
-                        toggle.SetValueWithoutNotify((bool)propertyInfo.GetValue(instance));
-                        prop = toggle;
-                        break;
-                    case "String":
-                        var textField = new UIElements.TextField(propertyInfo.Name);
-                        textField.RegisterValueChangedCallback((evt) => propertyInfo.SetValue(instance, evt.newValue));
-                        textField.SetValueWithoutNotify((string)propertyInfo.GetValue(instance));
-                        prop = textField;
-                        break;
-                    case "HeaderSize":
-                        var enumField = new EnumField(propertyInfo.Name, HeaderSize.M);
-                        enumField.RegisterValueChangedCallback((evt) => propertyInfo.SetValue(instance, evt.newValue));
-                        enumField.SetValueWithoutNotify((HeaderSize)propertyInfo.GetValue(instance));
-                        prop = enumField;
-                        break;
-                    case "Size":
-                        var enum2Field = new EnumField(propertyInfo.Name, Size.M);
-                        enum2Field.RegisterValueChangedCallback((evt) => propertyInfo.SetValue(instance, evt.newValue));
-                        enum2Field.SetValueWithoutNotify((Size)propertyInfo.GetValue(instance));
-                        prop = enum2Field;
-                        break;
-                    default:
-                        Debug.Log($"Ignore {propertyInfo.PropertyType.Name}");
-                        break;
-                }
-
-                if (prop != null)
-                {
-                    m_Preview.Add(prop);
-                }
-            }
-
-            var viewport = new VisualElement();
-            viewport.style.flexGrow = 1;
-            viewport.styleSheets.Add(AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>("Packages/com.unity.dt.app-ui/PackageResources/Styles/Themes/App UI.tss"));
-            var panel = new Panel();
-            var container = new VisualElement();
-            container.style.paddingBottom = 16;
-            container.style.paddingLeft = 16;
-            container.style.paddingRight = 16;
-            container.style.paddingTop = 16;
-            container.style.alignItems = Align.FlexStart;
-            viewport.Add(panel);
-            panel.Add(container);
-            container.Add(instance);
-            m_Preview.Add(viewport);
         }
 
         void BindListViewItem(VisualElement ve, int idx)

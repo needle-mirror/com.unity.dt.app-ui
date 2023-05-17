@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// An item contained inside a <see cref="Menu"/> element.
@@ -50,6 +51,11 @@ namespace UnityEngine.Dt.App.UI
         /// The MenuItem selectable mode styling class.
         /// </summary>
         public static readonly string selectableUssClassname = ussClassName + "--selectable";
+        
+        /// <summary>
+        /// The MenuItem active styling class.
+        /// </summary>
+        public static readonly string activeUssClassname = ussClassName + "--active";
 
         /// <summary>
         /// The content container of the MenuItem.
@@ -101,6 +107,7 @@ namespace UnityEngine.Dt.App.UI
             hierarchy.Add(m_SubMenuContainer);
 
             selectable = false;
+            active = false;
             icon = null;
             label = null;
             subMenu = null;
@@ -224,14 +231,14 @@ namespace UnityEngine.Dt.App.UI
             popoverElement.visible = false;
             popover.schedule.Execute(() =>
             {
-                var pos = Popover
+                var pos = AnchorPopupUtils
                     .ComputePosition(
                         popoverElement,
                         this,
                         this.GetContext().panel,
-                        PopoverPlacement.EndTop,
-                        -6,
-                        -8);
+                        new PositionOptions(PopoverPlacement.EndTop,
+                            -6,
+                            -8));
                 popoverElement.style.left = pos.left;
                 popoverElement.style.top = pos.top;
                 popoverElement.style.marginLeft = pos.marginLeft;
@@ -335,6 +342,15 @@ namespace UnityEngine.Dt.App.UI
         }
 
         /// <summary>
+        /// Enable or disable the active mode of the item.
+        /// </summary>
+        public bool active
+        {
+            get => ClassListContains(activeUssClassname);
+            set => EnableInClassList(activeUssClassname, value);
+        }
+
+        /// <summary>
         /// Sub Menu linked to this item.
         /// <para>
         /// An item with a submenu mode enabled has a small caret as trailing UI element which defines that a sub menu
@@ -400,7 +416,7 @@ namespace UnityEngine.Dt.App.UI
         }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="MenuItem"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="MenuItem"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

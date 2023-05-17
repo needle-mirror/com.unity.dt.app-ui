@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// ColorPicker UI Element.
@@ -409,6 +410,7 @@ namespace UnityEngine.Dt.App.UI
                 if (Uri.IsHexDigit(hexChar))
                     strBuilder.Append(hexChar);
             }
+            
             var str = strBuilder.ToString();
 
             if (!ColorExtensions.IsValidHex(str))
@@ -843,7 +845,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<ColorPicker, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="ColorPicker"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ColorPicker"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

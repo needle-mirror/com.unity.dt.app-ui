@@ -3,9 +3,10 @@ using System.Xml;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
+using UnityEngine;
 
-namespace UnityEngine.Dt.App.Editor
+namespace Unity.AppUI.Editor
 {
     /// <summary>
     /// Unity build processor to add AppUISettings object to preloaded assets.
@@ -23,7 +24,7 @@ namespace UnityEngine.Dt.App.Editor
         /// <param name="report"> Unity Build report. </param>
         public void OnPreprocessBuild(BuildReport report)
         {
-            if (AppUI.settings == null)
+            if (Core.AppUI.settings == null)
             {
                 throw new System.InvalidOperationException("There's no App UI Settings set in your project./n" +
                     "Please go to Edit > Project Settings > App UI and create a new Settings asset.");
@@ -32,7 +33,7 @@ namespace UnityEngine.Dt.App.Editor
             // If we operate on temporary object instead of input setting asset,
             // adding temporary asset would result in preloadedAssets containing null object "{fileID: 0}".
             // Hence we ignore adding temporary objects to preloaded assets.
-            if (!EditorUtility.IsPersistent(AppUI.settings))
+            if (!EditorUtility.IsPersistent(Core.AppUI.settings))
                 return;
 
             // Add AppUISettings object assets, if it's not in there already.
@@ -40,20 +41,20 @@ namespace UnityEngine.Dt.App.Editor
             var preloadedAssetsContainsSettings = false;
             foreach (var preloadedAsset in preloadedAssets)
             {
-                if (preloadedAsset == AppUI.settings)
+                if (preloadedAsset == AppUI.Core.AppUI.settings)
                 {
                     preloadedAssetsContainsSettings = true;
                     break;
                 }
             }
-            
+
             if (!preloadedAssetsContainsSettings)
             {
-                ArrayUtility.Add(ref preloadedAssets, AppUI.settings);
+                ArrayUtility.Add(ref preloadedAssets, Core.AppUI.settings);
                 PlayerSettings.SetPreloadedAssets(preloadedAssets);
             }
 
-            if (report.summary.platform == BuildTarget.Android && AppUI.settings.autoOverrideAndroidManifest)
+            if (report.summary.platform == BuildTarget.Android && Core.AppUI.settings.autoOverrideAndroidManifest)
             {
                 const string androidNamespace = "http://schemas.android.com/apk/res/android";
                 var manifest = Path.Combine(Application.dataPath, "Plugins", "Android", "AndroidManifest.xml");

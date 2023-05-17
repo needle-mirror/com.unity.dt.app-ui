@@ -44,7 +44,7 @@ Others stories are made directly by code by giving a specific context.
 First, you need to create a Storybook Page which will contains all the stories of a specific
 UI Component.
 
-To create a Storybook Page, create a new C# class that inherits from [StoryBookPage](xref:UnityEngine.Dt.App.Editor.StoryBookPage).
+To create a Storybook Page, create a new C# class that inherits from [StoryBookPage](xref:Unity.AppUI.Editor.StoryBookPage).
 
 Here is an example of a Storybook Page for the Button UI Component.
 
@@ -84,7 +84,7 @@ The `displayName` property is used to display the name of the page in the Storyb
 
 The `componentType` property is used to display the properties of the UI Component in the Storybook property editor.
 
-You must implement the `componentType` property by creating a new class that inherits from [StoryBookComponent](xref:UnityEngine.Dt.App.Editor.StoryBookComponent).
+You must implement the `componentType` property by creating a new class that inherits from [StoryBookComponent](xref:Unity.AppUI.Editor.StoryBookComponent).
 
 > [!NOTE]
 > If you don't provide a valid `componentType` property, the Storybook property editor 

@@ -9,7 +9,7 @@ using UnityEngine.Localization.Tables;
 using UnityEngine.ResourceManagement.AsyncOperations;
 #endif
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A localized text element.

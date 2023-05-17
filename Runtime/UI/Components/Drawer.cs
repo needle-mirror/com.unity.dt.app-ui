@@ -4,7 +4,7 @@ using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Drawer UI element. A drawer is a UI element that slides in from the side of the screen. It can be used to display

@@ -1,4 +1,4 @@
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Extensions for the <see cref="TextField"/> class.
@@ -9,7 +9,7 @@ namespace UnityEngine.Dt.App.UI
         /// Make the cursor blink.
         /// </summary>
         /// <param name="tf">The <see cref="TextField"/> object.</param>
-        public static void BlinkingCursor(this UIElements.TextField tf)
+        public static void BlinkingCursor(this UnityEngine.UIElements.TextField tf)
         {
             const string transparentCursorUssClassName = "appui-text-cursor--transparent";
 

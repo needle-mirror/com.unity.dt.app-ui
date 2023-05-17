@@ -11,18 +11,18 @@ Unity package from UPM.
 
 ## ContextProvider
 
-The [ContextProvider](xref:UnityEngine.Dt.App.UI.ContextProvider) element is a component that provides the [ApplicationContext](xref:UnityEngine.Dt.App.Core.ApplicationContext) to its children.
+The [ContextProvider](xref:Unity.AppUI.UI.ContextProvider) element is a component that provides the [ApplicationContext](xref:Unity.AppUI.Core.ApplicationContext) to its children.
 With this component, you can define the global context for your application, or override the context for a specific part of your UI.
-In terms of localization, the [ContextProvider](xref:UnityEngine.Dt.App.UI.ContextProvider) is used to define the current locale identifier for the current scope of the application.
+In terms of localization, the [ContextProvider](xref:Unity.AppUI.UI.ContextProvider) is used to define the current locale identifier for the current scope of the application.
 
 > [!NOTE]
 > For more information about the ContextProvider, see the [ContextProvider documentation](xref:contexts).
 
-Here is an example of how to get a the localized string of a given entry using the locale defined inside the [ApplicationContext](xref:UnityEngine.Dt.App.Core.ApplicationContext):
+Here is an example of how to get a the localized string of a given entry using the locale defined inside the [ApplicationContext](xref:Unity.AppUI.Core.ApplicationContext):
 
 ```csharp
 
-using UnityEngine.Dt.App.UI;
+using Unity.AppUI.UI;
 using UnityEngine.UIElements;
 
 public class MyComponent : VisualElement

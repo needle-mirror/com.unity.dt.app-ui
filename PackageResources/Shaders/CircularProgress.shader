@@ -3,7 +3,7 @@ Shader "Hidden/App UI/CircularProgress"
     Properties
     {
         _Color ("Color", Color) = (1,1,1,1)
-        _InnerRadius ("Inner Radius", Float) = 0.38
+        _InnerRadius ("Inner Radius", Float) = 0
         _Start ("Start", Float) = 0
         _End ("End", Float) = 0
         _BufferStart ("Buffer Start", Float) = 0

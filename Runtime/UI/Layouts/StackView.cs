@@ -4,7 +4,7 @@ using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// The status of a StackViewItem.
@@ -175,6 +175,25 @@ namespace UnityEngine.Dt.App.UI
     public class StackView : VisualElement
     {
         readonly Stack<StackViewItem> m_Stack;
+        
+        /// <summary>
+        /// Event emitted when the current item in the stack changes.
+        /// </summary>
+        /// <remarks>
+        /// The event is emitted at the end of the animation (if any).
+        /// </remarks>
+        /// <remarks>
+        /// The event is emitted after the <see cref="currentItemChanging"/> event.
+        /// </remarks>
+        public event Action currentItemChanged;
+        
+        /// <summary>
+        /// Event emitted when the current item in the stack is about to change.
+        /// </summary>
+        /// <remarks>
+        /// The event is emitted at the beginning of the animation (if any). Afterwards, <see cref="currentItemChanged"/> is emitted.
+        /// </remarks>
+        public event Action currentItemChanging;
 
         /// <summary>
         /// The main styling class of the StackView. This is the class that is used in the USS file.
@@ -286,10 +305,11 @@ namespace UnityEngine.Dt.App.UI
         /// <summary>
         /// Pushes an item onto the stack using an optional operation.
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="item"> The item to push onto the stack.</param>
+        /// <param name="callback"> The callback to call when the operation is completed.</param>
         /// <param name="operation">The type of transition to use during the process.</param>
         /// <returns>Returns the item that became current.</returns>
-        public StackViewItem Push(VisualElement item, StackViewOperation operation = StackViewOperation.PushTransition)
+        public StackViewItem Push(VisualElement item, Action callback = null, StackViewOperation operation = StackViewOperation.PushTransition)
         {
             var newItem = (item as StackViewItem) ?? new StackViewItem(item);
             newItem.view = this;
@@ -297,7 +317,7 @@ namespace UnityEngine.Dt.App.UI
 
             Exit(previousItem, operation, false);
             m_Stack.Push(newItem);
-            Enter(newItem, operation, true);
+            Enter(newItem, operation, true, callback);
 
             return newItem;
         }
@@ -353,19 +373,22 @@ namespace UnityEngine.Dt.App.UI
         /// </summary>
         /// <param name="target">If the target argument is specified, all items down to the target item will be replaced.
         /// If target is null, all items in the stack will be replaced.
-        /// If not specified, only the top item will be replaced.
-        /// If the target argument is specified, all items down to the target item will be replaced.
-        /// If target is null, all items in the stack will be replaced.
-        /// If not specified, only the top item will be replaced.</param>
+        /// </param>
         /// <param name="item">The item that will be used as replacement.</param>
+        /// <param name="callback">The callback to call when the operation is completed.</param>
         /// <param name="operation">The type of transition to use during the process.</param>
         /// <returns>Returns the item that became current.</returns>
-        public StackViewItem Replace(StackViewItem target, VisualElement item, StackViewOperation operation = StackViewOperation.ReplaceTransition)
+        public StackViewItem Replace(StackViewItem target, VisualElement item, Action callback = null, StackViewOperation operation = StackViewOperation.ReplaceTransition)
         {
-            return null;
+            while (m_Stack.TryPeek(out var peekItem) && peekItem != target)
+            {
+                m_Stack.Pop();
+            }
+            
+            return Push(item, callback, operation);
         }
 
-        void Enter(StackViewItem enteredItem, StackViewOperation operation, bool add)
+        void Enter(StackViewItem enteredItem, StackViewOperation operation, bool add, Action callback = null)
         {
             if (enteredItem == null)
                 return;
@@ -379,12 +402,21 @@ namespace UnityEngine.Dt.App.UI
             };
 
             if (add)
+            {
                 Add(enteredItem);
+                currentItemChanging?.Invoke();
+            }
             enteredItem.InvokeActivating();
             m_CurrentExitAnimation = enteredItem.experimental.animation
                 .Start(0, 1f, anim.durationMs, anim.callback)
                 .Ease(anim.easing)
-                .OnCompleted(enteredItem.InvokeActivated);
+                .OnCompleted(() =>
+                {
+                    enteredItem.InvokeActivated();
+                    callback?.Invoke();
+                    if (add)
+                        currentItemChanged?.Invoke();
+                });
         }
 
         void Exit(StackViewItem poppedItem, StackViewOperation operation, bool remove)
@@ -401,6 +433,8 @@ namespace UnityEngine.Dt.App.UI
             };
 
             poppedItem.InvokeDeactivating();
+            if (remove)
+                currentItemChanging?.Invoke();
             m_CurrentExitAnimation = poppedItem.experimental.animation
                 .Start(1f, 0, anim.durationMs, anim.callback)
                 .Ease(anim.easing)
@@ -408,7 +442,10 @@ namespace UnityEngine.Dt.App.UI
                 {
                     poppedItem.InvokeDeactivated();
                     if (remove)
+                    {
                         RemoveItem(poppedItem);
+                        currentItemChanged?.Invoke();
+                    }
                 });
         }
 
@@ -426,7 +463,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<StackView, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="StackView"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="StackView"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {

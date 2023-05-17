@@ -1,7 +1,7 @@
 using System;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Class containing the UXML traits for the VisualElement class.
@@ -14,7 +14,7 @@ namespace UnityEngine.Dt.App.UI
                 defaultValue = Tooltip.defaultPlacement,
                 name = "preferred-tooltip-placement"
             };
-
+        
         /// <summary>
         /// Initializes the VisualElement from the UXML attributes.
         /// </summary>
@@ -23,8 +23,13 @@ namespace UnityEngine.Dt.App.UI
         /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
         public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
         {
+            var isFocusable = ve.focusable;
             base.Init(ve, bag, cc);
-
+            
+            // small hack because UITK override the currently focusable state when building the element from UXML
+            if (isFocusable)
+                ve.focusable = true;
+            
             var preferredTooltipPlacement = Tooltip.defaultPlacement;
             if (m_PreferredTooltipPlacement.TryGetValueFromBag(bag, cc, ref preferredTooltipPlacement))
                 ve.SetPreferredTooltipPlacement(preferredTooltipPlacement);
@@ -51,11 +56,7 @@ namespace UnityEngine.Dt.App.UI
         /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
         public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
         {
-            var isFocusable = ve.focusable;
             base.Init(ve, bag, cc);
-            
-            if (isFocusable)
-                ve.focusable = true;
 
             var preferredTooltipPlacement = Tooltip.defaultPlacement;
             if (m_PreferredTooltipPlacement.TryGetValueFromBag(bag, cc, ref preferredTooltipPlacement))

@@ -1,11 +1,12 @@
-using UnityEngine.Dt.App.Core;
+using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// CircularProgress UI element. This is a circular progress bar.
@@ -36,24 +37,11 @@ namespace UnityEngine.Dt.App.UI
         static readonly int k_BufferOpacity = Shader.PropertyToID("_BufferOpacity");
 
         static readonly int k_Phase = Shader.PropertyToID("_Phase");
-
-        float m_InnerRadius = 0.38f;
-
+        
         /// <summary>
         /// The inner radius of the CircularProgress.
         /// </summary>
-        public float innerRadius
-        {
-            get => m_InnerRadius;
-            set
-            {
-                if (Mathf.Approximately(m_InnerRadius, value))
-                    return;
-
-                m_InnerRadius = value;
-                MarkDirtyRepaint();
-            }
-        }
+        public float innerRadius { get; set; } = 0.38f;
 
         /// <summary>
         /// Default constructor.
@@ -130,7 +118,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<CircularProgress, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="CircularProgress"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="CircularProgress"/>.
         /// </summary>
         public new class UxmlTraits : Progress.UxmlTraits { }
     }

@@ -2,7 +2,7 @@ using System;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A special <see cref="Divider"/> intended to be used inside <see cref="Menu"/> elements.
@@ -29,7 +29,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<MenuDivider, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="MenuDivider"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="MenuDivider"/>.
         /// </summary>
         public new class UxmlTraits : Divider.UxmlTraits { }
     }

@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
-namespace UnityEngine.Dt.App.UI
+namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Base class for any Slider (<see cref="TouchSliderFloat"/>, <see cref="TouchSliderInt"/>,
@@ -383,7 +384,7 @@ namespace UnityEngine.Dt.App.UI
 
         readonly VisualElement m_ProgressElement;
 
-        readonly UIElements.TextField m_InputField;
+        readonly UnityEngine.UIElements.TextField m_InputField;
 
         bool m_IsEditingTextField;
 
@@ -422,7 +423,7 @@ namespace UnityEngine.Dt.App.UI
             m_ValueLabelElement.AddToClassList(valueUssClassName);
             hierarchy.Add(m_ValueLabelElement);
 
-            m_InputField = new UIElements.TextField { name = valueUssClassName, pickingMode = PickingMode.Position };
+            m_InputField = new UnityEngine.UIElements.TextField { name = valueUssClassName, pickingMode = PickingMode.Position };
             m_InputField.BlinkingCursor();
             m_InputField.AddToClassList(valueUssClassName);
             m_InputField.RegisterCallback<FocusEvent>(OnInputFocusedIn);
@@ -584,7 +585,7 @@ namespace UnityEngine.Dt.App.UI
         }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="TouchSlider{TValueType}"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TouchSlider{TValueType}"/>.
         /// </summary>
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {
@@ -690,7 +691,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<TouchSliderInt, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="TouchSliderInt"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TouchSliderInt"/>.
         /// </summary>
         public new class UxmlTraits : TouchSlider<int>.UxmlTraits
         {
@@ -786,7 +787,7 @@ namespace UnityEngine.Dt.App.UI
         public new class UxmlFactory : UxmlFactory<TouchSliderFloat, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UIElements.UxmlTraits"/> for the <see cref="TouchSliderFloat"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TouchSliderFloat"/>.
         /// </summary>
         public new class UxmlTraits : TouchSlider<float>.UxmlTraits
         {
