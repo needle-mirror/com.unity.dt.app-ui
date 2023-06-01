@@ -27,6 +27,8 @@ Shader "Hidden/App UI/Box"
     }
     SubShader
     {
+        ZTest Always Cull Off ZWrite Off
+        
         CGINCLUDE
 
         #include "UnityCG.cginc"

@@ -140,6 +140,13 @@ namespace UnityEngine.Dt.App.UI
 
             m_InputField.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
             m_Placeholder.RegisterValueChangedCallback(OnPlaceholderChanged);
+            m_InputField.RegisterValueChangedCallback(OnInputValueChanged);
+        }
+
+        void OnInputValueChanged(ChangeEvent<string> evt)
+        {
+            value = evt.newValue;
+            evt.StopPropagation();
         }
 
         void OnPlaceholderChanged(ChangeEvent<string> evt)
@@ -313,7 +320,7 @@ namespace UnityEngine.Dt.App.UI
         /// </summary>
         public string value
         {
-            get => m_Value;
+            get => m_InputField.value;
             set
             {
                 if (m_Value == value)

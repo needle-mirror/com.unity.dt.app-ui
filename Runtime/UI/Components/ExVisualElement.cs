@@ -105,7 +105,74 @@ namespace UnityEngine.Dt.App.UI
             /// The outline pass. This will render the outline.
             /// </summary>
             Outline = 0b01000000,
-        };
+        }
+        
+        const int k_BlitTextureMessageId = 520;
+
+        static Handler handler
+        {
+            get
+            {
+                if (s_Handler == null)
+                    s_Handler = new Handler(AppUI.mainLooper, HandleMessage);
+                
+                return s_Handler;
+            }
+        }
+        
+        static bool HandleMessage(Message msg)
+        {
+            if (msg.what == k_BlitTextureMessageId)
+            {
+                var ve = (ExVisualElement)msg.obj;
+
+                var renderRect = PrepareMaterial(ve.paddingRect, ve.resolvedStyle, ve.m_Style, ve.passMask);
+                var rtSize = GetRenderTextureSize(renderRect);
+
+                if (rtSize.x < 1 || rtSize.y < 1)
+                    return true;
+
+                if (ve.m_RT && (ve.m_RT.width != rtSize.x || ve.m_RT.height != rtSize.y))
+                {
+                    ve.m_RT.Release();
+                    ve.m_RT = null;
+                }
+
+                if (!ve.m_RT)
+                {
+                    ve.m_RT = new RenderTexture(rtSize.x, rtSize.y, 24);
+                    ve.m_RT.Create();
+                }
+                
+                var prevRt = RenderTexture.active;
+                if (ve.passMask == (Passes)0xFF)
+                {
+                    Graphics.Blit(null, ve.m_RT, s_Material);
+                }
+                else
+                {
+                    if ((ve.passMask & Passes.Clear) > 0)
+                        Graphics.Blit(null, ve.m_RT, s_Material, 0);
+                    if ((ve.passMask & Passes.OutsetShadows) > 0)
+                        Graphics.Blit(null, ve.m_RT, s_Material, 1);
+                    if ((ve.passMask & Passes.BackgroundColor) > 0)
+                        Graphics.Blit(null, ve.m_RT, s_Material, 2);
+                    if ((ve.passMask & Passes.BackgroundImage) > 0)
+                        Graphics.Blit(null, ve.m_RT, s_Material, 3);
+                    if ((ve.passMask & Passes.InsetShadows) > 0)
+                        Graphics.Blit(null, ve.m_RT, s_Material, 4);
+                    if ((ve.passMask & Passes.Borders) > 0)
+                        Graphics.Blit(null, ve.m_RT, s_Material, 5);
+                    if ((ve.passMask & Passes.Outline) > 0)
+                        Graphics.Blit(null, ve.m_RT, s_Material, 6);
+                }
+                RenderTexture.active = prevRt;
+            
+                return true;
+            }
+            
+            return false;
+        }
 
         /// <summary>
         /// The content container of this element.
@@ -184,6 +251,8 @@ namespace UnityEngine.Dt.App.UI
         Color? m_BackgroundColorByCode;
 
         Passes m_PassMask = (Passes)0xFF;
+
+        static Handler s_Handler;
 
         static ExVisualElement()
         {
@@ -344,27 +413,13 @@ namespace UnityEngine.Dt.App.UI
                 return;
             }
 
-            var dpi = Mathf.Clamp(Platform.mainScreenScale, 1, 2);
+            var renderRect = ComputeContentRect(paddingRect, m_Style);
+            var rtSize = GetRenderTextureSize(renderRect);
 
-            var renderRect = PrepareMaterial(paddingRect, resolvedStyle, m_Style, passMask);
-
-            int width, height;
-
-            if (renderRect.height > renderRect.width)
-            {
-                height = (int)Mathf.Clamp(renderRect.height * dpi, 16, 1024); ;
-                width = (int)(height * (renderRect.width / renderRect.height));
-            }
-            else
-            {
-                width = (int)Mathf.Clamp(renderRect.width * dpi, 16, 1024); ;
-                height = (int)(width * (renderRect.height / renderRect.width));
-            }
-
-            if (width < 1 || height < 1)
+            if (rtSize.x < 1 || rtSize.y < 1)
                 return;
 
-            if (m_RT && (m_RT.width != width || m_RT.height != height))
+            if (m_RT && (m_RT.width != rtSize.x || m_RT.height != rtSize.y))
             {
                 m_RT.Release();
                 m_RT = null;
@@ -372,33 +427,11 @@ namespace UnityEngine.Dt.App.UI
 
             if (!m_RT)
             {
-                m_RT = new RenderTexture(width, height, 24);
+                m_RT = new RenderTexture(rtSize.x, rtSize.y, 24);
                 m_RT.Create();
             }
-
-            var prevRt = RenderTexture.active;
-            if (passMask == (Passes)0xFF)
-            {
-                Graphics.Blit(null, m_RT, s_Material);
-            }
-            else
-            {
-                if ((passMask & Passes.Clear) > 0)
-                    Graphics.Blit(null, m_RT, s_Material, 0);
-                if ((passMask & Passes.OutsetShadows) > 0)
-                    Graphics.Blit(null, m_RT, s_Material, 1);
-                if ((passMask & Passes.BackgroundColor) > 0)
-                    Graphics.Blit(null, m_RT, s_Material, 2);
-                if ((passMask & Passes.BackgroundImage) > 0)
-                    Graphics.Blit(null, m_RT, s_Material, 3);
-                if ((passMask & Passes.InsetShadows) > 0)
-                    Graphics.Blit(null, m_RT, s_Material, 4);
-                if ((passMask & Passes.Borders) > 0)
-                    Graphics.Blit(null, m_RT, s_Material, 5);
-                if ((passMask & Passes.Outline) > 0)
-                    Graphics.Blit(null, m_RT, s_Material, 6);
-            }
-            RenderTexture.active = prevRt;
+            
+            handler.SendMessage(Message.Obtain(handler, k_BlitTextureMessageId, this));
 
             var left = renderRect.xMin;
             var right = renderRect.xMax;
@@ -428,7 +461,26 @@ namespace UnityEngine.Dt.App.UI
             mwd.SetAllIndices(k_Indices);
         }
 
-        static Rect PrepareMaterial(Rect rect, IResolvedStyle currentStyle, AdditionalStyle ads, Passes passMask)
+        static Vector2Int GetRenderTextureSize(Rect renderRect)
+        {
+            var dpi = Mathf.Clamp(Platform.mainScreenScale, 1, 2);
+            int width, height;
+
+            if (renderRect.height > renderRect.width)
+            {
+                height = (int)Mathf.Clamp(renderRect.height * dpi, 16, 1024);
+                width = (int)(height * (renderRect.width / renderRect.height));
+            }
+            else
+            {
+                width = (int)Mathf.Clamp(renderRect.width * dpi, 16, 1024);
+                height = (int)(width * (renderRect.height / renderRect.width));
+            }
+            
+            return new Vector2Int(width, height);
+        }
+
+        static Rect ComputeContentRect(Rect rect, AdditionalStyle ads)
         {
             // shrink the rect by 1 pixel to avoid bleeding
             rect = new Rect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2);
@@ -454,9 +506,17 @@ namespace UnityEngine.Dt.App.UI
             // Compute the size based on the aspect ratio of the rect
             var width = Mathf.Abs(xMax - xMin);
             var height = Mathf.Abs(yMax - yMin);
-            var size = width;// Mathf.Max(width, height); todo(mickael-bonfill) add support for non-square aspect ratio
 
             var biggestRect = new Rect(new Vector2(xMin, yMin) - Vector2.one, new Vector2(width, height));
+
+            return biggestRect;
+        }
+
+        static Rect PrepareMaterial(Rect rect, IResolvedStyle currentStyle, AdditionalStyle ads, Passes passMask)
+        {
+            var biggestRect = ComputeContentRect(rect, ads);
+            var width = biggestRect.width;
+            var height = biggestRect.height;
 
             // Compute the UV coordinates of the rect (the normalized coordinates of the rect in the biggest rect)
             var rectRect = new Vector4(
@@ -466,10 +526,10 @@ namespace UnityEngine.Dt.App.UI
                 rect.height / biggestRect.height);
 
             s_Material.SetVector(k_Rect, rectRect);
-            s_Material.SetFloat(k_OutlineThickness, ads.outlineWidth / size);
+            s_Material.SetFloat(k_OutlineThickness, ads.outlineWidth / width);
             s_Material.SetColor(k_OutlineColor, ads.outlineColor);
-            s_Material.SetFloat(k_OutlineOffset, (ads.outlineOffset + ads.outlineWidth) / size);
-            s_Material.SetFloat(k_AASoftness, 1f / size);
+            s_Material.SetFloat(k_OutlineOffset, (ads.outlineOffset + ads.outlineWidth) / width);
+            s_Material.SetFloat(k_AASoftness, 1f / width);
             s_Material.SetFloat(k_Ratio, height / width);
 
             if ((passMask & Passes.Borders) > 0)
@@ -488,7 +548,7 @@ namespace UnityEngine.Dt.App.UI
             s_Material.SetVector(k_ShadowOffset, new Vector4(
                 ads.shadowOffset.x / width,
                 ads.shadowOffset.y / height,
-                ads.shadowSpread / size, ads.shadowBlur / size));
+                ads.shadowSpread / width, ads.shadowBlur / width));
 
             s_Material.SetColor(k_ShadowColor, ads.shadowColor);
 
@@ -503,9 +563,9 @@ namespace UnityEngine.Dt.App.UI
                 Mathf.Min(currentStyle.borderBottomLeftRadius, cornerLimit));
             borderRadius *= 0.5f;
 
-            s_Material.SetVector(k_Radiuses, borderRadius / size);
+            s_Material.SetVector(k_Radiuses, borderRadius / width);
 
-            s_Material.SetFloat(k_BorderThickness, ads.borderWidth / size);
+            s_Material.SetFloat(k_BorderThickness, ads.borderWidth / width);
 
             s_Material.SetColor(k_Color, ads.backgroundColor);
             var bgTex = currentStyle.backgroundImage.texture;

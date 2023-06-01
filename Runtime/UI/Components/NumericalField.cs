@@ -117,7 +117,27 @@ namespace UnityEngine.Dt.App.UI
             hierarchy.Add(m_InputContainer);
             hierarchy.Add(m_TrailingContainer);
 
+            m_InputElement.RegisterValueChangedCallback(OnInputValueChanged);
             m_InputElement.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
+        }
+
+        void OnInputValueChanged(ChangeEvent<string> evt)
+        {
+            if (ParseStringToValue(evt.newValue, out var v))
+            {
+                if (lowValue.HasValue)
+                    v = Max(v, lowValue.Value);
+                if (highValue.HasValue)
+                    v = Min(v, highValue.Value);
+                if (v.CompareTo(m_Value) != 0)
+                {
+                    using var e = ChangeEvent<TValueType>.GetPooled(m_Value, v);
+                    e.target = this;
+                    m_Value = v;
+                    SendEvent(e);
+                }
+            }
+            evt.StopPropagation();
         }
 
         /// <summary>
@@ -182,7 +202,7 @@ namespace UnityEngine.Dt.App.UI
         /// </summary>
         public TValueType value
         {
-            get => m_Value;
+            get => string.IsNullOrEmpty(m_InputElement.value) && ParseStringToValue(m_InputElement.value, out var val) ? val : m_Value;
             set
             {
                 var val = value;
@@ -220,9 +240,9 @@ namespace UnityEngine.Dt.App.UI
             RemoveFromClassList(Styles.keyboardFocusUssClassName);
 
             var val = ParseStringToValue(m_InputElement.value, out var v) ? v : value;
-            if (val.Equals(value))
+            if (val.Equals(m_Value))
             {
-                m_InputElement.SetValueWithoutNotify(ParseValueToString(value)); // reset previous value text if invalid text
+                m_InputElement.SetValueWithoutNotify(ParseValueToString(m_Value)); // reset previous value text if invalid text
                 return;
             }
 

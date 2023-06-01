@@ -88,6 +88,11 @@ namespace UnityEngine.Dt.App.UI
         Pressable m_Clickable;
 
         /// <summary>
+        /// The content container of this element.
+        /// </summary>
+        public override VisualElement contentContainer => null;
+
+        /// <summary>
         /// Default constructor.
         /// </summary>
         public Button() : this(null) { }

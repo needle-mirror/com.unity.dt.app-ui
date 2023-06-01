@@ -8,16 +8,11 @@ uid: setup
 
 To use the App UI Unity Package, you will need to download it from the Unity Package Manager.
 
-- Inside the Unity Editor, go to **Windows > Package Manager**.
-- Make sure your scope is set to **Unity Registry**.<br/>
-  <p align="center">
-  ![unity-registry-scope](images/unity-registry-scope.png)
-  </p>
-- Look for the **Digital Twins App UI** package then click **Install**.
-
-> [!WARNING]
-> If you are not able to find the package inside the Package Manager, you are probably using an unsupported version of Unity. 
-> See [Requirements](xref:system-requirements) section for more information.
+- Inside the Unity Editor, go to **Windows > Package Manager**
+- Click the **+** button at the top left of the window
+- Select **Add package from git URL...**
+- Enter the following URL: `com.unity.dt.app-ui`
+- Click the **Add** button
 
 ## Preliminary Setup
 

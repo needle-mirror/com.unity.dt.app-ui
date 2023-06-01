@@ -427,6 +427,7 @@ namespace UnityEngine.Dt.App.UI
             m_InputField.AddToClassList(valueUssClassName);
             m_InputField.RegisterCallback<FocusEvent>(OnInputFocusedIn);
             m_InputField.RegisterCallback<FocusOutEvent>(OnInputFocusedOut);
+            m_InputField.RegisterValueChangedCallback(OnInputValueChanged);
             hierarchy.Add(m_InputField);
 
             HideInputField();
@@ -437,6 +438,11 @@ namespace UnityEngine.Dt.App.UI
 
             size = Size.M;
             RegisterCallback<KeyDownEvent>(OnKeyDown);
+        }
+
+        void OnInputValueChanged(ChangeEvent<string> evt)
+        {
+            evt.StopPropagation();
         }
 
         /// <summary>
@@ -646,10 +652,10 @@ namespace UnityEngine.Dt.App.UI
         public int incrementFactor { get; set; } = 1;
 
         /// <inheritdoc cref="BaseSlider{TValueType}.ParseStringToValue"/>
-        protected override bool ParseStringToValue(string strValue, out int v)
+        protected override bool ParseStringToValue(string strValue, out int val)
         {
-            var ret = int.TryParse(strValue, out var val);
-            v = val;
+            var ret = UINumericFieldsUtils.StringToLong(strValue, out var v);
+            val = ret ? UINumericFieldsUtils.ClampToInt(v) : value;
             return ret;
         }
 
@@ -742,10 +748,10 @@ namespace UnityEngine.Dt.App.UI
         public float incrementFactor { get; set; } = 0.1f;
 
         /// <inheritdoc cref="BaseSlider{TValueType}.ParseStringToValue"/>
-        protected override bool ParseStringToValue(string strValue, out float v)
+        protected override bool ParseStringToValue(string strValue, out float val)
         {
-            var ret = float.TryParse(strValue, out var val);
-            v = val;
+            var ret = UINumericFieldsUtils.StringToDouble(strValue, out var d);
+            val = ret ? UINumericFieldsUtils.ClampToFloat(d) : value;
             return ret;
         }
 

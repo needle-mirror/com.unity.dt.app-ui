@@ -49,6 +49,9 @@
 .appui-icon--arrow-square-out {
     --unity-image: url("./ArrowSquareOut.png");
 }
+.appui-icon--arrows-submenuicon {
+    --unity-image: url("./ArrowsSubmenuicon.png");
+}
 .appui-icon--arrows-u-clockwise {
     --unity-image: url("./ArrowsUClockwise.png");
 }
