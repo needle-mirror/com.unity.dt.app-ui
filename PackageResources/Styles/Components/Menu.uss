@@ -56,8 +56,8 @@
 .appui-menuitem__submenu-icon {
     display: none;
     margin-left: var(--appui-alias-control-gap-md);
-    width: var(--appui-sizing-300);
-    height: var(--appui-sizing-300);
+    width: var(--appui-sizing-400);
+    height: var(--appui-sizing-400);
     translate: 2px 0;
 }
 
@@ -87,6 +87,12 @@
     flex-grow: 1;
     flex-shrink: 0;
     margin-right: var(--appui-alias-control-gap-md);
+}
+
+.appui-menuitem__shortcut {
+    flex-shrink: 0;
+    color: var(--appui-foregrounds-25);
+    font-size: var(--appui-font-sizes-body-xxs);
 }
 
 .appui-menuitem--active > .appui-menuitem__label {

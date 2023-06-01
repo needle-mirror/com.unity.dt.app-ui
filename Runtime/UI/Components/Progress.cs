@@ -1,3 +1,4 @@
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -89,6 +90,8 @@ namespace Unity.AppUI.UI
 
         IVisualElementScheduledItem m_Update;
 
+        static Handler s_Handler;
+
         /// <summary>
         /// The content container of the progress.
         /// </summary>
@@ -135,9 +138,33 @@ namespace Unity.AppUI.UI
             m_Image.MarkDirtyRepaint();
         }
 
+        const int k_ProgressGenerateTexturesMsgId = 521;
+
+        static Handler handler
+        {
+            get
+            {
+                if (s_Handler == null)
+                    s_Handler = new Handler(AppUI.Core.AppUI.mainLooper, HandleMessage);
+                
+                return s_Handler;
+            }
+        }
+
+        static bool HandleMessage(Message message)
+        {
+            if (message.what == k_ProgressGenerateTexturesMsgId)
+            {
+                ((Progress)message.obj).GenerateTextures();
+                return true;
+            }
+
+            return false;
+        }
+
         void OnGenerateVisualContent(MeshGenerationContext mgc)
         {
-            GenerateTextures();
+            handler.SendMessage(Message.Obtain(handler, k_ProgressGenerateTexturesMsgId, this));
             
             var left = paddingRect.xMin;
             var right = paddingRect.xMax;

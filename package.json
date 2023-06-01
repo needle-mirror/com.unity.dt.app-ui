@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "1ad830e315ecce45378257278457ddbf6f4b1237"
+    "revision": "66e7e555e45b51d45e88e3f4fcc14056d3919e37"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -70,10 +70,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed warning messages about styling.\n- Fixed warning messages about GUID conflicts in UI Kit samples.\n- Fixed warning messages about unused events in NavController."
+    "changelog": "### Fixed \n\n- Fixed NavAction being added twice in NavGraph when deleting a linked NavDestination."
   },
   "upmCi": {
-    "footprint": "1260ab417b17c287a01c4ff0c8b03445df6c68d2"
+    "footprint": "1d1ffe86ab5fd69d27edd8dc126f63e9dc48a9d9"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.3/manual/index.html"
 }

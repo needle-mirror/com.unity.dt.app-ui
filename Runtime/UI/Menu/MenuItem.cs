@@ -15,7 +15,7 @@ namespace Unity.AppUI.UI
 
         const string k_CheckmarkIconName = "check";
 
-        const string k_SubMenuIconName = "caret-right";
+        const string k_SubMenuIconName = "arrows-submenuicon";
 
         /// <summary>
         /// The MenuItem main styling class.
@@ -26,6 +26,11 @@ namespace Unity.AppUI.UI
         /// The MenuItem label styling class.
         /// </summary>
         public static readonly string labelUssClassName = ussClassName + "__label";
+        
+        /// <summary>
+        /// The MenuItem shortcut styling class.
+        /// </summary>
+        public static readonly string shortcutUssClassName = ussClassName + "__shortcut";
 
         /// <summary>
         /// The MenuItem icon styling class.
@@ -66,6 +71,8 @@ namespace Unity.AppUI.UI
 
         readonly LocalizedTextElement m_Label;
 
+        readonly LocalizedTextElement m_Shortcut;
+
         bool m_Selected;
 
         readonly VisualElement m_SubMenuContainer;
@@ -94,11 +101,14 @@ namespace Unity.AppUI.UI
             m_Icon.AddToClassList(iconUssClassName);
             m_Label = new LocalizedTextElement { name = labelUssClassName, pickingMode = PickingMode.Ignore };
             m_Label.AddToClassList(labelUssClassName);
+            m_Shortcut = new LocalizedTextElement { name = shortcutUssClassName, pickingMode = PickingMode.Ignore };
+            m_Shortcut.AddToClassList(shortcutUssClassName);
             var subMenuIcon = new Icon { name = subMenuIconUssClassname, iconName = k_SubMenuIconName, pickingMode = PickingMode.Ignore };
             subMenuIcon.AddToClassList(subMenuIconUssClassname);
             hierarchy.Add(checkmark);
             hierarchy.Add(m_Icon);
             hierarchy.Add(m_Label);
+            hierarchy.Add(m_Shortcut);
             hierarchy.Add(subMenuIcon);
             
             this.AddManipulator(new KeyboardFocusController());
@@ -296,6 +306,15 @@ namespace Unity.AppUI.UI
             get => m_Label.text;
             set => m_Label.text = value;
         }
+        
+        /// <summary>
+        /// The shortcut text value.
+        /// </summary>
+        public string shortcut
+        {
+            get => m_Shortcut.text;
+            set => m_Shortcut.text = value;
+        }
 
         /// <summary>
         /// The icon to display next to the label.
@@ -437,6 +456,12 @@ namespace Unity.AppUI.UI
                 name = "label",
                 defaultValue = null
             };
+            
+            readonly UxmlStringAttributeDescription m_Shortcut = new UxmlStringAttributeDescription
+            {
+                name = "shortcut",
+                defaultValue = null
+            };
 
             readonly UxmlBoolAttributeDescription m_Selectable = new UxmlBoolAttributeDescription
             {
@@ -463,6 +488,7 @@ namespace Unity.AppUI.UI
                 var element = (MenuItem)ve;
                 element.icon = m_Icon.GetValueFromBag(bag, cc);
                 element.label = m_Label.GetValueFromBag(bag, cc);
+                element.shortcut = m_Shortcut.GetValueFromBag(bag, cc);
                 element.selectable = m_Selectable.GetValueFromBag(bag, cc);
                 element.SetValueWithoutNotify(m_SelectedByDefault.GetValueFromBag(bag, cc));
 

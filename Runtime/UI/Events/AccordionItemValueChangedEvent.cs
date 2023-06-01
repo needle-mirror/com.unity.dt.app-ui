@@ -1,0 +1,33 @@
+using System.Reflection;
+using UnityEngine.UIElements;
+
+namespace Unity.AppUI.UI
+{
+    /// <summary>
+    /// Event for when an accordion item value has changed.
+    /// </summary>
+    public class AccordionItemValueChangedEvent : EventBase<AccordionItemValueChangedEvent>
+    {
+        static readonly PropertyInfo k_Propagation =
+            typeof(EventBase).GetProperty("propagation", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        /// <summary>
+        /// Resets all event members to their initial values.
+        /// </summary>
+        protected override void Init()
+        {
+            base.Init();
+            LocalInit();
+        }
+
+        void LocalInit()
+        {
+            k_Propagation.SetValue(this, 1 | 2 | 4);
+        }
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public AccordionItemValueChangedEvent() => LocalInit();
+    }
+}

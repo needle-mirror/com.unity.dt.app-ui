@@ -69,7 +69,7 @@ namespace Unity.AppUI.UI
 
             Dismiss(DismissType.OutOfBounds);
         }
-
+        
         /// <summary>
         /// Add an Action menu item to the current menu.
         /// </summary>
@@ -84,6 +84,29 @@ namespace Unity.AppUI.UI
             {
                 label = labelStr,
                 icon = iconName,
+                userData = actionId,
+            };
+            item.RegisterCallback(callback);
+            currentMenu.Add(item);
+            return this;
+        }
+
+        /// <summary>
+        /// Add an Action menu item to the current menu.
+        /// </summary>
+        /// <param name="actionId"> A unique identifier for the action. </param>
+        /// <param name="labelStr"> The raw label of the menu item (will be localized). </param>
+        /// <param name="iconName"> The icon of the menu item. </param>
+        /// <param name="shortcut"> The shortcut of the menu item. </param>
+        /// <param name="callback"> The callback to invoke when the menu item is clicked. </param>
+        /// <returns> The MenuBuilder instance. </returns>
+        public MenuBuilder AddAction(int actionId, string labelStr, string iconName, string shortcut, EventCallback<ClickEvent> callback)
+        {
+            var item = new MenuItem
+            {
+                label = labelStr,
+                icon = iconName,
+                shortcut = shortcut,
                 userData = actionId,
             };
             item.RegisterCallback(callback);

@@ -25,6 +25,22 @@
                             </appui:Accordion>
                         </ui:VisualElement>
 
+                        <appui:Text text="Exclusive" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:Accordion is-exclusive="true">
+                                <appui:AccordionItem title="Hello">
+                                    <appui:Button title="Click Here" />
+                                </appui:AccordionItem>
+                                <appui:AccordionItem title="Disabled Item" disabled="true">
+                                    <appui:Button title="Click Here Too" />
+                                </appui:AccordionItem>
+                                <appui:AccordionItem title="Another Item">
+                                    <appui:Button title="Click Here Too" />
+                                    <appui:Text text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec purus feugiat, molestie ipsum et, consequat nibh. Etiam non elit dui. Nullam vel eros sit amet arcu vestibulum accumsan in in leo." />
+                                </appui:AccordionItem>
+                            </appui:Accordion>
+                        </ui:VisualElement>
+
                         <!-- ActionBar -->
                         <appui:Heading text="ACTIONBAR" class="example-title" />
                         <appui:Text text="Default" class="example-subtitle" />

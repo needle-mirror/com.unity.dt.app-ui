@@ -210,7 +210,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public TValueType value
         {
-            get => m_Value;
+            get => string.IsNullOrEmpty(m_InputElement.value) && ParseStringToValue(m_InputElement.value, out var val) ? val : m_Value;
             set
             {
                 var val = value;
@@ -248,9 +248,9 @@ namespace Unity.AppUI.UI
             RemoveFromClassList(Styles.keyboardFocusUssClassName);
 
             var val = ParseStringToValue(m_InputElement.value, out var v) ? v : value;
-            if (val.Equals(value))
+            if (val.Equals(m_Value))
             {
-                m_InputElement.SetValueWithoutNotify(ParseValueToString(value)); // reset previous value text if invalid text
+                m_InputElement.SetValueWithoutNotify(ParseValueToString(m_Value)); // reset previous value text if invalid text
                 return;
             }
 

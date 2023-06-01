@@ -331,7 +331,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public string value
         {
-            get => m_Value;
+            get => m_InputField.value;
             set
             {
                 if (m_Value == value && m_PreviousValue == value)

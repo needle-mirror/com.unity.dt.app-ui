@@ -135,9 +135,12 @@ namespace Unity.AppUI.UI
                 if (previousValue == value)
                     return;
                 using var evt = ChangeEvent<bool>.GetPooled(previousValue, value);
+                using var itemEvt = AccordionItemValueChangedEvent.GetPooled();
+                itemEvt.target = this;
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
+                SendEvent(itemEvt);
             }
         }
 
@@ -241,13 +244,41 @@ namespace Unity.AppUI.UI
         public static readonly string ussClassName = "appui-accordion";
 
         /// <summary>
+        /// The behavior of the Accordion when multiple items are open.
+        /// <para>
+        /// If true, a maximum of one item can be open at a time.
+        /// </para>
+        /// </summary>
+        public bool isExclusive { get; set; } = false;
+
+        /// <summary>
         /// Default constructor.
         /// </summary>
         public Accordion()
         {
             AddToClassList(ussClassName);
 
+            RegisterCallback<AccordionItemValueChangedEvent>(OnAccordionItemValueChanged);
+
             pickingMode = PickingMode.Ignore;
+        }
+
+        void OnAccordionItemValueChanged(AccordionItemValueChangedEvent evt)
+        {
+            if (evt.target is AccordionItem item && item.parent == this)
+            {
+                if (isExclusive)
+                {
+                    foreach (var child in Children())
+                    {
+                        if (child != item && child is AccordionItem accordionItem)
+                        {
+                            accordionItem.SetValueWithoutNotify(false);
+                        }
+                    }
+                }
+                evt.StopPropagation();
+            }
         }
 
         /// <summary>
@@ -262,6 +293,18 @@ namespace Unity.AppUI.UI
         public new class UxmlTraits : VisualElementExtendedUxmlTraits
         {
             /// <summary>
+            /// The behavior of the Accordion when multiple items are open.
+            /// <para>
+            /// If true, a maximum of one item can be open at a time.
+            /// </para>
+            /// </summary>
+            readonly UxmlBoolAttributeDescription m_IsExclusive = new UxmlBoolAttributeDescription
+            {
+                name = "is-exclusive",
+                defaultValue = false
+            };
+
+            /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
             /// </summary>
             /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
@@ -271,6 +314,9 @@ namespace Unity.AppUI.UI
             {
                 m_PickingMode.defaultValue = PickingMode.Ignore;
                 base.Init(ve, bag, cc);
+
+                var element = (Accordion)ve;
+                element.isExclusive = m_IsExclusive.GetValueFromBag(bag, cc);
             }
         }
     }

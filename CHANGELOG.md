@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] - 2023-06-01
+
+### Fixed 
+
+- Fixed NavAction being added twice in NavGraph when deleting a linked NavDestination.
+
 ## [0.3.1] - 2023-05-17
 
 ### Fixed
@@ -54,6 +60,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improved StackView logic to support the navigation system.
 - Refactored Avatar component, there are no more containers for notifications and icons.
 - Refactored Badge component.
+
+## [0.2.12] - 2023-06-01
+
+### Added
+
+- Added `isExclusive` property to the `Accordion` component.
+- Added `shortcut` property to the `MenuItem` component.
+
+### Fixed
+
+- Fixed TextArea input size.
+- Fixed ValueChanged events on text based inputs.
+- Fixed depth tests in custom shaders for WebGL platform.
 
 ## [0.2.11] - 2023-05-12
 

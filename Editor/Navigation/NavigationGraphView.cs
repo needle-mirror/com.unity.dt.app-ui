@@ -370,9 +370,12 @@ namespace Unity.AppUI.Navigation.Editor
                 // set the action as global (current graph)
                 var action = (NavAction)edge.input.node.userData;
                 dest.actions.Remove(action);
-                currentGraph.actions.Add(action);
-                EditorUtility.SetDirty(currentGraph);
-                EditorUtility.SetDirty(dest);
+                if (!currentGraph.actions.Contains(action))
+                {
+                    currentGraph.actions.Add(action);
+                    EditorUtility.SetDirty(currentGraph);
+                    EditorUtility.SetDirty(dest);
+                }
             }
             else if (edge.output.node.userData is NavAction act)
             {

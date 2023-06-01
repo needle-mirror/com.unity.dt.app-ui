@@ -112,6 +112,16 @@ namespace Unity.AppUI.UI
             m_InputField.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
             m_InputField.RegisterValueChangedCallback(OnInputValueChanged);
             m_Placeholder.RegisterValueChangedCallback(OnPlaceholderValueChanged);
+            RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+        }
+
+        void OnGeometryChanged(GeometryChangedEvent evt)
+        {
+            var newHeight = contentRect.height;
+            var currentHeight = m_InputField.resolvedStyle.minHeight;
+
+            if (currentHeight.keyword == StyleKeyword.Auto || !Mathf.Approximately(newHeight, currentHeight.value))
+                m_InputField.style.minHeight = newHeight;
         }
 
         void OnPlaceholderValueChanged(ChangeEvent<string> evt)
@@ -185,7 +195,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public string value
         {
-            get => m_Value;
+            get => m_InputField.value;
             set
             {
                 if (m_Value == value && m_PreviousValue == value)
