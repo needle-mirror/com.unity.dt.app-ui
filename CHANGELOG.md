@@ -4,6 +4,19 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.3.3] - 2023-07-06
+
+### Added 
+
+- Added Magic Trackpad gesture support for MacOS.
+- Added `PanGesture` and `MagnificationGesture` events for UITK dispatcher.
+
+### Fixed
+
+- Fixed `Pressable` post-processing for disabled targets.
+- Fixed visual content rendering synchronization in `Progress` and `ExVisualElement` components.
+- Fixed Animation Recycling in `NavHost` component.
+
 ## [0.3.2] - 2023-06-01
 
 ### Fixed 
@@ -60,6 +73,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improved StackView logic to support the navigation system.
 - Refactored Avatar component, there are no more containers for notifications and icons.
 - Refactored Badge component.
+
+## [0.2.13] - 2023-06-28
+
+### Fixed
+
+- Fixed RenderTextures destruction to avoid memory leaks.
 
 ## [0.2.12] - 2023-06-01
 

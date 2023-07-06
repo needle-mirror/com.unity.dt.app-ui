@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "66e7e555e45b51d45e88e3f4fcc14056d3919e37"
+    "revision": "0024bea0ebe16f038c47192e048869c373fcc12a"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -67,13 +67,18 @@
       "displayName": "UndoRedo",
       "description": "Example of undo/redo system",
       "path": "Samples~/UndoRedo"
+    },
+    {
+      "displayName": "Trackpad",
+      "description": "Example of Trackpad gesture recognition",
+      "path": "Samples~/Trackpad"
     }
   ],
   "_upm": {
-    "changelog": "### Fixed \n\n- Fixed NavAction being added twice in NavGraph when deleting a linked NavDestination."
+    "changelog": "### Added \n\n- Added Magic Trackpad gesture support for MacOS.\n- Added `PanGesture` and `MagnificationGesture` events for UITK dispatcher.\n\n### Fixed\n\n- Fixed `Pressable` post-processing for disabled targets.\n- Fixed visual content rendering synchronization in `Progress` and `ExVisualElement` components.\n- Fixed Animation Recycling in `NavHost` component."
   },
   "upmCi": {
-    "footprint": "1d1ffe86ab5fd69d27edd8dc126f63e9dc48a9d9"
+    "footprint": "c4a10fc16afafb782a26b81ce71869453841b6cf"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.3/manual/index.html"
 }

@@ -102,6 +102,7 @@ namespace Unity.AppUI.Core
 #if UNITY_INPUTSYSTEM_PRESENT && ENABLE_INPUT_SYSTEM
 
         Vector2 m_PointerPosition = Vector2.zero;
+        bool m_PointerDown = false;
 
         void OnActionChange(object arg1, InputActionChange arg2)
         {
@@ -109,7 +110,7 @@ namespace Unity.AppUI.Core
             if (arg2 == InputActionChange.ActionPerformed && arg1 is InputAction action && module)
             {
                 if (action.name == module.leftClick.action.name)
-                    HandlePointerDown(m_PointerPosition);
+                    m_PointerDown = true;
                 else if (action.name == module.point.action.name)
                     m_PointerPosition = action.ReadValue<Vector2>();
             }
@@ -138,56 +139,80 @@ namespace Unity.AppUI.Core
         internal void Update()
         {
             Platform.PollSystemTheme();
+            Platform.PollGestures();
+            
+            var dpi = m_Settings.autoCorrectUiScale ? Platform.referenceDpi : Platform.baseDpi;
+            
+            Vector3 mousePosition;
+            bool mouseLeftButtonDown;
+#if ENABLE_LEGACY_INPUT_MANAGER
+            mousePosition = Input.mousePosition;
+            mouseLeftButtonDown = Input.GetMouseButtonDown(0);
+#elif ENABLE_INPUT_SYSTEM
+            mousePosition = m_PointerPosition;
+            mouseLeftButtonDown = m_PointerDown;
+            m_PointerDown = false;
+#endif
+            mousePosition = new Vector2(mousePosition.x, Screen.height - mousePosition.y);
 
-            if (m_PanelSettings is { Count: > 0 } && m_Settings.autoCorrectUiScale)
+            if (m_PanelSettings is {Count: > 0})
             {
-                var dpi = Platform.referenceDpi;
                 foreach (var panelSettings in m_PanelSettings.Keys)
                 {
-                    if (panelSettings)
+                    if (panelSettings is null)
+                        continue;
+
+                    var previousDpi = panelSettings.referenceDpi;
+                    var dpiChanged = m_Settings.autoCorrectUiScale && !Mathf.Approximately(panelSettings.referenceDpi, dpi);
+                    
+                    if (dpiChanged)
+                        panelSettings.referenceDpi = dpi;
+
+                    foreach (var panel in m_PanelSettings[panelSettings])
                     {
-                        if (!Mathf.Approximately(panelSettings.referenceDpi, dpi))
+                        if (panel is not {panel: { } iPanel})
+                            continue;
+                            
+                        if (dpiChanged)
                         {
-                            var previousValue = panelSettings.referenceDpi;
-                            panelSettings.referenceDpi = dpi;
-                            foreach (var panel in m_PanelSettings[panelSettings])
-                            {
-                                using var evt = DpiChangedEvent.GetPooled();
-                                evt.previousValue = previousValue;
-                                evt.newValue = dpi;
-                                evt.target = panel;
-                                panel.SendEvent(evt);
-                            }
+                            using var evt = DpiChangedEvent.GetPooled();
+                            evt.previousValue = previousDpi;
+                            evt.newValue = dpi;
+                            evt.target = panel;
+                            panel.SendEvent(evt);
+                        }
+
+                        VisualElement pickedElement = null;
+                        if (mouseLeftButtonDown || Platform.magnificationGestureChangedThisFrame ||
+                            Platform.panGestureChangedThisFrame)
+                        {
+                            var coord = RuntimePanelUtils.ScreenToPanel(iPanel, mousePosition);
+                            pickedElement = iPanel.Pick(coord);
+                        }
+                        
+                        if (mouseLeftButtonDown && pickedElement == null)
+                            panel.DismissAnyPopups(DismissType.OutOfBounds);
+                        
+                        if (Platform.panGestureChangedThisFrame && pickedElement != null)
+                        {
+                            using var evt = PanGestureEvent.GetPooled();
+                            evt.gesture = Platform.panGesture;
+                            evt.target = pickedElement;
+                            panel.SendEvent(evt);
+                        }
+                        
+                        if (Platform.magnificationGestureChangedThisFrame && pickedElement != null)
+                        {
+                            using var evt = MagnificationGestureEvent.GetPooled();
+                            evt.gesture = Platform.magnificationGesture;
+                            evt.target = pickedElement;
+                            panel.SendEvent(evt);
                         }
                     }
                 }
             }
-            
-#if ENABLE_LEGACY_INPUT_MANAGER
-            if (Input.GetMouseButtonDown(0))
-                HandlePointerDown(Input.mousePosition);
-#endif
 
             m_MainLooper.LoopOnce();
-        }
-        
-        void HandlePointerDown(Vector2 position)
-        {
-            // Reverse Y axis for UIElements
-            position = new Vector2(position.x, Screen.height - position.y);
-            foreach (var panelSettings in m_PanelSettings.Keys)
-            {
-                foreach (var panel in m_PanelSettings[panelSettings])
-                {
-                    if (panel is {panel: {} iPanel})
-                    {
-                        var coord = RuntimePanelUtils.ScreenToPanel(iPanel, position);
-                        var picked = iPanel.Pick(coord);
-                        if (picked == null)
-                            panel.DismissAnyPopups(DismissType.OutOfBounds);
-                    }
-                }
-            }
         }
 
         /// <summary>

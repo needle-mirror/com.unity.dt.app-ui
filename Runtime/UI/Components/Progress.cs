@@ -164,7 +164,10 @@ namespace Unity.AppUI.UI
 
         void OnGenerateVisualContent(MeshGenerationContext mgc)
         {
-            handler.SendMessage(Message.Obtain(handler, k_ProgressGenerateTexturesMsgId, this));
+            // handler.SendMessage(Message.Obtain(handler, k_ProgressGenerateTexturesMsgId, this));
+            var msg = Message.Obtain(null, k_ProgressGenerateTexturesMsgId, this);
+            HandleMessage(msg);
+            msg.Recycle();
             
             var left = paddingRect.xMin;
             var right = paddingRect.xMax;
@@ -277,7 +280,10 @@ namespace Unity.AppUI.UI
         void OnDetachedFromPanel(DetachFromPanelEvent evt)
         {
             if (m_RT)
+            {
                 m_RT.Release();
+                UnityObject.Destroy(m_RT);
+            }
 
             m_RT = null;
             

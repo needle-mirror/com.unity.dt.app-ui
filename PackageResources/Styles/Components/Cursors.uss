@@ -42,3 +42,48 @@
 .cursor--grabbing {
     cursor: var(--appui-alias-control-cursor-grabbing);
 }
+
+/* Unity Editor Overrides */
+.unity-editor :root {
+    cursor: arrow;
+}
+
+.unity-editor .cursor--pointer {
+    cursor: link;
+}
+
+.unity-editor .cursor--text {
+    cursor: text;
+}
+
+.unity-editor .cursor--disabled {
+    cursor: var(--appui-alias-control-cursor-disabled);
+}
+
+.unity-editor .cursor--ew-resize {
+    cursor: resize-horizontal;
+}
+
+.unity-editor .cursor--ns-resize {
+    cursor: resize-vertical;
+}
+
+.unity-editor .cursor--nesw-resize {
+    cursor: resize-up-right;
+}
+
+.unity-editor .cursor--nwse-resize {
+    cursor: resize-up-left;
+}
+
+.unity-editor .cursor--move {
+    cursor: move-arrow;
+}
+
+.unity-editor .cursor--grab {
+    cursor: var(--appui-alias-control-cursor-grab);
+}
+
+.unity-editor .cursor--grabbing {
+    cursor: var(--appui-alias-control-cursor-grabbing);
+}

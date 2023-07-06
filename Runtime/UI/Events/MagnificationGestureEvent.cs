@@ -1,20 +1,18 @@
-using System;
-using System.Reflection;
+using Unity.AppUI.Core;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.UI
 {
-    static class EventUtils
-    {
-        internal static readonly PropertyInfo propagationProp =
-            typeof(EventBase).GetProperty("propagation", BindingFlags.Instance | BindingFlags.NonPublic);
-    }
-    
     /// <summary>
-    /// An Action has been triggered.
+    /// Event sent when a magnification gesture is recognized.
     /// </summary>
-    public class ActionTriggeredEvent : EventBase<ActionTriggeredEvent>
+    public class MagnificationGestureEvent : EventBase<MagnificationGestureEvent>
     {
+        /// <summary>
+        /// The magnification gesture.
+        /// </summary>
+        public MagnificationGesture gesture { get; set; }
+        
         /// <summary>
         /// Resets all event members to their initial values.
         /// </summary>
@@ -33,6 +31,5 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public ActionTriggeredEvent() => LocalInit();
-    }
+        public MagnificationGestureEvent() => LocalInit();    }
 }

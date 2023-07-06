@@ -67,12 +67,16 @@ namespace Unity.AppUI.UI
             if (m_RT && (Mathf.Abs(m_RT.width - rectSize.x) > 1 || Mathf.Abs(m_RT.height - rectSize.y) > 1))
             {
                 m_RT.Release();
+                UnityObject.Destroy(m_RT);
                 m_RT = null;
             }
 
             if (!m_RT)
             {
-                m_RT = new RenderTexture((int)rectSize.x, (int)rectSize.y, 24);
+                m_RT = new RenderTexture((int)rectSize.x, (int)rectSize.y, 24)
+                {
+                    hideFlags = HideFlags.HideAndDontSave,
+                };
                 m_RT.Create();
             }
 

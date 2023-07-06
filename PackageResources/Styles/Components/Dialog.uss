@@ -77,6 +77,10 @@
     display: none;
 }
 
+.appui-dialog__header {
+    flex-grow: 1;
+}
+
 .appui-dialog--dismissable > .appui-dialog__heading > .appui-button {
     display: flex;
 }

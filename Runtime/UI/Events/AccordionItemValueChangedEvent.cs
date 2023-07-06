@@ -8,9 +8,6 @@ namespace Unity.AppUI.UI
     /// </summary>
     public class AccordionItemValueChangedEvent : EventBase<AccordionItemValueChangedEvent>
     {
-        static readonly PropertyInfo k_Propagation =
-            typeof(EventBase).GetProperty("propagation", BindingFlags.Instance | BindingFlags.NonPublic);
-
         /// <summary>
         /// Resets all event members to their initial values.
         /// </summary>
@@ -22,7 +19,7 @@ namespace Unity.AppUI.UI
 
         void LocalInit()
         {
-            k_Propagation.SetValue(this, 1 | 2 | 4);
+            EventUtils.propagationProp.SetValue(this, 1 | 2 | 4);
         }
 
         /// <summary>

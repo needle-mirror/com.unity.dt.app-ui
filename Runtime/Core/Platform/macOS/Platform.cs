@@ -12,6 +12,12 @@ namespace Unity.AppUI.Core
 
         [DllImport("AppUINativePlugin")]
         static extern int _NSCurrentAppearance();
+
+        [DllImport("AppUINativePlugin")]
+        static extern bool ReadTouchEvent(ref PlatformTouchEvent e);
+
+        [DllImport("AppUINativePlugin")]
+        static extern void DestroyTrackingObject();
     }
 }
 #endif

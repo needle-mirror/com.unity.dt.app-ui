@@ -3,6 +3,7 @@ using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace Unity.AppUI.UI
 {
@@ -127,6 +128,17 @@ namespace Unity.AppUI.UI
             {
                 var ve = (ExVisualElement)msg.obj;
 
+                if (ve.panel == null)
+                {
+                    if (ve.m_RT)
+                    {
+                        ve.m_RT.Release();
+                        UnityObject.Destroy(ve.m_RT);
+                    }
+                    ve.m_RT = null;
+                    return true;
+                }
+
                 var renderRect = PrepareMaterial(ve.paddingRect, ve.resolvedStyle, ve.m_Style, ve.passMask);
                 var rtSize = GetRenderTextureSize(renderRect);
 
@@ -136,6 +148,7 @@ namespace Unity.AppUI.UI
                 if (ve.m_RT && (ve.m_RT.width != rtSize.x || ve.m_RT.height != rtSize.y))
                 {
                     ve.m_RT.Release();
+                    UnityObject.Destroy(ve.m_RT);
                     ve.m_RT = null;
                 }
 
@@ -321,7 +334,10 @@ namespace Unity.AppUI.UI
         void OnDetachedFromPanel(DetachFromPanelEvent evt)
         {
             if (m_RT)
+            {
                 m_RT.Release();
+                UnityObject.Destroy(m_RT);
+            }
 
             m_RT = null;
         }
@@ -403,18 +419,23 @@ namespace Unity.AppUI.UI
             if (!s_Material)
                 s_Material = new Material(Shader.Find("Hidden/App UI/Box"));
 
-            if (!paddingRect.IsValid() || passMask == 0)
+            if (!paddingRect.IsValid())
+                return;
+
+            if (passMask == 0)
             {
                 if (m_RT)
                 {
                     m_RT.Release();
-                    m_RT = null;
+                    UnityObject.Destroy(m_RT);
                 }
-
+                m_RT = null;
+                mgc.Allocate(0, 0, null);
                 return;
             }
 
             var renderRect = ComputeContentRect(paddingRect, m_Style);
+            
             var rtSize = GetRenderTextureSize(renderRect);
 
             if (rtSize.x < 1 || rtSize.y < 1)
@@ -423,17 +444,24 @@ namespace Unity.AppUI.UI
             if (m_RT && (m_RT.width != rtSize.x || m_RT.height != rtSize.y))
             {
                 m_RT.Release();
+                UnityObject.Destroy(m_RT);
                 m_RT = null;
             }
 
             if (!m_RT)
             {
-                m_RT = new RenderTexture(rtSize.x, rtSize.y, 24);
+                m_RT = new RenderTexture(rtSize.x, rtSize.y, 24)
+                {
+                    hideFlags = HideFlags.HideAndDontSave
+                };
                 m_RT.Create();
             }
-            
-            handler.SendMessage(Message.Obtain(handler, k_BlitTextureMessageId, this));
 
+            //handler.SendMessage(Message.Obtain(handler, k_BlitTextureMessageId, this));
+            var msg = Message.Obtain(null, k_BlitTextureMessageId, this);
+            HandleMessage(msg);
+            msg.Recycle();
+            
             var left = renderRect.xMin;
             var right = renderRect.xMax;
             var top = renderRect.yMin;

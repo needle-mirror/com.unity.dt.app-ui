@@ -98,6 +98,7 @@ namespace Unity.AppUI.UI
         {
             clicked?.Invoke();
             clickedWithEventInfo?.Invoke(evt);
+            PostProcessDisabledState();
         }
         
         /// <summary>
@@ -106,6 +107,17 @@ namespace Unity.AppUI.UI
         internal void InvokeLongPressed()
         {
             longClicked?.Invoke();
+            PostProcessDisabledState();
+        }
+
+        void PostProcessDisabledState()
+        {
+            if (!target.enabledInHierarchy)
+            {
+                // the element is no more enabled, remove the active and hovered states
+                Deactivate(m_PointerId);
+                RemoveHoverState();
+            }
         }
 
         /// <summary>
@@ -233,20 +245,26 @@ namespace Unity.AppUI.UI
             if (!target.enabledInHierarchy)
                 return;
             
-            var pseudoStates = (PseudoStates)(int)Clickable.pseudoStateProperty.GetValue(target);
             if (evt.pointerId == PointerId.mousePointerId)
-                Clickable.pseudoStateProperty.SetValue(target, (int)(pseudoStates | PseudoStates.Hover));
-            target.AddToClassList(Styles.hoveredUssClassName);
+                AddHoveredState();
         }
         
         void OnPointerLeave(PointerLeaveEvent evt)
         {
-            if (!target.enabledInHierarchy)
-                return;
-            
+            RemoveHoverState();
+        }
+
+        void AddHoveredState()
+        {
             var pseudoStates = (PseudoStates)(int)Clickable.pseudoStateProperty.GetValue(target);
-            if (evt.pointerId == PointerId.mousePointerId)
-                Clickable.pseudoStateProperty.SetValue(target, (int)(pseudoStates & ~PseudoStates.Hover));
+            Clickable.pseudoStateProperty.SetValue(target, (int) (pseudoStates | PseudoStates.Hover));
+            target.AddToClassList(Styles.hoveredUssClassName);
+        }
+        
+        void RemoveHoverState()
+        {
+            var pseudoStates = (PseudoStates)(int)Clickable.pseudoStateProperty.GetValue(target);
+            Clickable.pseudoStateProperty.SetValue(target, (int)(pseudoStates & ~PseudoStates.Hover));
             target.RemoveFromClassList(Styles.hoveredUssClassName);
         }
 
@@ -347,7 +365,8 @@ namespace Unity.AppUI.UI
 
         void Activate(int pointerId)
         {
-            target.CapturePointer(pointerId);
+            if (!target.HasPointerCapture(pointerId))
+                target.CapturePointer(pointerId);
             ForceActivePseudoState();
             target.AddToClassList(Styles.activeUssClassName);
             m_PointerId = pointerId;
@@ -366,7 +385,9 @@ namespace Unity.AppUI.UI
         void Deactivate(int pointerId)
         {
             active = false;
-            target.ReleasePointer(pointerId);
+            
+            if (target.HasPointerCapture(pointerId))
+                target.ReleasePointer(pointerId);
             
             if (m_DeferDeactivate != null)
                 return;

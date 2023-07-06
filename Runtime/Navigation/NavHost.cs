@@ -96,10 +96,8 @@ namespace Unity.AppUI.Navigation
             var content = destination.template;
             if (content != null)
             {
-                if (m_RemoveAnim is {isRunning: true})
-                    m_RemoveAnim.Recycle();
-                if (m_AddAnim is {isRunning: true})
-                    m_AddAnim.Recycle();
+                m_RemoveAnim?.Recycle();
+                m_AddAnim?.Recycle();
 
                 var item = CreateItem(destination, content);
                 if (m_Container.childCount == 0)
@@ -118,7 +116,8 @@ namespace Unity.AppUI.Navigation
                             exitAnimationFunc.durationMs, 
                             exitAnimationFunc.callback)
                         .Ease(exitAnimationFunc.easing)
-                        .OnCompleted(() => m_Container.Remove(previousItem));
+                        .OnCompleted(() => m_Container.Remove(previousItem))
+                        .KeepAlive();
                     if (isPop)
                         m_Container.Insert(0, item);
                     else
@@ -126,7 +125,8 @@ namespace Unity.AppUI.Navigation
                     m_AddAnim = item.experimental.animation.Start(0, 1, 
                             enterAnimationFunc.durationMs, 
                             enterAnimationFunc.callback)
-                        .Ease(enterAnimationFunc.easing);
+                        .Ease(enterAnimationFunc.easing)
+                        .KeepAlive();
                 }
                 if (item.Q<NavigationScreen>() is { } screen)
                     screen.InvokeOnEnter(navController, destination, args);
