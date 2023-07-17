@@ -178,6 +178,13 @@ namespace Unity.AppUI.UI
 
         void GenerateTextures()
         {
+            if (!s_Material)
+            {
+                s_Material = MaterialUtils.CreateMaterial("Hidden/App UI/Mask");
+                if (!s_Material)
+                    return;
+            }
+            
             var rect = paddingRect;
 
             if (!rect.IsValid())
@@ -199,11 +206,6 @@ namespace Unity.AppUI.UI
             {
                 m_RT = RenderTexture.GetTemporary((int)texSize.x, (int)texSize.y, 24);
                 m_RT.Create();
-            }
-
-            if (!s_Material)
-            {
-                s_Material = new Material(Shader.Find("Hidden/App UI/Mask")) { hideFlags = HideFlags.HideAndDontSave };
             }
 
             s_Material.SetColor(k_InnerMaskColor, innerMaskColor);

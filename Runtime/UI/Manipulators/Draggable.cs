@@ -43,22 +43,22 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The delta position between the last frame and the current one.
         /// </summary>
-        internal Vector2 deltaPos { get; set; } = Vector2.zero;
+        public Vector2 deltaPos { get; internal set; } = Vector2.zero;
 
         /// <summary>
         /// The local position received from the imGui native event.
         /// </summary>
-        internal Vector2 localPosition { get; set; }
+        public Vector2 localPosition { get; internal set; }
 
         /// <summary>
         /// The world position received from the imGui native event.
         /// </summary>
-        internal Vector2 position { get; set; }
+        public Vector2 position { get; internal set; }
 
         /// <summary>
         /// Has the pointer moved since the last <see cref="PointerDownEvent"/>.
         /// </summary>
-        internal bool hasMoved { get; set; }
+        public bool hasMoved { get; internal set; }
 
         /// <summary>
         /// Cancel the drag operation.

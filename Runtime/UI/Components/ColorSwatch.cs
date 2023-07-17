@@ -268,6 +268,13 @@ namespace Unity.AppUI.UI
 
         void GenerateTextures()
         {
+            if (!s_Material)
+            {
+                s_Material = MaterialUtils.CreateMaterial("Hidden/App UI/ColorSwatch");
+                if (!s_Material)
+                    return;
+            }
+            
             var rect = paddingRect;
 
             if (!rect.IsValid())
@@ -289,11 +296,6 @@ namespace Unity.AppUI.UI
             {
                 m_RT = RenderTexture.GetTemporary((int)texSize.x, (int)texSize.y, 24);
                 m_RT.Create();
-            }
-
-            if (!s_Material)
-            {
-                s_Material = new Material(Shader.Find("Hidden/App UI/ColorSwatch")) { hideFlags = HideFlags.HideAndDontSave };
             }
 
             m_ColorList.Clear();

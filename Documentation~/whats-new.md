@@ -2,7 +2,7 @@
 uid: whats-new
 ---
 
-# What's New in **0.3.3**
+# What's New in **0.3.4**
 
 This section contains information about new features, improvements, and issues fixed.
 
@@ -10,13 +10,12 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-### Added 
+### Changed
 
-- Added Magic Trackpad gesture support for MacOS.
-- Added `PanGesture` and `MagnificationGesture` events for UITK dispatcher.
+- Draggable manipulator now is publicly accessible.
 
 ### Fixed
 
-- Fixed `Pressable` post-processing for disabled targets.
-- Fixed visual content rendering synchronization in `Progress` and `ExVisualElement` components.
-- Fixed Animation Recycling in `NavHost` component.
+- Ensure shaders exist before creating materials.
+- Fixed random crashes during domain unload in Unity 2022.3+.
+- Fixed cursors variables for Editor context.

@@ -417,7 +417,11 @@ namespace Unity.AppUI.UI
         void GenerateVisualContent(MeshGenerationContext mgc)
         {
             if (!s_Material)
-                s_Material = new Material(Shader.Find("Hidden/App UI/Box"));
+            {
+                s_Material = MaterialUtils.CreateMaterial("Hidden/App UI/Box");
+                if (!s_Material)
+                    return;
+            }
 
             if (!paddingRect.IsValid())
                 return;

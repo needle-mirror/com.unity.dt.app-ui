@@ -44,46 +44,17 @@
 }
 
 /* Unity Editor Overrides */
-.unity-editor :root {
-    cursor: arrow;
-}
+.unity-editor {
+    --appui-alias-control-cursor-move: move-arrow;
+    --appui-alias-control-cursor-nwseresize: resize-up-left;
+    --appui-alias-control-cursor-neswresize: resize-up-right;
+    --appui-alias-control-cursor-nsresize: resize-vertical;
+    --appui-alias-control-cursor-ewresize: resize-horizontal;
+    --appui-alias-control-cursor-col-resize: split-resize-left-right;
+    --appui-alias-control-cursor-row-resize: split-resize-up-down;
+    --appui-alias-control-cursor-text: text;
+    --appui-alias-control-cursor-pointer: link;
+    --appui-alias-control-cursor-default: arrow;
 
-.unity-editor .cursor--pointer {
-    cursor: link;
-}
-
-.unity-editor .cursor--text {
-    cursor: text;
-}
-
-.unity-editor .cursor--disabled {
-    cursor: var(--appui-alias-control-cursor-disabled);
-}
-
-.unity-editor .cursor--ew-resize {
-    cursor: resize-horizontal;
-}
-
-.unity-editor .cursor--ns-resize {
-    cursor: resize-vertical;
-}
-
-.unity-editor .cursor--nesw-resize {
-    cursor: resize-up-right;
-}
-
-.unity-editor .cursor--nwse-resize {
-    cursor: resize-up-left;
-}
-
-.unity-editor .cursor--move {
-    cursor: move-arrow;
-}
-
-.unity-editor .cursor--grab {
-    cursor: var(--appui-alias-control-cursor-grab);
-}
-
-.unity-editor .cursor--grabbing {
-    cursor: var(--appui-alias-control-cursor-grabbing);
+    --appui-alias-control-cursor-disabled: arrow;
 }

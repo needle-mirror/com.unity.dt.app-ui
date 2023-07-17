@@ -333,6 +333,7 @@ namespace Unity.AppUI.Editor
             var detailPage = new VisualElement();
             var toolbar = new Toolbar();
             var panel = new Panel { theme = m_CurrentTheme };
+            panel.AddToClassList("unity-editor");
             m_ThemeDropdown = new EditorToolbarDropdown("Theme", () =>
             {
                 var menu = new GenericMenu();

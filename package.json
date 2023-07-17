@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "0024bea0ebe16f038c47192e048869c373fcc12a"
+    "revision": "a6d1a9eca93e65719724f602228933bd0561bd44"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -75,10 +75,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added \n\n- Added Magic Trackpad gesture support for MacOS.\n- Added `PanGesture` and `MagnificationGesture` events for UITK dispatcher.\n\n### Fixed\n\n- Fixed `Pressable` post-processing for disabled targets.\n- Fixed visual content rendering synchronization in `Progress` and `ExVisualElement` components.\n- Fixed Animation Recycling in `NavHost` component."
+    "changelog": "### Changed\n\n- Draggable manipulator now is publicly accessible.\n\n### Fixed\n\n- Ensure shaders exist before creating materials.\n- Fixed random crashes during domain unload in Unity 2022.3+.\n- Fixed cursors variables for Editor context."
   },
   "upmCi": {
-    "footprint": "c4a10fc16afafb782a26b81ce71869453841b6cf"
+    "footprint": "f5d9a720e3bfbc47eef1bb9e1dd9104a106e0eb6"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.3/manual/index.html"
 }

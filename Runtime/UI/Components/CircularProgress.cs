@@ -56,6 +56,13 @@ namespace Unity.AppUI.UI
         /// </summary>
         protected override void GenerateTextures()
         {
+            if (!s_Material)
+            {
+                s_Material = MaterialUtils.CreateMaterial("Hidden/App UI/CircularProgress");
+                if (!s_Material)
+                    return;
+            }
+            
             var rect = contentRect;
 
             if (!rect.IsValid())
@@ -83,11 +90,6 @@ namespace Unity.AppUI.UI
                 m_RT.Create();
             }
 
-            if (!s_Material)
-            {
-                s_Material = new Material(Shader.Find("Hidden/App UI/CircularProgress"));
-            }
-            
             var time = Application.isEditor ?
 #if UNITY_EDITOR
                 (float)EditorApplication.timeSinceStartup

@@ -53,6 +53,13 @@ namespace Unity.AppUI.UI
         /// </summary>
         protected override void GenerateTextures()
         {
+            if (!s_Material)
+            {
+                s_Material = MaterialUtils.CreateMaterial("Hidden/App UI/LinearProgress");
+                if (!s_Material)
+                    return;
+            }
+            
             var rect = contentRect;
 
             if (!rect.IsValid())
@@ -78,11 +85,6 @@ namespace Unity.AppUI.UI
                     hideFlags = HideFlags.HideAndDontSave,
                 };
                 m_RT.Create();
-            }
-
-            if (!s_Material)
-            {
-                s_Material = new Material(Shader.Find("Hidden/App UI/LinearProgress"));
             }
 
             var time = Application.isEditor ?

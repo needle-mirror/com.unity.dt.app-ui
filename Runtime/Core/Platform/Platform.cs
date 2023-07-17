@@ -630,18 +630,5 @@ namespace Unity.AppUI.Core
                 Debug.LogWarning("Haptic Feedbacks are not supported on the current platform.");
 #endif
         }
-
-        static void OnDomainUnloaded(object sender, EventArgs e)
-        {
-#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-            DestroyTrackingObject();
-#endif
-        }
-        
-        static Platform()
-        {
-            AppDomain.CurrentDomain.DomainUnload -= OnDomainUnloaded;
-            AppDomain.CurrentDomain.DomainUnload += OnDomainUnloaded;
-        }
     }
 }
