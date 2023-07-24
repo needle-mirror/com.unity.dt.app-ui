@@ -209,6 +209,12 @@ namespace Unity.AppUI.Core
             if (s_Manager == null)
                 return;
 
+            if (EditorApplication.isCompiling)
+            {
+                s_Manager.Cleanup();
+                return;
+            }
+
             if (settings.useCustomEditorUpdateFrequency)
             {
                 var currentTime = Time.realtimeSinceStartupAsDouble;

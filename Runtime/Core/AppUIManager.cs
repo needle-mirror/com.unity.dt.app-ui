@@ -134,6 +134,15 @@ namespace Unity.AppUI.Core
         }
 
         /// <summary>
+        /// Clean up the AppUIManager.
+        /// </summary>
+        internal void Cleanup()
+        {
+            m_MainLooper?.RemoveCallbacksAndMessages(null);
+            UnregisterAllPanels();
+        }
+
+        /// <summary>
         /// Update method that should be called every frame.
         /// </summary>
         internal void Update()
@@ -257,6 +266,14 @@ namespace Unity.AppUI.Core
                 if (m_PanelSettings[panelSettings].Count == 0)
                     m_PanelSettings.Remove(panelSettings);
             }
+        }
+
+        /// <summary>
+        /// Unregisters all panels.
+        /// </summary>
+        internal void UnregisterAllPanels()
+        {
+            m_PanelSettings.Clear();
         }
     }
 }

@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "a6d1a9eca93e65719724f602228933bd0561bd44"
+    "revision": "14ee731c6a3e8d232506af4a038d618ace3eac11"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -75,10 +75,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Changed\n\n- Draggable manipulator now is publicly accessible.\n\n### Fixed\n\n- Ensure shaders exist before creating materials.\n- Fixed random crashes during domain unload in Unity 2022.3+.\n- Fixed cursors variables for Editor context."
+    "changelog": "### Fixed\n\n- Regenerated the meta files inside MacOS bundle folder to avoid error messages in the console."
   },
   "upmCi": {
-    "footprint": "f5d9a720e3bfbc47eef1bb9e1dd9104a106e0eb6"
+    "footprint": "a6ccdd7f1729b4217febd6975b6f44ed8e3063b8"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.3/manual/index.html"
 }
