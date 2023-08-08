@@ -12,6 +12,7 @@
 @import "./Components/Breadcrumbs.uss";
 @import "./Components/BoundsField.uss";
 @import "./Components/Button.uss";
+@import "./Components/Canvas.uss";
 @import "./Components/Checkbox.uss";
 @import "./Components/Chip.uss";
 @import "./Components/ColorSwatch.uss";
@@ -27,6 +28,7 @@
 @import "./Components/Dropdown.uss";
 @import "./Components/Elevation.uss";
 @import "./Components/FAB.uss";
+@import "./Components/GridView.uss";
 @import "./Components/NumericalField.uss";
 @import "./Components/Heading.uss";
 @import "./Components/Icon.uss";

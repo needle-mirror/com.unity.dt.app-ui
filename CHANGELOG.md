@@ -4,6 +4,47 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.3.8] - 2023-08-08
+
+### Added
+
+- Added `tooltip-delay-ms` property to the `ContextProvider` component to customize the tooltip delay.
+- Added more shortcuts to the `Canvas` component.
+
+### Fixed 
+
+- Fixed Editor crash when updating packages from UPM window.
+
+## [0.3.7] - 2023-08-07
+
+### Added
+
+- Added `tooltipTemplate` property (by code only) on `VisualElement` to customize the tooltip content.
+
+### Fixed
+
+- Fixed Canvas manipulators for mouse devices and generic touchpads.
+- Fixed Tooltip manipulator coordinates to pick elements under the cursor.
+- Fixed Tooltip display for Editor context.
+- Fixed random crashes when switching focused window.
+
+## [0.3.6] - 2023-07-28
+
+### Added
+
+- Added `autoPlayDuration` property to the `PageView` component.
+- Added `variant` property to the `IconButton` component.
+- Added `Canvas` component.
+- Added `GridView` component.
+
+### Changed
+
+- Changed the calibration values for Magic Trackpad gestures recognition.
+
+### Fixed
+
+- Fixed horizontal ScrollView styling.
+
 ## [0.3.5] - 2023-07-24
 
 ### Fixed

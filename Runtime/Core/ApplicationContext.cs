@@ -79,6 +79,11 @@ namespace Unity.AppUI.Core
             }
         }
 #endif
+        
+        /// <summary>
+        /// The delay before the tooltip is displayed.
+        /// </summary>
+        public int? tooltipDelayMs { get; }
 
         /// <summary>
         /// Construct an <see cref="ApplicationContext"/> based on an other one, and overrides from a given <see cref="ContextProvider"/>.
@@ -90,6 +95,7 @@ namespace Unity.AppUI.Core
             lang = contextProvider.lang ?? context.lang;
             scale = contextProvider.scale ?? context.scale;
             theme = contextProvider.theme ?? context.theme;
+            tooltipDelayMs = contextProvider.tooltipDelayMs ?? context.tooltipDelayMs;
             preferredTooltipPlacement = contextProvider.preferredTooltipPlacement ?? context.preferredTooltipPlacement;
             panel = context.panel; // no override
             closestProvider = contextProvider;
@@ -104,6 +110,7 @@ namespace Unity.AppUI.Core
             lang = app.lang;
             scale = app.scale;
             theme = app.theme;
+            tooltipDelayMs = app.tooltipDelayMs;
             preferredTooltipPlacement = app.preferredTooltipPlacement;
             panel = app;
             closestProvider = app;

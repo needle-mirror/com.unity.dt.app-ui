@@ -68,9 +68,7 @@ namespace Unity.AppUI.UI
         string m_Value;
 
         string m_PreviousValue;
-
-        int m_VisualInputTabIndex;
-
+        
         internal static readonly PropertyInfo isCompositeRootProp = typeof(VisualElement).GetProperty("isCompositeRoot", BindingFlags.Instance | BindingFlags.NonPublic);
 
         internal static readonly PropertyInfo excludeFromFocusRingProp = typeof(Focusable).GetProperty("excludeFromFocusRing", BindingFlags.Instance | BindingFlags.NonPublic);

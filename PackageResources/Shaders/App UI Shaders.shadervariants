@@ -53,3 +53,10 @@ ShaderVariantCollection:
       variants:
       - keywords: 
         passType: 0
+  - first: {fileID: 4800000, guid: 0af910563c584febabca3f5810be2f28, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: DRAW_POINTS_ON
+        passType: 0

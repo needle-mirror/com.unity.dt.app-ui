@@ -14,10 +14,10 @@ namespace Unity.AppUI.Core
         static extern int _NSCurrentAppearance();
 
         [DllImport("AppUINativePlugin")]
-        static extern bool ReadTouchEvent(ref PlatformTouchEvent e);
+        static extern bool _NSReadTouchEvent(ref PlatformTouchEvent e);
 
         [DllImport("AppUINativePlugin")]
-        static extern void DestroyTrackingObject();
+        static extern void _NSSetupFocusedTrackingObject();
     }
 }
 #endif

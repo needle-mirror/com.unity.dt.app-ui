@@ -14,7 +14,7 @@ namespace Unity.AppUI.Core
     {
         void Update()
         {
-            if (!UnityEngine.Application.isEditor)
+            if (!Application.isEditor)
             {
                 AppUI.EnsureInitialized();
                 AppUI.Update();

@@ -3,7 +3,7 @@
   --appui-alias-control-gap-xs: 2px;
   --appui-alias-control-outline-style: solid;
   --appui-alias-control-border-style: solid;
-  --appui-alias-control-cursor-move: url('../../Cursors/move.png');
+  --appui-alias-control-cursor-move: url('../../Cursors/move.png') 18 18;
   --appui-alias-control-cursor-nwseresize: url('../../Cursors/resizenorthwestsoutheast.png') 18 18;
   --appui-alias-control-cursor-neswresize: url('../../Cursors/resizenortheastsouthwest.png') 18 18;
   --appui-alias-control-cursor-nsresize: url('../../Cursors/resizenorthsouth.png') 18 18;

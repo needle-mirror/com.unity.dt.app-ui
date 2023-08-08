@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.UI
@@ -12,6 +13,9 @@ namespace Unity.AppUI.UI
     /// </summary>
     public static class VisualElementExtensions
     {
+        internal static readonly PropertyInfo worldBoundingBoxProp =
+            typeof(VisualElement).GetProperty("worldBoundingBox", BindingFlags.NonPublic | BindingFlags.Instance);
+
         static readonly ConditionalWeakTable<VisualElement, AdditionalData> k_AdditionalDataCache =
             new ConditionalWeakTable<VisualElement, AdditionalData>();
 
@@ -127,6 +131,35 @@ namespace Unity.AppUI.UI
             var data = k_AdditionalDataCache.GetOrCreateValue(element);
             data.preferredTooltipPlacement = placement;
         }
+        
+        /// <summary>
+        /// Get the tooltip template for a <see cref="VisualElement"/>.
+        /// </summary>
+        /// <param name="element"> The target visual element.</param>
+        /// <returns> The tooltip template.</returns>
+        /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object can't be null.</exception>
+        public static VisualElement GetTooltipTemplate(this VisualElement element)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
+            return k_AdditionalDataCache.TryGetValue(element, out var data) ? data.tooltipTemplate : null;
+        }
+        
+        /// <summary>
+        /// Set the tooltip template for a <see cref="VisualElement"/>.
+        /// </summary>
+        /// <param name="element"> The target visual element.</param>
+        /// <param name="template"> The tooltip template.</param>
+        /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object can't be null.</exception>
+        public static void SetTooltipTemplate(this VisualElement element, VisualElement template)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+            
+            var data = k_AdditionalDataCache.GetOrCreateValue(element);
+            data.tooltipTemplate = template;
+        }
 
         /// <summary>
         /// Additional Data that should be stored on any <see cref="VisualElement"/> object.
@@ -137,6 +170,25 @@ namespace Unity.AppUI.UI
             /// The preferred placement for a tooltip.
             /// </summary>
             public PopoverPlacement preferredTooltipPlacement { get; set; } = Tooltip.defaultPlacement;
+
+            /// <summary>
+            /// The tooltip template to use for this element.
+            /// </summary>
+            public VisualElement tooltipTemplate { get; set; } = null;
+        }
+
+        /// <summary>
+        /// Get the world bounding box of a <see cref="VisualElement"/>.
+        /// </summary>
+        /// <param name="element"> The <see cref="VisualElement"/> object.</param>
+        /// <returns> The world bounding box.</returns>
+        /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object can't be null.</exception>
+        public static Rect GetWorldBoundingBox(this VisualElement element)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
+            return (Rect)worldBoundingBoxProp.GetValue(element);
         }
     }
 }

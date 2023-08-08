@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Unity.AppUI.Core;
 using Unity.AppUI.UI;
@@ -210,6 +211,23 @@ namespace Unity.AppUI.Samples
 
             root.Q<ActionButton>("menu-action-code").clickable.clickedWithEventInfo += (evt =>
                 OpenMenu((VisualElement)evt.target));
+            
+            var gridViewDefault = root.Q<GridView>("grid-view-default");
+            gridViewDefault.columnCount = 3;
+            gridViewDefault.itemHeight = 50;
+            gridViewDefault.bindItem = (item, i) => item.Q<Text>().text = $"Item {i}";
+            gridViewDefault.makeItem = () =>
+            {
+                var text = new Text();
+                var itemRoot = new VisualElement();
+                itemRoot.Add(text);
+                return itemRoot;
+            };
+            gridViewDefault.itemsSource = Enumerable.Range(0, 100).ToList();
+            gridViewDefault.selectionType = SelectionType.Multiple;
+            gridViewDefault.selectionChanged += selection => Debug.Log($"Selection changed: {string.Join(", ", selection)}");
+            gridViewDefault.itemsChosen += selection => Debug.Log($"Items chosen: {string.Join(", ", selection)}");
+            gridViewDefault.doubleClicked += indexUnderMouse => Debug.Log($"Double clicked: {indexUnderMouse}");
 
             root.Q<Button>("haptics-light-btn").clicked += () => Platform.RunHapticFeedback(HapticFeedbackType.LIGHT);
             root.Q<Button>("haptics-medium-btn").clicked += () => Platform.RunHapticFeedback(HapticFeedbackType.MEDIUM);

@@ -173,3 +173,17 @@
 .badge-container-circular-example {
   border-radius: 40px;
 }
+
+.appui-grid-view__item .appui-text {
+  width: 100%;
+  height: 100%;
+  -unity-text-align: middle-center;
+  background-color: var(--appui-backgrounds-300);
+  border-width: 2px;
+  border-color: rgba(0,0,0,0);
+  border-radius: 8px;
+}
+
+.appui-grid-view__item.is-selected .appui-text {
+  border-color: var(--appui-accent-100);
+}

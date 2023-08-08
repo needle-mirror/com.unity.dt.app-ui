@@ -9,14 +9,14 @@ namespace Unity.AppUI.UI
     /// </summary>
     class TooltipManipulator : Manipulator
     {
-        const int k_TooltipDelayMs = 750;
+        internal const int defaultDelayMs = 750;
 
         VisualElement m_AnchorElement;
 
         IVisualElementScheduledItem m_ScheduledItem;
 
         Tooltip m_Tooltip;
-
+        
         protected override void RegisterCallbacksOnTarget()
         {
             m_Tooltip = Tooltip.Build(target);
@@ -29,18 +29,25 @@ namespace Unity.AppUI.UI
         protected override void UnregisterCallbacksFromTarget()
         {
             target.UnregisterCallback<PointerMoveEvent>(OnPointerMoved);
-            target.panel.visualTree.UnregisterCallback<PointerDownEvent>(OnClick, TrickleDown.TrickleDown);
+            target.panel?.visualTree.UnregisterCallback<PointerDownEvent>(OnClick, TrickleDown.TrickleDown);
         }
-
+        
         void OnClick(PointerDownEvent evt)
         {
             HideTooltip();
         }
-
+        
         void OnPointerMoved(PointerMoveEvent evt)
         {
+            // 0 - If the pointer has been captured, nothing to do
+            if (target.panel?.GetCapturingElement(evt.pointerId) != null)
+            {
+                HideTooltip();
+                return;
+            }
+            
             // 1 - pick tooltip below cursor
-            var pickedElement = target.panel?.Pick(evt.localPosition);
+            var pickedElement = target.panel?.Pick(evt.position);
             if (pickedElement == null)
             {
                 HideTooltip();
@@ -55,16 +62,30 @@ namespace Unity.AppUI.UI
 
             // 3 - New tooltip to display, hide the visual tooltip first
             HideTooltip();
-            m_Tooltip.SetText(m_AnchorElement?.tooltip);
+            
+            var hasTooltip = false;
+            m_Tooltip.SetContent(null);
+            m_Tooltip.SetText(null);
+            if (m_AnchorElement?.GetTooltipTemplate() is { } template)
+            {
+                m_Tooltip.SetContent(template);
+                hasTooltip = true;
+            }
+            else if (target.panel.contextType == ContextType.Player && !string.IsNullOrEmpty(m_AnchorElement?.tooltip))
+            {
+                m_Tooltip.SetText(m_AnchorElement.tooltip);
+                hasTooltip = true;
+            }
 
             // 4 - If the tne new tooltip is not null, start delay
-            if (!string.IsNullOrEmpty(m_Tooltip.text))
+            if (hasTooltip)
                 ShowTooltip();
         }
 
         void ShowTooltip()
         {
-            m_ScheduledItem?.ExecuteLater(k_TooltipDelayMs);
+            var delay = m_AnchorElement?.GetContext().tooltipDelayMs ?? defaultDelayMs;
+            m_ScheduledItem?.ExecuteLater(delay);
         }
 
         void StartFadeIn()

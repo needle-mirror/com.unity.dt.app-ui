@@ -461,6 +461,15 @@
                             <appui:Button title="Disabled button" leading-icon="info" disabled="true" />
                         </ui:VisualElement>
 
+                        <!-- Canvas -->
+                        <appui:Heading text="CANVAS" class="example-title" />
+                        <appui:Text text="Default" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:Canvas style="height: 300px;">
+                                <ui:VisualElement style="position: absolute; width: 20px; height: 20px; background-color: red;" />
+                            </appui:Canvas>
+                        </ui:VisualElement>
+
                         <!-- Checkbox -->
                         <appui:Heading text="CHECKBOX" class="example-title" />
                         <appui:Text text="Sizing" class="example-subtitle" />
@@ -1108,6 +1117,13 @@
                             <appui:BoundsField />
                             <appui:Text text="BoundsInt Field" class="example-subtitle" />
                             <appui:BoundsIntField />
+                        </ui:VisualElement>
+
+                        <!-- Grid View -->
+                        <appui:Heading text="GRIDVIEW" class="example-title" />
+                        <appui:Text text="Default" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:GridView name="grid-view-default" style="height: 300px;" />
                         </ui:VisualElement>
 
                         <!-- Haptics -->

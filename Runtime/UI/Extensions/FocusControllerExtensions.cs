@@ -21,7 +21,30 @@ namespace Unity.AppUI.UI
             if (controller == null)
                 return;
 
+#if UNITY_2023_2_OR_NEWER
+            FocusNextInDirectionEx(controller, controller.focusedElement, direction);
+#else 
             k_FocusNextInDirection!.Invoke(controller, new object[] { direction });
+#endif
+        }
+
+        /// <summary>
+        /// Focus the next element in the given direction.
+        /// </summary>
+        /// <param name="controller">The focus controller.</param>
+        /// <param name="currentlyFocusedElement">The currently focused element.</param>
+        /// <param name="direction">The direction to focus.</param>
+        public static void FocusNextInDirectionEx(this FocusController controller,
+            Focusable currentlyFocusedElement, FocusChangeDirection direction)
+        {
+            if (controller == null)
+                return;
+
+#if UNITY_2023_2_OR_NEWER
+            k_FocusNextInDirection!.Invoke(controller, new object[] { currentlyFocusedElement, direction });
+#else 
+            controller.FocusNextInDirectionEx(direction);
+#endif
         }
     }
 }

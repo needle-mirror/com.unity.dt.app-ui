@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
+using PointerType = UnityEngine.PointerType;
 #if UNITY_INPUTSYSTEM_PRESENT
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
@@ -24,9 +25,11 @@ namespace Unity.AppUI.Core
         Looper m_MainLooper;
 
         readonly Dictionary<PanelSettings, HashSet<Panel>> m_PanelSettings = new Dictionary<PanelSettings, HashSet<Panel>>();
+        
+        readonly HashSet<Panel> m_Panels = new HashSet<Panel>(); 
 
         NotificationManager m_NotificationManager;
-
+        
         internal AppUISettings defaultSettings { get; private set; }
 
         /// <summary>
@@ -99,7 +102,7 @@ namespace Unity.AppUI.Core
 #endif
         }
 
-#if UNITY_INPUTSYSTEM_PRESENT && ENABLE_INPUT_SYSTEM
+#if UNITY_INPUTSYSTEM_PRESENT && ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
 
         Vector2 m_PointerPosition = Vector2.zero;
         bool m_PointerDown = false;
@@ -130,7 +133,7 @@ namespace Unity.AppUI.Core
         /// </summary>
         internal void ApplySettings()
         {
-
+            //Empty for now because there is no settings to apply.
         }
 
         /// <summary>
@@ -149,22 +152,20 @@ namespace Unity.AppUI.Core
         {
             Platform.PollSystemTheme();
             Platform.PollGestures();
-            
+
             var dpi = m_Settings.autoCorrectUiScale ? Platform.referenceDpi : Platform.baseDpi;
             
-            Vector3 mousePosition;
-            bool mouseLeftButtonDown;
 #if ENABLE_LEGACY_INPUT_MANAGER
-            mousePosition = Input.mousePosition;
-            mouseLeftButtonDown = Input.GetMouseButtonDown(0);
+            var mousePosition = Input.mousePosition;
+            var mouseLeftButtonDown = Input.GetMouseButtonDown(0);
 #elif ENABLE_INPUT_SYSTEM
-            mousePosition = m_PointerPosition;
-            mouseLeftButtonDown = m_PointerDown;
+            var mousePosition = m_PointerPosition;
+            var mouseLeftButtonDown = m_PointerDown;
             m_PointerDown = false;
 #endif
             mousePosition = new Vector2(mousePosition.x, Screen.height - mousePosition.y);
 
-            if (m_PanelSettings is {Count: > 0})
+            if (m_Panels is {Count: > 0})
             {
                 foreach (var panelSettings in m_PanelSettings.Keys)
                 {
@@ -179,7 +180,7 @@ namespace Unity.AppUI.Core
 
                     foreach (var panel in m_PanelSettings[panelSettings])
                     {
-                        if (panel is not {panel: { } iPanel})
+                        if (panel is not {panel: not null})
                             continue;
                             
                         if (dpiChanged)
@@ -190,33 +191,63 @@ namespace Unity.AppUI.Core
                             evt.target = panel;
                             panel.SendEvent(evt);
                         }
+                    }
+                }
 
-                        VisualElement pickedElement = null;
-                        if (mouseLeftButtonDown || Platform.magnificationGestureChangedThisFrame ||
-                            Platform.panGestureChangedThisFrame)
-                        {
-                            var coord = RuntimePanelUtils.ScreenToPanel(iPanel, mousePosition);
-                            pickedElement = iPanel.Pick(coord);
-                        }
+                foreach (var panel in m_Panels)
+                {
+                    if (panel is not {panel: { } iPanel})
+                        continue;
+                    
+                    VisualElement pickedElement = null;
+                    var needToFindPickedElement = mouseLeftButtonDown || Platform.magnificationGestureChangedThisFrame ||
+                                                  Platform.panGestureChangedThisFrame;
+                    if (needToFindPickedElement && iPanel.contextType == ContextType.Player)
+                    {
+                        var coord = RuntimePanelUtils.ScreenToPanel(iPanel, mousePosition);
+                        pickedElement = iPanel.Pick(coord);
+                    }
                         
-                        if (mouseLeftButtonDown && pickedElement == null)
-                            panel.DismissAnyPopups(DismissType.OutOfBounds);
+                    if (mouseLeftButtonDown && pickedElement == null)
+                        panel.DismissAnyPopups(DismissType.OutOfBounds);
+  
+#if UNITY_EDITOR
+                    if (needToFindPickedElement && iPanel.contextType == ContextType.Editor && 
+                        UnityEditor.EditorWindow.focusedWindow && 
+                        UnityEditor.EditorWindow.focusedWindow.rootVisualElement?.panel == iPanel)
+                        pickedElement ??= iPanel.focusController.focusedElement as VisualElement;
+#endif
+                    
+                    if (Platform.panGestureChangedThisFrame && pickedElement != null)
+                    {
+                        using var evt = PanGestureEvent.GetPooled();
+                        evt.gesture = Platform.panGesture;
+                        evt.target = pickedElement;
+                        panel.SendEvent(evt);
                         
-                        if (Platform.panGestureChangedThisFrame && pickedElement != null)
+                        // Unity already sends a scroll wheel event when panning, so we don't need to send one.
+                    }
+
+                    if (Platform.magnificationGestureChangedThisFrame && pickedElement != null)
+                    {
+                        using var evt = MagnificationGestureEvent.GetPooled();
+                        evt.gesture = Platform.magnificationGesture;
+                        evt.target = pickedElement;
+                        panel.SendEvent(evt);
+
+                        var systemEvent = new Event()
                         {
-                            using var evt = PanGestureEvent.GetPooled();
-                            evt.gesture = Platform.panGesture;
-                            evt.target = pickedElement;
-                            panel.SendEvent(evt);
-                        }
-                        
-                        if (Platform.magnificationGestureChangedThisFrame && pickedElement != null)
-                        {
-                            using var evt = MagnificationGestureEvent.GetPooled();
-                            evt.gesture = Platform.magnificationGesture;
-                            evt.target = pickedElement;
-                            panel.SendEvent(evt);
-                        }
+                            type = EventType.ScrollWheel,
+                            pointerType = PointerType.Mouse,
+                            modifiers = EventModifiers.Control,
+                            mousePosition = mousePosition,
+                            delta = evt.gesture.scrollDelta,
+                            button = 0,
+                            clickCount = 0,
+                        };
+                        using var evt2 = WheelEvent.GetPooled(systemEvent);
+                        evt2.target = pickedElement;
+                        panel.SendEvent(evt2);
                     }
                 }
             }
@@ -233,14 +264,16 @@ namespace Unity.AppUI.Core
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
+            
+            m_Panels.Add(element);
 
             var panelSettings = element.panel?.GetPanelSettings();
 
             if (panelSettings == null)
                 return;
 
-            if (m_PanelSettings.ContainsKey(panelSettings))
-                m_PanelSettings[panelSettings].Add(element);
+            if (m_PanelSettings.TryGetValue(panelSettings, out var setting))
+                setting.Add(element);
             else
                 m_PanelSettings.Add(panelSettings, new HashSet<Panel> { element });
         }
@@ -254,6 +287,8 @@ namespace Unity.AppUI.Core
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
+            
+            m_Panels.Remove(element);
 
             var panelSettings = element.panel?.GetPanelSettings();
 
@@ -274,6 +309,7 @@ namespace Unity.AppUI.Core
         internal void UnregisterAllPanels()
         {
             m_PanelSettings.Clear();
+            m_Panels.Clear();
         }
     }
 }

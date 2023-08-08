@@ -118,11 +118,13 @@ namespace Unity.AppUI.UI
             hierarchy.Add(trailingContainer);
             trailingContainer.hierarchy.Add(caret);
 
-            defaultValue = -1;
+            defaultValue = defaultIndex;
             size = Size.M;
             sourceItems = items;
             bindItem = bindFunc;
-            defaultValue = defaultIndex;
+            
+            if (defaultIndex >= 0)
+                SetValueWithoutNotify(defaultIndex);
 
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));
         }

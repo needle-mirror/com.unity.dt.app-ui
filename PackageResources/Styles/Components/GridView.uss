@@ -1,0 +1,17 @@
+/* GridView */
+.appui-grid-view {
+}
+
+.appui-grid-view__row {
+    flex-direction: row;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: auto;
+}
+
+.appui-grid-view__item {
+    padding: var(--appui-spacing-50);
+}
+
+.appui-grid-view__item--selected {
+}

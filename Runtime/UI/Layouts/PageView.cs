@@ -68,6 +68,15 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// The number of milliseconds between each automatic swipe.
+        /// </summary>
+        public int autoPlayDuration
+        {
+            get => m_SwipeView.autoPlayDuration;
+            set => m_SwipeView.autoPlayDuration = value;
+        }
+
+        /// <summary>
         /// The orientation of the PageView.
         /// </summary>
         public Direction direction
@@ -171,6 +180,12 @@ namespace Unity.AppUI.UI
                 name = "visibility-count",
                 defaultValue = 1,
             };
+            
+            readonly UxmlIntAttributeDescription m_AutoPlayDuration = new UxmlIntAttributeDescription()
+            {
+                name = "auto-play-duration",
+                defaultValue = 0,
+            };
 
             /// <summary>
             /// Returns an enumerable containing UxmlChildElementDescription(typeof(VisualElement)), since VisualElements can contain other VisualElements.
@@ -197,6 +212,7 @@ namespace Unity.AppUI.UI
                 el.visibilityCount = m_VisibilityCount.GetValueFromBag(bag, cc);
                 el.skipAnimationThreshold = m_SkipAnim.GetValueFromBag(bag, cc);
                 el.snapAnimationSpeed = m_AnimationSpeed.GetValueFromBag(bag, cc);
+                el.autoPlayDuration = m_AutoPlayDuration.GetValueFromBag(bag, cc);
             }
         }
     }

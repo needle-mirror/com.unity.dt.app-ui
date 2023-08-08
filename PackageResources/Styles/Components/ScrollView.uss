@@ -44,7 +44,14 @@
     border-radius: var(--appui-sizing-100);
     background-color: var(--appui-base-200);
     border-width: 0;
+}
+
+.unity-scroller--vertical .unity-base-slider__dragger {
     min-height: var(--appui-sizing-400);
+}
+
+.unity-scroller--horizontal .unity-base-slider__dragger {
+    min-width: var(--appui-sizing-400);
 }
 
 .unity-scroller .unity-base-slider__dragger:focus {

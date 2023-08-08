@@ -92,6 +92,11 @@ namespace Unity.AppUI.UI
                     AddToClassList($"{contextPrefix}{m_Theme}");
             }
         }
+        
+        /// <summary>
+        /// The delay in milliseconds before a tooltip is shown.
+        /// </summary>
+        public int? tooltipDelayMs { get; set; }
 
         /// <summary>
         /// A class responsible for creating a <see cref="ContextProvider"/> from UXML.
@@ -124,6 +129,13 @@ namespace Unity.AppUI.UI
                 name = "theme",
                 use = UxmlAttributeDescription.Use.Optional
             };
+            
+            readonly UxmlIntAttributeDescription m_TooltipDelayMs = new UxmlIntAttributeDescription
+            {
+                defaultValue = TooltipManipulator.defaultDelayMs,
+                name = "tooltip-delay-ms",
+                use = UxmlAttributeDescription.Use.Optional
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -143,6 +155,9 @@ namespace Unity.AppUI.UI
                     el.theme = val;
                 if (m_Scale.TryGetValueFromBag(bag, cc, ref val))
                     el.scale = val;
+                var tooltipDelayMs = TooltipManipulator.defaultDelayMs;
+                if (m_TooltipDelayMs.TryGetValueFromBag(bag, cc, ref tooltipDelayMs))
+                    el.tooltipDelayMs = tooltipDelayMs;
             }
         }
     }

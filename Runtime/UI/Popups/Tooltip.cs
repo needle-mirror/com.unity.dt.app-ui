@@ -49,7 +49,31 @@ namespace Unity.AppUI.UI
         /// <returns>The Tooltip.</returns>
         public Tooltip SetText(string value)
         {
+            if (!string.IsNullOrEmpty(value))
+                tooltip.contentContainer.Clear();
             tooltip.text = value;
+            return this;
+        }
+        
+        /// <summary>
+        /// The template to display inside the popup.
+        /// </summary>
+        public VisualElement template => tooltip.contentContainer.childCount > 0 ? tooltip.contentContainer[0] : null;
+
+        /// <summary>
+        /// Set the content of the tooltip.
+        /// </summary>
+        /// <remarks>
+        /// Passing null will clear the content of the tooltip.
+        /// </remarks>
+        /// <param name="content"> The content to display inside the tooltip. </param>
+        /// <returns> The Tooltip. </returns>
+        public Tooltip SetContent(VisualElement content)
+        {
+            tooltip.contentContainer.Clear();
+            tooltip.text = null;
+            if (content != null)
+                tooltip.contentContainer.Add(content);
             return this;
         }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Unity.AppUI.Core
 {
@@ -112,6 +113,14 @@ namespace Unity.AppUI.Core
         /// The magnification delta of the gesture since the last frame.
         /// </summary>
         public float deltaMagnification { get; }
+
+        /// <summary>
+        /// The scroll delta of the gesture since the last frame.
+        /// </summary>
+        /// <remarks>
+        /// This is a convenience property to convert the magnification delta to a scroll delta.
+        /// </remarks>
+        public Vector2 scrollDelta => new Vector2(0, -deltaMagnification * 50f);
 
         /// <summary>
         /// The phase of the gesture.
@@ -230,6 +239,10 @@ namespace Unity.AppUI.Core
     /// </summary>
     public static partial class Platform
     {
+#if UNITY_EDITOR 
+        static Object s_LastEditorWindow;        
+#endif
+        
         public const float baseDpi = 96f;
 
         /// <summary>
@@ -366,9 +379,9 @@ namespace Unity.AppUI.Core
 
         static float s_StartDistance;
 
-        const float k_RecognitionThreshold = 0.065f;
+        const float k_RecognitionThreshold = 0.05f;
 
-        const float k_PanRecognitionDotThreshold = 0.98f;
+        const float k_PanRecognitionDotThreshold = 0.9f;
 
         /// <summary>
         /// Polls the gestures and triggers gesture events if a gesture has been received.
@@ -379,6 +392,8 @@ namespace Unity.AppUI.Core
             magnificationGestureChangedThisFrame = false;
             
             var touches = GetTrackpadTouches();
+            
+            isTouchGestureSupported = isTouchGestureSupported || touches.Count > 0;
 
             foreach (var touch in touches)
             {
@@ -485,7 +500,7 @@ namespace Unity.AppUI.Core
         static List<TrackPadTouch> GetTrackpadTouches() 
         {
             s_LastTime = Time.unscaledTime;
-            if (s_LastFrame != Time.frameCount)
+            if ((Application.isPlaying && s_LastFrame != Time.frameCount) || !Application.isPlaying)
             {
                 s_LastFrame = Time.frameCount;
                 
@@ -504,27 +519,37 @@ namespace Unity.AppUI.Core
                 e.normalizedY = 0;
                 e.deviceWidth = 0;
                 e.deviceHeight = 0;
+
+#if UNITY_EDITOR
+                var currentWindow = UnityEditor.EditorWindow.focusedWindow;
+                if (currentWindow != s_LastEditorWindow && currentWindow)
+                    SetupFocusedTrackingObject();
+                s_LastEditorWindow = currentWindow;
                 
-                while (ReadTouch(ref e))
+                if (currentWindow)
+#endif
                 {
-                    var screenPos = new Vector2(e.normalizedX, e.normalizedY);
-                    var deltaPos = new Vector2(0, 0);
-
-                    if (k_PrevTouches.TryGetValue(e.touchId, out var prevTouch))
-                        deltaPos = screenPos - prevTouch.position;
-
-                    var timeDelta = Time.unscaledTime - s_LastTime;
-                    var phase = e.phase switch 
+                    while (ReadTouch(ref e))
                     {
-                        0 => TouchPhase.Began,
-                        1 => TouchPhase.Moved,
-                        2 => TouchPhase.Ended,
-                        3 => TouchPhase.Canceled,
-                        4 => TouchPhase.Stationary,
-                        _ => TouchPhase.Ended
-                    };
-                    var newTouch = new TrackPadTouch(e.touchId, screenPos, 1, deltaPos, timeDelta, phase);
-                    k_FrameTouches.Add(newTouch);
+                        var screenPos = new Vector2(e.normalizedX, e.normalizedY);
+                        var deltaPos = new Vector2(0, 0);
+
+                        if (k_PrevTouches.TryGetValue(e.touchId, out var prevTouch))
+                            deltaPos = screenPos - prevTouch.position;
+
+                        var timeDelta = Time.unscaledTime - s_LastTime;
+                        var phase = e.phase switch 
+                        {
+                            0 => TouchPhase.Began,
+                            1 => TouchPhase.Moved,
+                            2 => TouchPhase.Ended,
+                            3 => TouchPhase.Canceled,
+                            4 => TouchPhase.Stationary,
+                            _ => TouchPhase.Ended
+                        };
+                        var newTouch = new TrackPadTouch(e.touchId, screenPos, 1, deltaPos, timeDelta, phase);
+                        k_FrameTouches.Add(newTouch);
+                    }
                 }
 
                 s_LastTime = Time.unscaledTime;
@@ -536,9 +561,16 @@ namespace Unity.AppUI.Core
         static bool ReadTouch(ref PlatformTouchEvent touch)
         {
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-            return ReadTouchEvent(ref touch);
+            return _NSReadTouchEvent(ref touch);
 #else 
             return false;
+#endif
+        }
+        
+        static void SetupFocusedTrackingObject()
+        {
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+            _NSSetupFocusedTrackingObject();
 #endif
         }
 
@@ -587,6 +619,11 @@ namespace Unity.AppUI.Core
                 }
             }
         }
+        
+        /// <summary>
+        /// Whether the current platform supports touch gestures.
+        /// </summary>
+        public static bool isTouchGestureSupported { get; set; }
 
         static PanGesture s_PanGesture;
 

@@ -84,6 +84,7 @@ namespace Unity.AppUI.UI
             scale = Application.isMobilePlatform ? "large" : "medium";
             theme = "dark";
             preferredTooltipPlacement = Tooltip.defaultPlacement;
+            tooltipDelayMs = TooltipManipulator.defaultDelayMs;
         }
 
         void OnDpiChanged(DpiChangedEvent evt) 

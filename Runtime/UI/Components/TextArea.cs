@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
@@ -44,9 +45,7 @@ namespace Unity.AppUI.UI
         Size m_Size;
 
         string m_Value;
-
-        int m_VisualInputTabIndex;
-
+        
         readonly VisualElement m_ResizeHandle;
 
         string m_PreviousValue;
@@ -216,6 +215,7 @@ namespace Unity.AppUI.UI
         {
             RemoveFromClassList(Styles.focusedUssClassName);
             RemoveFromClassList(Styles.keyboardFocusUssClassName);
+            passMask = 0;
             value = m_InputField.value;
         }
 

@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "0.3.5",
+  "version": "0.3.8",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "14ee731c6a3e8d232506af4a038d618ace3eac11"
+    "revision": "2e8e39022eadd23ffb4b4560cce2b46c0b5082ce"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -75,10 +75,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- Regenerated the meta files inside MacOS bundle folder to avoid error messages in the console."
+    "changelog": "### Added\n\n- Added `tooltip-delay-ms` property to the `ContextProvider` component to customize the tooltip delay.\n- Added more shortcuts to the `Canvas` component.\n\n### Fixed \n\n- Fixed Editor crash when updating packages from UPM window."
   },
   "upmCi": {
-    "footprint": "a6ccdd7f1729b4217febd6975b6f44ed8e3063b8"
+    "footprint": "f742cd38d88c6aed62e647e38031c21d4378a7c6"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.3/manual/index.html"
 }

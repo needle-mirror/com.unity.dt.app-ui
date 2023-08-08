@@ -494,19 +494,19 @@ namespace Unity.AppUI.UI
             mwd.SetAllIndices(k_Indices);
         }
 
-        static Vector2Int GetRenderTextureSize(Rect renderRect)
+        internal static Vector2Int GetRenderTextureSize(Rect renderRect, int maxSize = 1024)
         {
             var dpi = Mathf.Clamp(Platform.mainScreenScale, 1, 2);
             int width, height;
 
             if (renderRect.height > renderRect.width)
             {
-                height = (int)Mathf.Clamp(renderRect.height * dpi, 16, 1024);
+                height = (int)Mathf.Clamp(renderRect.height * dpi, 16, maxSize);
                 width = (int)(height * (renderRect.width / renderRect.height));
             }
             else
             {
-                width = (int)Mathf.Clamp(renderRect.width * dpi, 16, 1024);
+                width = (int)Mathf.Clamp(renderRect.width * dpi, 16, maxSize);
                 height = (int)(width * (renderRect.height / renderRect.width));
             }
             

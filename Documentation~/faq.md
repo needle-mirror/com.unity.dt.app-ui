@@ -28,6 +28,30 @@ This theme is useful for Editor windows development but it doesn't match the App
 To use the App UI theme in the UI Builder, choose the **App UI** theme in the **Theme** dropdown,
 or a more specific theme like **App UI Dark - Medium** or **App UI Light - Medium**.
 
+### Does App UI support EditorWindow (Edit Mode)?
+
+Yes, App UI supports EditorWindow. You can use App UI components in your Editor windows.
+
+To make it work correctly, do not forget to load the right theme inside you window.
+
+```cs
+class MyWindow : EditorWindow
+{
+    void CreateGUI()
+    {
+        const string defaultTheme = "Packages/com.unity.dt.app-ui/PackageResources/Styles/Themes/App UI.tss";
+        rootVisualElement.styleSheets.Add(AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(defaultTheme));
+        rootVisualElement.AddToClassList("unity-editor"); // Enable Editor related styles
+    }
+}
+```
+
+You can also specify the theme stylesheet inside you UXML file directly.
+
+```xml
+<Style src="project:/Packages/com.unity.dt.app-ui/PackageResources/Styles/Themes/App UI.tss"/>
+```
+
 ### I see an error message "Exception: Attempting to use an invalid operation handle" when I go in Play Mode
 
 This error message is caused by an invalid load of Addressables content. 

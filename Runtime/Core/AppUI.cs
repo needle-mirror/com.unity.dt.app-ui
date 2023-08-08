@@ -114,6 +114,10 @@ namespace Unity.AppUI.Core
         }
 
 #if UNITY_EDITOR
+        
+        static uint s_UpdateFrame = 0;
+        
+        const uint k_EditorUpdateDelay = 20;
 
         /// <summary>
         /// Initialize the App UI system in the editor.
@@ -206,7 +210,10 @@ namespace Unity.AppUI.Core
 
         static void EditorUpdate()
         {
-            if (s_Manager == null)
+            if (s_UpdateFrame < k_EditorUpdateDelay)
+                s_UpdateFrame++;
+            
+            if (s_UpdateFrame < k_EditorUpdateDelay && s_Manager == null)
                 return;
 
             if (EditorApplication.isCompiling)

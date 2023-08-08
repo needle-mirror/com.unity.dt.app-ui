@@ -8,6 +8,7 @@
 * References
   * [Actions](xref:actions)
   * [Inputs](xref:inputs)
+    * [Input Values](xref:handle-input-values) 
   * [Layouts](xref:layouts)
   * [Typography](xref:typography)
   * [Iconography](xref:iconography)

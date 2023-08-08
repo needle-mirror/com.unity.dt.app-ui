@@ -156,6 +156,15 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// The IconButton icon variant.
+        /// </summary>
+        public IconVariant variant
+        {
+            get => m_Icon.variant;
+            set => m_Icon.variant = value;
+        }
+
+        /// <summary>
         /// The Button size.
         /// </summary>
         public Size size
@@ -198,6 +207,12 @@ namespace Unity.AppUI.UI
                 name = "icon",
                 defaultValue = null
             };
+            
+            readonly UxmlEnumAttributeDescription<IconVariant> m_Variant = new UxmlEnumAttributeDescription<IconVariant>
+            {
+                name = "variant",
+                defaultValue = IconVariant.Regular
+            };
 
             readonly UxmlBoolAttributeDescription m_Primary = new UxmlBoolAttributeDescription
             {
@@ -232,6 +247,7 @@ namespace Unity.AppUI.UI
                 element.primary = m_Primary.GetValueFromBag(bag, cc);
                 element.quiet = m_Quiet.GetValueFromBag(bag, cc);
                 element.icon = m_Icon.GetValueFromBag(bag, cc);
+                element.variant = m_Variant.GetValueFromBag(bag, cc);
                 element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
             }
         }
