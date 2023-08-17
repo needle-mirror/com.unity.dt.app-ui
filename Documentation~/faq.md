@@ -72,3 +72,10 @@ Yes, the New Input System is supported. You can use the App UI components with t
   ![input-system-ui-module](images/input-system-ui-module.png)
 - You can now use the App UI components with the New Input System.
   ![input-system-ui-module](images/input-system-ui-module-2.png)
+
+### Why does the Editor maximize docked windows when I try to zoom into an App UI [Canvas](xref:Unity.AppUI.UI.Canvas) component using an Apple trackpad?
+
+This is a known issue with the Unity Editor on macOS. 
+To avoid this issue temporarily, you can disable the **Zoom gesture** in the **Trackpad** settings of your Mac. By 
+disabling the gesture, you will still be able to zoom in and out in the Canvas component, but the Editor will not 
+handle them anymore.

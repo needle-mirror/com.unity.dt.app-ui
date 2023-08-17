@@ -12,7 +12,7 @@
   * [Layouts](xref:layouts)
   * [Typography](xref:typography)
   * [Iconography](xref:iconography)
-  * [Context Provider](xref:contexts)
+  * [Contexts](xref:contexts)
   * [Overlays](xref:overlays)
   * [Navigation](xref:navigation)
   * [Localization](xref:localization)

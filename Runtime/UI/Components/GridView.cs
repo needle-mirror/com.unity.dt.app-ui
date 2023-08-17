@@ -80,6 +80,8 @@ namespace Unity.AppUI.UI
         const string k_RowUssClassName = ussClassName + "__row";
 
         const int k_DefaultItemHeight = 30;
+        
+        const bool k_DefaultPreventScrollWithModifiers = true;
 
         static CustomStyleProperty<int> s_ItemHeightProperty = new CustomStyleProperty<int>("--unity-item-height");
 
@@ -586,6 +588,11 @@ namespace Unity.AppUI.UI
             get => ClassListContains(k_BorderUssClassName);
             set => EnableInClassList(k_BorderUssClassName, value);
         }
+
+        /// <summary>
+        /// Prevents the grid view from scrolling when the user presses a modifier key at the same time as scrolling.
+        /// </summary>
+        public bool preventScrollWithModifiers { get; set; } = k_DefaultPreventScrollWithModifiers;
 
         /// <summary>
         /// Callback for unbinding a data item from the VisualElement.
@@ -1111,6 +1118,7 @@ namespace Unity.AppUI.UI
             scrollView.contentContainer.RegisterCallback<KeyDownEvent>(OnKeyDown);
             scrollView.contentContainer.RegisterCallback<NavigationMoveEvent>(OnNavigationMove);
             scrollView.contentContainer.RegisterCallback<NavigationCancelEvent>(OnNavigationCancel);
+            scrollView.RegisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
         }
 
         void OnCustomStyleResolved(CustomStyleResolvedEvent e)
@@ -1138,6 +1146,13 @@ namespace Unity.AppUI.UI
             scrollView.contentContainer.UnregisterCallback<KeyDownEvent>(OnKeyDown);
             scrollView.contentContainer.UnregisterCallback<NavigationMoveEvent>(OnNavigationMove);
             scrollView.contentContainer.UnregisterCallback<NavigationCancelEvent>(OnNavigationCancel);
+            scrollView.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
+        }
+
+        void OnWheel(WheelEvent evt)
+        {
+            if (preventScrollWithModifiers && evt.modifiers != EventModifiers.None)
+                evt.StopImmediatePropagation();
         }
 
         void OnClick(ClickEvent evt)
@@ -1499,11 +1514,30 @@ namespace Unity.AppUI.UI
         /// </remarks>
         public new class UxmlTraits : BindableElement.UxmlTraits
         {
-            readonly UxmlIntAttributeDescription m_ItemHeight = new UxmlIntAttributeDescription { name = "item-height", obsoleteNames = new[] { "itemHeight" }, defaultValue = k_DefaultItemHeight };
+            readonly UxmlIntAttributeDescription m_ItemHeight = new UxmlIntAttributeDescription
+            {
+                name = "item-height", 
+                obsoleteNames = new[] { "itemHeight" }, 
+                defaultValue = k_DefaultItemHeight
+            };
 
-            readonly UxmlEnumAttributeDescription<SelectionType> m_SelectionType = new UxmlEnumAttributeDescription<SelectionType> { name = "selection-type", defaultValue = SelectionType.Single };
+            readonly UxmlEnumAttributeDescription<SelectionType> m_SelectionType = new UxmlEnumAttributeDescription<SelectionType>
+            {
+                name = "selection-type", 
+                defaultValue = SelectionType.Single
+            };
 
-            readonly UxmlBoolAttributeDescription m_ShowBorder = new UxmlBoolAttributeDescription { name = "show-border", defaultValue = false };
+            readonly UxmlBoolAttributeDescription m_ShowBorder = new UxmlBoolAttributeDescription
+            {
+                name = "show-border", 
+                defaultValue = false
+            };
+            
+            readonly UxmlBoolAttributeDescription m_PreventScrollWithModifiers = new UxmlBoolAttributeDescription
+            {
+                name = "prevent-scroll-with-modifiers",
+                defaultValue = k_DefaultPreventScrollWithModifiers
+            };
 
             /// <summary>
             /// Returns an empty enumerable, because list views usually do not have child elements.
@@ -1523,17 +1557,18 @@ namespace Unity.AppUI.UI
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                var itemHeight = 0;
                 var view = (GridView)ve;
 
                 // Avoid setting itemHeight unless it's explicitly defined.
                 // Setting itemHeight property will activate inline property mode.
+                var itemHeight = 0;
                 if (m_ItemHeight.TryGetValueFromBag(bag, cc, ref itemHeight))
-                {
                     view.itemHeight = itemHeight;
-                }
 
                 view.showBorder = m_ShowBorder.GetValueFromBag(bag, cc);
+                
+                view.preventScrollWithModifiers = m_PreventScrollWithModifiers.GetValueFromBag(bag, cc);
+                
                 view.selectionType = m_SelectionType.GetValueFromBag(bag, cc);
             }
         }

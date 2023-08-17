@@ -76,6 +76,11 @@ namespace Unity.AppUI.UI
         /// The styling class applied to the SwipeView depending on its orientation.
         /// </summary>
         public static readonly string variantUssClassName = ussClassName + "--";
+        
+        /// <summary>
+        /// The default duration of the auto play animation.
+        /// </summary>
+        public const int noAutoPlayDuration = -1;
 
         static readonly PropertyInfo k_Recycled = typeof(ValueAnimation<float>).GetProperty("recycled", BindingFlags.Instance | BindingFlags.NonPublic);
 
@@ -107,7 +112,7 @@ namespace Unity.AppUI.UI
 
         Vector2 m_PointerDistance;
 
-        int m_AutoPlayDuration = -1;
+        int m_AutoPlayDuration = noAutoPlayDuration;
 
         IVisualElementScheduledItem m_AutoPlayAnimation;
 
@@ -169,8 +174,8 @@ namespace Unity.AppUI.UI
                 }
                 else
                 {
-                    m_PollHierarchyItem?.Pause();
-                    m_PollHierarchyItem = null;
+                    m_AutoPlayAnimation?.Pause();
+                    m_AutoPlayAnimation = null;
                 }
             }
         }
@@ -373,6 +378,7 @@ namespace Unity.AppUI.UI
             
             swipeable = true;
             direction = Direction.Horizontal;
+            autoPlayDuration = noAutoPlayDuration;
         }
 
         void OnGeometryChanged(GeometryChangedEvent evt)
@@ -919,7 +925,7 @@ namespace Unity.AppUI.UI
             readonly UxmlIntAttributeDescription m_AutoPlayDuration = new UxmlIntAttributeDescription()
             {
                 name = "auto-play-duration",
-                defaultValue = -1,
+                defaultValue = noAutoPlayDuration,
             };
             
             readonly UxmlBoolAttributeDescription m_Swipeable = new UxmlBoolAttributeDescription()

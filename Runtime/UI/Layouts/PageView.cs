@@ -184,7 +184,7 @@ namespace Unity.AppUI.UI
             readonly UxmlIntAttributeDescription m_AutoPlayDuration = new UxmlIntAttributeDescription()
             {
                 name = "auto-play-duration",
-                defaultValue = 0,
+                defaultValue = SwipeView.noAutoPlayDuration,
             };
 
             /// <summary>

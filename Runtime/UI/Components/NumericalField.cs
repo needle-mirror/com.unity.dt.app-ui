@@ -137,6 +137,8 @@ namespace Unity.AppUI.UI
                 var previousValue = m_Value;
                 m_Value = newValue;
                 
+                if (validateValue != null) invalid = !validateValue(newValue);
+                
                 if (previousValue.CompareTo(m_Value) == 0)
                     return;
 
@@ -145,6 +147,10 @@ namespace Unity.AppUI.UI
                 changeEvent.previousValue = previousValue;
                 changeEvent.newValue = m_Value;
                 SendEvent(changeEvent);
+            }
+            else if (validateValue != null)
+            {
+                invalid = true;
             }
         }
 
@@ -203,6 +209,7 @@ namespace Unity.AppUI.UI
             m_Value = newValue;
             var valStr = ParseValueToString(newValue);
             m_InputElement.SetValueWithoutNotify(valStr);
+            if (validateValue != null) invalid = !validateValue(newValue);
         }
 
         /// <summary>

@@ -73,3 +73,56 @@ The [App UI Panel](xref:Unity.AppUI.UI.Panel) is a special
 must be added to the root of the UI. It provides access to the global 
 [ApplicationContext](xref:Unity.AppUI.Core.ApplicationContext)
 for this visual tree.
+
+## Provide and Consume your own Contexts
+
+If you want to create your own context, you can use [IContext](xref:Unity.AppUI.Core.IContext) along with 
+[ProvideContext](xref:Unity.AppUI.UI.VisualElementExtensions.ProvideContext``1(UnityEngine.UIElements.VisualElement,``0))
+and [RegisterContextChangedCallback](xref:Unity.AppUI.UI.VisualElementExtensions.RegisterContextChangedCallback``1(UnityEngine.UIElements.VisualElement,UnityEngine.UIElements.EventCallback{Unity.AppUI.UI.ContextChangedEvent{``0}}))
+to provide and consume your own context.
+
+Contexts will be propagated down the visual tree starting at the provider element, so any child element can access the context.
+The propagation will stop as soon as a child element provides a new context of the same type.
+
+The [ContextChangedEvent](xref:Unity.AppUI.UI.ContextChangedEvent`1) will be triggered whenever one of the visual tree ancestors
+provides a new context of the same type, or when the listener element is attached to the visual tree panel.
+
+> [!NOTE]
+> Passing a `null` context to [ProvideContext](xref:Unity.AppUI.UI.VisualElementExtensions.ProvideContext``1(UnityEngine.UIElements.VisualElement,``0))
+> method will remove the context from the provider. The element will not be defined as a context provider anymore, and 
+> the context from the closest ancestor provider will be propagated down the visual tree (or a `null` context if there is no ancestor provider).
+
+The following example shows how to create a custom context provider
+
+```cs
+using Unity.AppUI.Core;
+using Unity.AppUI.UI;
+
+// Define a custom context
+public record MyContext(int value) : IContext
+{
+    public int value { get; } = value;
+}
+
+// Create a custom context provider
+public void CreateContextProvider()
+{
+    var myElement = new VisualElement();
+    myElement.ProvideContext(new MyContext(42));
+}
+
+// Consume the custom context
+public void ConsumeContext()
+{
+    var myElement = new VisualElement();
+    myElement.RegisterContextChangedCallback<MyContext>(OnMyContextChanged);
+    
+    void OnMyContextChanged(ContextChangedEvent<MyContext> evt)
+    {
+        Debug.Log($"MyContext changed to {evt.context.value}");
+    }
+    
+    // You can also unregister the callback
+    myElement.UnregisterContextChangedCallback<MyContext>(OnMyContextChanged);
+}
+```

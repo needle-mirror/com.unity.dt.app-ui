@@ -2,7 +2,7 @@
 uid: whats-new
 ---
 
-# What's New in **0.3.8**
+# What's New in **0.3.9**
 
 This section contains information about new features, improvements, and issues fixed.
 
@@ -12,9 +12,10 @@ The main updates in this release include:
 
 ### Added
 
-- Added `tooltip-delay-ms` property to the `ContextProvider` component to customize the tooltip delay.
-- Added more shortcuts to the `Canvas` component.
+- Added Context API which is accessible through any `VisualElement` instance.
+- Added `preventScrollWithModifiers` property to the `GridView` component.
 
 ### Fixed
 
-- Fixed Editor crash when updating packages from UPM window.
+- Fixed `autoPlayDuration` property on PageView component.
+- Fixed value validation in `NumericalField` component.

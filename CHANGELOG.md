@@ -4,6 +4,18 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.3.9] - 2023-08-17
+
+### Added 
+
+- Added Context API which is accessible through any `VisualElement` instance.
+- Added `preventScrollWithModifiers` property to the `GridView` component.
+
+### Fixed
+
+- Fixed `autoPlayDuration` property on PageView component.
+- Fixed value validation in `NumericalField` component.
+
 ## [0.3.8] - 2023-08-08
 
 ### Added

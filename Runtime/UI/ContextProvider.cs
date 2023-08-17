@@ -21,11 +21,7 @@ namespace Unity.AppUI.UI
         /// Prefix used in Context USS classes.
         /// </summary>
         public static readonly string contextPrefix = "appui--";
-
-        string m_Scale;
-
-        string m_Theme;
-
+        
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -54,26 +50,35 @@ namespace Unity.AppUI.UI
         /// The current language override.
         /// <remarks> This property is useful only if you use the Unity Localization package inside your project.</remarks>
         /// </summary>
-        public string lang { get; set; }
+        public string lang
+        {
+            get => this.GetSelfContext<LangContext>()?.lang;
+            set => this.ProvideContext(string.IsNullOrEmpty(value) ? null : new LangContext(value));
+        }
 
         /// <summary>
         /// The preferred <see cref="Tooltip"/> placement in this context.
         /// </summary>
-        public PopoverPlacement? preferredTooltipPlacement { get; set; }
+        public PopoverPlacement? preferredTooltipPlacement
+        {
+            get => this.GetSelfContext<TooltipPlacementContext>()?.placement;
+            set => this.ProvideContext(value.HasValue ? new TooltipPlacementContext(value.Value) : null);
+        }
 
         /// <summary>
         /// The current UI scale override.
         /// </summary>
         public string scale
         {
-            get => m_Scale;
+            get => this.GetSelfContext<ScaleContext>()?.scale;
             set
             {
-                if (!string.IsNullOrEmpty(m_Scale))
-                    RemoveFromClassList($"{contextPrefix}{m_Scale}");
-                m_Scale = value;
-                if (!string.IsNullOrEmpty(m_Scale))
-                    AddToClassList($"{contextPrefix}{m_Scale}");
+                var currentScale = scale;
+                if (!string.IsNullOrEmpty(currentScale))
+                    RemoveFromClassList($"{contextPrefix}{currentScale}");
+                if (!string.IsNullOrEmpty(value))
+                    AddToClassList($"{contextPrefix}{value}");
+                this.ProvideContext(string.IsNullOrEmpty(value) ? null : new ScaleContext(value));
             }
         }
 
@@ -82,21 +87,26 @@ namespace Unity.AppUI.UI
         /// </summary>
         public string theme
         {
-            get => m_Theme;
+            get => this.GetSelfContext<ThemeContext>()?.theme;
             set
             {
-                if (!string.IsNullOrEmpty(m_Theme))
-                    RemoveFromClassList($"{contextPrefix}{m_Theme}");
-                m_Theme = value;
-                if (!string.IsNullOrEmpty(m_Theme))
-                    AddToClassList($"{contextPrefix}{m_Theme}");
+                var currentTheme = theme;
+                if (!string.IsNullOrEmpty(currentTheme))
+                    RemoveFromClassList($"{contextPrefix}{currentTheme}");
+                if (!string.IsNullOrEmpty(value))
+                    AddToClassList($"{contextPrefix}{value}");
+                this.ProvideContext(string.IsNullOrEmpty(value) ? null : new ThemeContext(value));
             }
         }
-        
+
         /// <summary>
         /// The delay in milliseconds before a tooltip is shown.
         /// </summary>
-        public int? tooltipDelayMs { get; set; }
+        public int? tooltipDelayMs
+        {
+            get => this.GetSelfContext<TooltipDelayContext>()?.tooltipDelayMs;
+            set => this.ProvideContext(value.HasValue ? new TooltipDelayContext(value.Value) : null);
+        }
 
         /// <summary>
         /// A class responsible for creating a <see cref="ContextProvider"/> from UXML.
