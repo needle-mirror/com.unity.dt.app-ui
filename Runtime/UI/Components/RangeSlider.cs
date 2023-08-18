@@ -7,124 +7,109 @@ using UnityEngine.UIElements;
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Inline mode for the Slider value element.
+    /// Base class for Sliders (<see cref="RangeSliderFloat"/>, <see cref="RangeSliderInt"/>).
     /// </summary>
-    public enum InlineValue
-    {
-        /// <summary>
-        /// Not inline.
-        /// </summary>
-        None,
-        /// <summary>
-        /// Inline on the left.
-        /// </summary>
-        Start,
-        /// <summary>
-        /// Inline on the right.
-        /// </summary>
-        End,
-    }
-
-    /// <summary>
-    /// Base class for Sliders (<see cref="SliderFloat"/>, <see cref="SliderInt"/>).
-    /// </summary>
+    /// <typeparam name="TRangeType">The range type. </typeparam>
     /// <typeparam name="TValueType">A comparable value type.</typeparam>
-    public abstract class SliderBase<TValueType> : BaseSlider<TValueType, TValueType> 
-        where TValueType : struct, IEquatable<TValueType>, IComparable
+    public abstract class RangeSliderBase<TRangeType, TValueType> : BaseSlider<TRangeType, TValueType> 
+        where TRangeType : IEquatable<TRangeType>
+        where TValueType : struct, IComparable, IEquatable<TValueType>
     {
         /// <summary>
         /// The Slider main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-slider";
+        public static readonly string ussClassName = SliderBase<TValueType>.ussClassName;
 
         /// <summary>
         /// The Slider size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        public static readonly string sizeUssClassName = SliderBase<TValueType>.sizeUssClassName;
 
         /// <summary>
         /// The Slider with tick labels variant styling class.
         /// </summary>
-        public static readonly string tickLabelVariantUssClassName = ussClassName + "--tick-labels";
+        public static readonly string tickLabelVariantUssClassName = SliderBase<TValueType>.tickLabelVariantUssClassName;
 
         /// <summary>
         /// The Slider no label variant styling class.
         /// </summary>
-        public static readonly string noLabelUssClassName = ussClassName + "--no-label";
+        public static readonly string noLabelUssClassName = SliderBase<TValueType>.noLabelUssClassName;
 
         /// <summary>
         /// The Slider tick styling class.
         /// </summary>
-        public static readonly string tickUssClassName = ussClassName + "__tick";
+        public static readonly string tickUssClassName = SliderBase<TValueType>.tickUssClassName;
 
         /// <summary>
         /// The Slider inline value styling class.
         /// </summary>
-        public static readonly string inlineValueUssClassName = ussClassName + "--inline-value-";
+        public static readonly string inlineValueUssClassName = SliderBase<TValueType>.inlineValueUssClassName;
 
         /// <summary>
         /// The Slider tick label styling class.
         /// </summary>
-        public static readonly string tickLabelUssClassName = ussClassName + "__ticklabel";
+        public static readonly string tickLabelUssClassName = SliderBase<TValueType>.tickLabelUssClassName;
 
         /// <summary>
         /// The Slider ticks container styling class.
         /// </summary>
-        public static readonly string ticksUssClassName = ussClassName + "__ticks";
+        public static readonly string ticksUssClassName = SliderBase<TValueType>.ticksUssClassName;
 
         /// <summary>
         /// The Slider track styling class.
         /// </summary>
-        public static readonly string trackUssClassName = ussClassName + "__track";
+        public static readonly string trackUssClassName = SliderBase<TValueType>.trackUssClassName;
 
         /// <summary>
         /// The Slider progress styling class.
         /// </summary>
-        public static readonly string progressUssClassName = ussClassName + "__progress";
+        public static readonly string progressUssClassName = SliderBase<TValueType>.progressUssClassName;
 
         /// <summary>
         /// The Slider handle styling class.
         /// </summary>
-        public static readonly string handleUssClassName = ussClassName + "__handle";
+        public static readonly string handleUssClassName = SliderBase<TValueType>.handleUssClassName;
 
         /// <summary>
         /// The Slider handle container styling class.
         /// </summary>
-        public static readonly string handleContainerUssClassName = ussClassName + "__handle-container";
+        public static readonly string handleContainerUssClassName = SliderBase<TValueType>.handleContainerUssClassName;
 
         /// <summary>
         /// The Slider label container styling class.
         /// </summary>
-        public static readonly string labelContainerUssClassName = ussClassName + "__labelcontainer";
+        public static readonly string labelContainerUssClassName = SliderBase<TValueType>.labelContainerUssClassName;
 
         /// <summary>
         /// The Slider label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
+        public static readonly string labelUssClassName = SliderBase<TValueType>.labelUssClassName;
 
         /// <summary>
         /// The Slider value label styling class.
         /// </summary>
-        public static readonly string valueLabelUssClassName = ussClassName + "__valuelabel";
+        public static readonly string valueLabelUssClassName = SliderBase<TValueType>.valueLabelUssClassName;
 
         /// <summary>
         /// The Slider inline value label styling class.
         /// </summary>
-        public static readonly string inlineValueLabelUssClassName = ussClassName + "__inline-valuelabel";
+        public static readonly string inlineValueLabelUssClassName = SliderBase<TValueType>.inlineValueLabelUssClassName;
 
         /// <summary>
         /// The Slider controls styling class.
         /// </summary>
-        public static readonly string controlsUssClassName = ussClassName + "__controls";
+        public static readonly string controlsUssClassName = SliderBase<TValueType>.controlsUssClassName;
 
         /// <summary>
         /// The Slider control container styling class.
         /// </summary>
-        public static readonly string controlContainerUssClassName = ussClassName + "__control-container";
-
+        public static readonly string controlContainerUssClassName = SliderBase<TValueType>.controlContainerUssClassName;
+        
         float m_FillOffset;
 
-        readonly ExVisualElement m_Handle;
+        readonly ExVisualElement m_MinHandle;
+        
+        readonly ExVisualElement m_MaxHandle;
 
         readonly LocalizedTextElement m_Label;
 
@@ -140,7 +125,9 @@ namespace Unity.AppUI.UI
 
         readonly LocalizedTextElement m_ValueLabel;
 
-        readonly VisualElement m_HandleContainer;
+        readonly VisualElement m_MinHandleContainer;
+        
+        readonly VisualElement m_MaxHandleContainer;
 
         InlineValue m_InlineValue;
 
@@ -153,9 +140,10 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
-        protected SliderBase()
+        protected RangeSliderBase()
         {
             AddToClassList(ussClassName);
+            AddToClassList("appui-rangeslider");
 
             pickingMode = PickingMode.Position;
             focusable = true;
@@ -203,29 +191,46 @@ namespace Unity.AppUI.UI
             m_Progress.AddToClassList(progressUssClassName);
             m_Controls.hierarchy.Add(m_Progress);
 
-            m_HandleContainer = new VisualElement
+            m_MinHandleContainer = new VisualElement
             {
                 name = handleContainerUssClassName,
                 pickingMode = PickingMode.Ignore,
                 usageHints = UsageHints.DynamicTransform,
             };
-            m_HandleContainer.AddToClassList(handleContainerUssClassName);
-            m_Controls.hierarchy.Add(m_HandleContainer);
+            m_MinHandleContainer.AddToClassList(handleContainerUssClassName);
+            m_Controls.hierarchy.Add(m_MinHandleContainer);
 
-            m_Handle = new ExVisualElement
+            m_MinHandle = new ExVisualElement
             {
                 name = handleUssClassName,
                 pickingMode = PickingMode.Ignore,
                 passMask = 0
             };
-            m_Handle.AddToClassList(handleUssClassName);
-            m_HandleContainer.hierarchy.Add(m_Handle);
+            m_MinHandle.AddToClassList(handleUssClassName);
+            m_MinHandleContainer.hierarchy.Add(m_MinHandle);
+            
+            m_MaxHandleContainer = new VisualElement
+            {
+                name = handleContainerUssClassName,
+                pickingMode = PickingMode.Ignore,
+                usageHints = UsageHints.DynamicTransform,
+            };
+            m_MaxHandleContainer.AddToClassList(handleContainerUssClassName);
+            m_Controls.hierarchy.Add(m_MaxHandleContainer);
+
+            m_MaxHandle = new ExVisualElement
+            {
+                name = handleUssClassName,
+                pickingMode = PickingMode.Ignore,
+                passMask = 0
+            };
+            m_MaxHandle.AddToClassList(handleUssClassName);
+            m_MaxHandleContainer.hierarchy.Add(m_MaxHandle);
 
             size = Size.M;
             tickCount = 0;
             label = null;
             filled = false;
-            fillOffset = 0;
             inlineValue = InlineValue.None;
 
             RegisterCallback<KeyDownEvent>(OnKeyDown);
@@ -236,12 +241,14 @@ namespace Unity.AppUI.UI
 
         void OnPointerFocusIn(FocusInEvent evt)
         {
-            m_Handle.passMask = 0;
+            m_MinHandle.passMask = 0;
+            m_MaxHandle.passMask = 0;
         }
 
         void OnKeyboardFocusIn(FocusInEvent evt)
         {
-            m_Handle.passMask = Passes.Clear | Passes.Outline;
+            m_MinHandle.passMask = Passes.Clear | Passes.Outline;
+            m_MaxHandle.passMask = Passes.Clear | Passes.Outline;
         }
 
         void OnKeyDown(KeyDownEvent evt)
@@ -251,26 +258,33 @@ namespace Unity.AppUI.UI
                 var handled = false;
                 var previousValue = value;
                 var newValue = previousValue;
-
+                
+                var focusedHandleValue = m_MinHandle.tabIndex == 0 ? minValue : maxValue;
+                
                 if (evt.keyCode == KeyCode.LeftArrow)
                 {
-                    newValue = Decrement(newValue);
-                    handled = true;
+                    var decrement = Decrement(focusedHandleValue);
+                    handled = decrement.CompareTo(focusedHandleValue) != 0;
+                    focusedHandleValue = decrement;
                 }
                 else if (evt.keyCode == KeyCode.RightArrow)
                 {
-                    newValue = Increment(newValue);
-                    handled = true;
+                    var increment = Increment(focusedHandleValue);
+                    handled = increment.CompareTo(focusedHandleValue) != 0;
+                    focusedHandleValue = increment;
                 }
 
                 if (handled)
                 {
+                    newValue = MakeRangeValue(
+                        m_MinHandle.tabIndex == 0 ? focusedHandleValue : minValue, 
+                        m_MinHandle.tabIndex == 0 ? maxValue : focusedHandleValue);
                     evt.StopPropagation();
                     evt.PreventDefault();
 
                     SetValueWithoutNotify(newValue);
 
-                    using var changingEvt = ChangingEvent<TValueType>.GetPooled();
+                    using var changingEvt = ChangingEvent<TRangeType>.GetPooled();
                     changingEvt.previousValue = previousValue;
                     changingEvt.newValue = newValue;
                     changingEvt.target = this;
@@ -304,19 +318,6 @@ namespace Unity.AppUI.UI
                 m_InlineValue = value;
                 if (m_InlineValue != InlineValue.None)
                     AddToClassList(inlineValueUssClassName + m_InlineValue.ToString().ToLower());
-            }
-        }
-
-        /// <summary>
-        /// Should be normalized.
-        /// </summary>
-        public float fillOffset
-        {
-            get => m_FillOffset;
-            set
-            {
-                m_FillOffset = value;
-                RefreshUI();
             }
         }
 
@@ -381,12 +382,31 @@ namespace Unity.AppUI.UI
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
             }
         }
+        
+        public abstract TValueType minValue { get; set; }
+        
+        public abstract TValueType maxValue { get; set; }
+        
+        protected abstract TRangeType MakeRangeValue(TValueType minValue, TValueType maxValue);
+        
+        protected abstract TValueType GetMinValue(TRangeType rangeValue);
+        
+        protected abstract TValueType GetMaxValue(TRangeType rangeValue);
+        
+        protected abstract TValueType GetClampedValue(TValueType value, TValueType lowerValue, TValueType higherValue);
+        
+        protected abstract TValueType LerpUnclamped(TValueType a, TValueType b, float interpolant);
+
+        protected int ClosestHandleIndex(float mousePosition)
+        {
+            return Mathf.Abs(mousePosition - m_MinHandleContainer.layout.xMin) < Mathf.Abs(mousePosition - m_MaxHandleContainer.layout.xMin) ? 0 : 1;
+        }
 
         /// <summary>
         /// Set the value of the slider without notifying the change.
         /// </summary>
         /// <param name="newValue"> The new value of the slider. </param>
-        public override void SetValueWithoutNotify(TValueType newValue)
+        public override void SetValueWithoutNotify(TRangeType newValue)
         {
             newValue = GetClampedValue(newValue);
             var strValue = ParseValueToString(newValue);
@@ -400,14 +420,35 @@ namespace Unity.AppUI.UI
             RefreshUI();
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.GetSliderRect"/>
+        /// <inheritdoc cref="BaseSlider{TRangeType,TValueType}.GetSliderRect"/>
         protected override Rect GetSliderRect() => this.WorldToLocal(m_Controls.LocalToWorld(m_Controls.contentRect));
 
-        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.OnSliderRangeChanged"/>
+        /// <inheritdoc cref="BaseSlider{TRangeType,TValueType}.OnSliderRangeChanged"/>
         protected override void OnSliderRangeChanged()
         {
             base.OnSliderRangeChanged();
             RefreshTickLabels();
+        }
+
+        protected override TRangeType Clamp(TRangeType v, TValueType lowBound, TValueType highBound)
+        {
+            var min = GetMinValue(v);
+            var max = GetMaxValue(v);
+            
+            return MakeRangeValue(
+                GetClampedValue(min, lowBound, highBound),
+                GetClampedValue(max, lowBound, highBound));
+        }
+
+        protected override TRangeType ComputeValueFromHandlePosition(float sliderLength, float dragElementPos)
+        {
+            if (sliderLength < Mathf.Epsilon)
+                return m_Value;
+            
+            var normalizedValue = Mathf.Clamp01(dragElementPos / sliderLength);
+            var newVal = LerpUnclamped(lowValue, highValue, normalizedValue);
+            
+            return ClosestHandleIndex(dragElementPos) == 0 ? MakeRangeValue(newVal, maxValue) : MakeRangeValue(minValue, newVal);
         }
 
         void RefreshLabel()
@@ -423,15 +464,20 @@ namespace Unity.AppUI.UI
 
             // set the label
             RefreshLabel();
-
-            // progress bar
-            var val = Mathf.Clamp01(SliderNormalizeValue(m_Value, lowValue, highValue));
+            
             var trackWidth = GetSliderRect().width;
-            m_Progress.style.width = trackWidth * Mathf.Abs(val - fillOffset);
-            m_Progress.style.left = trackWidth * Mathf.Min(fillOffset, val);
 
-            // handle
-            m_HandleContainer.style.left = trackWidth * val;
+            // min handle
+            var minVal = Mathf.Clamp01(SliderNormalizeValue(minValue, lowValue, highValue));
+            m_MinHandleContainer.style.left = trackWidth * minVal;
+            
+            // max handle
+            var maxVal = Mathf.Clamp01(SliderNormalizeValue(maxValue, lowValue, highValue));
+            m_MaxHandleContainer.style.left = trackWidth * maxVal;
+            
+            // progress bar
+            m_Progress.style.width = trackWidth * Mathf.Abs(maxVal - minVal);
+            m_Progress.style.left = trackWidth * minVal;
 
             MarkDirtyRepaint();
         }
@@ -446,8 +492,8 @@ namespace Unity.AppUI.UI
                 {
                     var tickLabelElement = tick.childCount == 0 ? new TextElement { pickingMode = PickingMode.Ignore } : (TextElement)tick.ElementAt(0);
                     var ratio = i / ((float)tickCount - 1);
-                    var tickVal = SliderLerpUnclamped(lowValue, highValue, ratio);
-                    tickLabelElement.text = ParseValueToString(tickVal);
+                    var tickVal = LerpUnclamped(lowValue, highValue, ratio);
+                    tickLabelElement.text = ParseHandleValueToString(tickVal);
                     tickLabelElement.AddToClassList(tickLabelUssClassName);
                     if (tickLabelElement.parent == null)
                         tick.Add(tickLabelElement);
@@ -457,16 +503,6 @@ namespace Unity.AppUI.UI
                     tick.Clear();
                 }
             }
-        }
-        
-        protected override TValueType Clamp(TValueType v, TValueType lowBound, TValueType highBound)
-        {
-            var result = v;
-            if (lowBound.CompareTo(v) > 0)
-                result = lowBound;
-            if (highBound.CompareTo(v) < 0)
-                result = highBound;
-            return result;
         }
 
         /// <summary>
@@ -538,13 +574,12 @@ namespace Unity.AppUI.UI
             {
                 base.Init(ve, bag, cc);
 
-                var el = (SliderBase<TValueType>)ve;
+                var el = (RangeSliderBase<TRangeType,TValueType>)ve;
                 el.label = m_Label.GetValueFromBag(bag, cc);
                 el.size = m_Size.GetValueFromBag(bag, cc);
                 el.tickCount = m_TickCount.GetValueFromBag(bag, cc);
                 el.tickLabel = m_TickLabel.GetValueFromBag(bag, cc);
                 el.filled = m_Filled.GetValueFromBag(bag, cc);
-                el.fillOffset = m_FillOffset.GetValueFromBag(bag, cc);
                 el.inlineValue = m_InlineValue.GetValueFromBag(bag, cc);
 
                 string formatStr = null;
@@ -557,9 +592,9 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// Slider UI element for floating point values.
+    /// Range Slider UI element for floating point values.
     /// </summary>
-    public class SliderFloat : SliderBase<float>
+    public class RangeSliderFloat : RangeSliderBase<Vector2, float>
     {
         /// <summary>
         /// The increment factor used when the slider is interacted with using the keyboard.
@@ -569,59 +604,100 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public SliderFloat()
+        public RangeSliderFloat()
         {
             formatString = UINumericFieldsUtils.k_FloatFieldFormatString;
         }
 
         /// <inheritdoc cref="BaseSlider{TValueType}.ParseStringToValue"/>
-        protected override bool ParseStringToValue(string strValue, out float v)
+        protected override bool ParseStringToValue(string strValue, out Vector2 val)
         {
-            var ret = float.TryParse(strValue, out var val);
-            v = val;
-            return ret;
+            var strValues = strValue.Split(" - ");
+            var xStr = strValues[0];
+            var yStr = strValues[1];
+            var xRet = float.TryParse(xStr, out var val1);
+            var yRet = float.TryParse(yStr, out var val2);
+            val = new Vector2(val1, val2);
+            return xRet && yRet;
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.ParseValueToString"/>
-        protected override string ParseValueToString(float val)
+        /// <inheritdoc cref="BaseSlider{Vector2,Single}.ParseValueToString"/>
+        protected override string ParseValueToString(Vector2 val)
         {
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType}.SliderLerpUnclamped"/>
-        protected override float SliderLerpUnclamped(float a, float b, float interpolant)
+        /// <inheritdoc cref="BaseSlider{Vector2,Single}.SliderLerpUnclamped"/>
+        protected override Vector2 SliderLerpUnclamped(float a, float b, float interpolant)
         {
-            return Mathf.LerpUnclamped(a, b, interpolant);
+            throw new InvalidOperationException("Cannot lerp between two integers and return a Vector2.");
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType}.SliderNormalizeValue"/>
+        /// <inheritdoc cref="BaseSlider{Vector2,Single}.SliderNormalizeValue"/>
         protected override float SliderNormalizeValue(float currentValue, float lowerValue, float higherValue)
         {
             return Mathf.InverseLerp(lowerValue, higherValue, currentValue);
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Increment"/>
+        /// <inheritdoc cref="BaseSlider{Vector2,Single}.Increment"/>
         protected override float Increment(float val)
         {
             return val + incrementFactor;
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Decrement"/>
+        /// <inheritdoc cref="BaseSlider{Vector2,Single}.Decrement"/>
         protected override float Decrement(float val)
         {
             return val - incrementFactor;
         }
+        
+        public override float minValue
+        {
+            get => m_Value.x;
+            set => this.value = new Vector2(value, m_Value.y);
+        }
+
+        public override float maxValue 
+        {
+            get => m_Value.y;
+            set => this.value = new Vector2(m_Value.x, value);
+        }
+
+        protected override Vector2 MakeRangeValue(float minValue, float maxValue)
+        {
+            return new Vector2(minValue, maxValue);
+        }
+
+        protected override float GetMinValue(Vector2 rangeValue)
+        {
+            return rangeValue.x;
+        }
+
+        protected override float GetMaxValue(Vector2 rangeValue)
+        {
+            return rangeValue.y;
+        }
+
+        protected override float GetClampedValue(float value, float lowerValue, float higherValue)
+        {
+            return Mathf.Clamp(value, lowerValue, higherValue);
+        }
+
+        protected override float LerpUnclamped(float a, float b, float interpolant)
+        {
+            return Mathf.LerpUnclamped(a, b, interpolant);
+        }
 
         /// <summary>
-        /// Factory class to instantiate a <see cref="SliderFloat"/> using the data read from a UXML file.
+        /// Factory class to instantiate a <see cref="RangeSliderFloat"/> using the data read from a UXML file.
         /// </summary>
         [Preserve]
-        public new class UxmlFactory : UxmlFactory<SliderFloat, UxmlTraits> { }
+        public new class UxmlFactory : UxmlFactory<RangeSliderFloat, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="SliderFloat"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="RangeSliderFloat"/>.
         /// </summary>
-        public new class UxmlTraits : SliderBase<float>.UxmlTraits
+        public new class UxmlTraits : RangeSliderBase<Vector2, float>.UxmlTraits
         {
             readonly UxmlFloatAttributeDescription m_HighValue = new UxmlFloatAttributeDescription
             {
@@ -635,10 +711,16 @@ namespace Unity.AppUI.UI
                 defaultValue = 0
             };
 
-            readonly UxmlFloatAttributeDescription m_Value = new UxmlFloatAttributeDescription
+            readonly UxmlFloatAttributeDescription m_MinValue = new UxmlFloatAttributeDescription
             {
-                name = "value",
+                name = "min-value",
                 defaultValue = 0
+            };
+            
+            readonly UxmlFloatAttributeDescription m_MaxValue = new UxmlFloatAttributeDescription
+            {
+                name = "max-value",
+                defaultValue = 100
             };
 
             /// <summary>
@@ -651,18 +733,18 @@ namespace Unity.AppUI.UI
             {
                 base.Init(ve, bag, cc);
 
-                var el = (SliderFloat)ve;
+                var el = (RangeSliderFloat)ve;
                 el.lowValue = m_LowValue.GetValueFromBag(bag, cc);
                 el.highValue = m_HighValue.GetValueFromBag(bag, cc);
-                el.value = m_Value.GetValueFromBag(bag, cc);
+                el.value = new Vector2(m_MinValue.GetValueFromBag(bag, cc), m_MaxValue.GetValueFromBag(bag, cc));
             }
         }
     }
 
     /// <summary>
-    /// Slider UI element for integer values.
+    /// Range Slider UI element for integer values.
     /// </summary>
-    public class SliderInt : SliderBase<int>
+    public class RangeSliderInt : RangeSliderBase<Vector2Int, int>
     {
         /// <summary>
         /// The increment factor used when the slider is interacted with using the keyboard.
@@ -672,59 +754,100 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public SliderInt()
+        public RangeSliderInt()
         {
             formatString = UINumericFieldsUtils.k_IntFieldFormatString;
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType}.ParseStringToValue"/>
-        protected override bool ParseStringToValue(string strValue, out int v)
+        /// <inheritdoc cref="BaseSlider{Vector2Int,Integer}.ParseStringToValue"/>
+        protected override bool ParseStringToValue(string strValue, out Vector2Int val)
         {
-            var ret = int.TryParse(strValue, out var val);
-            v = val;
-            return ret;
+            var strValues = strValue.Split(" - ");
+            var xStr = strValues[0];
+            var yStr = strValues[1];
+            var xRet = int.TryParse(xStr, out var val1);
+            var yRet = int.TryParse(yStr, out var val2);
+            val = new Vector2Int(val1, val2);
+            return xRet && yRet;
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.ParseValueToString"/>
-        protected override string ParseValueToString(int val)
+        /// <inheritdoc cref="BaseSlider{Vector2Int,Integer}.ParseValueToString"/>
+        protected override string ParseValueToString(Vector2Int val)
         {
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType}.SliderLerpUnclamped"/>
-        protected override int SliderLerpUnclamped(int a, int b, float interpolant)
+        /// <inheritdoc cref="BaseSlider{Vector2Int,Integer}.SliderLerpUnclamped"/>
+        protected override Vector2Int SliderLerpUnclamped(int a, int b, float interpolant)
         {
-            return Mathf.RoundToInt(Mathf.LerpUnclamped(a, b, interpolant));
+            throw new InvalidOperationException("Cannot lerp between two integers and return a Vector2Int.");
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType}.SliderNormalizeValue"/>
+        /// <inheritdoc cref="BaseSlider{Vector2Int,Integer}.SliderNormalizeValue"/>
         protected override float SliderNormalizeValue(int currentValue, int lowerValue, int higherValue)
         {
             return Mathf.InverseLerp(lowerValue, higherValue, currentValue);
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Increment"/>
+        /// <inheritdoc cref="BaseSlider{Vector2Int,Integer}.Increment"/>
         protected override int Increment(int val)
         {
             return val + incrementFactor;
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Decrement"/>
+        /// <inheritdoc cref="BaseSlider{Vector2Int,Integer}.Decrement"/>
         protected override int Decrement(int val)
         {
             return val - incrementFactor;
         }
+        
+        public override int minValue 
+        {
+            get => m_Value.x;
+            set => this.value = new Vector2Int(value, m_Value.y);
+        }
+
+        public override int maxValue 
+        {
+            get => m_Value.y;
+            set => this.value = new Vector2Int(m_Value.x, value);
+        }
+
+        protected override Vector2Int MakeRangeValue(int minValue, int maxValue)
+        {
+            return new Vector2Int(minValue, maxValue);
+        }
+
+        protected override int GetMinValue(Vector2Int rangeValue)
+        {
+            return rangeValue.x;
+        }
+
+        protected override int GetMaxValue(Vector2Int rangeValue)
+        {
+            return rangeValue.y;
+        }
+
+        protected override int GetClampedValue(int value, int lowerValue, int higherValue)
+        {
+            return Mathf.Clamp(value, lowerValue, higherValue);
+        }
+
+        protected override int LerpUnclamped(int a, int b, float interpolant)
+        {
+            return Mathf.RoundToInt(Mathf.LerpUnclamped(a, b, interpolant));
+        }
 
         /// <summary>
-        /// Factory class to instantiate a <see cref="SliderInt"/> using the data read from a UXML file.
+        /// Factory class to instantiate a <see cref="RangeSliderInt"/> using the data read from a UXML file.
         /// </summary>
         [Preserve]
-        public new class UxmlFactory : UxmlFactory<SliderInt, UxmlTraits> { }
+        public new class UxmlFactory : UxmlFactory<RangeSliderInt, UxmlTraits> { }
 
         /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="SliderInt"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="RangeSliderInt"/>.
         /// </summary>
-        public new class UxmlTraits : SliderBase<int>.UxmlTraits
+        public new class UxmlTraits : RangeSliderBase<Vector2Int, int>.UxmlTraits
         {
             readonly UxmlIntAttributeDescription m_HighValue = new UxmlIntAttributeDescription
             {
@@ -738,10 +861,16 @@ namespace Unity.AppUI.UI
                 defaultValue = 0
             };
 
-            readonly UxmlIntAttributeDescription m_Value = new UxmlIntAttributeDescription
+            readonly UxmlIntAttributeDescription m_MinValue = new UxmlIntAttributeDescription
             {
-                name = "value",
+                name = "min-value",
                 defaultValue = 0
+            };
+            
+            readonly UxmlIntAttributeDescription m_MaxValue = new UxmlIntAttributeDescription
+            {
+                name = "max-value",
+                defaultValue = 100
             };
 
             /// <summary>
@@ -754,10 +883,10 @@ namespace Unity.AppUI.UI
             {
                 base.Init(ve, bag, cc);
 
-                var el = (SliderInt)ve;
+                var el = (RangeSliderInt)ve;
                 el.lowValue = m_LowValue.GetValueFromBag(bag, cc);
                 el.highValue = m_HighValue.GetValueFromBag(bag, cc);
-                el.value = m_Value.GetValueFromBag(bag, cc);
+                el.value = new Vector2Int(m_MinValue.GetValueFromBag(bag, cc), m_MaxValue.GetValueFromBag(bag, cc));
             }
         }
     }

@@ -13,7 +13,7 @@ Shader "Hidden/App UI/CanvasBackground"
     SubShader
     {
         ZTest Always Cull Off ZWrite Off
-
+        
         CGINCLUDE
 
         #include "UnityCG.cginc"
@@ -50,7 +50,7 @@ Shader "Hidden/App UI/CanvasBackground"
             o.uv = (float2(v.uv.x * _TexSize.x, (1.0 - v.uv.y) * _TexSize.y) - _TexSize.zw) / _Scale; 
             return o;
         }
-
+        
         ENDCG
 
         Pass
@@ -62,7 +62,7 @@ Shader "Hidden/App UI/CanvasBackground"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_local __ DRAW_POINTS_ON
-
+            
             fixed4 frag (v2f i) : SV_Target
             {
                 _Thickness = _Thickness / _Scale;
@@ -72,7 +72,7 @@ Shader "Hidden/App UI/CanvasBackground"
 
                 const bool insideX = grid.x < _Thickness * 0.5 || (grid.x > (_Spacing - _Thickness * 0.5));
                 const bool insideY = grid.y < _Thickness * 0.5 || (grid.y > (_Spacing - _Thickness * 0.5));
-
+                
 #if DRAW_POINTS_ON
                 const bool inside = insideX && insideY;
 #else // DRAW_LINES_ON

@@ -160,6 +160,9 @@
 .appui-icon--check--regular {
     --unity-image: url("./Check.png");
 }
+.appui-icon--check--bold {
+    --unity-image: url("./Bold/check-bold.png");
+}
 .appui-icon--clap-board--regular {
     --unity-image: url("./ClapBoard.png");
 }
@@ -459,6 +462,9 @@
 }
 .appui-icon--minus--regular {
     --unity-image: url("./Minus.png");
+}
+.appui-icon--minus--bold {
+    --unity-image: url("./Bold/minus-bold.png");
 }
 .appui-icon--mouse--regular {
     --unity-image: url("./Mouse.png");

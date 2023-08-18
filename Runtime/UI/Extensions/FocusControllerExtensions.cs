@@ -16,16 +16,18 @@ namespace Unity.AppUI.UI
         /// </summary>
         /// <param name="controller">The focus controller.</param>
         /// <param name="direction">The direction to focus.</param>
-        public static void FocusNextInDirectionEx(this FocusController controller, FocusChangeDirection direction)
+        /// <returns>The focused element.</returns>
+        public static Focusable FocusNextInDirectionEx(this FocusController controller, FocusChangeDirection direction)
         {
             if (controller == null)
-                return;
+                return null;
 
 #if UNITY_2023_2_OR_NEWER
-            FocusNextInDirectionEx(controller, controller.focusedElement, direction);
+            var r = FocusNextInDirectionEx(controller, controller.focusedElement, direction);
 #else 
-            k_FocusNextInDirection!.Invoke(controller, new object[] { direction });
+            var r = k_FocusNextInDirection!.Invoke(controller, new object[] { direction });
 #endif
+            return r as Focusable;
         }
 
         /// <summary>
@@ -34,17 +36,19 @@ namespace Unity.AppUI.UI
         /// <param name="controller">The focus controller.</param>
         /// <param name="currentlyFocusedElement">The currently focused element.</param>
         /// <param name="direction">The direction to focus.</param>
-        public static void FocusNextInDirectionEx(this FocusController controller,
+        /// <returns>The focused element.</returns>
+        public static Focusable FocusNextInDirectionEx(this FocusController controller,
             Focusable currentlyFocusedElement, FocusChangeDirection direction)
         {
             if (controller == null)
-                return;
+                return null;
 
 #if UNITY_2023_2_OR_NEWER
-            k_FocusNextInDirection!.Invoke(controller, new object[] { currentlyFocusedElement, direction });
+            var r = k_FocusNextInDirection!.Invoke(controller, new object[] { currentlyFocusedElement, direction });
 #else 
-            controller.FocusNextInDirectionEx(direction);
+            var r = controller.FocusNextInDirectionEx(direction);
 #endif
+            return r as Focusable;
         }
     }
 }

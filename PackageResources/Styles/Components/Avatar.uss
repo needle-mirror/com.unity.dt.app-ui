@@ -1,4 +1,10 @@
 /* Avatar */
+:root {
+    --appui-avatar-size-sm: var(--appui-sizing-500);
+    --appui-avatar-size-md: var(--appui-sizing-650);
+    --appui-avatar-size-lg: var(--appui-sizing-800);
+}
+
 .appui-avatar {
     display: flex;
     flex-direction: row;
@@ -11,18 +17,18 @@
 }
 
 .appui-avatar--size-s {
-    width: var(--appui-sizing-500);
-    height: var(--appui-sizing-500);
+    width: var(--appui-avatar-size-sm);
+    height: var(--appui-avatar-size-sm);
 }
 
 .appui-avatar--size-m {
-    width: var(--appui-sizing-650);
-    height: var(--appui-sizing-650);
+    width: var(--appui-avatar-size-md);
+    height: var(--appui-avatar-size-md);
 }
 
 .appui-avatar--size-l {
-    width: var(--appui-sizing-800);
-    height: var(--appui-sizing-800);
+    width: var(--appui-avatar-size-lg);
+    height: var(--appui-avatar-size-lg);
 }
 
 .appui-avatar__container {

@@ -12,8 +12,10 @@ namespace Unity.AppUI.UI
     /// <see cref="SliderFloat"/>, <see cref="SliderInt"/>).
     /// </summary>
     /// <typeparam name="TValueType">A comparable value type.</typeparam>
-    public abstract class BaseSlider<TValueType> : ExVisualElement, IValidatableElement<TValueType>, INotifyValueChanging<TValueType>
+    /// <typeparam name="THandleValueType">A value type for a single handle of the slider. This can be the same as <typeparamref name="TValueType"/>.</typeparam>
+    public abstract class BaseSlider<TValueType, THandleValueType> : ExVisualElement, IValidatableElement<TValueType>, INotifyValueChanging<TValueType>
         where TValueType : IEquatable<TValueType>
+        where THandleValueType : struct, IComparable, IEquatable<THandleValueType>
     {
         /// <summary>
         /// The dragger manipulator used to move the slider.
@@ -23,12 +25,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Slider max value.
         /// </summary>
-        protected TValueType m_HighValue;
+        protected THandleValueType m_HighValue;
 
         /// <summary>
         /// Slider min value.
         /// </summary>
-        protected TValueType m_LowValue;
+        protected THandleValueType m_LowValue;
 
         /// <summary>
         /// The previous value of the slider before the user started interacting with it.
@@ -54,12 +56,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Specify the minimum value in the range of this slider.
         /// </summary>
-        public TValueType lowValue
+        public THandleValueType lowValue
         {
             get => m_LowValue;
             set
             {
-                if (!EqualityComparer<TValueType>.Default.Equals(m_LowValue, value))
+                if (!EqualityComparer<THandleValueType>.Default.Equals(m_LowValue, value))
                 {
                     m_LowValue = value;
                     OnSliderRangeChanged();
@@ -70,12 +72,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Specify the maximum value in the range of this slider.
         /// </summary>
-        public TValueType highValue
+        public THandleValueType highValue
         {
             get => m_HighValue;
             set
             {
-                if (!EqualityComparer<TValueType>.Default.Equals(m_HighValue, value))
+                if (!EqualityComparer<THandleValueType>.Default.Equals(m_HighValue, value))
                 {
                     m_HighValue = value;
                     OnSliderRangeChanged();
@@ -199,7 +201,7 @@ namespace Unity.AppUI.UI
         protected virtual void SetValueFromDrag(float newPos)
         {
             var sliderRect = GetSliderRect();
-            var newValue = ComputeValueDraggerPosition(sliderRect.width, newPos - sliderRect.x);
+            var newValue = ComputeValueFromHandlePosition(sliderRect.width, newPos - sliderRect.x);
             SetValueWithoutNotify(newValue);
 
             using var evt = ChangingEvent<TValueType>.GetPooled();
@@ -221,10 +223,10 @@ namespace Unity.AppUI.UI
         /// <param name="sliderLength"> The length of the slider.</param>
         /// <param name="dragElementPos"> The position of the dragger.</param>
         /// <returns> The value to set as slider value based on a given dragger position.</returns>
-        protected virtual TValueType ComputeValueDraggerPosition(float sliderLength, float dragElementPos)
+        protected virtual TValueType ComputeValueFromHandlePosition(float sliderLength, float dragElementPos)
         {
             if (sliderLength < Mathf.Epsilon)
-                return lowValue;
+                return default;
 
             var normalizedDragElementPosition = Mathf.Max(0f, Mathf.Min(dragElementPos, sliderLength)) / sliderLength;
             return SliderLerpUnclamped(lowValue, highValue, normalizedDragElementPosition);
@@ -255,7 +257,7 @@ namespace Unity.AppUI.UI
         /// <returns></returns>
         protected virtual TValueType GetClampedValue(TValueType newValue)
         {
-            TValueType lowest = lowValue, highest = highValue;
+            THandleValueType lowest = lowValue, highest = highValue;
             if (lowest is IComparable lowC && highest is IComparable highC && lowC.CompareTo(highC) > 0)
             {
                 // ReSharper disable once SwapViaDeconstruction
@@ -282,15 +284,7 @@ namespace Unity.AppUI.UI
         /// <param name="lowBound">Minimum</param>
         /// <param name="highBound">Maximum</param>
         /// <returns>The clamped value.</returns>
-        protected virtual TValueType Clamp(TValueType v, TValueType lowBound, TValueType highBound)
-        {
-            var result = v;
-            if (lowBound is IComparable lowC && lowC.CompareTo(v) > 0)
-                result = lowBound;
-            if (highBound is IComparable highC && highC.CompareTo(v) < 0)
-                result = highBound;
-            return result;
-        }
+        protected abstract TValueType Clamp(TValueType v, THandleValueType lowBound, THandleValueType highBound);
 
         /// <summary>
         /// Method to implement to resolve a <typeparamref name="TValueType"/> value into a <see cref="string"/> value.
@@ -300,6 +294,18 @@ namespace Unity.AppUI.UI
         /// <param name="val">The <typeparamref name="TValueType"/> value to convert.</param>
         /// <returns></returns>
         protected virtual string ParseValueToString(TValueType val)
+        {
+            return val.ToString();
+        }
+        
+        /// <summary>
+        /// Method to implement to resolve a <typeparamref name="TValueType"/> value into a <see cref="string"/> value.
+        /// <para>You can use <see cref="object.ToString"/> for floating point value types for example.</para>
+        /// <para>You can also round the value if you want a specific number of decimals.</para>
+        /// </summary>
+        /// <param name="val">The <typeparamref name="TValueType"/> value to convert.</param>
+        /// <returns></returns>
+        protected virtual string ParseHandleValueToString(THandleValueType val)
         {
             return val.ToString();
         }
@@ -322,7 +328,7 @@ namespace Unity.AppUI.UI
         /// <param name="b">The highest value in the range.</param>
         /// <param name="interpolant">The normalized value to process.</param>
         /// <returns></returns>
-        protected abstract TValueType SliderLerpUnclamped(TValueType a, TValueType b, float interpolant);
+        protected abstract TValueType SliderLerpUnclamped(THandleValueType a, THandleValueType b, float interpolant);
 
         /// <summary>
         /// Method to implement which returns the normalized value of a given value in a specific range.
@@ -332,28 +338,29 @@ namespace Unity.AppUI.UI
         /// <param name="lowerValue">The lowest value in the range.</param>
         /// <param name="higherValue">The highest value in the range.</param>
         /// <returns></returns>
-        protected abstract float SliderNormalizeValue(TValueType currentValue, TValueType lowerValue, TValueType higherValue);
+        protected abstract float SliderNormalizeValue(THandleValueType currentValue, THandleValueType lowerValue, THandleValueType higherValue);
 
         /// <summary>
         /// Method to implement which returns the decrement of a given value.
         /// </summary>
         /// <param name="val"> The value to decrement.</param>
         /// <returns> The decremented value.</returns>
-        protected abstract TValueType Decrement(TValueType val);
+        protected abstract THandleValueType Decrement(THandleValueType val);
 
         /// <summary>
         /// Method to implement which returns the increment of a given value.
         /// </summary>
         /// <param name="val"> The value to increment.</param>
         /// <returns> The incremented value.</returns>
-        protected abstract TValueType Increment(TValueType val);
+        protected abstract THandleValueType Increment(THandleValueType val);
     }
 
     /// <summary>
     /// Base class for TouchSlider UI elements (<see cref="TouchSliderFloat"/>, <see cref="TouchSliderInt"/>).
     /// </summary>
     /// <typeparam name="TValueType">A comparable value type.</typeparam>
-    public abstract class TouchSlider<TValueType> : BaseSlider<TValueType> where TValueType : IComparable, IEquatable<TValueType>
+    public abstract class TouchSlider<TValueType> : BaseSlider<TValueType, TValueType> 
+        where TValueType : struct, IComparable, IEquatable<TValueType>
     {
         const int k_EventDelay = 16;
 
@@ -590,6 +597,16 @@ namespace Unity.AppUI.UI
             m_InputField.style.display = DisplayStyle.None;
         }
 
+        protected override TValueType Clamp(TValueType v, TValueType lowBound, TValueType highBound)
+        {
+            var result = v;
+            if (lowBound.CompareTo(v) > 0)
+                result = lowBound;
+            if (highBound.CompareTo(v) < 0)
+                result = highBound;
+            return result;
+        }
+
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TouchSlider{TValueType}"/>.
         /// </summary>
@@ -660,7 +677,7 @@ namespace Unity.AppUI.UI
             return ret;
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType}.ParseValueToString"/>
+        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.ParseValueToString"/>
         protected override string ParseValueToString(int val)
         {
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
@@ -675,16 +692,16 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="BaseSlider{TValueType}.SliderNormalizeValue"/>
         protected override float SliderNormalizeValue(int currentValue, int lowerValue, int higherValue)
         {
-            return Mathf.InverseLerp(lowerValue, higherValue, currentValue);
+            return Mathf.InverseLerp(lowerValue,higherValue, currentValue);
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType}.Increment"/>
+        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Increment"/>
         protected override int Increment(int val)
         {
             return val + incrementFactor;
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType}.Decrement"/>
+        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Decrement"/>
         protected override int Decrement(int val)
         {
             return val - incrementFactor;
@@ -756,7 +773,7 @@ namespace Unity.AppUI.UI
             return ret;
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType}.ParseValueToString"/>
+        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.ParseValueToString"/>
         protected override string ParseValueToString(float val)
         {
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
@@ -774,13 +791,13 @@ namespace Unity.AppUI.UI
             return Mathf.InverseLerp(lowerValue, higherValue, currentValue);
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType}.Increment"/>
+        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Increment"/>
         protected override float Increment(float val)
         {
             return val + incrementFactor;
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType}.Decrement"/>
+        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Decrement"/>
         protected override float Decrement(float val)
         {
             return val - incrementFactor;

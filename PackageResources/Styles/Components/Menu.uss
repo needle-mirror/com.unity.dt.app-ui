@@ -39,7 +39,6 @@
     padding: var(--appui-alias-control-gap-md);
     margin-top: var(--appui-alias-control-gap-md); /*margin-block-start: var(--appui-alias-control-gap-md);*/
     -unity-text-align: middle-center; /* text-align: center; */
-    font-size: 12px;
 }
 
 .appui-menuitem {

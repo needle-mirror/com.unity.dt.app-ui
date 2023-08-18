@@ -11,13 +11,13 @@ namespace Unity.AppUI.UI
     public class CanvasBackground : VisualElement
     {
         public const string ussClassName = "appui-canvas-background";
-
+        
         static Material s_Material;
-
+        
         static readonly Vertex[] k_Vertices = new Vertex[4];
-
+        
         static readonly ushort[] k_Indices = { 0, 1, 2, 2, 3, 0 };
-
+        
         [Preserve]
         static CanvasBackground()
         {
@@ -26,25 +26,25 @@ namespace Unity.AppUI.UI
             k_Vertices[2].tint = Color.white;
             k_Vertices[3].tint = Color.white;
         }
-
+        
         static readonly CustomStyleProperty<Color> k_GridBackgroundColorProperty = new CustomStyleProperty<Color>("--grid-background-color");
-
+		
         static readonly CustomStyleProperty<Color> k_LineColorProperty = new CustomStyleProperty<Color>("--line-color");
-
+		
 		static readonly CustomStyleProperty<int> k_DrawPointsProperty = new CustomStyleProperty<int>("--draw-points");
-
+		
 		static readonly CustomStyleProperty<int> k_LineSpacingProperty = new CustomStyleProperty<int>("--line-spacing");
-
+		
 		static readonly CustomStyleProperty<Color> k_ThickLineColorProperty = new CustomStyleProperty<Color>("--thick-line-color");
-
+		
 		static readonly CustomStyleProperty<int> k_ThickLineThicknessProperty = new CustomStyleProperty<int>("--thick-line-thickness");
-
+		
 		static readonly CustomStyleProperty<int> k_ThickLinesProperty = new CustomStyleProperty<int>("--thick-lines");
-
+		
 		static readonly CustomStyleProperty<float> k_ThicknessProperty = new CustomStyleProperty<float>("--thickness"); 
-
+		
 		static readonly CustomStyleProperty<float> k_NextGridScaleFactor = new CustomStyleProperty<float>("--next-grid-scale-factor"); 
-
+			
 		const float k_DefaultNextGridScaleFactor = 10.0f;
 
 		const float k_DefaultSpacing = 200f;
@@ -52,49 +52,49 @@ namespace Unity.AppUI.UI
 		const int k_DefaultThickLines = 10;
 
 		const float k_DefaultThickness = 2f;
-
+		
 		const float k_DefaultThickLineThickness = 4f;
 
 		static readonly Color k_DefaultLineColor = new Color(0f, 0f, 0f, 0.18f);
-
+		
 		static readonly Color k_DefaultThickLineColor = new Color(0f, 0f, 0f, 0.38f);
-
+		
 		static readonly Color k_DefaultGridBackgroundColor = new Color(0.17f, 0.17f, 0.17f, 1.0f);
-
+		
 		static readonly int k_Color = Shader.PropertyToID("_Color");
-
+		
 		static readonly int k_Opacity = Shader.PropertyToID("_Opacity");
 
 		static readonly int k_Thickness = Shader.PropertyToID("_Thickness");
-
+		
 		static readonly int k_Spacing = Shader.PropertyToID("_Spacing");
-
+		
 		static readonly int k_Scale = Shader.PropertyToID("_Scale");
-
+		
 		static readonly int k_TexSize = Shader.PropertyToID("_TexSize");
 
 		float m_Spacing = k_DefaultSpacing;
-
+		
 		bool m_DrawPoints;
-
+		
 		RenderTexture m_RT;
-
+		
 		float m_Scale = 1f;
-
+		
 		Vector2 m_Offset;
-
+		
 		float m_NextGridScaleFactor = k_DefaultNextGridScaleFactor;
-
+		
 		float m_ThickLines = k_DefaultThickLines;
-
+		
 		Color m_LineColor = k_DefaultLineColor;
-
+		
 		Color m_ThickLineColor = k_DefaultThickLineColor;
-
+		
 		Color m_GridBackgroundColor = k_DefaultGridBackgroundColor;
-
+		
 		float m_Thickness = k_DefaultThickness;
-
+		
 		float m_ThickLineThickness = k_DefaultThickLineThickness;
 
 		/// <summary>
@@ -240,7 +240,7 @@ namespace Unity.AppUI.UI
 				MarkDirtyRepaint();
 			}
 		}
-
+        
         /// <summary>
         /// Instantiates a <see cref="CanvasBackground"/> element.
         /// </summary>
@@ -248,7 +248,7 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
             pickingMode = PickingMode.Ignore;
-
+            
             RegisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
             generateVisualContent = OnGenerateVisualContent;
         }
@@ -260,17 +260,17 @@ namespace Unity.AppUI.UI
             {
                 thickLines = thicklinesValue;
             }
-
+			
             if (eCustomStyle.TryGetValue(k_ThicknessProperty, out var thicknessProp))
             {
                 thickness = thicknessProp;
             }
-
+			
             if (eCustomStyle.TryGetValue(k_NextGridScaleFactor, out var nextGridScaleFactor))
             {
                 this.nextGridScaleFactor = nextGridScaleFactor;
             }
-
+			
             if (eCustomStyle.TryGetValue(k_ThickLineThicknessProperty, out var thickLinesThicknessValue))
             {
                 thickLineThickness = thickLinesThicknessValue;
@@ -285,12 +285,12 @@ namespace Unity.AppUI.UI
             {
                 lineColor = lineColorValue;
             }
-
+			
             if (eCustomStyle.TryGetValue(k_LineSpacingProperty, out var lineSpacing))
             {
                 spacing = lineSpacing;
             }
-
+			
             if (eCustomStyle.TryGetValue(k_DrawPointsProperty, out var drawPointsProp))
             {
                 drawPoints = drawPointsProp > 0;
@@ -314,19 +314,19 @@ namespace Unity.AppUI.UI
 
 	        if (!contentRect.IsValid())
 		        return;
-
+	        
 	        var rtSize = ExVisualElement.GetRenderTextureSize(contentRect, 4096);
-
+	        
 	        if (rtSize.x < 1 || rtSize.y < 1)
 		        return;
-
+	        
 	        if (m_RT && (m_RT.width != rtSize.x || m_RT.height != rtSize.y))
 	        {
 		        m_RT.Release();
 		        UnityObject.Destroy(m_RT);
 		        m_RT = null;
 	        }
-
+	        
 	        if (!m_RT)
 	        {
 		        m_RT = new RenderTexture(rtSize.x, rtSize.y, 24)
@@ -335,7 +335,7 @@ namespace Unity.AppUI.UI
 		        };
 		        m_RT.Create();
 	        }
-
+	        
 	        var prevRt = RenderTexture.active;
 	        RenderTexture.active = m_RT;
 	        // Draw starts here
@@ -380,7 +380,7 @@ namespace Unity.AppUI.UI
 	        var maxSpacing = m_Spacing;
 	        var newSpacing = m_Spacing;
 	        var targetSpacing = newSpacing * nextGridScaleFactor;
-
+            
 	        var currentSpacing = newSpacing * scale;
 
 	        if (targetSpacing > 0)
@@ -391,7 +391,7 @@ namespace Unity.AppUI.UI
 			        currentSpacing = newSpacing * scale;
 		        }
 	        }
-
+            
 	        while (currentSpacing < targetSpacing || targetSpacing == 0)
 	        {
 		        s_Material.SetColor(k_Color, lineColor);
@@ -419,10 +419,10 @@ namespace Unity.AppUI.UI
 			        s_Material.SetFloat(k_Spacing, newSpacing * thickLines);
 			        Graphics.Blit(null, m_RT, s_Material);
 		        }
-
+	            
 		        newSpacing *= nextGridScaleFactor;
 		        currentSpacing = newSpacing * scale;
-
+	            
 		        if (targetSpacing == 0)
 			        break;
 	        }

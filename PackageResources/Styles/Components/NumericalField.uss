@@ -8,7 +8,7 @@
     border-width: var(--appui-alias-control-border-width);
     /*border-style: var(--appui-control-border-style);*/
     border-color: var(--appui-base-400);
-    padding: 0 var(--appui-spacing-150);
+    padding: 0 var(--appui-alias-control-gap-md);
     cursor: var(--appui-alias-control-cursor-text);
     width: 100%;
     flex-shrink: 0;

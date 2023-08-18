@@ -9,6 +9,11 @@ namespace Unity.AppUI.UI
     public enum TextSize
     {
         /// <summary>
+        /// Extra-extra-small
+        /// </summary>
+        XXS,
+        
+        /// <summary>
         /// Extra-small
         /// </summary>
         XS,

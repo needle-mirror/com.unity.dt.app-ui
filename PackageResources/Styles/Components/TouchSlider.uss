@@ -9,7 +9,7 @@
     border-radius: var(--appui-alias-control-border-radius);
     border-width: var(--appui-alias-control-border-width);
     /*border-style: var(--appui-control-border-style);*/
-    padding: 0 var(--appui-spacing-150);
+    padding: 0 var(--appui-alias-control-gap-md);
     position: relative;
     /*overflow: hidden;*/
     cursor: var(--appui-alias-control-cursor-ewresize); /*cursor: ew-resize;*/
@@ -48,14 +48,14 @@
 
 .appui-touchslider__label {
     position: absolute;
-    left: 12px;
+    left: var(--appui-alias-control-gap-md);
     font-size: var(--appui-font-sizes-body-sm);
     color: var(--appui-foregrounds-50);
     transition: color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-100);
 }
 
 .appui-touchslider__valuelabel {
-    right: 12px;
+    right: var(--appui-alias-control-gap-md);
     position: absolute;
     font-size: var(--appui-font-sizes-body-sm);
     color: var(--appui-foregrounds-50);

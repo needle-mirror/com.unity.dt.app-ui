@@ -7,7 +7,7 @@
                 <!-- main content -->
                 <ui:ScrollView>
                     <ui:VisualElement class="example">
-
+                        
                         <!-- Accordion -->
                         <appui:Heading text="ACCORDION" class="example-title" />
                         <appui:Text text="Default" class="example-subtitle" />
@@ -1118,7 +1118,7 @@
                             <appui:Text text="BoundsInt Field" class="example-subtitle" />
                             <appui:BoundsIntField />
                         </ui:VisualElement>
-
+                        
                         <!-- Grid View -->
                         <appui:Heading text="GRIDVIEW" class="example-title" />
                         <appui:Text text="Default" class="example-subtitle" />
@@ -1434,7 +1434,7 @@
                             <appui:Text text="With Text" class="example-subtitle" />
                             <ui:VisualElement class="example-row">
                                 <ui:VisualElement class="example-item">
-                                    <appui:CircularProgress name="determinateCircularProgressWithLabel" variant="Determinate">
+                                    <appui:CircularProgress name="determinateCircularProgressWithLabel" variant="Determinate" class="example-cp-with-text">
                                         <appui:Text name="determinateCircularProgressLabel" text="0%" size="XS" />
                                     </appui:CircularProgress>
                                 </ui:VisualElement>
@@ -1529,6 +1529,18 @@
                                 </ui:VisualElement>
                             </ui:VisualElement>
                         </ui:VisualElement>
+                        
+                        <!-- RangeSlider -->
+                        <appui:Heading text="RANGE SLIDER" class="example-title" />
+                        <appui:Text text="Sizing" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:Text text="S" class="example-subtitle" />
+                            <appui:RangeSliderFloat size="S" filled="true" label="Small RangeSlider" />
+                            <appui:Text text="M" class="example-subtitle" />
+                            <appui:RangeSliderFloat name="rsfm" size="M" filled="true" label="Medium RangeSlider" />
+                            <appui:Text text="L" class="example-subtitle" />
+                            <appui:RangeSliderFloat size="L" filled="true" label="Large RangeSlider" />
+                        </ui:VisualElement>
 
                         <!-- Slider -->
                         <appui:Heading text="SLIDER" class="example-title" />
@@ -1537,7 +1549,7 @@
                             <appui:Text text="S" class="example-subtitle" />
                             <appui:SliderFloat size="S" inline-value="End" />
                             <appui:Text text="M" class="example-subtitle" />
-                            <appui:SliderFloat size="M" inline-value="End" />
+                            <appui:SliderFloat name="sfm" size="M" inline-value="End" />
                             <appui:Text text="L" class="example-subtitle" />
                             <appui:SliderFloat size="L" inline-value="End" />
                         </ui:VisualElement>
@@ -1833,12 +1845,14 @@
                         <appui:Heading text="TEXT" class="example-title" />
                         <ui:VisualElement class="example-section">
                             <appui:Text text="Sizing" class="example-subtitle" />
+                            <appui:Text text="Extra extra small text" size="XXS" />
                             <appui:Text text="Extra small text" size="XS" />
                             <appui:Text text="Small text" size="S" />
                             <appui:Text text="Medium text" size="M" />
                             <appui:Text text="Large text" size="L" />
                             <appui:Text text="Extra large text" size="XL" />
                             <appui:Text text="Double extra large text" size="XXL" />
+                            <appui:Text text="Triple extra large text" size="XXXL" />
                             <appui:Text text="Primary" class="example-subtitle" />
                             <appui:Text text="Primary text" primary="true" />
                             <appui:Text text="Secondary" class="example-subtitle" />
@@ -2041,6 +2055,7 @@
                 <ui:VisualElement class="example-context-switcher-panel" style="margin-top: 190px;">
                     <appui:Text text="&lt;b&gt;Scale&lt;/b&gt;" enable-rich-text="true"  style="margin-bottom: 8px;"  />
                     <appui:RadioGroup name="scale-switcher">
+                        <appui:Radio label="Small" emphasized="true" />
                         <appui:Radio label="Medium" value="true" emphasized="true" />
                         <appui:Radio label="Large" emphasized="true" />
                     </appui:RadioGroup>

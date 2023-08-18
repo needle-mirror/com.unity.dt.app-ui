@@ -8,7 +8,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Vector4 Field UI element.
     /// </summary>
-    public class Vector4Field : VisualElement, IValidatableElement<Vector4>, ISizeableElement
+    public class Vector4Field : VisualElement, IValidatableElement<Vector4>, ISizeableElement, INotifyValueChanging<Vector4>
     {
         /// <summary>
         /// The Vector4Field main styling class.
@@ -57,6 +57,8 @@ namespace Unity.AppUI.UI
 
         readonly FloatField m_ZField;
 
+        Vector4 m_LastValue;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -91,6 +93,11 @@ namespace Unity.AppUI.UI
 
             size = Size.M;
             SetValueWithoutNotify(Vector4.zero);
+            
+            m_XField.RegisterValueChangingCallback(OnXFieldChanging);
+            m_YField.RegisterValueChangingCallback(OnYFieldChanging);
+            m_ZField.RegisterValueChangingCallback(OnZFieldChanging);
+            m_WField.RegisterValueChangingCallback(OnWFieldChanging);
 
             m_XField.RegisterValueChangedCallback(OnXFieldChanged);
             m_YField.RegisterValueChangedCallback(OnYFieldChanged);
@@ -128,6 +135,7 @@ namespace Unity.AppUI.UI
         public void SetValueWithoutNotify(Vector4 newValue)
         {
             m_Value = newValue;
+            m_LastValue = m_Value;
             m_XField.SetValueWithoutNotify(m_Value.x);
             m_YField.SetValueWithoutNotify(m_Value.y);
             m_ZField.SetValueWithoutNotify(m_Value.z);
@@ -143,7 +151,7 @@ namespace Unity.AppUI.UI
             get => m_Value;
             set
             {
-                if (m_Value == value)
+                if (m_LastValue == m_Value && m_Value == value)
                     return;
                 using var evt = ChangeEvent<Vector4>.GetPooled(m_Value, value);
                 evt.target = this;
@@ -173,6 +181,51 @@ namespace Unity.AppUI.UI
         /// The validation function of the Vector4Field.
         /// </summary>
         public Func<Vector4, bool> validateValue { get; set; }
+        
+        void OnXFieldChanging(ChangingEvent<float> evt)
+        {
+            evt.PreventDefault();
+            evt.StopPropagation();
+            TrySendChangingEvent(new Vector4(evt.newValue, m_Value.y, m_Value.z, m_Value.w));
+        }
+        
+        void OnYFieldChanging(ChangingEvent<float> evt)
+        {
+            evt.PreventDefault();
+            evt.StopPropagation();
+            TrySendChangingEvent(new Vector4(m_Value.x, evt.newValue, m_Value.z, m_Value.w));
+        }
+        
+        void OnZFieldChanging(ChangingEvent<float> evt)
+        {
+            evt.PreventDefault();
+            evt.StopPropagation();
+            TrySendChangingEvent(new Vector4(m_Value.x, m_Value.y, evt.newValue, m_Value.w));
+        }
+        
+        void OnWFieldChanging(ChangingEvent<float> evt)
+        {
+            evt.PreventDefault();
+            evt.StopPropagation();
+            TrySendChangingEvent(new Vector4(m_Value.x, m_Value.y, m_Value.z, evt.newValue));
+        }
+        
+        void TrySendChangingEvent(Vector4 newVector)
+        {
+            var previousValue = m_Value;
+            m_Value = newVector;
+            
+            if (m_Value != previousValue)
+            {
+                if (validateValue != null) invalid = !validateValue(m_Value);
+                
+                using var changeEvent = ChangingEvent<Vector4>.GetPooled();
+                changeEvent.target = this;
+                changeEvent.previousValue = previousValue;
+                changeEvent.newValue = m_Value;
+                SendEvent(changeEvent);
+            }
+        }
 
         void OnWFieldChanged(ChangeEvent<float> evt)
         {

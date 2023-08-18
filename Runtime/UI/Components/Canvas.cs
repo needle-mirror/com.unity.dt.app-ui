@@ -15,13 +15,13 @@ namespace Unity.AppUI.UI
         /// The natural scroll direction.
         /// </summary>
         Natural,
-
+        
         /// <summary>
         /// The inversed scroll direction.
         /// </summary>
         Inverse,
     }
-
+    
     /// <summary>
     /// The current Grab Mode.
     /// </summary>
@@ -53,36 +53,36 @@ namespace Unity.AppUI.UI
         /// USS class name of elements of this type.
         /// </summary>
         public const string ussClassName = "appui-canvas";
-
+        
         /// <summary>
         /// USS class name of the background element of this type.
         /// </summary>
         public static readonly string backgroundUssClassName = ussClassName + "__background";
-
+        
         /// <summary>
         /// USS class name of the viewport element of this type.
         /// </summary>
         public static readonly string viewportUssClassName = ussClassName + "__viewport";
-
+        
         /// <summary>
         /// USS class name of the viewport container element of this type.
         /// </summary>
         public static readonly string viewportContainerUssClassName = ussClassName + "__viewport-container";
-
+        
         /// <summary>
         /// USS class name of the horizontal scroller element of this type.
         /// </summary>
         public static readonly string horizontalScrollerUssClassName = ussClassName + "__horizontal-scroller";
-
+        
         /// <summary>
         /// USS class name of the vertical scroller element of this type.
         /// </summary>
         public static readonly string verticalScrollerUssClassName = ussClassName + "__vertical-scroller";
-
+        
         const float k_DefaultScrollSpeed = 2f;
-
+        
         const float k_DefaultMinZoom = 0.1f;
-
+        
         const float k_DefaultMaxZoom = 100.0f;
 
         const float k_DefaultZoomSpeed = 0.075f;
@@ -92,17 +92,17 @@ namespace Unity.AppUI.UI
         const float k_DefaultPanMultiplier = 3f;
 
         const float k_DefaultFrameMargin = 12f;
-
+        
         const ScrollDirection k_DefaultScrollDirection = ScrollDirection.Natural;
 
         readonly CanvasBackground m_Background;
 
         readonly VisualElement m_Viewport;
-
+        
         readonly VisualElement m_ViewportContainer;
-
+        
         readonly Scroller m_HorizontalScroller;
-
+        
         readonly Scroller m_VerticalScroller;
 
         Vector3 m_PointerPosition;
@@ -121,7 +121,7 @@ namespace Unity.AppUI.UI
         /// The content container of the Canvas.
         /// </summary>
         public override VisualElement contentContainer => m_ViewportContainer;
-
+        
         /// <summary>
         /// The scroll coordinates of the Canvas.
         /// </summary>
@@ -134,22 +134,22 @@ namespace Unity.AppUI.UI
                 UpdateScrollers();
             }
         }
-
+        
         /// <summary>
         /// The scroll speed of the Canvas.
         /// </summary>
         public float scrollSpeed { get; set; } = k_DefaultScrollSpeed;
-
+        
         /// <summary>
         /// The minimum zoom factor of the Canvas.
         /// </summary>
         public float minZoom { get; set; } = k_DefaultMinZoom;
-
+        
         /// <summary>
         /// The maximum zoom factor of the Canvas.
         /// </summary>
         public float maxZoom { get; set; } = k_DefaultMaxZoom;
-
+        
         /// <summary>
         /// The zoom speed of the Canvas.
         /// </summary>
@@ -169,7 +169,7 @@ namespace Unity.AppUI.UI
         /// The scroll direction of the Canvas. See <see cref="ScrollDirection"/> for more information.
         /// </summary>
         public ScrollDirection scrollDirection { get; set; } = k_DefaultScrollDirection;
-
+        
         /// <summary>
         /// The zoom factor of the Canvas.
         /// </summary>
@@ -183,7 +183,7 @@ namespace Unity.AppUI.UI
                 UpdateScrollers();
             }
         }
-
+        
         /// <summary>
         /// The margin applied when framing the Canvas.
         /// </summary>
@@ -218,7 +218,7 @@ namespace Unity.AppUI.UI
             m_Background = new CanvasBackground {name = backgroundUssClassName, pickingMode = PickingMode.Ignore};
             m_Background.AddToClassList(backgroundUssClassName);
             hierarchy.Add(m_Background);
-
+            
             m_Viewport = new VisualElement
             {
                 name = viewportUssClassName, 
@@ -227,7 +227,7 @@ namespace Unity.AppUI.UI
             };
             m_Viewport.AddToClassList(viewportUssClassName);
             hierarchy.Add(m_Viewport);
-
+            
             m_ViewportContainer = new VisualElement
             {
                 name = viewportContainerUssClassName, 
@@ -247,7 +247,7 @@ namespace Unity.AppUI.UI
             m_VerticalScroller.slider.RegisterCallback<PointerCaptureEvent>(OnScrollerPointerCapture);
             m_VerticalScroller.slider.RegisterCallback<PointerCaptureOutEvent>(OnScrollerPointerCaptureOut);
             hierarchy.Add(m_VerticalScroller);
-
+            
             m_HorizontalScroller = new Scroller
             {
                 name = horizontalScrollerUssClassName,
@@ -258,20 +258,19 @@ namespace Unity.AppUI.UI
             m_HorizontalScroller.slider.RegisterCallback<PointerCaptureEvent>(OnScrollerPointerCapture);
             m_HorizontalScroller.slider.RegisterCallback<PointerCaptureOutEvent>(OnScrollerPointerCaptureOut);
             hierarchy.Add(m_HorizontalScroller);
-
+            
             RegisterCallback<WheelEvent>(OnWheel);
             RegisterCallback<PointerDownEvent>(OnPointerDown);
             RegisterCallback<PointerUpEvent>(OnPointerUp);
             RegisterCallback<PointerCancelEvent>(OnPointerCancel);
             RegisterCallback<PointerCaptureOutEvent>(OnPointerCaptureOut);
             RegisterCallback<PointerMoveEvent>(OnPointerMove);
-
             RegisterCallback<KeyDownEvent>(OnKeyDown);
             RegisterCallback<KeyUpEvent>(OnKeyUp);
             RegisterCallback<FocusOutEvent>(OnFocusOut);
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         }
-
+        
         /// <summary>
         /// Frame the Canvas to the given area. The area is in the Viewport's local coordinates.
         /// </summary>
@@ -284,7 +283,7 @@ namespace Unity.AppUI.UI
             var worldRect = m_Viewport.LocalToWorld(viewportArea);
             var container = contentRect;
             var containerCenter = new Vector2(container.width * 0.5f, container.height * 0.5f);
-
+            
             var localRect = this.WorldToLocal(worldRect);
             var zoomRatio = Mathf.Min(
                 (container.width - frameMargin * 2f) / localRect.width, 
@@ -293,7 +292,7 @@ namespace Unity.AppUI.UI
 
             var centerDelta = localRect.center - containerCenter;
             scrollOffset += centerDelta;
-
+            
             var zoomDelta = newZoom - zoom;
             ApplyZoom(containerCenter, zoomDelta);
         }
@@ -306,11 +305,11 @@ namespace Unity.AppUI.UI
         {
             if (element == null)
                 return;
-
+            
             var boundingBox = element.GetWorldBoundingBox();
             if (boundingBox.size.sqrMagnitude == 0)
                 return;
-
+            
             FrameArea(m_Viewport.WorldToLocal(boundingBox));
         }
 
@@ -474,17 +473,17 @@ namespace Unity.AppUI.UI
         {
             if (m_UpdatingScrollers)
                 return;
-
+            
             var delta = evt.newValue - m_LastScrollersPosition.y;
             SetScrollOffset(new Vector2(scrollOffset.x, scrollOffset.y + delta));
             m_LastScrollersPosition.y = evt.newValue;
         }
-
+        
         void OnHorizontalScrollValueChanged(ChangeEvent<float> evt)
         {
             if (m_UpdatingScrollers)
                 return;
-
+            
             var delta = evt.newValue - m_LastScrollersPosition.x;
             SetScrollOffset(new Vector2(scrollOffset.x - delta, scrollOffset.y));
             m_LastScrollersPosition.x = evt.newValue;
@@ -497,7 +496,7 @@ namespace Unity.AppUI.UI
 
             UpdateScrollers();
         }
-
+        
         void OnScrollerPointerCapture(PointerCaptureEvent evt)
         {
             if (evt.target == m_HorizontalScroller.slider || evt.target == m_VerticalScroller.slider)
@@ -505,7 +504,7 @@ namespace Unity.AppUI.UI
                 m_LastScrollersPosition = new Vector2(m_HorizontalScroller.slider.value, m_VerticalScroller.slider.value);
             }
         }
-
+        
         void OnScrollerPointerCaptureOut(PointerCaptureOutEvent evt)
         {
             if (evt.target == m_HorizontalScroller.slider || evt.target == m_VerticalScroller.slider)
@@ -519,15 +518,15 @@ namespace Unity.AppUI.UI
             var viewportRect = contentRect;
             if (!viewportRect.IsValid())
                 return;
-
+            
             var canvasContentRect = this.WorldToLocal(m_ViewportContainer.GetWorldBoundingBox());
-
+            
             // Shrinking the canvas content rect by 1 pixel on each side to avoid rounding issues
             canvasContentRect.xMin += 1;
             canvasContentRect.yMin += 1;
             canvasContentRect.xMax -= 1;
             canvasContentRect.yMax -= 1;
-
+            
             // Encapsulating the canvas content rect by the viewport rect
             canvasContentRect.xMin = Mathf.Min(canvasContentRect.xMin, 0);
             canvasContentRect.yMin = Mathf.Min(canvasContentRect.yMin, 0);
@@ -539,7 +538,7 @@ namespace Unity.AppUI.UI
             xRatio = Mathf.Approximately(1f, xRatio) ? 1f : xRatio;
             var yRatio = canvasContentRect.height > 0 ? viewportRect.height / canvasContentRect.height : 1f;
             yRatio = Mathf.Approximately(1f, yRatio) ? 1f : yRatio;
-
+            
             m_UpdatingScrollers = true;
 
             if (xRatio < 1f)
@@ -550,7 +549,7 @@ namespace Unity.AppUI.UI
                 var min = 0;
                 var max = Mathf.Max(min, canvasContentRect.width - viewportRect.width);
                 var newValue = max - Mathf.Clamp(-canvasContentRect.xMin, min, max);
-
+                
                 m_HorizontalScroller.slider.SetValueWithoutNotify(newValue);
                 m_HorizontalScroller.lowValue = min;
                 m_HorizontalScroller.highValue = max;
@@ -560,7 +559,7 @@ namespace Unity.AppUI.UI
             {
                 m_VerticalScroller.lowValue = float.MinValue;
                 m_VerticalScroller.highValue = float.MaxValue;
-
+                
                 var min = 0;
                 var max = Mathf.Max(min, canvasContentRect.height - viewportRect.height);
                 var newValue = Mathf.Clamp(-canvasContentRect.yMin, min, max);
@@ -569,10 +568,10 @@ namespace Unity.AppUI.UI
                 m_VerticalScroller.lowValue = min;
                 m_VerticalScroller.highValue = max;
             }
-
+            
             m_HorizontalScroller.Adjust(xRatio);
             m_VerticalScroller.Adjust(yRatio);
-
+            
             m_UpdatingScrollers = false;
         }
 
@@ -580,7 +579,7 @@ namespace Unity.AppUI.UI
         {
             if (delta == Vector2.zero)
                 return;
-
+            
             var newScrollOffset = scrollOffset;
             newScrollOffset += (delta * scrollSpeed) * (scrollDirection == ScrollDirection.Natural ? -1f : 1f);
             scrollOffset = newScrollOffset;
@@ -590,13 +589,13 @@ namespace Unity.AppUI.UI
         {
             if (delta == 0)
                 return;
-
+            
             var newZoom = zoom;
             newZoom += delta;
             newZoom = Mathf.Clamp(newZoom, minZoom, maxZoom);
             var zoomRatio = newZoom / zoom;
             zoom = newZoom;
-
+                
             var newScrollOffset = scrollOffset;
             newScrollOffset = (newScrollOffset + pivot) * zoomRatio - pivot;
             scrollOffset = newScrollOffset;
@@ -613,7 +612,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         [Preserve]
         public new class UxmlFactory : UxmlFactory<Canvas, UxmlTraits> { }
-
+        
         /// <summary>
         /// Class containing the UXML traits for the <see cref="Canvas"/>.
         /// </summary>
@@ -624,13 +623,13 @@ namespace Unity.AppUI.UI
                 name = "scroll-speed", 
                 defaultValue = k_DefaultScrollSpeed
             };
-
+            
             readonly UxmlFloatAttributeDescription m_MinZoom = new UxmlFloatAttributeDescription
             {
                 name = "min-zoom", 
                 defaultValue = k_DefaultMinZoom
             };
-
+            
             readonly UxmlFloatAttributeDescription m_MaxZoom = new UxmlFloatAttributeDescription
             {
                 name = "max-zoom", 
@@ -660,7 +659,7 @@ namespace Unity.AppUI.UI
                 name = "frame-margin", 
                 defaultValue = k_DefaultFrameMargin
             };
-
+            
             readonly UxmlEnumAttributeDescription<ScrollDirection> m_ScrollDirection = new UxmlEnumAttributeDescription<ScrollDirection>
             {
                 name = "scroll-direction", 
@@ -670,7 +669,7 @@ namespace Unity.AppUI.UI
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-
+                
                 var canvas = (Canvas)ve;
                 canvas.scrollSpeed = m_ScrollSpeed.GetValueFromBag(bag, cc);
                 canvas.minZoom = m_MinZoom.GetValueFromBag(bag, cc);

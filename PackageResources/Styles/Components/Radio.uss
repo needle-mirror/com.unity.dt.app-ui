@@ -1,4 +1,14 @@
 /* Radio */
+:root {
+    --appui-radio__button-size-sm: var(--appui-sizing-200);
+    --appui-radio__button-size-md: var(--appui-sizing-250);
+    --appui-radio__button-size-lg: var(--appui-sizing-300);
+    
+    --appui-radio__checkmark-size-sm: var(--appui-sizing-75);
+    --appui-radio__checkmark-size-md: var(--appui-sizing-100);
+    --appui-radio__checkmark-size-lg: var(--appui-sizing-150);
+}
+
 .appui-radio {
     position: relative;
     display: flex;
@@ -33,6 +43,7 @@
     border-width: var(--appui-alias-control-border-width);
     /*border-style: var(--appui-control-border-style);*/
     border-color: var(--appui-base-400);
+    border-radius: 100px;
 }
 
 .appui-radio.is-hovered > .appui-radio__button  {
@@ -96,6 +107,7 @@
     background-color: var(--appui-foregrounds-100);
     transition: opacity var(--appui-animation-easing-ease-out) var(--appui-animation-duration-50);
     border-width: 0;
+    border-radius: 100px;
 }
 
 .appui-radio--emphasized .appui-radio__checkmark,
@@ -119,37 +131,31 @@
 }
 
 .appui-radio--size-s > .appui-radio__button  {
-    width: var(--appui-sizing-200);
-    height: var(--appui-sizing-200);
-    border-radius: var(--appui-sizing-100);
+    width: var(--appui-radio__button-size-sm);
+    height: var(--appui-radio__button-size-sm);
 }
 
 .appui-radio--size-s .appui-radio__checkmark {
-    width: var(--appui-sizing-75);
-    height: var(--appui-sizing-75);
-    border-radius: var(--appui-sizing-50);
+    width: var(--appui-radio__checkmark-size-sm);
+    height: var(--appui-radio__checkmark-size-sm);
 }
 
 .appui-radio--size-m > .appui-radio__button  {
-    width: var(--appui-sizing-250);
-    height: var(--appui-sizing-250);
-    border-radius: var(--appui-sizing-125);
+    width: var(--appui-radio__button-size-md);
+    height: var(--appui-radio__button-size-md);
 }
 
 .appui-radio--size-m .appui-radio__checkmark {
-    width: var(--appui-sizing-100);
-    height: var(--appui-sizing-100);
-    border-radius: var(--appui-sizing-50);
+    width: var(--appui-radio__checkmark-size-md);
+    height: var(--appui-radio__checkmark-size-md);
 }
 
 .appui-radio--size-l > .appui-radio__button  {
-    width: var(--appui-sizing-300);
-    height: var(--appui-sizing-300);
-    border-radius: var(--appui-sizing-150);
+    width: var(--appui-radio__button-size-lg);
+    height: var(--appui-radio__button-size-lg);
 }
 
 .appui-radio--size-l .appui-radio__checkmark {
-    width: var(--appui-sizing-100);
-    height: var(--appui-sizing-100);
-    border-radius: var(--appui-sizing-50);
+    width: var(--appui-radio__checkmark-size-lg);
+    height: var(--appui-radio__checkmark-size-lg);
 }

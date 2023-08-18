@@ -1,4 +1,24 @@
 /* Toggle */
+:root {
+    --appui-toggle__box-width-sm: var(--appui-sizing-400);
+    --appui-toggle__box-width-md: var(--appui-sizing-500);
+    --appui-toggle__box-width-lg: var(--appui-sizing-600);
+    
+    --appui-toggle__box-height-sm: var(--appui-sizing-250);
+    --appui-toggle__box-height-md: var(--appui-sizing-300);
+    --appui-toggle__box-height-lg: var(--appui-sizing-375);
+    
+    --appui-toggle__box-border-radius-sm: var(--appui-sizing-125);
+    --appui-toggle__box-border-radius-md: var(--appui-sizing-150);
+    --appui-toggle__box-border-radius-lg: var(--appui-sizing-200);
+    
+    --appui-toggle__checkmark-size-sm: var(--appui-sizing-150);
+    --appui-toggle__checkmark-size-md: var(--appui-sizing-200);
+    --appui-toggle__checkmark-size-lg: var(--appui-sizing-250);
+    
+    --appui-toggle__box-gap: var(--appui-spacing-50);
+}
+
 .appui-toggle {
     display: flex;
     flex-direction: row;
@@ -22,7 +42,6 @@
     display: flex;
     flex-shrink: 0;
     flex-grow: 0;
-    background-color: var(--appui-alias-field-default);
     background-color: var(--appui-base-100);
     border-width: var(--appui-alias-control-border-width);
     /*border-style: var(--appui-control-border-style);*/
@@ -67,7 +86,7 @@
 
 .appui-toggle__boxpadded {
     position: relative;
-    margin: 0 3px;
+    margin: 0 var(--appui-toggle__box-gap);
     height: 100%;
 }
 
@@ -106,39 +125,39 @@
 }
 
 .appui-toggle--size-s > .appui-toggle__box {
-    height: var(--appui-sizing-250);
-    width: var(--appui-sizing-400);
-    border-radius: var(--appui-sizing-125);
+    height: var(--appui-toggle__box-height-sm);
+    width: var(--appui-toggle__box-width-sm);
+    border-radius: var(--appui-toggle__box-border-radius-sm);
 }
 
 .appui-toggle--size-s .appui-toggle__checkmark {
-    width: var(--appui-sizing-150);
-    height: var(--appui-sizing-150);
-    border-radius: var(--appui-sizing-75);
+    width: var(--appui-toggle__checkmark-size-sm);
+    height: var(--appui-toggle__checkmark-size-sm);
+    border-radius: var(--appui-toggle__checkmark-size-sm);
 }
 
 .appui-toggle--size-m > .appui-toggle__box {
-    height: var(--appui-sizing-300);
-    width: var(--appui-sizing-500);
-    border-radius: var(--appui-sizing-150);
+    height: var(--appui-toggle__box-height-md);
+    width: var(--appui-toggle__box-width-md);
+    border-radius: var(--appui-toggle__box-border-radius-md);
 }
 
 .appui-toggle--size-m .appui-toggle__checkmark {
-    width: var(--appui-sizing-200);
-    height: var(--appui-sizing-200);
-    border-radius: var(--appui-sizing-100);
+    width: var(--appui-toggle__checkmark-size-md);
+    height: var(--appui-toggle__checkmark-size-md);
+    border-radius: var(--appui-toggle__checkmark-size-md);
 }
 
 .appui-toggle--size-l > .appui-toggle__box {
-    height: var(--appui-sizing-375);
-    width: var(--appui-sizing-600);
-    border-radius: var(--appui-sizing-200);
+    height: var(--appui-toggle__box-height-lg);
+    width: var(--appui-toggle__box-width-lg);
+    border-radius: var(--appui-toggle__box-border-radius-lg);
 }
 
 .appui-toggle--size-l .appui-toggle__checkmark {
-    width: var(--appui-sizing-250);
-    height: var(--appui-sizing-250);
-    border-radius: var(--appui-sizing-125);
+    width: var(--appui-toggle__checkmark-size-lg);
+    height: var(--appui-toggle__checkmark-size-lg);
+    border-radius: var(--appui-toggle__checkmark-size-lg);
 }
 
 .appui-toggle__label {

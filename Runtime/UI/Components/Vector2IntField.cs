@@ -8,7 +8,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Vector2Int Field UI element.
     /// </summary>
-    public class Vector2IntField : VisualElement, IValidatableElement<Vector2Int>, ISizeableElement
+    public class Vector2IntField : VisualElement, IValidatableElement<Vector2Int>, ISizeableElement, INotifyValueChanging<Vector2Int>
     {
         /// <summary>
         /// The Vector2Field main styling class.
@@ -43,6 +43,8 @@ namespace Unity.AppUI.UI
 
         readonly IntField m_YField;
 
+        Vector2Int m_LastValue;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -66,6 +68,9 @@ namespace Unity.AppUI.UI
 
             size = Size.M;
             SetValueWithoutNotify(Vector2Int.zero);
+            
+            m_XField.RegisterValueChangingCallback(OnXFieldChanging);
+            m_YField.RegisterValueChangingCallback(OnYFieldChanging);
 
             m_XField.RegisterValueChangedCallback(OnXFieldChanged);
             m_YField.RegisterValueChangedCallback(OnYFieldChanged);
@@ -99,6 +104,7 @@ namespace Unity.AppUI.UI
         public void SetValueWithoutNotify(Vector2Int newValue)
         {
             m_Value = newValue;
+            m_LastValue = m_Value;
             m_XField.SetValueWithoutNotify(m_Value.x);
             m_YField.SetValueWithoutNotify(m_Value.y);
             if (validateValue != null) invalid = !validateValue(m_Value);
@@ -112,7 +118,7 @@ namespace Unity.AppUI.UI
             get => m_Value;
             set
             {
-                if (m_Value == value)
+                if (m_LastValue == m_Value && m_Value == value)
                     return;
                 using var evt = ChangeEvent<Vector2Int>.GetPooled(m_Value, value);
                 evt.target = this;
@@ -140,6 +146,37 @@ namespace Unity.AppUI.UI
         /// The validation function to use to validate the value.
         /// </summary>
         public Func<Vector2Int, bool> validateValue { get; set; }
+        
+        void OnXFieldChanging(ChangingEvent<int> evt)
+        {
+            evt.PreventDefault();
+            evt.StopPropagation();
+            TrySendChangingEvent(new Vector2Int(evt.newValue, m_Value.y));
+        }
+        
+        void OnYFieldChanging(ChangingEvent<int> evt)
+        {
+            evt.PreventDefault();
+            evt.StopPropagation();
+            TrySendChangingEvent(new Vector2Int(m_Value.x, evt.newValue));
+        }
+
+        void TrySendChangingEvent(Vector2Int newVector)
+        {
+            var previousValue = m_Value;
+            m_Value = newVector;
+            
+            if (m_Value != previousValue)
+            {
+                if (validateValue != null) invalid = !validateValue(m_Value);
+                
+                using var changeEvent = ChangingEvent<Vector2Int>.GetPooled();
+                changeEvent.target = this;
+                changeEvent.previousValue = previousValue;
+                changeEvent.newValue = m_Value;
+                SendEvent(changeEvent);
+            }
+        }
 
         void OnYFieldChanged(ChangeEvent<int> evt)
         {

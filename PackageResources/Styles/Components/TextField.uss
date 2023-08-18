@@ -6,7 +6,7 @@
     border-width: var(--appui-alias-control-border-width);
     /*border-style: var(--appui-control-border-style);*/
     border-radius: var(--appui-alias-control-border-radius);
-    padding: 0 6px;
+    padding: 0 var(--appui-alias-control-gap-md);
     /*gap: var(--appui-control-gap);*/
     background-color: var(--appui-base-100);
     border-color: var(--appui-base-400);

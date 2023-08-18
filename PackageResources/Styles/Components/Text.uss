@@ -6,6 +6,10 @@
   flex-shrink: 0;
 }
 
+.appui-text--size-xxs {
+  font-size: var(--appui-font-sizes-body-xxs);
+}
+
 .appui-text--size-xs {
   font-size: var(--appui-font-sizes-body-xs);
 }

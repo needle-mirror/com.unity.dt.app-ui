@@ -8,7 +8,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Vector3Int Field UI element.
     /// </summary>
-    public class Vector3IntField : VisualElement, IValidatableElement<Vector3Int>, ISizeableElement
+    public class Vector3IntField : VisualElement, IValidatableElement<Vector3Int>, ISizeableElement, INotifyValueChanging<Vector3Int>
     {
         /// <summary>
         /// The Vector3Field main styling class.
@@ -50,6 +50,8 @@ namespace Unity.AppUI.UI
 
         readonly IntField m_ZField;
 
+        Vector3Int m_LastValue;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -77,6 +79,10 @@ namespace Unity.AppUI.UI
 
             size = Size.M;
             SetValueWithoutNotify(Vector3Int.zero);
+
+            m_XField.RegisterValueChangingCallback(OnXFieldChanging);
+            m_YField.RegisterValueChangingCallback(OnYFieldChanging);
+            m_ZField.RegisterValueChangingCallback(OnZFieldChanging);
 
             m_XField.RegisterValueChangedCallback(OnXFieldChanged);
             m_YField.RegisterValueChangedCallback(OnYFieldChanged);
@@ -112,6 +118,7 @@ namespace Unity.AppUI.UI
         public void SetValueWithoutNotify(Vector3Int newValue)
         {
             m_Value = newValue;
+            m_LastValue = m_Value;
             m_XField.SetValueWithoutNotify(m_Value.x);
             m_YField.SetValueWithoutNotify(m_Value.y);
             m_ZField.SetValueWithoutNotify(m_Value.z);
@@ -126,7 +133,7 @@ namespace Unity.AppUI.UI
             get => m_Value;
             set
             {
-                if (m_Value == value)
+                if (m_LastValue == m_Value && m_Value == value)
                     return;
                 using var evt = ChangeEvent<Vector3Int>.GetPooled(m_Value, value);
                 evt.target = this;
@@ -155,6 +162,44 @@ namespace Unity.AppUI.UI
         /// The validation function of the Vector3IntField.
         /// </summary>
         public Func<Vector3Int, bool> validateValue { get; set; }
+        
+        void OnXFieldChanging(ChangingEvent<int> evt)
+        {
+            evt.PreventDefault();
+            evt.StopPropagation();
+            TrySendChangingEvent(new Vector3Int(evt.newValue, m_Value.y, m_Value.z));
+        }
+        
+        void OnYFieldChanging(ChangingEvent<int> evt)
+        {
+            evt.PreventDefault();
+            evt.StopPropagation();
+            TrySendChangingEvent(new Vector3Int(m_Value.x, evt.newValue, m_Value.z));
+        }
+        
+        void OnZFieldChanging(ChangingEvent<int> evt)
+        {
+            evt.PreventDefault();
+            evt.StopPropagation();
+            TrySendChangingEvent(new Vector3Int(m_Value.x, m_Value.y, evt.newValue));
+        }
+        
+        void TrySendChangingEvent(Vector3Int newVector)
+        {
+            var previousValue = m_Value;
+            m_Value = newVector;
+            
+            if (m_Value != previousValue)
+            {
+                if (validateValue != null) invalid = !validateValue(m_Value);
+                
+                using var changeEvent = ChangingEvent<Vector3Int>.GetPooled();
+                changeEvent.target = this;
+                changeEvent.previousValue = previousValue;
+                changeEvent.newValue = m_Value;
+                SendEvent(changeEvent);
+            }
+        }
 
         void OnZFieldChanged(ChangeEvent<int> evt)
         {

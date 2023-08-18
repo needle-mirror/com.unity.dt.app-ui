@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "0.3.9",
+  "version": "0.4.0",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "9cdc3d541eb22b2aa5b699658ad5be7e7f047e6a"
+    "revision": "6bd3fd64b241b770e369aa1409fff12eeb729978"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -75,10 +75,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added \n\n- Added Context API which is accessible through any `VisualElement` instance.\n- Added `preventScrollWithModifiers` property to the `GridView` component.\n\n### Fixed\n\n- Fixed `autoPlayDuration` property on PageView component.\n- Fixed value validation in `NumericalField` component."
+    "changelog": "### Added\n\n- Added the **Small** scale context to App UI. This context is now the preferred one for desktop platforms.\n- Added `RangeSlider` component.\n\n### Fixed\n\n- Fixed `ValueChanged` and `ValueChanging` events propagation in `NumericalField` and Vector components."
   },
   "upmCi": {
-    "footprint": "f91358391cc95965c12a0bd00f1fe5c31e45a7f8"
+    "footprint": "bd81628e05bcd9a1d795e7588ce602f30e4024c9"
   },
-  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.3/manual/index.html"
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.4/manual/index.html"
 }

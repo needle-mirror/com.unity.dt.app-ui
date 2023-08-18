@@ -2,7 +2,7 @@
 uid: whats-new
 ---
 
-# What's New in **0.3.9**
+# What's New in **0.4.0**
 
 This section contains information about new features, improvements, and issues fixed.
 
@@ -12,10 +12,9 @@ The main updates in this release include:
 
 ### Added
 
-- Added Context API which is accessible through any `VisualElement` instance.
-- Added `preventScrollWithModifiers` property to the `GridView` component.
+- Added the **Small** scale context to App UI. This context is now the preferred one for desktop platforms.
+- Added `RangeSlider` component.
 
 ### Fixed
 
-- Fixed `autoPlayDuration` property on PageView component.
-- Fixed value validation in `NumericalField` component.
+- Fixed `ValueChanged` and `ValueChanging` events propagation in `NumericalField` and Vector components.

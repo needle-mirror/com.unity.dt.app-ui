@@ -18,9 +18,9 @@ namespace Unity.AppUI.Tests.UI
         protected override string mainUssClassName => TouchSliderInt.ussClassName;
     }
 
-    class TouchSliderTests<T, U> : VisualElementTests<T>
-        where T : TouchSlider<U>, new()
-        where U : IComparable, IEquatable<U>
+    class TouchSliderTests<T, TU> : VisualElementTests<T>
+        where T : TouchSlider<TU>, new()
+        where TU : struct, IComparable, IEquatable<TU>
     {
 
     }

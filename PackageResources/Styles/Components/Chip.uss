@@ -7,8 +7,8 @@
     flex-shrink: 0;
     flex-grow: 0;
 
-    height: 32px;
-    border-radius: 16px;
+    height: var(--appui-sizing-600);
+    border-radius: var(--appui-sizing-300);
     border-width: 1px;
 
     border-color: var(--appui-foregrounds-25);
@@ -54,24 +54,25 @@
 }
 
 .appui-chip__ornament-container {
-    display: flex;
-    max-width: 24px;
-    height: 24px;
-    border-radius: 100%;
-    margin: 0 -6px 0 5px;
+    flex-shrink: 0;
+    width: var(--appui-sizing-400);
+    height: var(--appui-sizing-400);
+    border-radius: var(--appui-sizing-200);
+    margin-left: var(--appui-spacing-100);
     overflow: hidden;
+    display: none;
 }
 
-.appui-chip--outlined > .appui-chip__ornament-container {
-    max-width: 20px;
-    height: 20px;
+.appui-chip--with-ornament > .appui-chip__ornament-container {
+    display: flex;
 }
 
 .appui-chip__label {
     display: flex;
-    font-size: 12px;
-    padding-left: 12px;
-    padding-right: 12px;
+    flex-shrink: 0;
+    font-size: var(--appui-font-sizes-body-sm);
+    padding-left: var(--appui-spacing-250);
+    padding-right: var(--appui-spacing-250);
     -unity-text-align: middle-center;
     white-space: nowrap;
     color: var(--appui-foregrounds-100);
@@ -88,6 +89,7 @@
     height: 24px;
     margin: 0 5px 0 -6px;
     border-radius: 100%;
+    flex-shrink: 0;
     justify-content: center;
     align-items: center;
     padding: 1px;

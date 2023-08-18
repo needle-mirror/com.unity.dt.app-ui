@@ -9,7 +9,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A slider that allows the user to select a color value.
     /// </summary>
-    public sealed class ColorSlider : BaseSlider<float>
+    public sealed class ColorSlider : BaseSlider<float,float>
     {
         /// <summary>
         /// The ColorSlider main styling class.
@@ -238,16 +238,21 @@ namespace Unity.AppUI.UI
             return Mathf.InverseLerp(lowerValue, higherValue, currentValue);
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType}.Decrement"/>
+        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Decrement"/>
         protected override float Decrement(float val)
         {
             return val - incrementFactor;
         }
 
-        /// <inheritdoc cref="BaseSlider{TValueType}.Increment"/>
+        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Increment"/>
         protected override float Increment(float val)
         {
             return val + incrementFactor;
+        }
+        
+        protected override float Clamp(float v, float lowBound, float highBound)
+        {
+            return Mathf.Clamp(v, lowBound, highBound);
         }
 
         void RefreshUI()

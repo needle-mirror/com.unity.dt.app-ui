@@ -103,7 +103,6 @@ namespace Unity.AppUI.Core
         }
 
 #if UNITY_INPUTSYSTEM_PRESENT && ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
-
         Vector2 m_PointerPosition = Vector2.zero;
         bool m_PointerDown = false;
 

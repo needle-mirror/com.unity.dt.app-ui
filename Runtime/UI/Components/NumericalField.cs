@@ -75,6 +75,11 @@ namespace Unity.AppUI.UI
         string m_PreviousValue;
 
         /// <summary>
+        /// The last value of the element set during <see cref="SetValueWithoutNotify"/>.
+        /// </summary>
+        protected TValueType m_LastValue;
+
+        /// <summary>
         /// The format string of the element.
         /// </summary>
         public string formatString
@@ -207,6 +212,7 @@ namespace Unity.AppUI.UI
             if (highValue.HasValue)
                 newValue = Min(newValue, highValue.Value);
             m_Value = newValue;
+            m_LastValue = m_Value;
             var valStr = ParseValueToString(newValue);
             m_InputElement.SetValueWithoutNotify(valStr);
             if (validateValue != null) invalid = !validateValue(newValue);
@@ -225,7 +231,7 @@ namespace Unity.AppUI.UI
                     val = Max(val, lowValue.Value);
                 if (highValue.HasValue)
                     val = Min(val, highValue.Value);
-                if (AreEqual(m_Value, val))
+                if (AreEqual(m_LastValue, val) && AreEqual(m_Value, val))
                     return;
 
                 using var evt = ChangeEvent<TValueType>.GetPooled(m_Value, val);
@@ -256,10 +262,7 @@ namespace Unity.AppUI.UI
 
             var val = ParseStringToValue(m_InputElement.value, out var v) ? v : value;
             if (val.Equals(m_Value))
-            {
                 m_InputElement.SetValueWithoutNotify(ParseValueToString(m_Value)); // reset previous value text if invalid text
-                return;
-            }
 
             value = val;
             SetValueWithoutNotify(val);

@@ -28,8 +28,8 @@
 @import "./Components/Dropdown.uss";
 @import "./Components/Elevation.uss";
 @import "./Components/FAB.uss";
-@import "./Components/GridView.uss";
 @import "./Components/NumericalField.uss";
+@import "./Components/GridView.uss";
 @import "./Components/Heading.uss";
 @import "./Components/Icon.uss";
 @import "./Components/InputLabel.uss";

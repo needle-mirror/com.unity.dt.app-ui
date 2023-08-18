@@ -1,8 +1,8 @@
 /* Progress */
 .appui-circular-progress {
     display: flex;
-    width: 40px;
-    height: 40px;
+    width: var(--appui-sizing-650);
+    height: var(--appui-sizing-650);
     flex-shrink: 0;
     overflow: hidden;
     border-radius: 100%;
@@ -22,7 +22,7 @@
 
 .appui-linear-progress {
     display: flex;
-    height: 8px;
+    height: var(--appui-sizing-125);
     flex-shrink: 0;
     overflow: hidden;
     border-radius: 4px;

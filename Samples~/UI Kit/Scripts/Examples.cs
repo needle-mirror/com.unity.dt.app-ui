@@ -93,9 +93,12 @@ namespace Unity.AppUI.Samples
                 switch (scaleSwitcher.value)
                 {
                     case 0:
-                        panel.scale = "medium";
+                        panel.scale = "small";
                         break;
                     case 1:
+                        panel.scale = "medium";
+                        break;
+                    case 2:
                         panel.scale = "large";
                         break;
                 }
@@ -112,7 +115,7 @@ namespace Unity.AppUI.Samples
             if (scaleSwitcher != null)
             {
                 scaleSwitcher.RegisterValueChangedCallback(_ => SetScale());
-                scaleSwitcher.SetValueWithoutNotify(PlayerPrefs.GetInt("scale", 0));
+                scaleSwitcher.SetValueWithoutNotify(PlayerPrefs.GetInt("scale", 1));
                 SetScale();
             }
 
@@ -429,6 +432,26 @@ namespace Unity.AppUI.Samples
             {
                 stackView.ClearStack();
             };
+
+            root.Q<RangeSliderFloat>("rsfm").RegisterValueChangedCallback(evt =>
+            {
+                Debug.Log($"RangeSliderFloat Changed: {evt.newValue}");
+            });
+            
+            root.Q<RangeSliderFloat>("rsfm").RegisterValueChangingCallback(evt =>
+            {
+                Debug.Log($"RangeSliderFloat Changing: {evt.newValue}");
+            });
+            
+            root.Q<SliderFloat>("sfm").RegisterValueChangedCallback(evt =>
+            {
+                Debug.Log($"SliderFloat Changed: {evt.newValue}");
+            });
+            
+            root.Q<SliderFloat>("sfm").RegisterValueChangingCallback(evt =>
+            {
+                Debug.Log($"SliderFloat Changing: {evt.newValue}");
+            });
         }
 
         static void OpenToast(NotificationStyle style, NotificationDuration duration, AnimationMode animationMode, VisualElement ve)

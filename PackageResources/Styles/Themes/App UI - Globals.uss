@@ -1,4 +1,4 @@
-@import url("App UI - Palette.tss");
+@import url("App UI - Palette.uss");
 
 :root {
   --appui-animation-duration-50: 60ms;

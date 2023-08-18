@@ -46,6 +46,11 @@ namespace Unity.AppUI.UI
         /// The Chip Deletable variant styling class.
         /// </summary>
         public static readonly string deletableUssClassName = ussClassName + "--deletable";
+        
+        /// <summary>
+        /// The Chip with ornament variant styling class.
+        /// </summary>
+        public static readonly string withOrnamentUssClassName = ussClassName + "--with-ornament";
 
         /// <summary>
         /// The Chip label styling class.
@@ -130,6 +135,7 @@ namespace Unity.AppUI.UI
                 m_Ornament = value;
                 if (m_Ornament != null)
                     m_OrnamentContainer.Add(m_Ornament);
+                EnableInClassList(withOrnamentUssClassName, m_Ornament != null);
             }
         }
 

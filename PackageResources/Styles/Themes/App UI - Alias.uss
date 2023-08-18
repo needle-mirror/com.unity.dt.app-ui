@@ -1,5 +1,5 @@
 :root {
-  --appui-alias-actions-border-radius: 6;
+  --appui-alias-actions-border-radius: var(--appui-border-radius-md);
   --appui-alias-control-gap-xs: 2px;
   --appui-alias-control-outline-style: solid;
   --appui-alias-control-border-style: solid;

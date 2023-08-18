@@ -4,8 +4,7 @@
     /*border-style: var(--appui-control-border-style);*/
     border-radius: var(--appui-alias-control-border-radius);
     display: flex;
-    padding-left: var(--appui-spacing-150); /*padding-inline-start: var(--appui-spacing-150);*/
-    padding-right: var(--appui-alias-control-gap-md); /* padding-inline-end: var(--appui-alias-control-gap-md); */
+    padding: 0 var(--appui-alias-control-gap-md);
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
