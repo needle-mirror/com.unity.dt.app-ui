@@ -44,6 +44,22 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
+    /// The current Canvas control scheme.
+    /// </summary>
+    public enum CanvasControlScheme
+    {
+        /// <summary>
+        /// The default control scheme, similar to others Unity Editor tools.
+        /// </summary>
+        Editor,
+        
+        /// <summary>
+        /// The alternate control scheme, similar to Figma, Sketch, etc.
+        /// </summary>
+        Modern,
+    }
+
+    /// <summary>
     /// A Canvas is a VisualElement that can be used to group other VisualElements.
     /// You can use it to create a scrollable area inside a window.
     /// </summary>
@@ -94,6 +110,8 @@ namespace Unity.AppUI.UI
         const float k_DefaultFrameMargin = 12f;
         
         const ScrollDirection k_DefaultScrollDirection = ScrollDirection.Natural;
+        
+        const CanvasControlScheme k_DefaultControlScheme = CanvasControlScheme.Modern;
 
         readonly CanvasBackground m_Background;
 
@@ -116,7 +134,7 @@ namespace Unity.AppUI.UI
         int m_PointerId = -1;
         
         bool m_SpaceBarPressed;
-        
+
         /// <summary>
         /// The content container of the Canvas.
         /// </summary>
@@ -205,6 +223,11 @@ namespace Unity.AppUI.UI
                 AddToClassList("cursor--" + m_GrabMode.ToString().ToLower());
             }
         }
+        
+        /// <summary>
+        /// The current control scheme of the canvas.
+        /// </summary>
+        public CanvasControlScheme controlScheme { get; set; } = k_DefaultControlScheme;
 
         /// <summary>
         /// Instantiates a <see cref="Canvas"/> element.
@@ -404,9 +427,16 @@ namespace Unity.AppUI.UI
         {
             if (panel == null || panel.GetCapturingElement(evt.pointerId) != null)
                 return;
+
+            var hasModifierPressed = controlScheme switch
+            {
+                CanvasControlScheme.Modern => m_SpaceBarPressed,
+                CanvasControlScheme.Editor => evt.altKey,
+                _ => m_SpaceBarPressed
+            };
             
             if (evt.button == (int)MouseButton.MiddleMouse || 
-                (evt.button == (int)MouseButton.LeftMouse && m_SpaceBarPressed))
+                (evt.button == (int)MouseButton.LeftMouse && hasModifierPressed))
             {
                 if (!this.HasPointerCapture(evt.pointerId))
                     this.CapturePointer(evt.pointerId);
@@ -454,7 +484,18 @@ namespace Unity.AppUI.UI
             evt.PreventDefault();
             evt.StopImmediatePropagation();
 
-            if (evt.ctrlKey || evt.commandKey)
+            // no support of touchpad App UI events in Alternate control scheme
+            if (controlScheme == CanvasControlScheme.Editor && evt.button == Core.AppUI.touchPadId)
+                return;
+
+            var shouldZoom = controlScheme switch
+            {
+                CanvasControlScheme.Modern => evt.ctrlKey || evt.commandKey,
+                CanvasControlScheme.Editor => true,
+                _ => evt.ctrlKey || evt.commandKey
+            };
+            
+            if (shouldZoom)
             {
                 var multiplier = evt.shiftKey ? zoomMultiplier : 1f;
                 // logarithmic zoom
@@ -665,6 +706,12 @@ namespace Unity.AppUI.UI
                 name = "scroll-direction", 
                 defaultValue = k_DefaultScrollDirection
             };
+            
+            readonly UxmlEnumAttributeDescription<CanvasControlScheme> m_ControlScheme = new UxmlEnumAttributeDescription<CanvasControlScheme>
+            {
+                name = "control-scheme", 
+                defaultValue = k_DefaultControlScheme
+            };
 
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
@@ -679,6 +726,7 @@ namespace Unity.AppUI.UI
                 canvas.panMultiplier = m_PanMultiplier.GetValueFromBag(bag, cc);
                 canvas.frameMargin = m_FrameMargin.GetValueFromBag(bag, cc);
                 canvas.scrollDirection = m_ScrollDirection.GetValueFromBag(bag, cc);
+                canvas.controlScheme = m_ControlScheme.GetValueFromBag(bag, cc);
             }
         }
     }

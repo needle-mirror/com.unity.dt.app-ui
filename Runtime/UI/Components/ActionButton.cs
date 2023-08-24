@@ -89,6 +89,7 @@ namespace Unity.AppUI.UI
             size = Size.M;
             accent = false;
             quiet = false;
+            iconVariant = IconVariant.Regular;
 
             Refresh();
         }
@@ -111,12 +112,17 @@ namespace Unity.AppUI.UI
             get => m_Clickable;
             set
             {
-                if (m_Clickable != null && m_Clickable.target == this)
-                    this.RemoveManipulator(m_Clickable);
+                if (m_Clickable != null)
+                {
+                    m_Clickable.clicked -= OnClick;
+                    if (m_Clickable.target == this)
+                        this.RemoveManipulator(m_Clickable);
+                }
                 m_Clickable = value;
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
+                m_Clickable.clicked += OnClick;
             }
         }
 
@@ -153,6 +159,15 @@ namespace Unity.AppUI.UI
                 m_IconElement.iconName = value;
                 Refresh();
             }
+        }
+        
+        /// <summary>
+        /// The ActionButton icon variant.
+        /// </summary>
+        public IconVariant iconVariant
+        {
+            get => m_IconElement.variant;
+            set => m_IconElement.variant = value;
         }
 
         /// <summary>
@@ -218,6 +233,13 @@ namespace Unity.AppUI.UI
             m_IconElement.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(icon));
         }
 
+        void OnClick()
+        {
+            using var evt = ActionTriggeredEvent.GetPooled();
+            evt.target = this;
+            SendEvent(evt);
+        }
+
         /// <summary>
         /// The ActionButton UXML factory.
         /// </summary>
@@ -270,6 +292,12 @@ namespace Unity.AppUI.UI
                 name = "size",
                 defaultValue = Size.M,
             };
+            
+            readonly UxmlEnumAttributeDescription<IconVariant> m_IconVariant = new UxmlEnumAttributeDescription<IconVariant>
+            {
+                name = "icon-variant",
+                defaultValue = IconVariant.Regular,
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -284,6 +312,7 @@ namespace Unity.AppUI.UI
                 var el = (ActionButton)ve;
                 el.label = m_Label.GetValueFromBag(bag, cc);
                 el.icon = m_Icon.GetValueFromBag(bag, cc);
+                el.iconVariant = m_IconVariant.GetValueFromBag(bag, cc);
                 el.size = m_Size.GetValueFromBag(bag, cc);
                 el.accent = m_Accent.GetValueFromBag(bag, cc);
                 el.selected = m_Selected.GetValueFromBag(bag, cc);

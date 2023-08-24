@@ -112,6 +112,20 @@ namespace Unity.AppUI.Editor
                 EditorGUI.indentLevel--;
 
                 EditorGUILayout.Space();
+                
+                EditorGUILayout.LabelField("MacOS", EditorStyles.boldLabel);
+                
+                EditorGUI.indentLevel++;
+                
+                EditorGUILayout.PropertyField(m_EnableMacOSGestureRecognition, m_EnableMacOSGestureRecognitionContent);
+                
+                EditorGUILayout.HelpBox("Some gestures are synthesized as mouse events on MacOS and can't be avoided, " +
+                    "such as the Pan gesture.",
+                    MessageType.Info);
+                
+                EditorGUI.indentLevel--;
+                
+                EditorGUILayout.Space();
 
                 if (EditorGUI.EndChangeCheck())
                     Apply();
@@ -232,6 +246,9 @@ namespace Unity.AppUI.Editor
 
             m_AutoOverrideAndroidManifest = m_SettingsObject.FindProperty("m_AutoOverrideAndroidManifest");
             m_AutoOverrideAndroidManifestContent = new GUIContent("Auto Override Android Manifest", "");
+            
+            m_EnableMacOSGestureRecognition = m_SettingsObject.FindProperty("m_EnableMacOSGestureRecognition");
+            m_EnableMacOSGestureRecognitionContent = new GUIContent("Enable Gesture Recognition", "");
         }
 
         void Apply()
@@ -272,6 +289,7 @@ namespace Unity.AppUI.Editor
         [NonSerialized] SerializedProperty m_UseCustomEditorUpdateFrequency;
         [NonSerialized] SerializedProperty m_EditorUpdateFrequency;
         [NonSerialized] SerializedProperty m_AutoOverrideAndroidManifest;
+        [NonSerialized] SerializedProperty m_EnableMacOSGestureRecognition;
 
         [NonSerialized] List<string> m_AvailableInputSettingsAssets;
         [NonSerialized] GUIContent[] m_AvailableSettingsAssetsOptions;
@@ -283,6 +301,7 @@ namespace Unity.AppUI.Editor
         GUIContent m_UseCustomEditorUpdateFrequencyContent;
         GUIContent m_EditorUpdateFrequencyContent;
         GUIContent m_AutoOverrideAndroidManifestContent;
+        GUIContent m_EnableMacOSGestureRecognitionContent;
 
         static AppUISettingsProvider s_Instance;
 

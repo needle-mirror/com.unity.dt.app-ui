@@ -124,6 +124,71 @@
                                 </appui:ActionGroup>
                             </ui:VisualElement>
                         </ui:VisualElement>
+
+                        <appui:Text text="Selectable - Single" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <ui:VisualElement class="example-row">
+                                <appui:ActionGroup selection-type="Single">
+                                    <appui:ActionButton label="Left" />
+                                    <appui:ActionButton label="Center" />
+                                    <appui:ActionButton label="Right" />
+                                    <appui:ActionButton label="Justify" />
+                                </appui:ActionGroup>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+
+                        <appui:Text text="Selectable - Multiple" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <ui:VisualElement class="example-row">
+                                <appui:ActionGroup selection-type="Multiple">
+                                    <appui:ActionButton label="Option 1" />
+                                    <appui:ActionButton label="Option 2" />
+                                    <appui:ActionButton label="Option 3" />
+                                </appui:ActionGroup>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+
+                        <appui:Text text="Overflow" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:SplitView fixed-pane-index="0" fixed-pane-initial-dimension="200" style="height: 100px;">
+                                <appui:ActionGroup compact="true">
+                                    <appui:ActionButton label="Option 1" />
+                                    <appui:ActionButton label="Option 2" />
+                                    <appui:ActionButton label="Option 3" />
+                                    <appui:ActionButton label="Option 4" />
+                                </appui:ActionGroup>
+                                <ui:VisualElement />
+                            </appui:SplitView>
+                        </ui:VisualElement>
+
+                        <appui:Text text="Overflow - Selectable" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:SplitView fixed-pane-index="0" fixed-pane-initial-dimension="200" style="height: 100px;">
+                                <appui:ActionGroup compact="true" selection-type="Multiple">
+                                    <appui:ActionButton label="Option 1" />
+                                    <appui:ActionButton label="Option 2" />
+                                    <appui:ActionButton label="Option 3" />
+                                    <appui:ActionButton label="Option 4" />
+                                </appui:ActionGroup>
+                                <ui:VisualElement />
+                            </appui:SplitView>
+                        </ui:VisualElement>
+
+                        <appui:Text text="Overflow - Vertical" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:SplitView orientation="Vertical" fixed-pane-index="0" fixed-pane-initial-dimension="100" style="height: 200px;">
+                                <ui:VisualElement style="width: 100%; height: 100%; align-items: flex-start;">
+                                    <appui:ActionGroup vertical="true" style="max-height: 100%;">
+                                        <appui:ActionButton icon="arrow-up" />
+                                        <appui:ActionButton icon="arrow-down" />
+                                        <appui:ActionButton icon="arrow-left" />
+                                        <appui:ActionButton icon="arrow-right" />
+                                    </appui:ActionGroup>
+                                </ui:VisualElement>
+                                <ui:VisualElement />
+                            </appui:SplitView>
+                        </ui:VisualElement>
+                        
                         <appui:Text text="Quiet" class="example-subtitle" />
                         <ui:VisualElement class="example-section">
                             <ui:VisualElement class="example-row">
@@ -463,10 +528,16 @@
 
                         <!-- Canvas -->
                         <appui:Heading text="CANVAS" class="example-title" />
-                        <appui:Text text="Default" class="example-subtitle" />
+                        <appui:Text text="Modern controls" class="example-subtitle" />
                         <ui:VisualElement class="example-section">
                             <appui:Canvas style="height: 300px;">
                                 <ui:VisualElement style="position: absolute; width: 20px; height: 20px; background-color: red;" />
+                            </appui:Canvas>
+                        </ui:VisualElement>
+                        <appui:Text text="Editor-like controls" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:Canvas style="height: 300px;" control-scheme="Editor">
+                                <ui:VisualElement style="position: absolute; width: 20px; height: 20px; background-color: blue;" />
                             </appui:Canvas>
                         </ui:VisualElement>
 

@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "6bd3fd64b241b770e369aa1409fff12eeb729978"
+    "revision": "de35d0b6882acf2adc7905b4dddd7a16ed2cfc37"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -75,10 +75,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added the **Small** scale context to App UI. This context is now the preferred one for desktop platforms.\n- Added `RangeSlider` component.\n\n### Fixed\n\n- Fixed `ValueChanged` and `ValueChanging` events propagation in `NumericalField` and Vector components."
+    "changelog": "### Added\n\n- Added mouse and touchpad mapping presets to the `Canvas` component.\n- Added a setting to enable or disable gestures recognition on MacOS.\n- Added selection mode in `ActionGroup` component."
   },
   "upmCi": {
-    "footprint": "bd81628e05bcd9a1d795e7588ce602f30e4024c9"
+    "footprint": "2ba7dfc191be01a0be158270f499e19e9282db51"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.4/manual/index.html"
 }

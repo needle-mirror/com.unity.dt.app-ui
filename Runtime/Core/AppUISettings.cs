@@ -74,6 +74,22 @@ namespace Unity.AppUI.Core
                 OnChange();
             }
         }
+        
+        /// <summary>
+        /// Enable this option to enable gesture recognition on macOS.
+        /// </summary>
+        public bool enableMacOSGestureRecognition
+        {
+            get => m_EnableMacOSGestureRecognition;
+            set
+            {
+                if (m_EnableMacOSGestureRecognition == value)
+                    return;
+
+                m_EnableMacOSGestureRecognition = value;
+                OnChange();
+            }
+        }
 
         [Tooltip("Enable this options to correct the scale of UIDocuments, depending on the target platform and screen dpi.")]
         [SerializeField]
@@ -94,6 +110,11 @@ namespace Unity.AppUI.Core
         [SerializeField]
         // ReSharper disable once InconsistentNaming
         bool m_AutoOverrideAndroidManifest = true;
+        
+        [Tooltip("Enable this option to enable gesture recognition on macOS.")]
+        [SerializeField]
+        // ReSharper disable once InconsistentNaming
+        bool m_EnableMacOSGestureRecognition = true;
 
         internal void OnChange()
         {

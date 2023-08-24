@@ -24,6 +24,11 @@ namespace Unity.AppUI.Core
 #endif
     public static class AppUI
     {
+        /// <summary>
+        /// The id of the touchpad button in synthesized mouse events.
+        /// </summary>
+        public const int touchPadId = 3;
+        
         static AppUISystemObject s_SystemObject;
 
         internal static AppUIManager s_Manager;

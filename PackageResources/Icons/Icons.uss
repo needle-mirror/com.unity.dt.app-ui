@@ -220,6 +220,12 @@
 .appui-icon--dome--regular {
     --unity-image: url("./Dome.png");
 }
+.appui-icon--dots-three--bold {
+    --unity-image: url("./Bold/dots-three-bold.png");
+}
+.appui-icon--dots-three-vertical--bold {
+    --unity-image: url("./Bold/dots-three-vertical-bold.png");
+}
 .appui-icon--draghandle--regular {
     --unity-image: url("./Draghandle.png");
 }

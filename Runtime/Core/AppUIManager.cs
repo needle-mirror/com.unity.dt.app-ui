@@ -241,7 +241,7 @@ namespace Unity.AppUI.Core
                             modifiers = EventModifiers.Control,
                             mousePosition = mousePosition,
                             delta = evt.gesture.scrollDelta,
-                            button = 0,
+                            button = AppUI.touchPadId,
                             clickCount = 0,
                         };
                         using var evt2 = WheelEvent.GetPooled(systemEvent);

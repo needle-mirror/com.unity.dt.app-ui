@@ -2,7 +2,7 @@
 uid: whats-new
 ---
 
-# What's New in **0.4.0**
+# What's New in **0.4.1**
 
 This section contains information about new features, improvements, and issues fixed.
 
@@ -12,9 +12,6 @@ The main updates in this release include:
 
 ### Added
 
-- Added the **Small** scale context to App UI. This context is now the preferred one for desktop platforms.
-- Added `RangeSlider` component.
-
-### Fixed
-
-- Fixed `ValueChanged` and `ValueChanging` events propagation in `NumericalField` and Vector components.
+- Added mouse and touchpad mapping presets to the `Canvas` component.
+- Added a setting to enable or disable gestures recognition on MacOS.
+- Added selection mode in `ActionGroup` component.

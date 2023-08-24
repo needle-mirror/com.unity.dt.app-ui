@@ -561,7 +561,10 @@ namespace Unity.AppUI.Core
         static bool ReadTouch(ref PlatformTouchEvent touch)
         {
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-            return _NSReadTouchEvent(ref touch);
+            if (AppUI.settings && AppUI.settings.enableMacOSGestureRecognition)
+                return _NSReadTouchEvent(ref touch);
+            else
+                return false;
 #else 
             return false;
 #endif
