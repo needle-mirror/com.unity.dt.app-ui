@@ -141,6 +141,14 @@ namespace Unity.AppUI.UI
         public override VisualElement contentContainer => m_ViewportContainer;
         
         /// <summary>
+        /// The container used for framing the Canvas.
+        /// </summary>
+        /// <remarks>
+        /// The container rect value must be defined in the Canvas' local coordinates.
+        /// </remarks>
+        public Rect frameContainer { get; set; } = Rect.zero;
+        
+        /// <summary>
         /// The scroll coordinates of the Canvas.
         /// </summary>
         public Vector2 scrollOffset
@@ -293,19 +301,18 @@ namespace Unity.AppUI.UI
             RegisterCallback<FocusOutEvent>(OnFocusOut);
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         }
-        
-        /// <summary>
-        /// Frame the Canvas to the given area. The area is in the Viewport's local coordinates.
-        /// </summary>
-        /// <param name="viewportArea"> The area to frame. </param>
-        public void FrameArea(Rect viewportArea)
-        {
-            if (viewportArea.size.sqrMagnitude == 0)
-                return;
 
-            var worldRect = m_Viewport.LocalToWorld(viewportArea);
-            var container = contentRect;
-            var containerCenter = new Vector2(container.width * 0.5f, container.height * 0.5f);
+        /// <summary>
+        /// Frame the Canvas to the given world area. The area is in world coordinates.
+        /// </summary>
+        /// <param name="worldRect"> The area to frame. </param>
+        public void FrameWorldRect(Rect worldRect)
+        {
+            if (worldRect.size.sqrMagnitude == 0)
+                return;
+            
+            var container = frameContainer == Rect.zero ? contentRect : frameContainer;
+            var containerCenter = new Vector2(container.width * 0.5f, container.height * 0.5f) + container.position;
             
             var localRect = this.WorldToLocal(worldRect);
             var zoomRatio = Mathf.Min(
@@ -318,6 +325,19 @@ namespace Unity.AppUI.UI
             
             var zoomDelta = newZoom - zoom;
             ApplyZoom(containerCenter, zoomDelta);
+        }
+        
+        /// <summary>
+        /// Frame the Canvas to the given area. The area is in the Viewport's local coordinates.
+        /// </summary>
+        /// <param name="viewportArea"> The area to frame. </param>
+        public void FrameArea(Rect viewportArea)
+        {
+            if (viewportArea.size.sqrMagnitude == 0)
+                return;
+
+            var worldRect = m_Viewport.LocalToWorld(viewportArea);
+            FrameWorldRect(worldRect);
         }
 
         /// <summary>
@@ -712,7 +732,7 @@ namespace Unity.AppUI.UI
                 name = "control-scheme", 
                 defaultValue = k_DefaultControlScheme
             };
-
+            
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);

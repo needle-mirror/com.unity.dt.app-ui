@@ -2,7 +2,7 @@
 uid: whats-new
 ---
 
-# What's New in **0.4.1**
+# What's New in **0.4.2**
 
 This section contains information about new features, improvements, and issues fixed.
 
@@ -12,6 +12,9 @@ The main updates in this release include:
 
 ### Added
 
-- Added mouse and touchpad mapping presets to the `Canvas` component.
-- Added a setting to enable or disable gestures recognition on MacOS.
-- Added selection mode in `ActionGroup` component.
+- Added `FrameWorldRect` method to the `Canvas` component.
+- Added `frameContainer` property to the `Canvas` component.
+
+### Fixed
+
+- Fixed the soft selection handling on `PointerUpEvent` in the `GridView` component.

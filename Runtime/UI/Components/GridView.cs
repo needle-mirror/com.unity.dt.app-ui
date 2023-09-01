@@ -144,7 +144,9 @@ namespace Unity.AppUI.UI
         bool m_HasPointerMoved;
 
         readonly Dragger m_Dragger;
-        
+
+        bool m_SoftSelectIndexWasPreviouslySelected;
+
         /// <summary>
         /// Creates a <see cref="GridView"/> with all default properties. The <see cref="GridView.itemsSource"/>,
         /// <see cref="GridView.itemHeight"/>, <see cref="GridView.makeItem"/> and <see cref="GridView.bindItem"/> properties
@@ -1029,6 +1031,7 @@ namespace Unity.AppUI.UI
                 return;
 
             m_SoftSelectIndex = clickedIndex;
+            m_SoftSelectIndexWasPreviouslySelected = m_SelectedIndices.Contains(clickedIndex);
 
             var clickedItemId = GetIdFromIndex(clickedIndex);
             switch (clickCount)
@@ -1212,13 +1215,25 @@ namespace Unity.AppUI.UI
             if (!evt.isPrimary)
                 return;
 
-            var clickedIndex = GetIndexByPosition(evt.localPosition);
-            if (m_SoftSelectIndex != -1 && worldBound.Contains(evt.position) && clickedIndex == m_SoftSelectIndex)
-                NotifyOfSelectionChange();
-            else
+            if (m_HasPointerMoved)
+            {
                 CancelSoftSelect();
+                return;
+            }
 
+            if (m_SoftSelectIndex == -1)
+                return;
+
+            var index = m_SoftSelectIndex;
             m_SoftSelectIndex = -1;
+
+            if (m_SoftSelectIndexWasPreviouslySelected)
+            {
+                ProcessSingleClick(index);
+                return;
+            }
+            
+            NotifyOfSelectionChange();
         }
 
         void CancelSoftSelect()
