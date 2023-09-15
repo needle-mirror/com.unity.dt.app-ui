@@ -67,9 +67,9 @@
     border-color: var(--appui-base-500);
 }
 
-.appui-touchslider:focus {
+.appui-touchslider.is-focused {
     background-color: var(--appui-base-100);
-    border-color: var(--appui-base-400);
+    border-color: var(--appui-accent-100);
 }
 
 .appui-touchslider.keyboard-focus {

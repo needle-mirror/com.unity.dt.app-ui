@@ -1027,10 +1027,13 @@
                         </ui:VisualElement>
                         <ui:VisualElement class="example-section">
                             <appui:Text text="Primary" class="example-subtitle" />
-                            <appui:Dropdown name="dropdown1" default-value="0" emphasized="true">
+                            <appui:Dropdown name="dropdown1" emphasized="true">
                             </appui:Dropdown>
-                            <appui:Text text="Secondary" class="example-subtitle" />
-                            <appui:Dropdown name="dropdown2" default-value="1" emphasized="false">
+                            <appui:Text text="Secondary - Do Not Close On Selection" class="example-subtitle" />
+                            <appui:Dropdown name="dropdown2" emphasized="false" close-on-selection="false">
+                            </appui:Dropdown>
+                            <appui:Text text="Secondary - Multi Selection" class="example-subtitle" />
+                            <appui:Dropdown name="dropdown3" selection-type="Multiple" emphasized="false" close-on-selection="false">
                             </appui:Dropdown>
                             <appui:Text text="Primary &amp; Disabled" class="example-subtitle" />
                             <appui:Dropdown emphasized="true" disabled="true">
@@ -1038,6 +1041,33 @@
                             <appui:Text text="Secondary &amp; Disabled" class="example-subtitle" />
                             <appui:Dropdown emphasized="false" disabled="true">
                             </appui:Dropdown>
+                        </ui:VisualElement>
+
+                        <!-- DropZone -->
+                        <appui:Heading text="DROPZONE" class="example-title" />
+                        <appui:Text text="Default" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <ui:VisualElement class="example-dropzone-container">
+                                <appui:DropZone style="width: 100%; height: 100%;">
+                                    <appui:Text text="Drag &amp; Drop here" size="S" primary="false" picking-mode="Ignore" />
+                                </appui:DropZone>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                        <appui:Text text="Accept Drag" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <ui:VisualElement class="example-dropzone-container">
+                                <appui:DropZone style="width: 100%; height: 100%;" class="accept-drag">
+                                    <appui:Text text="Drag &amp; Drop here" size="S" primary="false" picking-mode="Ignore" />
+                                </appui:DropZone>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                        <appui:Text text="Accept Drag - Invalid" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <ui:VisualElement class="example-dropzone-container">
+                                <appui:DropZone style="width: 100%; height: 100%;" class="accept-drag is-invalid">
+                                    <appui:Text text="Drag &amp; Drop here" size="S" primary="false" picking-mode="Ignore" />
+                                </appui:DropZone>
+                            </ui:VisualElement>
                         </ui:VisualElement>
 
                         <!-- Elevations -->

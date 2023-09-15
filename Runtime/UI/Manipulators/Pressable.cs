@@ -7,7 +7,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Pressable Manipulator, used on <see cref="Button"/> elements.
     /// </summary>
-    public class Pressable : Manipulator
+    public class Pressable : PointerManipulator
     {
         /// <summary>
         /// The event invoked when the element is pressed.
@@ -66,6 +66,8 @@ namespace Unity.AppUI.UI
             m_TouchMoveEvent = new Touch { phase = TouchPhase.Moved };
             m_UpEvent = new Event { type = EventType.MouseUp };
             m_TouchUpEvent = new Touch { phase = TouchPhase.Ended };
+            
+            activators.Add(new ManipulatorActivationFilter { button = MouseButton.LeftMouse });
         }
         
         /// <summary>
@@ -270,6 +272,9 @@ namespace Unity.AppUI.UI
 
         void OnPointerDown(PointerDownEvent evt)
         {
+            if (!CanStartManipulation(evt))
+                return;
+            
             Activate(evt.pointerId);
             ProcessDownEvent(evt, evt.localPosition, evt.pointerId);
             evt.StopPropagation();
@@ -277,6 +282,9 @@ namespace Unity.AppUI.UI
 
         void OnPointerMove(PointerMoveEvent evt)
         {
+            if (!CanStopManipulation(evt))
+                return;
+            
             var parent = target?.parent;
             if (parent == null)
                 return;
@@ -316,6 +324,9 @@ namespace Unity.AppUI.UI
     
         void OnPointerUp(PointerUpEvent evt)
         {
+            if (!CanStopManipulation(evt))
+                return;
+            
             ProcessUpEvent(evt, evt.localPosition, evt.pointerId);
             
             if (!active)

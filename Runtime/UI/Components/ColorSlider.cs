@@ -196,13 +196,16 @@ namespace Unity.AppUI.UI
                     evt.StopPropagation();
                     evt.PreventDefault();
 
-                    SetValueWithoutNotify(newValue);
+                    if (!Mathf.Approximately(newValue, previousValue))
+                    {
+                        SetValueWithoutNotify(newValue);
 
-                    using var changingEvt = ChangingEvent<float>.GetPooled();
-                    changingEvt.previousValue = previousValue;
-                    changingEvt.newValue = newValue;
-                    changingEvt.target = this;
-                    SendEvent(changingEvt);
+                        using var changingEvt = ChangingEvent<float>.GetPooled();
+                        changingEvt.previousValue = previousValue;
+                        changingEvt.newValue = newValue;
+                        changingEvt.target = this;
+                        SendEvent(changingEvt);
+                    }
                 }
             }
         }
@@ -213,6 +216,8 @@ namespace Unity.AppUI.UI
         /// <param name="newValue"> The new value of the slider. </param>
         public override void SetValueWithoutNotify(float newValue)
         {
+            newValue = Clamp(newValue, lowValue, highValue);
+            
             m_Value = newValue;
 
             if (validateValue != null) invalid = !validateValue(m_Value);
@@ -241,13 +246,13 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Decrement"/>
         protected override float Decrement(float val)
         {
-            return val - incrementFactor;
+            return Clamp(val - incrementFactor, lowValue, highValue);
         }
 
         /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Increment"/>
         protected override float Increment(float val)
         {
-            return val + incrementFactor;
+            return Clamp(val + incrementFactor, lowValue, highValue);
         }
         
         protected override float Clamp(float v, float lowBound, float highBound)
@@ -261,6 +266,7 @@ namespace Unity.AppUI.UI
                 return;
 
             var firstIndex = colorRange.FindLastIndex(e => e.position <= m_Value);
+            firstIndex = Mathf.Max(firstIndex, 0);
             var secondIndex = Mathf.Min(firstIndex + 1, colorRange.Count - 1);
             var delta = (m_Value - colorRange[firstIndex].position) / Mathf.Max(0.001f, colorRange[secondIndex].position - colorRange[firstIndex].position);
             var color = Color.Lerp(colorRange[firstIndex].color, colorRange[secondIndex].color, delta);

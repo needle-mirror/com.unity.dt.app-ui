@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "676bf9c548cb5e9609c9459b30ed610d338e5556"
+    "revision": "bbf356b4b5fd29b8a5e207b060e5b9d6dd10c06d"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -33,6 +33,11 @@
     "com.unity.modules.physics": "1.0.0"
   },
   "samples": [
+    {
+      "displayName": "Drag And Drop",
+      "description": "Example of drag and drop system using App UI DropZone component and Dragger/DropTarget manipulators",
+      "path": "Samples~/Drag And Drop"
+    },
     {
       "displayName": "UI Kit",
       "description": "Every component in a single page",
@@ -75,10 +80,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added `FrameWorldRect` method to the `Canvas` component.\n- Added `frameContainer` property to the `Canvas` component.\n\n### Fixed\n\n- Fixed the soft selection handling on `PointerUpEvent` in the `GridView` component."
+    "changelog": "### Added\n\n- Added `outsideClickStrategy` property in `AnchorPopup` component.\n- Added `DropZone` component.\n- Added `DropTarget` manipulator.\n- Added a sample for `DropZone` and `DropTarget` components usage.\n- Added `--border-style` custom USS property to support `dotted` and `dashed` border styles.\n- Added `--border-speed` custom USS property to animate the border style.\n- Added `Picker` component.\n- Added `closeOnSelection` property for `Picker` and `Dropdown` components to close the picker when an item is selected.\n\n### Fixed\n\n- Fixed the `Pressable` manipulator to only handle the Left Mouse Button by default.\n- Fixed current tooltip element check in `TooltipManipulator`.\n- Fixed incremental value when interacting with keyboard in `ColorSlider` component.\n- Fixed clearing selection in `GridView` when a user clicks outside of the grid.\n- Fixed `itemsChosen` event in `GridView` to be fired only when the selection is not empty.\n- Fixed Navigation keys handling in the `GridView` to clamp the selection to the grid items.\n\n### Changed\n\n- The `Pressable` manipulator nows inherits from `PointerManipulator` instead of `Manipulator`.\n- Changed the `GridView.GetIndexByPosition` method to use a world-space position instead of a local-space position and renamed it to `GetIndexByWorldPosition`.\n- TouchSlider component will now loose focus when a slide interaction has ended.\n- When calling `GridView.Reset()` method, the selection won't be restored if no custom `GridView.getItemId` function has been provided. \n- When using `--box-shadow-type: 1` (inset box-shadow), the `--box-shadow-spread` value was interpreted with the same direction as outset box-shadow. This has been fixed so you can use a positive spread value to go inside the element and a negative spread value to go outside the element.\n- The `Dropdown` component inherits from `Picker` component. Users will be able to create custom dropdown-like components by inheriting from `Picker` component.\n- The `Dropdown` component now has a selection mode property to choose between single and multiple selection modes.\n- The `Dropdown` component now uses `DropdownItem` component instead of `MenuItem` component.\n- Removed `default-value` UXML property from `Dropdown` component. The preferred way to set the default value is by code."
   },
   "upmCi": {
-    "footprint": "0a892f81f5a0853be279110ebec89d0003de1ee4"
+    "footprint": "e7fe9096cb7bf38332b5bb55597610edb51448ce"
   },
-  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.4/manual/index.html"
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.5/manual/index.html"
 }

@@ -39,6 +39,8 @@ namespace Unity.AppUI.UI
 
         int m_PointerId = -1;
 
+        static VisualElement s_VisualElement;
+
         /// <summary>
         /// Creates a new <see cref="Dragger"/> instance.
         /// </summary>
@@ -53,6 +55,9 @@ namespace Unity.AppUI.UI
             m_Dragging = dragging;
             m_DragEnded = dragEnded;
             m_DragCanceled = dragCanceled;
+            
+            if (s_VisualElement == null)
+                CreateVisualElement();
         }
 
         protected override void RegisterCallbacksOnTarget()
@@ -84,8 +89,8 @@ namespace Unity.AppUI.UI
 
             if (CanStartManipulation(evt))
             {
-                if (!evt.target.HasPointerCapture(evt.pointerId))
-                    evt.target.CapturePointer(evt.pointerId);
+                if (!target.HasPointerCapture(evt.pointerId))
+                    target.CapturePointer(evt.pointerId);
                 m_StartPosition = evt.position;
                 m_PointerId = evt.pointerId;
             }
@@ -96,7 +101,7 @@ namespace Unity.AppUI.UI
             if (m_PointerId != evt.pointerId)
                 return;
             
-            if (evt.target.HasPointerCapture(evt.pointerId))
+            if (target.HasPointerCapture(evt.pointerId))
             {
                 if (!isActive)
                 {
@@ -105,11 +110,18 @@ namespace Unity.AppUI.UI
                     {
                         isActive = true;
                         m_DragStarted?.Invoke(evt);
+                        
+                        var panel = target.GetContext().panel;
+                        if (s_VisualElement.parent != panel.tooltipContainer)
+                            panel.tooltipContainer.Add(s_VisualElement);
                     }
                 }
                 else
                 {
                     m_Dragging?.Invoke(evt);
+                    var elementPosition = s_VisualElement.parent.WorldToLocal(evt.position);
+                    s_VisualElement.style.left = elementPosition.x;
+                    s_VisualElement.style.top = elementPosition.y;
                 }
             }
         }
@@ -119,8 +131,11 @@ namespace Unity.AppUI.UI
             if (m_PointerId != evt.pointerId)
                 return;
             
-            if (evt.target.HasPointerCapture(evt.pointerId))
-                evt.target.ReleasePointer(evt.pointerId);
+            if (s_VisualElement.parent != null)
+                s_VisualElement.RemoveFromHierarchy();
+            
+            if (target.HasPointerCapture(evt.pointerId))
+                target.ReleasePointer(evt.pointerId);
 
             if (isActive)
                 m_DragEnded?.Invoke(evt);
@@ -169,6 +184,21 @@ namespace Unity.AppUI.UI
             }
             
             m_PointerId = -1;
+        }
+
+        static void CreateVisualElement()
+        {
+            s_VisualElement = new Icon
+            {
+                pickingMode = PickingMode.Ignore,
+                iconName = "plus",
+                style =
+                {
+                    position = Position.Absolute,
+                    marginLeft = 16,
+                    marginTop = 16
+                }
+            };
         }
     }
 }

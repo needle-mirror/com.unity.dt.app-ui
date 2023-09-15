@@ -106,13 +106,13 @@ namespace Unity.AppUI.UI
             var ret = element;
             var parent = element.parent;
 
-            while (string.IsNullOrEmpty(ret.tooltip) && parent != null)
+            while (ret.GetTooltipTemplate() == null && string.IsNullOrEmpty(ret.tooltip) && parent != null)
             {
                 ret = parent;
                 parent = parent.parent;
             }
 
-            return string.IsNullOrEmpty(ret.tooltip) ? null : ret;
+            return ret.GetTooltipTemplate() == null && string.IsNullOrEmpty(ret.tooltip) ? null : ret;
         }
     }
 }

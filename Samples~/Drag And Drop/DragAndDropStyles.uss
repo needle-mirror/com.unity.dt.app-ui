@@ -1,0 +1,60 @@
+.dnd-main-root {
+    flex-grow: 1;
+}
+
+.dnd-desc {
+    -unity-text-align: middle-center;
+    margin: var(--appui-alias-control-gap-md);
+    margin-top: var(--appui-alias-control-gap-lg);
+}
+
+.dnd-list-container {
+    flex-direction: row; 
+    flex-grow: 1; 
+    align-items: center; 
+    padding: var(--appui-alias-control-gap-md);
+}
+
+.dnd-gridview-container {
+    height: 100%; 
+    flex-grow: 1;
+    border-radius: var(--appui-alias-control-border-radius);
+    background-color: var(--appui-base-50);
+}
+
+.dnd-arrow {
+    margin: var(--appui-alias-control-gap-lg);
+}
+
+.dnd-gridview {
+    flex-grow: 1;
+}
+
+.dnd-dropzone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.dnd-item {
+    padding: var(--appui-alias-control-gap-md);
+}
+
+.dnd-item__label {
+    -unity-text-align: middle-center;
+    background-color: var(--appui-base-100);
+    border-radius: var(--appui-alias-control-border-radius);
+    border-color: rgba(0,0,0,0);
+    border-width: var(--appui-alias-control-border-width);
+    flex-grow: 1;
+}
+
+.dnd-item:hover .dnd-item__label {
+    background-color: var(--appui-base-200);
+}
+
+.dnd-item.is-selected .dnd-item__label {
+    border-color: var(--appui-accent-100);
+}

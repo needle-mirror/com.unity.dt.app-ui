@@ -45,6 +45,14 @@
   max-width: 97%;
 }
 
+.example-dropzone-container {
+  width: 200px;
+  height: 200px;
+  border-radius: var(--appui-alias-control-border-radius);
+  overflow: hidden;
+  background-color: var(--appui-backgrounds-200);
+}
+
 .align-start {
   align-items: flex-start;
 }

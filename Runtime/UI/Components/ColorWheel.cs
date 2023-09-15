@@ -100,6 +100,8 @@ namespace Unity.AppUI.UI
 
         float m_PreviousValue;
 
+        readonly VisualElement m_ThumbSwatch;
+
         /// <summary>
         /// The hue value of the color wheel.
         /// </summary>
@@ -250,10 +252,19 @@ namespace Unity.AppUI.UI
                 name = thumbUssClassName,
                 pickingMode = PickingMode.Position,
                 usageHints = UsageHints.DynamicTransform,
-                passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.Borders | ExVisualElement.Passes.BackgroundColor | ExVisualElement.Passes.OutsetShadows
+                passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.OutsetShadows
             };
             m_Thumb.AddToClassList(thumbUssClassName);
             hierarchy.Add(m_Thumb);
+            
+            m_ThumbSwatch = new VisualElement
+            {
+                name = thumbSwatchUssClassName,
+                pickingMode = PickingMode.Ignore,
+                usageHints = UsageHints.DynamicColor,
+            };
+            m_ThumbSwatch.AddToClassList(thumbSwatchUssClassName);
+            m_Thumb.Add(m_ThumbSwatch);
 
             m_DraggerManipulator = new Draggable(OnTrackClicked, OnTrackDragged, OnTrackUp, OnTrackDown);
             this.AddManipulator(m_DraggerManipulator);
@@ -457,6 +468,7 @@ namespace Unity.AppUI.UI
             var y = center.y + radius * Mathf.Sin(targetAngle);
             m_Thumb.style.top = y - selectorSize * 0.5f;
             m_Thumb.style.left = x - selectorSize * 0.5f;
+            m_ThumbSwatch.style.backgroundColor = selectedColor;
         }
 
         void GenerateTextures()

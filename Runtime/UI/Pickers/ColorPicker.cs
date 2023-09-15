@@ -395,7 +395,7 @@ namespace Unity.AppUI.UI
 
             m_HexField.RegisterValueChangedCallback(OnHexValueChanged);
 
-            m_ChannelsDropdown.SetValueWithoutNotify(0);
+            m_ChannelsDropdown.SetValueWithoutNotify(new []{ (int)SliderMode.RGB255 });
             OnChannelModeChanged(null);
             SetValueWithoutNotify(Color.clear);
         }
@@ -492,7 +492,7 @@ namespace Unity.AppUI.UI
             value = m_Toolbar.previousColor;
         }
 
-        void BindDropdownItem(MenuItem item, int index)
+        void BindDropdownItem(DropdownItem item, int index)
         {
             var mode = (SliderMode)m_ChannelsDropdown.sourceItems[index];
             switch (mode)
@@ -511,12 +511,16 @@ namespace Unity.AppUI.UI
             }
         }
 
-        void OnChannelModeChanged(ChangeEvent<int> evt)
+        void OnChannelModeChanged(ChangeEvent<IEnumerable<int>> evt)
         {
-            var channelMode = (SliderMode)m_ChannelsDropdown.value;
-            m_RGBContainer.EnableInClassList(Styles.hiddenUssClassName, channelMode != SliderMode.RGB255);
-            m_RGBFloatContainer.EnableInClassList(Styles.hiddenUssClassName, channelMode != SliderMode.RGB01);
-            m_HSVContainer.EnableInClassList(Styles.hiddenUssClassName, channelMode != SliderMode.HSV);
+            using var selectionEnumerator = m_ChannelsDropdown.value.GetEnumerator();
+            if (selectionEnumerator.MoveNext())
+            {
+                var channelMode = (SliderMode)selectionEnumerator.Current;
+                m_RGBContainer.EnableInClassList(Styles.hiddenUssClassName, channelMode != SliderMode.RGB255);
+                m_RGBFloatContainer.EnableInClassList(Styles.hiddenUssClassName, channelMode != SliderMode.RGB01);
+                m_HSVContainer.EnableInClassList(Styles.hiddenUssClassName, channelMode != SliderMode.HSV);
+            }
         }
 
         void OnWheelChanging(ChangingEvent<float> evt)

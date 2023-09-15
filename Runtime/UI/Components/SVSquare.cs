@@ -37,6 +37,8 @@ namespace Unity.AppUI.UI
         Vector2 m_Value;
 
         readonly ExVisualElement m_Thumb;
+        
+        readonly VisualElement m_ThumbSwatch;
 
         readonly Draggable m_DragManipulator;
 
@@ -137,12 +139,19 @@ namespace Unity.AppUI.UI
             {
                 name = thumbUssClassName,
                 pickingMode = PickingMode.Position,
-                usageHints = UsageHints.DynamicTransform | UsageHints.DynamicColor,
-                passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.Borders |
-                    ExVisualElement.Passes.BackgroundColor | ExVisualElement.Passes.OutsetShadows,
+                usageHints = UsageHints.DynamicTransform,
+                passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.OutsetShadows,
             };
             m_Thumb.AddToClassList(thumbUssClassName);
             hierarchy.Add(m_Thumb);
+            m_ThumbSwatch = new VisualElement
+            {
+                name = thumbSwatchUssClassName,
+                pickingMode = PickingMode.Ignore,
+                usageHints = UsageHints.DynamicColor,
+            };
+            m_ThumbSwatch.AddToClassList(thumbSwatchUssClassName);
+            m_Thumb.Add(m_ThumbSwatch);
 
             m_DragManipulator = new Draggable(OnClicked, OnPointerMove, OnPointerUp, OnPointerDown);
             this.AddManipulator(m_DragManipulator);
@@ -296,7 +305,7 @@ namespace Unity.AppUI.UI
             m_Value = newValue;
             m_Thumb.style.top = (paddingRect.height - brightness * paddingRect.height) - m_Thumb.resolvedStyle.height * 0.5f;
             m_Thumb.style.left = saturation * paddingRect.width - m_Thumb.resolvedStyle.width * 0.5f;
-            m_Thumb.backgroundColor = selectedColor;
+            m_ThumbSwatch.style.backgroundColor = selectedColor;
         }
 
         Vector2 ComputeValue(Vector2 localPosition)

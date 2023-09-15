@@ -268,26 +268,39 @@ namespace Unity.AppUI.UI
 
         void OnTreeDown(PointerDownEvent evt)
         {
-            if (!outsideClickDismissEnabled)
+            if (!outsideClickDismissEnabled || outsideClickStrategy == 0)
                 return;
 
             var index = view.parent.IndexOf(view);
             if (index != view.parent.childCount - 1)
                 return;
 
-            var insidePopover = GetMovableElement().worldBound.Contains((Vector2)evt.position);
-            if (!insidePopover)
+            var shouldDismiss = true;
+            if ((outsideClickStrategy & OutsideClickStrategy.Bounds) != 0)
             {
-                var insideAnchor = anchor?.worldBound.Contains((Vector2)evt.position) ?? false;
-                var insideLastFocusedElement = (m_LastFocusedElement as VisualElement)?.worldBound.Contains((Vector2)evt.position) ?? false;
-                if (insideAnchor || insideLastFocusedElement)
-                {
-                    // prevent reopening the same popover again...
-                    evt.PreventDefault();
-                    evt.StopImmediatePropagation();
-                }
-                Dismiss(DismissType.OutOfBounds);
+                shouldDismiss = !GetMovableElement().worldBound.Contains((Vector2)evt.position);
             }
+
+            if (shouldDismiss && (outsideClickStrategy & OutsideClickStrategy.Pick) != 0)
+            {
+                var picked = view.panel.Pick(evt.position);
+                var commonAncestor = picked?.FindCommonAncestor(view);
+                if (commonAncestor == view) // if the picked element is a child of the popover, don't dismiss
+                    shouldDismiss = false;
+            }
+
+            if (!shouldDismiss)
+                return;
+            
+            var insideAnchor = anchor?.worldBound.Contains((Vector2)evt.position) ?? false;
+            var insideLastFocusedElement = (m_LastFocusedElement as VisualElement)?.worldBound.Contains((Vector2)evt.position) ?? false;
+            if (insideAnchor || insideLastFocusedElement)
+            {
+                // prevent reopening the same popover again...
+                evt.PreventDefault();
+                evt.StopImmediatePropagation();
+            }
+            Dismiss(DismissType.OutOfBounds);
         }
 
         /// <inheritdoc cref="Popup.ShouldAnimate"/>

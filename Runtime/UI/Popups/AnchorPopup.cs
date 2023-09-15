@@ -22,6 +22,23 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
+    /// The strategy used to determine if a click is outside of the popup.
+    /// </summary>
+    [Flags]
+    public enum OutsideClickStrategy
+    {
+        /// <summary>
+        /// A click is considered outside if the cursor position is outside of the popup's bounds.
+        /// </summary>
+        Bounds = 1,
+        
+        /// <summary>
+        /// A click is considered outside if the picked element at the cursor position is not a child of the popup.
+        /// </summary>
+        Pick = 2,
+    }
+
+    /// <summary>
     /// Base class for Popup that can be anchored to another UI Element.
     /// </summary>
     /// <typeparam name="T">The sealed anchor popup class type.</typeparam>
@@ -106,6 +123,11 @@ namespace Unity.AppUI.UI
         /// `True` if the the popup can be dismissed by clicking outside of it, `False` otherwise.
         /// </summary>
         public bool outsideClickDismissEnabled { get; protected set; } = true;
+        
+        /// <summary>
+        /// The strategy used to determine if the click is outside of the popup.
+        /// </summary>
+        public OutsideClickStrategy outsideClickStrategy { get; protected set; } = OutsideClickStrategy.Bounds;
 
         /// <summary>
         /// The popup's anchor.
@@ -215,6 +237,17 @@ namespace Unity.AppUI.UI
         public T SetOutsideClickDismiss(bool dismissEnabled)
         {
             outsideClickDismissEnabled = dismissEnabled;
+            return (T)this;
+        }
+        
+        /// <summary>
+        /// Set the strategy used to determine if the click is outside of the popup.
+        /// </summary>
+        /// <param name="strategy"> The strategy to use.</param>
+        /// <returns> The popup of type <typeparamref name="T"/>.</returns>
+        public T SetOutsideClickStrategy(OutsideClickStrategy strategy)
+        {
+            outsideClickStrategy = strategy;
             return (T)this;
         }
 

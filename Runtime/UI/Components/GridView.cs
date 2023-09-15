@@ -143,7 +143,7 @@ namespace Unity.AppUI.UI
 
         bool m_HasPointerMoved;
 
-        readonly Dragger m_Dragger;
+        Dragger m_Dragger;
 
         bool m_SoftSelectIndexWasPreviouslySelected;
 
@@ -166,21 +166,14 @@ namespace Unity.AppUI.UI
             RegisterCallback<GeometryChangedEvent>(OnSizeChanged);
             RegisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
 
-            scrollView.contentContainer.RegisterCallback<AttachToPanelEvent>(OnAttachToPanel);
-            scrollView.contentContainer.RegisterCallback<DetachFromPanelEvent>(OnDetachFromPanel);
+            RegisterCallback<AttachToPanelEvent>(OnAttachToPanel);
+            RegisterCallback<DetachFromPanelEvent>(OnDetachFromPanel);
 
             hierarchy.Add(scrollView);
 
-            scrollView.contentContainer.focusable = true;
             scrollView.contentContainer.usageHints &= ~UsageHints.GroupTransform; // Scroll views with virtualized content shouldn't have the "view transform" optimization
 
             focusable = true;
-
-            m_Dragger = new Dragger(OnDraggerStarted, OnDraggerMoved, OnDraggerEnded, OnDraggerCanceled)
-            {
-                acceptDrag = () => m_SelectedIndices.Count > 0,
-            };
-            this.AddManipulator(m_Dragger);
         }
 
         /// <summary>
@@ -240,7 +233,7 @@ namespace Unity.AppUI.UI
                     break;
                 case GridOperations.Right:
                 {
-                    var newIndex = Mathf.Min(selectedIndex + 1, itemsSource.Count);
+                    var newIndex = Mathf.Min(selectedIndex + 1, itemsSource.Count - 1);
                     if (newIndex != selectedIndex)
                     {
                         HandleSelectionAndScroll(newIndex);
@@ -260,7 +253,7 @@ namespace Unity.AppUI.UI
                     break;
                 case GridOperations.Down:
                 {
-                    var newIndex = Mathf.Min(selectedIndex + columnCount, itemsSource.Count);
+                    var newIndex = Mathf.Min(selectedIndex + columnCount, itemsSource.Count - 1);
                     if (newIndex != selectedIndex)
                     {
                         HandleSelectionAndScroll(newIndex);
@@ -275,7 +268,8 @@ namespace Unity.AppUI.UI
                     HandleSelectionAndScroll(itemsSource.Count - 1);
                     return true;
                 case GridOperations.Choose:
-                    itemsChosen?.Invoke(selectedItems);
+                    if (m_SelectedIndices.Count > 0)
+                        itemsChosen?.Invoke(selectedItems);
                     return true;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(operation), operation, null);
@@ -326,7 +320,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public void CancelDrag()
         {
-            m_Dragger.Cancel();
+            m_Dragger?.Cancel();
         }
         
         void OnKeyDown(KeyDownEvent evt)
@@ -463,7 +457,7 @@ namespace Unity.AppUI.UI
                 {
                     newCollection.CollectionChanged += OnItemsSourceCollectionChanged;
                 }
-
+                
                 Refresh();
             }
         }
@@ -701,7 +695,7 @@ namespace Unity.AppUI.UI
 
         public void ClearSelectionWithoutNotify()
         {
-            if (!HasValidDataAndBindings() || m_SelectedIds.Count == 0)
+            if (!HasValidDataAndBindings() || m_SelectedIndices.Count == 0)
                 return;
 
             ClearSelectionWithoutValidation();
@@ -727,6 +721,13 @@ namespace Unity.AppUI.UI
 
             m_SelectedIndices.Clear();
             m_SelectedItems.Clear();
+            m_SoftSelectIndex = -1;
+            m_SoftSelectIndexWasPreviouslySelected = false;
+            m_PreviouslySelectedIndices.Clear();
+            m_OriginalSelection.Clear();
+            
+            if (m_GetItemId == null)
+                m_SelectedIds.Clear();
 
             // O(n)
             if (m_SelectedIds.Count > 0)
@@ -1024,11 +1025,15 @@ namespace Unity.AppUI.UI
             contextClicked?.Invoke(evt);
         }
 
-        void DoSoftSelect(Vector2 localPosition, int clickCount, bool actionKey, bool shiftKey)
+        void DoSoftSelect(PointerDownEvent evt, int clickCount)
         {
-            var clickedIndex = GetIndexByPosition(localPosition);
+            var clickedIndex = GetIndexByWorldPosition(evt.position);
             if (clickedIndex > m_ItemsSource.Count - 1)
+            {
+                if (evt.button == (int)MouseButton.LeftMouse)
+                    ClearSelection();
                 return;
+            }
 
             m_SoftSelectIndex = clickedIndex;
             m_SoftSelectIndexWasPreviouslySelected = m_SelectedIndices.Contains(clickedIndex);
@@ -1042,7 +1047,7 @@ namespace Unity.AppUI.UI
                     if (selectionType == SelectionType.None)
                         return;
 
-                    if (selectionType == SelectionType.Multiple && actionKey)
+                    if (selectionType == SelectionType.Multiple && evt.actionKey)
                     {
                         m_RangeSelectionOrigin = clickedIndex;
 
@@ -1052,7 +1057,7 @@ namespace Unity.AppUI.UI
                         else
                             AddToSelection(clickedIndex, false);
                     }
-                    else if (selectionType == SelectionType.Multiple && shiftKey)
+                    else if (selectionType == SelectionType.Multiple && evt.shiftKey)
                     {
                         if (m_RangeSelectionOrigin == -1 || m_SelectedIndices.Count == 0)
                         {
@@ -1113,14 +1118,21 @@ namespace Unity.AppUI.UI
         {
             if (evt.destinationPanel == null)
                 return;
+            
+            if (m_Dragger == null)
+                m_Dragger = new Dragger(OnDraggerStarted, OnDraggerMoved, OnDraggerEnded, OnDraggerCanceled)
+                {
+                    acceptDrag = () => m_SelectedIndices.Count > 0,
+                };
+            scrollView.AddManipulator(m_Dragger);
 
             scrollView.contentContainer.RegisterCallback<ClickEvent>(OnClick);
-            scrollView.contentContainer.RegisterCallback<PointerDownEvent>(OnPointerDown);
-            scrollView.contentContainer.RegisterCallback<PointerUpEvent>(OnPointerUp);
-            scrollView.contentContainer.RegisterCallback<PointerMoveEvent>(OnPointerMove);
-            scrollView.contentContainer.RegisterCallback<KeyDownEvent>(OnKeyDown);
-            scrollView.contentContainer.RegisterCallback<NavigationMoveEvent>(OnNavigationMove);
-            scrollView.contentContainer.RegisterCallback<NavigationCancelEvent>(OnNavigationCancel);
+            scrollView.RegisterCallback<PointerDownEvent>(OnPointerDown);
+            scrollView.RegisterCallback<PointerUpEvent>(OnPointerUp);
+            scrollView.RegisterCallback<PointerMoveEvent>(OnPointerMove);
+            RegisterCallback<KeyDownEvent>(OnKeyDown);
+            RegisterCallback<NavigationMoveEvent>(OnNavigationMove);
+            RegisterCallback<NavigationCancelEvent>(OnNavigationCancel);
             scrollView.RegisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
         }
 
@@ -1141,14 +1153,17 @@ namespace Unity.AppUI.UI
         {
             if (evt.originPanel == null)
                 return;
+            
+            if (m_Dragger != null)
+                scrollView.RemoveManipulator(m_Dragger);
 
             scrollView.contentContainer.UnregisterCallback<ClickEvent>(OnClick);
-            scrollView.contentContainer.UnregisterCallback<PointerDownEvent>(OnPointerDown);
-            scrollView.contentContainer.UnregisterCallback<PointerUpEvent>(OnPointerUp);
-            scrollView.contentContainer.UnregisterCallback<PointerMoveEvent>(OnPointerMove);
-            scrollView.contentContainer.UnregisterCallback<KeyDownEvent>(OnKeyDown);
-            scrollView.contentContainer.UnregisterCallback<NavigationMoveEvent>(OnNavigationMove);
-            scrollView.contentContainer.UnregisterCallback<NavigationCancelEvent>(OnNavigationCancel);
+            scrollView.UnregisterCallback<PointerDownEvent>(OnPointerDown);
+            scrollView.UnregisterCallback<PointerUpEvent>(OnPointerUp);
+            scrollView.UnregisterCallback<PointerMoveEvent>(OnPointerMove);
+            UnregisterCallback<KeyDownEvent>(OnKeyDown);
+            UnregisterCallback<NavigationMoveEvent>(OnNavigationMove);
+            UnregisterCallback<NavigationCancelEvent>(OnNavigationCancel);
             scrollView.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
         }
 
@@ -1165,7 +1180,7 @@ namespace Unity.AppUI.UI
 
             if (evt.clickCount == 2)
             {
-                var clickedIndex = GetIndexByPosition(evt.localPosition);
+                var clickedIndex = GetIndexByWorldPosition(evt.position);
                 if (clickedIndex >= 0 && clickedIndex < m_ItemsSource.Count)
                     doubleClicked?.Invoke(clickedIndex);
                 Apply(GridOperations.Choose, evt.shiftKey);
@@ -1188,9 +1203,10 @@ namespace Unity.AppUI.UI
 
             var capturingElement = panel?.GetCapturingElement(evt.pointerId);
             
+            // if the pointer is captured by a child of the scroll view, abort any selection
             if (capturingElement is VisualElement ve && 
-                ve != scrollView.contentContainer && 
-                ve.FindCommonAncestor(scrollView.contentContainer) != null)
+                ve != scrollView && 
+                ve.FindCommonAncestor(scrollView) != null)
                 return;
 
             m_OriginalSelection.Clear();
@@ -1201,7 +1217,7 @@ namespace Unity.AppUI.UI
             var clickCount = m_HasPointerMoved ? 1 : evt.clickCount;
             m_HasPointerMoved = false;
 
-            DoSoftSelect(evt.localPosition, clickCount, evt.actionKey, evt.shiftKey);
+            DoSoftSelect(evt, clickCount);
             
             if (evt.button == (int)MouseButton.RightMouse)
                 DoContextClickAfterSelect(evt);
@@ -1253,10 +1269,11 @@ namespace Unity.AppUI.UI
         /// <remarks>
         /// The position is relative to the top left corner of the grid. No check is made to see if the index is valid.
         /// </remarks>
-        /// <param name="localPosition"> The position of the item relative to the top left corner of the grid.</param>
+        /// <param name="worldPosition">The position of the item in the world-space.</param>
         /// <returns> The index of the item at the given position.</returns>
-        public int GetIndexByPosition(Vector2 localPosition)
+        public int GetIndexByWorldPosition(Vector2 worldPosition)
         {
+            var localPosition = scrollView.contentContainer.WorldToLocal(worldPosition);
             return Mathf.FloorToInt(localPosition.y / resolvedItemHeight) * columnCount + Mathf.FloorToInt(localPosition.x / resolvedItemWidth);
         }
 

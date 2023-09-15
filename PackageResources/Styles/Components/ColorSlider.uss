@@ -40,6 +40,7 @@
     --box-shadow-blur: 4;
     --box-shadow-color: rgba(0,0,0,.75);
 
+    --border-style: 1; /* solid */
     --border-width: 4;
     --border-color: var(--appui-color-white);
     --background-color: var(--appui-color-white);

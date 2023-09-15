@@ -15,6 +15,8 @@ namespace Unity.AppUI.UI
 
         IVisualElementScheduledItem m_ScheduledItem;
 
+        bool m_CloseOnSelection = true;
+
         const string k_MenuPopoverUssClassName = "appui-popover--menu";
 
         Popover.PopoverVisualElement popover => (Popover.PopoverVisualElement)view;
@@ -42,20 +44,31 @@ namespace Unity.AppUI.UI
 
         void OnTreeDown(PointerDownEvent evt)
         {
-            if (!outsideClickDismissEnabled)
+            if (!outsideClickDismissEnabled || outsideClickStrategy == 0)
                 return;
 
-            var insideMenus = false;
-            foreach (var child in popover.hierarchy.Children())
+            var shouldDismiss = true;
+            if ((outsideClickStrategy & OutsideClickStrategy.Bounds) != 0)
             {
-                if (child.worldBound.Contains((Vector2)evt.position))
+                foreach (var child in popover.hierarchy.Children())
                 {
-                    insideMenus = true;
-                    break;
+                    if (child.worldBound.Contains((Vector2)evt.position))
+                    {
+                        shouldDismiss = false;
+                        break;
+                    }
                 }
             }
             
-            if (insideMenus)
+            if (shouldDismiss && (outsideClickStrategy & OutsideClickStrategy.Pick) != 0 && popover.panel is {} panel)
+            {
+                var picked = panel.Pick(evt.position);
+                var commonAncestor = picked?.FindCommonAncestor(popover);
+                if (commonAncestor == popover) // if the picked element is a child of the popover, don't dismiss
+                    shouldDismiss = false;
+            }
+            
+            if (!shouldDismiss)
                 return;
 
             var insideAnchor = anchor?.worldBound.Contains((Vector2)evt.position) ?? false;
@@ -145,6 +158,22 @@ namespace Unity.AppUI.UI
             m_MenuStack.Pop();
             return this;
         }
+        
+        /// <summary>
+        /// Close the menu automatically when an item is selected.
+        /// </summary>
+        public bool closeOnSelection => m_CloseOnSelection;
+
+        /// <summary>
+        /// Close the menu automatically when an item is selected.
+        /// </summary>
+        /// <param name="value"> True to close the menu automatically when an item is selected. </param>
+        /// <returns> The MenuBuilder instance. </returns>
+        public MenuBuilder SetCloseOnSelection(bool value)
+        {
+            m_CloseOnSelection = value;
+            return this;
+        }
 
         /// <inheritdoc cref="Popup.ShouldAnimate"/>
         protected override bool ShouldAnimate()
@@ -187,11 +216,12 @@ namespace Unity.AppUI.UI
                 .SetLastFocusedElement(referenceView)
                 .SetArrowVisible(false)
                 .SetPlacement(PopoverPlacement.BottomStart)
+                .SetOutsideClickStrategy(OutsideClickStrategy.Pick)
                 .SetCrossOffset(-8)
                 .SetAnchor(referenceView);
             popoverVisualElement.RegisterCallback<ActionTriggeredEvent>(evt =>
             {
-                if (evt.target is MenuItem)
+                if (evt.target is MenuItem or PickerItem && menuBuilder.closeOnSelection)
                     menuBuilder.Dismiss(DismissType.Action);
             });
             menuBuilder.dismissed += (_, _) => menu.CloseSubMenus();

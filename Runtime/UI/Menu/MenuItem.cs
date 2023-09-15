@@ -13,7 +13,7 @@ namespace Unity.AppUI.UI
     {
         static readonly Stack<Menu> k_SubMenuStack = new Stack<Menu>();
 
-        const string k_CheckmarkIconName = "check";
+        internal const string checkmarkIconName = "check";
 
         const string k_SubMenuIconName = "arrows-submenuicon";
 
@@ -95,7 +95,7 @@ namespace Unity.AppUI.UI
             tabIndex = 0;
             clickable = new Pressable(OnClick);
 
-            var checkmark = new Icon { name = checkmarkUssClassName, iconName = k_CheckmarkIconName, pickingMode = PickingMode.Ignore };
+            var checkmark = new Icon { name = checkmarkUssClassName, iconName = checkmarkIconName, pickingMode = PickingMode.Ignore };
             checkmark.AddToClassList(checkmarkUssClassName);
             m_Icon = new Icon { name = iconUssClassName, pickingMode = PickingMode.Ignore };
             m_Icon.AddToClassList(iconUssClassName);

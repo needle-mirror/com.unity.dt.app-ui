@@ -27,7 +27,7 @@ namespace Unity.AppUI.Samples
                 SetupDataBinding(uiDocument.rootVisualElement);
         }
 
-        void Update()
+        void Update() 
         {
             if (uiDocument)
             {
@@ -192,12 +192,17 @@ namespace Unity.AppUI.Samples
             var dropdown1 = root.Q<Dropdown>("dropdown1");
             dropdown1.bindItem = (item, i) => item.label = dropdownSrc[i];
             dropdown1.sourceItems = dropdownSrc;
-            dropdown1.SetValueWithoutNotify(0);
+            dropdown1.SetValueWithoutNotify(new []{ 0 });
             
             var dropdown2 = root.Q<Dropdown>("dropdown2");
             dropdown2.bindItem = (item, i) => item.label = dropdownSrc[i];
             dropdown2.sourceItems = dropdownSrc;
-            dropdown2.SetValueWithoutNotify(1);
+            dropdown2.SetValueWithoutNotify(new []{ 1 });
+            
+            var dropdown3 = root.Q<Dropdown>("dropdown3");
+            dropdown3.bindItem = (item, i) => item.label = dropdownSrc[i];
+            dropdown3.sourceItems = dropdownSrc;
+            dropdown3.SetValueWithoutNotify(new []{ 1, 2 });
 
             root.Q<UI.Avatar>("avatar-with-picture").src = Resources.Load<Texture2D>("example-avatar-pic");
 

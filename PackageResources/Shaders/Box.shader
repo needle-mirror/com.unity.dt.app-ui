@@ -10,10 +10,14 @@ Shader "Hidden/App UI/Box"
         _BackgroundSize("Background Size", Int) = 0
         _Radiuses("Radiuses", Vector) = (0,0,0.5,0.25)
         _AA("Anti Aliasing", Float) = 0.0012
+        _Phase("Phase", Vector) = (0,0,0,0)
         [Header(Border)]
         [Toggle(ENABLE_BORDER)] _EnableBorder("Enable", Float) = 1
         _BorderThickness("Border Thickness", Range(0,1)) = 0.012
         _BorderColor("Border Color", Color) = (1,1,1,1)
+        _BorderStyle("Border Style", Int) = 0
+        _BorderDotFactor("Border Dot Factor", Int) = 3
+        _BorderSpeed("Border Speed", Float) = 0.0
         [Header(Shadow)]
         [Toggle(ENABLE_SHADOW)] _EnableShadow("Enable", Float) = 1
         _ShadowOffset("Shadow Offset", Vector) = (0.1, 0.1, 0.02, 0.005)
@@ -214,7 +218,7 @@ Shader "Hidden/App UI/Box"
                 if (_ShadowInset == 0)
                     return fixed4(0,0,0,0);
                 // Find clip box mask
-                const float2 spread = float2(_ShadowOffset.z, _ShadowOffset.z / _Ratio);
+                const float2 spread = float2(_ShadowOffset.z, _ShadowOffset.z / _Ratio) * -1.0;
                 const float2 boxClipSSize = _Rect.zw;
                 const float2 halfSize = float2(boxClipSSize.x, boxClipSSize.y * _Ratio) * 0.5;
                 const float sd = roundedBoxSDF(i.uv, halfSize, _Radiuses.zywx);
@@ -254,15 +258,40 @@ Shader "Hidden/App UI/Box"
 
             float _BorderThickness;
             fixed4 _BorderColor;
+            int _BorderStyle;
+            int _BorderDotFactor;
+            float _BorderSpeed;
+            float4 _Phase;
 
             fixed4 frag (v2f i) : SV_Target
             {
                 #if ENABLE_BORDER
+                if (_BorderStyle <= 0 || _BorderThickness <= 0.0 || _BorderColor.a <= 0.0)
+                    return fixed4(0,0,0,0);
+
+                const float band = _BorderThickness * _BorderDotFactor;
                 const float2 halfSize = float2(_Rect.z, _Rect.w * _Ratio) * 0.5;
-                const float distance = roundedBoxSDF(i.uv, halfSize, _Radiuses.zywx);
-                const float smoothedAlpha = 1.0 - smoothstep(0.0, _AA, distance);
-                const float borderAlpha = 1.0 - smoothstep(_BorderThickness - _AA, _BorderThickness, abs(distance));
-                return fixed4(_BorderColor.rgb, _BorderColor.a * min(borderAlpha, smoothedAlpha));
+                float4 box = paBox(i.uv, halfSize - _BorderThickness * 0.5 - _Radiuses.x, _Radiuses.x, band);
+                const float distance = box.w;
+                float borderAlpha = abs(distance) <= _BorderThickness * 0.5 ? 1.0 : 0.0;
+
+                float2 q = box.xy;
+                q.y *= floor(box.z / band) * (band / box.z);
+                q.y -= _Phase.y * _BorderSpeed;
+                const float2 dotUV = frac(q / band + 0.5) - 0.5;
+                const float dotLength = length(dotUV);
+
+                if (_BorderStyle == 2) // Dotted
+                {
+                    borderAlpha *= smoothstep(0.50 / _BorderDotFactor, 0.49 / _BorderDotFactor, dotLength);
+                }
+                else if (_BorderStyle == 3) // Dashed
+                {
+                    borderAlpha *= smoothstep(0.24, 0.25, dotLength);
+                }
+                
+                return fixed4(_BorderColor.rgb, _BorderColor.a * borderAlpha);
+                
                 #else
                 return fixed4(0,0,0,0);
                 #endif

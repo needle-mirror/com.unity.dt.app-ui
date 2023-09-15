@@ -42,7 +42,7 @@
 }
 
 .appui-menuitem {
-    border-radius: 6px;
+    border-radius: var(--appui-alias-control-border-radius);
     padding: var(--appui-alias-control-gap-md);
     display: flex;
     flex-direction: row;
@@ -102,11 +102,11 @@
     color: var(--appui-foregrounds-100);
 }
 
-.appui-dropdown__menu .appui-menuitem.is-selected {
+.appui-picker__menu .appui-menuitem.is-selected {
     background-color: var(--appui-base-300);
 }
 
-.appui-dropdown__menu .appui-menuitem.is-selected > .appui-menuitem__label {
+.appui-picker__menu .appui-menuitem.is-selected > .appui-menuitem__label {
     color: var(--appui-foregrounds-200);
 }
 

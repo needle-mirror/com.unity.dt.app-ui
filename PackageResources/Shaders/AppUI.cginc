@@ -104,3 +104,27 @@ float roundedBoxShadow(float2 lower, float2 upper, float2 pos, float sigma, floa
 
     return value;
 }
+
+float msign(const in float x ) { return x < 0.0 ? -1.0 : 1.0; }
+
+// x = local dist
+// y = local perimeter dist
+// z = total local perimeter
+// w = global distance (sdf)
+float4 paBox( in float2 p, in float2 b, const in float r, const in float s)
+{
+    float2 q = abs(p) - b;
+
+    const float l = b.x + b.y + UNITY_HALF_PI * r;
+    
+    float k1 = min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
+    const float k2 = q.x > 0.0 ? atan2(q.x, q.y) : UNITY_HALF_PI;
+    const float k3 = 3.0 + 2.0 * msign(min(p.x, -p.y)) - msign(p.x);
+    const float k4 = msign(p.x * p.y);
+    const float k5 = r * k2 + max(-q.x, 0.0);
+    const float ra = s * round(k1 / s);
+    const float l2 = l + UNITY_HALF_PI * ra;
+
+    return float4(k1 - ra, k3 * l2 + k4 * (b.y + (q.y > 0.0 ? k5 + k2 * ra : q.y)), 4.0 * l2, k1);
+}
+
