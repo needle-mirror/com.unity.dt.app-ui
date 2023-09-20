@@ -377,6 +377,22 @@ namespace Unity.AppUI.Samples
                 }
             };
 
+            root.Query<AvatarGroup>("avatar-group-1").ForEach(avatarGroup1 =>
+            {
+                avatarGroup1.sourceItems = Enumerable.Range(0, 10).ToList();
+                avatarGroup1.bindItem = (item, i) =>
+                {
+                    var text = new Text($"A{i}");
+                    item.Add(text);
+                    // random color 
+                    var color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+                    item.backgroundColor = color;
+                    // text color in contrast with background color
+                    var grayscale = color.grayscale;
+                    text.style.color = grayscale > 0.5f ? Color.black : Color.white;
+                };
+            });
+
             var tabViewTabs = root.Q<Tabs>("tabview-tabs");
             var tabViewSwiperView = root.Q<SwipeView>("tabview-swipeview");
             tabViewSwiperView.swipeable = false;

@@ -1,762 +1,1024 @@
-.appui-icon--360--regular {
-    --unity-image: url("./360.png");
-}
-.appui-icon--add-brush--regular {
-    --unity-image: url("./AddBrush.png");
-}
-.appui-icon--add-layer--regular {
-    --unity-image: url("./AddLayer.png");
-}
-.appui-icon--annotation--regular {
-    --unity-image: url("./Annotation.png");
-}
-.appui-icon--apperature--regular {
-    --unity-image: url("./Apperature.png");
-}
-.appui-icon--apperature-off--regular {
-    --unity-image: url("./ApperatureOff.png");
-}
-.appui-icon--ar-mode--regular {
-    --unity-image: url("./ARMode.png");
-}
-.appui-icon--ar-mode-off--regular {
-    --unity-image: url("./ARModeOff.png");
-}
-.appui-icon--arrow-clockwise--regular {
-    --unity-image: url("./ArrowClockwise.png");
-}
-.appui-icon--arrow-counter-clockwise--regular {
-    --unity-image: url("./ArrowCounterClockwise.png");
-}
-.appui-icon--arrow-down--regular {
-    --unity-image: url("./ArrowDown.png");
-}
-.appui-icon--arrow-left--regular {
-    --unity-image: url("./ArrowLeft.png");
-}
-.appui-icon--arrow-right--regular {
-    --unity-image: url("./ArrowRight.png");
-}
-.appui-icon--arrows-clockwise--regular {
-    --unity-image: url("./ArrowsClockwise.png");
-}
-.appui-icon--arrows-counter-clockwise--regular {
-    --unity-image: url("./ArrowsCounterClockwise.png");
-}
-.appui-icon--arrows-out-cardinal--regular {
-    --unity-image: url("./ArrowsOutCardinal.png");
-}
-.appui-icon--arrow-square-out--regular {
-    --unity-image: url("./ArrowSquareOut.png");
-}
-.appui-icon--arrows-submenuicon {
-    --unity-image: url("./ArrowsSubmenuicon.png");
-}
-.appui-icon--arrows-u-clockwise--regular {
-    --unity-image: url("./ArrowsUClockwise.png");
-}
-.appui-icon--arrows-u-counter-clockwise--regular {
-    --unity-image: url("./ArrowsUCounterClockwise.png");
-}
-.appui-icon--arrow-u-down-left--regular {
-    --unity-image: url("./ArrowUDownLeft.png");
-}
-.appui-icon--arrow-u-down-right--regular {
-    --unity-image: url("./ArrowUDownRight.png");
-}
-.appui-icon--arrow-up--regular {
-    --unity-image: url("./ArrowUp.png");
-}
-.appui-icon--arrow-u-up-left--regular {
-    --unity-image: url("./ArrowUUpLeft.png");
-}
-.appui-icon--arrow-u-up-right--regular {
-    --unity-image: url("./ArrowUUpRight.png");
-}
-.appui-icon--backplate--regular {
-    --unity-image: url("./Backplate.png");
-}
-.appui-icon--calendar--regular {
-    --unity-image: url("./Calendar.png");
-}
-.appui-icon--camera--regular {
-    --unity-image: url("./Camera.png");
-}
-.appui-icon--camera-dynamic--regular {
-    --unity-image: url("./CameraDynamic.png");
-}
-.appui-icon--camera-follow--regular {
-    --unity-image: url("./CameraFollow.png");
-}
-.appui-icon--camera-move--regular {
-    --unity-image: url("./CameraMove.png");
-}
-.appui-icon--camera-move-lock--regular {
-    --unity-image: url("./CameraMoveLock.png");
-}
-.appui-icon--camera-overhead--regular {
-    --unity-image: url("./CameraOverhead.png");
-}
-.appui-icon--camera-rotate--regular {
-    --unity-image: url("./CameraRotate.png");
-}
-.appui-icon--camera-rotate-lock--regular {
-    --unity-image: url("./CameraRotateLock.png");
-}
-.appui-icon--camera-scale--regular {
-    --unity-image: url("./CameraScale.png");
-}
-.appui-icon--camera-settings--regular {
-    --unity-image: url("./CameraSettings.png");
-}
-.appui-icon--camera-shake--regular {
-    --unity-image: url("./CameraShake.png");
-}
-.appui-icon--camera-sidelines--regular {
-    --unity-image: url("./CameraSidelines.png");
-}
-.appui-icon--camera-x--regular {
-    --unity-image: url("./CameraX.png");
-}
-.appui-icon--camera-y--regular {
-    --unity-image: url("./CameraY.png");
-}
-.appui-icon--camera-z--regular {
-    --unity-image: url("./CameraZ.png");
-}
-.appui-icon--caret-double-down--regular {
-    --unity-image: url("./CaretDoubleDown.png");
-}
-.appui-icon--caret-double-left--regular {
-    --unity-image: url("./CaretDoubleLeft.png");
-}
-.appui-icon--caret-double-right--regular {
-    --unity-image: url("./CaretDoubleRight.png");
-}
-.appui-icon--caret-double-up--regular {
-    --unity-image: url("./CaretDoubleUp.png");
-}
-.appui-icon--caret-down--regular {
-    --unity-image: url("./CaretDown.png");
-}
-.appui-icon--caret-down-shallow--regular {
-    --unity-image: url("./CaretDownShallow.png");
-}
-.appui-icon--caret-left--regular {
-    --unity-image: url("./CaretLeft.png");
-}
-.appui-icon--caret-right--regular {
-    --unity-image: url("./CaretRight.png");
-}
-.appui-icon--caret-up--regular {
-    --unity-image: url("./CaretUp.png");
-}
-.appui-icon--caret-up-shallow--regular {
-    --unity-image: url("./CaretUpShallow.png");
-}
-.appui-icon--car-rim--regular {
-    --unity-image: url("./CarRim.png");
-}
-.appui-icon--check--regular {
-    --unity-image: url("./Check.png");
-}
 .appui-icon--check--bold {
     --unity-image: url("./Bold/check-bold.png");
 }
-.appui-icon--clap-board--regular {
-    --unity-image: url("./ClapBoard.png");
-}
-.appui-icon--clippers--regular {
-    --unity-image: url("./Clippers.png");
-}
-.appui-icon--clipping--regular {
-    --unity-image: url("./Clipping.png");
-}
-.appui-icon--clipping-x--regular {
-    --unity-image: url("./ClippingX.png");
-}
-.appui-icon--clipping-y--regular {
-    --unity-image: url("./ClippingY.png");
-}
-.appui-icon--clipping-z--regular {
-    --unity-image: url("./ClippingZ.png");
-}
-.appui-icon--cloud--regular {
-    --unity-image: url("./Cloud.png");
-}
-.appui-icon--color-picker--regular {
-    --unity-image: url("./ColorPicker.png");
-}
-.appui-icon--communication--regular {
-    --unity-image: url("./Communication.png");
-}
-.appui-icon--connection-slash-1--regular {
-    --unity-image: url("./ConnectionSlash-1.png");
-}
-.appui-icon--connection-slash--regular {
-    --unity-image: url("./ConnectionSlash.png");
-}
-.appui-icon--damping-high--regular {
-    --unity-image: url("./DampingHigh.png");
-}
-.appui-icon--damping-low--regular {
-    --unity-image: url("./DampingLow.png");
-}
-.appui-icon--damping-medium--regular {
-    --unity-image: url("./DampingMedium.png");
-}
-.appui-icon--damping-off--regular {
-    --unity-image: url("./DampingOff.png");
-}
-.appui-icon--debug--regular {
-    --unity-image: url("./Debug.png");
-}
-.appui-icon--delete--regular {
-    --unity-image: url("./Delete.png");
-}
-.appui-icon--do-f-disabled--regular {
-    --unity-image: url("./DoFDisabled.png");
-}
-.appui-icon--dome--regular {
-    --unity-image: url("./Dome.png");
-}
+
 .appui-icon--dots-three--bold {
     --unity-image: url("./Bold/dots-three-bold.png");
 }
+
 .appui-icon--dots-three-vertical--bold {
     --unity-image: url("./Bold/dots-three-vertical-bold.png");
 }
-.appui-icon--draghandle--regular {
-    --unity-image: url("./Draghandle.png");
-}
-.appui-icon--drywall-installer--regular {
-    --unity-image: url("./DrywallInstaller.png");
-}
-.appui-icon--ellipsis--regular {
-    --unity-image: url("./Ellipsis.png");
-}
-.appui-icon--equipment-operator--regular {
-    --unity-image: url("./EquipmentOperator.png");
-}
-.appui-icon--export--regular {
-    --unity-image: url("./Export.png");
-}
-.appui-icon--eye--regular {
-    --unity-image: url("./Eye.png");
-}
-.appui-icon--eye-slash--regular {
-    --unity-image: url("./EyeSlash.png");
-}
-.appui-icon--face-mesh--regular {
-    --unity-image: url("./FaceMesh.png");
-}
-.appui-icon--fast-forward--regular {
-    --unity-image: url("./FastForward.png");
-}
-.appui-icon--film-roll--regular {
-    --unity-image: url("./FilmRoll.png");
-}
-.appui-icon--flag--regular {
-    --unity-image: url("./Flag.png");
-}
-.appui-icon--fly--regular {
-    --unity-image: url("./Fly.png");
-}
-.appui-icon--focal-length--regular {
-    --unity-image: url("./FocalLength.png");
-}
-.appui-icon--focus--regular {
-    --unity-image: url("./Focus.png");
-}
-.appui-icon--focus-apperature--regular {
-    --unity-image: url("./FocusApperature.png");
-}
-.appui-icon--focus-auto--regular {
-    --unity-image: url("./FocusAuto.png");
-}
-.appui-icon--focus-manual--regular {
-    --unity-image: url("./FocusManual.png");
-}
-.appui-icon--focus-mode-tracking--regular {
-    --unity-image: url("./FocusModeTracking.png");
-}
-.appui-icon--focus-object--regular {
-    --unity-image: url("./FocusObject.png");
-}
-.appui-icon--folder--regular {
-    --unity-image: url("./Folder.png");
-}
-.appui-icon--forma-backplate--regular {
-    --unity-image: url("./FormaBackplate.png");
-}
-.appui-icon--forma-dome--regular {
-    --unity-image: url("./FormaDome.png");
-}
-.appui-icon--forma-scene--regular {
-    --unity-image: url("./FormaScene.png");
-}
-.appui-icon--funnel--regular {
-    --unity-image: url("./Funnel.png");
-}
-.appui-icon--funnel-simple--regular {
-    --unity-image: url("./FunnelSimple.png");
-}
-.appui-icon--generic-cube--regular {
-    --unity-image: url("./GenericCube.png");
-}
-.appui-icon--generic-sphere--regular {
-    --unity-image: url("./GenericSphere.png");
-}
-.appui-icon--grid-four--regular {
-    --unity-image: url("./GridFour.png");
-}
-.appui-icon--hammer--regular {
-    --unity-image: url("./Hammer.png");
-}
-.appui-icon--heart--regular {
-    --unity-image: url("./Heart.png");
-}
-.appui-icon--help--regular {
-    --unity-image: url("./Help.png");
-}
-.appui-icon--helper--regular {
-    --unity-image: url("./Helper.png");
-}
-.appui-icon--hierarchy--regular {
-    --unity-image: url("./Hierarchy.png");
-}
-.appui-icon--horizontal--regular {
-    --unity-image: url("./Horizontal.png");
-}
-.appui-icon--hotspot--regular {
-    --unity-image: url("./Hotspot.png");
-}
-.appui-icon--house--regular {
-    --unity-image: url("./House.png");
-}
-.appui-icon--image--regular {
-    --unity-image: url("./Image.png");
-}
-.appui-icon--info--regular {
-    --unity-image: url("./Info.png");
-}
-.appui-icon--installs--regular {
-    --unity-image: url("./Installs.png");
-}
-.appui-icon--joystick--regular {
-    --unity-image: url("./Joystick.png");
-}
-.appui-icon--joystick-slash--regular {
-    --unity-image: url("./JoystickSlash.png");
-}
-.appui-icon--keyboard-a--regular {
-    --unity-image: url("./KeyboardA.png");
-}
-.appui-icon--keyboard-backspace--regular {
-    --unity-image: url("./KeyboardBackspace.png");
-}
-.appui-icon--keyboard-control--regular {
-    --unity-image: url("./KeyboardControl.png");
-}
-.appui-icon--keyboard-e--regular {
-    --unity-image: url("./KeyboardE.png");
-}
-.appui-icon--keyboard-esc--regular {
-    --unity-image: url("./KeyboardESC.png");
-}
-.appui-icon--keyboard-m--regular {
-    --unity-image: url("./KeyboardM.png");
-}
-.appui-icon--keyboard-q--regular {
-    --unity-image: url("./KeyboardQ.png");
-}
-.appui-icon--keyboard-return--regular {
-    --unity-image: url("./KeyboardReturn.png");
-}
-.appui-icon--keyboard-s--regular {
-    --unity-image: url("./KeyboardS.png");
-}
-.appui-icon--keyboard-shift--regular {
-    --unity-image: url("./KeyboardShift.png");
-}
-.appui-icon--keyboard-space--regular {
-    --unity-image: url("./KeyboardSpace.png");
-}
-.appui-icon--keyboard-w--regular {
-    --unity-image: url("./KeyboardW.png");
-}
-.appui-icon--layers--regular {
-    --unity-image: url("./Layers.png");
-}
-.appui-icon--learn--regular {
-    --unity-image: url("./Learn.png");
-}
-.appui-icon--level--regular {
-    --unity-image: url("./Level.png");
-}
-.appui-icon--level-active--regular {
-    --unity-image: url("./LevelActive.png");
-}
-.appui-icon--line-brush--regular {
-    --unity-image: url("./LineBrush.png");
-}
-.appui-icon--link--regular {
-    --unity-image: url("./link.png");
-}
-.appui-icon--link-break--regular {
-    --unity-image: url("./LinkBreak.png");
-}
-.appui-icon--link-ratio--regular {
-    --unity-image: url("./LinkRatio.png");
-}
-.appui-icon--link-simple--regular {
-    --unity-image: url("./LinkSimple.png");
-}
-.appui-icon--link-simple-break--regular {
-    --unity-image: url("./LinkSimpleBreak.png");
-}
-.appui-icon--link-simple-horizontal--regular {
-    --unity-image: url("./LinkSimpleHorizontal.png");
-}
-.appui-icon--link-simple-horizontal-break--regular {
-    --unity-image: url("./LinkSimpleHorizontalBreak.png");
-}
-.appui-icon--list--regular {
-    --unity-image: url("./List.png");
-}
-.appui-icon--local-positioning--regular {
-    --unity-image: url("./LocalPositioning.png");
-}
-.appui-icon--lock--regular {
-    --unity-image: url("./Lock.png");
-}
-.appui-icon--magnifying-glass--regular {
-    --unity-image: url("./MagnifyingGlass.png");
-}
-.appui-icon--magnifying-glass-minus--regular {
-    --unity-image: url("./MagnifyingGlassMinus.png");
-}
-.appui-icon--magnifying-glass-plus--regular {
-    --unity-image: url("./MagnifyingGlassPlus.png");
-}
-.appui-icon--mars-corner-tool--regular {
-    --unity-image: url("./MarsCornerTool.png");
-}
-.appui-icon--mars-proxy--regular {
-    --unity-image: url("./MarsProxy.png");
-}
-.appui-icon--mars-scan--regular {
-    --unity-image: url("./MarsScan.png");
-}
-.appui-icon--mars-snapping--regular {
-    --unity-image: url("./MarsSnapping.png");
-}
-.appui-icon--mason--regular {
-    --unity-image: url("./Mason.png");
-}
-.appui-icon--measure-angle--regular {
-    --unity-image: url("./MeasureAngle.png");
-}
-.appui-icon--measure-length--regular {
-    --unity-image: url("./MeasureLength.png");
-}
-.appui-icon--menu--regular {
-    --unity-image: url("./Menu.png");
-}
-.appui-icon--microphone--regular {
-    --unity-image: url("./Microphone.png");
-}
-.appui-icon--microphone-slash--regular {
-    --unity-image: url("./MicrophoneSlash.png");
-}
-.appui-icon--minus--regular {
-    --unity-image: url("./Minus.png");
-}
+
 .appui-icon--minus--bold {
     --unity-image: url("./Bold/minus-bold.png");
 }
-.appui-icon--mouse--regular {
-    --unity-image: url("./Mouse.png");
-}
-.appui-icon--mouse-left--regular {
-    --unity-image: url("./MouseLeft.png");
-}
-.appui-icon--mouse-right--regular {
-    --unity-image: url("./MouseRight.png");
-}
-.appui-icon--new-folder--regular {
-    --unity-image: url("./NewFolder.png");
-}
-.appui-icon--no-leveling--regular {
-    --unity-image: url("./NoLeveling.png");
-}
-.appui-icon--office-editing--regular {
-    --unity-image: url("./Office_Editing.png");
-}
-.appui-icon--ok--regular {
-    --unity-image: url("./OK.png");
-}
-.appui-icon--orbit--regular {
-    --unity-image: url("./Orbit.png");
-}
-.appui-icon--orbit-selection--regular {
-    --unity-image: url("./OrbitSelection.png");
-}
-.appui-icon--orbit-world--regular {
-    --unity-image: url("./OrbitWorld.png");
-}
-.appui-icon--paint-brush--regular {
-    --unity-image: url("./PaintBrush.png");
-}
-.appui-icon--paint-bucket--regular {
-    --unity-image: url("./PaintBucket.png");
-}
-.appui-icon--painter--regular {
-    --unity-image: url("./Painter.png");
-}
-.appui-icon--pan--regular {
-    --unity-image: url("./pan.png");
-}
-.appui-icon--pause--regular {
-    --unity-image: url("./Pause.png");
-}
-.appui-icon--pen--regular {
-    --unity-image: url("./Pen.png");
-}
-.appui-icon--play--regular {
-    --unity-image: url("./Play.png");
-}
-.appui-icon--plugged-in--regular {
-    --unity-image: url("./PluggedIn.png");
-}
-.appui-icon--plugged-in-slash--regular {
-    --unity-image: url("./PluggedInSlash.png");
-}
-.appui-icon--plumb--regular {
-    --unity-image: url("./Plumb.png");
-}
-.appui-icon--plus--regular {
-    --unity-image: url("./Plus.png");
-}
-.appui-icon--point-cloud--regular {
-    --unity-image: url("./PointCloud.png");
-}
-.appui-icon--profile--regular {
-    --unity-image: url("./profile.png");
-}
-.appui-icon--qr-code--regular {
-    --unity-image: url("./QRCode.png");
-}
-.appui-icon--rebase--regular {
-    --unity-image: url("./Rebase.png");
-}
-.appui-icon--recorder--regular {
-    --unity-image: url("./Recorder.png");
-}
-.appui-icon--reposition-camera--regular {
-    --unity-image: url("./reposition-camera.png");
-}
-.appui-icon--review--regular {
-    --unity-image: url("./Review.png");
-}
-.appui-icon--rewind--regular {
-    --unity-image: url("./Rewind.png");
-}
-.appui-icon--roofer--regular {
-    --unity-image: url("./Roofer.png");
-}
-.appui-icon--ruler--regular {
-    --unity-image: url("./Ruler.png");
-}
-.appui-icon--scale--regular {
-    --unity-image: url("./Scale.png");
-}
-.appui-icon--scene--regular {
-    --unity-image: url("./3DScene.png");
-}
-.appui-icon--scene-settings--regular {
-    --unity-image: url("./SceneSettings.png");
-}
-.appui-icon--select-object--regular {
-    --unity-image: url("./SelectObject.png");
-}
-.appui-icon--settings--regular {
-    --unity-image: url("./Settings.png");
-}
-.appui-icon--shape--regular {
-    --unity-image: url("./Shape.png");
-}
-.appui-icon--skip-back--regular {
-    --unity-image: url("./SkipBack.png");
-}
-.appui-icon--skip-next--regular {
-    --unity-image: url("./SkipNext.png");
-}
-.appui-icon--smooth-brush--regular {
-    --unity-image: url("./SmoothBrush.png");
-}
-.appui-icon--snapshot--regular {
-    --unity-image: url("./Snapshot.png");
-}
-.appui-icon--speaker-high--regular {
-    --unity-image: url("./SpeakerHigh.png");
-}
-.appui-icon--speaker-low--regular {
-    --unity-image: url("./SpeakerLow.png");
-}
-.appui-icon--speaker-none--regular {
-    --unity-image: url("./SpeakerNone.png");
-}
-.appui-icon--speaker-slash--regular {
-    --unity-image: url("./SpeakerSlash.png");
-}
-.appui-icon--speaker-x--regular {
-    --unity-image: url("./SpeakerX.png");
-}
-.appui-icon--spline-tool-1--regular {
-    --unity-image: url("./SplineTool-1.png");
-}
-.appui-icon--spline-tool--regular {
-    --unity-image: url("./SplineTool.png");
-}
-.appui-icon--squares-four--regular {
-    --unity-image: url("./SquaresFour.png");
-}
-.appui-icon--star--regular {
-    --unity-image: url("./Star.png");
-}
-.appui-icon--steady-cam-1--regular {
-    --unity-image: url("./SteadyCam-1.png");
-}
-.appui-icon--steady-cam--regular {
-    --unity-image: url("./SteadyCam.png");
-}
-.appui-icon--steel-worker--regular {
-    --unity-image: url("./SteelWorker.png");
-}
-.appui-icon--steering-wheel--regular {
-    --unity-image: url("./SteeringWheel.png");
-}
-.appui-icon--step-back-1--regular {
-    --unity-image: url("./StepBack1.png");
-}
-.appui-icon--step-back-10--regular {
-    --unity-image: url("./StepBack10.png");
-}
-.appui-icon--step-forward-1--regular {
-    --unity-image: url("./StepForward1.png");
-}
-.appui-icon--step-forward-10--regular {
-    --unity-image: url("./StepForward10.png");
-}
-.appui-icon--stop--regular {
-    --unity-image: url("./Stop.png");
-}
-.appui-icon--sun--regular {
-    --unity-image: url("./Sun.png");
-}
-.appui-icon--sundial--regular {
-    --unity-image: url("./Sundial.png");
-}
-.appui-icon--sun-study--regular {
-    --unity-image: url("./SunStudy.png");
-}
-.appui-icon--tag--regular {
-    --unity-image: url("./Tag.png");
-}
-.appui-icon--target--regular {
-    --unity-image: url("./Target.png");
-}
-.appui-icon--teleport--regular {
-    --unity-image: url("./Teleport.png");
-}
-.appui-icon--tiled--regular {
-    --unity-image: url("./Tiled.png");
-}
-.appui-icon--tilt-device--regular {
-    --unity-image: url("./tilt-device.png");
-}
-.appui-icon--tilt--regular {
-    --unity-image: url("./Tilt.png");
-}
-.appui-icon--time--regular {
-    --unity-image: url("./Time.png");
-}
-.appui-icon--timeline-play--regular {
-    --unity-image: url("./TimelinePlay.png");
-}
-.appui-icon--timeline-scrubber--regular {
-    --unity-image: url("./TimelineScrubber.png");
-}
-.appui-icon--timeline-scrubber-slash--regular {
-    --unity-image: url("./TimelineScrubberSlash.png");
-}
-.appui-icon--transparency--regular {
-    --unity-image: url("./Transparency.png");
-}
-.appui-icon--trend-down--regular {
-    --unity-image: url("./TrendDown.png");
-}
-.appui-icon--trend-up--regular {
-    --unity-image: url("./TrendUp.png");
-}
-.appui-icon--unity--regular {
-    --unity-image: url("./Unity.png");
-}
-.appui-icon--unlock--regular {
-    --unity-image: url("./Unlock.png");
-}
-.appui-icon--users--regular {
-    --unity-image: url("./Users.png");
-}
-.appui-icon--vertical--regular {
-    --unity-image: url("./Vertical.png");
-}
-.appui-icon--view-left--regular {
-    --unity-image: url("./ViewLeft.png");
-}
-.appui-icon--view-right--regular {
-    --unity-image: url("./ViewRight.png");
-}
-.appui-icon--view-top--regular {
-    --unity-image: url("./ViewTop.png");
-}
-.appui-icon--vr--regular {
-    --unity-image: url("./VR.png");
-}
-.appui-icon--walk-mode--regular {
-    --unity-image: url("./WalkMode.png");
-}
-.appui-icon--warning--regular {
-    --unity-image: url("./Warning.png");
-}
+
 .appui-icon--warning--fill {
     --unity-image: url("./Fill/warning-fill.png");
 }
+
+.appui-icon--360--regular {
+    --unity-image: url("./Regular/360.png");
+}
+
+.appui-icon--a-rmode--regular {
+    --unity-image: url("./Regular/ARMode.png");
+}
+
+.appui-icon--a-rmode-off--regular {
+    --unity-image: url("./Regular/ARModeOff.png");
+}
+
+.appui-icon--add-layer--regular {
+    --unity-image: url("./Regular/AddLayer.png");
+}
+
+.appui-icon--annotation--regular {
+    --unity-image: url("./Regular/Annotation.png");
+}
+
+.appui-icon--apperature--regular {
+    --unity-image: url("./Regular/Apperature.png");
+}
+
+.appui-icon--apperature-off--regular {
+    --unity-image: url("./Regular/ApperatureOff.png");
+}
+
+.appui-icon--arrow-clockwise--regular {
+    --unity-image: url("./Regular/ArrowClockwise.png");
+}
+
+.appui-icon--arrow-counter-clockwise--regular {
+    --unity-image: url("./Regular/ArrowCounterClockwise.png");
+}
+
+.appui-icon--arrow-down--regular {
+    --unity-image: url("./Regular/ArrowDown.png");
+}
+
+.appui-icon--arrow-left--regular {
+    --unity-image: url("./Regular/ArrowLeft.png");
+}
+
+.appui-icon--arrow-right--regular {
+    --unity-image: url("./Regular/ArrowRight.png");
+}
+
+.appui-icon--arrow-square-out--regular {
+    --unity-image: url("./Regular/ArrowSquareOut.png");
+}
+
+.appui-icon--arrow-udown-left--regular {
+    --unity-image: url("./Regular/ArrowUDownLeft.png");
+}
+
+.appui-icon--arrow-udown-right--regular {
+    --unity-image: url("./Regular/ArrowUDownRight.png");
+}
+
+.appui-icon--arrow-uup-left--regular {
+    --unity-image: url("./Regular/ArrowUUpLeft.png");
+}
+
+.appui-icon--arrow-uup-right--regular {
+    --unity-image: url("./Regular/ArrowUUpRight.png");
+}
+
+.appui-icon--arrow-up--regular {
+    --unity-image: url("./Regular/ArrowUp.png");
+}
+
+.appui-icon--arrows-clockwise--regular {
+    --unity-image: url("./Regular/ArrowsClockwise.png");
+}
+
+.appui-icon--arrows-counter-clockwise--regular {
+    --unity-image: url("./Regular/ArrowsCounterClockwise.png");
+}
+
+.appui-icon--arrows-out-cardinal--regular {
+    --unity-image: url("./Regular/ArrowsOutCardinal.png");
+}
+
+.appui-icon--arrows-uclockwise--regular {
+    --unity-image: url("./Regular/ArrowsUClockwise.png");
+}
+
+.appui-icon--arrows-ucounter-clockwise--regular {
+    --unity-image: url("./Regular/ArrowsUCounterClockwise.png");
+}
+
+.appui-icon--backplate--regular {
+    --unity-image: url("./Regular/Backplate.png");
+}
+
+.appui-icon--calendar--regular {
+    --unity-image: url("./Regular/Calendar.png");
+}
+
+.appui-icon--camera--regular {
+    --unity-image: url("./Regular/Camera.png");
+}
+
+.appui-icon--camera-dynamic--regular {
+    --unity-image: url("./Regular/CameraDynamic.png");
+}
+
+.appui-icon--camera-follow--regular {
+    --unity-image: url("./Regular/CameraFollow.png");
+}
+
+.appui-icon--camera-move--regular {
+    --unity-image: url("./Regular/CameraMove.png");
+}
+
+.appui-icon--camera-move-lock--regular {
+    --unity-image: url("./Regular/CameraMoveLock.png");
+}
+
+.appui-icon--camera-overhead--regular {
+    --unity-image: url("./Regular/CameraOverhead.png");
+}
+
+.appui-icon--camera-rotate--regular {
+    --unity-image: url("./Regular/CameraRotate.png");
+}
+
+.appui-icon--camera-rotate-lock--regular {
+    --unity-image: url("./Regular/CameraRotateLock.png");
+}
+
+.appui-icon--camera-scale--regular {
+    --unity-image: url("./Regular/CameraScale.png");
+}
+
+.appui-icon--camera-settings--regular {
+    --unity-image: url("./Regular/CameraSettings.png");
+}
+
+.appui-icon--camera-shake--regular {
+    --unity-image: url("./Regular/CameraShake.png");
+}
+
+.appui-icon--camera-sidelines--regular {
+    --unity-image: url("./Regular/CameraSidelines.png");
+}
+
+.appui-icon--camera-x--regular {
+    --unity-image: url("./Regular/CameraX.png");
+}
+
+.appui-icon--camera-y--regular {
+    --unity-image: url("./Regular/CameraY.png");
+}
+
+.appui-icon--camera-z--regular {
+    --unity-image: url("./Regular/CameraZ.png");
+}
+
+.appui-icon--car-rim--regular {
+    --unity-image: url("./Regular/CarRim.png");
+}
+
+.appui-icon--caret-double-down--regular {
+    --unity-image: url("./Regular/CaretDoubleDown.png");
+}
+
+.appui-icon--caret-double-left--regular {
+    --unity-image: url("./Regular/CaretDoubleLeft.png");
+}
+
+.appui-icon--caret-double-right--regular {
+    --unity-image: url("./Regular/CaretDoubleRight.png");
+}
+
+.appui-icon--caret-double-up--regular {
+    --unity-image: url("./Regular/CaretDoubleUp.png");
+}
+
+.appui-icon--caret-down--regular {
+    --unity-image: url("./Regular/CaretDown.png");
+}
+
+.appui-icon--caret-down-shallow--regular {
+    --unity-image: url("./Regular/CaretDownShallow.png");
+}
+
+.appui-icon--caret-down-small--regular {
+    --unity-image: url("./Regular/CaretDownSmall.png");
+}
+
+.appui-icon--caret-left--regular {
+    --unity-image: url("./Regular/CaretLeft.png");
+}
+
+.appui-icon--caret-right--regular {
+    --unity-image: url("./Regular/CaretRight.png");
+}
+
+.appui-icon--caret-up--regular {
+    --unity-image: url("./Regular/CaretUp.png");
+}
+
+.appui-icon--caret-up-shallow--regular {
+    --unity-image: url("./Regular/CaretUpShallow.png");
+}
+
+.appui-icon--carpenter--regular {
+    --unity-image: url("./Regular/Carpenter.png");
+}
+
+.appui-icon--check--regular {
+    --unity-image: url("./Regular/Check.png");
+}
+
+.appui-icon--clap-board--regular {
+    --unity-image: url("./Regular/ClapBoard.png");
+}
+
+.appui-icon--clipping--regular {
+    --unity-image: url("./Regular/Clipping.png");
+}
+
+.appui-icon--clipping-x--regular {
+    --unity-image: url("./Regular/ClippingX.png");
+}
+
+.appui-icon--clipping-y--regular {
+    --unity-image: url("./Regular/ClippingY.png");
+}
+
+.appui-icon--clipping-z--regular {
+    --unity-image: url("./Regular/ClippingZ.png");
+}
+
+.appui-icon--cloud--regular {
+    --unity-image: url("./Regular/Cloud.png");
+}
+
+.appui-icon--color-picker--regular {
+    --unity-image: url("./Regular/ColorPicker.png");
+}
+
+.appui-icon--connection-slash-1--regular {
+    --unity-image: url("./Regular/ConnectionSlash-1.png");
+}
+
+.appui-icon--connection-slash--regular {
+    --unity-image: url("./Regular/ConnectionSlash.png");
+}
+
+.appui-icon--damping-high--regular {
+    --unity-image: url("./Regular/DampingHigh.png");
+}
+
+.appui-icon--damping-low--regular {
+    --unity-image: url("./Regular/DampingLow.png");
+}
+
+.appui-icon--damping-medium--regular {
+    --unity-image: url("./Regular/DampingMedium.png");
+}
+
+.appui-icon--damping-off--regular {
+    --unity-image: url("./Regular/DampingOff.png");
+}
+
+.appui-icon--debug--regular {
+    --unity-image: url("./Regular/Debug.png");
+}
+
+.appui-icon--delete--regular {
+    --unity-image: url("./Regular/Delete.png");
+}
+
+.appui-icon--dof-disabled--regular {
+    --unity-image: url("./Regular/DofDisabled.png");
+}
+
+.appui-icon--dome--regular {
+    --unity-image: url("./Regular/Dome.png");
+}
+
+.appui-icon--draghandle--regular {
+    --unity-image: url("./Regular/Draghandle.png");
+}
+
+.appui-icon--drywall-installer--regular {
+    --unity-image: url("./Regular/DrywallInstaller.png");
+}
+
+.appui-icon--electrician--regular {
+    --unity-image: url("./Regular/Electrician.png");
+}
+
+.appui-icon--ellipsis--regular {
+    --unity-image: url("./Regular/Ellipsis.png");
+}
+
+.appui-icon--equipment-operator--regular {
+    --unity-image: url("./Regular/EquipmentOperator.png");
+}
+
+.appui-icon--eraser--regular {
+    --unity-image: url("./Regular/Eraser.png");
+}
+
+.appui-icon--export--regular {
+    --unity-image: url("./Regular/Export.png");
+}
+
+.appui-icon--eye--regular {
+    --unity-image: url("./Regular/Eye.png");
+}
+
+.appui-icon--eye-slash--regular {
+    --unity-image: url("./Regular/EyeSlash.png");
+}
+
+.appui-icon--face-mesh--regular {
+    --unity-image: url("./Regular/FaceMesh.png");
+}
+
+.appui-icon--fast-forward--regular {
+    --unity-image: url("./Regular/FastForward.png");
+}
+
+.appui-icon--file--regular {
+    --unity-image: url("./Regular/File.png");
+}
+
+.appui-icon--film-roll--regular {
+    --unity-image: url("./Regular/FilmRoll.png");
+}
+
+.appui-icon--flag--regular {
+    --unity-image: url("./Regular/Flag.png");
+}
+
+.appui-icon--fly--regular {
+    --unity-image: url("./Regular/Fly.png");
+}
+
+.appui-icon--focal-length--regular {
+    --unity-image: url("./Regular/FocalLength.png");
+}
+
+.appui-icon--focus--regular {
+    --unity-image: url("./Regular/Focus.png");
+}
+
+.appui-icon--focus-apperature--regular {
+    --unity-image: url("./Regular/FocusApperature.png");
+}
+
+.appui-icon--focus-auto--regular {
+    --unity-image: url("./Regular/FocusAuto.png");
+}
+
+.appui-icon--focus-manual--regular {
+    --unity-image: url("./Regular/FocusManual.png");
+}
+
+.appui-icon--focus-mode-tracking--regular {
+    --unity-image: url("./Regular/FocusModeTracking.png");
+}
+
+.appui-icon--focus-object--regular {
+    --unity-image: url("./Regular/FocusObject.png");
+}
+
+.appui-icon--folder--regular {
+    --unity-image: url("./Regular/Folder.png");
+}
+
+.appui-icon--forma-backplate--regular {
+    --unity-image: url("./Regular/FormaBackplate.png");
+}
+
+.appui-icon--forma-dome--regular {
+    --unity-image: url("./Regular/FormaDome.png");
+}
+
+.appui-icon--forma-scene--regular {
+    --unity-image: url("./Regular/FormaScene.png");
+}
+
+.appui-icon--funnel--regular {
+    --unity-image: url("./Regular/Funnel.png");
+}
+
+.appui-icon--funnel-simple--regular {
+    --unity-image: url("./Regular/FunnelSimple.png");
+}
+
+.appui-icon--generic-cube--regular {
+    --unity-image: url("./Regular/GenericCube.png");
+}
+
+.appui-icon--generic-sphere--regular {
+    --unity-image: url("./Regular/GenericSphere.png");
+}
+
+.appui-icon--grid-four--regular {
+    --unity-image: url("./Regular/GridFour.png");
+}
+
+.appui-icon--hare--regular {
+    --unity-image: url("./Regular/Hare.png");
+}
+
+.appui-icon--heart--regular {
+    --unity-image: url("./Regular/Heart.png");
+}
+
+.appui-icon--help--regular {
+    --unity-image: url("./Regular/Help.png");
+}
+
+.appui-icon--helper--regular {
+    --unity-image: url("./Regular/Helper.png");
+}
+
+.appui-icon--hierarchy--regular {
+    --unity-image: url("./Regular/Hierarchy.png");
+}
+
+.appui-icon--horizontal--regular {
+    --unity-image: url("./Regular/Horizontal.png");
+}
+
+.appui-icon--hotspot--regular {
+    --unity-image: url("./Regular/Hotspot.png");
+}
+
+.appui-icon--house--regular {
+    --unity-image: url("./Regular/House.png");
+}
+
+.appui-icon--image--regular {
+    --unity-image: url("./Regular/Image.png");
+}
+
+.appui-icon--info--regular {
+    --unity-image: url("./Regular/Info.png");
+}
+
+.appui-icon--installs--regular {
+    --unity-image: url("./Regular/Installs.png");
+}
+
+.appui-icon--joystick--regular {
+    --unity-image: url("./Regular/Joystick.png");
+}
+
+.appui-icon--joystick-slash--regular {
+    --unity-image: url("./Regular/JoystickSlash.png");
+}
+
+.appui-icon--keyboard-a--regular {
+    --unity-image: url("./Regular/KeyboardA.png");
+}
+
+.appui-icon--keyboard-backspace--regular {
+    --unity-image: url("./Regular/KeyboardBackspace.png");
+}
+
+.appui-icon--keyboard-control--regular {
+    --unity-image: url("./Regular/KeyboardControl.png");
+}
+
+.appui-icon--keyboard-e--regular {
+    --unity-image: url("./Regular/KeyboardE.png");
+}
+
+.appui-icon--keyboard-es-c--regular {
+    --unity-image: url("./Regular/KeyboardESC.png");
+}
+
+.appui-icon--keyboard-m--regular {
+    --unity-image: url("./Regular/KeyboardM.png");
+}
+
+.appui-icon--keyboard-q--regular {
+    --unity-image: url("./Regular/KeyboardQ.png");
+}
+
+.appui-icon--keyboard-return--regular {
+    --unity-image: url("./Regular/KeyboardReturn.png");
+}
+
+.appui-icon--keyboard-s--regular {
+    --unity-image: url("./Regular/KeyboardS.png");
+}
+
+.appui-icon--keyboard-shift--regular {
+    --unity-image: url("./Regular/KeyboardShift.png");
+}
+
+.appui-icon--keyboard-space--regular {
+    --unity-image: url("./Regular/KeyboardSpace.png");
+}
+
+.appui-icon--keyboard-w--regular {
+    --unity-image: url("./Regular/KeyboardW.png");
+}
+
+.appui-icon--layers--regular {
+    --unity-image: url("./Regular/Layers.png");
+}
+
+.appui-icon--learn--regular {
+    --unity-image: url("./Regular/Learn.png");
+}
+
+.appui-icon--level--regular {
+    --unity-image: url("./Regular/Level.png");
+}
+
+.appui-icon--level-active--regular {
+    --unity-image: url("./Regular/LevelActive.png");
+}
+
+.appui-icon--line-brush--regular {
+    --unity-image: url("./Regular/LineBrush.png");
+}
+
+.appui-icon--link--regular {
+    --unity-image: url("./Regular/Link.png");
+}
+
+.appui-icon--link-break--regular {
+    --unity-image: url("./Regular/LinkBreak.png");
+}
+
+.appui-icon--link-ratio--regular {
+    --unity-image: url("./Regular/LinkRatio.png");
+}
+
+.appui-icon--link-simple--regular {
+    --unity-image: url("./Regular/LinkSimple.png");
+}
+
+.appui-icon--link-simple-break--regular {
+    --unity-image: url("./Regular/LinkSimpleBreak.png");
+}
+
+.appui-icon--link-simple-horizontal--regular {
+    --unity-image: url("./Regular/LinkSimpleHorizontal.png");
+}
+
+.appui-icon--link-simple-horizontal-break--regular {
+    --unity-image: url("./Regular/LinkSimpleHorizontalBreak.png");
+}
+
+.appui-icon--list--regular {
+    --unity-image: url("./Regular/List.png");
+}
+
+.appui-icon--local-positioning--regular {
+    --unity-image: url("./Regular/LocalPositioning.png");
+}
+
+.appui-icon--lock--regular {
+    --unity-image: url("./Regular/Lock.png");
+}
+
+.appui-icon--magnifying-glass--regular {
+    --unity-image: url("./Regular/MagnifyingGlass.png");
+}
+
+.appui-icon--magnifying-glass-minus--regular {
+    --unity-image: url("./Regular/MagnifyingGlassMinus.png");
+}
+
+.appui-icon--magnifying-glass-plus--regular {
+    --unity-image: url("./Regular/MagnifyingGlassPlus.png");
+}
+
+.appui-icon--mars-corner-tool--regular {
+    --unity-image: url("./Regular/MarsCornerTool.png");
+}
+
+.appui-icon--mars-proxy--regular {
+    --unity-image: url("./Regular/MarsProxy.png");
+}
+
+.appui-icon--mars-scan--regular {
+    --unity-image: url("./Regular/MarsScan.png");
+}
+
+.appui-icon--mars-snapping--regular {
+    --unity-image: url("./Regular/MarsSnapping.png");
+}
+
+.appui-icon--mason--regular {
+    --unity-image: url("./Regular/Mason.png");
+}
+
+.appui-icon--measure-angle--regular {
+    --unity-image: url("./Regular/MeasureAngle.png");
+}
+
+.appui-icon--measure-length--regular {
+    --unity-image: url("./Regular/MeasureLength.png");
+}
+
+.appui-icon--menu--regular {
+    --unity-image: url("./Regular/Menu.png");
+}
+
+.appui-icon--microphone--regular {
+    --unity-image: url("./Regular/Microphone.png");
+}
+
+.appui-icon--microphone-slash--regular {
+    --unity-image: url("./Regular/MicrophoneSlash.png");
+}
+
+.appui-icon--minus--regular {
+    --unity-image: url("./Regular/Minus.png");
+}
+
+.appui-icon--mouse--regular {
+    --unity-image: url("./Regular/Mouse.png");
+}
+
+.appui-icon--mouse-left--regular {
+    --unity-image: url("./Regular/MouseLeft.png");
+}
+
+.appui-icon--mouse-right--regular {
+    --unity-image: url("./Regular/MouseRight.png");
+}
+
+.appui-icon--new-folder--regular {
+    --unity-image: url("./Regular/NewFolder.png");
+}
+
+.appui-icon--no-leveling--regular {
+    --unity-image: url("./Regular/NoLeveling.png");
+}
+
+.appui-icon--ok--regular {
+    --unity-image: url("./Regular/Ok.png");
+}
+
+.appui-icon--orbit--regular {
+    --unity-image: url("./Regular/Orbit.png");
+}
+
+.appui-icon--orbit-selection--regular {
+    --unity-image: url("./Regular/OrbitSelection.png");
+}
+
+.appui-icon--orbit-world--regular {
+    --unity-image: url("./Regular/OrbitWorld.png");
+}
+
+.appui-icon--paint-brush--regular {
+    --unity-image: url("./Regular/PaintBrush.png");
+}
+
+.appui-icon--paint-brush-add--regular {
+    --unity-image: url("./Regular/PaintBrushAdd.png");
+}
+
+.appui-icon--paint-bucket--regular {
+    --unity-image: url("./Regular/PaintBucket.png");
+}
+
+.appui-icon--painter--regular {
+    --unity-image: url("./Regular/Painter.png");
+}
+
+.appui-icon--pan--regular {
+    --unity-image: url("./Regular/Pan.png");
+}
+
+.appui-icon--pause--regular {
+    --unity-image: url("./Regular/Pause.png");
+}
+
+.appui-icon--pen--regular {
+    --unity-image: url("./Regular/Pen.png");
+}
+
+.appui-icon--play--regular {
+    --unity-image: url("./Regular/Play.png");
+}
+
+.appui-icon--plugged-in--regular {
+    --unity-image: url("./Regular/PluggedIn.png");
+}
+
+.appui-icon--plugged-in-slash--regular {
+    --unity-image: url("./Regular/PluggedInSlash.png");
+}
+
+.appui-icon--plumb--regular {
+    --unity-image: url("./Regular/Plumb.png");
+}
+
+.appui-icon--plumber--regular {
+    --unity-image: url("./Regular/Plumber.png");
+}
+
+.appui-icon--plus--regular {
+    --unity-image: url("./Regular/Plus.png");
+}
+
+.appui-icon--point-cloud--regular {
+    --unity-image: url("./Regular/PointCloud.png");
+}
+
+.appui-icon--profile--regular {
+    --unity-image: url("./Regular/Profile.png");
+}
+
+.appui-icon--qr-code--regular {
+    --unity-image: url("./Regular/QrCode.png");
+}
+
+.appui-icon--rebase--regular {
+    --unity-image: url("./Regular/Rebase.png");
+}
+
+.appui-icon--recorder--regular {
+    --unity-image: url("./Regular/Recorder.png");
+}
+
+.appui-icon--reposition-camera--regular {
+    --unity-image: url("./Regular/RepositionCamera.png");
+}
+
+.appui-icon--review--regular {
+    --unity-image: url("./Regular/Review.png");
+}
+
+.appui-icon--rewind--regular {
+    --unity-image: url("./Regular/Rewind.png");
+}
+
+.appui-icon--roofer--regular {
+    --unity-image: url("./Regular/Roofer.png");
+}
+
+.appui-icon--ruler--regular {
+    --unity-image: url("./Regular/Ruler.png");
+}
+
+.appui-icon--scale--regular {
+    --unity-image: url("./Regular/Scale.png");
+}
+
+.appui-icon--scene--regular {
+    --unity-image: url("./Regular/Scene.png");
+}
+
+.appui-icon--scene-settings--regular {
+    --unity-image: url("./Regular/SceneSettings.png");
+}
+
+.appui-icon--select-object--regular {
+    --unity-image: url("./Regular/SelectObject.png");
+}
+
+.appui-icon--settings--regular {
+    --unity-image: url("./Regular/Settings.png");
+}
+
+.appui-icon--shape--regular {
+    --unity-image: url("./Regular/Shape.png");
+}
+
+.appui-icon--skip-back--regular {
+    --unity-image: url("./Regular/SkipBack.png");
+}
+
+.appui-icon--skip-next--regular {
+    --unity-image: url("./Regular/SkipNext.png");
+}
+
+.appui-icon--smooth-brush--regular {
+    --unity-image: url("./Regular/SmoothBrush.png");
+}
+
+.appui-icon--snapshot--regular {
+    --unity-image: url("./Regular/Snapshot.png");
+}
+
+.appui-icon--speaker-high--regular {
+    --unity-image: url("./Regular/SpeakerHigh.png");
+}
+
+.appui-icon--speaker-low--regular {
+    --unity-image: url("./Regular/SpeakerLow.png");
+}
+
+.appui-icon--speaker-none--regular {
+    --unity-image: url("./Regular/SpeakerNone.png");
+}
+
+.appui-icon--speaker-slash--regular {
+    --unity-image: url("./Regular/SpeakerSlash.png");
+}
+
+.appui-icon--speaker-x--regular {
+    --unity-image: url("./Regular/SpeakerX.png");
+}
+
+.appui-icon--spline-tool--regular {
+    --unity-image: url("./Regular/SplineTool.png");
+}
+
+.appui-icon--squares-four--regular {
+    --unity-image: url("./Regular/SquaresFour.png");
+}
+
+.appui-icon--star--regular {
+    --unity-image: url("./Regular/Star.png");
+}
+
+.appui-icon--steady-cam-1--regular {
+    --unity-image: url("./Regular/SteadyCam-1.png");
+}
+
+.appui-icon--steady-cam--regular {
+    --unity-image: url("./Regular/SteadyCam.png");
+}
+
+.appui-icon--steel-worker--regular {
+    --unity-image: url("./Regular/SteelWorker.png");
+}
+
+.appui-icon--steering-wheel--regular {
+    --unity-image: url("./Regular/SteeringWheel.png");
+}
+
+.appui-icon--step-back1--regular {
+    --unity-image: url("./Regular/StepBack1.png");
+}
+
+.appui-icon--step-back10--regular {
+    --unity-image: url("./Regular/StepBack10.png");
+}
+
+.appui-icon--step-forward1--regular {
+    --unity-image: url("./Regular/StepForward1.png");
+}
+
+.appui-icon--step-forward10--regular {
+    --unity-image: url("./Regular/StepForward10.png");
+}
+
+.appui-icon--stop--regular {
+    --unity-image: url("./Regular/Stop.png");
+}
+
+.appui-icon--sun--regular {
+    --unity-image: url("./Regular/Sun.png");
+}
+
+.appui-icon--sun-study--regular {
+    --unity-image: url("./Regular/SunStudy.png");
+}
+
+.appui-icon--sundial--regular {
+    --unity-image: url("./Regular/Sundial.png");
+}
+
+.appui-icon--tag--regular {
+    --unity-image: url("./Regular/Tag.png");
+}
+
+.appui-icon--target--regular {
+    --unity-image: url("./Regular/Target.png");
+}
+
+.appui-icon--teleport--regular {
+    --unity-image: url("./Regular/Teleport.png");
+}
+
+.appui-icon--tiled--regular {
+    --unity-image: url("./Regular/Tiled.png");
+}
+
+.appui-icon--tilt--regular {
+    --unity-image: url("./Regular/Tilt.png");
+}
+
+.appui-icon--tilt-device--regular {
+    --unity-image: url("./Regular/TiltDevice.png");
+}
+
+.appui-icon--time--regular {
+    --unity-image: url("./Regular/Time.png");
+}
+
+.appui-icon--timeline-play--regular {
+    --unity-image: url("./Regular/TimelinePlay.png");
+}
+
+.appui-icon--timeline-scrubber--regular {
+    --unity-image: url("./Regular/TimelineScrubber.png");
+}
+
+.appui-icon--timeline-scrubber-slash--regular {
+    --unity-image: url("./Regular/TimelineScrubberSlash.png");
+}
+
+.appui-icon--tortoise--regular {
+    --unity-image: url("./Regular/Tortoise.png");
+}
+
+.appui-icon--transparency--regular {
+    --unity-image: url("./Regular/Transparency.png");
+}
+
+.appui-icon--trend-down--regular {
+    --unity-image: url("./Regular/TrendDown.png");
+}
+
+.appui-icon--trend-up--regular {
+    --unity-image: url("./Regular/TrendUp.png");
+}
+
+.appui-icon--unity--regular {
+    --unity-image: url("./Regular/Unity.png");
+}
+
+.appui-icon--unlock--regular {
+    --unity-image: url("./Regular/Unlock.png");
+}
+
+.appui-icon--users--regular {
+    --unity-image: url("./Regular/Users.png");
+}
+
+.appui-icon--vertical--regular {
+    --unity-image: url("./Regular/Vertical.png");
+}
+
+.appui-icon--view-left--regular {
+    --unity-image: url("./Regular/ViewLeft.png");
+}
+
+.appui-icon--view-right--regular {
+    --unity-image: url("./Regular/ViewRight.png");
+}
+
+.appui-icon--view-top--regular {
+    --unity-image: url("./Regular/ViewTop.png");
+}
+
+.appui-icon--vr--regular {
+    --unity-image: url("./Regular/Vr.png");
+}
+
+.appui-icon--walk-mode--regular {
+    --unity-image: url("./Regular/WalkMode.png");
+}
+
+.appui-icon--warning--regular {
+    --unity-image: url("./Regular/Warning.png");
+}
+
 .appui-icon--waypoint--regular {
-    --unity-image: url("./Waypoint.png");
+    --unity-image: url("./Regular/Waypoint.png");
 }
+
 .appui-icon--waypoint-add--regular {
-    --unity-image: url("./WaypointAdd.png");
+    --unity-image: url("./Regular/WaypointAdd.png");
 }
+
 .appui-icon--waypoint-custom--regular {
-    --unity-image: url("./WaypointCustom.png");
+    --unity-image: url("./Regular/WaypointCustom.png");
 }
+
 .appui-icon--waypoint-delete--regular {
-    --unity-image: url("./WaypointDelete.png");
+    --unity-image: url("./Regular/WaypointDelete.png");
 }
+
 .appui-icon--waypoint-home--regular {
-    --unity-image: url("./WaypointHome.png");
+    --unity-image: url("./Regular/WaypointHome.png");
 }
+
 .appui-icon--world-edit--regular {
-    --unity-image: url("./WorldEdit.png");
+    --unity-image: url("./Regular/WorldEdit.png");
 }
+
 .appui-icon--world-positioning--regular {
-    --unity-image: url("./WorldPositioning.png");
+    --unity-image: url("./Regular/WorldPositioning.png");
 }
-.appui-icon--wrench--regular {
-    --unity-image: url("./Wrench.png");
-}
+
 .appui-icon--x--regular {
-    --unity-image: url("./X.png");
+    --unity-image: url("./Regular/X.png");
 }
+
+.appui-icon--text-area-resizer {
+    --unity-image: url("./TextAreaResizer.png");
+}
+

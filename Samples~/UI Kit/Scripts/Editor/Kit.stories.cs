@@ -30,6 +30,8 @@ namespace Unity.AppUI.Editor
                 // root.Remove(panel);
                 root.styleSheets.Add(Resources.Load<ThemeStyleSheet>("ExampleTheme"));
                 Samples.Examples.SetupDataBinding(root);
+                root.Query(className: "example-context-switcher-panel").ForEach(visualElement => 
+                    visualElement.style.display = DisplayStyle.None);
                 return root;
             }));
         }

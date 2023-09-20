@@ -91,7 +91,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public AlertDialog()
         {
-            m_PrimaryButton = new Button { name = primaryActionUssClassName, primary = true };
+            m_PrimaryButton = new Button { name = primaryActionUssClassName, variant = ButtonVariant.Accent };
             m_PrimaryButton.AddToClassList(primaryActionUssClassName);
 
             m_SecondaryButton = new Button { name = secondaryActionUssClassName };

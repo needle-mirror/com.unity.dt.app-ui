@@ -330,6 +330,26 @@
                                 <appui:Text text="MB" style="color: #fff;" />
                             </appui:Avatar>
                         </ui:VisualElement>
+                        <appui:Text text="Variants" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <ui:VisualElement class="example-row">
+                                <ui:VisualElement class="example-item">
+                                    <appui:Avatar text-color="#FFF" background-color="#4D70EE" variant="Circular">
+                                        <appui:Text text="MB" style="color: #fff;" />
+                                    </appui:Avatar>
+                                </ui:VisualElement>
+                                <ui:VisualElement class="example-item">
+                                    <appui:Avatar text-color="#FFF" background-color="#4D70EE" variant="Rounded">
+                                        <appui:Text text="MB" style="color: #fff;" />
+                                    </appui:Avatar>
+                                </ui:VisualElement>
+                                <ui:VisualElement class="example-item">
+                                    <appui:Avatar text-color="#FFF" background-color="#4D70EE" variant="Square">
+                                        <appui:Text text="MB" style="color: #fff;" />
+                                    </appui:Avatar>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
                         <appui:Text text="Long Text" class="example-subtitle" />
                         <ui:VisualElement class="example-section">
                             <appui:Avatar text-color="#FFF" background-color="#4D70EE">
@@ -378,7 +398,40 @@
                                 <appui:Text text="MB" style="color: #fff;" />
                             </appui:Avatar>
                         </ui:VisualElement>
-
+                        
+                        <!-- AvatarGroup -->
+                        <appui:Heading text="AVATARGROUP" class="example-title" />
+                        <appui:Text text="Circular - Small Spacing" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:AvatarGroup name="avatar-group-1" variant="Circular" spacing="S" />
+                        </ui:VisualElement>
+                        <appui:Text text="Circular - Medium Spacing" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:AvatarGroup name="avatar-group-1" variant="Circular" spacing="M" />
+                        </ui:VisualElement>
+                        <appui:Text text="Circular - Large Spacing" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:AvatarGroup name="avatar-group-1" variant="Circular" spacing="L" />
+                        </ui:VisualElement>
+                        <appui:Text text="Circular - No overlap" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:AvatarGroup name="avatar-group-1" variant="Circular" spacing="NoOverlap" />
+                        </ui:VisualElement>
+                        <appui:Text text="Sizing" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:AvatarGroup name="avatar-group-1" size="S" spacing="L" />
+                            <appui:AvatarGroup name="avatar-group-1" size="M" spacing="M" />
+                            <appui:AvatarGroup name="avatar-group-1" size="L" spacing="S" />
+                        </ui:VisualElement>
+                        <appui:Text text="Max = 2" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:AvatarGroup name="avatar-group-1" max="2" />
+                        </ui:VisualElement>
+                        <appui:Text text="Custom total" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:AvatarGroup name="avatar-group-1" total="42" spacing="L" />
+                        </ui:VisualElement>
+                        
                         <!-- Badge -->
                         <appui:Heading text="BADGE" class="example-title" />
                         <appui:Text text="Default" class="example-subtitle" />
@@ -1330,32 +1383,62 @@
                         <appui:Heading text="INPUT LABEL" class="example-title" />
                         <appui:Text text="Horizontal - Sizing" class="example-subtitle" />
                         <ui:VisualElement class="example-section">
-                            <appui:InputLabel direction="Horizontal" label="Small" size="S">
+                            <appui:InputLabel direction="Horizontal" label="Small">
                                 <appui:TextField size="S" />
                             </appui:InputLabel>
-                            <appui:InputLabel direction="Horizontal" label="Medium" size="M">
-                                <appui:TextField size="M" />
+                            <appui:InputLabel direction="Horizontal" label="Medium">
+                                <appui:TextField size="M"/>
                             </appui:InputLabel>
-                            <appui:InputLabel direction="Horizontal" label="Large" size="L">
+                            <appui:InputLabel direction="Horizontal" label="Large">
                                 <appui:TextField size="L" />
                             </appui:InputLabel>
-                            <appui:InputLabel direction="Horizontal" label="Disabled" size="L" disabled="true">
+                            <appui:InputLabel direction="Horizontal" label="Disabled" disabled="true">
                                 <appui:TextField size="L" disabled="true" />
                             </appui:InputLabel>
                         </ui:VisualElement>
                         <appui:Text text="Vertical - Sizing" class="example-subtitle" />
                         <ui:VisualElement class="example-section">
-                            <appui:InputLabel direction="Vertical" label="Small" size="S">
+                            <appui:InputLabel direction="Vertical" label="Small">
                                 <appui:TextField size="S" />
                             </appui:InputLabel>
-                            <appui:InputLabel direction="Vertical" label="Medium" size="M">
-                                <appui:TextField size="M" />
+                            <appui:InputLabel direction="Vertical" label="Medium">
+                                <appui:TextField size="M"/>
                             </appui:InputLabel>
-                            <appui:InputLabel direction="Vertical" label="Large" size="L">
+                            <appui:InputLabel direction="Vertical" label="Large">
                                 <appui:TextField size="L" />
                             </appui:InputLabel>
-                            <appui:InputLabel direction="Vertical" label="Disabled" size="L" disabled="true">
+                            <appui:InputLabel direction="Vertical" label="Disabled" disabled="true">
                                 <appui:TextField size="L" disabled="true" />
+                            </appui:InputLabel>
+                        </ui:VisualElement>
+                        <appui:Text text="Horizontal - Required" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:InputLabel direction="Horizontal" label="Default" required="true" help-message="The value is not valid." help-variant="Default">
+                                <appui:TextField size="M" />
+                            </appui:InputLabel>
+                            <appui:InputLabel direction="Horizontal" label="Warning" required="true" help-message="The value is not valid." help-variant="Warning">
+                                <appui:TextField size="M" />
+                            </appui:InputLabel>
+                            <appui:InputLabel direction="Horizontal" label="Destructive" required="true" help-message="The value is not valid." help-variant="Destructive">
+                                <appui:TextField size="M" />
+                            </appui:InputLabel>
+                            <appui:InputLabel direction="Horizontal" label="Disabled" required="true" help-message="The value is not valid." help-variant="Destructive" disabled="true">
+                                <appui:TextField size="M" disabled="true" />
+                            </appui:InputLabel>
+                        </ui:VisualElement>
+                        <appui:Text text="Vertical - Required" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:InputLabel direction="Vertical" label="Default" required="true" help-message="The value is not valid." help-variant="Default">
+                                <appui:TextField size="M" />
+                            </appui:InputLabel>
+                            <appui:InputLabel direction="Vertical" label="Warning" required="true" help-message="The value is not valid." help-variant="Warning">
+                                <appui:TextField size="M" />
+                            </appui:InputLabel>
+                            <appui:InputLabel direction="Vertical" label="Destructive" required="true" help-message="The value is not valid." help-variant="Destructive">
+                                <appui:TextField size="M" />
+                            </appui:InputLabel>
+                            <appui:InputLabel direction="Vertical" label="Disabled" required="true" help-message="The value is not valid." help-variant="Destructive" disabled="true">
+                                <appui:TextField size="M" disabled="true" />
                             </appui:InputLabel>
                         </ui:VisualElement>
                         <appui:Text text="Label Overflow" class="example-subtitle" />
@@ -1567,6 +1650,21 @@
                             <appui:Text text="With Buffer" class="example-subtitle" />
                             <appui:LinearProgress variant="Determinate" value="0.10" buffer-value="0.35" />
                             <appui:LinearProgress variant="Determinate" value="0.35" buffer-value="0.60" />
+                        </ui:VisualElement>
+                        
+                        <!-- Quote -->
+                        <appui:Heading text="QUOTE" class="example-title" />
+                        <appui:Text text="Default" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:Quote>
+                                <appui:Text text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." />
+                            </appui:Quote>
+                        </ui:VisualElement>
+                        <appui:Text text="With Color" class="example-subtitle" />
+                        <ui:VisualElement class="example-section">
+                            <appui:Quote color="#ce93d8">
+                                <appui:Text text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." />
+                            </appui:Quote>
                         </ui:VisualElement>
 
                         <!-- Radio -->

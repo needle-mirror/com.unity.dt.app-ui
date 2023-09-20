@@ -1,0 +1,47 @@
+/* FieldLabel */
+.appui-field-label {
+    
+    --appui-field-label-size: var(--appui-font-sizes-100);
+    --appui-field-label-color-default: var(--appui-foregrounds-100);
+    --appui-field-label-color-disabled: var(--appui-foregrounds-25);
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.appui-field-label__label,
+.appui-field-label__required-label {
+    display: flex;
+    font-size: var(--appui-field-label-size);
+    color: var(--appui-field-label-color-default);
+    -unity-text-align: middle-left;
+}
+
+.appui-field-label__required-label {
+    display: none;
+    flex-shrink: 0;
+    flex-grow: 0;
+    margin-left: var(--appui-alias-control-gap-sm);
+}
+
+.appui-field-label--required > .appui-field-label__required-label {
+    display: flex;
+}
+
+.appui-field-label--label-overflow-ellipsis > .appui-field-label__label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -unity-text-overflow-position: end;
+}
+
+.is-disabled .appui-field-label__label,
+.appui-field-label__label:disabled,
+.is-disabled .appui-field-label__required-label,
+.appui-field-label__required-label:disabled {
+    color: var(--appui-field-label-color-disabled);
+}

@@ -4,6 +4,31 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2023-09-20
+
+### Added
+
+- Added the `Quote` component.
+- Added `FieldLabel` component.
+- Added `HelpText` component.
+- Added `AvatarGroup` component.
+- Added `required` property to the `InputLabel` component.
+- Added `indicatorType` property to the `InputLabel` component.
+- Added `helpMessage` property to the `InputLabel` component.
+- Added `helpVariant` property to the `InputLabel` component.
+- Added `variant` property to the `Avatar` component to support `square`, `rounded` and `circular` variants.
+
+### Changed
+
+- Added the `Button` `variant` property and removed the `primary` property.
+- Updated App UI icons with a default size of 256x256 and moved into a folder named `Regular`.
+- The `InputLabel` component uses the `FieldLabel` and `HelpText` components to display the label and the help text.
+- The `Avatar` component now listens to `AvatarVarianContext` and `SizeContext` changes to update the variant and size of the avatar.
+
+### Removed 
+
+- Removed the `size` property from the `InputLabel` component.
+
 ## [0.5.3] - 2023-10-16
 
 ### Added

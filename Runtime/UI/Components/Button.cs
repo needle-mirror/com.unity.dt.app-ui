@@ -5,6 +5,27 @@ using UnityEngine.UIElements;
 namespace Unity.AppUI.UI
 {
     /// <summary>
+    /// The variant of the Button.
+    /// </summary>
+    public enum ButtonVariant
+    {
+        /// <summary>
+        /// Default variant.
+        /// </summary>
+        Default,
+        
+        /// <summary>
+        /// Primary variant.
+        /// </summary>
+        Accent,
+        
+        /// <summary>
+        /// Quiet variant.
+        /// </summary>
+        Destructive,
+    }
+    
+    /// <summary>
     /// Button UI element.
     /// </summary>
     public class Button : ExVisualElement, ISizeableElement, IPressable
@@ -15,15 +36,15 @@ namespace Unity.AppUI.UI
         public static readonly string ussClassName = "appui-button";
 
         /// <summary>
-        /// The Button primary variant styling class.
+        /// The Button variant styling class.
         /// </summary>
-        public static readonly string primaryUssClassName = ussClassName + "--accent";
+        public static readonly string variantUssClassName = ussClassName + "--";
 
         /// <summary>
         /// The Button quiet mode styling class.
         /// </summary>
         public static readonly string quietUssClassName = ussClassName + "--quiet";
-
+        
         /// <summary>
         /// The Button leading container styling class.
         /// </summary>
@@ -87,6 +108,8 @@ namespace Unity.AppUI.UI
 
         Pressable m_Clickable;
 
+        ButtonVariant m_Variant;
+
         /// <summary>
         /// The content container of this element.
         /// </summary>
@@ -140,7 +163,7 @@ namespace Unity.AppUI.UI
 
             passMask = 0;
 
-            primary = false;
+            variant = ButtonVariant.Default;
             quiet = false;
             title = null;
             subtitle = null;
@@ -188,12 +211,17 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// Use the primary variant of the Button.
+        /// The button variant.
         /// </summary>
-        public bool primary
+        public ButtonVariant variant
         {
-            get => ClassListContains(primaryUssClassName);
-            set => EnableInClassList(primaryUssClassName, value);
+            get => m_Variant;
+            set
+            {
+                RemoveFromClassList(variantUssClassName + m_Variant.ToString().ToLower());
+                m_Variant = value;
+                AddToClassList(variantUssClassName + m_Variant.ToString().ToLower());
+            }
         }
 
         /// <summary>
@@ -303,10 +331,10 @@ namespace Unity.AppUI.UI
                 defaultValue = null
             };
 
-            readonly UxmlBoolAttributeDescription m_Primary = new UxmlBoolAttributeDescription
+            readonly UxmlEnumAttributeDescription<ButtonVariant> m_Variant = new UxmlEnumAttributeDescription<ButtonVariant>
             {
-                name = "primary",
-                defaultValue = false
+                name = "variant",
+                defaultValue = ButtonVariant.Default
             };
 
             readonly UxmlBoolAttributeDescription m_Quiet = new UxmlBoolAttributeDescription
@@ -351,7 +379,7 @@ namespace Unity.AppUI.UI
 
                 var element = (Button)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
-                element.primary = m_Primary.GetValueFromBag(bag, cc);
+                element.variant = m_Variant.GetValueFromBag(bag, cc);
                 element.quiet = m_Quiet.GetValueFromBag(bag, cc);
                 element.title = m_Title.GetValueFromBag(bag, cc);
                 element.subtitle = m_Subtitle.GetValueFromBag(bag, cc);

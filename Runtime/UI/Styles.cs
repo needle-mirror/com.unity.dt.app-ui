@@ -108,6 +108,11 @@ namespace Unity.AppUI.UI
         /// The styling class used to set a "focus" pseudo-state on a element.
         /// </summary>
         public const string focusedUssClassName = "is-focused";
+        
+        /// <summary>
+        /// The styling class used to set a "required" pseudo-state on a element.
+        /// </summary>
+        public const string requiredUssClassName = "is-required";
 
         /// <summary>
         /// Used in popups to hide the arrow/tip.

@@ -7,6 +7,28 @@ uid: inputs
 Inputs components are used to get input from the user through UI controls. 
 App UI provides a wide range of Input components that can be easily integrated into your Unity projects.
 
+## Input Label
+
+The [InputLabel](xref:Unity.AppUI.UI.InputLabel) element is used to display a name next to an input control.
+The InputLabel element can be used with any input control and will decorate it with a label, required indicator and helper text.
+
+```cs
+// This code creates a Name field with a label.
+// The field is valid if it contains at least 1 character.
+var myField = new TextField();
+var label = new InputLabel("Name");
+label.inputAlignment = Align.Stretch;
+label.labelOverflow = TextOverflow.Ellipsis;
+label.indicatorType = IndicatorType.Asterisk;
+label.required = true;
+label.helpVariant = HelpTextVariant.Destructive;
+myField.validateValue = val => !string.IsNullOrEmpty(val);
+myField.RegisterValueChangedCallback(evt =>
+{
+    label.helpMessage = myField.invalid ? "Name is required" : null;
+});
+```
+
 ## Boolean Inputs
 
 Boolean inputs are used to get a boolean value from the user, typically through a checkbox or a toggle. 

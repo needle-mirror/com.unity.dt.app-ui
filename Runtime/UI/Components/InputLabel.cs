@@ -12,6 +12,7 @@ namespace Unity.AppUI.UI
         /// The text will be truncated with an ellipsis.
         /// </summary>
         Ellipsis,
+        
         /// <summary>
         /// The text won't be truncated.
         /// </summary>
@@ -39,37 +40,50 @@ namespace Unity.AppUI.UI
         public static readonly string orientationUssClassName = ussClassName + "--";
 
         /// <summary>
+        /// The InputLabel input container styling class.
+        /// </summary>
+        public static readonly string inputContainerUssClassName = ussClassName + "__input-container";
+        
+        /// <summary>
         /// The InputLabel container styling class.
         /// </summary>
         public static readonly string containerUssClassName = ussClassName + "__container";
-
+        
         /// <summary>
-        /// The InputLabel label styling class.
+        /// The InputLabel label container styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
-
+        public static readonly string labelContainerUssClassName = ussClassName + "__label-container";
+        
         /// <summary>
-        /// The InputLabel label overflow styling class.
+        /// The InputLabel field-label styling class.
         /// </summary>
-        public static readonly string labelOverflowUssClassName = ussClassName + "--label-overflow-";
+        public static readonly string fieldLabelUssClassName = ussClassName + "__field-label";
+        
+        /// <summary>
+        /// The InputLabel help text styling class.
+        /// </summary>
+        public static readonly string helpTextUssClassName = ussClassName + "__help-text";
 
         /// <summary>
         /// The InputLabel input alignment styling class.
         /// </summary>
         public static readonly string inputAlignmentUssClassName = ussClassName + "--input-alignment-";
-
-        TextSize m_Size = TextSize.M;
-
-        readonly Text m_LabelElement;
+        
+        /// <summary>
+        /// The InputLabel with help text styling class.
+        /// </summary>
+        public static readonly string withHelpTextUssClassName = ussClassName + "--with-help-text";
+        
+        readonly FieldLabel m_FieldLabel;
 
         readonly VisualElement m_Container;
-
+        
+        readonly HelpText m_HelpText;
+        
         Direction m_Direction = Direction.Horizontal;
-
-        TextOverflow m_LabelOverflow = TextOverflow.Ellipsis;
-
+        
         Align m_InputAlignment = Align.Stretch;
-
+        
         /// <summary>
         /// The content container.
         /// </summary>
@@ -80,26 +94,11 @@ namespace Unity.AppUI.UI
         /// </summary>
         public string label
         {
-            get => m_LabelElement.text;
+            get => m_FieldLabel.label;
             set
             {
-                m_LabelElement.text = value;
-                m_LabelElement.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
-            }
-        }
-
-        /// <summary>
-        /// The size of the label.
-        /// </summary>
-        public TextSize size
-        {
-            get => m_Size;
-            set
-            {
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
-                m_Size = value;
-                m_LabelElement.size = m_Size;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                m_FieldLabel.label = value;
+                m_FieldLabel.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
             }
         }
 
@@ -122,13 +121,8 @@ namespace Unity.AppUI.UI
         /// </summary>
         public TextOverflow labelOverflow
         {
-            get => m_LabelOverflow;
-            set
-            {
-                RemoveFromClassList(labelOverflowUssClassName + m_LabelOverflow.ToString().ToLower());
-                m_LabelOverflow = value;
-                AddToClassList(labelOverflowUssClassName + m_LabelOverflow.ToString().ToLower());
-            }
+            get => m_FieldLabel.labelOverflow;
+            set => m_FieldLabel.labelOverflow = value;
         }
 
         /// <summary>
@@ -143,6 +137,59 @@ namespace Unity.AppUI.UI
                 m_InputAlignment = value;
                 AddToClassList(inputAlignmentUssClassName + m_InputAlignment.ToString().ToLower());
             }
+        }
+
+        /// <summary>
+        /// Whether the input is required or not in the form. This will add an asterisk next to the label.
+        /// </summary>
+        public bool required
+        {
+            get => m_FieldLabel.required;
+            set
+            {
+                m_FieldLabel.required = value;
+                EnableInClassList(Styles.requiredUssClassName,  m_FieldLabel.required);
+            }
+        }
+
+        /// <summary>
+        /// The requirement indicator to display.
+        /// </summary>
+        public IndicatorType indicatorType
+        {
+            get => m_FieldLabel.indicatorType;
+            set => m_FieldLabel.indicatorType = value;
+        }
+
+        /// <summary>
+        /// The requirement indicator to display.
+        /// </summary>
+        public string requiredText
+        {
+            get => m_FieldLabel.requiredText;
+            set => m_FieldLabel.requiredText = value;
+        }
+
+        /// <summary>
+        /// The error message to display.
+        /// </summary>
+        public string helpMessage
+        {
+            get => m_HelpText.text;
+            set
+            {
+                m_HelpText.text = value;
+                EnableInClassList(withHelpTextUssClassName, !string.IsNullOrEmpty(value));
+            }
+        }
+        
+        /// <summary>
+        /// The variant of the <see cref="HelpText"/>.
+        /// </summary>
+        public HelpTextVariant helpVariant
+        {
+            get => m_HelpText.variant;
+            set => m_HelpText.variant = value;
         }
 
         /// <summary>
@@ -162,20 +209,44 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
             pickingMode = PickingMode.Position;
+            
+            var labelContainer = new VisualElement { name = labelContainerUssClassName, pickingMode = PickingMode.Ignore };
+            labelContainer.AddToClassList(labelContainerUssClassName);
+            hierarchy.Add(labelContainer);
 
-            m_LabelElement = new Text { name = labelUssClassName, pickingMode = PickingMode.Ignore };
-            m_LabelElement.AddToClassList(labelUssClassName);
-            hierarchy.Add(m_LabelElement);
-
+            m_FieldLabel = new FieldLabel(label) { name = fieldLabelUssClassName, pickingMode = PickingMode.Ignore };
+            m_FieldLabel.AddToClassList(fieldLabelUssClassName);
+            labelContainer.hierarchy.Add(m_FieldLabel);
+            
+            var cell = new HelpText { pickingMode = PickingMode.Ignore };
+            cell.AddToClassList(helpTextUssClassName);
+            labelContainer.hierarchy.Add(cell);
+            
+            var inputContainer = new VisualElement { name = inputContainerUssClassName, pickingMode = PickingMode.Ignore };
+            inputContainer.AddToClassList(inputContainerUssClassName);
+            hierarchy.Add(inputContainer);
+            
             m_Container = new VisualElement { name = containerUssClassName, pickingMode = PickingMode.Ignore };
             m_Container.AddToClassList(containerUssClassName);
-            hierarchy.Add(m_Container);
+            inputContainer.hierarchy.Add(m_Container);
+            
+            m_HelpText = new HelpText
+            {
+                name = helpTextUssClassName, 
+                pickingMode = PickingMode.Ignore
+            };
+            m_HelpText.AddToClassList(helpTextUssClassName);
+            inputContainer.hierarchy.Add(m_HelpText);
 
             this.label = label;
-            size = TextSize.S;
             direction = Direction.Horizontal;
             inputAlignment = Align.Stretch;
             labelOverflow = TextOverflow.Ellipsis;
+            requiredText = "(Required)";
+            indicatorType = IndicatorType.Asterisk;
+            required = false;
+            helpMessage = null;
+            helpVariant = HelpTextVariant.Destructive;
         }
 
         /// <summary>
@@ -224,6 +295,30 @@ namespace Unity.AppUI.UI
                 name = "input-alignment",
                 defaultValue = Align.Stretch,
             };
+            
+            readonly UxmlBoolAttributeDescription m_Required = new UxmlBoolAttributeDescription
+            {
+                name = "required",
+                defaultValue = false,
+            };
+            
+            readonly UxmlStringAttributeDescription m_HelpMessage = new UxmlStringAttributeDescription
+            {
+                name = "help-message",
+                defaultValue = null,
+            };
+            
+            readonly UxmlEnumAttributeDescription<HelpTextVariant> m_HelpVariant = new UxmlEnumAttributeDescription<HelpTextVariant>
+            {
+                name = "help-variant",
+                defaultValue = HelpTextVariant.Destructive,
+            };
+            
+            readonly UxmlStringAttributeDescription m_RequiredText = new UxmlStringAttributeDescription
+            {
+                name = "required-text",
+                defaultValue = "(Required)",
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -236,12 +331,42 @@ namespace Unity.AppUI.UI
                 base.Init(ve, bag, cc);
 
                 var element = (InputLabel)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                element.direction = m_Orientation.GetValueFromBag(bag, cc);
-                element.inputAlignment = m_InputAlignment.GetValueFromBag(bag, cc);
-                element.labelOverflow = m_LabelOverflow.GetValueFromBag(bag, cc);
-                element.label = m_Label.GetValueFromBag(bag, cc);
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                
+                var direction = Direction.Horizontal;
+                if (m_Orientation.TryGetValueFromBag(bag, cc, ref direction))
+                    element.direction = direction;
+                
+                var inputAlignment = Align.Stretch;
+                if (m_InputAlignment.TryGetValueFromBag(bag, cc, ref inputAlignment))
+                    element.inputAlignment = inputAlignment;
+                
+                var labelOverflow = TextOverflow.Ellipsis;
+                if (m_LabelOverflow.TryGetValueFromBag(bag, cc, ref labelOverflow))
+                    element.labelOverflow = labelOverflow;
+                
+                var label = string.Empty;
+                if (m_Label.TryGetValueFromBag(bag, cc, ref label))
+                    element.label = label;
+                
+                var disabled = false;
+                if (m_Disabled.TryGetValueFromBag(bag, cc, ref disabled))
+                    element.SetEnabled(!disabled);
+                
+                var required = false;
+                if (m_Required.TryGetValueFromBag(bag, cc, ref required))
+                    element.required = required;
+                
+                var helpMessage = string.Empty;
+                if (m_HelpMessage.TryGetValueFromBag(bag, cc, ref helpMessage))
+                    element.helpMessage = helpMessage;
+                
+                var helpVariant = HelpTextVariant.Destructive;
+                if (m_HelpVariant.TryGetValueFromBag(bag, cc, ref helpVariant))
+                    element.helpVariant = helpVariant;
+                
+                var requiredText = string.Empty;
+                if (m_RequiredText.TryGetValueFromBag(bag, cc, ref requiredText))
+                    element.requiredText = requiredText;
             }
         }
     }

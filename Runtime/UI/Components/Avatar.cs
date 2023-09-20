@@ -5,6 +5,27 @@ using UnityEngine.UIElements;
 namespace Unity.AppUI.UI
 {
     /// <summary>
+    /// The Avatar variant.
+    /// </summary>
+    public enum AvatarVariant
+    {
+        /// <summary>
+        /// Display the Avatar component as a square.
+        /// </summary>
+        Square,
+        
+        /// <summary>
+        /// Display the Avatar component as a rounded square.
+        /// </summary>
+        Rounded,
+        
+        /// <summary>
+        /// Display the Avatar component as a circle.
+        /// </summary>
+        Circular,      
+    }
+    
+    /// <summary>
     /// Avatar UI element.
     /// </summary>
     public class Avatar : VisualElement, ISizeableElement
@@ -23,6 +44,15 @@ namespace Unity.AppUI.UI
         /// The Avatar size styling class.
         /// </summary>
         public static readonly string sizeUssClassName = ussClassName + "--size-";
+        
+        /// <summary>
+        /// The Avatar variant styling class.
+        /// </summary>
+        public static readonly string variantUssClassName = ussClassName + "--";
+        
+        const Size k_DefaultSize = Size.M;
+        
+        const AvatarVariant k_DefaultVariant = AvatarVariant.Circular;
 
         Size m_Size = Size.M;
 
@@ -33,6 +63,8 @@ namespace Unity.AppUI.UI
         Color? m_OutlineColor;
 
         float m_OutlineWidth;
+
+        AvatarVariant m_Variant;
 
         /// <summary>
         /// The content container of the Avatar.
@@ -50,6 +82,20 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+            }
+        }
+
+        /// <summary>
+        /// The Avatar variant.
+        /// </summary>
+        public AvatarVariant variant
+        {
+            get => m_Variant;
+            set
+            {
+                RemoveFromClassList(variantUssClassName + m_Variant.ToString().ToLower());
+                m_Variant = value;
+                AddToClassList(variantUssClassName + m_Variant.ToString().ToLower());
             }
         }
         
@@ -147,11 +193,27 @@ namespace Unity.AppUI.UI
             m_Container.AddToClassList(containerUssClassName);
             hierarchy.Add(m_Container);
 
-            size = Size.M;
+            size = k_DefaultSize;
+            variant = k_DefaultVariant;
             backgroundColor = null;
             outlineColor = null;
             outlineWidth = 2;
             src = null;
+            
+            this.RegisterContextChangedCallback<AvatarVariantContext>(OnVariantContextChanged);
+            this.RegisterContextChangedCallback<SizeContext>(OnSizeContextChanged);
+        }
+        
+        void OnSizeContextChanged(ContextChangedEvent<SizeContext> evt)
+        {
+            if (evt.context != null)
+                size = evt.context.size;
+        }
+
+        void OnVariantContextChanged(ContextChangedEvent<AvatarVariantContext> evt)
+        {
+            if (evt.context != null)
+                variant = evt.context.variant;
         }
 
         /// <summary>
@@ -180,7 +242,13 @@ namespace Unity.AppUI.UI
             readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
             {
                 name = "size",
-                defaultValue = Size.M,
+                defaultValue = k_DefaultSize,
+            };
+            
+            readonly UxmlEnumAttributeDescription<AvatarVariant> m_Variant = new UxmlEnumAttributeDescription<AvatarVariant>
+            {
+                name = "variant",
+                defaultValue = k_DefaultVariant,
             };
             
             readonly UxmlStringAttributeDescription m_Src = new UxmlStringAttributeDescription
@@ -213,6 +281,7 @@ namespace Unity.AppUI.UI
 
                 var element = (Avatar)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
+                element.variant = m_Variant.GetValueFromBag(bag, cc);
                 var bgColor = Color.gray;
                 if (m_BackgroundColor.TryGetValueFromBag(bag, cc, ref bgColor))
                     element.backgroundColor = bgColor;

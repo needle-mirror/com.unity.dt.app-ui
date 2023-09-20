@@ -12,8 +12,16 @@
     align-items: stretch;
     position: relative;
     flex-shrink: 0;
-    border-radius: 1000px;
+    
     transition: border-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
+}
+
+.appui-avatar--circular {
+    border-radius: 1000px;
+}
+
+.appui-avatar--rounded {
+    border-radius: var(--appui-alias-control-border-radius);
 }
 
 .appui-avatar--size-s {
@@ -34,12 +42,19 @@
 .appui-avatar__container {
     flex-grow: 1;
     flex-shrink: 1;
-    border-radius: 1000px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
+}
+
+.appui-avatar--circular .appui-avatar__container {
+    border-radius: 1000px;
+}
+
+.appui-avatar--rounded .appui-avatar__container {
+    border-radius: var(--appui-alias-control-border-radius);
 }
 
 .appui-avatar .appui-text {

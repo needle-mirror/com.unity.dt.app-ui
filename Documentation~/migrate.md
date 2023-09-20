@@ -6,20 +6,26 @@ uid: migrate
 
 This guide will help you to migrate from the previous version of App UI to the latest one.
 
-## Namespace changes
+## Button variants
 
-The namespaces used by the package **has changed** from `UnityEngine.Dt.AppUI` to `Unity.AppUI`.
+The `Button` component has been updated to use the `variant` prop instead of `primary` boolean prop. 
 
-To migrate your code, you can use a refactoring tool from your IDE like [JetBrains Rider](https://www.jetbrains.com/rider/) or [Visual Studio](https://visualstudio.microsoft.com/).
+The `variant` prop accepts the following values:
 
-### UXML references
+- `Default`
+- `Accent`
+- `Destructive`
 
-If you are using UXML files, you will need to update the namespace references in your UXML files too.
+If you want to get the same result as the previous `primary` prop, you can use the `Accent` variant.
 
-You will need to delete the UIElementsSchema folder at the root of your project (if it exists) and reimport the package to regenerate the schema.
+## Icons
 
-## Deprecated components
+Icons PNG files has been updated with newer version of the App UI Design System available in Figma.
 
-The following components are deprecated and will be removed in a future release:
+Certain file names has been fixed to match our naming convention without any exception. 
+You may need to update your code to use the new icon names.
 
-- `Header` component is now named `Heading`. The old name is still supported but will be removed in a future release.
+App UI doesn't offer any `@2x` or `@3x` icons anymore. The unique size available is `256x256` pixels 
+but mipmap generation is still supported.
+
+Icons has been moved to a new `Regular` folder to follow the same structure as Phosphor icons.

@@ -1,0 +1,11 @@
+/* Quote */
+.appui-quote {
+    border-left-width: var(--appui-sizing-25);
+    border-left-color: var(--appui-foregrounds-100);
+    flex-shrink: 0;
+}
+
+.appui-quote__container {
+    padding: var(--appui-spacing-125);
+}
+

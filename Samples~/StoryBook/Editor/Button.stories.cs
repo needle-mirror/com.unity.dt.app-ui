@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.UI;
 using Button = Unity.AppUI.UI.Button;
 
 namespace Unity.AppUI.Editor
@@ -11,7 +12,11 @@ namespace Unity.AppUI.Editor
 
         public ButtonPage()
         {
-            m_Stories.Add(new StoryBookStory("Primary", () => new Button { primary = true, title = "Primary Style Button" }));
+            m_Stories.Add(new StoryBookStory("Primary", () => new Button
+            {
+                variant = ButtonVariant.Accent, 
+                title = "Primary Style Button"
+            }));
         }
     }
 
@@ -21,10 +26,10 @@ namespace Unity.AppUI.Editor
 
         public ButtonComponent()
         {
-            m_Properties.Add(new StoryBookBooleanProperty(
-                nameof(Button.primary),
-                (btn) => ((Button)btn).primary,
-                (btn, val) => ((Button)btn).primary = val));
+            m_Properties.Add(new StoryBookEnumProperty(
+                nameof(Button.variant),
+                (btn) => ((Button)btn).variant,
+                (btn, val) => ((Button)btn).variant = (ButtonVariant)val));
 
             m_Properties.Add(new StoryBookStringProperty(
                 nameof(Button.title),

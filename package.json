@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "f9c97ff53558c86f7b46477bd667c35ff740791b"
+    "revision": "7b0a0b2f7fdd16f37e5ee58c471f835f3c71f5d4"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -80,10 +80,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added `useSpaceBar` property in `Canvas` component to enable or disable the handling of the space bar key.\n\n### Fixed\n\n- Removed the handling of the space bar key in the `Canvas` component when the used control scheme is `Editor`."
+    "changelog": "### Added\n\n- Added the `Quote` component.\n- Added `FieldLabel` component.\n- Added `HelpText` component.\n- Added `AvatarGroup` component.\n- Added `required` property to the `InputLabel` component.\n- Added `indicatorType` property to the `InputLabel` component.\n- Added `helpMessage` property to the `InputLabel` component.\n- Added `helpVariant` property to the `InputLabel` component.\n- Added `variant` property to the `Avatar` component to support `square`, `rounded` and `circular` variants.\n\n### Changed\n\n- Added the `Button` `variant` property and removed the `primary` property.\n- Updated App UI icons with a default size of 256x256 and moved into a folder named `Regular`.\n- The `InputLabel` component uses the `FieldLabel` and `HelpText` components to display the label and the help text.\n- The `Avatar` component now listens to `AvatarVarianContext` and `SizeContext` changes to update the variant and size of the avatar.\n\n### Removed \n\n- Removed the `size` property from the `InputLabel` component."
   },
   "upmCi": {
-    "footprint": "f37e9427c95b2d6c9aaf87576b8e12c11af67286"
+    "footprint": "5155b6df04330508e510c1951baa06eae368b936"
   },
-  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.5/manual/index.html"
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.6/manual/index.html"
 }
