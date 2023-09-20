@@ -68,7 +68,7 @@ namespace Unity.AppUI.UI
         public DropdownItem()
         {
             AddToClassList(ussClassName);
-            pickingMode = PickingMode.Ignore;
+            pickingMode = PickingMode.Position;
             
             m_CheckmarkElement = new Icon
             {

@@ -40,5 +40,34 @@ namespace Unity.AppUI.UI
 
             return true;
         }
+
+        /// <summary>
+        /// Get the first element in an enumerable.
+        /// </summary>
+        /// <param name="enumerable"> The enumerable.</param>
+        /// <typeparam name="T"> The type of the enumerable.</typeparam>
+        /// <returns> The first element in the enumerable, or default if the enumerable is empty.</returns>
+        public static T GetFirst<T>(IEnumerable<T> enumerable)
+        {
+            if (enumerable == null)
+                return default;
+            
+            using var enumerator = enumerable.GetEnumerator();
+            return enumerator.MoveNext() ? enumerator.Current : default;
+        }
+        
+        /// <summary>
+        /// Get the first integer in an enumerable.
+        /// </summary>
+        /// <param name="enumerable"> The enumerable.</param>
+        /// <returns> The first integer in the enumerable, or -1 if the enumerable is empty.</returns>
+        public static int GetFirst(IEnumerable<int> enumerable)
+        {
+            if (enumerable == null)
+                return -1;
+            
+            using var enumerator = enumerable.GetEnumerator();
+            return enumerator.MoveNext() ? enumerator.Current : -1;
+        }
     }
 }

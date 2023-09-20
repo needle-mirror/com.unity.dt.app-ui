@@ -80,10 +80,27 @@ namespace Unity.AppUI.UI
         /// </summary>
         public void CloseSubMenus()
         {
-            foreach (var menuItem in this.GetChildren<MenuItem>(false))
+            foreach (var child in Children())
             {
-                if (menuItem.subMenu != null)
-                    menuItem.CloseSubMenus(Vector2.negativeInfinity, menuItem.subMenu);
+                switch (child)
+                {
+                    case MenuSection menuSection:
+                    {
+                        foreach (var menuItem in menuSection.GetChildren<MenuItem>(false))
+                        {
+                            if (menuItem.subMenu != null)
+                                menuItem.CloseSubMenus(Vector2.negativeInfinity, menuItem.subMenu);
+                        }
+
+                        break;
+                    }
+                    case MenuItem menuItem:
+                    {
+                        if (menuItem.subMenu != null)
+                            menuItem.CloseSubMenus(Vector2.negativeInfinity, menuItem.subMenu);
+                        break;
+                    }
+                }
             }
         }
 

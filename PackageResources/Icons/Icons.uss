@@ -727,6 +727,9 @@
 .appui-icon--warning--regular {
     --unity-image: url("./Warning.png");
 }
+.appui-icon--warning--fill {
+    --unity-image: url("./Fill/warning-fill.png");
+}
 .appui-icon--waypoint--regular {
     --unity-image: url("./Waypoint.png");
 }

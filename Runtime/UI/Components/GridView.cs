@@ -159,7 +159,11 @@ namespace Unity.AppUI.UI
             selectionType = SelectionType.Single;
             m_ScrollOffset = 0.0f;
 
-            scrollView = new ScrollView { viewDataKey = "grid-view__scroll-view" };
+            scrollView = new ScrollView
+            {
+                viewDataKey = "grid-view__scroll-view",
+                horizontalScrollerVisibility = ScrollerVisibility.Hidden
+            };
             scrollView.StretchToParentSize();
             scrollView.verticalScroller.valueChanged += OnScroll;
 
@@ -335,6 +339,16 @@ namespace Unity.AppUI.UI
                 KeyCode.DownArrow => GridOperations.Down,
                 KeyCode.LeftArrow => GridOperations.Left,
                 KeyCode.RightArrow => GridOperations.Right,
+                _ => GridOperations.None
+            };
+
+            Apply(operation, evt);
+        }
+        
+        void OnKeyUp(KeyUpEvent evt)
+        {
+            var operation = evt.keyCode switch
+            {
                 KeyCode.KeypadEnter or KeyCode.Return => GridOperations.Choose,
                 _ => GridOperations.None
             };
@@ -1126,11 +1140,12 @@ namespace Unity.AppUI.UI
                 };
             scrollView.AddManipulator(m_Dragger);
 
-            scrollView.contentContainer.RegisterCallback<ClickEvent>(OnClick);
+            scrollView.RegisterCallback<ClickEvent>(OnClick);
             scrollView.RegisterCallback<PointerDownEvent>(OnPointerDown);
             scrollView.RegisterCallback<PointerUpEvent>(OnPointerUp);
             scrollView.RegisterCallback<PointerMoveEvent>(OnPointerMove);
             RegisterCallback<KeyDownEvent>(OnKeyDown);
+            RegisterCallback<KeyUpEvent>(OnKeyUp);
             RegisterCallback<NavigationMoveEvent>(OnNavigationMove);
             RegisterCallback<NavigationCancelEvent>(OnNavigationCancel);
             scrollView.RegisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
@@ -1157,11 +1172,12 @@ namespace Unity.AppUI.UI
             if (m_Dragger != null)
                 scrollView.RemoveManipulator(m_Dragger);
 
-            scrollView.contentContainer.UnregisterCallback<ClickEvent>(OnClick);
+            scrollView.UnregisterCallback<ClickEvent>(OnClick);
             scrollView.UnregisterCallback<PointerDownEvent>(OnPointerDown);
             scrollView.UnregisterCallback<PointerUpEvent>(OnPointerUp);
             scrollView.UnregisterCallback<PointerMoveEvent>(OnPointerMove);
             UnregisterCallback<KeyDownEvent>(OnKeyDown);
+            UnregisterCallback<KeyUpEvent>(OnKeyUp);
             UnregisterCallback<NavigationMoveEvent>(OnNavigationMove);
             UnregisterCallback<NavigationCancelEvent>(OnNavigationCancel);
             scrollView.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);

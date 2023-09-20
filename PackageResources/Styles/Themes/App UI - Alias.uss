@@ -144,6 +144,11 @@
   --appui-alias-actions-destructive-active: var(--appui-destructive-50);
   --appui-alias-actions-destructive-hover: var(--appui-destructive-200);
   --appui-alias-actions-destructive-default: var(--appui-destructive-100);
+
+  --appui-alias-actions-warning-focus: var(--appui-warning-50);
+  --appui-alias-actions-warning-active: var(--appui-warning-50);
+  --appui-alias-actions-warning-hover: var(--appui-warning-200);
+  --appui-alias-actions-warning-default: var(--appui-warning-100);
   
   --appui-alias-actions-accent-background-focus: var(--appui-color-white);
   --appui-alias-actions-accent-background-active: var(--appui-accent-50);

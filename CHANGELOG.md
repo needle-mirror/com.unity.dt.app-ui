@@ -4,6 +4,25 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2023-09-20
+
+### Added
+
+- Added `selectedIndex` property to the `Picker` component to get or set the selected index for a single selection mode.
+- Added a new `Enumerable` extension method called `GetFirst` to get the first item of an enumerable collection or a default value if the collection is empty.
+- Added `isPrimaryActionDisabled` and `isSecondaryActionDisabled` properties to the `AlertDialog` component.
+- Added styling for `AlertDialog` component semantic variants.
+
+### Fixed
+
+- Fixed the `Picker` component to avoid to select multiple items if the selection mode is set to `Single`.
+- Fixed `Menu.CloseSubMenus` method to close sub-menus opened by `MenuItem` components contained inside `MenuSection` components.
+- Fixed double click handling in `GridView` component.
+
+### Changed
+
+- Changed the picking mode of the `DropdownItem` component to `Position` instead of `Ignore`.
+
 ## [0.5.0] - 2023-09-15
 
 ### Added

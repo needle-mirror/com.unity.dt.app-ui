@@ -312,6 +312,12 @@ namespace Unity.AppUI.UI
             set => EnableInClassList(emphasizedUssClassName, value);
         }
 
+        /// <summary>
+        /// The Picker selection type.
+        /// </summary>
+        /// <remarks>
+        /// If the selection type is changed, the Picker value will be reset.
+        /// </remarks>
         public PickerSelectionType selectionType
         {
             get => m_SelectionType;
@@ -320,6 +326,15 @@ namespace Unity.AppUI.UI
                 m_SelectionType = value;
                 this.value = new int[] { };
             }
+        }
+
+        /// <summary>
+        /// Quick access to the currently selected index for a Picker in Single selection mode.
+        /// </summary>
+        public int selectedIndex
+        {
+            get => m_Value.Count > 0 ? m_Value[0] : -1;
+            set => this.value = new[] { value };
         }
 
         /// <summary>
@@ -341,7 +356,17 @@ namespace Unity.AppUI.UI
             
             m_ValueSet = true;
             m_Value.Clear();
-            m_Value.AddRange(values);
+            if (m_SelectionType == PickerSelectionType.Multiple)
+            {
+                m_Value.AddRange(values);
+            }
+            else if (values.Count > 0)
+            {
+                if (values.Count > 1)
+                    Debug.LogWarning($"<b>[App UI]</b> [Picker]: Trying to set multiple values on a single selection Picker. " +
+                        $"Only the first value will be set. Value: {values[0]}");
+                m_Value.Add(values[0]);
+            }
             RefreshTitleUI();
 
             var menu = m_MenuBuilder?.currentMenu;

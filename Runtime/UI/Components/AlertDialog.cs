@@ -66,6 +66,11 @@ namespace Unity.AppUI.UI
         /// The AlertDialog cancel action styling class.
         /// </summary>
         public static readonly string cancelActionUssClassName = ussClassName + "__cancel-action";
+        
+        /// <summary>
+        /// The AlertDialog icon styling class.
+        /// </summary>
+        public static readonly string iconUssClassName = ussClassName + "__icon";
 
         readonly Button m_CancelButton;
 
@@ -78,6 +83,8 @@ namespace Unity.AppUI.UI
         readonly Button m_SecondaryButton;
 
         AlertSemantic m_Variant = AlertSemantic.Default;
+
+        readonly Icon m_IconElement;
 
         /// <summary>
         /// Default constructor.
@@ -104,6 +111,16 @@ namespace Unity.AppUI.UI
             m_PrimaryButton.clicked += OnPrimaryActionClicked;
             m_SecondaryButton.clicked += OnSecondaryActionClicked;
             m_CancelButton.clicked += OnCancelActionClicked;
+            
+            m_IconElement = new Icon
+            {
+                name = iconUssClassName, 
+                iconName = "warning",
+                variant = IconVariant.Fill,
+                pickingMode = PickingMode.Ignore
+            };
+            m_IconElement.AddToClassList(iconUssClassName);
+            m_Heading.hierarchy.Add(m_IconElement);
 
             variant = AlertSemantic.Default;
         }
@@ -120,6 +137,24 @@ namespace Unity.AppUI.UI
                 m_Variant = value;
                 AddToClassList(ussClassName + "--" + m_Variant.ToString().ToLower());
             }
+        }
+        
+        /// <summary>
+        /// Is the primary action button disabled.
+        /// </summary>
+        public bool isPrimaryActionDisabled
+        {
+            get => m_PrimaryButton.enabledSelf;
+            set => m_PrimaryButton.SetEnabled(value);
+        }
+        
+        /// <summary>
+        /// Is the secondary action button disabled.
+        /// </summary>
+        public bool isSecondaryActionDisabled
+        {
+            get => m_SecondaryButton.enabledSelf;
+            set => m_SecondaryButton.SetEnabled(value);
         }
 
         /// <summary>
