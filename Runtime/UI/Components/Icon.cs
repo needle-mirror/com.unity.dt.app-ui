@@ -107,6 +107,7 @@ namespace Unity.AppUI.UI
 
             focusable = false;
             pickingMode = PickingMode.Ignore;
+            usageHints |= UsageHints.DynamicColor;
 
             iconName = "info";
             size = IconSize.M;

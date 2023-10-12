@@ -21,6 +21,10 @@
     position: relative;
 }
 
+.appui-tabs .unity-scroll-view__content-container {
+    flex-basis: 100%;
+}
+
 .appui-tabitem {
     display: flex;
     flex-direction: row;
@@ -79,6 +83,9 @@
 .appui-tabs__indicator {
     position: absolute;
     background-color: var(--appui-foregrounds-200);
+    transition-property: left, top, width, height;
+    transition-duration: var(--appui-animation-duration-100);
+    transition-timing-function: var(--appui-animation-easing-ease-out);
 }
 
 .appui-tabitem.is-selected > .appui-tabitem__label {
@@ -97,7 +104,7 @@
     color: var(--appui-accent-100);
 }
 
-.appui-tabs--emphasized > .appui-tabitem.is-selected > .appui-icon {
+.appui-tabs--emphasized .appui-tabitem.is-selected > .appui-icon {
     --unity-image-tint-color: var(--appui-accent-100); /*fill: var(--appui-accent-100);*/
 }
 

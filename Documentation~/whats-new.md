@@ -2,7 +2,7 @@
 uid: whats-new
 ---
 
-# What's New in **0.5.1**
+# What's New in **0.5.2**
 
 This section contains information about new features, improvements, and issues fixed.
 
@@ -12,13 +12,13 @@ The main updates in this release include:
 
 ### Added
 
-- Added `selectedIndex` property to the `Picker` component to get or set the selected index for a single selection mode.
-- Added a new `Enumerable` extension method called `GetFirst` to get the first item of an enumerable collection or a default value if the collection is empty.
-- Added `isPrimaryActionDisabled` and `isSecondaryActionDisabled` properties to the `AlertDialog` component.
-- Added styling for `AlertDialog` component semantic variants.
+- Added `acceptDrag` property to the `GridView` component to enable or disable the drag and drop feature.
+- Added `menu` icon.
+- Added `AddDivider` and `AddSection` methods to the `MenuBuilder` component.
 
 ### Fixed
 
-- Fixed the `Picker` component to avoid to select multiple items if the selection mode is set to `Single`.
-- Fixed `Menu.CloseSubMenus` method to close sub-menus opened by `MenuItem` components contained inside `MenuSection` components.
-- Fixed double click handling in `GridView` component.
+- Fixed handling `acceptDrag` property in `Dragger` manipulator.
+- Fixed MenuItem opening sub menus when the item is disabled.
+- Fixed mipmap limit for Icons when a global limit is set in the Quality settings of the project.
+- Fixed the capture of pointer during PointerDown event in `Dragger` manipulator. Now the pointer is captured only if the `Dragger` manipulator is active (i.e. the threshold has been reached).

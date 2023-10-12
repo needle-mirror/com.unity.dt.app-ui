@@ -143,8 +143,6 @@ namespace Unity.AppUI.UI
 
         bool m_HasPointerMoved;
 
-        Dragger m_Dragger;
-
         bool m_SoftSelectIndexWasPreviouslySelected;
 
         /// <summary>
@@ -166,18 +164,21 @@ namespace Unity.AppUI.UI
             };
             scrollView.StretchToParentSize();
             scrollView.verticalScroller.valueChanged += OnScroll;
+            
+            dragger = new Dragger(OnDraggerStarted, OnDraggerMoved, OnDraggerEnded, OnDraggerCanceled);
 
             RegisterCallback<GeometryChangedEvent>(OnSizeChanged);
             RegisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
 
             RegisterCallback<AttachToPanelEvent>(OnAttachToPanel);
             RegisterCallback<DetachFromPanelEvent>(OnDetachFromPanel);
-
+            
             hierarchy.Add(scrollView);
 
             scrollView.contentContainer.usageHints &= ~UsageHints.GroupTransform; // Scroll views with virtualized content shouldn't have the "view transform" optimization
 
             focusable = true;
+            dragger.acceptStartDrag = DefaultAcceptStartDrag;
         }
 
         /// <summary>
@@ -324,7 +325,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public void CancelDrag()
         {
-            m_Dragger?.Cancel();
+            dragger?.Cancel();
         }
         
         void OnKeyDown(KeyDownEvent evt)
@@ -402,6 +403,11 @@ namespace Unity.AppUI.UI
                 }
             }
         }
+
+        /// <summary>
+        /// The <see cref="Dragger"/> manipulator used by this <see cref="GridView"/>.
+        /// </summary>
+        public Dragger dragger { get; }
 
         /// <summary>
         /// A mask describing available operations in this <see cref="GridView"/> when the user interacts with it.
@@ -621,6 +627,11 @@ namespace Unity.AppUI.UI
                 m_GetItemId = value;
                 Refresh();
             }
+        }
+
+        bool DefaultAcceptStartDrag(Vector2 worldPosition)
+        {
+            return GetIndexByWorldPosition(worldPosition) != -1;
         }
 
         internal List<RecycledRow> rowPool
@@ -1133,12 +1144,7 @@ namespace Unity.AppUI.UI
             if (evt.destinationPanel == null)
                 return;
             
-            if (m_Dragger == null)
-                m_Dragger = new Dragger(OnDraggerStarted, OnDraggerMoved, OnDraggerEnded, OnDraggerCanceled)
-                {
-                    acceptDrag = () => m_SelectedIndices.Count > 0,
-                };
-            scrollView.AddManipulator(m_Dragger);
+            scrollView.AddManipulator(dragger);
 
             scrollView.RegisterCallback<ClickEvent>(OnClick);
             scrollView.RegisterCallback<PointerDownEvent>(OnPointerDown);
@@ -1169,8 +1175,7 @@ namespace Unity.AppUI.UI
             if (evt.originPanel == null)
                 return;
             
-            if (m_Dragger != null)
-                scrollView.RemoveManipulator(m_Dragger);
+            scrollView.RemoveManipulator(dragger);
 
             scrollView.UnregisterCallback<ClickEvent>(OnClick);
             scrollView.UnregisterCallback<PointerDownEvent>(OnPointerDown);

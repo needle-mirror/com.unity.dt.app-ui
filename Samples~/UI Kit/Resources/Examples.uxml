@@ -1767,7 +1767,7 @@
                                     <appui:Text text="Item 5" />
                                 </appui:SwipeViewItem>
                             </appui:SwipeView>
-                            <appui:ActionGroup justified="true" style="width: 206px; margin-top: 8px;">
+                            <appui:ActionGroup justified="true" style="width: 100%; margin-top: 8px;">
                                 <appui:ActionButton name="swipeview-h-prev" label="Previous" />
                                 <appui:ActionButton name="swipeview-h-next" label="Next" />
                                 <appui:ActionButton name="swipeview-h-five" label="Go to 5" />

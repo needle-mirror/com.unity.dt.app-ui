@@ -460,6 +460,9 @@
 .appui-icon--measure-length--regular {
     --unity-image: url("./MeasureLength.png");
 }
+.appui-icon--menu--regular {
+    --unity-image: url("./Menu.png");
+}
 .appui-icon--microphone--regular {
     --unity-image: url("./Microphone.png");
 }

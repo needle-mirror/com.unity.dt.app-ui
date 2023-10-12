@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "01a90b23c02dec337f10a03a0522675a93f5a32c"
+    "revision": "da3ff9a3e6db785187b4cca9dc13681ecbf73324"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -80,10 +80,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added `selectedIndex` property to the `Picker` component to get or set the selected index for a single selection mode.\n- Added a new `Enumerable` extension method called `GetFirst` to get the first item of an enumerable collection or a default value if the collection is empty.\n- Added `isPrimaryActionDisabled` and `isSecondaryActionDisabled` properties to the `AlertDialog` component.\n- Added styling for `AlertDialog` component semantic variants.\n\n### Fixed\n\n- Fixed the `Picker` component to avoid to select multiple items if the selection mode is set to `Single`.\n- Fixed `Menu.CloseSubMenus` method to close sub-menus opened by `MenuItem` components contained inside `MenuSection` components.\n- Fixed double click handling in `GridView` component.\n\n### Changed\n\n- Changed the picking mode of the `DropdownItem` component to `Position` instead of `Ignore`."
+    "changelog": "### Added\n\n- Added `acceptDrag` property to the `GridView` component to enable or disable the drag and drop feature.\n- Added `menu` icon.\n- Added `AddDivider` and `AddSection` methods to the `MenuBuilder` component.\n\n### Fixed\n\n- Fixed handling `acceptDrag` property in `Dragger` manipulator.\n- Fixed MenuItem opening sub menus when the item is disabled.\n- Fixed mipmap limit for Icons when a global limit is set in the Quality settings of the project.\n- Fixed the capture of pointer during PointerDown event in `Dragger` manipulator. Now the pointer is captured only if the `Dragger` manipulator is active (i.e. the threshold has been reached)."
   },
   "upmCi": {
-    "footprint": "1d45b7c6a503ec5381d87452c9c49f1c45562f94"
+    "footprint": "f4e273ff7a4aa46f063fd6cb6395d2876ef8b514"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.5/manual/index.html"
 }

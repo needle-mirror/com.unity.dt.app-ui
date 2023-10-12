@@ -126,6 +126,49 @@ namespace Unity.AppUI.UI
             currentMenu.Add(item);
             return this;
         }
+        
+        /// <summary>
+        /// Add an Action menu item to the current menu.
+        /// </summary>
+        /// <param name="actionId"> A unique identifier for the action. </param>
+        /// <param name="bindItemFunc"> A callback to bind the action. </param>
+        /// <returns> The MenuBuilder instance. </returns>
+        public MenuBuilder AddAction(int actionId, Action<MenuItem> bindItemFunc)
+        {
+            var item = new MenuItem
+            {
+                userData = actionId,
+            };
+            currentMenu.Add(item);
+            bindItemFunc?.Invoke(item);
+            return this;
+        }
+        
+        /// <summary>
+        /// Add a Menu Divider to the current menu.
+        /// </summary>
+        /// <param name="bindDividerFunc"> A callback to bind the divider. </param>
+        /// <returns> The MenuBuilder instance. </returns>
+        public MenuBuilder AddDivider(Action<MenuDivider> bindDividerFunc = null)
+        {
+            var item = new MenuDivider();
+            currentMenu.Add(item);
+            bindDividerFunc?.Invoke(item);
+            return this;
+        }
+
+        /// <summary>
+        /// Add a Section to the current menu.
+        /// </summary>
+        /// <param name="bindSectionFunc"> A callback to bind the section. </param>
+        /// <returns> The MenuBuilder instance. </returns>
+        public MenuBuilder AddSection(Action<MenuSection> bindSectionFunc = null)
+        {
+            var item = new MenuSection();
+            currentMenu.Add(item);
+            bindSectionFunc?.Invoke(item);
+            return this;
+        }
 
         /// <summary>
         /// Create an action menu item, add a sub-menu to the current menu, and make it the current menu.

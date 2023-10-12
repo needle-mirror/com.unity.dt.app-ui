@@ -354,6 +354,11 @@ namespace Unity.AppUI.Editor
             m_ScaleDropdown = new EditorToolbarDropdown("Scale", () =>
             {
                 var menu = new GenericMenu();
+                menu.AddItem(new GUIContent("Small"), m_CurrentScale == "small", () =>
+                {
+                    m_CurrentScale = "small";
+                    panel.scale = m_CurrentScale;
+                });
                 menu.AddItem(new GUIContent("Medium"), m_CurrentScale == "medium", () =>
                 {
                     m_CurrentScale = "medium";

@@ -34,7 +34,7 @@ namespace Unity.AppUI.Editor
             scrollView.style.overflow = Overflow.Hidden;
             
             root.Add(scrollView);
-            root.Add(appBar);
+            scrollView.hierarchy.Add(appBar);
 
             for (var i = 0; i < 24; i++)
             {

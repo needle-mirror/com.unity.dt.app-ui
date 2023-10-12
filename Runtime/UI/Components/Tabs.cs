@@ -223,6 +223,8 @@ namespace Unity.AppUI.UI
 
         readonly ScrollView m_ScrollView;
 
+        readonly VisualElement m_LambdaContainer;
+
         Action<TabItem, int> m_BindItem;
 
         int m_DefaultValue;
@@ -236,6 +238,8 @@ namespace Unity.AppUI.UI
         int m_Value;
 
         bool m_ValueSet;
+
+        IVisualElementScheduledItem m_ScheduledItem;
 
         /// <summary>
         /// Default constructor.
@@ -264,6 +268,13 @@ namespace Unity.AppUI.UI
                 usageHints = UsageHints.DynamicTransform,
             };
             m_Indicator.AddToClassList(indicatorUssClassName);
+            
+            m_LambdaContainer = new VisualElement
+            {
+                name = "lambda-container",
+                pickingMode = PickingMode.Ignore,
+            };
+            hierarchy.Add(m_LambdaContainer);
 
             hierarchy.Add(m_ScrollView);
             hierarchy.Add(m_Indicator);
@@ -274,7 +285,7 @@ namespace Unity.AppUI.UI
             defaultValue = 0;
 
             RegisterCallback<KeyDownEvent>(OnKeyDown);
-            RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+            m_LambdaContainer.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             m_ScrollView.verticalScroller.valueChanged += OnVerticalScrollerChanged;
             m_ScrollView.horizontalScroller.valueChanged += OnHorizontalScrollerChanged;
         }
@@ -353,9 +364,14 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// The content container of the Tabs.
+        /// The virtual content container of the Tabs.
         /// </summary>
-        public override VisualElement contentContainer => m_ScrollView.contentContainer;
+        public override VisualElement contentContainer => m_LambdaContainer;
+        
+        /// <summary>
+        /// The item container of the Tabs.
+        /// </summary>
+        public VisualElement itemContainer => m_ScrollView.contentContainer;
 
         /// <summary>
         /// The default value of the Tabs. This is the value that will be selected if no value is set.
@@ -389,6 +405,13 @@ namespace Unity.AppUI.UI
             // refresh selection visually
             if (previousValue >= 0 && previousValue < m_Items.Count)
                 m_Items[previousValue].selected = false;
+
+            m_ScheduledItem?.Pause();
+            m_ScheduledItem = schedule.Execute(RefreshVisuals);
+        }
+
+        void RefreshVisuals()
+        {
             if (m_Value >= 0 && m_Value < m_Items.Count)
             {
                 m_Items[m_Value].selected = true;
@@ -521,14 +544,22 @@ namespace Unity.AppUI.UI
 
         void OnGeometryChanged(GeometryChangedEvent evt)
         {
-            if (childCount > 0 && sourceItems == null)
-                RefreshItems(Children());
+            if (m_LambdaContainer.childCount > 0 && sourceItems == null)
+            {
+                var children = new List<VisualElement>(m_LambdaContainer.Children());
+                RefreshItems(children);
+                m_LambdaContainer.Clear();
+            }
         }
 
         void RefreshItems(IEnumerable items)
         {
             // clear items
-            foreach (var item in m_Items) item.clickable.clickedWithEventInfo -= OnItemClicked;
+            foreach (var item in m_Items)
+            {
+                item.clickable.clickedWithEventInfo -= OnItemClicked;
+                item.RemoveFromHierarchy();
+            }
             m_Items.Clear();
 
             // create menu items
@@ -541,6 +572,7 @@ namespace Unity.AppUI.UI
                     bindItem?.Invoke(tabItem, i);
                     tabItem.clickable.clickedWithEventInfo += OnItemClicked;
                     m_Items.Add(tabItem);
+                    m_ScrollView.Add(tabItem);
                     i++;
                 }
             }

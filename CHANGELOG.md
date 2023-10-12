@@ -4,6 +4,21 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.5.2] - 2023-10-12
+
+### Added
+
+- Added `acceptDrag` property to the `GridView` component to enable or disable the drag and drop feature.
+- Added `menu` icon.
+- Added `AddDivider` and `AddSection` methods to the `MenuBuilder` component.
+
+### Fixed
+
+- Fixed handling `acceptDrag` property in `Dragger` manipulator.
+- Fixed MenuItem opening sub menus when the item is disabled.
+- Fixed mipmap limit for Icons when a global limit is set in the Quality settings of the project.
+- Fixed the capture of pointer during PointerDown event in `Dragger` manipulator. Now the pointer is captured only if the `Dragger` manipulator is active (i.e. the threshold has been reached).
+
 ## [0.5.1] - 2023-09-20
 
 ### Added

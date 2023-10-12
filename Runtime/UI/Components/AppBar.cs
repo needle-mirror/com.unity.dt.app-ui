@@ -269,7 +269,7 @@ namespace Unity.AppUI.UI
             {
                 name = drawerButtonUssClassName,
                 quiet = true,
-                icon = "list",
+                icon = "menu",
             };
             m_DrawerButton.AddToClassList(drawerButtonUssClassName);
             m_DrawerButton.clickable.clicked += () => drawerButtonTriggered?.Invoke();

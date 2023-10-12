@@ -8,6 +8,7 @@
   margin: var(--appui-spacing-100);
   cursor: var(--appui-alias-control-cursor-pointer);
   border-radius: var(--appui-sizing-150);
+  flex-shrink: 0;
 }
 
 .appui-listview-item:hover {

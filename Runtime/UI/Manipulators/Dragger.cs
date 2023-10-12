@@ -30,10 +30,19 @@ namespace Unity.AppUI.UI
         public bool isActive { get; private set; }
         
         /// <summary>
-        /// Delegate that will be called when a drag should be accepted.
+        /// Delegate that will be called when a drag should be accepted during <see cref="PointerDownEvent"/>.
         /// </summary>
         /// <remarks>
-        /// If this delegate is not set, the drag will be accepted by default.
+        /// If this delegate is not set (or set to null), the drag will be accepted by default.
+        /// </remarks>
+        public Func<Vector2, bool> acceptStartDrag { get; set; }
+        
+        /// <summary>
+        /// Delegate that will be called when a drag should be accepted when the dragger wants to become
+        /// active during <see cref="PointerMoveEvent"/>.
+        /// </summary>
+        /// <remarks>
+        /// If this delegate is not set (or set to null), the drag will be accepted by default.
         /// </remarks>
         public Func<bool> acceptDrag { get; set; }
 
@@ -87,10 +96,8 @@ namespace Unity.AppUI.UI
             isActive = false;
             m_PointerId = -1;
 
-            if (CanStartManipulation(evt))
+            if (CanStartManipulation(evt) && (acceptStartDrag == null || acceptStartDrag.Invoke(evt.position)))
             {
-                if (!target.HasPointerCapture(evt.pointerId))
-                    target.CapturePointer(evt.pointerId);
                 m_StartPosition = evt.position;
                 m_PointerId = evt.pointerId;
             }
@@ -101,13 +108,16 @@ namespace Unity.AppUI.UI
             if (m_PointerId != evt.pointerId)
                 return;
             
-            if (target.HasPointerCapture(evt.pointerId))
+            if (m_PointerId != -1)
             {
                 if (!isActive)
                 {
                     var delta = evt.position - m_StartPosition;
                     if (delta.sqrMagnitude > dragThreshold * dragThreshold && (acceptDrag == null || acceptDrag.Invoke()))
                     {
+                        if (!target.HasPointerCapture(evt.pointerId))
+                            target.CapturePointer(evt.pointerId);
+                        
                         isActive = true;
                         m_DragStarted?.Invoke(evt);
                         
@@ -118,6 +128,9 @@ namespace Unity.AppUI.UI
                 }
                 else
                 {
+                    if (!target.HasPointerCapture(evt.pointerId))
+                        target.CapturePointer(evt.pointerId);
+                    
                     m_Dragging?.Invoke(evt);
                     var elementPosition = s_VisualElement.parent.WorldToLocal(evt.position);
                     s_VisualElement.style.left = elementPosition.x;

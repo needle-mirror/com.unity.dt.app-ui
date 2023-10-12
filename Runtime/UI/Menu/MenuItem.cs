@@ -223,6 +223,10 @@ namespace Unity.AppUI.UI
         void ScheduleOpenSubMenu(int delayMs)
         {
             m_ScheduledItem?.Pause();
+            
+            if (!enabledInHierarchy || !enabledSelf)
+                return;
+            
             m_ScheduledItem = schedule.Execute(OpenSubMenu);
             if (delayMs > 0)
                 m_ScheduledItem.ExecuteLater(delayMs);
@@ -407,9 +411,13 @@ namespace Unity.AppUI.UI
         void OnClick()
         {
             if (selectable)
+            {
                 value = !value;
+            }
             else if (subMenu != null)
+            {
                 ScheduleOpenSubMenu(0);
+            }
             else
             {
                 using var evt = ActionTriggeredEvent.GetPooled();
