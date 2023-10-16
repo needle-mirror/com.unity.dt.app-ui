@@ -2,7 +2,7 @@
 uid: whats-new
 ---
 
-# What's New in **0.5.2**
+# What's New in **0.5.3**
 
 This section contains information about new features, improvements, and issues fixed.
 
@@ -12,13 +12,8 @@ The main updates in this release include:
 
 ### Added
 
-- Added `acceptDrag` property to the `GridView` component to enable or disable the drag and drop feature.
-- Added `menu` icon.
-- Added `AddDivider` and `AddSection` methods to the `MenuBuilder` component.
+- Added `useSpaceBar` property in `Canvas` component to enable or disable the handling of the space bar key.
 
 ### Fixed
 
-- Fixed handling `acceptDrag` property in `Dragger` manipulator.
-- Fixed MenuItem opening sub menus when the item is disabled.
-- Fixed mipmap limit for Icons when a global limit is set in the Quality settings of the project.
-- Fixed the capture of pointer during PointerDown event in `Dragger` manipulator. Now the pointer is captured only if the `Dragger` manipulator is active (i.e. the threshold has been reached).
+- Removed the handling of the space bar key in the `Canvas` component when the used control scheme is `Editor`.

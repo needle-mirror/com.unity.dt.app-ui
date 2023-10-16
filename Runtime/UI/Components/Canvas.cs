@@ -109,6 +109,8 @@ namespace Unity.AppUI.UI
 
         const float k_DefaultFrameMargin = 12f;
         
+        const bool k_DefaultUseSpaceBar = true;
+        
         const ScrollDirection k_DefaultScrollDirection = ScrollDirection.Natural;
         
         const CanvasControlScheme k_DefaultControlScheme = CanvasControlScheme.Modern;
@@ -214,6 +216,11 @@ namespace Unity.AppUI.UI
         /// The margin applied when framing the Canvas.
         /// </summary>
         public float frameMargin { get; set; } = k_DefaultFrameMargin;
+        
+        /// <summary>
+        /// Whether the Canvas should use the Space bar to pan.
+        /// </summary>
+        public bool useSpaceBar { get; set; } = k_DefaultUseSpaceBar;
 
         /// <summary>
         /// The current grab state of the canvas (to pan).
@@ -370,10 +377,13 @@ namespace Unity.AppUI.UI
             {
                 case KeyCode.Space:
                 {
-                    m_SpaceBarPressed = false;
-                    grabMode = GrabMode.None;
-                    if (m_PointerId >= 0 && this.HasPointerCapture(m_PointerId))
-                        this.ReleasePointer(m_PointerId);
+                    if (controlScheme != CanvasControlScheme.Editor && useSpaceBar)
+                    {
+                        m_SpaceBarPressed = false;
+                        grabMode = GrabMode.None;
+                        if (m_PointerId >= 0 && this.HasPointerCapture(m_PointerId))
+                            this.ReleasePointer(m_PointerId);
+                    }
                     break;
                 }
             }
@@ -406,9 +416,12 @@ namespace Unity.AppUI.UI
                     break;
                 }
                 case KeyCode.Space:
-                    evt.StopImmediatePropagation();
-                    m_SpaceBarPressed = true;
-                    grabMode = GrabMode.Grab;
+                    if (controlScheme != CanvasControlScheme.Editor && useSpaceBar)
+                    {
+                        evt.StopImmediatePropagation();
+                        m_SpaceBarPressed = true;
+                        grabMode = GrabMode.Grab;
+                    }
                     break;
                 case KeyCode.Minus when evt.actionKey:
                 case KeyCode.KeypadMinus when evt.actionKey:
@@ -733,20 +746,51 @@ namespace Unity.AppUI.UI
                 defaultValue = k_DefaultControlScheme
             };
             
+            readonly UxmlBoolAttributeDescription m_UseSpaceBar = new UxmlBoolAttributeDescription
+            {
+                name = "use-space-bar", 
+                defaultValue = k_DefaultUseSpaceBar
+            };
+            
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
                 
                 var canvas = (Canvas)ve;
-                canvas.scrollSpeed = m_ScrollSpeed.GetValueFromBag(bag, cc);
-                canvas.minZoom = m_MinZoom.GetValueFromBag(bag, cc);
-                canvas.maxZoom = m_MaxZoom.GetValueFromBag(bag, cc);
-                canvas.zoomSpeed = m_ZoomSpeed.GetValueFromBag(bag, cc);
-                canvas.zoomMultiplier = m_ZoomMultiplier.GetValueFromBag(bag, cc);
-                canvas.panMultiplier = m_PanMultiplier.GetValueFromBag(bag, cc);
-                canvas.frameMargin = m_FrameMargin.GetValueFromBag(bag, cc);
-                canvas.scrollDirection = m_ScrollDirection.GetValueFromBag(bag, cc);
-                canvas.controlScheme = m_ControlScheme.GetValueFromBag(bag, cc);
+                
+                var floatVal = 0f;
+                if (m_ScrollSpeed.TryGetValueFromBag(bag, cc, ref floatVal))
+                    canvas.scrollSpeed = floatVal;
+                
+                if (m_MinZoom.TryGetValueFromBag(bag, cc, ref floatVal))
+                    canvas.minZoom = floatVal;
+                
+                if (m_MaxZoom.TryGetValueFromBag(bag, cc, ref floatVal))
+                    canvas.maxZoom = floatVal;
+                
+                if (m_ZoomSpeed.TryGetValueFromBag(bag, cc, ref floatVal))
+                    canvas.zoomSpeed = floatVal;
+                
+                if (m_ZoomMultiplier.TryGetValueFromBag(bag, cc, ref floatVal))
+                    canvas.zoomMultiplier = floatVal;
+                
+                if (m_PanMultiplier.TryGetValueFromBag(bag, cc, ref floatVal))
+                    canvas.panMultiplier = floatVal;
+                
+                if (m_FrameMargin.TryGetValueFromBag(bag, cc, ref floatVal))
+                    canvas.frameMargin = floatVal;
+                
+                var scrollDirectionVal = ScrollDirection.Natural;
+                if (m_ScrollDirection.TryGetValueFromBag(bag, cc, ref scrollDirectionVal))
+                    canvas.scrollDirection = scrollDirectionVal;
+                
+                var controlSchemeVal = CanvasControlScheme.Modern;
+                if (m_ControlScheme.TryGetValueFromBag(bag, cc, ref controlSchemeVal))
+                    canvas.controlScheme = controlSchemeVal;
+                
+                var boolVal = false;
+                if (m_UseSpaceBar.TryGetValueFromBag(bag, cc, ref boolVal))
+                    canvas.useSpaceBar = boolVal;
             }
         }
     }

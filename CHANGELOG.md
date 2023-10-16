@@ -4,6 +4,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.5.3] - 2023-10-16
+
+### Added
+
+- Added `useSpaceBar` property in `Canvas` component to enable or disable the handling of the space bar key.
+
+### Fixed
+
+- Removed the handling of the space bar key in the `Canvas` component when the used control scheme is `Editor`.
+
 ## [0.5.2] - 2023-10-12
 
 ### Added
