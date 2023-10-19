@@ -90,7 +90,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The content container of this element.
         /// </summary>
-        public override VisualElement contentContainer => null;
+        public override VisualElement contentContainer => this;
 
         /// <summary>
         /// Default constructor.
