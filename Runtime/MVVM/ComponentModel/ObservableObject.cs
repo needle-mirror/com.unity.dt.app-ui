@@ -4,7 +4,6 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace Unity.AppUI.MVVM
@@ -12,24 +11,24 @@ namespace Unity.AppUI.MVVM
     /// <summary>
     /// A base class for objects of which the properties must be observable.
     /// </summary>
-    public abstract class ObservableObject : INotifyPropertyChanged, INotifyPropertyChanging
+    public abstract class ObservableObject : System.ComponentModel.INotifyPropertyChanged, System.ComponentModel.INotifyPropertyChanging
     {
         /// <summary>
         /// Occurs when a property value is changing.
         /// </summary>
-        public event PropertyChangingEventHandler? PropertyChanging;
+        public event System.ComponentModel.PropertyChangingEventHandler? PropertyChanging;
         
         /// <summary>
         /// Occurs when a property value has changed.
         /// </summary>
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
         
         /// <summary>
         /// Raises the <see cref="PropertyChanging"/> event.
         /// </summary>
         /// <param name="e"> The event data. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="e"/> is <see langword="null"/>. </exception>
-        protected virtual void OnPropertyChanging(PropertyChangingEventArgs e)
+        protected virtual void OnPropertyChanging(System.ComponentModel.PropertyChangingEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -43,7 +42,7 @@ namespace Unity.AppUI.MVVM
         /// <param name="propertyName"> The name of the property that is changing. </param>
         protected void OnPropertyChanging([CallerMemberName] string? propertyName = null)
         {
-            OnPropertyChanging(new PropertyChangingEventArgs(propertyName));
+            OnPropertyChanging(new System.ComponentModel.PropertyChangingEventArgs(propertyName));
         }
         
         /// <summary>
@@ -51,7 +50,7 @@ namespace Unity.AppUI.MVVM
         /// </summary>
         /// <param name="e"> The event data. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="e"/> is <see langword="null"/>. </exception>
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected virtual void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
@@ -65,7 +64,7 @@ namespace Unity.AppUI.MVVM
         /// <param name="propertyName"> The name of the property that has changed. </param>
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+            OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
 
         /// <summary>

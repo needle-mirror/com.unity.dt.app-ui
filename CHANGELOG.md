@@ -4,6 +4,17 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.6.1] - 2023-10-20
+
+### Added
+
+- Added `allowNoSelection` property to the `GridView` component to enable or disable the selection of no items. 
+
+### Fixed
+
+- Fixed the support of nested components inside the `Button` component.
+- Fixed the reset of the previous selection when `GridView.SetSelectionWithoutNotify` method is called.
+
 ## [0.6.0] - 2023-09-20
 
 ### Added
@@ -28,6 +39,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Removed 
 
 - Removed the `size` property from the `InputLabel` component.
+
+## [0.5.4] - 2023-10-19
+
+### Added
+
+- Added `allowNoSelection` property to the `GridView` component to enable or disable the selection of no items. 
+
+### Fixed
+
+- Fixed the support of nested components inside the `Button` component.
+- Fixed the reset of the previous selection when `GridView.SetSelectionWithoutNotify` method is called.
 
 ## [0.5.3] - 2023-10-16
 

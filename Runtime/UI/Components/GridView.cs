@@ -133,6 +133,8 @@ namespace Unity.AppUI.UI
 
         SelectionType m_SelectionType;
 
+        bool m_AllowNoSelection = true;
+
         int m_VisibleRowCount;
 
         bool m_IsList;
@@ -209,7 +211,7 @@ namespace Unity.AppUI.UI
             void HandleSelectionAndScroll(int index)
             {
                 if (selectionType == SelectionType.Multiple && shiftKey && m_SelectedIndices.Count != 0)
-                    DoRangeSelection(index);
+                    DoRangeSelection(index, true, true);
                 else
                     selectedIndex = index;
 
@@ -581,10 +583,44 @@ namespace Unity.AppUI.UI
             set
             {
                 m_SelectionType = value;
-                if (m_SelectionType == SelectionType.None || (m_SelectionType == SelectionType.Single && m_SelectedIndices.Count > 1))
+
+                if (m_SelectionType == SelectionType.None)
                 {
-                    ClearSelection();
+                    ClearSelectionWithoutValidation();
                 }
+                else
+                {
+                    if (allowNoSelection)
+                    {
+                        ClearSelectionWithoutValidation();
+                    }
+                    else if (m_ItemsSource.Count > 0)
+                    {
+                        SetSelectionInternal(new[] { 0 }, false, false);
+                    }
+                    else
+                    {
+                        ClearSelectionWithoutValidation();
+                    }
+                }
+                
+                m_RangeSelectionOrigin = -1;
+                PostSelection(updatePreviousSelection: true, sendNotification: true);
+            }
+        }
+
+        /// <summary>
+        /// Whether the GridView allows to have no selection when the selection type is <see cref="SelectionType.Single"/> or <see cref="SelectionType.Multiple"/>.
+        /// </summary>
+        public bool allowNoSelection
+        {
+            get => m_AllowNoSelection;
+
+            set
+            {
+                m_AllowNoSelection = value;
+                if (HasValidDataAndBindings() && !m_AllowNoSelection && m_SelectedIndices.Count == 0 && m_ItemsSource.Count > 0)
+                    SetSelectionInternal(new []{ 0 }, true, true);
             }
         }
 
@@ -631,7 +667,8 @@ namespace Unity.AppUI.UI
 
         bool DefaultAcceptStartDrag(Vector2 worldPosition)
         {
-            return GetIndexByWorldPosition(worldPosition) != -1;
+            var idx = GetIndexByWorldPosition(worldPosition);
+            return idx >= 0 && idx < itemsSource.Count;
         }
 
         internal List<RecycledRow> rowPool
@@ -701,12 +738,12 @@ namespace Unity.AppUI.UI
         /// <param name="index">Item index.</param>
         public void AddToSelection(int index)
         {
-            AddToSelection(new[] { index });
+            AddToSelection(new[] { index }, true, true);
         }
         
-        internal void AddToSelection(int index, bool notify = true)
+        internal void AddToSelection(int index, bool updatePrevious, bool notify)
         {
-            AddToSelection(new[] { index }, notify);
+            AddToSelection(new[] { index }, updatePrevious, notify);
         }
 
         /// <summary>
@@ -715,16 +752,17 @@ namespace Unity.AppUI.UI
         public void ClearSelection()
         {
             ClearSelectionWithoutNotify();
-            NotifyOfSelectionChange();
+            PostSelection(true, true);
         }
 
         public void ClearSelectionWithoutNotify()
         {
-            if (!HasValidDataAndBindings() || m_SelectedIndices.Count == 0)
+            if (!HasValidDataAndBindings() || m_SelectedIndices.Count == 0 || !allowNoSelection)
                 return;
 
             ClearSelectionWithoutValidation();
             m_RangeSelectionOrigin = -1;
+            m_PreviouslySelectedIndices.Clear();
         }
 
         /// <summary>
@@ -777,6 +815,12 @@ namespace Unity.AppUI.UI
 
             m_FirstVisibleIndex = Math.Min((int)(m_ScrollOffset / resolvedItemHeight) * columnCount, m_ItemsSource.Count - 1);
             ResizeHeight(m_LastHeight);
+            
+            if (!allowNoSelection && m_ItemsSource.Count > 0)
+                SetSelectionInternal(new []
+                {
+                    m_FirstVisibleIndex >= 0 ? m_FirstVisibleIndex : 0
+                }, true, true);
         }
 
         /// <summary>
@@ -785,17 +829,20 @@ namespace Unity.AppUI.UI
         /// <param name="index">The item index.</param>
         public void RemoveFromSelection(int index)
         {
-            RemoveFromSelectionInternal(index);
+            RemoveFromSelectionInternal(index, true, true);
         }
         
-        internal void RemoveFromSelectionInternal(int index, bool notify = true)
+        internal void RemoveFromSelectionInternal(int index, bool updatePrevious, bool notify)
         {
             if (!HasValidDataAndBindings())
                 return;
+            
+            if (m_SelectedIndices.Count == 1 && m_SelectedIndices[0] == index && !allowNoSelection)
+                return;
 
             RemoveFromSelectionWithoutValidation(index);
-            if(notify)
-                NotifyOfSelectionChange();
+
+            PostSelection(updatePrevious, notify);
         }
 
         /// <summary>
@@ -872,7 +919,7 @@ namespace Unity.AppUI.UI
                     throw new ArgumentOutOfRangeException();
             }
 
-            SetSelectionInternal(indices, true);
+            SetSelectionInternal(indices, true, true);
         }
 
         /// <summary>
@@ -881,10 +928,10 @@ namespace Unity.AppUI.UI
         /// <param name="indices">The collection of items to be selected.</param>
         public void SetSelectionWithoutNotify(IEnumerable<int> indices)
         {
-            SetSelectionInternal(indices, false);
+            SetSelectionInternal(indices, true, false);
         }
 
-        internal void AddToSelection(IList<int> indexes, bool notify = true)
+        internal void AddToSelection(IList<int> indexes, bool updatePrevious, bool notify)
         {
             if (!HasValidDataAndBindings() || indexes == null || indexes.Count == 0)
                 return;
@@ -894,8 +941,7 @@ namespace Unity.AppUI.UI
                 AddToSelectionWithoutValidation(index);
             }
 
-            if(notify)
-                NotifyOfSelectionChange();
+            PostSelection(updatePrevious, notify);
 
             //SaveViewData();
         }
@@ -929,25 +975,29 @@ namespace Unity.AppUI.UI
                 }
             }
 
-            NotifyOfSelectionChange();
+            PostSelection(true, true);
 
             //SaveViewData();
         }
 
-        internal void SetSelectionInternal(IEnumerable<int> indices, bool sendNotification)
+        internal void SetSelectionInternal(IEnumerable<int> indices, bool updatePrevious, bool sendNotification)
         {
             if (!HasValidDataAndBindings() || indices == null)
                 return;
+            
+            var indicesList = new List<int>(indices);
+            
+            if (!allowNoSelection && indicesList.Count == 0)
+                return;
 
             ClearSelectionWithoutValidation();
-            foreach (var index in indices)
+            foreach (var index in indicesList)
             {
                 AddToSelectionWithoutValidation(index);
             }
 
-            if (sendNotification)
-                NotifyOfSelectionChange();
-
+            PostSelection(updatePrevious, sendNotification);
+            
             //SaveViewData();
         }
 
@@ -1018,7 +1068,7 @@ namespace Unity.AppUI.UI
             return item;
         }
 
-        void DoRangeSelection(int rangeSelectionFinalIndex, bool notify = true)
+        void DoRangeSelection(int rangeSelectionFinalIndex, bool updatePrevious, bool notify)
         {
             m_RangeSelectionOrigin = m_IsRangeSelectionDirectionUp ? m_SelectedIndices.Max() : m_SelectedIndices.Min();
 
@@ -1042,7 +1092,7 @@ namespace Unity.AppUI.UI
                 }
             }
 
-            AddToSelection(range, notify);
+            AddToSelection(range, updatePrevious, notify);
         }
 
         void DoContextClickAfterSelect(PointerDownEvent evt)
@@ -1055,7 +1105,7 @@ namespace Unity.AppUI.UI
             var clickedIndex = GetIndexByWorldPosition(evt.position);
             if (clickedIndex > m_ItemsSource.Count - 1)
             {
-                if (evt.button == (int)MouseButton.LeftMouse)
+                if (evt.button == (int)MouseButton.LeftMouse && allowNoSelection)
                     ClearSelection();
                 return;
             }
@@ -1078,20 +1128,20 @@ namespace Unity.AppUI.UI
 
                         // Add/remove single clicked element
                         if (m_SelectedIds.Contains(clickedItemId))
-                            RemoveFromSelectionInternal(clickedIndex, false);
+                            RemoveFromSelectionInternal(clickedIndex, false, false);
                         else
-                            AddToSelection(clickedIndex, false);
+                            AddToSelection(clickedIndex, false, false);
                     }
                     else if (selectionType == SelectionType.Multiple && evt.shiftKey)
                     {
                         if (m_RangeSelectionOrigin == -1 || m_SelectedIndices.Count == 0)
                         {
                             m_RangeSelectionOrigin = clickedIndex;
-                            SetSelectionInternal(new[] { clickedIndex }, false);
+                            SetSelectionInternal(new[] { clickedIndex }, false, false);
                         }
                         else
                         {
-                            DoRangeSelection(clickedIndex, false);
+                            DoRangeSelection(clickedIndex, false, false);
                         }
                     }
                     else if (selectionType == SelectionType.Multiple && m_SelectedIndices.Contains(clickedIndex))
@@ -1104,7 +1154,7 @@ namespace Unity.AppUI.UI
                         m_RangeSelectionOrigin = clickedIndex;
                         if (!(m_SelectedIndices.Count == 1 && m_SelectedIndices[0] == clickedIndex))
                         {
-                            SetSelectionInternal(new[] { clickedIndex }, false);
+                            SetSelectionInternal(new[] { clickedIndex }, false, false);
                         }
                     }
 
@@ -1126,7 +1176,7 @@ namespace Unity.AppUI.UI
             return itemsSource != null && makeItem != null && bindItem != null;
         }
 
-        void NotifyOfSelectionChange()
+        void PostSelection(bool updatePreviousSelection, bool sendNotification)
         {
             if (!HasValidDataAndBindings())
                 return;
@@ -1134,9 +1184,14 @@ namespace Unity.AppUI.UI
             if (m_PreviouslySelectedIndices.SequenceEqual(m_SelectedIndices))
                 return;
             
-            m_PreviouslySelectedIndices.Clear();
-            m_PreviouslySelectedIndices.AddRange(m_SelectedIndices);
-            selectionChanged?.Invoke(m_SelectedItems);
+            if (updatePreviousSelection)
+            {
+                m_PreviouslySelectedIndices.Clear();
+                m_PreviouslySelectedIndices.AddRange(m_SelectedIndices);
+            }
+            
+            if (sendNotification)
+                selectionChanged?.Invoke(m_SelectedItems);
         }
 
         void OnAttachToPanel(AttachToPanelEvent evt)
@@ -1203,8 +1258,10 @@ namespace Unity.AppUI.UI
             {
                 var clickedIndex = GetIndexByWorldPosition(evt.position);
                 if (clickedIndex >= 0 && clickedIndex < m_ItemsSource.Count)
+                {
                     doubleClicked?.Invoke(clickedIndex);
-                Apply(GridOperations.Choose, evt.shiftKey);
+                    Apply(GridOperations.Choose, evt.shiftKey);
+                }
             }
         }
 
@@ -1270,14 +1327,14 @@ namespace Unity.AppUI.UI
                 return;
             }
             
-            NotifyOfSelectionChange();
+            PostSelection(true, true);
         }
 
         void CancelSoftSelect()
         {
             if (m_SoftSelectIndex != -1)
             {
-                SetSelectionInternal(m_OriginalSelection, false);
+                SetSelectionInternal(m_OriginalSelection, false, false);
                 scrollView.verticalScroller.value = m_OriginalScrollOffset;
             }
 
@@ -1591,6 +1648,12 @@ namespace Unity.AppUI.UI
                 name = "prevent-scroll-with-modifiers",
                 defaultValue = k_DefaultPreventScrollWithModifiers
             };
+            
+            readonly UxmlBoolAttributeDescription m_AllowNoSelection = new UxmlBoolAttributeDescription
+            {
+                name = "allow-no-selection",
+                defaultValue = true
+            };
 
             /// <summary>
             /// Returns an empty enumerable, because list views usually do not have child elements.
@@ -1623,6 +1686,8 @@ namespace Unity.AppUI.UI
                 view.preventScrollWithModifiers = m_PreventScrollWithModifiers.GetValueFromBag(bag, cc);
                 
                 view.selectionType = m_SelectionType.GetValueFromBag(bag, cc);
+                
+                view.allowNoSelection = m_AllowNoSelection.GetValueFromBag(bag, cc);
             }
         }
 
