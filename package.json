@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "765b512532639ada7a9bec37a7b11de323d0910e"
+    "revision": "00ac0664c0dcc71d9b84cb6758610af8f7343eb5"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -80,10 +80,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added `allowNoSelection` property to the `GridView` component to enable or disable the selection of no items. \n\n### Fixed\n\n- Fixed the support of nested components inside the `Button` component.\n- Fixed the reset of the previous selection when `GridView.SetSelectionWithoutNotify` method is called."
+    "changelog": "### Added \n\n- Added `closeOnSelection` property to the `MenuTrigger` component.\n- Added `closeOnSelection` property to the `ActionGroup` component to close the popover menu (if any) when an item is selected.\n- Added `primaryButton`, `secondaryButton` and `cancelButton` public access to the `AlertDialog` component.\n- Added the autofocus of the first available action in the `AlertDialog` component.\n\n### Fixed\n\n- Fixed `closeOnSelection` property in `MenuBuilder` component.\n- Fixed `TextInput` styling for Unity 2023.1+\n- Fixed `InvalidCastException` at startup of santandlone builds (in both Mono and IL2CPP)\n- Fixed `NullReferenceException` when dismissing a Popup from a destroyed UI-Toolkit panel.\n- Fixed sub-menu indicator icon in `MenuItem` component.\n- Fixed context click handling in `GridView` component."
   },
   "upmCi": {
-    "footprint": "a1b4826993445488130eac59cf7f9543118728cf"
+    "footprint": "07601e9ead6d8a5fd919e81544a77af84509fde8"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.6/manual/index.html"
 }

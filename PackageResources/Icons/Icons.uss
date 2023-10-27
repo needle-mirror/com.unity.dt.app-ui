@@ -1018,6 +1018,10 @@
     --unity-image: url("./Regular/X.png");
 }
 
+.appui-icon--sub-menu-indicator {
+    --unity-image: url("./SubMenuIndicator.png");
+}
+
 .appui-icon--text-area-resizer {
     --unity-image: url("./TextAreaResizer.png");
 }

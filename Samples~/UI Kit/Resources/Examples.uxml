@@ -164,7 +164,7 @@
                         <appui:Text text="Overflow - Selectable" class="example-subtitle" />
                         <ui:VisualElement class="example-section">
                             <appui:SplitView fixed-pane-index="0" fixed-pane-initial-dimension="200" style="height: 100px;">
-                                <appui:ActionGroup compact="true" selection-type="Multiple">
+                                <appui:ActionGroup compact="true" selection-type="Multiple" close-on-selection="false">
                                     <appui:ActionButton label="Option 1" />
                                     <appui:ActionButton label="Option 2" />
                                     <appui:ActionButton label="Option 3" />
@@ -1498,7 +1498,7 @@
                             <appui:Text text="By Code" class="example-subtitle" />
                             <appui:ActionButton name="menu-action-code" label="Click here!" />
                             <appui:Text text="By UXML" class="example-subtitle" />
-                            <appui:MenuTrigger>
+                            <appui:MenuTrigger close-on-selection="false">
                                 <appui:ActionButton label="Click here!" />
                                 <appui:Menu>
                                     <appui:MenuItem label="Item 1" />

@@ -240,7 +240,7 @@ namespace Unity.AppUI.UI
         protected override void InvokeDismissedEventHandlers(DismissType reason)
         {
             base.InvokeDismissedEventHandlers(reason);
-            targetParent.panel.visualTree.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            targetParent?.panel?.visualTree.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace Unity.AppUI.UI
                 .SetAnchor(referenceView);
             popoverVisualElement.RegisterCallback<ActionTriggeredEvent>(evt =>
             {
-                if (evt.target is MenuItem or PickerItem && menuBuilder.closeOnSelection)
+                if (menuBuilder.closeOnSelection || evt.target is MenuItem { selectable: false })
                     menuBuilder.Dismiss(DismissType.Action);
             });
             menuBuilder.dismissed += (_, _) => menu.CloseSubMenus();

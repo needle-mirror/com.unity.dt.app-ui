@@ -85,7 +85,10 @@ namespace Unity.AppUI.UI
 
         static CustomStyleProperty<int> s_ItemHeightProperty = new CustomStyleProperty<int>("--unity-item-height");
 
-        internal readonly ScrollView scrollView;
+        /// <summary>
+        /// The <see cref="UnityEngine.UIElements.ScrollView"/> used by the GridView.
+        /// </summary>
+        public ScrollView scrollView { get; }
 
         readonly List<int> m_SelectedIds = new List<int>();
 
@@ -675,7 +678,7 @@ namespace Unity.AppUI.UI
         {
             get { return m_RowPool; }
         }
-
+        
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
             Refresh();
@@ -698,6 +701,14 @@ namespace Unity.AppUI.UI
         /// This callback receives an enumerable that contains the item or items selected.
         /// </remarks>
         public event Action<IEnumerable<object>> selectionChanged;
+
+        /// <summary>
+        /// Callback triggered when the selection changes.
+        /// </summary>
+        /// <remarks>
+        /// This callback receives an enumerable that contains the indices of selected items.
+        /// </remarks>
+        public event Action<IEnumerable<int>> selectedIndicesChanged;
 
         /// <summary>
         /// Callback triggered when the user right-clicks on an item.
@@ -1103,7 +1114,7 @@ namespace Unity.AppUI.UI
         void DoSoftSelect(PointerDownEvent evt, int clickCount)
         {
             var clickedIndex = GetIndexByWorldPosition(evt.position);
-            if (clickedIndex > m_ItemsSource.Count - 1)
+            if (clickedIndex > m_ItemsSource.Count - 1 || clickedIndex < 0)
             {
                 if (evt.button == (int)MouseButton.LeftMouse && allowNoSelection)
                     ClearSelection();
@@ -1113,52 +1124,47 @@ namespace Unity.AppUI.UI
             m_SoftSelectIndex = clickedIndex;
             m_SoftSelectIndexWasPreviouslySelected = m_SelectedIndices.Contains(clickedIndex);
 
-            var clickedItemId = GetIdFromIndex(clickedIndex);
-            switch (clickCount)
+            if (clickCount == 1)
             {
-                case 2:
-                    break;
-                default:
-                    if (selectionType == SelectionType.None)
-                        return;
+                if (selectionType == SelectionType.None)
+                    return;
 
-                    if (selectionType == SelectionType.Multiple && evt.actionKey)
+                if (selectionType == SelectionType.Multiple && evt.actionKey)
+                {
+                    m_RangeSelectionOrigin = clickedIndex;
+
+                    // Add/remove single clicked element
+                    var clickedItemId = GetIdFromIndex(clickedIndex);
+                    if (m_SelectedIds.Contains(clickedItemId))
+                        RemoveFromSelectionInternal(clickedIndex, false, false);
+                    else
+                        AddToSelection(clickedIndex, false, false);
+                }
+                else if (selectionType == SelectionType.Multiple && evt.shiftKey)
+                {
+                    if (m_RangeSelectionOrigin == -1 || m_SelectedIndices.Count == 0)
                     {
                         m_RangeSelectionOrigin = clickedIndex;
-
-                        // Add/remove single clicked element
-                        if (m_SelectedIds.Contains(clickedItemId))
-                            RemoveFromSelectionInternal(clickedIndex, false, false);
-                        else
-                            AddToSelection(clickedIndex, false, false);
+                        SetSelectionInternal(new[] { clickedIndex }, false, false);
                     }
-                    else if (selectionType == SelectionType.Multiple && evt.shiftKey)
+                    else
                     {
-                        if (m_RangeSelectionOrigin == -1 || m_SelectedIndices.Count == 0)
-                        {
-                            m_RangeSelectionOrigin = clickedIndex;
-                            SetSelectionInternal(new[] { clickedIndex }, false, false);
-                        }
-                        else
-                        {
-                            DoRangeSelection(clickedIndex, false, false);
-                        }
+                        DoRangeSelection(clickedIndex, false, false);
                     }
-                    else if (selectionType == SelectionType.Multiple && m_SelectedIndices.Contains(clickedIndex))
+                }
+                else if (selectionType == SelectionType.Multiple && m_SoftSelectIndexWasPreviouslySelected)
+                {
+                    // Do noting, selection will be processed OnPointerUp.
+                    // If drag and drop will be started GridViewDragger will capture the mouse and GridView will not receive the mouse up event.
+                }
+                else // single
+                {
+                    m_RangeSelectionOrigin = clickedIndex;
+                    if (!(m_SelectedIndices.Count == 1 && m_SelectedIndices[0] == clickedIndex))
                     {
-                        // Do noting, selection will be processed OnPointerUp.
-                        // If drag and drop will be started GridViewDragger will capture the mouse and GridView will not receive the mouse up event.
+                        SetSelectionInternal(new[] { clickedIndex }, false, false);
                     }
-                    else // single
-                    {
-                        m_RangeSelectionOrigin = clickedIndex;
-                        if (!(m_SelectedIndices.Count == 1 && m_SelectedIndices[0] == clickedIndex))
-                        {
-                            SetSelectionInternal(new[] { clickedIndex }, false, false);
-                        }
-                    }
-
-                    break;
+                }
             }
             
             ScrollToItem(clickedIndex);
@@ -1191,7 +1197,10 @@ namespace Unity.AppUI.UI
             }
             
             if (sendNotification)
+            {
                 selectionChanged?.Invoke(m_SelectedItems);
+                selectedIndicesChanged?.Invoke(m_SelectedIndices);
+            }
         }
 
         void OnAttachToPanel(AttachToPanelEvent evt)
@@ -1321,7 +1330,9 @@ namespace Unity.AppUI.UI
             var index = m_SoftSelectIndex;
             m_SoftSelectIndex = -1;
 
-            if (m_SoftSelectIndexWasPreviouslySelected)
+            if (m_SoftSelectIndexWasPreviouslySelected && 
+                evt.button == (int)MouseButton.LeftMouse &&
+                evt.modifiers == EventModifiers.None)
             {
                 ProcessSingleClick(index);
                 return;

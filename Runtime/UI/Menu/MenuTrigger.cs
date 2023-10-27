@@ -34,6 +34,11 @@ namespace Unity.AppUI.UI
         /// The menu to display.
         /// </summary>
         public Menu menu { get; private set; }
+        
+        /// <summary>
+        /// Whether the menu should close when a selection is made.
+        /// </summary>
+        public bool closeOnSelection { get; set; } = true;
 
         void OnGeometryChanged(GeometryChangedEvent evt)
         {
@@ -82,6 +87,7 @@ namespace Unity.AppUI.UI
         void OnActionTriggered()
         {
             var popover = MenuBuilder.Build(anchor ?? trigger, menu);
+            popover.SetCloseOnSelection(closeOnSelection);
             popover.Show();
         }
 
@@ -101,6 +107,12 @@ namespace Unity.AppUI.UI
                 name = "anchor",
                 defaultValue = null
             };
+            
+            readonly UxmlBoolAttributeDescription m_CloseOnSelection = new UxmlBoolAttributeDescription
+            {
+                name = "close-on-selection",
+                defaultValue = true
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -115,6 +127,7 @@ namespace Unity.AppUI.UI
                 var el = (MenuTrigger)ve;
 
                 el.m_AnchorName = m_Anchor.GetValueFromBag(bag, cc);
+                el.closeOnSelection = m_CloseOnSelection.GetValueFromBag(bag, cc);
             }
         }
     }

@@ -15,7 +15,7 @@ namespace Unity.AppUI.UI
 
         internal const string checkmarkIconName = "check";
 
-        const string k_SubMenuIconName = "arrows-submenuicon";
+        const string k_SubMenuIconName = "sub-menu-indicator";
 
         /// <summary>
         /// The MenuItem main styling class.
@@ -411,10 +411,9 @@ namespace Unity.AppUI.UI
         void OnClick()
         {
             if (selectable)
-            {
                 value = !value;
-            }
-            else if (subMenu != null)
+            
+            if (subMenu != null)
             {
                 ScheduleOpenSubMenu(0);
             }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -16,8 +15,8 @@ namespace Unity.AppUI.UI
         internal static readonly PropertyInfo worldBoundingBoxProp =
             typeof(VisualElement).GetProperty("worldBoundingBox", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        static readonly ConditionalWeakTable<VisualElement, AdditionalData> k_AdditionalDataCache =
-            new ConditionalWeakTable<VisualElement, AdditionalData>();
+        static readonly WeakReferenceTable<VisualElement, AdditionalData> k_AdditionalDataCache =
+            new WeakReferenceTable<VisualElement, AdditionalData>();
 
         /// <summary>
         /// Get the current application context associated with the current <see cref="VisualElement"/> object.
