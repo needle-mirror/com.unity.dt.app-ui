@@ -411,10 +411,9 @@ namespace Unity.AppUI.UI
         void OnClick()
         {
             if (selectable)
-            {
                 value = !value;
-            }
-            else if (subMenu != null)
+            
+            if (subMenu != null)
             {
                 ScheduleOpenSubMenu(0);
             }

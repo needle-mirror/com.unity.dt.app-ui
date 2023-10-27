@@ -136,9 +136,12 @@ namespace Unity.AppUI.UI
                 AddToClassList(ussClassName);
 
                 pickingMode = PickingMode.Position;
-                focusable = true;
 
                 m_ContentContainer = new ExVisualElement { name = contentContainerUssClassName, pickingMode = PickingMode.Position, focusable = true, passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.OutsetShadows };
+                TextField.isCompositeRootProp!.SetValue(m_ContentContainer, true);
+                TextField.excludeFromFocusRingProp!.SetValue(m_ContentContainer, true);
+                m_ContentContainer.delegatesFocus = true;
+                
                 m_ContentContainer.AddToClassList(contentContainerUssClassName);
 
                 hierarchy.Add(m_ContentContainer);

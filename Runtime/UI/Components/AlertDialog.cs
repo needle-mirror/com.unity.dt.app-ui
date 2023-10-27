@@ -1,5 +1,6 @@
 using System;
 using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
@@ -85,12 +86,34 @@ namespace Unity.AppUI.UI
         AlertSemantic m_Variant = AlertSemantic.Default;
 
         readonly Icon m_IconElement;
+        
+        /// <summary>
+        /// The AlertDialog primary action button.
+        /// </summary>
+        public Button primaryButton => m_PrimaryButton;
+        
+        /// <summary>
+        /// The AlertDialog secondary action button.
+        /// </summary>
+        public Button secondaryButton => m_SecondaryButton;
+        
+        /// <summary>
+        /// The AlertDialog cancel action button.
+        /// </summary>
+        public Button cancelButton => m_CancelButton;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public AlertDialog()
         {
+            focusable = true;
+            TextField.isCompositeRootProp!.SetValue(this, true);
+            TextField.excludeFromFocusRingProp!.SetValue(this, true);
+            delegatesFocus = true;
+            
+            RegisterCallback<FocusInEvent>(OnFocusIn);
+            
             m_PrimaryButton = new Button { name = primaryActionUssClassName, primary = true };
             m_PrimaryButton.AddToClassList(primaryActionUssClassName);
 
@@ -123,6 +146,22 @@ namespace Unity.AppUI.UI
             m_Heading.hierarchy.Add(m_IconElement);
 
             variant = AlertSemantic.Default;
+        }
+
+        void OnFocusIn(FocusInEvent evt)
+        {
+            schedule.Execute(DeferFocusFirstAction);
+            UnregisterCallback<FocusInEvent>(OnFocusIn);
+        }
+
+        void DeferFocusFirstAction()
+        {
+            if (m_PrimaryButton.userData != null)
+                m_PrimaryButton.Focus();
+            else if (m_SecondaryButton.userData != null)
+                m_SecondaryButton.Focus();
+            else if (m_CancelButton.userData != null)
+                m_CancelButton.Focus();
         }
 
         /// <summary>

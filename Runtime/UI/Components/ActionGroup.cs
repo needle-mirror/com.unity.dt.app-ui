@@ -109,6 +109,7 @@ namespace Unity.AppUI.UI
             m_MoreButton.clicked += OnMoreButtonClicked;
             hierarchy.Add(m_MoreButton);
             vertical = false;
+            closeOnSelection = true;
 
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             RegisterCallback<ActionTriggeredEvent>(OnActionTriggered);
@@ -173,6 +174,11 @@ namespace Unity.AppUI.UI
                     ClearSelection();
             }
         }
+        
+        /// <summary>
+        /// Whether the ActionGroup's menu popover should close when a selection is made.
+        /// </summary>
+        public bool closeOnSelection { get; set; }
         
         /// <summary>
         /// Deselects any selected items.
@@ -247,8 +253,8 @@ namespace Unity.AppUI.UI
                 return;
 
             ClearSelectionWithoutNotify();
-            m_SelectedActionIds.AddRange(newSelection);
-            RefreshSelectionUI();
+            m_SelectedActionIds.AddRange(newSelection); 
+            RefreshSelectionUI(closeOnSelection);
             if (sendEvent)
                 NotifyOfSelectionChange();
         }
@@ -325,10 +331,14 @@ namespace Unity.AppUI.UI
             RefreshUI();
         }
 
-        void RefreshSelectionUI()
+        void RefreshSelectionUI(bool dismissPopover = true)
         {
-            m_MenuBuilder?.Dismiss(DismissType.Action);
-            m_MenuBuilder = null;
+            if (dismissPopover)
+            {
+                m_MenuBuilder?.Dismiss(DismissType.Action);
+                m_MenuBuilder = null;
+            }
+            
             for (var i = 0; i < m_HandledChildren.Count; i++)
             {
                 var child = m_HandledChildren[i];
@@ -402,6 +412,7 @@ namespace Unity.AppUI.UI
 
             m_MenuBuilder?.Dismiss(DismissType.Consecutive);
             m_MenuBuilder = MenuBuilder.Build(m_MoreButton)
+                .SetCloseOnSelection(closeOnSelection)
                 .SetPlacement(vertical ? PopoverPlacement.EndBottom : PopoverPlacement.BottomStart);
 
             var selectable = selectionType != SelectionType.None;
@@ -471,6 +482,12 @@ namespace Unity.AppUI.UI
                 name = "selection-type",
                 defaultValue = k_DefaultSelectionType
             };
+            
+            readonly UxmlBoolAttributeDescription m_CloseOnSelection = new UxmlBoolAttributeDescription
+            {
+                name = "close-on-selection",
+                defaultValue = true
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -488,6 +505,7 @@ namespace Unity.AppUI.UI
                 el.vertical = m_Vertical.GetValueFromBag(bag, cc);
                 el.justified = m_Justified.GetValueFromBag(bag, cc);
                 el.selectionType = m_SelectionType.GetValueFromBag(bag, cc);
+                el.closeOnSelection = m_CloseOnSelection.GetValueFromBag(bag, cc);
             }
         }
     }
