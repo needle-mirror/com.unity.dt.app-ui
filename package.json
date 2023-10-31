@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "b4e16d01daa76f9d344c660ba4e0e3084adac5ae"
+    "revision": "d77c68ae7977f1bffcc0aafc176952c21d194234"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -80,10 +80,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added `getItemId` property to the `GridView` component to get the id of an item.\n\n### Fixed\n\n- Fixed items selection persistence between refreshes in `GridView` component."
+    "changelog": "### Fixed\n\n- Fixed `NullReferenceException` when testing accept drag in `GridView` component."
   },
   "upmCi": {
-    "footprint": "31bfa240e531218d245cb6af163689e454e5feb5"
+    "footprint": "2359cb1f7fa08594d5551ba7e1e4d4f4c2d24710"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.6/manual/index.html"
 }

@@ -676,6 +676,9 @@ namespace Unity.AppUI.UI
 
         bool DefaultAcceptStartDrag(Vector2 worldPosition)
         {
+            if (!HasValidDataAndBindings())
+                return false;
+            
             var idx = GetIndexByWorldPosition(worldPosition);
             return idx >= 0 && idx < itemsSource.Count;
         }
