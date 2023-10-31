@@ -184,28 +184,28 @@ namespace Unity.AppUI.UI
         
         void OnXFieldChanging(ChangingEvent<float> evt)
         {
-            evt.PreventDefault();
+            
             evt.StopPropagation();
             TrySendChangingEvent(new Vector4(evt.newValue, m_Value.y, m_Value.z, m_Value.w));
         }
         
         void OnYFieldChanging(ChangingEvent<float> evt)
         {
-            evt.PreventDefault();
+            
             evt.StopPropagation();
             TrySendChangingEvent(new Vector4(m_Value.x, evt.newValue, m_Value.z, m_Value.w));
         }
         
         void OnZFieldChanging(ChangingEvent<float> evt)
         {
-            evt.PreventDefault();
+            
             evt.StopPropagation();
             TrySendChangingEvent(new Vector4(m_Value.x, m_Value.y, evt.newValue, m_Value.w));
         }
         
         void OnWFieldChanging(ChangingEvent<float> evt)
         {
-            evt.PreventDefault();
+            
             evt.StopPropagation();
             TrySendChangingEvent(new Vector4(m_Value.x, m_Value.y, m_Value.z, evt.newValue));
         }

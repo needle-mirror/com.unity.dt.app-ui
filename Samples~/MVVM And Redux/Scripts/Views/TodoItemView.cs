@@ -83,7 +83,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
 
         void InitializeComponents()
         {
-            var visualTree = Resources.Load<VisualTreeAsset>("MVVMRedux/Views/TodoItemView");
+            var visualTree = MVVMReduxAppBuilder.instance.todoItemTemplate;
             visualTree.CloneTree(this);
             
             m_Checkbox = this.Q<Checkbox>("checkbox");

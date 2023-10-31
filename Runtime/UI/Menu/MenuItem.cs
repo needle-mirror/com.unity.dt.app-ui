@@ -121,24 +121,11 @@ namespace Unity.AppUI.UI
             icon = null;
             label = null;
             subMenu = null;
-        }
-
-        /// <summary>
-        /// Executes logic after the callbacks registered on the event target have executed, unless the event is marked to prevent its default behaviour. EventBase{T}.PreventDefault.
-        /// </summary>
-        /// <param name="evt"> The event instance to process. </param>
-        protected override void ExecuteDefaultActionAtTarget(EventBase evt)
-        {
-            base.ExecuteDefaultActionAtTarget(evt);
-
-            if (evt.eventTypeId == GeometryChangedEvent.TypeId())
-                OnGeometryChanged((GeometryChangedEvent)evt);
-            else if (evt.eventTypeId == PointerOverEvent.TypeId())
-                OnEntered((PointerOverEvent)evt);
-            else if (evt.eventTypeId == PointerOutEvent.TypeId())
-                OnLeft((PointerOutEvent)evt);
-            else if (evt.eventTypeId == KeyDownEvent.TypeId())
-                OnKeyDown((KeyDownEvent)evt);
+            
+            RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+            RegisterCallback<PointerOverEvent>(OnEntered);
+            RegisterCallback<PointerOutEvent>(OnLeft);
+            RegisterCallback<KeyDownEvent>(OnKeyDown);
         }
 
         void OnKeyDown(KeyDownEvent evt)
@@ -173,7 +160,7 @@ namespace Unity.AppUI.UI
             if (handled)
             {
                 evt.StopPropagation();
-                evt.PreventDefault();
+                
             }
         }
 

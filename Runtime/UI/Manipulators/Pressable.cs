@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.Bridge;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -128,17 +129,15 @@ namespace Unity.AppUI.UI
         /// <param name="evt">The base event to use to invoke the click.</param>
         internal void SimulateSingleClickInternal(EventBase evt)
         {
-            if (Clickable.pseudoStateProperty != null && target != null)
+            if (target != null)
             {
-                var pseudoStates = (PseudoStates)(int)Clickable.pseudoStateProperty.GetValue(target);
-                Clickable.pseudoStateProperty.SetValue(target, (int)(pseudoStates | PseudoStates.Active));
+                var pseudoStates = target.GetPseudoStates();
+                target.SetPseudoStates(pseudoStates | PseudoStates.Active);
                 target.AddToClassList(Styles.activeUssClassName);
                 target.schedule
                     .Execute(() =>
                     {
-                        Clickable.pseudoStateProperty.SetValue(target,
-                            (int) ((PseudoStates) (int) Clickable.pseudoStateProperty.GetValue(target) &
-                                ~PseudoStates.Active));
+                        target.SetPseudoStates(target.GetPseudoStates() & ~PseudoStates.Active);
                         target.RemoveFromClassList(Styles.activeUssClassName);
                     })
                     .ExecuteLater(16L);
@@ -151,10 +150,10 @@ namespace Unity.AppUI.UI
         /// </summary>
         public void ForceActivePseudoState()
         {
-            if (Clickable.pseudoStateProperty != null && target != null)
+            if (target != null)
             {
-                var pseudoStates = (PseudoStates)(int)Clickable.pseudoStateProperty.GetValue(target);
-                Clickable.pseudoStateProperty.SetValue(target, (int)(pseudoStates | PseudoStates.Active));
+                var pseudoStates = target.GetPseudoStates();
+                target.SetPseudoStates(pseudoStates | PseudoStates.Active);
                 target.AddToClassList(Styles.activeUssClassName);
             }
         }
@@ -258,15 +257,15 @@ namespace Unity.AppUI.UI
 
         void AddHoveredState()
         {
-            var pseudoStates = (PseudoStates)(int)Clickable.pseudoStateProperty.GetValue(target);
-            Clickable.pseudoStateProperty.SetValue(target, (int) (pseudoStates | PseudoStates.Hover));
+            var pseudoStates = target.GetPseudoStates();
+            target.SetPseudoStates(pseudoStates | PseudoStates.Hover);
             target.AddToClassList(Styles.hoveredUssClassName);
         }
         
         void RemoveHoverState()
         {
-            var pseudoStates = (PseudoStates)(int)Clickable.pseudoStateProperty.GetValue(target);
-            Clickable.pseudoStateProperty.SetValue(target, (int)(pseudoStates & ~PseudoStates.Hover));
+            var pseudoStates = target.GetPseudoStates();
+            target.SetPseudoStates(pseudoStates & ~PseudoStates.Hover);
             target.RemoveFromClassList(Styles.hoveredUssClassName);
         }
 
@@ -403,8 +402,8 @@ namespace Unity.AppUI.UI
             if (m_DeferDeactivate != null)
                 return;
             
-            var pseudoStates = (PseudoStates)(int)Clickable.pseudoStateProperty.GetValue(target);
-            Clickable.pseudoStateProperty.SetValue(target, (int)(pseudoStates & ~PseudoStates.Active));
+            var pseudoStates = target.GetPseudoStates();
+            target.SetPseudoStates(pseudoStates & ~PseudoStates.Active);
             target.RemoveFromClassList(Styles.activeUssClassName);
         }
 

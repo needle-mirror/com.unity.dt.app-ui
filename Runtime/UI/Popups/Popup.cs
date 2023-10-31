@@ -224,7 +224,7 @@ namespace Unity.AppUI.UI
             var focusableElement = GetFocusableElement();
             if (keyboardDismissEnabled && focusableElement != null && evt.keyCode == KeyCode.Escape)
             {
-                evt.PreventDefault();
+                
                 evt.StopPropagation();
                 Dismiss(DismissType.Cancel);
             }

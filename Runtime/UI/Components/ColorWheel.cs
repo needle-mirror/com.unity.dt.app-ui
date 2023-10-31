@@ -309,7 +309,7 @@ namespace Unity.AppUI.UI
 
             if (handled)
             {
-                evt.PreventDefault();
+                
                 evt.StopPropagation();
 
                 val = Mathf.Repeat(val, 1f);

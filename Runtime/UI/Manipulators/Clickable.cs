@@ -1,35 +1,15 @@
 using System;
-using System.Reflection;
+using Unity.AppUI.Bridge;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.UI
 {
-    [Flags]
-    enum PseudoStates
-    {
-        Active = 1,
-        Hover = 2,
-        Checked = 8,
-        Disabled = 32, // 0x00000020
-        Focus = 64, // 0x00000040
-        Root = 128, // 0x00000080
-    }
-
-    static class ScrollWaitDefinitions
-    {
-        public const int firstWait = 250; // ms
-        public const int regularWait = 30; // ms
-    }
-
     /// <summary>
     /// Clickable Manipulator, used on <see cref="Button"/> elements.
     /// </summary>
     public class Clickable : UnityEngine.UIElements.Clickable
     {
-        internal static readonly PropertyInfo pseudoStateProperty =
-            typeof(VisualElement).GetProperty("pseudoStates", BindingFlags.NonPublic | BindingFlags.Instance);
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -81,14 +61,13 @@ namespace Unity.AppUI.UI
         /// <param name="evt">The base event to use to invoke the click.</param>
         internal void SimulateSingleClickInternal(EventBase evt)
         {
-            if (pseudoStateProperty != null && target != null)
+            if (target != null)
             {
-                var pseudoStates = (PseudoStates)(int)pseudoStateProperty.GetValue(target);
-                pseudoStateProperty.SetValue(target, (int)(pseudoStates | PseudoStates.Active));
+                var pseudoStates = target.GetPseudoStates();
+                target.SetPseudoStates(pseudoStates | PseudoStates.Active);
                 target.schedule
                     .Execute(() =>
-                    pseudoStateProperty.SetValue(target,
-                        (int)((PseudoStates)(int)pseudoStateProperty.GetValue(target) & ~PseudoStates.Active)))
+                        target.SetPseudoStates(target.GetPseudoStates() & ~PseudoStates.Active))
                     .ExecuteLater(16L);
             }
             InvokeClick(evt);
@@ -99,10 +78,22 @@ namespace Unity.AppUI.UI
         /// </summary>
         public void ForceActivePseudoState()
         {
-            if (pseudoStateProperty != null && target != null)
+            if (target != null)
             {
-                var pseudoStates = (PseudoStates)(int)pseudoStateProperty.GetValue(target);
-                pseudoStateProperty.SetValue(target, (int)(pseudoStates | PseudoStates.Active));
+                var pseudoStates = target.GetPseudoStates();
+                target.SetPseudoStates(pseudoStates | PseudoStates.Active);
+            }
+        }
+        
+        /// <summary>
+        /// Force the remove of active pseudo state on the target element.
+        /// </summary>
+        public void ForceRemoveActivePseudoState()
+        {
+            if (target != null)
+            {
+                var pseudoStates = target.GetPseudoStates();
+                target.SetPseudoStates(pseudoStates & ~PseudoStates.Active);
             }
         }
     }

@@ -1,5 +1,6 @@
-using System.Reflection;
+using Unity.AppUI.Bridge;
 using UnityEngine.UIElements;
+using EventPropagation = Unity.AppUI.Bridge.EventBaseExtensionsBridge.EventPropagation;
 
 namespace Unity.AppUI.UI
 {
@@ -19,7 +20,11 @@ namespace Unity.AppUI.UI
 
         void LocalInit()
         {
-            EventUtils.propagationProp.SetValue(this, 1 | 2 | 4);
+            this.SetPropagation(EventPropagation.Bubbles | EventPropagation.TricklesDown
+#if !UNITY_2023_2_OR_NEWER
+                | EventPropagation.Cancellable
+#endif
+            );
         }
 
         /// <summary>

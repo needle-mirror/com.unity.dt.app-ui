@@ -497,7 +497,7 @@ namespace Unity.AppUI.UI
 
             if (handled)
             {
-                evt.PreventDefault();
+                
                 evt.StopPropagation();
             }
         }

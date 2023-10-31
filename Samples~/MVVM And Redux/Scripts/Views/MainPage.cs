@@ -55,7 +55,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
 
         void InitializeComponent()
         {
-            var template = Resources.Load<VisualTreeAsset>("MVVMRedux/Views/MainPage");
+            var template = MVVMReduxAppBuilder.instance.mainUITemplate;
             template.CloneTree(this);
             
             m_SearchTextField = this.Q<SearchBar>();

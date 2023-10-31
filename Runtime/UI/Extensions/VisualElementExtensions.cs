@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,9 +11,6 @@ namespace Unity.AppUI.UI
     /// </summary>
     public static class VisualElementExtensions
     {
-        internal static readonly PropertyInfo worldBoundingBoxProp =
-            typeof(VisualElement).GetProperty("worldBoundingBox", BindingFlags.NonPublic | BindingFlags.Instance);
-
         static readonly WeakReferenceTable<VisualElement, AdditionalData> k_AdditionalDataCache =
             new WeakReferenceTable<VisualElement, AdditionalData>();
 
@@ -37,26 +33,6 @@ namespace Unity.AppUI.UI
                 return contextProvider.context;
 
             return default;
-        }
-
-        /// <summary>
-        /// Get the <see cref="PanelSettings"/> instance associated to this <see cref="IPanel"/>, if any.
-        /// </summary>
-        /// <param name="panel">The <see cref="IPanel"/> object.</param>
-        /// <returns>The <see cref="PanelSettings"/> instance if it exists, null otherwise.</returns>
-        /// <exception cref="ArgumentNullException">The <see cref="IPanel"/> object must not be null.</exception>
-        public static PanelSettings GetPanelSettings(this IPanel panel)
-        {
-            if (panel == null)
-                throw new ArgumentNullException(nameof(panel));
-
-            var prop = panel.GetType()
-                .GetProperty("panelSettings", BindingFlags.Public | BindingFlags.Instance);
-
-            if (prop == null)
-                return null;
-
-            return prop.GetValue(panel) as PanelSettings;
         }
 
         /// <summary>
@@ -197,20 +173,6 @@ namespace Unity.AppUI.UI
             /// The tooltip template to use for this element.
             /// </summary>
             public VisualElement tooltipTemplate { get; set; } = null;
-        }
-
-        /// <summary>
-        /// Get the world bounding box of a <see cref="VisualElement"/>.
-        /// </summary>
-        /// <param name="element"> The <see cref="VisualElement"/> object.</param>
-        /// <returns> The world bounding box.</returns>
-        /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object can't be null.</exception>
-        public static Rect GetWorldBoundingBox(this VisualElement element)
-        {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
-
-            return (Rect)worldBoundingBoxProp.GetValue(element);
         }
 
         /// <summary>

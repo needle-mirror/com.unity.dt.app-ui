@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.Bridge;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -102,8 +103,8 @@ namespace Unity.AppUI.UI
             target.ReleasePointer(evt.pointerId);
             m_PointerId = PointerId.invalidPointerId;
 
-            Clickable.pseudoStateProperty.SetValue(target,
-                (int) ((PseudoStates) (int) Clickable.pseudoStateProperty.GetValue(target) & ~PseudoStates.Active));
+            var pseudoStates = target.GetPseudoStates();
+            target.SetPseudoStates(pseudoStates & ~PseudoStates.Active);
 
             m_IsDown = false;
             deltaPos = Vector2.zero;
@@ -124,8 +125,8 @@ namespace Unity.AppUI.UI
                 m_PointerId = evt.pointerId;
                 m_LastPos = evt.position;
                 target.CapturePointer(evt.pointerId);
-                var pseudoStates = (PseudoStates)(int)Clickable.pseudoStateProperty.GetValue(target);
-                Clickable.pseudoStateProperty.SetValue(target, (int)(pseudoStates | PseudoStates.Active));
+                var pseudoStates = target.GetPseudoStates();
+                target.SetPseudoStates(pseudoStates | PseudoStates.Active);
             }
 
             if (m_PointerId != evt.pointerId)
@@ -136,7 +137,7 @@ namespace Unity.AppUI.UI
             deltaPos = position - m_LastPos;
             m_LastPos = position;
 
-            Draggable.handledByDraggableProp.SetValue(evt, true);
+            evt.SetIsHandledByDraggable(true);
 
             m_DragHandler?.Invoke(this);
             hasMoved = true;
@@ -177,8 +178,8 @@ namespace Unity.AppUI.UI
             m_CancelHandler?.Invoke(this);
             m_PointerId = PointerId.invalidPointerId;
 
-            Clickable.pseudoStateProperty.SetValue(target,
-                (int) ((PseudoStates) (int) Clickable.pseudoStateProperty.GetValue(target) & ~PseudoStates.Active));
+            var pseudoStates = target.GetPseudoStates();
+            target.SetPseudoStates(pseudoStates & ~PseudoStates.Active);
 
             m_IsDown = false;
             deltaPos = Vector2.zero;

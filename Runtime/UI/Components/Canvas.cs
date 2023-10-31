@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -514,7 +515,7 @@ namespace Unity.AppUI.UI
 
         void OnWheel(WheelEvent evt)
         {
-            evt.PreventDefault();
+            
             evt.StopImmediatePropagation();
 
             // no support of touchpad App UI events in Alternate control scheme

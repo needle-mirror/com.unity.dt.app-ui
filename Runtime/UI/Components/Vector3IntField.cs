@@ -165,21 +165,21 @@ namespace Unity.AppUI.UI
         
         void OnXFieldChanging(ChangingEvent<int> evt)
         {
-            evt.PreventDefault();
+            
             evt.StopPropagation();
             TrySendChangingEvent(new Vector3Int(evt.newValue, m_Value.y, m_Value.z));
         }
         
         void OnYFieldChanging(ChangingEvent<int> evt)
         {
-            evt.PreventDefault();
+            
             evt.StopPropagation();
             TrySendChangingEvent(new Vector3Int(m_Value.x, evt.newValue, m_Value.z));
         }
         
         void OnZFieldChanging(ChangingEvent<int> evt)
         {
-            evt.PreventDefault();
+            
             evt.StopPropagation();
             TrySendChangingEvent(new Vector3Int(m_Value.x, m_Value.y, evt.newValue));
         }

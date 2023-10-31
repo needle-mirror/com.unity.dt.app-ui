@@ -176,7 +176,7 @@ namespace Unity.AppUI.UI
             
             if (evt.keyCode == KeyCode.Escape)
             {
-                evt.PreventDefault();
+                
                 evt.StopImmediatePropagation();
                 Cancel();
             }

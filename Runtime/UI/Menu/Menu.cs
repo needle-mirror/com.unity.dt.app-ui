@@ -45,6 +45,8 @@ namespace Unity.AppUI.UI
             };
             m_ScrollView.AddToClassList(containerUssClassName);
             hierarchy.Add(m_ScrollView);
+            
+            RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         }
 
         /// <summary>
@@ -57,21 +59,12 @@ namespace Unity.AppUI.UI
         /// </summary>
         public MenuItem parentItem { get; internal set; } = null;
 
-        /// <summary>
-        /// Executes logic after the callbacks registered on the event target have executed, unless the event is marked to prevent its default behaviour. EventBase{T}.PreventDefault.
-        /// </summary>
-        /// <param name="evt"> The event to execute the default action on. </param>
-        protected override void ExecuteDefaultActionAtTarget(EventBase evt)
+        void OnGeometryChanged(GeometryChangedEvent evt)
         {
-            base.ExecuteDefaultActionAtTarget(evt);
-
-            if (evt.eventTypeId == GeometryChangedEvent.TypeId())
+            if (panel != null)
             {
-                if (panel != null)
-                {
-                    var query = this.Query<MenuItem>().Where(item => item.selectable).Build();
-                    EnableInClassList(selectableUssClassName, query.ToList().Count > 0);
-                }
+                var query = this.Query<MenuItem>().Where(item => item.selectable).Build();
+                EnableInClassList(selectableUssClassName, query.ToList().Count > 0);
             }
         }
 

@@ -1,5 +1,5 @@
 using System;
-using System.Reflection;
+using Unity.AppUI.Bridge;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -10,8 +10,6 @@ namespace Unity.AppUI.UI
     /// </summary>
     public class Draggable : Pressable
     {
-        internal static readonly PropertyInfo handledByDraggableProp = typeof(PointerMoveEvent).GetProperty("isHandledByDraggable", BindingFlags.NonPublic | BindingFlags.Instance);
-
         readonly Action<Draggable> m_DownHandler;
 
         readonly Action<Draggable> m_DragHandler;
@@ -122,7 +120,7 @@ namespace Unity.AppUI.UI
                 if (evt is PointerMoveEvent pointerMoveEvent)
                 {
                     if (pointerMoveEvent.pointerId != PointerId.mousePointerId)
-                        handledByDraggableProp.SetValue(pointerMoveEvent, true);
+                        pointerMoveEvent.SetIsHandledByDraggable(true);
                 }
 
                 m_DragHandler?.Invoke(this);

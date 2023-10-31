@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.Bridge;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.UI
@@ -103,8 +104,8 @@ namespace Unity.AppUI.UI
             pickingMode = PickingMode.Position;
             passMask = 0;
             tabIndex = 0;
-            TextField.isCompositeRootProp!.SetValue(this, true);
-            TextField.excludeFromFocusRingProp!.SetValue(this, true);
+            this.SetIsCompositeRoot(true);
+            this.SetExcludeFromFocusRing(true);
             delegatesFocus = true;
 
             m_InputContainer = new VisualElement { name = inputContainerUssClassName, pickingMode = PickingMode.Ignore };
@@ -130,7 +131,7 @@ namespace Unity.AppUI.UI
 
         void OnInputValueChanged(ChangeEvent<string> evt)
         {
-            evt.PreventDefault();
+            
             evt.StopPropagation();
             if (ParseStringToValue(evt.newValue, out var newValue))
             {

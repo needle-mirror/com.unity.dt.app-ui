@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEditor;
 using UnityEditor.Toolbars;
 using UnityEditor.UIElements;
@@ -303,11 +302,17 @@ namespace Unity.AppUI.Editor
 
         void OnSelectionChanged(IEnumerable<int> indices)
         {
-            foreach (var idx in indices)
+            var enumerator = indices.GetEnumerator();
+
+            if (!enumerator.MoveNext())
             {
-                RefreshStoryList(m_StoriesList[idx]);
-                break;
+                RefreshDetailPage(null);
+                return;
             }
+
+            var idx = enumerator.Current;
+            var page = m_StoriesList[idx];
+            RefreshStoryList(page);
         }
 
         void RefreshStoryList(StoryBookPage page)
@@ -321,11 +326,18 @@ namespace Unity.AppUI.Editor
 
         void OnStorySelectionChanged(IEnumerable<int> indices)
         {
-            foreach (var idx in indices)
+            var enumerator = indices.GetEnumerator();
+
+            if (!enumerator.MoveNext())
             {
-                RefreshDetailPage(((List<StoryBookStory>)m_StoryListView.itemsSource)[idx]);
-                break;
+                RefreshDetailPage(null);
+                return;
             }
+
+            var idx = enumerator.Current;
+            var story = ((List<StoryBookStory>)m_StoryListView.itemsSource)[idx];
+
+            RefreshDetailPage(story);
         }
 
         VisualElement CreateDetailPage()

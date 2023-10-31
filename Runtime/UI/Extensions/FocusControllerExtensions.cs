@@ -1,4 +1,4 @@
-using System.Reflection;
+using Unity.AppUI.Bridge;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.UI
@@ -8,9 +8,6 @@ namespace Unity.AppUI.UI
     /// </summary>
     public static class FocusControllerExtensions
     {
-        static readonly MethodInfo k_FocusNextInDirection = typeof(FocusController).GetMethod("FocusNextInDirection",
-            BindingFlags.Instance | BindingFlags.NonPublic);
-
         /// <summary>
         /// Focus the next element in the given direction.
         /// </summary>
@@ -25,9 +22,9 @@ namespace Unity.AppUI.UI
 #if UNITY_2023_2_OR_NEWER
             var r = FocusNextInDirectionEx(controller, controller.focusedElement, direction);
 #else 
-            var r = k_FocusNextInDirection!.Invoke(controller, new object[] { direction });
+            var r = controller.FocusNextInDirection(direction);
 #endif
-            return r as Focusable;
+            return r;
         }
 
         /// <summary>
@@ -44,11 +41,11 @@ namespace Unity.AppUI.UI
                 return null;
 
 #if UNITY_2023_2_OR_NEWER
-            var r = k_FocusNextInDirection!.Invoke(controller, new object[] { currentlyFocusedElement, direction });
+            var r = controller.FocusNextInDirection(currentlyFocusedElement, direction);
 #else 
             var r = controller.FocusNextInDirectionEx(direction);
 #endif
-            return r as Focusable;
+            return r;
         }
     }
 }

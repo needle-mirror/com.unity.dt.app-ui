@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -15,20 +16,13 @@ namespace Unity.AppUI.Editor
             m_Stories.Add(new StoryBookStory("Main", () =>
             {
                 var element = new VisualElement();
-                var tree = Resources.Load<VisualTreeAsset>("Examples");
+                var tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
+                    "Assets/Samples/App UI/1.0.0-pre.1/UI Kit/SampleResources/Examples.uxml");
                 tree.CloneTree(element);
                 var root = element.Q<VisualElement>("root-main");
-                // remove scrollview
-                // var scrollView = element.Q<ScrollView>();
-                // var panel = scrollView.parent;
-                // var root = panel.parent;
-                // var children = scrollView.contentContainer.Children().ToList();
-                // foreach (var c in children)
-                // {
-                //     root.Add(c);
-                // }
-                // root.Remove(panel);
-                root.styleSheets.Add(Resources.Load<ThemeStyleSheet>("ExampleTheme"));
+                root.styleSheets.Add(
+                    AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(
+                        "Assets/Samples/App UI/1.0.0-pre.1/UI Kit/SampleResources/ExampleTheme.tss"));
                 Samples.Examples.SetupDataBinding(root);
                 root.Query(className: "example-context-switcher-panel").ForEach(visualElement => 
                     visualElement.style.display = DisplayStyle.None);

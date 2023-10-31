@@ -4,6 +4,16 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-pre.1] - 2023-10-31
+
+### Added
+
+- Added debug symbols for native plugins.
+
+### Changed
+
+- Moved internal Engine API related code into a new assembly `Unity.AppUI.InternalAPIBridge`.
+
 ## [0.6.4] - 2023-10-31
 
 ### Fixed
@@ -26,8 +36,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added `closeOnSelection` property to the `MenuTrigger` component.
 - Added `closeOnSelection` property to the `ActionGroup` component to close the popover menu (if any) when an item is selected.
-- Added `primaryButton`, `secondaryButton` and `cancelButton` public access to the `AlertDialog` component.
-- Added the autofocus of the first available action in the `AlertDialog` component.
 
 ### Fixed
 
@@ -80,8 +88,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [Backport] Added `closeOnSelection` property to the `MenuTrigger` component.
 - [Backport] Added `closeOnSelection` property to the `ActionGroup` component to close the popover menu (if any) when an item is selected.
-- [Backport] Added `primaryButton`, `secondaryButton` and `cancelButton` public access to the `AlertDialog` component.
-- [Backport] Added the autofocus of the first available action in the `AlertDialog` component.
 
 ### Fixed
 

@@ -280,7 +280,7 @@ namespace Unity.AppUI.UI
                         m_MinHandle.tabIndex == 0 ? focusedHandleValue : minValue, 
                         m_MinHandle.tabIndex == 0 ? maxValue : focusedHandleValue);
                     evt.StopPropagation();
-                    evt.PreventDefault();
+                    
 
                     SetValueWithoutNotify(newValue);
 

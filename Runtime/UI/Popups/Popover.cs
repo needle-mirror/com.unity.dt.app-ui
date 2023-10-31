@@ -297,7 +297,7 @@ namespace Unity.AppUI.UI
             if (insideAnchor || insideLastFocusedElement)
             {
                 // prevent reopening the same popover again...
-                evt.PreventDefault();
+                
                 evt.StopImmediatePropagation();
             }
             Dismiss(DismissType.OutOfBounds);

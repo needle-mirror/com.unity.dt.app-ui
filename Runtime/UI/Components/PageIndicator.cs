@@ -134,7 +134,7 @@ namespace Unity.AppUI.UI
 
             if (handled)
             {
-                evt.PreventDefault();
+                
                 evt.StopPropagation();
             }
         }
@@ -144,7 +144,7 @@ namespace Unity.AppUI.UI
             if (evt.target is VisualElement dot && dot.hierarchy.parent == this)
             {
                 value = hierarchy.IndexOf(dot);
-                evt.PreventDefault();
+                
                 evt.StopPropagation();
             }
         }

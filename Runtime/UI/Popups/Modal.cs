@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
 using UnityEngine.UIElements;
 
@@ -138,8 +139,8 @@ namespace Unity.AppUI.UI
                 pickingMode = PickingMode.Position;
 
                 m_ContentContainer = new ExVisualElement { name = contentContainerUssClassName, pickingMode = PickingMode.Position, focusable = true, passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.OutsetShadows };
-                TextField.isCompositeRootProp!.SetValue(m_ContentContainer, true);
-                TextField.excludeFromFocusRingProp!.SetValue(m_ContentContainer, true);
+                m_ContentContainer.SetIsCompositeRoot(true);
+                m_ContentContainer.SetExcludeFromFocusRing(true);
                 m_ContentContainer.delegatesFocus = true;
                 
                 m_ContentContainer.AddToClassList(contentContainerUssClassName);

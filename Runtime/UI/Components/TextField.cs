@@ -1,5 +1,5 @@
 using System;
-using System.Reflection;
+using Unity.AppUI.Bridge;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
@@ -69,10 +69,6 @@ namespace Unity.AppUI.UI
 
         string m_PreviousValue;
         
-        internal static readonly PropertyInfo isCompositeRootProp = typeof(VisualElement).GetProperty("isCompositeRoot", BindingFlags.Instance | BindingFlags.NonPublic);
-
-        internal static readonly PropertyInfo excludeFromFocusRingProp = typeof(Focusable).GetProperty("excludeFromFocusRing", BindingFlags.Instance | BindingFlags.NonPublic);
-
         VisualElement m_LeadingElement;
 
         VisualElement m_TrailingElement;
@@ -98,8 +94,8 @@ namespace Unity.AppUI.UI
             pickingMode = PickingMode.Position;
             passMask = 0;
             tabIndex = 0;
-            isCompositeRootProp!.SetValue(this, true);
-            excludeFromFocusRingProp!.SetValue(this, true);
+            this.SetIsCompositeRoot(true);
+            this.SetExcludeFromFocusRing(true);
             delegatesFocus = true;
 
             m_LeadingContainer = new VisualElement { name = leadingContainerUssClassName, pickingMode = PickingMode.Ignore };
@@ -145,7 +141,7 @@ namespace Unity.AppUI.UI
 
         void OnInputValueChanged(ChangeEvent<string> e)
         {
-            e.PreventDefault();
+            
             e.StopPropagation();
             
             using var evt = ChangingEvent<string>.GetPooled();
@@ -160,7 +156,7 @@ namespace Unity.AppUI.UI
 
         void OnPlaceholderValueChanged(ChangeEvent<string> evt)
         {
-            evt.PreventDefault();
+            
             evt.StopPropagation();
         }
 

@@ -1,15 +1,10 @@
 using System;
-using System.Reflection;
+using Unity.AppUI.Bridge;
 using UnityEngine.UIElements;
+using EventPropagation = Unity.AppUI.Bridge.EventBaseExtensionsBridge.EventPropagation;
 
 namespace Unity.AppUI.UI
 {
-    static class EventUtils
-    {
-        internal static readonly PropertyInfo propagationProp =
-            typeof(EventBase).GetProperty("propagation", BindingFlags.Instance | BindingFlags.NonPublic);
-    }
-    
     /// <summary>
     /// An Action has been triggered.
     /// </summary>
@@ -26,8 +21,11 @@ namespace Unity.AppUI.UI
 
         void LocalInit()
         {
-            EventUtils.propagationProp.SetValue(this,
-                (int)(EventPropagations.Bubbles | EventPropagations.TricklesDown | EventPropagations.Cancellable));
+            this.SetPropagation(EventPropagation.Bubbles | EventPropagation.TricklesDown 
+#if !UNITY_2023_2_OR_NEWER
+                | EventPropagation.Cancellable
+#endif
+                );
         }
 
         /// <summary>

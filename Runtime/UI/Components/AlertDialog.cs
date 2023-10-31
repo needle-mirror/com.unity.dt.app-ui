@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -108,8 +109,8 @@ namespace Unity.AppUI.UI
         public AlertDialog()
         {
             focusable = true;
-            TextField.isCompositeRootProp!.SetValue(this, true);
-            TextField.excludeFromFocusRingProp!.SetValue(this, true);
+            this.SetIsCompositeRoot(true);
+            this.SetExcludeFromFocusRing(true);
             delegatesFocus = true;
             
             RegisterCallback<FocusInEvent>(OnFocusIn);

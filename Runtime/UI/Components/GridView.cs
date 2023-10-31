@@ -293,7 +293,7 @@ namespace Unity.AppUI.UI
             if ((operation & operationMask) != 0 && Apply(operation, (sourceEvent as IKeyboardEvent)?.shiftKey ?? false))
             {
                 sourceEvent?.StopPropagation();
-                sourceEvent?.PreventDefault();
+                
             }
         }
 
@@ -365,13 +365,13 @@ namespace Unity.AppUI.UI
         void OnNavigationMove(NavigationMoveEvent evt)
         {
             evt.StopPropagation();
-            evt.PreventDefault();
+            
         }
 
         void OnNavigationCancel(NavigationCancelEvent evt)
         {
             evt.StopPropagation();
-            evt.PreventDefault();
+            
         }
 
         /// <summary>

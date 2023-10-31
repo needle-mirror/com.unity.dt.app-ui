@@ -6,6 +6,7 @@ using Unity.AppUI.Core;
 using Unity.AppUI.UI;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
+using AnimationMode = Unity.AppUI.UI.AnimationMode;
 using Button = Unity.AppUI.UI.Button;
 using Toggle = Unity.AppUI.UI.Toggle;
 using Dropdown = Unity.AppUI.UI.Dropdown;
@@ -15,6 +16,8 @@ namespace Unity.AppUI.Samples
     public class Examples : MonoBehaviour
     {
         public UIDocument uiDocument;
+        
+        public Texture2D avatarPicture;
 
         const int DELETE_ACTION = 99;
 
@@ -24,7 +27,7 @@ namespace Unity.AppUI.Samples
         void Start()
         {
             if (uiDocument)
-                SetupDataBinding(uiDocument.rootVisualElement);
+                SetupDataBinding(uiDocument.rootVisualElement, avatarPicture);
         }
 
         void Update() 
@@ -39,7 +42,7 @@ namespace Unity.AppUI.Samples
             }
         }
 
-        public static void SetupDataBinding(VisualElement root)
+        public static void SetupDataBinding(VisualElement root, Texture2D avatarPicture = null)
         {
             root.Q<ActionButton>("alert-trigger").clickable.clickedWithEventInfo += evt =>
             {
@@ -204,7 +207,15 @@ namespace Unity.AppUI.Samples
             dropdown3.sourceItems = dropdownSrc;
             dropdown3.SetValueWithoutNotify(new []{ 1, 2 });
 
-            root.Q<UI.Avatar>("avatar-with-picture").src = Resources.Load<Texture2D>("example-avatar-pic");
+            var img = avatarPicture ? avatarPicture : 
+#if UNITY_EDITOR 
+                UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.unity.dt.app-ui/PackageResources/Images/example-avatar-pic.png")
+#else 
+                null
+#endif
+                    ;
+
+            root.Q<UI.Avatar>("avatar-with-picture").src = img;
 
             root.Q<ColorSlider>("rainbow-slider").colorRange = new List<ColorEntry>
             {
@@ -355,8 +366,7 @@ namespace Unity.AppUI.Samples
 
             var swipeViewD = root.Q<SwipeView>("swipeview-distance");
             swipeViewD.beingSwiped += OnBeingSwiped;
-
-            var img = Resources.Load<Texture2D>("example-avatar-pic");
+            
             root.Q<Chip>("filled-chip-ornament").ornament = new Image
             {
                 image = img,

@@ -125,13 +125,13 @@ namespace Unity.AppUI.UI
 
         void OnPlaceholderValueChanged(ChangeEvent<string> evt)
         {
-            evt.PreventDefault();
+            
             evt.StopPropagation();
         }
 
         void OnInputValueChanged(ChangeEvent<string> e)
         {
-            e.PreventDefault();
+            
             e.StopPropagation();
             
             using var evt = ChangingEvent<string>.GetPooled();

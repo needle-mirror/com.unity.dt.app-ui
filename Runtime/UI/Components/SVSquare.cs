@@ -208,7 +208,7 @@ namespace Unity.AppUI.UI
 
             if (handled)
             {
-                evt.PreventDefault();
+                
                 evt.StopPropagation();
 
                 var validValue = new Vector2(Mathf.Clamp01(val.x), Mathf.Clamp01(val.y));

@@ -9,10 +9,10 @@ namespace Unity.AppUI.Samples.Navigation
     {
         public UIDocument uiDocument;
         
+        public NavGraphViewAsset graphAsset;
+        
         void Start()
         {
-            var graphAsset = Resources.Load<NavGraphViewAsset>("Navigation/NavigationSample");
-
             var navHost = new NavHost();
             navHost.navController.SetGraph(graphAsset);
             navHost.visualController = new MyVisualController();

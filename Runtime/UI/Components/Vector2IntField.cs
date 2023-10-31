@@ -149,14 +149,14 @@ namespace Unity.AppUI.UI
         
         void OnXFieldChanging(ChangingEvent<int> evt)
         {
-            evt.PreventDefault();
+            
             evt.StopPropagation();
             TrySendChangingEvent(new Vector2Int(evt.newValue, m_Value.y));
         }
         
         void OnYFieldChanging(ChangingEvent<int> evt)
         {
-            evt.PreventDefault();
+            
             evt.StopPropagation();
             TrySendChangingEvent(new Vector2Int(m_Value.x, evt.newValue));
         }

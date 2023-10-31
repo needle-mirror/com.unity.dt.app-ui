@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
+using Unity.AppUI.Bridge;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
@@ -81,8 +81,6 @@ namespace Unity.AppUI.UI
         /// The default duration of the auto play animation.
         /// </summary>
         public const int noAutoPlayDuration = -1;
-
-        static readonly PropertyInfo k_Recycled = typeof(ValueAnimation<float>).GetProperty("recycled", BindingFlags.Instance | BindingFlags.NonPublic);
 
         bool m_Wrap;
 
@@ -414,7 +412,7 @@ namespace Unity.AppUI.UI
 
             if (handled)
             {
-                evt.PreventDefault();
+                
                 evt.StopPropagation();
             }
         }
@@ -475,8 +473,8 @@ namespace Unity.AppUI.UI
 
         void OnDrag(Scrollable drag)
         {
-            if (m_Animation != null && !((bool)k_Recycled!.GetValue(m_Animation)))
-                m_Animation?.Recycle();
+            if (m_Animation != null && !m_Animation.IsRecycled())
+                m_Animation.Recycle();
             
             var multiplier = ShouldResist(drag.deltaPos) ? 1f / resistance : 1f;
             
@@ -622,8 +620,8 @@ namespace Unity.AppUI.UI
             var targetContainerOffset = currentContainerOffset - newElementOffset;
 
             // Recycle previous animation
-            if (m_Animation != null && !((bool)k_Recycled!.GetValue(m_Animation)))
-                m_Animation?.Recycle();
+            if (m_Animation != null && !m_Animation.IsRecycled())
+                m_Animation.Recycle();
 
             // Find the best duration and distance to use in the animation
             var duration = from == null || newElementOffset == 0
