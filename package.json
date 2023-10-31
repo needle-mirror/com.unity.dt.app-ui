@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "00ac0664c0dcc71d9b84cb6758610af8f7343eb5"
+    "revision": "b4e16d01daa76f9d344c660ba4e0e3084adac5ae"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -80,10 +80,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added \n\n- Added `closeOnSelection` property to the `MenuTrigger` component.\n- Added `closeOnSelection` property to the `ActionGroup` component to close the popover menu (if any) when an item is selected.\n- Added `primaryButton`, `secondaryButton` and `cancelButton` public access to the `AlertDialog` component.\n- Added the autofocus of the first available action in the `AlertDialog` component.\n\n### Fixed\n\n- Fixed `closeOnSelection` property in `MenuBuilder` component.\n- Fixed `TextInput` styling for Unity 2023.1+\n- Fixed `InvalidCastException` at startup of santandlone builds (in both Mono and IL2CPP)\n- Fixed `NullReferenceException` when dismissing a Popup from a destroyed UI-Toolkit panel.\n- Fixed sub-menu indicator icon in `MenuItem` component.\n- Fixed context click handling in `GridView` component."
+    "changelog": "### Added\n\n- Added `getItemId` property to the `GridView` component to get the id of an item.\n\n### Fixed\n\n- Fixed items selection persistence between refreshes in `GridView` component."
   },
   "upmCi": {
-    "footprint": "07601e9ead6d8a5fd919e81544a77af84509fde8"
+    "footprint": "31bfa240e531218d245cb6af163689e454e5feb5"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.6/manual/index.html"
 }

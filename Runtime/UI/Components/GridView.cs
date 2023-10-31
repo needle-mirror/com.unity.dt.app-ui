@@ -658,7 +658,13 @@ namespace Unity.AppUI.UI
         /// </remarks>
         public Action<VisualElement, int> unbindItem { get; set; }
 
-        internal Func<int, int> getItemId
+        /// <summary>
+        /// Callback for getting the ID of an item.
+        /// </summary>
+        /// <remarks>
+        /// The method called by this callback receives the index of the item to get the ID from.
+        /// </remarks>
+        public Func<int, int> getItemId
         {
             get { return m_GetItemId; }
             set
@@ -800,8 +806,7 @@ namespace Unity.AppUI.UI
             m_PreviouslySelectedIndices.Clear();
             m_OriginalSelection.Clear();
             
-            if (m_GetItemId == null)
-                m_SelectedIds.Clear();
+            var newSelectedIds = new List<int>();
 
             // O(n)
             if (m_SelectedIds.Count > 0)
@@ -809,12 +814,18 @@ namespace Unity.AppUI.UI
                 // Add selected objects to working lists.
                 for (var index = 0; index < m_ItemsSource.Count; ++index)
                 {
-                    if (!m_SelectedIds.Contains(GetIdFromIndex(index))) continue;
+                    var id = GetIdFromIndex(index);
+                    if (!m_SelectedIds.Contains(id)) 
+                        continue;
 
                     m_SelectedIndices.Add(index);
                     m_SelectedItems.Add(m_ItemsSource[index]);
+                    newSelectedIds.Add(id);
                 }
             }
+            
+            m_SelectedIds.Clear();
+            m_SelectedIds.AddRange(newSelectedIds);
 
             if (!HasValidDataAndBindings())
                 return;
@@ -827,11 +838,18 @@ namespace Unity.AppUI.UI
             m_FirstVisibleIndex = Math.Min((int)(m_ScrollOffset / resolvedItemHeight) * columnCount, m_ItemsSource.Count - 1);
             ResizeHeight(m_LastHeight);
             
-            if (!allowNoSelection && m_ItemsSource.Count > 0)
-                SetSelectionInternal(new []
-                {
-                    m_FirstVisibleIndex >= 0 ? m_FirstVisibleIndex : 0
-                }, true, true);
+            if (!allowNoSelection && m_SelectedIds.Count == 0)
+            {
+                if (m_ItemsSource.Count > 0)
+                    SetSelectionInternal(new[]
+                    {
+                        m_FirstVisibleIndex >= 0 ? m_FirstVisibleIndex : 0
+                    }, true, true);
+            }
+            else
+            {
+                PostSelection(true, true);
+            }
         }
 
         /// <summary>
