@@ -12,19 +12,19 @@
 }
 
 .appui-dropdown-item__checkmark {
-    visibility: hidden;
+    opacity: 0;
     display: none;
     margin-right: var(--appui-alias-control-gap-md);
 }
 
 .appui-picker-item .appui-dropdown-item__checkmark {
     display: flex;
-    color: var(--appui-accent-100);
-    --unity-image-tint-color: var(--appui-accent-100);
+    color: var(--appui-foregrounds-200);
+    --unity-image-tint-color: var(--appui-foregrounds-200);
 }
 
 .is-selected .appui-dropdown-item__checkmark {
-    visibility: visible;
+    opacity: 1;
 }
 
 .appui-dropdown-item__icon {

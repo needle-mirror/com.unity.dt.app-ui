@@ -40,6 +40,17 @@ namespace Unity.AppUI.UI
             m_MenuStack.Push((Menu)contentView);
 
             parentView.panel.visualTree.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            parentView.panel.visualTree.RegisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
+        }
+        
+        void OnWheel(WheelEvent evt)
+        {
+            if (outsideScrollEnabled)
+                return;
+            
+            var inside = GetMovableElement().worldBound.Contains((Vector2)evt.mousePosition);
+            if (!inside)
+                evt.StopImmediatePropagation();
         }
 
         void OnTreeDown(PointerDownEvent evt)
@@ -241,6 +252,7 @@ namespace Unity.AppUI.UI
         {
             base.InvokeDismissedEventHandlers(reason);
             targetParent?.panel?.visualTree.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            targetParent?.panel?.visualTree.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
         }
 
         /// <summary>

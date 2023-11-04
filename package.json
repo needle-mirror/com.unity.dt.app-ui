@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "d77c68ae7977f1bffcc0aafc176952c21d194234"
+    "revision": "3eeff2b5793bf843c3a028f718c36206ed05ff5e"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -80,10 +80,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed `NullReferenceException` when testing accept drag in `GridView` component."
+    "changelog": "### Added\n\n- Added missing XML documentation parts for the public API of the package.\n- Added the `primaryManipulator` property to the `Canvas` component to get the primary pointer manipulator used by the canvas when no modifier is pressed.\n- Added the `autoResize` property to the `TextArea` component to grow the text area when the text overflows.\n- Added the handling of double-click in the `TextArea` resizing handle to re-enable the auto-resize feature.\n- Added the `outsideScrollEnabled` property to the `AnchorPopup` components to enable or disable the outside scroll handling. The default value is `false`.\n- Added a smoother animation for the `AnchorPopup` components when the popup is about to be shown.\n\n### Fixed\n\n- Fixed the Canvas background to support light theme.\n- Fixed the styling of DropdownItem checkmark.\n- Fixed the styling of MenuItem checkmark.\n- Fixed the styling of Slider components.\n- Fixed the styling of TextArea component.\n- Fixed the styling of TouchSlider components.\n- Fixed the previous value sent in `ChangeEvent` of `NumericalField`, `VectorField` and `Picker` (Dropdown) components.\n- Improved the synchronization of the `AnchorPopup` components to refresh their position in the layout faster.\n\n### Changed \n\n- Changed the USS selector for component-level aliases to use directly `:root` selector instead of `<component_main_uss_class>` selector."
   },
   "upmCi": {
-    "footprint": "2359cb1f7fa08594d5551ba7e1e4d4f4c2d24710"
+    "footprint": "6b955e1590b5d93b6b024e16304b7234615195fa"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@0.6/manual/index.html"
 }

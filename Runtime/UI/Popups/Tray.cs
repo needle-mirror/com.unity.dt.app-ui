@@ -104,7 +104,7 @@ namespace Unity.AppUI.UI
                         .OnCompleted(InvokeShownEventHandlers).Start();
                     tray.draggedOff += OnTrayDraggedOff;
                 }
-            }).ExecuteLater(k_NextFrameDurationMs);
+            });
         }
 
         void OnTrayDraggedOff()

@@ -2,6 +2,7 @@ using System;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.UIElements.Experimental;
 
 namespace Unity.AppUI.UI
 {
@@ -45,6 +46,8 @@ namespace Unity.AppUI.UI
     public abstract class AnchorPopup<T> : Popup<T> where T : AnchorPopup<T>
     {
         const long k_AnchorUpdateInterval = 8L;
+        
+        const int k_AnchorPopUpFadeInDurationMs = 150;
 
         VisualElement m_Anchor;
 
@@ -123,6 +126,11 @@ namespace Unity.AppUI.UI
         /// `True` if the the popup can be dismissed by clicking outside of it, `False` otherwise.
         /// </summary>
         public bool outsideClickDismissEnabled { get; protected set; } = true;
+        
+        /// <summary>
+        /// `True` if the the popup let the user to be able to scroll outside of it, `False` otherwise.
+        /// </summary>
+        public bool outsideScrollEnabled { get; protected set; } = false;
         
         /// <summary>
         /// The strategy used to determine if the click is outside of the popup.
@@ -241,6 +249,17 @@ namespace Unity.AppUI.UI
         }
         
         /// <summary>
+        /// Activate the possibility to scroll outside of the popup.
+        /// </summary>
+        /// <param name="scrollEnabled"> `True` to activate the feature, `False` otherwise.</param>
+        /// <returns> The popup of type <typeparamref name="T"/>.</returns>
+        public T SetOutsideScrollEnabled(bool scrollEnabled)
+        {
+            outsideScrollEnabled = scrollEnabled;
+            return (T)this;
+        }
+        
+        /// <summary>
         /// Set the strategy used to determine if the click is outside of the popup.
         /// </summary>
         /// <param name="strategy"> The strategy to use.</param>
@@ -273,10 +292,22 @@ namespace Unity.AppUI.UI
                 if (view.parent != null)
                 {
                     view.visible = true;
+                    view.style.opacity = 0.0001f;
                     RefreshPosition();
-                    InvokeShownEventHandlers();
+                    view.schedule.Execute(() =>
+                    {
+                        view.experimental.animation.Start(0, 1f, k_AnchorPopUpFadeInDurationMs, (element, f) =>
+                        {
+                            var y = Mathf.Lerp(-8f, 0f, f);
+                            var scale = Mathf.Lerp(0.98f, 1f, f);
+                            var opacity = Mathf.Lerp(0.0001f, 1f, f);
+                            element.style.translate = new Translate(0, y, 0);
+                            element.style.scale = new Scale(new Vector3(scale, scale, scale));
+                            element.style.opacity = opacity;
+                        }).Ease(Easing.OutQuad).OnCompleted(InvokeShownEventHandlers);
+                    });
                 }
-            }).ExecuteLater(k_NextFrameDurationMs);
+            });
         }
 
         /// <summary>

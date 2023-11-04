@@ -51,7 +51,7 @@
 .appui-slider__track {
     width: 100%;
     height: 1px;
-    background-color: var(--appui-base-100);
+    background-color: var(--appui-base-400);
     position: absolute;
     top: 5px;
 }
@@ -64,8 +64,8 @@
 }
 
 .appui-slider__handle {
-    background-color: var(--appui-foregrounds-100);
-    border-color: var(--appui-backgrounds-100);
+    background-color: var(--appui-foregrounds-50);
+    border-color: var(--appui-backgrounds-300);
     /*border-style: var(--appui-control-border-style);*/
     border-width: var(--appui-sizing-25);
     width: 100%;
@@ -171,7 +171,7 @@
 .appui-slider__tick {
     width: var(--appui-sizing-10);
     height: var(--appui-sizing-150);
-    background-color: var(--appui-base-100);
+    background-color: var(--appui-base-400);
     display: flex;
     flex-direction: row;
     align-items: center;

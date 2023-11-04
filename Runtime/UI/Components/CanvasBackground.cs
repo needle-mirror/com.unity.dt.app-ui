@@ -10,6 +10,9 @@ namespace Unity.AppUI.UI
     /// </summary>
     public class CanvasBackground : VisualElement
     {
+	    /// <summary>
+	    /// The CanvasBackground main USS class name.
+	    /// </summary>
         public const string ussClassName = "appui-canvas-background";
         
         static Material s_Material;

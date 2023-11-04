@@ -32,6 +32,7 @@ namespace Unity.AppUI.UI
             this.onMagnify = onMagnify;
         }
 
+        /// <inheritdoc cref="Manipulator.RegisterCallbacksOnTarget"/>
         protected override void RegisterCallbacksOnTarget()
         {
             target.RegisterCallback<PointerEnterEvent>(OnEnter);
@@ -40,6 +41,7 @@ namespace Unity.AppUI.UI
             target.RegisterCallback<MagnificationGestureEvent>(OnMagnify);
         }
 
+        /// <inheritdoc cref="Manipulator.UnregisterCallbacksFromTarget"/>
         protected override void UnregisterCallbacksFromTarget()
         {
             target.UnregisterCallback<PointerEnterEvent>(OnEnter);

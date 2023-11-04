@@ -245,6 +245,7 @@ namespace Unity.AppUI.UI
             : base(parentView, context, popover, contentView)
         {
             parentView.panel.visualTree.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            parentView.panel.visualTree.RegisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
         }
 
         PopoverVisualElement popover => (PopoverVisualElement)view;
@@ -264,6 +265,16 @@ namespace Unity.AppUI.UI
                 .SetAnchor(referenceView)
                 .SetLastFocusedElement(referenceView);
             return popoverElement;
+        }
+
+        void OnWheel(WheelEvent evt)
+        {
+            if (outsideScrollEnabled)
+                return;
+            
+            var inside = GetMovableElement().worldBound.Contains((Vector2)evt.mousePosition);
+            if (!inside)
+                evt.StopImmediatePropagation();
         }
 
         void OnTreeDown(PointerDownEvent evt)
@@ -337,6 +348,7 @@ namespace Unity.AppUI.UI
         {
             base.InvokeDismissedEventHandlers(reason);
             targetParent?.panel?.visualTree.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            targetParent?.panel?.visualTree.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
         }
 
         /// <summary>

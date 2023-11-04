@@ -151,6 +151,9 @@ namespace Unity.AppUI.UI
         /// </summary>
         public static readonly string appuiPickerMenu = ussClassName + "__menu";
 
+        /// <summary>
+        /// The list of items contained in the Picker.
+        /// </summary>
         protected readonly List<PickerItem> m_Items = new List<PickerItem>();
 
         int[] m_DefaultValue = null;
@@ -159,6 +162,9 @@ namespace Unity.AppUI.UI
 
         IList m_SourceItems;
 
+        /// <summary>
+        /// The list of indices of the selected items.
+        /// </summary>
         protected readonly List<int> m_Value = new List<int>();
 
         bool m_ValueSet;
@@ -167,6 +173,9 @@ namespace Unity.AppUI.UI
 
         MenuBuilder m_MenuBuilder;
         
+        /// <summary>
+        /// The container for the Picker title.
+        /// </summary>
         protected readonly VisualElement m_TitleContainer;
 
         PickerSelectionType m_SelectionType;
@@ -390,12 +399,13 @@ namespace Unity.AppUI.UI
 
             set
             {
-                if (EnumerableExtensions.SequenceEqual(m_Value, value))
+                var newValue = value != null ? new List<int>(value) : new List<int>();
+                if (EnumerableExtensions.SequenceEqual(m_Value, newValue))
                     return;
 
-                using var evt = ChangeEvent<IEnumerable<int>>.GetPooled(m_Value, value);
+                using var evt = ChangeEvent<IEnumerable<int>>.GetPooled(new List<int>(m_Value), newValue);
                 evt.target = this;
-                SetValueWithoutNotify(value);
+                SetValueWithoutNotify(newValue);
                 SendEvent(evt);
             }
         }
@@ -435,13 +445,19 @@ namespace Unity.AppUI.UI
             m_MenuBuilder.Show();
         }
 
+        /// <summary>
+        /// Refresh the Picker UI.
+        /// </summary>
         protected void RefreshUI()
         {
             RefreshListUI();
             RefreshTitleUI();
-            // SetValueWithoutNotify(m_Value);
+            SetValueWithoutNotify(m_Value);
         }
 
+        /// <summary>
+        /// Refresh the Picker list UI.
+        /// </summary>
         protected void RefreshListUI()
         {
             // clear items
@@ -466,10 +482,23 @@ namespace Unity.AppUI.UI
             }
         }
 
+        /// <summary>
+        /// Refresh the Picker title UI.
+        /// </summary>
         protected abstract void RefreshTitleUI();
 
+        /// <summary>
+        /// Create a Picker item.
+        /// </summary>
+        /// <param name="i"> The index of the item to create. </param>
+        /// <returns> The created item. </returns>
         protected abstract VisualElement OnRequestItemCreation(int i);
 
+        /// <summary>
+        /// Unbind a Picker item.
+        /// </summary>
+        /// <param name="item"> The item to unbind. </param>
+        /// <param name="index"> The index of the item to unbind. </param>
         protected abstract void OnUnbindItem(VisualElement item, int index);
 
         void OnItemClicked(EventBase evt)
@@ -565,6 +594,11 @@ namespace Unity.AppUI.UI
         }
     }
 
+    /// <summary>
+    /// A Picker UI element with a title and a list of items.
+    /// </summary>
+    /// <typeparam name="TItemType"> The type of the items contained in the Picker. </typeparam>
+    /// <typeparam name="TTitleType"> The type of the title contained in the Picker. </typeparam>
     public abstract class Picker<TItemType, TTitleType> : Picker
         where TItemType : VisualElement, new()
         where TTitleType : VisualElement, new()
@@ -577,6 +611,9 @@ namespace Unity.AppUI.UI
         
         Action<TTitleType, IEnumerable<int>> m_BindTitle;
         
+        /// <summary>
+        /// The function used to create a Picker item.
+        /// </summary>
         public Func<TItemType> makeItem
         {
             get => m_MakeItem;
@@ -587,6 +624,9 @@ namespace Unity.AppUI.UI
             }
         }
         
+        /// <summary>
+        /// The function used to bind a Picker item.
+        /// </summary>
         public Action<TItemType, int> bindItem
         {
             get => m_BindItem;
@@ -597,12 +637,18 @@ namespace Unity.AppUI.UI
             }
         }
         
+        /// <summary>
+        /// The function used to unbind a Picker item.
+        /// </summary>
         public Action<TItemType, int> unbindItem
         {
             get;
             set;
         }
         
+        /// <summary>
+        /// The function used to create a Picker title.
+        /// </summary>
         public Func<TTitleType> makeTitle
         {
             get => m_MakeTitle;
@@ -613,6 +659,9 @@ namespace Unity.AppUI.UI
             }
         }
         
+        /// <summary>
+        /// The function used to bind a Picker title.
+        /// </summary>
         public Action<TTitleType, IEnumerable<int>> bindTitle
         {
             get => m_BindTitle;
@@ -623,6 +672,16 @@ namespace Unity.AppUI.UI
             }
         }
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="items"> The items collection. </param>
+        /// <param name="makeItemFunc"> The function used to create a Picker item. </param>
+        /// <param name="makeTitleFunc"> The function used to create a Picker title. </param>
+        /// <param name="bindItemFunc"> The function used to bind a Picker item. </param>
+        /// <param name="bindTitleFunc"> The function used to bind a Picker title. </param>
+        /// <param name="unbindItemFunc"> The function used to unbind a Picker item. </param>
+        /// <param name="defaultIndices"> The selected index by default. </param>
         public Picker(
             IList items, 
             Func<TItemType> makeItemFunc = null, 
@@ -640,6 +699,7 @@ namespace Unity.AppUI.UI
             bindTitle = bindTitleFunc;
         }
 
+        /// <inheritdoc cref="Picker.RefreshTitleUI"/>
         protected override void RefreshTitleUI()
         {
             m_TitleContainer.Clear();
@@ -652,6 +712,7 @@ namespace Unity.AppUI.UI
             bindTitle?.Invoke(title, m_Value);
         }
 
+        /// <inheritdoc cref="Picker.OnRequestItemCreation"/>
         protected override VisualElement OnRequestItemCreation(int i)
         {
             var content = makeItem?.Invoke() ?? new TItemType();
@@ -663,12 +724,18 @@ namespace Unity.AppUI.UI
             return content;
         }
 
+        /// <inheritdoc cref="Picker.OnUnbindItem"/>
         protected override void OnUnbindItem(VisualElement item, int index)
         {
             if (item is TItemType typedItem)
                 unbindItem?.Invoke(typedItem, index);
         }
 
+        /// <summary>
+        /// Get the Picker item at the given index.
+        /// </summary>
+        /// <param name="index"> The index of the item to get. </param>
+        /// <returns> The Picker item at the given index. </returns>
         protected TItemType GetPickerItem(int index)
         {
             if (index < 0 || index >= sourceItems.Count)

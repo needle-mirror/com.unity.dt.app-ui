@@ -58,6 +58,27 @@ namespace Unity.AppUI.UI
         /// </summary>
         Modern,
     }
+    
+    /// <summary>
+    /// The current Canvas manipulator for the primary pointer.
+    /// </summary>
+    public enum CanvasManipulator
+    {
+        /// <summary>
+        /// The pointer has no manipulator when no modifier is pressed.
+        /// </summary>
+        None,
+        
+        /// <summary>
+        /// The pointer is used to pan into the <see cref="Canvas"/> when no modifier is pressed.
+        /// </summary>
+        Pan,
+        
+        /// <summary>
+        /// The pointer is used to zoom into the <see cref="Canvas"/> when no modifier is pressed.
+        /// </summary>
+        Zoom,
+    }
 
     /// <summary>
     /// A Canvas is a VisualElement that can be used to group other VisualElements.
@@ -114,6 +135,8 @@ namespace Unity.AppUI.UI
         const ScrollDirection k_DefaultScrollDirection = ScrollDirection.Natural;
         
         const CanvasControlScheme k_DefaultControlScheme = CanvasControlScheme.Modern;
+        
+        const CanvasManipulator k_DefaultPrimaryManipulator = CanvasManipulator.None;
 
         readonly CanvasBackground m_Background;
 
@@ -136,6 +159,8 @@ namespace Unity.AppUI.UI
         int m_PointerId = -1;
         
         bool m_SpaceBarPressed;
+
+        CanvasManipulator m_PrimaryManipulator = k_DefaultPrimaryManipulator;
 
         /// <summary>
         /// The content container of the Canvas.
@@ -238,11 +263,28 @@ namespace Unity.AppUI.UI
                 AddToClassList("cursor--" + m_GrabMode.ToString().ToLower());
             }
         }
-        
+
         /// <summary>
         /// The current control scheme of the canvas.
         /// </summary>
         public CanvasControlScheme controlScheme { get; set; } = k_DefaultControlScheme;
+
+        /// <summary>
+        /// The current manipulator of the canvas for the primary pointer without modifier.
+        /// </summary>
+        public CanvasManipulator primaryManipulator
+        {
+            get => m_PrimaryManipulator;
+            set
+            {
+                m_PrimaryManipulator = value;
+                grabMode = m_PrimaryManipulator switch
+                {
+                    CanvasManipulator.Pan => GrabMode.Grab,
+                    _ => GrabMode.None
+                };
+            }
+        }
 
         /// <summary>
         /// Instantiates a <see cref="Canvas"/> element.
@@ -380,7 +422,8 @@ namespace Unity.AppUI.UI
                     if (controlScheme != CanvasControlScheme.Editor && useSpaceBar)
                     {
                         m_SpaceBarPressed = false;
-                        grabMode = GrabMode.None;
+                        if (m_PrimaryManipulator != CanvasManipulator.Pan)
+                            grabMode = GrabMode.None;
                         if (m_PointerId >= 0 && this.HasPointerCapture(m_PointerId))
                             this.ReleasePointer(m_PointerId);
                     }
@@ -392,7 +435,7 @@ namespace Unity.AppUI.UI
         void OnFocusOut(FocusOutEvent evt)
         {
             m_SpaceBarPressed = false;
-            grabMode = GrabMode.None;
+            grabMode = m_PrimaryManipulator == CanvasManipulator.Pan ? GrabMode.Grab : GrabMode.None;
             m_PointerId = -1;
         }
 
@@ -466,8 +509,8 @@ namespace Unity.AppUI.UI
                 CanvasControlScheme.Modern => m_SpaceBarPressed,
                 CanvasControlScheme.Editor => evt.altKey,
                 _ => m_SpaceBarPressed
-            };
-            
+            } || primaryManipulator == CanvasManipulator.Pan;
+
             if (evt.button == (int)MouseButton.MiddleMouse || 
                 (evt.button == (int)MouseButton.LeftMouse && hasModifierPressed))
             {
@@ -496,7 +539,8 @@ namespace Unity.AppUI.UI
             if (evt.pointerId == m_PointerId)
             {
                 m_PointerId = -1;
-                grabMode = m_SpaceBarPressed ? GrabMode.Grab : GrabMode.None;
+                grabMode = m_SpaceBarPressed || m_PrimaryManipulator == CanvasManipulator.Pan ? 
+                    GrabMode.Grab : GrabMode.None;
             }
         }
 

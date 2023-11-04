@@ -69,6 +69,7 @@ namespace Unity.AppUI.UI
                 CreateVisualElement();
         }
 
+        /// <inheritdoc cref="Manipulator.RegisterCallbacksOnTarget"/>
         protected override void RegisterCallbacksOnTarget()
         {
             activators.Add(new ManipulatorActivationFilter { button = MouseButton.LeftMouse });
@@ -79,7 +80,8 @@ namespace Unity.AppUI.UI
             target.RegisterCallback<PointerCaptureOutEvent>(OnPointerCaptureOut);
             target.RegisterCallback<KeyDownEvent>(OnKeyDown);
         }
-
+        
+        /// <inheritdoc cref="Manipulator.UnregisterCallbacksFromTarget"/>
         protected override void UnregisterCallbacksFromTarget()
         {
             activators.Clear();

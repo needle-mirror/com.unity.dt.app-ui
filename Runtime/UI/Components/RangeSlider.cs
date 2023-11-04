@@ -383,20 +383,69 @@ namespace Unity.AppUI.UI
             }
         }
         
+        /// <summary>
+        /// The value of the left handle.
+        /// </summary>
+        /// <remarks>
+        /// This is not the same as the <see cref="BaseSlider{TRangeType,TValueType}.lowValue"/>
+        /// which is the minimum value of the slider.
+        /// </remarks>
         public abstract TValueType minValue { get; set; }
         
+        /// <summary>
+        /// The value of the right handle.
+        /// </summary>
+        /// <remarks>
+        /// This is not the same as the <see cref="BaseSlider{TRangeType,TValueType}.highValue"/>
+        /// which is the maximum value of the slider.
+        /// </remarks>
         public abstract TValueType maxValue { get; set; }
         
+        /// <summary>
+        /// Create a range value from the min and max values.
+        /// </summary>
+        /// <param name="minValue"> The minimum value of the range. </param>
+        /// <param name="maxValue"> The maximum value of the range. </param>
+        /// <returns> A new range object of type <see cref="TRangeType"/>. </returns>
         protected abstract TRangeType MakeRangeValue(TValueType minValue, TValueType maxValue);
         
+        /// <summary>
+        /// Get the minimum value from the range value.
+        /// </summary>
+        /// <param name="rangeValue"> The range value. </param>
+        /// <returns> The minimum value of the range. </returns>
         protected abstract TValueType GetMinValue(TRangeType rangeValue);
         
+        /// <summary>
+        /// Get the maximum value from the range value.
+        /// </summary>
+        /// <param name="rangeValue"> The range value. </param>
+        /// <returns> The maximum value of the range. </returns>
         protected abstract TValueType GetMaxValue(TRangeType rangeValue);
         
+        /// <summary>
+        /// Get the clamped value.
+        /// </summary>
+        /// <param name="value"> The value to clamp. </param>
+        /// <param name="lowerValue"> The lower bound. </param>
+        /// <param name="higherValue"> The higher bound. </param>
+        /// <returns> The clamped value. </returns>
         protected abstract TValueType GetClampedValue(TValueType value, TValueType lowerValue, TValueType higherValue);
         
+        /// <summary>
+        /// Lerp between two values.
+        /// </summary>
+        /// <param name="a"> The first value. </param>
+        /// <param name="b"> The second value. </param>
+        /// <param name="interpolant"> The interpolant. </param>
+        /// <returns> The lerped value. </returns>
         protected abstract TValueType LerpUnclamped(TValueType a, TValueType b, float interpolant);
 
+        /// <summary>
+        /// Find the closest handle index to the mouse position.
+        /// </summary>
+        /// <param name="mousePosition"> The mouse position. </param>
+        /// <returns> The closest handle index. </returns>
         protected int ClosestHandleIndex(float mousePosition)
         {
             return Mathf.Abs(mousePosition - m_MinHandleContainer.layout.xMin) < Mathf.Abs(mousePosition - m_MaxHandleContainer.layout.xMin) ? 0 : 1;
@@ -430,6 +479,7 @@ namespace Unity.AppUI.UI
             RefreshTickLabels();
         }
 
+        /// <inheritdoc cref="BaseSlider{TRangeType,TValueType}.Clamp"/>
         protected override TRangeType Clamp(TRangeType v, TValueType lowBound, TValueType highBound)
         {
             var min = GetMinValue(v);
@@ -440,6 +490,7 @@ namespace Unity.AppUI.UI
                 GetClampedValue(max, lowBound, highBound));
         }
 
+        /// <inheritdoc cref="BaseSlider{TRangeType,TValueType}.ComputeValueFromHandlePosition"/>
         protected override TRangeType ComputeValueFromHandlePosition(float sliderLength, float dragElementPos)
         {
             if (sliderLength < Mathf.Epsilon)
@@ -651,38 +702,45 @@ namespace Unity.AppUI.UI
             return val - incrementFactor;
         }
         
+        /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.minValue"/>
         public override float minValue
         {
             get => m_Value.x;
             set => this.value = new Vector2(value, m_Value.y);
         }
 
+        /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.maxValue"/>
         public override float maxValue 
         {
             get => m_Value.y;
             set => this.value = new Vector2(m_Value.x, value);
         }
 
+        /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.MakeRangeValue"/>
         protected override Vector2 MakeRangeValue(float minValue, float maxValue)
         {
             return new Vector2(minValue, maxValue);
         }
 
+        /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.GetMinValue"/>
         protected override float GetMinValue(Vector2 rangeValue)
         {
             return rangeValue.x;
         }
 
+        /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.GetMaxValue"/>
         protected override float GetMaxValue(Vector2 rangeValue)
         {
             return rangeValue.y;
         }
 
+        /// <inheritdoc cref="M:Unity.AppUI.UI.RangeSliderBase`2.GetClampedValue(`1,`1,`1)"/>
         protected override float GetClampedValue(float value, float lowerValue, float higherValue)
         {
             return Mathf.Clamp(value, lowerValue, higherValue);
         }
 
+        /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.LerpUnclamped"/>
         protected override float LerpUnclamped(float a, float b, float interpolant)
         {
             return Mathf.LerpUnclamped(a, b, interpolant);
@@ -801,38 +859,45 @@ namespace Unity.AppUI.UI
             return val - incrementFactor;
         }
         
+        /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.minValue"/>
         public override int minValue 
         {
             get => m_Value.x;
             set => this.value = new Vector2Int(value, m_Value.y);
         }
 
+        /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.maxValue"/>
         public override int maxValue 
         {
             get => m_Value.y;
             set => this.value = new Vector2Int(m_Value.x, value);
         }
 
+        /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.MakeRangeValue"/>
         protected override Vector2Int MakeRangeValue(int minValue, int maxValue)
         {
             return new Vector2Int(minValue, maxValue);
         }
 
+        /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.GetMinValue"/>
         protected override int GetMinValue(Vector2Int rangeValue)
         {
             return rangeValue.x;
         }
 
+        /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.GetMaxValue"/>
         protected override int GetMaxValue(Vector2Int rangeValue)
         {
             return rangeValue.y;
         }
 
+        /// <inheritdoc cref="M:Unity.AppUI.UI.RangeSliderBase`2.GetClampedValue(`1,`1,`1)"/>
         protected override int GetClampedValue(int value, int lowerValue, int higherValue)
         {
             return Mathf.Clamp(value, lowerValue, higherValue);
         }
 
+        /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.LerpUnclamped"/>
         protected override int LerpUnclamped(int a, int b, float interpolant)
         {
             return Mathf.RoundToInt(Mathf.LerpUnclamped(a, b, interpolant));
