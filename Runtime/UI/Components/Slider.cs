@@ -459,6 +459,7 @@ namespace Unity.AppUI.UI
             }
         }
         
+        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Clamp"/>
         protected override TValueType Clamp(TValueType v, TValueType lowBound, TValueType highBound)
         {
             var result = v;

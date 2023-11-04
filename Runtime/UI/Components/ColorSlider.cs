@@ -255,6 +255,7 @@ namespace Unity.AppUI.UI
             return Clamp(val + incrementFactor, lowValue, highValue);
         }
         
+        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Clamp"/>
         protected override float Clamp(float v, float lowBound, float highBound)
         {
             return Mathf.Clamp(v, lowBound, highBound);

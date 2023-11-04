@@ -22,15 +22,54 @@ namespace Unity.AppUI.UI
         [Flags]
         public enum GridOperations
         {
+            /// <summary>
+            /// No operation.
+            /// </summary>
             None = 0,
+            
+            /// <summary>
+            /// Select all items. 
+            /// </summary>
             SelectAll = 1 << 0,
+            
+            /// <summary>
+            /// Cancel selection.
+            /// </summary>
             Cancel = 1 << 1,
+            
+            /// <summary>
+            /// Move selection cursor left.
+            /// </summary>
             Left = 1 << 2,
+            
+            /// <summary>
+            /// Move selection cursor right.
+            /// </summary>
             Right = 1 << 3,
+            
+            /// <summary>
+            /// Move selection cursor up.
+            /// </summary>
             Up = 1 << 4,
+            
+            /// <summary>
+            /// Move selection cursor down.
+            /// </summary>
             Down = 1 << 5,
+            
+            /// <summary>
+            /// Move selection cursor to the beginning of the list.
+            /// </summary>
             Begin = 1 << 6,
+            
+            /// <summary>
+            /// Move selection cursor to the end of the list.
+            /// </summary>
             End = 1 << 7,
+            
+            /// <summary>
+            /// Choose selected items.
+            /// </summary>
             Choose = 1 << 8,
         }
 
@@ -775,6 +814,9 @@ namespace Unity.AppUI.UI
             PostSelection(true, true);
         }
 
+        /// <summary>
+        /// Clear the selection without triggering selection changed event.
+        /// </summary>
         public void ClearSelectionWithoutNotify()
         {
             if (!HasValidDataAndBindings() || m_SelectedIndices.Count == 0 || !allowNoSelection)

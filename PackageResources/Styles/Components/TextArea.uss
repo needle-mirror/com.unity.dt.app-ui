@@ -16,6 +16,7 @@
     height: var(--appui-sizing-1350);
     position: relative;
     padding: 2px;
+    flex-shrink: 0;
 }
 
 .appui-textarea__scrollview {

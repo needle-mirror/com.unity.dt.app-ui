@@ -19,6 +19,12 @@ namespace Unity.AppUI.UI
 
         readonly ValueAnimation<float> m_Animation;
 
+        IVisualElementScheduledItem m_ScheduledAnimateViewIn;
+
+        IVisualElementScheduledItem m_DeferredAnimateViewIn;
+
+        IVisualElementScheduledItem m_ScheduledAnimationStart;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -87,21 +93,35 @@ namespace Unity.AppUI.UI
         protected override void AnimateViewIn()
         {
             // delay the animation of the notification to be sure the layout has been updated with UI Toolkit.
-            view.schedule.Execute(() =>
+            m_ScheduledAnimateViewIn?.Pause();
+            m_ScheduledAnimateViewIn = view.schedule.Execute(ScheduledAnimateViewIn);
+        }
+
+        void ScheduledAnimateViewIn()
+        {
+            m_DeferredAnimateViewIn?.Pause();
+            m_DeferredAnimateViewIn = view.schedule.Execute(DeferredAnimateViewIn);
+        }
+
+        void DeferredAnimateViewIn()
+        {
+            if (view.parent != null)
             {
-                if (view.parent != null)
-                {
-                    tooltip.visible = true;
-                    RefreshPosition();
-                    m_Animation.Start();
-                }
-            }).ExecuteLater(k_NextFrameDurationMs);
+                m_ScheduledAnimationStart?.Pause();
+                tooltip.visible = true;
+                tooltip.style.opacity = 0.0001f;
+                RefreshPosition();
+                m_ScheduledAnimationStart = view.schedule.Execute(m_Animation.Start);
+            }
         }
 
         /// <inheritdoc cref="AnchorPopup{T}.AnimateViewOut"/>
         protected override void AnimateViewOut(DismissType reason)
         {
             m_Animation.Stop();
+            m_ScheduledAnimationStart?.Pause();
+            m_DeferredAnimateViewIn?.Pause();
+            m_ScheduledAnimateViewIn?.Pause();
             tooltip.visible = false; // no out animation
             tooltip.style.opacity = 0;
             InvokeDismissedEventHandlers(reason);

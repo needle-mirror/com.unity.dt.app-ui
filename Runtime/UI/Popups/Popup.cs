@@ -14,7 +14,7 @@ namespace Unity.AppUI.UI
         /// The average duration of a frame in milliseconds. Used to delay position calculations.
         /// </summary>
         protected const int k_NextFrameDurationMs = 16;
-
+        
         /// <summary>
         /// The message id used to show the popup.
         /// </summary>
@@ -209,7 +209,7 @@ namespace Unity.AppUI.UI
                     // focusableElement.panel.focusController = new FocusController(new VisualElementFocusRing(focusableElement));
                     // but UITK doesnt provide any accessible way to do it
                     focusableElement.Focus();
-                }).ExecuteLater(k_NextFrameDurationMs);
+                });
         }
 
         /// <summary>

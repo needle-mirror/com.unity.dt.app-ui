@@ -1,8 +1,9 @@
 /* InputLabel */
-.appui-inputlabel {
-    
+:root {
     --appui-inputlabel-label-size: 33%;
-    
+}
+
+.appui-inputlabel {
     display: flex;
     margin-bottom: var(--appui-alias-control-gap-sm);
     margin-top: var(--appui-alias-control-gap-sm);

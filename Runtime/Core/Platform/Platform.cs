@@ -138,26 +138,52 @@ namespace Unity.AppUI.Core
             this.deltaMagnification = deltaMagnification;
         }
 
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="other"> The object to compare with the current object.</param>
+        /// <returns> True if objects are equal, false otherwise.</returns>
         public bool Equals(MagnificationGesture other)
         {
             return Mathf.Approximately(deltaMagnification, other.deltaMagnification) && phase == other.phase;
         }
 
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="obj"> The object to compare with the current object.</param>
+        /// <returns> True if the first MagnificationGesture is equal to the second MagnificationGesture, false otherwise.</returns>
         public override bool Equals(object obj)
         {
             return obj is MagnificationGesture other && Equals(other);
         }
 
+        /// <summary>
+        /// Serves as the default hash function.
+        /// </summary>
+        /// <returns> A hash code for the current object.</returns>
         public override int GetHashCode()
         {
             return HashCode.Combine(deltaMagnification, (int) phase);
         }
         
+        /// <summary>
+        /// Determines whether two specified MagnificationGesture objects are equal.
+        /// </summary>
+        /// <param name="left"> The first MagnificationGesture to compare.</param>
+        /// <param name="right"> The second MagnificationGesture to compare.</param>
+        /// <returns> True if the first MagnificationGesture is equal to the second MagnificationGesture, false otherwise.</returns>
         public static bool operator ==(MagnificationGesture left, MagnificationGesture right)
         {
             return left.Equals(right);
         }
         
+        /// <summary>
+        /// Determines whether two specified MagnificationGesture objects are not equal.
+        /// </summary>
+        /// <param name="left"> The first MagnificationGesture to compare.</param>
+        /// <param name="right"> The second MagnificationGesture to compare.</param>
+        /// <returns> True if the first MagnificationGesture is not equal to the second MagnificationGesture, false otherwise.</returns>
         public static bool operator !=(MagnificationGesture left, MagnificationGesture right)
         {
             return !left.Equals(right);
@@ -197,26 +223,52 @@ namespace Unity.AppUI.Core
             this.phase = phase;
         }
 
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="other"> The object to compare with the current object.</param>
+        /// <returns> True if objects are equal, false otherwise.</returns>
         public bool Equals(PanGesture other)
         {
             return deltaPos.Equals(other.deltaPos) && phase == other.phase && position.Equals(other.position);
         }
 
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="obj"> The object to compare with the current object.</param>
+        /// <returns> True if objects are equal, false otherwise.</returns>
         public override bool Equals(object obj)
         {
             return obj is PanGesture other && Equals(other);
         }
 
+        /// <summary>
+        /// Serves as the default hash function.
+        /// </summary>
+        /// <returns> A hash code for the current object.</returns>
         public override int GetHashCode()
         {
             return HashCode.Combine(deltaPos, position, (int) phase);
         }
         
+        /// <summary>
+        /// Determines whether two specified PanGesture objects are equal.
+        /// </summary>
+        /// <param name="left"> The first PanGesture to compare.</param>
+        /// <param name="right"> The second PanGesture to compare.</param>
+        /// <returns> True if the first PanGesture is equal to the second PanGesture, false otherwise.</returns>
         public static bool operator ==(PanGesture left, PanGesture right)
         {
             return left.Equals(right);
         }
         
+        /// <summary>
+        /// Determines whether two specified PanGesture objects are not equal.
+        /// </summary>
+        /// <param name="left"> The first PanGesture to compare.</param>
+        /// <param name="right"> The second PanGesture to compare.</param>
+        /// <returns> True if the first PanGesture is not equal to the second PanGesture, false otherwise.</returns>
         public static bool operator !=(PanGesture left, PanGesture right)
         {
             return !left.Equals(right);
@@ -243,6 +295,9 @@ namespace Unity.AppUI.Core
         static Object s_LastEditorWindow;        
 #endif
         
+        /// <summary>
+        /// The base DPI value used in <see cref="UnityEngine.UIElements.PanelSettings"/>.
+        /// </summary>
         public const float baseDpi = 96f;
 
         /// <summary>
@@ -587,14 +642,29 @@ namespace Unity.AppUI.Core
             magnificationGesture = new MagnificationGesture(0f, phase);
         }
         
+        /// <summary>
+        /// Event triggered when a pan gesture is received.
+        /// </summary>
         public static event Action<PanGesture> panGestureChanged;
         
+        /// <summary>
+        /// Event triggered when a magnification gesture is received.
+        /// </summary>
         public static event Action<MagnificationGesture> magnificationGestureChanged;
         
+        /// <summary>
+        /// Whether the pan gesture has changed this frame.
+        /// </summary>
         public static bool panGestureChangedThisFrame { get; set; }
         
+        /// <summary>
+        /// Whether the magnification gesture has changed this frame.
+        /// </summary>
         public static bool magnificationGestureChangedThisFrame { get; set; }
 
+        /// <summary>
+        /// The pan gesture data.
+        /// </summary>
         public static PanGesture panGesture
         {
             get => s_PanGesture;
@@ -609,6 +679,9 @@ namespace Unity.AppUI.Core
             }
         }
 
+        /// <summary>
+        /// The magnification gesture data.
+        /// </summary>
         public static MagnificationGesture magnificationGesture
         {
             get => s_MagnificationGesture;

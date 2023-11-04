@@ -235,7 +235,7 @@ namespace Unity.AppUI.UI
                 if (AreEqual(m_LastValue, val) && AreEqual(m_Value, val))
                     return;
 
-                using var evt = ChangeEvent<TValueType>.GetPooled(m_Value, val);
+                using var evt = ChangeEvent<TValueType>.GetPooled(m_LastValue, val);
                 evt.target = this;
                 SetValueWithoutNotify(val);
                 SendEvent(evt);

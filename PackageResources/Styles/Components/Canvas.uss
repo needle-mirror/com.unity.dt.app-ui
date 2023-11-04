@@ -12,9 +12,9 @@
     right: 0;
     overflow: hidden;
 
-    --grid-background-color: var(--appui-primary-25);
-    --line-color: var(--appui-primary-300);
-    --thick-line-color: var(--appui-primary-300);
+    --grid-background-color: var(--appui-backgrounds-50);
+    --line-color: var(--appui-base-100);
+    --thick-line-color: var(--appui-base-100);
     --thick-lines: 0; /* Every N lines the line is thicker (use 0 to disable) */
     --line-spacing: 12; /* 12px of spacing between each lines' center point */
     --draw-points: 1; /* 1 to draw points, 0 to draw lines */

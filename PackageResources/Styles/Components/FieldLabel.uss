@@ -1,10 +1,11 @@
 /* FieldLabel */
-.appui-field-label {
-    
+:root {
     --appui-field-label-size: var(--appui-font-sizes-100);
     --appui-field-label-color-default: var(--appui-foregrounds-100);
     --appui-field-label-color-disabled: var(--appui-foregrounds-25);
-    
+}
+
+.appui-field-label {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;

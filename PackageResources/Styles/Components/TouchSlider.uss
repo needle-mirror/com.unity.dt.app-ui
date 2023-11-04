@@ -2,19 +2,28 @@
 .appui-touchslider {
     background-color: var(--appui-base-100);
     border-color: var(--appui-base-300);
+    border-radius: var(--appui-alias-control-border-radius);
+    border-width: var(--appui-alias-control-border-width);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    /*border-style: var(--appui-control-border-style);*/
+    position: relative;
+    cursor: var(--appui-alias-control-cursor-ewresize); /*cursor: ew-resize;*/
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.appui-touchslider__container {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    border-radius: var(--appui-alias-control-border-radius);
+    overflow: hidden;
     border-width: var(--appui-alias-control-border-width);
-    /*border-style: var(--appui-control-border-style);*/
     padding: 0 var(--appui-alias-control-gap-md);
-    position: relative;
-    /*overflow: hidden;*/
-    cursor: var(--appui-alias-control-cursor-ewresize); /*cursor: ew-resize;*/
     flex-shrink: 0;
-    flex-grow: 0;
+    flex-grow: 1;
 }
 
 .appui-touchslider--size-s {
@@ -39,7 +48,6 @@
     top: 0;
     bottom: 0;
     left: 0;
-    border-radius: var(--appui-alias-control-border-radius);
 }
 
 .appui-touchslider__progress:hover {

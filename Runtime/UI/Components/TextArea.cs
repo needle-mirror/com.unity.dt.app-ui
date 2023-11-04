@@ -49,7 +49,7 @@ namespace Unity.AppUI.UI
         readonly VisualElement m_ResizeHandle;
 
         string m_PreviousValue;
-
+        
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -106,12 +106,23 @@ namespace Unity.AppUI.UI
             hierarchy.Add(m_ResizeHandle);
             var dragManipulator = new Draggable(null, OnDrag, null);
             m_ResizeHandle.AddManipulator(dragManipulator);
+            m_ResizeHandle.RegisterCallback<ClickEvent>(OnResizeHandleClicked);
 
             SetValueWithoutNotify(value);
             m_InputField.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
             m_InputField.RegisterValueChangedCallback(OnInputValueChanged);
             m_Placeholder.RegisterValueChangedCallback(OnPlaceholderValueChanged);
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+        }
+        
+        void OnResizeHandleClicked(ClickEvent evt)
+        {
+            if (evt.clickCount == 2)
+            {
+                evt.StopPropagation();
+                autoResize = true;
+                AutoResize();
+            }
         }
 
         void OnGeometryChanged(GeometryChangedEvent evt)
@@ -133,6 +144,9 @@ namespace Unity.AppUI.UI
         {
             
             e.StopPropagation();
+
+            if (autoResize)
+                AutoResize();
             
             using var evt = ChangingEvent<string>.GetPooled();
             evt.target = this;
@@ -144,8 +158,43 @@ namespace Unity.AppUI.UI
             SendEvent(evt);
         }
 
+        void AutoResize()
+        {
+            if (panel == null || !contentRect.IsValid())
+                return;
+            
+            var width = m_InputField.resolvedStyle.width -
+                m_InputField.resolvedStyle.borderLeftWidth -
+                m_InputField.resolvedStyle.borderRightWidth -
+                m_InputField.resolvedStyle.paddingLeft -
+                m_InputField.resolvedStyle.paddingRight;
+
+            var textSize = m_InputField.MeasureTextSize(
+                m_InputField.text, 
+                width, MeasureMode.Exactly,
+                0, MeasureMode.Undefined);
+            
+            var newHeight = textSize.y + 
+                resolvedStyle.paddingTop +
+                resolvedStyle.paddingBottom +
+                resolvedStyle.borderTopWidth +
+                resolvedStyle.borderBottomWidth +
+                m_InputField.resolvedStyle.borderTopWidth +
+                m_InputField.resolvedStyle.borderBottomWidth +
+                m_InputField.resolvedStyle.marginTop +
+                m_InputField.resolvedStyle.marginBottom +
+                m_InputField.resolvedStyle.paddingTop +
+                m_InputField.resolvedStyle.paddingBottom;
+            
+            newHeight = Mathf.Max(resolvedStyle.minHeight.value, newHeight);
+            
+            if (newHeight > resolvedStyle.height)
+                style.height = newHeight;
+        }
+
         void OnDrag(Draggable draggable)
         {
+            autoResize = false;
             style.height = Mathf.Max(resolvedStyle.minHeight.value, resolvedStyle.height + draggable.deltaPos.y);
         }
 
@@ -176,6 +225,17 @@ namespace Unity.AppUI.UI
             get => ClassListContains(Styles.invalidUssClassName);
             set => EnableInClassList(Styles.invalidUssClassName, value);
         }
+
+        /// <summary>
+        /// Automatically resize the <see cref="TextArea"/> if the content is larger than the current size.
+        /// </summary>
+        /// <remarks>
+        /// This will only grow the <see cref="TextArea"/>. It will not shrink it.
+        /// </remarks>
+        /// <remarks>
+        /// If the user manually resizes the <see cref="TextArea"/>, the auto resize will be disabled.
+        /// </remarks>
+        public bool autoResize { get; set; } = false;
 
         /// <summary>
         /// Set the TextArea value without notifying the change.
@@ -269,6 +329,12 @@ namespace Unity.AppUI.UI
                 name = "value",
                 defaultValue = null
             };
+            
+            readonly UxmlBoolAttributeDescription m_AutoResize = new()
+            {
+                name = "auto-resize",
+                defaultValue = false
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -283,6 +349,7 @@ namespace Unity.AppUI.UI
                 var el = (TextArea)ve;
 
                 el.placeholder = m_Placeholder.GetValueFromBag(bag, cc);
+                el.autoResize = m_AutoResize.GetValueFromBag(bag, cc);
                 el.value = m_Value.GetValueFromBag(bag, cc);
                 el.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
             }

@@ -336,7 +336,7 @@ namespace Unity.AppUI.UI
                 default:
                     break;
             }
-
+            
             return result;
         }
     
