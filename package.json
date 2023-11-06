@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "1.0.0-pre.2",
+  "version": "1.0.0-pre.3",
   "unity": "2021.3",
   "keywords": [
     "app",
@@ -24,7 +24,7 @@
   "repository": {
     "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
     "type": "git",
-    "revision": "a4044164ea8911036def3aa9ac0ba6c4b7f3f48b"
+    "revision": "845dde1454fa87733912f77c77c5fa8f4239bd3b"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -80,10 +80,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added missing XML documentation parts for the public API of the package."
+    "changelog": "### Added\n\n- Added public access to `Pressable.InvokePressed` and `Pressable.InvokeLongPressed` methods.\n- Added `trailingContainer` property to the `AccordionItem` component.\n\n### Fixed\n\n- Fixed warning message about Z-axis scale in the `AnchorPopup` component.\n- Fixed styling of the `AccordionItem` header component.\n- Fixed the `not-allowed` (disabled) cursor texture for Windows support at Runtime.\n- Fixed images in the package documentation.\n\n### Changed\n\n- The `Pressable` manipulator now uses the `keepPropagation` property also in its `PointerUpEvent` callback to avoid to propagate the event to the parent element."
   },
   "upmCi": {
-    "footprint": "1590cd38f7093e9b236394c5dc10287eb98c95df"
+    "footprint": "343357f4999a7782bfaf617b5ea6af25d68455e5"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@1.0/manual/index.html"
 }

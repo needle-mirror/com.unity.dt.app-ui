@@ -45,7 +45,7 @@ The [Button](xref:Unity.AppUI.UI.Button) component is used to trigger an action 
 opening a dialog, canceling an action, or performing a delete operation.
 
 <p align="center">
-![Button](images/button.png)
+  <img src="images/button.png" alt="Button">
 </p>
 
 ```xml 
@@ -58,7 +58,7 @@ The [IconButton](xref:Unity.AppUI.UI.IconButton) component is used to trigger an
 opening a dialog, canceling an action, or performing a delete operation. It is a variant of the [Button](#button) component that uses an icon instead of text.
 
 <p align="center">
-![IconButton](images/iconbutton.png)
+  <img src="images/iconbutton.png" alt="IconButton">
 </p>
 
 ```xml
@@ -71,7 +71,7 @@ The [ActionButton](xref:Unity.AppUI.UI.ActionButton) component is a button that 
 It can have text, an icon, or both, and can be customized with different themes and styles.
 
 <p align="center">
-![ActionButton](images/actionbutton.png)
+  <img src="images/actionbutton.png" alt="ActionButton">
 </p>
 
 ```xml
@@ -84,7 +84,7 @@ The [ActionGroup](xref:Unity.AppUI.UI.ActionGroup) component is a group of
 [ActionButton](#actionbutton) components that can be used to toggle between different actions.
 
 <p align="center">
-![ActionGroup](images/actiongroup.png)
+  <img src="images/actiongroup.png" alt="ActionGroup">
 </p>
 
 ```xml
@@ -100,7 +100,7 @@ The [ActionBar](xref:Unity.AppUI.UI.ActionBar) component is a bar that appears w
 in order to apply some actions on them. It can contain [ActionButton](#actionbutton) components or other types of UI components.
 
 <p align="center">
-![ActionBar](images/actionbar.png)
+  <img src="images/actionbar.png" alt="ActionBar">
 </p>
 
 ```xml

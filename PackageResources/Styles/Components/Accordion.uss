@@ -68,6 +68,24 @@
     --unity-image-tint-color:  var(--appui-foregrounds-25); /* converted from : fill: var(--appui-foregrounds-25); */
 }
 
+.appui-accordionitem__headertext {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    -unity-text-overflow-position: end;
+    text-overflow: ellipsis;
+}
+
+.appui-accordionitem__trailing-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    justify-content: flex-end;
+}
+
 .appui-accordionitem__indicator {
     flex-shrink: 0;
     rotate: 0; /*transform: rotate(0);*/

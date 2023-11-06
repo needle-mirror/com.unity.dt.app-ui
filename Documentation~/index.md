@@ -5,13 +5,8 @@ uid: overview
 # App UI
 
 <p align="center">
-![App UI](images/replica-app-ui.png)
+ <img src="images/replica-app-ui.png" alt="Unity App UI Banner">
 </p>
-
-> [!IMPORTANT]
-> This package is experimental, you can use it at your own risk. The process to become a
-production package is in progress as the App UI Design System takes shape.
-
 
 ## Introduction
 

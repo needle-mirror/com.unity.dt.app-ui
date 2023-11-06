@@ -186,7 +186,7 @@ namespace Unity.AppUI.UI
         NavigationCancelEvent m_NavigationCancelAdapter;
 
         bool m_HasPointerMoved;
-
+        
         bool m_SoftSelectIndexWasPreviouslySelected;
 
         /// <summary>
@@ -355,12 +355,12 @@ namespace Unity.AppUI.UI
         void OnDraggerEnded(PointerUpEvent evt)
         {
             dragFinished?.Invoke(evt);
+            CancelSoftSelect();
         }
         
         void OnDraggerCanceled()
         {
             dragCanceled?.Invoke();
-
             CancelSoftSelect();
         }
         
@@ -1381,11 +1381,11 @@ namespace Unity.AppUI.UI
             if (!evt.isPrimary)
                 return;
 
-            if (m_HasPointerMoved)
-            {
-                CancelSoftSelect();
-                return;
-            }
+            // if (shouldCancelSoftSelection)
+            // {
+            //     CancelSoftSelect();
+            //     return;
+            // }
 
             if (m_SoftSelectIndex == -1)
                 return;

@@ -52,5 +52,5 @@ Here is an example of usage inside your [`UI Document`](xref:UnityEngine.UIEleme
 ```
 
 <p align="center">
-![App UI Hello World](images/app-ui-hello-world.png)
+  <img src="images/app-ui-hello-world.png" alt="App UI Hello World">
 </p>

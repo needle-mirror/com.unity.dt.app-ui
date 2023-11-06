@@ -26,7 +26,7 @@ which can be problematic with the UI scaling system from App UI. Our system tend
 It is highly suggested to **disable** this feature. You can find it inside the **Aspect Ratio** dropdown.
 
 <p align="center">
-![aspect-ratio](images/low-reso-unchecked.png)
+  <img src="images/low-reso-unchecked.png" alt="Low Resolution Aspect Ratio" width="50%">
 </p>
 
 ### App UI Settings file
@@ -36,7 +36,7 @@ To generate this file, go to **Edit > Project Settings > App UI**.
 If there's no settings file, you can generate one by clicking on the **Generate Settings File** button.
 
 <p align="center">
-![app-ui-settings](images/app-ui-settings.png)
+  <img src="images/app-ui-settings.png" alt="App UI Settings">
 </p>
 
 > [!NOTE]

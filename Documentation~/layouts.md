@@ -32,7 +32,7 @@ in a Z-axis stack. You can push and pop elements from the stack at runtime,
 and you can also animate the transition between the elements.
 
 <p align="center">
-![StackView](images/stackview.gif)
+  <img src="images/stackview.gif" alt="StackView">
 </p>
 
 #### SwipeView
@@ -44,11 +44,11 @@ This view can display more than one child at a time,
 and it can also be used to create a *carousel* effect by using the wrap mode.
 
 <p align="center">
-![SwipeView](images/swipeview.gif)
+  <img src="images/swipeview.gif" alt="SwipeView">
 </p>
 
 <p align="center">
-![SwipeView](images/swipeview-2.gif)
+  <img src="images/swipeview-2.gif" alt="SwipeView">
 </p>
 
 

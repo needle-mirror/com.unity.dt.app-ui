@@ -147,7 +147,7 @@ The BottomNavBar component can be used to display a list of links to other pages
 The Navigation Graph Editor is a visual editor that can be used to create and edit navigation graphs.
 
 <p align="center">
-![Navigation Graph](images/navigation-graph.png)
+  <img src="images/navigation-graph.png" alt="Navigation Graph">
 </p>
 
 To create a new navigation graph asset, right click on the **Project** window and select **Create** > **App UI** > **Navigation Graph**.
@@ -163,13 +163,13 @@ A destination node is defined by a [NavDestination](xref:Unity.AppUI.Navigation.
 A destination node can be connected to other destination nodes using [actions](#action-node).
 
 <p align="center">
-![Destination Node](images/destination-node.png)
+  <img src="images/destination-node.png" alt="Destination Node">
 </p>
 
 When a Destination node is used as the start destination of the navigation graph, its node will be outlined in green.
 
 <p align="center">
-![Start Destination Node](images/start-destination-node.png)
+  <img src="images/start-destination-node.png" alt="Start Destination Node">
 </p>
 
 > [!NOTE]
@@ -188,13 +188,13 @@ By default, when creating a new Action Node, the action will be defined as a **G
 that the action will be available from any destination in the current navigation graph and nested ones. 
 
 <p align="center">
-![Global Action Node](images/global-action-node.png)
+  <img src="images/global-action-node.png" alt="Global Action Node">
 </p>
 
 As soon as you link a destination on the action node's input port, the action will be defined as a **Local Action**.
 
 <p align="center">
-![Action Node](images/action-node.png)
+  <img src="images/action-node.png" alt="Action Node">
 </p>
 
 The output port of an action node can be connected to the input port of a destination node or a group node. At runtime,
@@ -207,7 +207,7 @@ A nested graph node represents a nested navigation graph in the navigation graph
 A nested graph node is defined by a [NavGraph](xref:Unity.AppUI.Navigation.NavGraph) component.
 
 <p align="center">
-![Nested Graph Node](images/nested-graph-node.png)
+  <img src="images/nested-graph-node.png" alt="Nested Graph Node">
 </p>
 
 To browse a nested navigation graph, you can double click on the nested graph node. 

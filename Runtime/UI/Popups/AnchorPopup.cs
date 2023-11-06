@@ -302,7 +302,7 @@ namespace Unity.AppUI.UI
                             var scale = Mathf.Lerp(0.98f, 1f, f);
                             var opacity = Mathf.Lerp(0.0001f, 1f, f);
                             element.style.translate = new Translate(0, y, 0);
-                            element.style.scale = new Scale(new Vector3(scale, scale, scale));
+                            element.style.scale = new Scale(new Vector3(scale, scale, 1.0f));
                             element.style.opacity = opacity;
                         }).Ease(Easing.OutQuad).OnCompleted(InvokeShownEventHandlers);
                     });

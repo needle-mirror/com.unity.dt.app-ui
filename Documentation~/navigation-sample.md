@@ -35,7 +35,7 @@ the **Assets > Samples > App UI > Navigation > Resources > Navigation** folder.
 You should see the following graph: 
 
 <p align="center">
-![Navigation Graph](images/navigation-graph.png)
+  <img src="images/navigation-graph.png" alt="Navigation Graph">
 </p>
 
 > [!NOTE]

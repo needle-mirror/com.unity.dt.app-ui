@@ -95,7 +95,7 @@ namespace Unity.AppUI.UI
         /// Invoke the Pressed event.
         /// </summary>
         /// <param name="evt">The base event to use to invoke the press.</param>
-        internal void InvokePressed(EventBase evt) => Invoke(evt);
+        public void InvokePressed(EventBase evt) => Invoke(evt);
 
         void Invoke(EventBase evt)
         {
@@ -107,7 +107,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Invoke the LongPressed event.
         /// </summary>
-        internal void InvokeLongPressed()
+        public void InvokeLongPressed()
         {
             longClicked?.Invoke();
             PostProcessDisabledState();
@@ -335,7 +335,7 @@ namespace Unity.AppUI.UI
             Deactivate(evt.pointerId);
 
             var parent = target?.parent;
-            if (parent == null)
+            if (parent == null || !keepEventPropagation)
                 return;
 
             m_UpEvent.mousePosition = evt.originalMousePosition;

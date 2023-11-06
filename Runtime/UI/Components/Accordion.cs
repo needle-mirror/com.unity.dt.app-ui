@@ -12,6 +12,8 @@ namespace Unity.AppUI.UI
     /// </summary>
     public class AccordionItem : VisualElement, INotifyValueChanged<bool>
     {
+        const string k_IndicatorIconName = "caret-down";
+        
         /// <summary>
         /// The AccordionItem main styling class.
         /// </summary>
@@ -31,6 +33,11 @@ namespace Unity.AppUI.UI
         /// The AccordionItem headertext styling class.
         /// </summary>
         public static readonly string headerTextUssClassName = ussClassName + "__headertext";
+        
+        /// <summary>
+        /// The AccordionItem trailing container styling class.
+        /// </summary>
+        public static readonly string trailingContainerUssClassName = ussClassName + "__trailing-container";
 
         /// <summary>
         /// The AccordionItem indicator styling class.
@@ -64,8 +71,11 @@ namespace Unity.AppUI.UI
 
             m_HeaderTextElement = new LocalizedTextElement { name = headerTextUssClassName, pickingMode = PickingMode.Ignore };
             m_HeaderTextElement.AddToClassList(headerTextUssClassName);
+            
+            trailingContainer = new VisualElement { name = trailingContainerUssClassName, pickingMode = PickingMode.Ignore };
+            trailingContainer.AddToClassList(trailingContainerUssClassName);
 
-            var headerIndicatorElement = new Icon { name = indicatorUssClassName, iconName = "caret-down", pickingMode = PickingMode.Ignore };
+            var headerIndicatorElement = new Icon { name = indicatorUssClassName, iconName = k_IndicatorIconName, pickingMode = PickingMode.Ignore };
             headerIndicatorElement.AddToClassList(indicatorUssClassName);
 
             m_HeaderElement = new ExVisualElement
@@ -80,6 +90,7 @@ namespace Unity.AppUI.UI
             m_HeaderElement.AddManipulator(m_Clickable);
             m_HeaderElement.AddManipulator(new KeyboardFocusController(OnKeyboardFocus, OnFocus));
             m_HeaderElement.hierarchy.Add(m_HeaderTextElement);
+            m_HeaderElement.hierarchy.Add(trailingContainer);
             m_HeaderElement.hierarchy.Add(headerIndicatorElement);
 
             var headingElement = new VisualElement { pickingMode = PickingMode.Ignore };
@@ -95,7 +106,7 @@ namespace Unity.AppUI.UI
 
             hierarchy.Add(headingElement);
             hierarchy.Add(m_ContentElement);
-
+            
             SetValueWithoutNotify(false);
         }
 
@@ -113,6 +124,11 @@ namespace Unity.AppUI.UI
         /// The content container of the AccordionItem.
         /// </summary>
         public override VisualElement contentContainer => m_ContentElement;
+        
+        /// <summary>
+        /// The header's trailing container of the AccordionItem.
+        /// </summary>
+        public VisualElement trailingContainer { get; }
 
         /// <summary>
         /// The title of the AccordionItem.

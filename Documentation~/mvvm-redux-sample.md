@@ -35,5 +35,5 @@ is also a search bar to filter the Todo list.
 Go in Play mode and give it a try!
 
 <p align="center">
-![MVVM & Redux Sample](images/mvvm-redux-sample.png)
+  <img src="images/mvvm-redux-sample.png" alt="MVVM & Redux Sample">
 </p>

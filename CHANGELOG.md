@@ -4,6 +4,24 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-pre.3] - 2023-11-06
+
+### Added
+
+- Added public access to `Pressable.InvokePressed` and `Pressable.InvokeLongPressed` methods.
+- Added `trailingContainer` property to the `AccordionItem` component.
+
+### Fixed
+
+- Fixed warning message about Z-axis scale in the `AnchorPopup` component.
+- Fixed styling of the `AccordionItem` header component.
+- Fixed the `not-allowed` (disabled) cursor texture for Windows support at Runtime.
+- Fixed images in the package documentation.
+
+### Changed
+
+- The `Pressable` manipulator now uses the `keepPropagation` property also in its `PointerUpEvent` callback to avoid to propagate the event to the parent element.
+
 ## [1.0.0-pre.2] - 2023-11-04
 
 ### Added

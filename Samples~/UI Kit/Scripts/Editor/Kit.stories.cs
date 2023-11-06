@@ -17,12 +17,12 @@ namespace Unity.AppUI.Editor
             {
                 var element = new VisualElement();
                 var tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                    "Assets/Samples/App UI/1.0.0-pre.2/UI Kit/SampleResources/Examples.uxml");
+                    "Assets/Samples/App UI/1.0.0-pre.3/UI Kit/SampleResources/Examples.uxml");
                 tree.CloneTree(element);
                 var root = element.Q<VisualElement>("root-main");
                 root.styleSheets.Add(
                     AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(
-                        "Assets/Samples/App UI/1.0.0-pre.2/UI Kit/SampleResources/ExampleTheme.tss"));
+                        "Assets/Samples/App UI/1.0.0-pre.3/UI Kit/SampleResources/ExampleTheme.tss"));
                 Samples.Examples.SetupDataBinding(root);
                 root.Query(className: "example-context-switcher-panel").ForEach(visualElement => 
                     visualElement.style.display = DisplayStyle.None);

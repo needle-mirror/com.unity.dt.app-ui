@@ -34,7 +34,7 @@ myField.RegisterValueChangedCallback(evt =>
 Boolean inputs are used to get a boolean value from the user, typically through a checkbox or a toggle. 
 
 <p align="center">
-![Toggle](images/toggle.png)
+  <img src="images/toggle.png" alt="Toggle">
 </p>
 
 In App UI, you can use the [Checkbox](xref:Unity.AppUI.UI.Checkbox) element to create a checkbox, 
@@ -45,7 +45,7 @@ and the [Toggle](xref:Unity.AppUI.UI.Toggle) element to create a toggle.
 Selection inputs are used to get a value from a list of pre-defined values. 
 
 <p align="center">
-![Dropdown](images/dropdown.png)
+  <img src="images/dropdown.png" alt="Dropdown">
 </p>
 
 In App UI, you can use the [Dropdown](xref:Unity.AppUI.UI.Dropdown) element to create a dropdown list, 
@@ -56,7 +56,7 @@ and the [RadioGroup](xref:Unity.AppUI.UI.RadioGroup) element to create a radio b
 Color inputs are used for selecting colors. 
 
 <p align="center">
-![Color Picker](images/color-picker.png)
+  <img src="images/color-picker.png" alt="Color Picker">
 </p>
 
 
@@ -65,7 +65,7 @@ Color inputs are used for selecting colors.
 Text inputs are used for entering text values.
 
 <p align="center">
-![Text Field](images/text-field.png)
+  <img src="images/text-field.png" alt="Text Field">
 </p>
 
 In App UI, you can use the [TextField](xref:Unity.AppUI.UI.TextField) element to create a text field,
@@ -82,7 +82,7 @@ We aim to provide different version of our component in order to fit the needs o
 Slider inputs are used for selecting a value from a range of values.
 
 <p align="center">
-![Slider](images/slider.png)
+  <img src="images/slider.png" alt="Slider">
 </p>
 
 In App UI, you can use the [SliderFloat](xref:Unity.AppUI.UI.SliderFloat) element to create a slider.
@@ -95,28 +95,28 @@ You can also use the [TouchSliderInt](xref:Unity.AppUI.UI.TouchSliderInt) elemen
 Numeric inputs are used for entering numerical values.
 
 <p align="center">
-![Numeric Field](images/numeric-field.png)
+  <img src="images/numeric-field.png" alt="Numeric Field">
 </p>
 
 ### Vectors
 
 <p align="center">
-![Vector Field](images/vector-field.png)
+  <img src="images/vector-field.png" alt="Vector Field">
 </p>
 
 ### Rects and Bounds
 
 <p align="center">
-![Rect Field](images/rect-field.png)
+  <img src="images/rect-field.png" alt="Rect Field">
 </p>
 
 <p align="center">
-![Rect Field](images/bounds-field.png)
+  <img src="images/bounds-field.png" alt="Bounds Field">
 </p>
 
 ### Expression Evaluation
 
 <p align="center">
-![Expression Field](images/expression-evaluator.gif)
+  <img src="images/expression-evaluator.gif" alt="Expression Evaluator">
 </p>
 

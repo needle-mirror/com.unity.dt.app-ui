@@ -28,7 +28,7 @@ Our Storybook window is able to collect all the stories from the project and dis
 To open the Storybook window, go to **Window > App UI > Storybook**.
 
 <p align="center">
-![Storybook Window](images/storybook-window.png)
+  <img src="images/storybook-window.png" alt="Storybook Window">
 </p>
 
 On the left side of the window, you will see a list of all the pages that contain stories.

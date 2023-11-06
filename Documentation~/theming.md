@@ -25,7 +25,7 @@ you need to reference this Theme file inside the [PanelSettings](xref:UnityEngin
 used on your [UIDocument](xref:UnityEngine.UIElements.UIDocument) component.
 
 <p align="center">
-![Use Default Theme](images/use-default-theme.png)
+  <img src="images/use-default-theme.png" alt="Use Default Theme">
 </p>
 
 ## Creating a theme
@@ -73,7 +73,7 @@ VisualElement {}
 You can also use the Editor inspector panel for editing the theme file:
 
 <p align="center">
-![Edit Theme File](images/edit-theme-file.png)
+  <img src="images/edit-theme-file.png" alt="Edit Theme File">
 </p>
 
 When all the theme files are ready, you can reference the theme file
@@ -81,7 +81,7 @@ in the [PanelSettings](xref:UnityEngine.UIElements.PanelSettings) of your
 [UIDocument](xref:UnityEngine.UIElements.UIDocument) component:
 
 <p align="center">
-![Use Custom Theme](images/use-custom-theme.png)
+  <img src="images/use-custom-theme.png" alt="Use Custom Theme">
 </p>
 
 
