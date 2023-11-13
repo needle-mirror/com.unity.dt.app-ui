@@ -27,7 +27,6 @@ namespace Unity.AppUI.Navigation.Editor
             using (var streamWriter = new StreamWriter(output, false))
             {
                 streamWriter.WriteLine("// This file is auto-generated. Do not edit it directly.");
-                streamWriter.WriteLine("// Path: " + output);
                 streamWriter.WriteLine("// Date: " + System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 streamWriter.WriteLine("using System;");
                 streamWriter.WriteLine("using System.Collections.Generic;");

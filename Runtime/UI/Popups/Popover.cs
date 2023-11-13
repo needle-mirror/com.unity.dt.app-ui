@@ -119,6 +119,56 @@ namespace Unity.AppUI.UI
         /// The Popover will be placed at the end-bottom of the target.
         /// </summary>
         EndBottom,
+        
+        /// <summary>
+        /// The Popover will be placed inside the target, at the top left.
+        /// </summary>
+        InsideTopStart,
+        
+        /// <summary>
+        /// The Popover will be placed inside the target, at the top left.
+        /// </summary>
+        InsideTopLeft,
+        
+        /// <summary>
+        /// The Popover will be placed inside the target, at the top center.
+        /// </summary>
+        InsideTop,
+        
+        /// <summary>
+        /// The Popover will be placed inside the target, at the top right.
+        /// </summary>
+        InsideTopEnd,
+        
+        /// <summary>
+        /// The Popover will be placed inside the target, at the bottom left.
+        /// </summary>
+        InsideBottomStart,
+        
+        /// <summary>
+        /// The Popover will be placed inside the target, at the bottom center.
+        /// </summary>
+        InsideBottom,
+        
+        /// <summary>
+        /// The Popover will be placed inside the target, at the bottom right.
+        /// </summary>
+        InsideBottomEnd,
+        
+        /// <summary>
+        /// The Popover will be placed inside the target, at the center left.
+        /// </summary>
+        InsideStart,
+        
+        /// <summary>
+        /// The Popover will be placed inside the target, at the center right.
+        /// </summary>
+        InsideEnd,
+        
+        /// <summary>
+        /// The Popover will be placed inside the target, at the center.
+        /// </summary>
+        InsideCenter,
     }
 
     /// <summary>
@@ -472,6 +522,9 @@ namespace Unity.AppUI.UI
                     case PopoverPlacement.BottomRight:
                     case PopoverPlacement.BottomStart:
                     case PopoverPlacement.BottomEnd:
+                    case PopoverPlacement.InsideTopStart:
+                    case PopoverPlacement.InsideTopLeft:
+                    case PopoverPlacement.InsideTop:
                         up = true;
                         break;
                     case PopoverPlacement.Top:
@@ -479,6 +532,9 @@ namespace Unity.AppUI.UI
                     case PopoverPlacement.TopRight:
                     case PopoverPlacement.TopStart:
                     case PopoverPlacement.TopEnd:
+                    case PopoverPlacement.InsideBottomStart:
+                    case PopoverPlacement.InsideBottom:
+                    case PopoverPlacement.InsideBottomEnd:
                         down = true;
                         break;
                     case PopoverPlacement.Left:
@@ -487,6 +543,7 @@ namespace Unity.AppUI.UI
                     case PopoverPlacement.Start:
                     case PopoverPlacement.StartTop:
                     case PopoverPlacement.StartBottom:
+                    case PopoverPlacement.InsideEnd:
                         right = true;
                         break;
                     case PopoverPlacement.Right:
@@ -495,7 +552,10 @@ namespace Unity.AppUI.UI
                     case PopoverPlacement.End:
                     case PopoverPlacement.EndTop:
                     case PopoverPlacement.EndBottom:
-                        left = true;
+                    case PopoverPlacement.InsideStart:
+                        left = true; 
+                        break;
+                    case PopoverPlacement.InsideCenter:
                         break;
                     default:
                         throw new ValueOutOfRangeException(nameof(m_Placement), m_Placement);

@@ -280,6 +280,60 @@ namespace Unity.AppUI.UI
                     ComputePositionRight(screenRect, elementRect, anchorRect, options, ref result);
                     CrossSnapVertically(ref result, screenRect, elementRect, options.crossSnap);
                     break;
+                case PopoverPlacement.InsideTopStart:
+                    result.top = anchorRect.yMin;
+                    result.marginTop = options.offset;
+                    result.left = anchorRect.xMin;
+                    result.marginLeft = options.crossOffset;
+                    break;
+                case PopoverPlacement.InsideTopEnd:
+                    result.top = anchorRect.yMin;
+                    result.marginTop = options.offset;
+                    result.left = anchorRect.xMax - elementRect.width;
+                    result.marginLeft = -options.crossOffset;
+                    break;
+                case PopoverPlacement.InsideTop:
+                    result.top = anchorRect.yMin;
+                    result.marginTop = options.offset;
+                    result.left = anchorRect.center.x - elementRect.width * 0.5f;
+                    result.marginLeft = options.crossOffset;
+                    break;
+                case PopoverPlacement.InsideBottomStart:
+                    result.top = anchorRect.yMax - elementRect.height;
+                    result.marginTop = -options.offset;
+                    result.left = anchorRect.xMin;
+                    result.marginLeft = options.crossOffset;
+                    break; 
+                case PopoverPlacement.InsideBottomEnd:
+                    result.top = anchorRect.yMax - elementRect.height;
+                    result.marginTop = -options.offset;
+                    result.left = anchorRect.xMax - elementRect.width;
+                    result.marginLeft = -options.crossOffset;
+                    break;
+                case PopoverPlacement.InsideBottom:
+                    result.top = anchorRect.yMax - elementRect.height;
+                    result.marginTop = -options.offset;
+                    result.left = anchorRect.center.x - elementRect.width * 0.5f;
+                    result.marginLeft = options.crossOffset;
+                    break;
+                case PopoverPlacement.InsideStart:
+                    result.top = anchorRect.center.y - elementRect.height * 0.5f;
+                    result.marginTop = options.crossOffset;
+                    result.left = anchorRect.xMin;
+                    result.marginLeft = options.offset;
+                    break;
+                case PopoverPlacement.InsideEnd:
+                    result.top = anchorRect.center.y - elementRect.height * 0.5f;
+                    result.marginTop = options.crossOffset;
+                    result.left = anchorRect.xMax - elementRect.width;
+                    result.marginLeft = -options.offset;
+                    break;
+                case PopoverPlacement.InsideCenter:
+                    result.top = anchorRect.center.y - elementRect.height * 0.5f;
+                    result.marginTop = options.crossOffset;
+                    result.left = anchorRect.center.x - elementRect.width * 0.5f;
+                    result.marginLeft = options.offset;
+                    break;
                 default:
                     break;
             }

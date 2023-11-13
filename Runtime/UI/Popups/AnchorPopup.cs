@@ -287,12 +287,12 @@ namespace Unity.AppUI.UI
         /// </summary>
         protected override void AnimateViewIn()
         {
+            view.style.opacity = 0.0001f;
             view.schedule.Execute(() =>
             {
                 if (view.parent != null)
                 {
                     view.visible = true;
-                    view.style.opacity = 0.0001f;
                     RefreshPosition();
                     view.schedule.Execute(() =>
                     {

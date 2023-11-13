@@ -1,5 +1,4 @@
 // This file is auto-generated. Do not edit it directly.
-// Path: Assets/Samples/App UI/1.0.0-pre.3/Navigation/Resources/Navigation/NavigationSample
 // Date: 2023-05-08 20:54:51
 using System;
 using System.Collections.Generic;

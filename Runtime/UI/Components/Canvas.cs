@@ -117,6 +117,16 @@ namespace Unity.AppUI.UI
         /// </summary>
         public static readonly string verticalScrollerUssClassName = ussClassName + "__vertical-scroller";
         
+        /// <summary>
+        /// Event that is triggered when the scroll position of the Canvas has changed.
+        /// </summary>
+        public event Action scrollOffsetChanged;
+        
+        /// <summary>
+        /// Event that is triggered when the zoom factor of the Canvas has changed.
+        /// </summary>
+        public event Action zoomChanged;
+        
         const float k_DefaultScrollSpeed = 2f;
         
         const float k_DefaultMinZoom = 0.1f;
@@ -186,6 +196,7 @@ namespace Unity.AppUI.UI
             {
                 SetScrollOffset(value);
                 UpdateScrollers();
+                scrollOffsetChanged?.Invoke();
             }
         }
         
@@ -235,6 +246,7 @@ namespace Unity.AppUI.UI
                 m_Viewport.transform.scale = new Vector3(value, value, 1);
                 m_Background.scale = value;
                 UpdateScrollers();
+                zoomChanged?.Invoke();
             }
         }
         
@@ -341,7 +353,7 @@ namespace Unity.AppUI.UI
             hierarchy.Add(m_HorizontalScroller);
             
             RegisterCallback<WheelEvent>(OnWheel);
-            RegisterCallback<PointerDownEvent>(OnPointerDown);
+            RegisterCallback<PointerDownEvent>(OnPointerDown, TrickleDown.TrickleDown);
             RegisterCallback<PointerUpEvent>(OnPointerUp);
             RegisterCallback<PointerCancelEvent>(OnPointerCancel);
             RegisterCallback<PointerCaptureOutEvent>(OnPointerCaptureOut);
@@ -517,6 +529,8 @@ namespace Unity.AppUI.UI
             {
                 if (!this.HasPointerCapture(evt.pointerId))
                     this.CapturePointer(evt.pointerId);
+                
+                evt.StopPropagation();
                 m_PointerId = evt.pointerId;
                 m_PointerPosition = evt.localPosition;
                 grabMode = GrabMode.Grabbing;
@@ -596,6 +610,7 @@ namespace Unity.AppUI.UI
             var delta = evt.newValue - m_LastScrollersPosition.y;
             SetScrollOffset(new Vector2(scrollOffset.x, scrollOffset.y + delta));
             m_LastScrollersPosition.y = evt.newValue;
+            scrollOffsetChanged?.Invoke();
         }
         
         void OnHorizontalScrollValueChanged(ChangeEvent<float> evt)
@@ -606,6 +621,7 @@ namespace Unity.AppUI.UI
             var delta = evt.newValue - m_LastScrollersPosition.x;
             SetScrollOffset(new Vector2(scrollOffset.x - delta, scrollOffset.y));
             m_LastScrollersPosition.x = evt.newValue;
+            scrollOffsetChanged?.Invoke();
         }
 
         void OnGeometryChanged(GeometryChangedEvent evt)
