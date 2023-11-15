@@ -125,6 +125,64 @@ namespace Unity.AppUI.Tests.Undo
         }
 
         [Test]
+        public void CanUndoAndRedoMacroCommand()
+        {
+            var undoStack = new UndoStack();
+            
+            undoStack.BeginMacro("Macro 1");
+            
+            undoStack.Push(new TestCommand("Test 1"));
+            
+            undoStack.Push(new TestCommand("Test 2"));
+            
+            undoStack.EndMacro();
+            
+            undoStack.BeginMacro("Macro 2");
+            
+            undoStack.Push(new TestCommand("Test 3"));
+            
+            var test4 = new TestCommand("Test 4");
+            
+            undoStack.Push(test4);
+            
+            undoStack.EndMacro();
+            
+            Assert.AreEqual(2, undoStack.count);
+            
+            Assert.AreEqual(1, undoStack.index);
+            
+            Assert.AreEqual("Macro 1", undoStack[0].name);
+            
+            Assert.AreEqual("Macro 2", undoStack[1].name);
+            
+            Assert.IsFalse(test4.hasUndone);
+            
+            Assert.IsFalse(test4.hasRedone);
+            
+            undoStack.Undo();
+            
+            Assert.AreEqual(2, undoStack.count);
+            
+            Assert.AreEqual(0, undoStack.index);
+            
+            Assert.AreEqual("Macro 1", undoStack[0].name);
+            
+            Assert.IsTrue(test4.hasUndone);
+            
+            Assert.IsFalse(test4.hasRedone);
+            
+            undoStack.Redo();
+            
+            Assert.AreEqual(2, undoStack.count);
+            
+            Assert.AreEqual(1, undoStack.index);
+            
+            Assert.AreEqual("Macro 2", undoStack[1].name);
+            
+            Assert.IsTrue(test4.hasRedone);
+        }
+
+        [Test]
         public void CanSetIndex()
         {
             var undoStack = new UndoStack();

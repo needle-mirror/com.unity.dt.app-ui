@@ -114,6 +114,15 @@ namespace Unity.AppUI.UI
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
             }
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Factory class to instantiate a <see cref="Text"/> using the data read from a UXML file.
@@ -156,7 +165,7 @@ namespace Unity.AppUI.UI
                 var element = (Text)ve;
                 element.primary = m_Primary.GetValueFromBag(bag, cc);
                 element.size = m_Size.GetValueFromBag(bag, cc);
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

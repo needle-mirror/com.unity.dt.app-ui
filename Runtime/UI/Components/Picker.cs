@@ -538,6 +538,15 @@ namespace Unity.AppUI.UI
 
             return menu;
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Picker"/>.
@@ -588,7 +597,7 @@ namespace Unity.AppUI.UI
                 el.size = m_Size.GetValueFromBag(bag, cc);
                 el.emphasized = m_Emphasized.GetValueFromBag(bag, cc);
                 el.closeOnSelection = m_CloseOnSelection.GetValueFromBag(bag, cc);
-                el.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
                 el.selectionType = m_SelectionType.GetValueFromBag(bag, cc);
             }
         }

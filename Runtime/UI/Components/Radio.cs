@@ -331,6 +331,15 @@ namespace Unity.AppUI.UI
         {
             m_Box.passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.Outline;
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Factory class to instantiate a <see cref="Radio"/> using the data read from a UXML file.
@@ -388,7 +397,7 @@ namespace Unity.AppUI.UI
                 element.emphasized = m_Emphasized.GetValueFromBag(bag, cc);
                 element.value = m_Value.GetValueFromBag(bag, cc);
                 element.label = m_Label.GetValueFromBag(bag, cc);
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

@@ -52,6 +52,7 @@
 @import "./Components/RectField.uss";
 @import "./Components/ScrollView.uss";
 @import "./Components/Slider.uss";
+@import "./Components/Spacer.uss";
 @import "./Components/SplitView.uss";
 @import "./Components/StackView.uss";
 @import "./Components/Stepper.uss";

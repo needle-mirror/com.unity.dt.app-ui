@@ -5,7 +5,7 @@
     flex-direction: row;
     align-items: center;
     padding: 4px var(--appui-spacing-150);
-    height: var(--appui-alias-control-sizing-lg-height);
+    min-height: var(--appui-alias-control-sizing-lg-height);
     /*box-shadow: var(--appui-toast-box-shadow);*/
     border-radius: var(--appui-alias-control-border-radius);
     margin-bottom: 24px;

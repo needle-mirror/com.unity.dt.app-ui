@@ -30,6 +30,15 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="NumericalField{T}.ParseValueToString"/>
         protected override string ParseValueToString(double val)
         {
+            // If formatString is percent, we need to divide by 100
+            if (UINumericFieldsUtils.IsPercentFormatString(formatString))
+            {
+                val /= 100f;
+                if (highValue == 1f)
+                    Debug.LogWarning("High value is set to 1, but format string is a percent format string.\n" +
+                        "Please set high value to 100 instead.");
+            }
+            
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
         }
 

@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "1.0.0-pre.4",
+  "version": "1.0.0-pre.5",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -23,18 +23,15 @@
     "app-ui"
   ],
   "repository": {
-    "url": "https://github.cds.internal.unity3d.com/unity/com.unity.dt.app-ui.git",
+    "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "4685bd57a758e85f3891d12b6b10e9b9602834af"
+    "revision": "4187ab9d436818b2100deb7df4bbfc193062bb5b"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.uielements": "1.0.0",
     "com.unity.modules.physics": "1.0.0"
-  },
-  "optionalDependencies": {
-    "com.unity.localization": "^1.3.2"
   },
   "samples": [
     {
@@ -84,10 +81,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added new *Placement* possibilities in for `AnchorPopup` components. \n  Now you will be able to anchor a popup inside the anchor element instead of outside of it.\n- Added `zoomChanged` and `scrollOffsetChanged` events to the `Canvas` component.\n- Added `Commanding` documentation page.\n\n### Fixed\n\n- Fixed setting the opacity of `Popover` component at the right frame to avoid to see the content of the popover during the animation.\n\n### Changed\n\n- The `Canvas` component now listens to `PointerDownEvent` in `TrickleDown` phase to avoid to miss the event when the pointer is over a child element."
+    "changelog": "### Changed\n\n- Migrated code into the App UI monorepo at https://github.com/Unity-Technologies/unity-app-ui\n- Renamed `format` UXML Attribute to `format-string` to bind correctly in UIBuilder\n- The `MacroCommand.Flush` method will now call `UndoCommand.Flush` on its child commands from the most recent to the oldest one.\n  This is the same order as the one used by the `MacroCommand.Undo` method.\n- Renamed CircularProgress and LinearProgress `color` Uxml Attribute to `color-override` to bind correctly in UIBuilder\n- Float Fields using a string format set on Percentage (P) will now use the same value as what you typed\n\n### Added\n\n- Added `disabled` property on every components that needed it in order to bind correctly with UIBuilder\n- Added `Spacer` component.\n\n### Fixed\n\n- Fixed the height of Toast components to be `auto`.\n- Fixed `MacroCommand.Undo` and `MacroCommand.Redo` methods."
   },
   "upmCi": {
-    "footprint": "5ac6f13e40139d5e37ecdcfbf10624300e4886cb"
+    "footprint": "55847e16b55597aa04d447ace22c25785a498b65"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@1.0/manual/index.html"
 }

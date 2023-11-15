@@ -411,6 +411,15 @@ namespace Unity.AppUI.UI
                 SendEvent(evt);
             }
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Factory class to be able to instantiate a MenuItem from UXML.
@@ -486,7 +495,7 @@ namespace Unity.AppUI.UI
                 element.selectable = m_Selectable.GetValueFromBag(bag, cc);
                 element.SetValueWithoutNotify(m_SelectedByDefault.GetValueFromBag(bag, cc));
 
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

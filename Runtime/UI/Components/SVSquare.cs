@@ -357,6 +357,15 @@ namespace Unity.AppUI.UI
                 m_Image.image = m_RT;
             m_Image.MarkDirtyRepaint();
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Factory class to instantiate a <see cref="SVSquare"/> using the data read from a UXML file.
@@ -412,7 +421,7 @@ namespace Unity.AppUI.UI
                 satBri.x = m_Saturation.GetValueFromBag(bag, cc);
                 satBri.y = m_Brightness.GetValueFromBag(bag, cc);
                 square.SetValueWithoutNotify(satBri);
-                square.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                square.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

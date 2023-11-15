@@ -335,6 +335,15 @@ namespace Unity.AppUI.UI
         /// <param name="baseValue"></param>
         /// <returns></returns>
         protected abstract float GetIncrementFactor(TValueType baseValue);
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="NumericalField{TValueType}"/>.
@@ -365,7 +374,7 @@ namespace Unity.AppUI.UI
 
             readonly UxmlStringAttributeDescription m_Value = new UxmlStringAttributeDescription { name = "value", defaultValue = "0" };
 
-            readonly UxmlStringAttributeDescription m_Format = new UxmlStringAttributeDescription { name = "format", defaultValue = null };
+            readonly UxmlStringAttributeDescription m_Format = new UxmlStringAttributeDescription { name = "format-string", defaultValue = null };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -397,7 +406,7 @@ namespace Unity.AppUI.UI
                 if (m_Format.TryGetValueFromBag(bag, cc, ref formatStr) && !string.IsNullOrEmpty(formatStr))
                     element.formatString = formatStr;
 
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

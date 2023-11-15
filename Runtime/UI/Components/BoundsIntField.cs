@@ -245,6 +245,15 @@ namespace Unity.AppUI.UI
         {
             value = new BoundsInt(value.position, new Vector3Int(value.size.x, value.size.y, evt.newValue));
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Class to instantiate a <see cref="BoundsIntField"/> using the data read from a UXML file.
@@ -282,7 +291,7 @@ namespace Unity.AppUI.UI
                 var element = (BoundsIntField)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
 
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

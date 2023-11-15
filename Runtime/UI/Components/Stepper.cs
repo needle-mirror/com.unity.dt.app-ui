@@ -201,6 +201,15 @@ namespace Unity.AppUI.UI
         {
             value = -1;
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Factory class to instantiate a <see cref="Stepper"/> using the data read from a UXML file.
@@ -237,7 +246,7 @@ namespace Unity.AppUI.UI
 
                 var el = (Stepper)ve;
                 el.size = m_Size.GetValueFromBag(bag, cc);
-                el.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

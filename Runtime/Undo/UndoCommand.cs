@@ -111,6 +111,10 @@ namespace Unity.AppUI.Undo
         /// </summary>
         public override void Undo()
         {
+            for (var i = m_Commands.Count - 1; i >= 0; i--)
+            {
+                m_Commands[i].Undo();
+            }
         }
 
         /// <summary>
@@ -118,6 +122,10 @@ namespace Unity.AppUI.Undo
         /// </summary>
         public override void Redo()
         {
+            foreach (var command in m_Commands)
+            {
+                command.Redo();
+            }
         }
         
         /// <summary>
@@ -125,9 +133,9 @@ namespace Unity.AppUI.Undo
         /// </summary>
         public override void OnFlush()
         {
-            foreach (var command in m_Commands)
+            for (var i = m_Commands.Count - 1; i >= 0; i--)
             {
-                command.OnFlush();
+                m_Commands[i].OnFlush();
             }
             
             m_Commands.Clear();

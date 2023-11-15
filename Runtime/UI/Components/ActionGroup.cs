@@ -441,6 +441,15 @@ namespace Unity.AppUI.UI
                 btn.clickable?.InvokePressed(evt);
             }
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// The UXML factory for the ActionGroup.
@@ -488,6 +497,12 @@ namespace Unity.AppUI.UI
                 name = "close-on-selection",
                 defaultValue = true
             };
+            
+            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
+            {
+                name = "disabled",
+                defaultValue = false
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -506,6 +521,7 @@ namespace Unity.AppUI.UI
                 el.justified = m_Justified.GetValueFromBag(bag, cc);
                 el.selectionType = m_SelectionType.GetValueFromBag(bag, cc);
                 el.closeOnSelection = m_CloseOnSelection.GetValueFromBag(bag, cc);
+                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

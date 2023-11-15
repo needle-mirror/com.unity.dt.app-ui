@@ -555,6 +555,15 @@ namespace Unity.AppUI.UI
                 }
             }
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="SliderBase{TValueType}"/>.
@@ -587,7 +596,7 @@ namespace Unity.AppUI.UI
 
             readonly UxmlStringAttributeDescription m_Format = new UxmlStringAttributeDescription
             {
-                name = "format",
+                name = "format-string",
                 defaultValue = null
             };
 
@@ -637,7 +646,7 @@ namespace Unity.AppUI.UI
                 if (m_Format.TryGetValueFromBag(bag, cc, ref formatStr) && !string.IsNullOrEmpty(formatStr))
                     el.formatString = formatStr;
 
-                el.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }
@@ -675,7 +684,17 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="BaseSlider{Vector2,Single}.ParseValueToString"/>
         protected override string ParseValueToString(Vector2 val)
         {
-            return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
+            // If formatString is percent, we need to divide by 100
+            if (UINumericFieldsUtils.IsPercentFormatString(formatString))
+            {
+                val /= 100f;
+                if (highValue == 1f)
+                    Debug.LogWarning("High value is set to 1, but format string is a percent format string.\n" +
+                        "Please set high value to 100 instead.");
+            }
+            
+            return $"[{val.x.ToString(formatString, CultureInfo.InvariantCulture)} - " +
+                $"{val.y.ToString(formatString, CultureInfo.InvariantCulture)}]";
         }
 
         /// <inheritdoc cref="BaseSlider{Vector2,Single}.SliderLerpUnclamped"/>
@@ -832,6 +851,10 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="BaseSlider{Vector2Int,Integer}.ParseValueToString"/>
         protected override string ParseValueToString(Vector2Int val)
         {
+            if (UINumericFieldsUtils.IsPercentFormatString(formatString))
+                Debug.LogWarning("Percent format string is not supported for integer values.\n" +
+                    "Please use a RangeSliderFloat instead.");
+            
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
         }
 

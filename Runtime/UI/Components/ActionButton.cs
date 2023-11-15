@@ -239,6 +239,15 @@ namespace Unity.AppUI.UI
             evt.target = this;
             SendEvent(evt);
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// The ActionButton UXML factory.
@@ -317,7 +326,7 @@ namespace Unity.AppUI.UI
                 el.accent = m_Accent.GetValueFromBag(bag, cc);
                 el.selected = m_Selected.GetValueFromBag(bag, cc);
                 el.quiet = m_Quiet.GetValueFromBag(bag, cc);
-                el.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

@@ -741,6 +741,15 @@ namespace Unity.AppUI.UI
             m_Viewport.transform.position = new Vector3(-newValue.x, -newValue.y, 0);
             m_Background.offset = m_Viewport.transform.position;
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Defines the UxmlFactory for the Canvas.
@@ -813,6 +822,12 @@ namespace Unity.AppUI.UI
                 defaultValue = k_DefaultUseSpaceBar
             };
             
+            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
+            {
+                name = "disabled",
+                defaultValue = false
+            };
+            
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
@@ -852,6 +867,9 @@ namespace Unity.AppUI.UI
                 var boolVal = false;
                 if (m_UseSpaceBar.TryGetValueFromBag(bag, cc, ref boolVal))
                     canvas.useSpaceBar = boolVal;
+                
+                if (m_Disabled.TryGetValueFromBag(bag, cc, ref boolVal))
+                    canvas.disabled = boolVal;
             }
         }
     }

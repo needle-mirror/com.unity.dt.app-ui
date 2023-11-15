@@ -73,6 +73,15 @@ namespace Unity.AppUI.UI
             this.text = text;
             variant = HelpTextVariant.Default;
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Factory class to instantiate a <see cref="HelpText"/> using the data read from a UXML file.
@@ -109,7 +118,7 @@ namespace Unity.AppUI.UI
                 
                 var disabled = false;
                 if (m_Disabled.TryGetValueFromBag(bag, cc, ref disabled))
-                    helpText.SetEnabled(!disabled);
+                    helpText.disabled = disabled;
             }
         }
     }

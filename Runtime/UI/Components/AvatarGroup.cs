@@ -265,6 +265,15 @@ namespace Unity.AppUI.UI
 
             return avatar;
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Defines the UxmlFactory for the AvatarGroup.
@@ -316,6 +325,12 @@ namespace Unity.AppUI.UI
                 defaultValue = k_DefaultVariant,
             };
             
+            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
+            {
+                name = "disabled",
+                defaultValue = false,
+            };
+            
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
             /// </summary>
@@ -336,6 +351,8 @@ namespace Unity.AppUI.UI
                 var total = -1;
                 if (m_CustomTotal.TryGetValueFromBag(bag, cc, ref total))
                     element.SetCustomTotal(total);
+                
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

@@ -533,6 +533,15 @@ namespace Unity.AppUI.UI
             // var refPoint = new Vector2(1, 0); // angle = 0 = red = position(1,0) in wheel
             return (/*Mathf.Atan2(refPoint.y, refPoint.x)*/ -Mathf.Atan2(direction.y, direction.x)) * k_InvTwoPI;
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Instantiates an <see cref="ColorWheel"/> using the data read from a UXML file.
@@ -569,7 +578,7 @@ namespace Unity.AppUI.UI
 
                 var el = (ColorWheel)ve;
                 el.SetValueWithoutNotify(m_Value.GetValueFromBag(bag, cc));
-                el.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

@@ -215,6 +215,15 @@ namespace Unity.AppUI.UI
         {
             value = new Vector3Int(evt.newValue, value.y, value.z);
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Factory class to instantiate a <see cref="Vector3IntField"/> using the data read from a UXML file.
@@ -252,7 +261,7 @@ namespace Unity.AppUI.UI
                 var element = (Vector3IntField)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
 
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

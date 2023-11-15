@@ -56,6 +56,15 @@ namespace Unity.AppUI.UI
 
             color = null;
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Defines the UxmlFactory for the Quote.
@@ -96,7 +105,7 @@ namespace Unity.AppUI.UI
                 if (m_Color.TryGetValueFromBag(bag, cc, ref color))
                     element.color = color;
                 
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

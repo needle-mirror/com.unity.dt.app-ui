@@ -172,7 +172,15 @@ namespace Unity.AppUI.UI
                 SendEvent(evt);
             }
         }
-
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         [Preserve]
         public new class UxmlFactory : UxmlFactory<AssetTargetField, UxmlTraits> { }
@@ -214,7 +222,7 @@ namespace Unity.AppUI.UI
                 var element = (AssetTargetField)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
                 element.invalid = m_Invalid.GetValueFromBag(bag, cc);
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

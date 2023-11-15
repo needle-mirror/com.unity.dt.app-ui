@@ -274,6 +274,15 @@ namespace Unity.AppUI.UI
             m_ThumbContent.style.backgroundColor = color;
             m_ThumbContainer.style.left = new StyleLength(new Length(m_Value * 100f, LengthUnit.Percent));
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Instantiates an <see cref="ColorSlider"/> using the data read from a UXML file.
@@ -339,7 +348,7 @@ namespace Unity.AppUI.UI
                     el.colorRange = range;
                 }
                 el.SetValueWithoutNotify(m_Value.GetValueFromBag(bag, cc));
-                el.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

@@ -120,6 +120,15 @@ namespace Unity.AppUI.UI
         }
         
         /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
+        
+        /// <summary>
         /// Defines the UxmlFactory for the <see cref="FloatingActionButton"/>.
         /// </summary>
         [Preserve]
@@ -141,6 +150,12 @@ namespace Unity.AppUI.UI
                 name = "elevation",
                 defaultValue = 12,
             };
+            
+            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
+            {
+                name = "disabled",
+                defaultValue = false,
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -155,6 +170,8 @@ namespace Unity.AppUI.UI
                 var element = (FloatingActionButton)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
                 element.elevation = m_Elevation.GetValueFromBag(bag, cc);
+                
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

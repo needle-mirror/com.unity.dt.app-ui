@@ -215,6 +215,15 @@ namespace Unity.AppUI.UI
             if (evt.context != null)
                 variant = evt.context.variant;
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Defines the UxmlFactory for the Avatar.
@@ -291,7 +300,7 @@ namespace Unity.AppUI.UI
                 if (m_Src.TryGetValueFromBag(bag, cc, ref src))
                     element.src = new StyleBackground(Resources.Load<Texture2D>(src));
                 element.outlineWidth = m_OutlineWidth.GetValueFromBag(bag, cc);
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

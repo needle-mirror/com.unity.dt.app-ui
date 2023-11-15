@@ -169,6 +169,15 @@ namespace Unity.AppUI.UI
                 AddToClassList(ussClassName + "--" + m_IconName);
             } 
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Factory class to instantiate a <see cref="Icon"/> using the data read from a UXML file.
@@ -227,7 +236,7 @@ namespace Unity.AppUI.UI
                 element.size = m_Size.GetValueFromBag(bag, cc);
                 element.iconName = m_IconName.GetValueFromBag(bag, cc);
                 element.variant = m_Variant.GetValueFromBag(bag, cc);
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

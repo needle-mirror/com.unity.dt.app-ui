@@ -248,6 +248,15 @@ namespace Unity.AppUI.UI
             helpMessage = null;
             helpVariant = HelpTextVariant.Destructive;
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Factory class to instantiate a <see cref="InputLabel"/> using the data read from a UXML file.
@@ -350,7 +359,7 @@ namespace Unity.AppUI.UI
                 
                 var disabled = false;
                 if (m_Disabled.TryGetValueFromBag(bag, cc, ref disabled))
-                    element.SetEnabled(!disabled);
+                    element.disabled = disabled;
                 
                 var required = false;
                 if (m_Required.TryGetValueFromBag(bag, cc, ref required))

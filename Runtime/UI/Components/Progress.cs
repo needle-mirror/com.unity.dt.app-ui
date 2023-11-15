@@ -319,7 +319,7 @@ namespace Unity.AppUI.UI
 
             readonly UxmlColorAttributeDescription m_Color = new UxmlColorAttributeDescription
             {
-                name = "color",
+                name = "color-override",
                 defaultValue = Color.white,
             };
 

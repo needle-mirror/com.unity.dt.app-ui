@@ -307,6 +307,15 @@ namespace Unity.AppUI.UI
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
             }
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Defines the UxmlFactory for the Button.
@@ -385,7 +394,7 @@ namespace Unity.AppUI.UI
                 element.subtitle = m_Subtitle.GetValueFromBag(bag, cc);
                 element.leadingIcon = m_LeadingIcon.GetValueFromBag(bag, cc);
                 element.trailingIcon = m_TrailingIcon.GetValueFromBag(bag, cc);
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

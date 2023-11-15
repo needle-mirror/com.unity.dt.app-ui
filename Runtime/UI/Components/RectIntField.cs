@@ -205,6 +205,15 @@ namespace Unity.AppUI.UI
         {
             value = new RectInt(evt.newValue, value.y, value.width, value.height);
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Factory class to instantiate a <see cref="RectIntField"/> using the data read from a UXML file.
@@ -242,7 +251,7 @@ namespace Unity.AppUI.UI
                 var element = (RectIntField)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
 
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

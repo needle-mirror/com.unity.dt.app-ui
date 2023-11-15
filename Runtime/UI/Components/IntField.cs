@@ -30,6 +30,10 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="NumericalField{T}.ParseValueToString"/>
         protected override string ParseValueToString(int val)
         {
+            if (UINumericFieldsUtils.IsPercentFormatString(formatString))
+                Debug.LogWarning("Percent format string is not supported for integer values.\n" +
+                    "Please use a FloatField instead.");
+            
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
         }
 

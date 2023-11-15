@@ -90,6 +90,15 @@ namespace Unity.AppUI.UI
             
             this.AddManipulator(new KeyboardFocusController());
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Defines the UxmlFactory for the Link.
@@ -134,7 +143,7 @@ namespace Unity.AppUI.UI
                 element.size = m_Size.GetValueFromBag(bag, cc);
                 var url = m_Url.GetValueFromBag(bag, cc);
                 element.url = string.IsNullOrEmpty(url) ? element.url : url;
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

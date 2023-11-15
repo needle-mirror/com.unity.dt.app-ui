@@ -172,6 +172,15 @@ namespace Unity.AppUI.UI
         }
         
         /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
+        
+        /// <summary>
         /// Factory class to instantiate a <see cref="FieldLabel"/> using the data read from a UXML file.
         /// </summary>
         [Preserve]
@@ -238,7 +247,7 @@ namespace Unity.AppUI.UI
 
                 var disabled = false;
                 if (m_Disabled.TryGetValueFromBag(bag, cc, ref disabled))
-                    fieldLabel.SetEnabled(!disabled);
+                    fieldLabel.disabled = disabled;
                 
                 var requiredText = string.Empty;
                 if (m_RequiredText.TryGetValueFromBag(bag, cc, ref requiredText))

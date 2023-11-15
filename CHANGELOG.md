@@ -4,18 +4,28 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.0.0-pre.4] - 2023-11-13
+## [1.0.0-pre.5] - 2023-11-15
+
+### Changed
+
+- Migrated code into the App UI monorepo at https://github.com/Unity-Technologies/unity-app-ui
+- Renamed `format` UXML Attribute to `format-string` to bind correctly in UIBuilder
+- The `MacroCommand.Flush` method will now call `UndoCommand.Flush` on its child commands from the most recent to the oldest one.
+  This is the same order as the one used by the `MacroCommand.Undo` method.
+- Renamed CircularProgress and LinearProgress `color` Uxml Attribute to `color-override` to bind correctly in UIBuilder
+- Float Fields using a string format set on Percentage (P) will now use the same value as what you typed
 
 ### Added
 
-- Added new *Placement* possibilities in for `AnchorPopup` components. 
-  Now you will be able to anchor a popup inside the anchor element instead of outside of it.
-- Added `zoomChanged` and `scrollOffsetChanged` events to the `Canvas` component.
-- Added `Commanding` documentation page.
+- Added `disabled` property on every components that needed it in order to bind correctly with UIBuilder
+- Added `Spacer` component.
 
 ### Fixed
 
-- Fixed setting the opacity of `Popover` component at the right frame to avoid to see the content of the popover during the animation.
+- Fixed the height of Toast components to be `auto`.
+- Fixed `MacroCommand.Undo` and `MacroCommand.Redo` methods.
+
+## [1.0.0-pre.4] - 2023-11-08
 
 ### Changed
 

@@ -245,6 +245,15 @@ namespace Unity.AppUI.UI
         {
             m_Clicked?.Invoke(this, EventArgs.Empty);
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Defines the UxmlFactory for the Chip.
@@ -295,7 +304,7 @@ namespace Unity.AppUI.UI
                 element.variant = m_Variant.GetValueFromBag(bag, cc);
                 element.label = m_Label.GetValueFromBag(bag, cc);
                 element.deleteIcon = m_DeleteIcon.GetValueFromBag(bag, cc);
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

@@ -133,6 +133,15 @@ namespace Unity.AppUI.UI
         {
             EnableInClassList(Styles.selectedUssClassName, newValue);
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Factory class to instantiate a <see cref="TabItem"/> using the data read from a UXML file.
@@ -177,7 +186,7 @@ namespace Unity.AppUI.UI
                 el.icon = m_Icon.GetValueFromBag(bag, cc);
                 el.label = m_Label.GetValueFromBag(bag, cc);
 
-                el.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }
@@ -585,6 +594,15 @@ namespace Unity.AppUI.UI
             if (evt.target is TabItem item)
                 value = item.parent.IndexOf(item);
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Factory class to instantiate a <see cref="Tabs"/> using the data read from a UXML file.
@@ -652,7 +670,7 @@ namespace Unity.AppUI.UI
                 el.emphasized = m_Emphasized.GetValueFromBag(bag, cc);
                 el.defaultValue = m_DefaultValue.GetValueFromBag(bag, cc);
 
-                el.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

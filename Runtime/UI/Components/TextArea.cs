@@ -300,6 +300,15 @@ namespace Unity.AppUI.UI
         {
             m_Placeholder.EnableInClassList(Styles.hiddenUssClassName, !string.IsNullOrEmpty(m_Value));
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Factory class to instantiate a <see cref="TextArea"/> using the data read from a UXML file.
@@ -351,7 +360,7 @@ namespace Unity.AppUI.UI
                 el.placeholder = m_Placeholder.GetValueFromBag(bag, cc);
                 el.autoResize = m_AutoResize.GetValueFromBag(bag, cc);
                 el.value = m_Value.GetValueFromBag(bag, cc);
-                el.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

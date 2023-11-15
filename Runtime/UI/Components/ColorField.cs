@@ -256,6 +256,15 @@ namespace Unity.AppUI.UI
                 SendEvent(evt);
             }
         }
+        
+        /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
 
         /// <summary>
         /// Class to instantiate a <see cref="ColorField"/> using the data read from a UXML file.
@@ -313,7 +322,7 @@ namespace Unity.AppUI.UI
                 element.invalid = m_Invalid.GetValueFromBag(bag, cc);
                 element.swatchOnly = m_SwatchOnly.GetValueFromBag(bag, cc);
                 element.inlinePicker = m_InlinePicker.GetValueFromBag(bag, cc);
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

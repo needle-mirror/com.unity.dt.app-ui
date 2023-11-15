@@ -209,6 +209,15 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// Whether the element is disabled.
+        /// </summary>
+        public bool disabled
+        {
+            get => !enabledSelf;
+            set => SetEnabled(!value);
+        }
+
+        /// <summary>
         /// Class to be able to use the <see cref="AccordionItem"/> in UXML.
         /// </summary>
         [Preserve]
@@ -244,7 +253,7 @@ namespace Unity.AppUI.UI
 
                 var element = (AccordionItem)ve;
                 element.title = m_Title.GetValueFromBag(bag, cc);
-                element.SetEnabled(!m_Disabled.GetValueFromBag(bag, cc));
+                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
     }

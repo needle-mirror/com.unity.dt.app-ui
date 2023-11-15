@@ -30,6 +30,10 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="NumericalField{T}.ParseValueToString"/>
         protected override string ParseValueToString(long val)
         {
+            if (UINumericFieldsUtils.IsPercentFormatString(formatString))
+                Debug.LogWarning("Percent format string is not supported for long values.\n" +
+                    "Please use a DoubleField instead.");
+            
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
         }
 
