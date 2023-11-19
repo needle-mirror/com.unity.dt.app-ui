@@ -1,6 +1,11 @@
 /* HelpText */
 .appui-help-text {
     display: flex;
+    -unity-text-align: middle-left;
+}
+
+.appui--rtl .appui-help-text {
+    -unity-text-align: middle-right;
 }
 
 .appui-help-text,

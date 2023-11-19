@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
@@ -132,6 +133,8 @@ namespace Unity.AppUI.UI
         {
             var handled = false;
 
+            var ctx = this.GetContext();
+
             switch (evt.keyCode)
             {
                 case KeyCode.DownArrow:
@@ -142,12 +145,14 @@ namespace Unity.AppUI.UI
                     focusController.FocusNextInDirectionEx(VisualElementFocusChangeDirection.left);
                     handled = true;
                     break;
-                case KeyCode.RightArrow:
+                case KeyCode.RightArrow when ctx.dir is Dir.Ltr:
+                case KeyCode.LeftArrow when ctx.dir is Dir.Rtl:
                     if (hasSubMenu)
                         clickable?.SimulateSingleClickInternal(evt);
                     handled = true;
                     break;
-                case KeyCode.LeftArrow:
+                case KeyCode.LeftArrow when ctx.dir is Dir.Ltr:
+                case KeyCode.RightArrow when ctx.dir is Dir.Rtl:
                     if (GetFirstAncestorOfType<Menu>() is { parentItem: { } item } menu)
                     {
                         CloseSubMenus(Vector2.negativeInfinity, menu);
@@ -230,21 +235,24 @@ namespace Unity.AppUI.UI
             var popover = GetFirstAncestorOfType<Popover.PopoverVisualElement>();
             popover.popoverElement.parent.hierarchy.Add(popoverElement);
             popoverElement.visible = false;
+            popoverElement.style.opacity = 0.00001f;
             popover.schedule.Execute(() =>
             {
+                var ctx = this.GetContext();
                 var pos = AnchorPopupUtils
                     .ComputePosition(
                         popoverElement,
                         this,
                         this.GetContext().panel,
-                        new PositionOptions(PopoverPlacement.EndTop,
-                            -6,
+                        new PositionOptions(ctx.dir == Dir.Ltr ? PopoverPlacement.EndTop : PopoverPlacement.StartTop,
+                            -4,
                             -8));
                 popoverElement.style.left = pos.left;
                 popoverElement.style.top = pos.top;
                 popoverElement.style.marginLeft = pos.marginLeft;
                 popoverElement.style.marginTop = pos.marginTop;
                 popoverElement.visible = true;
+                popoverElement.style.opacity = 1f;
                 popoverElement.Focus();
             }).ExecuteLater(16L);
 

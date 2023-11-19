@@ -6,6 +6,18 @@
   flex-shrink: 0;
 }
 
+.appui-localized-text,
+.appui-text {
+  -unity-text-align: middle-left;
+}
+
+.appui--rtl .appui-text,
+.appui--rtl.appui-text,
+.appui--rtl .appui-localized-text,
+.appui--rtl.appui-localized-text {
+  -unity-text-align: middle-right;
+}
+
 .appui-text--size-xxs {
   font-size: var(--appui-font-sizes-body-xxs);
 }

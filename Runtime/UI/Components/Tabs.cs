@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
@@ -220,6 +221,11 @@ namespace Unity.AppUI.UI
         /// The Tabs container styling class.
         /// </summary>
         public static readonly string containerUssClassName = ussClassName + "__container";
+        
+        /// <summary>
+        /// The Tabs ScrollView styling class.
+        /// </summary>
+        public static readonly string scrollViewUssClassName = ussClassName + "__scroll-view";
 
         /// <summary>
         /// The Tabs indicator styling class.
@@ -234,6 +240,8 @@ namespace Unity.AppUI.UI
 
         readonly VisualElement m_LambdaContainer;
 
+        readonly VisualElement m_Container;
+
         Action<TabItem, int> m_BindItem;
 
         int m_DefaultValue;
@@ -247,8 +255,8 @@ namespace Unity.AppUI.UI
         int m_Value;
 
         bool m_ValueSet;
-
-        IVisualElementScheduledItem m_ScheduledItem;
+        
+        IVisualElementScheduledItem m_ScheduledRefreshIndicator;
 
         /// <summary>
         /// Default constructor.
@@ -261,7 +269,7 @@ namespace Unity.AppUI.UI
 
             m_ScrollView = new ScrollView
             {
-                name = containerUssClassName,
+                name = scrollViewUssClassName,
 #if (UNITY_2021_3 && UNITY_2021_3_NIK) || (UNITY_2022_1 && UNITY_2022_1_NIK) || (UNITY_2022_2 && UNITY_2022_2_NIK) || UNITY_2022_3 || (UNITY_2023_1 && UNITY_2023_1_NIK) || UNITY_2023_2_OR_NEWER
                 nestedInteractionKind = ScrollView.NestedInteractionKind.StopScrolling,
 #endif
@@ -269,7 +277,16 @@ namespace Unity.AppUI.UI
                 horizontalScrollerVisibility = ScrollerVisibility.Hidden,
                 verticalScrollerVisibility = ScrollerVisibility.Hidden,
             };
-            m_ScrollView.AddToClassList(containerUssClassName);
+            m_ScrollView.AddToClassList(scrollViewUssClassName);
+            
+            m_Container = new VisualElement
+            {
+                name = containerUssClassName,
+                pickingMode = PickingMode.Ignore,
+            };
+            m_Container.AddToClassList(containerUssClassName);
+            m_ScrollView.Add(m_Container);
+            
             m_Indicator = new VisualElement
             {
                 name = indicatorUssClassName,
@@ -294,9 +311,15 @@ namespace Unity.AppUI.UI
             defaultValue = 0;
 
             RegisterCallback<KeyDownEvent>(OnKeyDown);
+            this.RegisterContextChangedCallback<DirContext>(OnDirectionChanged);
             m_LambdaContainer.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             m_ScrollView.verticalScroller.valueChanged += OnVerticalScrollerChanged;
             m_ScrollView.horizontalScroller.valueChanged += OnHorizontalScrollerChanged;
+        }
+
+        void OnDirectionChanged(ContextChangedEvent<DirContext> evt)
+        {
+            RefreshVisuals();
         }
 
         /// <summary>
@@ -380,7 +403,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The item container of the Tabs.
         /// </summary>
-        public VisualElement itemContainer => m_ScrollView.contentContainer;
+        public VisualElement itemContainer => m_Container;
 
         /// <summary>
         /// The default value of the Tabs. This is the value that will be selected if no value is set.
@@ -412,11 +435,10 @@ namespace Unity.AppUI.UI
             m_ValueSet = true;
 
             // refresh selection visually
-            if (previousValue >= 0 && previousValue < m_Items.Count)
+            if (previousValue >= 0 && previousValue < m_Items.Count && previousValue != m_Value)
                 m_Items[previousValue].selected = false;
 
-            m_ScheduledItem?.Pause();
-            m_ScheduledItem = schedule.Execute(RefreshVisuals);
+            RefreshVisuals();
         }
 
         void RefreshVisuals()
@@ -425,23 +447,8 @@ namespace Unity.AppUI.UI
             {
                 m_Items[m_Value].selected = true;
                 m_ScrollView.ScrollTo(m_Items[m_Value]);
-                switch (direction)
-                {
-                    case Direction.Horizontal:
-                        m_Indicator.style.width = m_Items[m_Value].worldBound.width;
-                        m_Indicator.style.left = m_Items[m_Value].localBound.x - m_ScrollView.scrollOffset.x;
-                        m_Indicator.style.top = StyleKeyword.Null;
-                        m_Indicator.style.height = StyleKeyword.Null;
-                        break;
-                    case Direction.Vertical:
-                        m_Indicator.style.height = m_Items[m_Value].worldBound.height;
-                        m_Indicator.style.top = m_Items[m_Value].localBound.y - m_ScrollView.scrollOffset.y;
-                        m_Indicator.style.width = StyleKeyword.Null;
-                        m_Indicator.style.left = StyleKeyword.Null;
-                        break;
-                    default:
-                        throw new ValueOutOfRangeException(nameof(direction), direction);
-                }
+                m_ScheduledRefreshIndicator?.Pause();
+                m_ScheduledRefreshIndicator = schedule.Execute(RefreshIndicator);
             }
             else
             {
@@ -462,6 +469,37 @@ namespace Unity.AppUI.UI
                     default:
                         throw new ValueOutOfRangeException(nameof(direction), direction);
                 }
+            }
+        }
+
+        void RefreshIndicator()
+        {
+            var dirContext = this.GetContext<DirContext>();
+            switch (direction)
+            {
+                case Direction.Horizontal:
+                    m_Indicator.style.width = m_Items[m_Value].worldBound.width;
+                    m_Indicator.style.left = m_Items[m_Value].localBound.x - m_ScrollView.scrollOffset.x;
+                    m_Indicator.style.top = StyleKeyword.Null;
+                    m_Indicator.style.height = StyleKeyword.Null;
+                    m_Indicator.style.right = StyleKeyword.Null;
+                    break;
+                case Direction.Vertical when dirContext.dir == Dir.Ltr:
+                    m_Indicator.style.height = m_Items[m_Value].worldBound.height;
+                    m_Indicator.style.top = m_Items[m_Value].localBound.y - m_ScrollView.scrollOffset.y;
+                    m_Indicator.style.width = StyleKeyword.Null;
+                    m_Indicator.style.left = 0;
+                    m_Indicator.style.right = StyleKeyword.Null;
+                    break;
+                case Direction.Vertical when dirContext.dir == Dir.Rtl:
+                    m_Indicator.style.height = m_Items[m_Value].worldBound.height;
+                    m_Indicator.style.top = m_Items[m_Value].localBound.y - m_ScrollView.scrollOffset.y;
+                    m_Indicator.style.width = StyleKeyword.Null;
+                    m_Indicator.style.left = StyleKeyword.Null;
+                    m_Indicator.style.right = 0;
+                    break;
+                default:
+                    throw new ValueOutOfRangeException(nameof(direction), direction);
             }
         }
 
@@ -580,13 +618,20 @@ namespace Unity.AppUI.UI
                     var tabItem = item as TabItem ?? new TabItem();
                     bindItem?.Invoke(tabItem, i);
                     tabItem.clickable.clickedWithEventInfo += OnItemClicked;
+                    tabItem.RegisterCallback<GeometryChangedEvent>(OnItemGeometryChanged);
                     m_Items.Add(tabItem);
-                    m_ScrollView.Add(tabItem);
+                    itemContainer.Add(tabItem);
                     i++;
                 }
             }
 
             SetValueWithoutNotify(m_Value);
+        }
+
+        void OnItemGeometryChanged(GeometryChangedEvent evt)
+        {
+            if (evt.target is TabItem { selected: true })
+                SetValueWithoutNotify(m_Value);
         }
 
         void OnItemClicked(EventBase evt)

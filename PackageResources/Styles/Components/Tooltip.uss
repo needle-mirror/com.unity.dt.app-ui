@@ -17,6 +17,11 @@
 
 .appui-tooltip__content {
     color: var(--appui-foregrounds-100);
+    -unity-text-align: middle-left;
+}
+
+.appui--rtl .appui-tooltip__content {
+    -unity-text-align: middle-right;
 }
 
 .appui-tooltip__tip {

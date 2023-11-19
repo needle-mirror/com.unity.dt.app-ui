@@ -17,6 +17,10 @@
     justify-content: space-between;
 }
 
+.appui--rtl .appui-inputlabel--horizontal {
+    flex-direction: row-reverse;
+}
+
 .appui-inputlabel--vertical {
     flex-direction: column;
     align-items: stretch;
@@ -37,7 +41,13 @@
 
 .appui-inputlabel--horizontal > .appui-inputlabel__label-container {
     padding-right: var(--appui-alias-control-gap-md);
+    padding-left: 0;
     flex-basis: var(--appui-inputlabel-label-size);
+}
+
+.appui--rtl .appui-inputlabel--horizontal > .appui-inputlabel__label-container {
+    padding-right: 0;
+    padding-left: var(--appui-alias-control-gap-md);
 }
 
 .appui-inputlabel--vertical > .appui-inputlabel__label-container {
@@ -76,6 +86,7 @@
 
 .appui-inputlabel--horizontal.appui-inputlabel--input-alignment-stretch .appui-inputlabel__container {
     align-items: stretch;
+    justify-content: center;
 }
 
 .appui-inputlabel--horizontal.appui-inputlabel--input-alignment-auto .appui-inputlabel__container {

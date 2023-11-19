@@ -65,6 +65,7 @@ namespace Unity.AppUI.Samples
 
             var themeSwitcher = root.Q<RadioGroup>("theme-switcher");
             var scaleSwitcher = root.Q<RadioGroup>("scale-switcher");
+            var dirSwitcher = root.Q<RadioGroup>("dir-switcher");
             var panel = root.Q<Panel>("root-panel") ?? root.GetFirstAncestorOfType<Panel>();
 
             void OnSystemThemeChanged(string systemTheme)
@@ -107,6 +108,20 @@ namespace Unity.AppUI.Samples
                 }
                 PlayerPrefs.SetInt("scale", scaleSwitcher.value);
             }
+            
+            void SetDir()
+            {
+                switch (dirSwitcher.value)
+                {
+                    case 0:
+                        panel.dir = Dir.Ltr;
+                        break;
+                    case 1:
+                        panel.dir = Dir.Rtl;
+                        break;
+                }
+                PlayerPrefs.SetInt("dir", dirSwitcher.value);
+            }
 
             if (themeSwitcher != null)
             {
@@ -120,6 +135,13 @@ namespace Unity.AppUI.Samples
                 scaleSwitcher.RegisterValueChangedCallback(_ => SetScale());
                 scaleSwitcher.SetValueWithoutNotify(PlayerPrefs.GetInt("scale", 1));
                 SetScale();
+            }
+            
+            if (dirSwitcher != null)
+            {
+                dirSwitcher.RegisterValueChangedCallback(_ => SetDir());
+                dirSwitcher.SetValueWithoutNotify(PlayerPrefs.GetInt("dir", 0));
+                SetDir();
             }
 
             var localizationVariables = new Dictionary<string, object>

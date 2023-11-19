@@ -67,14 +67,30 @@
     align-items: center;
 }
 
+.appui--rtl .appui-dialog__heading {
+    flex-direction: row-reverse;
+}
+
 .appui-dialog__heading > .appui-header {
     -unity-font-style: bold; /* font-weight: var(--appui-global-font-weight-bold); */
     flex-grow: 1;
+    -unity-text-align: middle-left;
+}
+
+.appui--rtl .appui-dialog__heading > .appui-header {
+    -unity-text-align: middle-right;
 }
 
 .appui-dialog__heading > .appui-button {
     flex-shrink: 0;
     display: none;
+    margin-left: var(--appui-alias-control-gap-md);
+    margin-right: 0;
+}
+
+.appui--rtl .appui-dialog__heading > .appui-button {
+    margin-left: 0;
+    margin-right: var(--appui-alias-control-gap-md);
 }
 
 .appui-dialog__header {
@@ -91,10 +107,19 @@
 
 .appui-dialog__content {
     margin-top: var(--appui-spacing-400); /* margin-block-start: var(--appui-spacing-400); */
+    -unity-text-align: upper-left;
+}
+
+.appui--rtl .appui-dialog__content {
+    -unity-text-align: upper-right;
 }
 
 .appui-dialog__content .appui-text {
-    -unity-text-align: initial; /*text-align: justify;*/
+    -unity-text-align: upper-left; /*text-align: justify;*/
+}
+
+.appui--rtl .appui-dialog__content .appui-text {
+    -unity-text-align: upper-right;
 }
 
 .appui-dialog__buttongroup {
@@ -104,8 +129,18 @@
     justify-content: flex-end;
 }
 
+.appui--rtl .appui-dialog__buttongroup {
+    flex-direction: row-reverse;
+}
+
 .appui-dialog__buttongroup > .appui-button {
     margin-left: var(--appui-alias-control-gap-md); /*margin-inline-start: var(--appui-alias-control-gap-md);*/
+    margin-right: 0;
+}
+
+.appui--rtl .appui-dialog__buttongroup > .appui-button {
+    margin-left: 0;
+    margin-right: var(--appui-alias-control-gap-md);
 }
 
 .appui-dialog--size-s {
@@ -118,6 +153,13 @@
 
 .appui-dialog--size-l {
     width: 640px;
+}
+
+.appui-tray__content {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .appui-tray__content > .appui-dialog {
@@ -206,6 +248,13 @@
 
 .appui-dialog__icon {
     display: none;
+    margin-left: var(--appui-alias-control-gap-md);
+    margin-right: 0;
+}
+
+.appui--rtl .appui-dialog__icon {
+    margin-left: 0;
+    margin-right: var(--appui-alias-control-gap-md);
 }
 
 .appui-dialog--warning .appui-dialog__icon,

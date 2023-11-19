@@ -7,6 +7,10 @@
     padding: var(--appui-spacing-100) var(--appui-spacing-200);
 }
 
+.appui--rtl .appui-bottom-navbar {
+    flex-direction: row-reverse;
+}
+
 .appui-bottom-navbar-item {
     display: flex;
     flex-direction: column;

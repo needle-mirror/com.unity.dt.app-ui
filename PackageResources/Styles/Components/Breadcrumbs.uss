@@ -9,6 +9,10 @@
     margin: 0;
 }
 
+.appui--rtl .appui-breadcrumbs {
+    flex-direction: row-reverse;
+}
+
 .appui-breadcrumb-item.appui-link {
     color: var(--appui-foregrounds-100);
     border-radius: var(--appui-alias-control-border-radius);

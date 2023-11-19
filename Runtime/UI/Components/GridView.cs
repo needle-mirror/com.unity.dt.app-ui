@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
@@ -260,6 +261,8 @@ namespace Unity.AppUI.UI
                 ScrollToItem(index);
             }
 
+            var dir = this.GetContext().dir;
+
             switch (operation)
             {
                 case GridOperations.None:
@@ -270,7 +273,8 @@ namespace Unity.AppUI.UI
                 case GridOperations.Cancel:
                     ClearSelection();
                     return true;
-                case GridOperations.Left:
+                case GridOperations.Left when dir is Dir.Ltr:
+                case GridOperations.Right when dir is Dir.Rtl:
                 {
                     var newIndex = Mathf.Max(selectedIndex - 1, 0);
                     if (newIndex != selectedIndex)
@@ -280,7 +284,8 @@ namespace Unity.AppUI.UI
                     }
                 }
                     break;
-                case GridOperations.Right:
+                case GridOperations.Right when dir is Dir.Ltr:
+                case GridOperations.Left when dir is Dir.Rtl:
                 {
                     var newIndex = Mathf.Min(selectedIndex + 1, itemsSource.Count - 1);
                     if (newIndex != selectedIndex)
@@ -1426,7 +1431,9 @@ namespace Unity.AppUI.UI
         public int GetIndexByWorldPosition(Vector2 worldPosition)
         {
             var localPosition = scrollView.contentContainer.WorldToLocal(worldPosition);
-            return Mathf.FloorToInt(localPosition.y / resolvedItemHeight) * columnCount + Mathf.FloorToInt(localPosition.x / resolvedItemWidth);
+            var totalWidth = scrollView.contentContainer.layout.width;
+            var posX = this.GetContext().dir == Dir.Ltr ? localPosition.x : totalWidth - localPosition.x;
+            return Mathf.FloorToInt(localPosition.y / resolvedItemHeight) * columnCount + Mathf.FloorToInt(posX / resolvedItemWidth);
         }
 
         void OnItemsSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)

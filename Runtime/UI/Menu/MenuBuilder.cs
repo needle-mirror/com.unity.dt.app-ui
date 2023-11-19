@@ -270,7 +270,7 @@ namespace Unity.AppUI.UI
             var menuBuilder = new MenuBuilder(parentView, context, popoverVisualElement, menu)
                 .SetLastFocusedElement(referenceView)
                 .SetArrowVisible(false)
-                .SetPlacement(PopoverPlacement.BottomStart)
+                .SetPlacement(context.dir == Dir.Ltr ? PopoverPlacement.BottomStart : PopoverPlacement.BottomEnd)
                 .SetOutsideClickStrategy(OutsideClickStrategy.Pick)
                 .SetCrossOffset(-8)
                 .SetAnchor(referenceView);

@@ -18,18 +18,38 @@
     /*gap: var(--appui-control-gap);*/
 }
 
+.appui--rtl .appui-rectfield__row {
+    flex-direction: row-reverse;
+}
+
 .appui-rectfield__row > .appui-text,
 .appui-rectfield__row > .appui-numericalfield {
     flex-basis: 33.33%;
     width: auto;
 }
 
-.appui-rectfield__label {
+.appui-text.appui-rectfield__label {
     padding-left: var(--appui-spacing-300);
+    padding-right: 0;
+    -unity-text-align: middle-right;
+}
+
+.appui--rtl .appui-text.appui-rectfield__label {
+    padding-left: 0;
+    padding-right: var(--appui-spacing-300);
+    -unity-text-align: middle-left;
 }
 
 .appui-rectfield__label,
 .appui-rectfield__x-field,
 .appui-rectfield__w-field {
     margin-right: var(--appui-alias-control-gap-sm);
+    margin-left: 0;
+}
+
+.appui--rtl .appui-rectfield__label,
+.appui--rtl .appui-rectfield__x-field,
+.appui--rtl .appui-rectfield__w-field {
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-sm);
 }

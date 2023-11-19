@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
@@ -427,11 +428,16 @@ namespace Unity.AppUI.UI
             // progress bar
             var val = Mathf.Clamp01(SliderNormalizeValue(m_Value, lowValue, highValue));
             var trackWidth = GetSliderRect().width;
+            
+            var width = trackWidth * Mathf.Abs(val - fillOffset);
             m_Progress.style.width = trackWidth * Mathf.Abs(val - fillOffset);
-            m_Progress.style.left = trackWidth * Mathf.Min(fillOffset, val);
+            m_Progress.style.left = m_CurrentDirection == Dir.Ltr
+                ? trackWidth * Mathf.Min(fillOffset, val)
+                : trackWidth - width - Mathf.Min(fillOffset, val) * trackWidth;
 
             // handle
-            m_HandleContainer.style.left = trackWidth * val;
+            m_HandleContainer.style.left = m_CurrentDirection == Dir.Ltr ? 
+                trackWidth * val : trackWidth - trackWidth * val;
 
             MarkDirtyRepaint();
         }

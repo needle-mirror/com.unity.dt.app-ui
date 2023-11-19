@@ -3,6 +3,10 @@
     display: none;
 }
 
+.appui--rtl .unity-scroll-view__content-and-vertical-scroll-container {
+    flex-direction: row-reverse;
+}
+
 .unity-scroller--vertical {
     width: var(--appui-sizing-200);
 }

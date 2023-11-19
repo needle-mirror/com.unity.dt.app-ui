@@ -5,12 +5,16 @@
     border-color: var(--appui-base-400);
     /*border-style: var(--appui-control-border-style);*/
     border-radius: var(--appui-alias-control-border-radius);
-    cursor: var(--appui-alias-control-cursor-default);
+    cursor: var(--appui-alias-control-cursor-pointer);
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     padding: 0 var(--appui-spacing-100);
+}
+
+.appui--rtl .appui-actionbutton {
+    flex-direction: row-reverse;
 }
 
 .appui-actionbutton--quiet {
@@ -24,6 +28,12 @@
 
 .appui-actionbutton.appui-actionbutton--icon-and-label > .appui-actionbutton__label {
     margin-left: var(--appui-alias-control-gap-md); /*margin-inline-start: var(--appui-alias-control-gap-md);*/
+    margin-right: 0; /*margin-inline-end: 0;*/
+}
+
+.appui--rtl .appui-actionbutton.appui-actionbutton--icon-and-label > .appui-actionbutton__label {
+    margin-left: 0; /*margin-inline-start: 0;*/
+    margin-right: var(--appui-alias-control-gap-md); /*margin-inline-end: var(--appui-alias-control-gap-md);*/
 }
 
 .appui-actionbutton__label {

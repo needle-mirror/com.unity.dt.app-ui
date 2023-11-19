@@ -46,6 +46,11 @@ namespace Unity.AppUI.Core
         public string theme { get; }
         
         /// <summary>
+        /// The current layout direction.
+        /// </summary>
+        public Dir dir { get; }
+        
+        /// <summary>
         /// The closest <see cref="ContextProvider"/> instance which overrides the current context.
         /// </summary>
         public ContextProvider closestProvider { get; }
@@ -95,6 +100,7 @@ namespace Unity.AppUI.Core
             lang = contextProvider.lang ?? context.lang;
             scale = contextProvider.scale ?? context.scale;
             theme = contextProvider.theme ?? context.theme;
+            dir = contextProvider.dir ?? context.dir;
             tooltipDelayMs = contextProvider.tooltipDelayMs ?? context.tooltipDelayMs;
             preferredTooltipPlacement = contextProvider.preferredTooltipPlacement ?? context.preferredTooltipPlacement;
             panel = context.panel; // no override
@@ -110,6 +116,7 @@ namespace Unity.AppUI.Core
             lang = app.lang;
             scale = app.scale;
             theme = app.theme;
+            dir = app.dir ?? Dir.Ltr;
             tooltipDelayMs = app.tooltipDelayMs;
             preferredTooltipPlacement = app.preferredTooltipPlacement;
             panel = app;

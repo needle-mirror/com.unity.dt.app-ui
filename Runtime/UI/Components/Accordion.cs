@@ -18,6 +18,11 @@ namespace Unity.AppUI.UI
         /// The AccordionItem main styling class.
         /// </summary>
         public static readonly string ussClassName = "appui-accordionitem";
+        
+        /// <summary>
+        /// The AccordionItem content parent styling class.
+        /// </summary>
+        public static readonly string contentParentUssClassName = ussClassName + "__content-parent";
 
         /// <summary>
         /// The AccordionItem content styling class.
@@ -50,6 +55,8 @@ namespace Unity.AppUI.UI
         public static readonly string headingUssClassName = ussClassName + "__heading";
 
         readonly VisualElement m_ContentElement;
+        
+        readonly VisualElement m_ContentParentElement;
 
         readonly LocalizedTextElement m_HeaderTextElement;
 
@@ -58,6 +65,8 @@ namespace Unity.AppUI.UI
         readonly ExVisualElement m_HeaderElement;
 
         ValueAnimation<float> m_Anim;
+
+        IVisualElementScheduledItem m_ScheduledHeightResolver;
 
         /// <summary>
         /// Default constructor.
@@ -96,16 +105,24 @@ namespace Unity.AppUI.UI
             var headingElement = new VisualElement { pickingMode = PickingMode.Ignore };
             headingElement.AddToClassList(headingUssClassName);
             headingElement.hierarchy.Add(m_HeaderElement);
+            
+            m_ContentParentElement = new VisualElement
+            {
+                name = contentParentUssClassName,
+                pickingMode = PickingMode.Ignore,
+            };
+            m_ContentParentElement.AddToClassList(contentParentUssClassName);
 
             m_ContentElement = new VisualElement
             {
+                name = contentUssClassName,
                 pickingMode = PickingMode.Ignore,
-                usageHints = UsageHints.DynamicTransform,
             };
             m_ContentElement.AddToClassList(contentUssClassName);
+            m_ContentParentElement.hierarchy.Add(m_ContentElement);
 
             hierarchy.Add(headingElement);
-            hierarchy.Add(m_ContentElement);
+            hierarchy.Add(m_ContentParentElement);
             
             SetValueWithoutNotify(false);
         }
@@ -169,39 +186,48 @@ namespace Unity.AppUI.UI
             m_Anim?.Stop();
             m_Anim?.Recycle();
             m_Anim = null;
+            m_ScheduledHeightResolver?.Pause();
+            m_ScheduledHeightResolver = null;
             
             if (newValue)
             {
-                m_ContentElement.style.height = new StyleLength(StyleKeyword.Auto);
-                m_ContentElement.style.maxHeight = 500;
-                m_ContentElement.style.visibility = Visibility.Hidden;
-                m_ContentElement.style.position = Position.Absolute;
+                m_ContentParentElement.style.height = m_ContentElement.resolvedStyle.height;
+                // m_ContentParentElement.style.height = new StyleLength(StyleKeyword.Auto);
+                // m_ContentElement.style.opacity = 0.0000f;
+                // m_ContentElement.style.visibility = Visibility.Hidden;
+                // m_ContentElement.style.position = Position.Absolute;
 
-                m_ContentElement.schedule.Execute(() =>
-                {
-                    var height = Mathf.Min(m_ContentElement.resolvedStyle.height, 500);
-                    m_ContentElement.style.height = 0;
-                    m_ContentElement.style.maxHeight = new StyleLength(StyleKeyword.Null);
-                    m_ContentElement.style.visibility = new StyleEnum<Visibility>(StyleKeyword.Null);
-                    m_ContentElement.style.position = new StyleEnum<Position>(StyleKeyword.Null);
-
-                    m_Anim = m_ContentElement.experimental.animation.Start(0, height, 125, (element, f) =>
-                    {
-                        element.style.height = f;
-                    }).Ease(Easing.OutQuad).KeepAlive();
-                }).ExecuteLater(1L);
+                //m_ScheduledHeightResolver = m_ContentElement.schedule.Execute(OnHeightResolved);
             }
             else
             {
-                var startHeight = m_ContentElement.resolvedStyle.height;
-                startHeight = float.IsNaN(startHeight) ? 0 : startHeight;
-                m_Anim = m_ContentElement.experimental.animation.Start(startHeight, 0, 125, (element, f) =>
-                {
-                    element.style.height = f;
-                }).Ease(Easing.OutQuad).KeepAlive();
+                m_ContentParentElement.style.height = 0;
+                //var startHeight = m_ContentElement.resolvedStyle.height;
+                //startHeight = float.IsNaN(startHeight) ? 0 : startHeight;
+                // m_Anim = m_ContentElement.experimental.animation.Start(startHeight, 0, 125, (element, f) =>
+                // {
+                //     element.style.height = f;
+                // }).Ease(Easing.OutQuad).KeepAlive();
             }
             EnableInClassList(Styles.openUssClassName, newValue);
         }
+
+        // void OnHeightResolved()
+        // {
+        //     var height = m_ContentElement.resolvedStyle.height;
+        //     m_ContentElement.style.height = 0;
+        //     m_ContentElement.style.maxHeight = new StyleLength(StyleKeyword.Null);
+        //     m_ContentElement.style.visibility = new StyleEnum<Visibility>(StyleKeyword.Null);
+        //     m_ContentElement.style.position = new StyleEnum<Position>(StyleKeyword.Null);
+        //
+        //     m_Anim?.Stop();
+        //     m_Anim?.Recycle();
+        //     m_Anim = m_ContentElement.experimental.animation.Start(0, 1f, 125, (element, f) =>
+        //     {
+        //         element.style.height = f * height;
+        //         element.style.opacity = f;
+        //     }).Ease(Easing.OutQuad).KeepAlive();
+        // }
 
         void OnClicked()
         {

@@ -17,6 +17,10 @@
     transition: background-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-200), border-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-200);
 }
 
+.appui--rtl .appui-chip {
+    flex-direction: row-reverse;
+}
+
 .appui-chip--filled {
     border-color: var(--appui-base-100);
     background-color: var(--appui-base-100);
@@ -59,8 +63,14 @@
     height: var(--appui-sizing-400);
     border-radius: var(--appui-sizing-200);
     margin-left: var(--appui-spacing-100);
+    margin-right: 0;
     overflow: hidden;
     display: none;
+}
+
+.appui--rtl .appui-chip__ornament-container {
+    margin-left: 0;
+    margin-right: var(--appui-spacing-100);
 }
 
 .appui-chip--with-ornament > .appui-chip__ornament-container {
@@ -96,6 +106,10 @@
     cursor: var(--appui-alias-control-cursor-pointer);
     opacity: 0.55;
     transition: opacity var(--appui-animation-easing-ease-out) var(--appui-animation-duration-50);
+}
+
+.appui--rtl .appui-chip__delete-button {
+    margin: 0 -6px 0 5px;
 }
 
 .appui-chip__delete-button > .appui-chip__delete-icon.appui-icon {

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.AppUI.Core;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
@@ -34,6 +35,8 @@ namespace Unity.AppUI.UI
         readonly SwipeView m_SwipeView;
 
         readonly PageIndicator m_PageIndicator;
+
+        Dir m_CurrentDirection;
 
         /// <summary>
         /// The content container of the PageView.
@@ -121,6 +124,16 @@ namespace Unity.AppUI.UI
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
 
             direction = Direction.Horizontal;
+            
+            this.RegisterContextChangedCallback<DirContext>(OnDirContextChanged);
+        }
+
+        void OnDirContextChanged(ContextChangedEvent<DirContext> evt)
+        {
+            m_CurrentDirection = evt.context?.dir ?? Dir.Ltr;
+            m_PageIndicator.count = m_SwipeView.childCount;
+            var newValue = m_PageIndicator.count > 0 ? 0 : -1;
+            m_SwipeView.value = newValue;
         }
 
         void OnPageIndicatorValueChanged(ChangeEvent<int> evt)
@@ -138,6 +151,7 @@ namespace Unity.AppUI.UI
         {
             m_PageIndicator.count = m_SwipeView.childCount;
             m_PageIndicator.SetValueWithoutNotify(m_SwipeView.value);
+            m_SwipeView.SetValueWithoutNotify(m_SwipeView.value);
         }
 
         /// <summary>

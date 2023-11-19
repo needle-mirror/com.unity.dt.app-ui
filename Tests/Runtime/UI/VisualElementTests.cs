@@ -17,7 +17,7 @@ namespace Unity.AppUI.Tests.UI
 
         protected virtual bool uxmlConstructable => true;
 
-        protected virtual string uxmlPrefix => "appui";
+        protected virtual string uxmlNamespaceName => "appui";
 
         protected T element => m_VisualElement as T;
 
@@ -81,7 +81,7 @@ namespace Unity.AppUI.Tests.UI
 
             Assert.DoesNotThrow(() =>
             {
-                var msg = $"<{uxmlPrefix}:" + typeof(T).Name + " />";
+                var msg = $"<{uxmlNamespaceName}:" + typeof(T).Name + " />";
                 var content = "<ui:UXML xmlns:ui=\"UnityEngine.UIElements\" xmlns:appui=\"Unity.AppUI.UI\" xmlns:nav=\"Unity.AppUI.Navigation\" >" + msg + "</ui:UXML>";
                 var asset = Utils.LoadUxmlTemplateFromString(content);
                 m_TestUI.visualTreeAsset = asset;

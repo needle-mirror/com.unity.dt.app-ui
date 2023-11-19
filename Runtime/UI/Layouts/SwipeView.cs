@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AppUI.Bridge;
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
@@ -115,6 +116,10 @@ namespace Unity.AppUI.UI
         IVisualElementScheduledItem m_AutoPlayAnimation;
 
         bool m_Swipeable;
+
+        Dir m_CurrentDirection;
+
+        IVisualElementScheduledItem m_ScheduledNextValue;
 
         /// <summary>
         /// The container of the SwipeView.
@@ -377,6 +382,14 @@ namespace Unity.AppUI.UI
             swipeable = true;
             direction = Direction.Horizontal;
             autoPlayDuration = noAutoPlayDuration;
+            
+            this.RegisterContextChangedCallback<DirContext>(OnDirectionChanged);
+        }
+
+        void OnDirectionChanged(ContextChangedEvent<DirContext> evt)
+        {
+            m_CurrentDirection = evt.context?.dir ?? Dir.Ltr;
+            schedule.Execute(RefreshEverything);
         }
 
         void OnGeometryChanged(GeometryChangedEvent evt)
@@ -384,7 +397,11 @@ namespace Unity.AppUI.UI
             if (!evt.newRect.IsValid())
                 return;
 
-            RefreshItemsSize();
+            RefreshEverything();
+        }
+        
+        void RefreshEverything()
+        {
             SetValueWithoutNotify(value);
             InvokeSwipeEvents();
         }
@@ -535,6 +552,10 @@ namespace Unity.AppUI.UI
 
             if (newValue < 0 || newValue > count - 1)
                 return;
+            
+            m_ScheduledNextValue?.Pause();
+            
+            RefreshItemsSize();
 
             if (shouldWrap)
             {
@@ -555,12 +576,12 @@ namespace Unity.AppUI.UI
                     }
                     m_Container.UnregisterCallback<GeometryChangedEvent>(OnContainerGeometryChanged);
                     SwapFirstToLast(itemsToMove.Count);
-                    schedule.Execute(() =>
+                    m_ScheduledNextValue = schedule.Execute(() =>
                     {
                         m_GoingNext = goingNext;
                         value = newValue;
                         m_GoingNext = false;
-                    }).ExecuteLater(16L);
+                    });
                     return;
                 }
 
@@ -579,12 +600,12 @@ namespace Unity.AppUI.UI
                     }
                     m_Container.UnregisterCallback<GeometryChangedEvent>(OnContainerGeometryChanged);
                     SwapLastToFirst(itemsToMove.Count);
-                    schedule.Execute(() =>
+                    m_ScheduledNextValue = schedule.Execute(() =>
                     {
                         m_GoingPrevious = goingPrevious;
                         value = newValue;
                         m_GoingPrevious = false;
-                    }).ExecuteLater(16L);
+                    });
                     return;
                 }
             }
@@ -702,17 +723,11 @@ namespace Unity.AppUI.UI
                     Add(item);
                 }
             }
-
-            RefreshItemsSize();
-
+            
             if (childCount > 0)
-            {
                 value = 0;
-            }
             else
-            {
                 m_Value = -1;
-            }
         }
 
         void SwapLastToFirst() => SwapLastToFirst(1);

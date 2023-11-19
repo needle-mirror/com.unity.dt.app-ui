@@ -38,6 +38,7 @@ namespace Unity.AppUI.UI
             {
                 m_InlineColor = value;
                 style.borderLeftColor = m_InlineColor ?? new StyleColor(StyleKeyword.Null);
+                style.borderRightColor = m_InlineColor ?? new StyleColor(StyleKeyword.Null);
             }
         }
         

@@ -17,6 +17,10 @@
     flex-shrink: 0;
 }
 
+.appui--rtl .appui-picker {
+    flex-direction: row-reverse;
+}
+
 .appui-picker .appui-icon {
     /*fill: inherit;*/
 }
@@ -104,6 +108,10 @@
     align-items: center;
 }
 
+.appui--rtl .appui-picker__trailingcontainer {
+    flex-direction: row-reverse;
+}
+
 .appui-icon.appui-picker__caret {
     width: var(--appui-sizing-300);
     height: var(--appui-sizing-300);
@@ -125,6 +133,10 @@
     flex-shrink: 0;
     cursor: var(--appui-alias-control-cursor-pointer);
     overflow: hidden;
+}
+
+.appui--rtl .appui-picker-item {
+    flex-direction: row-reverse;
 }
 
 .appui-picker-item.is-hovered {

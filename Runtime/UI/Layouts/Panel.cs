@@ -81,8 +81,9 @@ namespace Unity.AppUI.UI
 
             RegisterCallback<DpiChangedEvent>(OnDpiChanged);
 
-            scale = Application.isMobilePlatform ? "large" : "medium";
+            scale = "medium";
             theme = "dark";
+            dir = Dir.Ltr;
             preferredTooltipPlacement = Tooltip.defaultPlacement;
             tooltipDelayMs = TooltipManipulator.defaultDelayMs;
         }

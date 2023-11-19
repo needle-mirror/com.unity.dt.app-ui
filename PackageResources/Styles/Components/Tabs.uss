@@ -11,19 +11,32 @@
     padding-bottom: 2px;
 }
 
-.appui-tabs--vertical {
+.appui--ltr .appui-tabs--vertical {
     padding-left: 2px;
+}
+
+.appui--rtl .appui-tabs--vertical {
+    padding-right: 2px;
 }
 
 .appui-tabs__container {
     display: flex;
     align-items: stretch;
     position: relative;
+    flex-basis: 100%;
 }
 
 .appui-tabs .unity-scroll-view__content-container {
     flex-basis: 100%;
 }
+
+/*.appui--ltr .appui-tabs--horizontal .unity-scroll-view--horizontal > .unity-scroll-view__content-and-vertical-scroll-container > .unity-scroll-view__content-viewport > .unity-scroll-view__content-container {*/
+/*    flex-direction: row;*/
+/*}*/
+
+/*.appui--rtl .appui-tabs--horizontal .unity-scroll-view--horizontal > .unity-scroll-view__content-and-vertical-scroll-container > .unity-scroll-view__content-viewport > .unity-scroll-view__content-container {*/
+/*    flex-direction: row-reverse;*/
+/*}*/
 
 .appui-tabitem {
     display: flex;
@@ -35,6 +48,10 @@
     padding: var(--appui-alias-control-gap-sm) var(--appui-alias-control-gap-md);
     cursor: var(--appui-alias-control-cursor-pointer);
     height: var(--appui-alias-control-sizing-md-height);
+}
+
+.appui--rtl .appui-tabitem {
+    flex-direction: row-reverse;
 }
 
 .appui-tabitem__label {
@@ -115,17 +132,24 @@
 
 .appui-tabs--vertical > .appui-tabs__indicator {
     width: 2px;
-    left: 0;
 }
 
-.appui-tabs--horizontal > .appui-tabs__container {
+.appui-tabs--horizontal .appui-tabs__container {
     flex-direction: row;
 }
 
-.appui-tabs--vertical > .appui-tabs__container {
+.appui--rtl .appui-tabs--horizontal .appui-tabs__container {
+    flex-direction: row-reverse;
+}
+
+.appui-tabs--vertical .appui-tabs__container {
     flex-direction: column;
 }
 
-.appui-tabitem__icon {
+.appui--ltr .appui-tabitem__icon {
     margin-right: var(--appui-alias-control-gap-md); /* todo remove this when gap is supported */
+}
+
+.appui--rtl .appui-tabitem__icon {
+    margin-left: var(--appui-alias-control-gap-md); /* todo remove this when gap is supported */
 }

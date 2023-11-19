@@ -16,6 +16,10 @@
     flex-shrink: 0;
 }
 
+.appui--rtl .appui-textfield {
+    flex-direction: row-reverse;
+}
+
 .appui-textfield--size-s {
     height: var(--appui-alias-control-sizing-sm-height);
 }
@@ -33,7 +37,14 @@
     flex-shrink: 0;
     flex-direction: row;
     align-items: center;
+    margin-left: 0;
     margin-right: var(--appui-alias-control-gap-md); /* todo : remove when gap will be supported */
+}
+
+.appui--rtl .appui-textfield__leadingcontainer {
+    margin-left: var(--appui-alias-control-gap-md); /* todo : remove when gap will be supported */
+    margin-right: 0;
+    flex-direction: row-reverse;
 }
 
 .appui-textfield__inputcontainer {
@@ -46,12 +57,23 @@
     overflow: hidden;
 }
 
+.appui--rtl .appui-textfield__inputcontainer {
+    flex-direction: row-reverse;
+}
+
 .appui-textfield__trailingcontainer {
     display: flex;
     flex-shrink: 0;
     flex-direction: row;
     align-items: center;
     margin-left: var(--appui-alias-control-gap-md); /* todo : remove when gap will be supported */
+    margin-right: 0;
+}
+
+.appui--rtl .appui-textfield__trailingcontainer {
+    margin-left: 0;
+    margin-right: var(--appui-alias-control-gap-md); /* todo : remove when gap will be supported */
+    flex-direction: row-reverse;
 }
 
 .appui-textfield__input,
@@ -67,7 +89,16 @@
     width: 100%;
     height: 100%;
     margin: 0;
+}
+
+.appui-textfield__input > .unity-text-field__input,
+.appui-textfield__placeholder {
     -unity-text-align: middle-left;
+}
+
+.appui--rtl .appui-textfield__input > .unity-text-field__input,
+.appui--rtl .appui-textfield__placeholder {
+    -unity-text-align: middle-right;
 }
 
 .appui-textfield__placeholder {

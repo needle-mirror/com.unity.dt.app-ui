@@ -19,6 +19,10 @@
     flex-shrink: 0;
 }
 
+.appui--rtl .appui-checkbox {
+    flex-direction: row-reverse;
+}
+
 .appui-checkbox__input {
     position: absolute;
     top: 0;
@@ -43,6 +47,11 @@
     overflow: hidden;
     -unity-text-overflow-position: end;
     text-overflow: ellipsis;
+    -unity-text-align: middle-left;
+}
+
+.appui--rtl .appui-checkbox__label {
+    -unity-text-align: middle-right;
 }
 
 .appui-checkbox__box > .appui-icon {

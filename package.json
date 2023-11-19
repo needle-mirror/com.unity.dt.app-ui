@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "1.0.0-pre.5",
+  "version": "1.0.0-pre.6",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,7 +25,7 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "4187ab9d436818b2100deb7df4bbfc193062bb5b"
+    "revision": "3df64553e5a8b947535fea18acf3b4e5c2ba4a4a"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -81,10 +81,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Changed\n\n- Migrated code into the App UI monorepo at https://github.com/Unity-Technologies/unity-app-ui\n- Renamed `format` UXML Attribute to `format-string` to bind correctly in UIBuilder\n- The `MacroCommand.Flush` method will now call `UndoCommand.Flush` on its child commands from the most recent to the oldest one.\n  This is the same order as the one used by the `MacroCommand.Undo` method.\n- Renamed CircularProgress and LinearProgress `color` Uxml Attribute to `color-override` to bind correctly in UIBuilder\n- Float Fields using a string format set on Percentage (P) will now use the same value as what you typed\n\n### Added\n\n- Added `disabled` property on every components that needed it in order to bind correctly with UIBuilder\n- Added `Spacer` component.\n\n### Fixed\n\n- Fixed the height of Toast components to be `auto`.\n- Fixed `MacroCommand.Undo` and `MacroCommand.Redo` methods."
+    "changelog": "### Added\n\n- Added Layout Direction `dir` context in the App UI `ApplicationContext`.\n- Added support of LTR and RTL layout direction in most App UI components\n\n### Changed\n\n- Previously the Panel Constructor set the default scale context to \"large\" on mobile platforms, now the default scale context for any platform is \"medium\"."
   },
   "upmCi": {
-    "footprint": "55847e16b55597aa04d447ace22c25785a498b65"
+    "footprint": "87b64a8698098577445cfb1d696d20f6c9a2a923"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@1.0/manual/index.html"
 }

@@ -16,6 +16,10 @@
     flex-direction: row;
 }
 
+.appui--rtl .appui-swipeview--horizontal {
+    flex-direction: row-reverse;
+}
+
 .appui-swipeview__container {
     display: flex;
     position: absolute;
@@ -33,6 +37,10 @@
     display: flex;
     flex-direction: row;
     height: 100%;
+}
+
+.appui--rtl .appui-swipeview--horizontal > .appui-swipeview__container {
+    flex-direction: row-reverse;
 }
 
 /* SwipeViewItem */

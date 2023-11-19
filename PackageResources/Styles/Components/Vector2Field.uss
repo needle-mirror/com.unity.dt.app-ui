@@ -11,6 +11,10 @@
     flex-direction: row;
 }
 
+.appui--rtl .appui-vector2field__container {
+    flex-direction: row-reverse;
+}
+
 .appui-vector2field__container > .appui-numericalfield {
     flex-basis: 50%;
     width: auto;
@@ -21,7 +25,17 @@
     margin-right: var(--appui-alias-control-gap-sm);
 }
 
+.appui--rtl .appui-vector2field__x-field {
+    margin-left: var(--appui-alias-control-gap-sm);
+    margin-right: 0;
+}
+
 .appui-vector2field__y-field {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.appui--rtl .appui-vector2field__y-field {
     margin-left: 0;
     margin-right: 0;
 }

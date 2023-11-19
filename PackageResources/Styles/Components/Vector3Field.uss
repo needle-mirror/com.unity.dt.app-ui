@@ -11,6 +11,10 @@
     flex-direction: row;
 }
 
+.appui--rtl .appui-vector3field__container {
+    flex-direction: row-reverse;
+}
+
 .appui-vector3field__container > .appui-numericalfield {
     flex-basis: 33%;
     width: auto;

@@ -109,6 +109,23 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// The current layout direction override.
+        /// </summary>
+        public Dir? dir
+        {
+            get => this.GetSelfContext<DirContext>()?.dir;
+            set
+            {
+                var currentDir = dir;
+                if (currentDir.HasValue)
+                    RemoveFromClassList($"{contextPrefix}{currentDir.Value.ToString().ToLower()}");
+                if (value != null)
+                    AddToClassList($"{contextPrefix}{value.ToString().ToLower()}");
+                this.ProvideContext(value == null ? null : new DirContext(value.Value));
+            }
+        }
+
+        /// <summary>
         /// A class responsible for creating a <see cref="ContextProvider"/> from UXML.
         /// </summary>
         [Preserve]

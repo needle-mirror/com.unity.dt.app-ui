@@ -15,12 +15,23 @@
     flex-shrink: 0;
 }
 
+.appui--rtl .appui-button {
+    flex-direction: row-reverse;
+}
+
 .appui-button__leadingcontainer {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     margin-left: var(--appui-alias-control-gap-md); /* todo remove this when gap will be supported */
+    margin-right: 0; /* todo remove this when gap will be supported */
+}
+
+.appui--rtl .appui-button__leadingcontainer {
+    flex-direction: row-reverse;
+    margin-left: 0; /* todo remove this when gap will be supported */
+    margin-right: var(--appui-alias-control-gap-md); /* todo remove this when gap will be supported */
 }
 
 .appui-button__titlecontainer {
@@ -38,7 +49,14 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    margin-left: 0; /* todo remove this when gap will be supported */
     margin-right: var(--appui-alias-control-gap-md); /* todo remove this when gap will be supported */
+}
+
+.appui--rtl .appui-button__trailingcontainer {
+    flex-direction: row-reverse;
+    margin-left: var(--appui-alias-control-gap-md); /* todo remove this when gap will be supported */
+    margin-right: 0; /* todo remove this when gap will be supported */
 }
 
 .appui-button__title {
@@ -102,6 +120,7 @@
 
 .appui-button--icon-only > .appui-button__leadingcontainer {
     margin-left: 0; /* todo remove this when gap will be supported */
+    margin-right: 0; /* todo remove this when gap will be supported */
 }
 
 .appui-button--accent {

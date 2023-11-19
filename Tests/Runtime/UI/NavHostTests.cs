@@ -9,6 +9,6 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => NavHost.ussClassName;
 
-        protected override string uxmlPrefix => "nav";
+        protected override string uxmlNamespaceName => "nav";
     }
 }

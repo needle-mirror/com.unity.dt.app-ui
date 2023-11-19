@@ -19,6 +19,10 @@
     flex-shrink: 0;
 }
 
+.appui--rtl .appui-textarea {
+    flex-direction: row-reverse;
+}
+
 .appui-textarea__scrollview {
     height: 100%;
     width: 100%;
@@ -54,6 +58,12 @@
     cursor: var(--appui-alias-control-cursor-nsresize);
     background-image: url("../../Icons/TextAreaResizer.png");
     -unity-background-image-tint-color: var(--appui-foregrounds-50);
+}
+
+.appui--rtl .appui-textarea__resize-handle {
+    left: var(--appui-sizing-25);
+    right: auto;
+    scale: -1 1;
 }
 
 .appui-textarea__resize-handle:hover,

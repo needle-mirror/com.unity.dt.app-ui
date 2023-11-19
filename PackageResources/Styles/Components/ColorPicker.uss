@@ -29,7 +29,7 @@
     --inner-radius: 0.4;
 }
 
-.appui-colorpicker__svsquare {
+.appui-colorpicker__svsquare.appui-svsquare {
     display: flex;
     flex-shrink: 0;
     position: absolute;

@@ -9,6 +9,14 @@
     flex-basis: auto;
 }
 
+.appui--ltr .appui-grid-view__row {
+    flex-direction: row;
+}
+
+.appui--rtl .appui-grid-view__row {
+    flex-direction: row-reverse;
+}
+
 .appui-grid-view__item {
     padding: var(--appui-spacing-50);
 }

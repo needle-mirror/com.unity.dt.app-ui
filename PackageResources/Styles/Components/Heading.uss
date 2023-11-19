@@ -6,9 +6,14 @@
   -unity-font-style: normal; /* converted from : font-weight: var(--appui-global-font-weight-regular); */
   white-space: nowrap;
   overflow: hidden;
+  -unity-text-align: middle-left;
   -unity-text-overflow-position: end;
   text-overflow: ellipsis;
   flex-shrink: 0;
+}
+
+.appui--rtl .appui-heading {
+  -unity-text-align: middle-right;
 }
 
 .appui-heading--size-xxs {

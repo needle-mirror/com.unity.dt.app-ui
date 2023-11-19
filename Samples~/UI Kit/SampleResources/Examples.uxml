@@ -2260,6 +2260,14 @@
                     </appui:RadioGroup>
                 </ui:VisualElement>
 
+                <ui:VisualElement class="example-context-switcher-panel" style="margin-top: 380px;">
+                    <appui:Text text="&lt;b&gt;Direction&lt;/b&gt;" enable-rich-text="true"  style="margin-bottom: 8px;"  />
+                    <appui:RadioGroup name="dir-switcher">
+                        <appui:Radio label="LTR" emphasized="true" value="true" />
+                        <appui:Radio label="RTL" emphasized="true" />
+                    </appui:RadioGroup>
+                </ui:VisualElement>
+
             </ui:VisualElement>
 
 

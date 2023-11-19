@@ -16,6 +16,10 @@
     flex-direction: row-reverse;
 }
 
+.appui--rtl .appui-avatar-group {
+    flex-direction: row;
+}
+
 .appui-avatar-group {
     padding-right: var(--appui-avatar-group-padding-default);
 }

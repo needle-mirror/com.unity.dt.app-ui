@@ -7,6 +7,10 @@
     flex-shrink: 0;
 }
 
+.appui--rtl .appui-colortoolbar {
+    flex-direction: row-reverse;
+}
+
 .appui-colortoolbar__eyedropper {
     display: flex;
 }
@@ -18,13 +22,26 @@
     flex-shrink: 0;
 }
 
+.appui--rtl .appui-colortoolbar__swatchcontainer {
+    flex-direction: row-reverse;
+}
+
 .appui-colortoolbar__previouscolorswatch {
     display: flex;
     width: 40px;
     height: 100%;
     flex-shrink: 0;
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+.appui--ltr .appui-colortoolbar__previouscolorswatch {
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
+}
+
+.appui--rtl .appui-colortoolbar__previouscolorswatch {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
 }
 
 .appui-colortoolbar__currentcolorswatch {
@@ -32,6 +49,15 @@
     width: 40px;
     height: 100%;
     flex-shrink: 0;
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+.appui--ltr .appui-colortoolbar__currentcolorswatch {
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
+}
+
+.appui--rtl .appui-colortoolbar__currentcolorswatch {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
 }

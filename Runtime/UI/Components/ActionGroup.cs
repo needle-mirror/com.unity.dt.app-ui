@@ -86,6 +86,8 @@ namespace Unity.AppUI.UI
 
         Rect m_LastLayout;
 
+        Dir m_CurrentDirection;
+
         const SelectionType k_DefaultSelectionType = SelectionType.None;
 
         /// <summary>
@@ -113,6 +115,13 @@ namespace Unity.AppUI.UI
 
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             RegisterCallback<ActionTriggeredEvent>(OnActionTriggered);
+            this.RegisterContextChangedCallback<DirContext>(OnDirectionChanged);
+        }
+
+        void OnDirectionChanged(ContextChangedEvent<DirContext> evt)
+        {
+            m_CurrentDirection = evt.context?.dir ?? Dir.Ltr;
+            schedule.Execute(RefreshUI);
         }
 
         /// <summary>
@@ -361,7 +370,11 @@ namespace Unity.AppUI.UI
             var size = vertical ? layout.height : layout.width;
             var outOfBounds = vertical ? size < m_Container.layout.height : size < m_Container.layout.width;
 
-            var spaceUsed = outOfBounds ? 32f : 0;
+            var moreButtonSize = vertical ? 
+                m_MoreButton.resolvedStyle.height + m_MoreButton.resolvedStyle.marginTop + m_MoreButton.resolvedStyle.marginBottom : 
+                m_MoreButton.resolvedStyle.width + m_MoreButton.resolvedStyle.marginLeft + m_MoreButton.resolvedStyle.marginRight;
+            
+            var spaceUsed = outOfBounds ? moreButtonSize : 0;
             m_FirstIndexOutOfBound = -1;
             for (var i = 0; i < m_HandledChildren.Count; i++)
             {
@@ -376,7 +389,9 @@ namespace Unity.AppUI.UI
 
                 if (outOfBounds)
                 {
-                    var childSize = vertical ? child.layout.height : child.layout.width;
+                    var childSize = vertical ? 
+                        child.resolvedStyle.height + child.resolvedStyle.marginTop + child.resolvedStyle.marginBottom : 
+                        child.resolvedStyle.width + child.resolvedStyle.marginLeft + child.resolvedStyle.marginRight;
                     var newSpaceUsed = spaceUsed + childSize;
                     if (spaceUsed <= size && newSpaceUsed > size)
                     {
@@ -396,9 +411,15 @@ namespace Unity.AppUI.UI
             if (m_FirstIndexOutOfBound >= 0) // overflow detected
             {
                 if (vertical)
+                {
                     m_MoreButton.style.top = m_HandledChildren[m_FirstIndexOutOfBound].layout.y;
+                }
                 else
-                    m_MoreButton.style.left = m_HandledChildren[m_FirstIndexOutOfBound].layout.x;
+                {
+                    m_MoreButton.style.left = m_CurrentDirection == Dir.Ltr ? 
+                        m_HandledChildren[m_FirstIndexOutOfBound].layout.x : 
+                        m_HandledChildren[m_FirstIndexOutOfBound].layout.xMax + (size - m_Container.layout.width) - moreButtonSize;
+                }
                 m_MoreButton.EnableInClassList("unity-first-child", m_FirstIndexOutOfBound == 0);
             }
 
@@ -410,10 +431,12 @@ namespace Unity.AppUI.UI
             if (m_FirstIndexOutOfBound < 0)
                 return;
 
+            var ctx = this.GetContext();
+            var horizontalPlacement = ctx.dir == Dir.Ltr ? PopoverPlacement.BottomStart : PopoverPlacement.BottomEnd;
             m_MenuBuilder?.Dismiss(DismissType.Consecutive);
             m_MenuBuilder = MenuBuilder.Build(m_MoreButton)
                 .SetCloseOnSelection(closeOnSelection)
-                .SetPlacement(vertical ? PopoverPlacement.EndBottom : PopoverPlacement.BottomStart);
+                .SetPlacement(vertical ? PopoverPlacement.EndBottom : horizontalPlacement);
 
             var selectable = selectionType != SelectionType.None;
             for (var i = m_FirstIndexOutOfBound; i < m_HandledChildren.Count; i++)

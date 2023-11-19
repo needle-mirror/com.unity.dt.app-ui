@@ -46,6 +46,11 @@ namespace Unity.AppUI.UI
         /// The Progress image styling class.
         /// </summary>
         public static readonly string imageUssClassName = ussClassName + "__image";
+        
+        /// <summary>
+        /// The Progress container styling class.
+        /// </summary>
+        public static readonly string containerUssClassName = ussClassName + "__container";
 
         /// <summary>
         /// The Progress size styling class.
@@ -92,10 +97,12 @@ namespace Unity.AppUI.UI
 
         static Handler s_Handler;
 
+        readonly VisualElement m_Container;
+
         /// <summary>
         /// The content container of the progress.
         /// </summary>
-        public override VisualElement contentContainer => m_Image.contentContainer;
+        public override VisualElement contentContainer => m_Container;
 
         /// <summary>
         /// Default constructor.
@@ -110,6 +117,10 @@ namespace Unity.AppUI.UI
             m_Image = new Image { name = imageUssClassName, pickingMode = PickingMode.Ignore };
             m_Image.AddToClassList(imageUssClassName);
             hierarchy.Add(m_Image);
+            
+            m_Container = new VisualElement { name = containerUssClassName, pickingMode = PickingMode.Ignore };
+            m_Container.AddToClassList(containerUssClassName);
+            hierarchy.Add(m_Container);
 
             m_Color = new Color(0.82f, 0.82f, 0.82f);
             variant = Variant.Indeterminate;

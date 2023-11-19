@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
@@ -496,7 +497,8 @@ namespace Unity.AppUI.UI
             if (sliderLength < Mathf.Epsilon)
                 return m_Value;
             
-            var normalizedValue = Mathf.Clamp01(dragElementPos / sliderLength);
+            var finalPos = m_CurrentDirection == Dir.Ltr ? dragElementPos : sliderLength - dragElementPos;
+            var normalizedValue = Mathf.Clamp01(finalPos / sliderLength);
             var newVal = LerpUnclamped(lowValue, highValue, normalizedValue);
             
             return ClosestHandleIndex(dragElementPos) == 0 ? MakeRangeValue(newVal, maxValue) : MakeRangeValue(minValue, newVal);
@@ -520,15 +522,18 @@ namespace Unity.AppUI.UI
 
             // min handle
             var minVal = Mathf.Clamp01(SliderNormalizeValue(minValue, lowValue, highValue));
-            m_MinHandleContainer.style.left = trackWidth * minVal;
+            m_MinHandleContainer.style.left = m_CurrentDirection == Dir.Ltr ?
+                trackWidth * minVal : trackWidth - trackWidth * minVal;
             
             // max handle
             var maxVal = Mathf.Clamp01(SliderNormalizeValue(maxValue, lowValue, highValue));
-            m_MaxHandleContainer.style.left = trackWidth * maxVal;
+            m_MaxHandleContainer.style.left = m_CurrentDirection == Dir.Ltr ?
+                trackWidth * maxVal : trackWidth - trackWidth * maxVal;
             
             // progress bar
             m_Progress.style.width = trackWidth * Mathf.Abs(maxVal - minVal);
-            m_Progress.style.left = trackWidth * minVal;
+            m_Progress.style.left = m_CurrentDirection == Dir.Ltr ?
+                trackWidth * minVal : trackWidth - trackWidth * minVal - trackWidth * Mathf.Abs(maxVal - minVal);
 
             MarkDirtyRepaint();
         }

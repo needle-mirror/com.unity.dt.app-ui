@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
@@ -45,12 +46,18 @@ namespace Unity.AppUI.UI
         string m_FormatString;
 
         /// <summary>
+        /// The current direction of the layout.
+        /// </summary>
+        protected Dir m_CurrentDirection;
+
+        /// <summary>
         /// Default constructor.
         /// </summary>
         protected BaseSlider()
         {
             passMask = Passes.Clear;
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+            this.RegisterContextChangedCallback<DirContext>(OnDirectionChanged);
         }
 
         /// <summary>
@@ -161,6 +168,16 @@ namespace Unity.AppUI.UI
         {
             SetValueWithoutNotify(value);
         }
+        
+        /// <summary>
+        /// Event callback called when the direction of the layout has changed.
+        /// </summary>
+        /// <param name="evt"></param>
+        protected virtual void OnDirectionChanged(ContextChangedEvent<DirContext> evt) 
+        {
+            m_CurrentDirection = evt.context?.dir ?? Dir.Ltr;
+            SetValueWithoutNotify(value);
+        }
 
         /// <summary>
         /// Event callback called when a pointer up event is received.
@@ -229,8 +246,9 @@ namespace Unity.AppUI.UI
         {
             if (sliderLength < Mathf.Epsilon)
                 return default;
-
-            var normalizedDragElementPosition = Mathf.Max(0f, Mathf.Min(dragElementPos, sliderLength)) / sliderLength;
+            
+            var finalPos = m_CurrentDirection == Dir.Ltr ? dragElementPos : sliderLength - dragElementPos;
+            var normalizedDragElementPosition = Mathf.Max(0f, Mathf.Min(finalPos, sliderLength)) / sliderLength;
             return SliderLerpUnclamped(lowValue, highValue, normalizedDragElementPosition);
         }
 

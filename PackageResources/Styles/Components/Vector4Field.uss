@@ -18,6 +18,10 @@
     /*gap: var(--appui-control-gap);*/
 }
 
+.appui--rtl .appui-vector4field__row {
+    flex-direction: row-reverse;
+}
+
 .appui-vector4field__row > .appui-text,
 .appui-vector4field__row > .appui-numericalfield {
     flex-basis: 50%;
@@ -32,4 +36,12 @@
 .appui-vector4field__x-field,
 .appui-vector4field__z-field {
     margin-right: var(--appui-alias-control-gap-sm);
+    margin-left: 0;
+}
+
+.appui--rtl .appui-vector4field__label,
+.appui--rtl .appui-vector4field__x-field,
+.appui--rtl .appui-vector4field__z-field {
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-sm);
 }

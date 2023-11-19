@@ -18,6 +18,10 @@
     flex-shrink: 0;
 }
 
+.appui--rtl .appui-radio {
+    flex-direction: row-reverse;
+}
+
 .appui-radio__input {
     position: absolute;
     top: 0;
@@ -32,6 +36,12 @@
 .appui-radio__label {
     color: var(--appui-foregrounds-100);
     margin-left: var(--appui-alias-control-gap-md); /*margin-inline-start: var(--appui-alias-control-gap-md);*/
+    margin-right: 0;
+}
+
+.appui--rtl .appui-radio__label {
+    margin-left: 0;
+    margin-right: var(--appui-alias-control-gap-md);
 }
 
 .appui-radio__button  {

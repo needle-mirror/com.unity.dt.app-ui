@@ -53,6 +53,14 @@ The scale context provides a way to adjust the size of the UI based on the devic
 pixel density. You can define different scaling factors for different devices, 
 and the UI will automatically adjust to the appropriate size.
 
+### Layout Direction
+
+The layout direction context provides a way to adjust the layout of the UI based on the
+current language. Some languages are read from right to left, so the UI should be mirrored
+to reflect this behavior. The context property name is `dir` and the possible values are 
+[LTR](xref:Unity.AppUI.Core.Dir.Ltr) and [RTL](xref:Unity.AppUI.Core.Dir.Rtl). 
+For more information about layout direction, see the [Accessibility](xref:accessibility) page.
+
 ### Panel
 
 You can retrieve the instance of the root [App UI Panel](xref:Unity.AppUI.UI.Panel)

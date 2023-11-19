@@ -17,6 +17,10 @@
     --inner-radius: 0.395;
 }
 
+.appui--rtl .appui-colorwheel {
+    scale: -1 1;
+}
+
 .appui-colorwheel__image {
     display: flex;
     width: 100%;
@@ -84,6 +88,10 @@
     display: flex;
     position: relative;
     flex-shrink: 0;
+}
+
+.appui--rtl .appui-svsquare {
+    scale: -1 1;
 }
 
 .appui-svsquare__image {
