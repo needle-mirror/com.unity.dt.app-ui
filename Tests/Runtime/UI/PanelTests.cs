@@ -5,7 +5,7 @@ namespace Unity.AppUI.Tests.UI
 {
     [TestFixture]
     [TestOf(typeof(Panel))]
-    class ApplicationTests : VisualElementTests<Panel>
+    class PanelTests : VisualElementTests<Panel>
     {
         protected override string mainUssClassName => ContextProvider.ussClassName;
     }

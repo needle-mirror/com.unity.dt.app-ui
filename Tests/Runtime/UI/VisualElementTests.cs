@@ -1,10 +1,16 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using NUnit.Framework;
+using Unity.AppUI.Core;
 using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace Unity.AppUI.Tests.UI
 {
@@ -12,12 +18,34 @@ namespace Unity.AppUI.Tests.UI
         where T : VisualElement, new()
     {
         VisualElement m_VisualElement;
+        
+        protected virtual string componentName => typeof(T).Name;
 
         protected virtual string mainUssClassName => null;
 
         protected virtual bool uxmlConstructable => true;
 
         protected virtual string uxmlNamespaceName => "appui";
+
+        protected record StoryContext(UIDocument document, Panel panel)
+        {
+            public UIDocument document { get; } = document;
+            public Panel panel { get; } = panel;
+        }
+        
+        protected record Story(string name, Func<StoryContext, VisualElement> setup)
+        {
+            public string name { get; } = name;
+            public Func<StoryContext, VisualElement> setup { get; } = setup;
+        }
+
+        protected virtual IEnumerable<Story> stories
+        {
+            get 
+            { 
+                yield break;
+            }
+        }
 
         protected T element => m_VisualElement as T;
 
@@ -39,6 +67,7 @@ namespace Unity.AppUI.Tests.UI
                     yield return null;
                 }
                 m_TestUI = Utils.ConstructTestUI();
+                Screen.SetResolution(1200, 600, FullScreenMode.Windowed);
             }
             m_TestUI.rootVisualElement.Clear();
             m_SetupDone = true;
@@ -86,6 +115,81 @@ namespace Unity.AppUI.Tests.UI
                 var asset = Utils.LoadUxmlTemplateFromString(content);
                 m_TestUI.visualTreeAsset = asset;
             });
+        }
+
+        [UnityTest]
+        [Order(3)]
+        public IEnumerator CreateSnapshot()
+        {
+            if (!string.IsNullOrEmpty(Utils.snapshotsOutputDir) && !Application.isEditor)
+            {
+                if (typeof(ContextProvider).IsAssignableFrom(typeof(T)))
+                    Assert.Ignore("ContextProvider are not supported in snapshots");
+                                
+                foreach (var story in stories)
+                {
+                    foreach (var theme in Utils.themes)
+                    {
+                        foreach (var scale in Utils.scales)
+                        {
+                            foreach (var dir in Enum.GetValues(typeof(Dir)))
+                            {
+                                yield return CreateSnapshotInternal(story, theme, scale, (Dir)dir);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Assert.Ignore("Snapshots are generated only Standalone Player and when SNAPSHOTS_OUTPUT_DIR is set");
+            }
+        }
+
+        IEnumerator CreateSnapshotInternal(Story story, string theme, string scale, Dir dir)
+        {
+            var outputFilePath = Path.GetFullPath(
+                Path.Combine(Utils.snapshotsOutputDir, 
+                    $"{componentName}.{story.name}.{theme}.{dir.ToString().ToLower()}.{scale}.png"));
+            
+            Screen.SetResolution(1200, 600, FullScreenMode.Windowed);
+            var panel = new Panel
+            {
+                theme = theme,
+                scale = scale,
+                dir = dir,
+            };
+            m_TestUI.rootVisualElement.Clear();
+            m_TestUI.rootVisualElement.styleSheets.Add(Resources.Load<ThemeStyleSheet>("Themes/App UI"));
+            m_TestUI.rootVisualElement.Add(panel);
+            var container = new VisualElement
+            {
+                style =
+                {
+                    paddingBottom = 10,
+                    paddingLeft = 10,
+                    paddingRight = 10,
+                    paddingTop = 10,
+                }
+            };
+            panel.Add(container);
+            var context = new StoryContext(m_TestUI, panel);
+            var component = story.setup(context);
+            container.Add(component);
+            yield return null;
+            const int waitFrames = 3;
+            for (var i = 0; i < waitFrames; i++)
+            {
+                yield return null;
+            }
+            yield return new WaitForEndOfFrame();
+            ScreenCapture.CaptureScreenshot(outputFilePath);
+            yield return null;
+            yield return new WaitUntilOrTimeOut(
+                () => Utils.FileAvailable(outputFilePath), 
+                false, 
+                TimeSpan.FromSeconds(3));
+            Assert.IsTrue(Utils.FileAvailable(outputFilePath));
         }
     }
 }

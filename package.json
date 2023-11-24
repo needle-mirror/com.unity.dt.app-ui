@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "1.0.0-pre.6",
+  "version": "1.0.0-pre.7",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,13 +25,14 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "3df64553e5a8b947535fea18acf3b4e5c2ba4a4a"
+    "revision": "638b3f7f8108ce404a433ae9b487013ad6034341"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.uielements": "1.0.0",
-    "com.unity.modules.physics": "1.0.0"
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.screencapture": "1.0.0"
   },
   "samples": [
     {
@@ -81,10 +82,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added Layout Direction `dir` context in the App UI `ApplicationContext`.\n- Added support of LTR and RTL layout direction in most App UI components\n\n### Changed\n\n- Previously the Panel Constructor set the default scale context to \"large\" on mobile platforms, now the default scale context for any platform is \"medium\"."
+    "changelog": "### Added\n\n- Added others Inter font variants\n\n### Fixed\n\n- Fixed some unit tests"
   },
   "upmCi": {
-    "footprint": "87b64a8698098577445cfb1d696d20f6c9a2a923"
+    "footprint": "a91b66c39188d0f128daa0cf153cd30687073799"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@1.0/manual/index.html"
 }

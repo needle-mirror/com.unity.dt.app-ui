@@ -1,6 +1,7 @@
 using System.Collections;
 using NUnit.Framework;
 using Unity.AppUI.UI;
+using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
 using FloatField = Unity.AppUI.UI.FloatField;
@@ -59,6 +60,13 @@ namespace Unity.AppUI.Tests.UI
         [Order(5)]
         public IEnumerator CanEnterValue([ValueSource(nameof(k_CanEnterValueCases))] (string text, int expected) expected)
         {
+            if (!Application.isEditor)
+            {
+                // skip test and mark as ignored
+                Assert.Ignore("Can't run this test outside of the editor");
+                yield break;
+            }
+            
             m_TestUI.rootVisualElement.Clear();
             var field = new FloatField();
             m_TestUI.rootVisualElement.Add(field);

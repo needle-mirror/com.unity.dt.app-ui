@@ -53,7 +53,15 @@ namespace Unity.AppUI.UI
         public string lang
         {
             get => this.GetSelfContext<LangContext>()?.lang;
-            set => this.ProvideContext(string.IsNullOrEmpty(value) ? null : new LangContext(value));
+            set
+            {
+                var currentLang = lang;
+                if (!string.IsNullOrEmpty(currentLang))
+                    RemoveFromClassList($"{contextPrefix}{currentLang}");
+                if (!string.IsNullOrEmpty(value))
+                    AddToClassList($"{contextPrefix}{value}");
+                this.ProvideContext(string.IsNullOrEmpty(value) ? null : new LangContext(value));
+            }
         }
 
         /// <summary>

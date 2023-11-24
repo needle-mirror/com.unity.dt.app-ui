@@ -79,18 +79,11 @@ namespace Unity.AppUI.UI
             RegisterCallback<AttachToPanelEvent>(OnAttachedToPanel);
             RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
 
-            RegisterCallback<DpiChangedEvent>(OnDpiChanged);
-
             scale = "medium";
             theme = "dark";
             dir = Dir.Ltr;
             preferredTooltipPlacement = Tooltip.defaultPlacement;
             tooltipDelayMs = TooltipManipulator.defaultDelayMs;
-        }
-
-        void OnDpiChanged(DpiChangedEvent evt) 
-        {
-            Debug.Log($"DPI Changed from {evt.previousValue} to {evt.newValue}");
         }
 
         /// <summary>
