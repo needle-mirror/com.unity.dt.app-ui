@@ -67,6 +67,11 @@ namespace Unity.AppUI.UI
         /// The content container of the MenuItem.
         /// </summary>
         public override VisualElement contentContainer => m_SubMenuContainer;
+        
+        /// <summary>
+        /// The event raised when the item's submenu is opened.
+        /// </summary>
+        public event Action subMenuOpened;
 
         readonly Icon m_Icon;
 
@@ -254,6 +259,7 @@ namespace Unity.AppUI.UI
                 popoverElement.visible = true;
                 popoverElement.style.opacity = 1f;
                 popoverElement.Focus();
+                subMenuOpened?.Invoke();
             }).ExecuteLater(16L);
 
             k_SubMenuStack.Push(subMenu);

@@ -109,7 +109,7 @@ namespace Unity.AppUI.Navigation.Editor
             {
                 graphView.SetGraphAsset(m_LastGraphAsset);
                 m_GraphViewPane.SetEnabled(true);
-                m_GraphViewPane.CapturePointer(0);
+                m_GraphViewPane.CapturePointer(PointerId.mousePointerId);
             }
         }
 

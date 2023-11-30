@@ -140,7 +140,7 @@
 
 .appui-button--accent,
 .appui-button--destructive {
-    color: white;
+    color: var(--appui-color-white);
 }
 
 .appui-button--accent.appui-button--quiet,

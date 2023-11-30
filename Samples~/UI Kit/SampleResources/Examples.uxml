@@ -1588,13 +1588,13 @@
                             <appui:Text text="Color" class="example-subtitle" />
                             <ui:VisualElement class="example-row">
                                 <ui:VisualElement class="example-item">
-                                    <appui:CircularProgress color="#ce93d8" />
+                                    <appui:CircularProgress color-override="#ce93d8" />
                                 </ui:VisualElement>
                                 <ui:VisualElement class="example-item">
-                                    <appui:CircularProgress color="#66bb6a" />
+                                    <appui:CircularProgress color-override="#66bb6a" />
                                 </ui:VisualElement>
                                 <ui:VisualElement class="example-item">
-                                    <appui:CircularProgress color="#3545bf" />
+                                    <appui:CircularProgress color-override="#3545bf" />
                                 </ui:VisualElement>
                             </ui:VisualElement>
                             <appui:Text text="Determinate" class="example-subtitle" />
@@ -1638,9 +1638,9 @@
                             <appui:Text text="Indeterminate" class="example-subtitle" />
                             <appui:LinearProgress/>
                             <appui:Text text="Color" class="example-subtitle" />
-                            <appui:LinearProgress color="#ce93d8" />
-                            <appui:LinearProgress color="#66bb6a" />
-                            <appui:LinearProgress color="#3545bf" />
+                            <appui:LinearProgress color-override="#ce93d8" />
+                            <appui:LinearProgress color-override="#66bb6a" />
+                            <appui:LinearProgress color-override="#3545bf" />
                             <appui:Text text="Determinate" class="example-subtitle" />
                             <appui:LinearProgress variant="Determinate" value="0.25"/>
                             <appui:LinearProgress variant="Determinate" value="0.50"/>

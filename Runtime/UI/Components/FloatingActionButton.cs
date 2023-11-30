@@ -19,6 +19,11 @@ namespace Unity.AppUI.UI
         /// </summary>
         public static readonly string sizeUssClassName = ussClassName + "--size-";
         
+        /// <summary>
+        /// The Floating Action Button's accent USS class name.
+        /// </summary>
+        public static readonly string accentUssClassName = ussClassName + "--accent";
+        
         Pressable m_Clickable;
 
         int m_Elevation;
@@ -55,14 +60,20 @@ namespace Unity.AppUI.UI
         /// The elevation of this element.
         /// </summary>
         public int elevation
-        {
+        { 
             get => m_Elevation;
             set
             {
-                RemoveFromClassList(Styles.elevationUssClassName + m_Elevation);
+                RemoveFromClassList(Styles.elevationUssClassName + m_Elevation); 
                 m_Elevation = value;
                 AddToClassList(Styles.elevationUssClassName + m_Elevation);
             }
+        }
+        
+        public bool accent
+        {
+            get => ClassListContains(accentUssClassName);
+            set => EnableInClassList(accentUssClassName, value);
         }
         
         /// <summary>
@@ -156,6 +167,12 @@ namespace Unity.AppUI.UI
                 name = "disabled",
                 defaultValue = false,
             };
+            
+            readonly UxmlBoolAttributeDescription m_Accent = new UxmlBoolAttributeDescription
+            {
+                name = "accent",
+                defaultValue = false,
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -170,6 +187,7 @@ namespace Unity.AppUI.UI
                 var element = (FloatingActionButton)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
                 element.elevation = m_Elevation.GetValueFromBag(bag, cc);
+                element.accent = m_Accent.GetValueFromBag(bag, cc);
                 
                 element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }

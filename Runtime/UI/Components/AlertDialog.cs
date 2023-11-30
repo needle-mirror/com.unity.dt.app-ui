@@ -184,8 +184,8 @@ namespace Unity.AppUI.UI
         /// </summary>
         public bool isPrimaryActionDisabled
         {
-            get => m_PrimaryButton.enabledSelf;
-            set => m_PrimaryButton.SetEnabled(value);
+            get => !m_PrimaryButton.enabledSelf;
+            set => m_PrimaryButton.SetEnabled(!value);
         }
         
         /// <summary>
@@ -193,8 +193,8 @@ namespace Unity.AppUI.UI
         /// </summary>
         public bool isSecondaryActionDisabled
         {
-            get => m_SecondaryButton.enabledSelf;
-            set => m_SecondaryButton.SetEnabled(value);
+            get => !m_SecondaryButton.enabledSelf;
+            set => m_SecondaryButton.SetEnabled(!value);
         }
 
         /// <summary>
@@ -276,6 +276,18 @@ namespace Unity.AppUI.UI
                 name = "variant",
                 defaultValue = AlertSemantic.Default,
             };
+            
+            readonly UxmlBoolAttributeDescription m_IsPrimaryActionDisabled = new UxmlBoolAttributeDescription
+            {
+                name = "is-primary-action-disabled",
+                defaultValue = false
+            };
+            
+            readonly UxmlBoolAttributeDescription m_IsSecondaryActionDisabled = new UxmlBoolAttributeDescription
+            {
+                name = "is-secondary-action-disabled",
+                defaultValue = false
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -289,6 +301,8 @@ namespace Unity.AppUI.UI
 
                 var element = (AlertDialog)ve;
                 element.variant = m_Variant.GetValueFromBag(bag, cc);
+                element.isPrimaryActionDisabled = m_IsPrimaryActionDisabled.GetValueFromBag(bag, cc);
+                element.isSecondaryActionDisabled = m_IsSecondaryActionDisabled.GetValueFromBag(bag, cc);
             }
         }
     }

@@ -4,6 +4,32 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-pre.8] - 2023-11-30
+
+### Fixed
+
+- Fixed Unity crashes when polling TabItem elements inside Tabs component.
+- Fixed mouse capture during Pointer down event in Pressable manipulator for Unity versions older than 2023.1.
+- Fixed tab key handling to switch focus in `TextArea` component.
+- Fixed UI Kit Sample with Progress components' color overrides.
+- Fixed `border-radius` usage in `ExVisualElement` component.
+- Fixed typo in App UI Elevation's USS selector.
+- Fixed box-shadows border-radius calculation
+- Fixed `isPrimaryActionDisabled` and `isSecondaryActionDisabled` property setters
+
+### Added
+
+- Added new methods to push sub-menus in `MenuBuilder` class.
+- Added `submit-on-enter` property in `TextArea` component.
+- Added `submit-modifiers` property in `TextArea` component.
+- Added `submitted` event property in `TextArea` component.
+- Added `subMenuOpened` event property in `MenuItem` UI component.
+- Added `accent` property to the `FloatingActionButton` component.
+
+### Changed
+
+- Runtime Tooltips won't be displayed if the picked element has `.is-open` USS class currently applied.
+
 ## [1.0.0-pre.7] - 2023-11-24
 
 ### Added

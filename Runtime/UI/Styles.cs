@@ -97,8 +97,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The styling class used to set an element's elevation.
         /// </summary>
-        public const string elevationUssClassName = "unity-elevation-";
-
+        public const string elevationUssClassName = "appui-elevation-";
+        
         /// <summary>
         /// The styling class used to set a ":last-child" pseudo-state on a element.
         /// </summary>

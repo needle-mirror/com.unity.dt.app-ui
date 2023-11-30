@@ -220,8 +220,6 @@ namespace Unity.AppUI.UI
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                var app = (Panel)ve;
-                app.theme = m_DefaultTheme.GetValueFromBag(bag, cc);
             }
         }
 

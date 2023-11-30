@@ -58,7 +58,7 @@ namespace Unity.AppUI.UI
             focusable = true;
             pickingMode = PickingMode.Position;
             tabIndex = 0;
-            clickable = new Pressable();
+            clickable = new Pressable(OnPressed);
 
             AddToClassList(ussClassName);
 
@@ -72,6 +72,13 @@ namespace Unity.AppUI.UI
             label = null;
             icon = null;
             selected = false;
+        }
+
+        void OnPressed()
+        {
+            using var evt = ActionTriggeredEvent.GetPooled();
+            evt.target = this;
+            SendEvent(evt);
         }
 
         /// <summary>
@@ -243,6 +250,8 @@ namespace Unity.AppUI.UI
         readonly VisualElement m_Container;
 
         Action<TabItem, int> m_BindItem;
+        
+        Action<TabItem, int> m_UnbindItem;
 
         int m_DefaultValue;
 
@@ -257,6 +266,10 @@ namespace Unity.AppUI.UI
         bool m_ValueSet;
         
         IVisualElementScheduledItem m_ScheduledRefreshIndicator;
+
+        IVisualElementScheduledItem m_PollHierarchyItem;
+
+        List<TabItem> m_StaticItems;
 
         /// <summary>
         /// Default constructor.
@@ -312,9 +325,10 @@ namespace Unity.AppUI.UI
 
             RegisterCallback<KeyDownEvent>(OnKeyDown);
             this.RegisterContextChangedCallback<DirContext>(OnDirectionChanged);
-            m_LambdaContainer.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+            m_PollHierarchyItem = schedule.Execute(PollHierarchy).Every(50L);
             m_ScrollView.verticalScroller.valueChanged += OnVerticalScrollerChanged;
             m_ScrollView.horizontalScroller.valueChanged += OnHorizontalScrollerChanged;
+            RegisterCallback<ActionTriggeredEvent>(OnItemClicked);
         }
 
         void OnDirectionChanged(ContextChangedEvent<DirContext> evt)
@@ -354,6 +368,11 @@ namespace Unity.AppUI.UI
                 };
             }
         }
+        
+        /// <summary>
+        /// The current list of items used to populate the Tabs.
+        /// </summary>
+        public IList items => m_SourceItems ?? m_StaticItems;
 
         /// <summary>
         /// The emphasized mode of the Tabs.
@@ -374,7 +393,20 @@ namespace Unity.AppUI.UI
             set
             {
                 m_BindItem = value;
-                RefreshItems(sourceItems);
+                RefreshItems();
+            }
+        }
+
+        /// <summary>
+        /// Method to unbind the TabItem.
+        /// </summary>
+        public Action<TabItem, int> unbindItem
+        {
+            get => m_UnbindItem;
+            set
+            {
+                m_UnbindItem = value;
+                RefreshItems();
             }
         }
 
@@ -391,7 +423,10 @@ namespace Unity.AppUI.UI
 
                 m_SourceItems = value;
                 m_ValueSet = false;
-                RefreshItems(sourceItems);
+                
+                m_PollHierarchyItem?.Pause();
+                m_PollHierarchyItem = null;
+                RefreshItems();
             }
         }
 
@@ -443,6 +478,9 @@ namespace Unity.AppUI.UI
 
         void RefreshVisuals()
         {
+            if (panel == null || !paddingRect.IsValid())
+                return;
+            
             if (m_Value >= 0 && m_Value < m_Items.Count)
             {
                 m_Items[m_Value].selected = true;
@@ -589,43 +627,59 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
         }
 
-        void OnGeometryChanged(GeometryChangedEvent evt)
+        void PollHierarchy()
         {
-            if (m_LambdaContainer.childCount > 0 && sourceItems == null)
+            if (m_StaticItems == null && childCount > 0 && m_SourceItems == null)
             {
-                var children = new List<VisualElement>(m_LambdaContainer.Children());
-                RefreshItems(children);
-                m_LambdaContainer.Clear();
+                m_PollHierarchyItem?.Pause();
+                m_PollHierarchyItem = null;
+                m_StaticItems = new List<TabItem>();
+                foreach (var c in Children())
+                {
+                    m_StaticItems.Add((TabItem)c);
+                }
+                RefreshItems();
             }
         }
 
-        void RefreshItems(IEnumerable items)
+        void RefreshItems()
         {
-            // clear items
-            foreach (var item in m_Items)
+            for (var i = 0; i < itemContainer.childCount; i++)
             {
-                item.clickable.clickedWithEventInfo -= OnItemClicked;
-                item.RemoveFromHierarchy();
+                var item = (TabItem)ElementAt(i);
+                unbindItem?.Invoke(item, i);
+                item.UnregisterCallback<GeometryChangedEvent>(OnItemGeometryChanged);
             }
+
+            itemContainer.Clear();
             m_Items.Clear();
 
-            // create menu items
-            if (items != null)
+            if (m_SourceItems != null)
             {
-                var i = 0;
-                foreach (var item in items)
+                for (var i = 0; i < m_SourceItems.Count; i++)
                 {
-                    var tabItem = item as TabItem ?? new TabItem();
-                    bindItem?.Invoke(tabItem, i);
-                    tabItem.clickable.clickedWithEventInfo += OnItemClicked;
-                    tabItem.RegisterCallback<GeometryChangedEvent>(OnItemGeometryChanged);
-                    m_Items.Add(tabItem);
-                    itemContainer.Add(tabItem);
-                    i++;
+                    var item = new TabItem();
+                    bindItem?.Invoke(item, i);
+                    item.RegisterCallback<GeometryChangedEvent>(OnItemGeometryChanged);
+                    itemContainer.Add(item);
+                    m_Items.Add(item);
                 }
             }
-
-            SetValueWithoutNotify(m_Value);
+            else if (m_StaticItems != null)
+            {
+                for (var i = 0; i < m_StaticItems.Count; i++)
+                {
+                    var item = m_StaticItems[i];
+                    item.RegisterCallback<GeometryChangedEvent>(OnItemGeometryChanged);
+                    itemContainer.Add(item);
+                    m_Items.Add(item);
+                }
+            }
+            
+            if (itemContainer.childCount > 0)
+                SetValueWithoutNotify(Mathf.Clamp(m_Value, 0, itemContainer.childCount - 1));
+            else
+                m_Value = -1;
         }
 
         void OnItemGeometryChanged(GeometryChangedEvent evt)
@@ -634,10 +688,13 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(m_Value);
         }
 
-        void OnItemClicked(EventBase evt)
+        void OnItemClicked(ActionTriggeredEvent evt)
         {
             if (evt.target is TabItem item)
+            {
                 value = item.parent.IndexOf(item);
+                evt.StopPropagation();
+            }
         }
         
         /// <summary>

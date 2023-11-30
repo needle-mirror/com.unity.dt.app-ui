@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.AppUI.Bridge;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
@@ -49,7 +50,16 @@ namespace Unity.AppUI.UI
         readonly VisualElement m_ResizeHandle;
 
         string m_PreviousValue;
-        
+
+        bool m_RequestSubmit;
+
+        bool m_RequestTab;
+
+        /// <summary>
+        /// Event triggered when the user presses the Enter key and <see cref="submitOnEnter"/> is true.
+        /// </summary>
+        public event Action submitted;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -67,8 +77,13 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
 
+            focusable = true;
             pickingMode = PickingMode.Position;
             passMask = 0;
+            tabIndex = 0;
+            this.SetIsCompositeRoot(true);
+            this.SetExcludeFromFocusRing(true);
+            delegatesFocus = true;
 
             m_ScrollView = new ScrollView
             {
@@ -113,6 +128,39 @@ namespace Unity.AppUI.UI
             m_InputField.RegisterValueChangedCallback(OnInputValueChanged);
             m_Placeholder.RegisterValueChangedCallback(OnPlaceholderValueChanged);
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+            RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
+        }
+
+        void OnKeyDown(KeyDownEvent evt)
+        {
+            if (evt.keyCode == KeyCode.Tab && !evt.shiftKey)
+            {
+                m_RequestTab = true;
+                return;
+            }
+
+            if (m_RequestTab && evt.keyCode == KeyCode.None)
+            {
+                evt.StopPropagation();
+                evt.PreventDefault();
+                focusController.FocusNextInDirectionEx(this, VisualElementFocusChangeDirection.right);
+            }
+
+            if (submitOnEnter && evt.keyCode is KeyCode.Return or KeyCode.KeypadEnter && evt.modifiers == submitModifiers)
+            {
+                m_RequestSubmit = true;
+                return;
+            }
+
+            if (m_RequestSubmit && evt.keyCode == KeyCode.None)
+            {
+                evt.StopPropagation();
+                evt.PreventDefault();
+                submitted?.Invoke();
+            }
+            
+            m_RequestSubmit = false;
+            m_RequestTab = false;
         }
         
         void OnResizeHandleClicked(ClickEvent evt)
@@ -248,6 +296,16 @@ namespace Unity.AppUI.UI
             RefreshUI();
             if (validateValue != null) invalid = !validateValue(m_Value);
         }
+        
+        /// <summary>
+        /// Whether the TextArea should invoke the <see cref="submitted"/> event when the user presses the Enter key.
+        /// </summary>
+        public bool submitOnEnter { get; set; } = false;
+        
+        /// <summary>
+        /// The modifiers required to submit the TextArea.
+        /// </summary>
+        public EventModifiers submitModifiers { get; set; } = EventModifiers.None;
 
         /// <summary>
         /// The TextArea value.
@@ -344,6 +402,18 @@ namespace Unity.AppUI.UI
                 name = "auto-resize",
                 defaultValue = false
             };
+            
+            readonly UxmlBoolAttributeDescription m_SubmitOnEnter = new()
+            {
+                name = "submit-on-enter",
+                defaultValue = false
+            };
+            
+            readonly UxmlEnumAttributeDescription<EventModifiers> m_SubmitModifiers = new()
+            {
+                name = "submit-modifiers",
+                defaultValue = EventModifiers.None
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -361,6 +431,8 @@ namespace Unity.AppUI.UI
                 el.autoResize = m_AutoResize.GetValueFromBag(bag, cc);
                 el.value = m_Value.GetValueFromBag(bag, cc);
                 el.disabled = m_Disabled.GetValueFromBag(bag, cc);
+                el.submitOnEnter = m_SubmitOnEnter.GetValueFromBag(bag, cc);
+                el.submitModifiers = m_SubmitModifiers.GetValueFromBag(bag, cc);
             }
         }
     }

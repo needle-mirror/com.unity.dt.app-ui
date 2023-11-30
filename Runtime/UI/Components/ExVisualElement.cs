@@ -668,13 +668,12 @@ namespace Unity.AppUI.UI
             s_Material.SetInt(k_ShadowInset, ads.shadowInset ? 1 : 0);
 
             // Compute the border radiuses and clamp them to the half size of the rect
-            var cornerLimit = Mathf.Min(rect.width, rect.height);
+            var cornerLimit = Mathf.Min(rect.width, rect.height) * 0.5f;
             var borderRadius = new Vector4(
                 Mathf.Min(currentStyle.borderTopLeftRadius, cornerLimit),
                 Mathf.Min(currentStyle.borderTopRightRadius, cornerLimit),
                 Mathf.Min(currentStyle.borderBottomRightRadius, cornerLimit),
                 Mathf.Min(currentStyle.borderBottomLeftRadius, cornerLimit));
-            borderRadius *= 0.5f;
 
             s_Material.SetVector(k_Radiuses, borderRadius / width);
 

@@ -118,7 +118,13 @@ namespace Unity.AppUI.UI
                     if (delta.sqrMagnitude > dragThreshold * dragThreshold && (acceptDrag == null || acceptDrag.Invoke()))
                     {
                         if (!target.HasPointerCapture(evt.pointerId))
+                        {
                             target.CapturePointer(evt.pointerId);
+#if !UNITY_2023_1_OR_NEWER
+                            if (evt.pointerId == PointerId.mousePointerId)
+                                target.CaptureMouse();
+#endif
+                        }
                         
                         isActive = true;
                         m_DragStarted?.Invoke(evt);
@@ -131,7 +137,13 @@ namespace Unity.AppUI.UI
                 else
                 {
                     if (!target.HasPointerCapture(evt.pointerId))
+                    {
                         target.CapturePointer(evt.pointerId);
+#if !UNITY_2023_1_OR_NEWER
+                        if (evt.pointerId == PointerId.mousePointerId)
+                            target.CaptureMouse();
+#endif
+                    }
                     
                     m_Dragging?.Invoke(evt);
                     var elementPosition = s_VisualElement.parent.WorldToLocal(evt.position);

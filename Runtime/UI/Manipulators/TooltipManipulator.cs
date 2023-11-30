@@ -106,13 +106,18 @@ namespace Unity.AppUI.UI
             var ret = element;
             var parent = element.parent;
 
-            while (ret.GetTooltipTemplate() == null && string.IsNullOrEmpty(ret.tooltip) && parent != null)
+            while (HasInvalidTooltip(ret) && parent != null)
             {
                 ret = parent;
                 parent = parent.parent;
             }
 
-            return ret.GetTooltipTemplate() == null && string.IsNullOrEmpty(ret.tooltip) ? null : ret;
+            return HasInvalidTooltip(ret) ? null : ret;
+
+            bool HasInvalidTooltip(VisualElement ve)
+            {
+                return (ve.GetTooltipTemplate() == null && string.IsNullOrEmpty(ve.tooltip)) || ve.ClassListContains(Styles.openUssClassName);
+            }
         }
     }
 }

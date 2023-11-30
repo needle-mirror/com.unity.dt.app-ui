@@ -94,7 +94,7 @@ Shader "Hidden/App UI/Box"
                     return fixed4(0,0,0,0);
                 // Find clip box mask
                 const float2 spread = float2(_ShadowOffset.z, _ShadowOffset.z / _Ratio);
-                const float2 boxClipSSize = _Rect.zw + _AA;
+                const float2 boxClipSSize = _Rect.zw + _AA * 0.5;
                 const float2 halfSize = float2(boxClipSSize.x, boxClipSSize.y * _Ratio) * 0.5;
                 const float sd = roundedBoxSDF(i.uv, halfSize, _Radiuses.zywx);
                 // Find rounded shadow box mask
@@ -112,7 +112,8 @@ Shader "Hidden/App UI/Box"
                 // apply shadow box mask
                 shadow *= boxShadow(lower, upper, i.uv, sigma);
                 // apply clip box mask based on Inset value
-                const float outsetShadow = shadow * max(float(sd > 0.), 0.);
+                // if the pixel is inside the box, then shadow is smoothed with _AA
+                const float outsetShadow = sd > 0. ? shadow : smoothstep(-_AA, 0., sd) * shadow;
                 return fixed4(_ShadowColor.rgb, outsetShadow * _ShadowColor.a);
                 #else
                 return fixed4(0,0,0,0);
@@ -270,10 +271,15 @@ Shader "Hidden/App UI/Box"
                     return fixed4(0,0,0,0);
 
                 const float band = _BorderThickness * _BorderDotFactor;
-                const float2 halfSize = float2(_Rect.z, _Rect.w * _Ratio) * 0.5;
-                float4 box = paBox(i.uv, halfSize - _BorderThickness * 0.5 - _Radiuses.x, _Radiuses.x, band);
+                const float2 boxClipSSize = _Rect.zw;
+                float2 halfSize = float2(boxClipSSize.x, boxClipSSize.y * _Ratio) * 0.5;
+                float4 box = paBox(i.uv, halfSize - _Radiuses.x, _Radiuses.x, band);
                 const float distance = box.w;
-                float borderAlpha = abs(distance) <= _BorderThickness * 0.5 ? 1.0 : 0.0;
+                float borderAlpha = 1.0 - smoothstep(0.0, _AA, distance);
+                borderAlpha *= 1.0 - smoothstep(_BorderThickness - _AA, _BorderThickness, abs(distance));
+
+                halfSize = float2(boxClipSSize.x - _BorderThickness, (boxClipSSize.y * _Ratio) - _BorderThickness ) * 0.5;
+                box = paBox(i.uv, halfSize - (_Radiuses.x - (_BorderThickness * 0.5)), _Radiuses.x - (_BorderThickness * 0.5), band);
 
                 float2 q = box.xy;
                 q.y *= floor(box.z / band) * (band / box.z);
@@ -283,11 +289,13 @@ Shader "Hidden/App UI/Box"
 
                 if (_BorderStyle == 2) // Dotted
                 {
-                    borderAlpha *= smoothstep(0.50 / _BorderDotFactor, 0.49 / _BorderDotFactor, dotLength);
+                    const float dotSize = 0.52 / _BorderDotFactor;
+                    borderAlpha *= 1.0 - smoothstep(dotSize - (_AA / band), dotSize, abs(dotLength));
                 }
                 else if (_BorderStyle == 3) // Dashed
                 {
-                    borderAlpha *= smoothstep(0.24, 0.25, dotLength);
+                    const float dotSize = 0.25;
+                    borderAlpha *= smoothstep(dotSize - (_AA / band), dotSize, abs(dotLength));
                 }
                 
                 return fixed4(_BorderColor.rgb, _BorderColor.a * borderAlpha);

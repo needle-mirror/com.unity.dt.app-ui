@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "1.0.0-pre.7",
+  "version": "1.0.0-pre.8",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,7 +25,7 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "638b3f7f8108ce404a433ae9b487013ad6034341"
+    "revision": "f372a2b60dc49454191d0af3378536deec0d8f34"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -82,10 +82,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added others Inter font variants\n\n### Fixed\n\n- Fixed some unit tests"
+    "changelog": "### Fixed\n\n- Fixed Unity crashes when polling TabItem elements inside Tabs component.\n- Fixed mouse capture during Pointer down event in Pressable manipulator for Unity versions older than 2023.1.\n- Fixed tab key handling to switch focus in `TextArea` component.\n- Fixed UI Kit Sample with Progress components' color overrides.\n- Fixed `border-radius` usage in `ExVisualElement` component.\n- Fixed typo in App UI Elevation's USS selector.\n- Fixed box-shadows border-radius calculation\n- Fixed `isPrimaryActionDisabled` and `isSecondaryActionDisabled` property setters\n\n### Added\n\n- Added new methods to push sub-menus in `MenuBuilder` class.\n- Added `submit-on-enter` property in `TextArea` component.\n- Added `submit-modifiers` property in `TextArea` component.\n- Added `submitted` event property in `TextArea` component.\n- Added `subMenuOpened` event property in `MenuItem` UI component.\n- Added `accent` property to the `FloatingActionButton` component.\n\n### Changed\n\n- Runtime Tooltips won't be displayed if the picked element has `.is-open` USS class currently applied."
   },
   "upmCi": {
-    "footprint": "a91b66c39188d0f128daa0cf153cd30687073799"
+    "footprint": "9d4e652b5a3ff432af36c549f53b226997c7051d"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@1.0/manual/index.html"
 }

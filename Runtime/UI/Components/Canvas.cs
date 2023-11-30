@@ -354,6 +354,9 @@ namespace Unity.AppUI.UI
             
             RegisterCallback<WheelEvent>(OnWheel);
             RegisterCallback<PointerDownEvent>(OnPointerDown, TrickleDown.TrickleDown);
+#if !UNITY_2023_1_OR_NEWER
+            RegisterCallback<MouseDownEvent>(OnMouseDown, TrickleDown.TrickleDown);
+#endif
             RegisterCallback<PointerUpEvent>(OnPointerUp);
             RegisterCallback<PointerCancelEvent>(OnPointerCancel);
             RegisterCallback<PointerCaptureOutEvent>(OnPointerCaptureOut);
@@ -528,13 +531,25 @@ namespace Unity.AppUI.UI
                 (evt.button == (int)MouseButton.LeftMouse && hasModifierPressed))
             {
                 if (!this.HasPointerCapture(evt.pointerId))
+                {
                     this.CapturePointer(evt.pointerId);
+#if !UNITY_2023_1_OR_NEWER
+                    if (evt.pointerId == PointerId.mousePointerId)
+                        this.CaptureMouse();
+#endif
+                }
                 
                 evt.StopPropagation();
                 m_PointerId = evt.pointerId;
                 m_PointerPosition = evt.localPosition;
                 grabMode = GrabMode.Grabbing;
             }
+        }
+
+        void OnMouseDown(MouseDownEvent evt)
+        {
+            if (this.HasMouseCapture())
+                evt.StopPropagation();
         }
 
         void OnPointerUp(PointerUpEvent evt)

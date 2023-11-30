@@ -190,6 +190,19 @@ namespace Unity.AppUI.UI
         /// <returns> The MenuBuilder instance. </returns>
         public MenuBuilder PushSubMenu(int actionId, string labelStr, string iconName)
         {
+            return PushSubMenu(actionId, labelStr, iconName, null);
+        }
+        
+        /// <summary>
+        /// Create an action menu item, add a sub-menu to the current menu, and make it the current menu.
+        /// </summary>
+        /// <param name="actionId"> A unique identifier for the action. </param>
+        /// <param name="labelStr"> The label of the menu item. </param>
+        /// <param name="iconName"> The icon of the menu item. </param>
+        /// <param name="subMenuOpenedCallback"> The callback to invoke when the sub-menu is opened. </param>
+        /// <returns> The MenuBuilder instance. </returns>
+        public MenuBuilder PushSubMenu(int actionId, string labelStr, string iconName, Action subMenuOpenedCallback)
+        {
             var subMenu = new Menu();
             var item = new MenuItem
             {
@@ -198,8 +211,28 @@ namespace Unity.AppUI.UI
                 userData = actionId,
                 subMenu = subMenu,
             };
+            if (subMenuOpenedCallback != null)
+                item.subMenuOpened += subMenuOpenedCallback;
             currentMenu.Add(item);
             m_MenuStack.Push(subMenu);
+            return this;
+        }
+
+        /// <summary>
+        /// Create an action menu item, add a sub-menu to the current menu, and make it the current menu.
+        /// </summary>
+        /// <param name="bindItemFunc"> A callback to bind the action. </param>
+        /// <returns> The MenuBuilder instance. </returns>
+        /// <remarks>
+        /// When the binding callback is invoked, the sub-menu is already pushed on the stack and set on the menu item.
+        /// </remarks>
+        public MenuBuilder PushSubMenu(Action<MenuItem> bindItemFunc)
+        {
+            var subMenu = new Menu();
+            var item = new MenuItem { subMenu = subMenu };
+            currentMenu.Add(item);
+            m_MenuStack.Push(subMenu);
+            bindItemFunc?.Invoke(item);
             return this;
         }
 
