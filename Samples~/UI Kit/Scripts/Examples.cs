@@ -288,7 +288,11 @@ namespace Unity.AppUI.Samples
             var temporaryDrawer = root.Q<Drawer>("temporary-drawer");
             var drawerVariantSwitcher = root.Q<RadioGroup>("drawer-variant-switcher");
             var openTempDrawerBtn = root.Q<Button>("open-temp-drawer-btn");
+            var openSnapTempDrawerBtn = root.Q<Button>("open-snap-temp-drawer-btn");
+            var closeSnapTempDrawerBtn = root.Q<Button>("close-snap-temp-drawer-btn");
             openTempDrawerBtn.clicked += temporaryDrawer.Open;
+            openSnapTempDrawerBtn.clicked += () => temporaryDrawer.isOpen = true;
+            closeSnapTempDrawerBtn.clicked += () => temporaryDrawer.isOpen = false;
             temporaryDrawer.AddToClassList(Styles.hiddenUssClassName);
             drawerVariantSwitcher.SetValueWithoutNotify(1);
             drawerVariantSwitcher.RegisterValueChangedCallback(evt =>
@@ -299,11 +303,15 @@ namespace Unity.AppUI.Samples
                         permanentDrawer.AddToClassList(Styles.hiddenUssClassName);
                         temporaryDrawer.RemoveFromClassList(Styles.hiddenUssClassName);
                         openTempDrawerBtn.SetEnabled(true);
+                        openSnapTempDrawerBtn.SetEnabled(true);
+                        closeSnapTempDrawerBtn.SetEnabled(true);
                         break;
                     case 1:
                         temporaryDrawer.AddToClassList(Styles.hiddenUssClassName);
                         permanentDrawer.RemoveFromClassList(Styles.hiddenUssClassName);
                         openTempDrawerBtn.SetEnabled(false);
+                        openSnapTempDrawerBtn.SetEnabled(false);
+                        closeSnapTempDrawerBtn.SetEnabled(false);
                         break;
                 }
             });

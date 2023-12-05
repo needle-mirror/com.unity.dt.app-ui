@@ -1055,6 +1055,7 @@
                                 <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
                                     <appui:Text text="Main Content" />
                                     <appui:Button name="open-temp-drawer-btn" title="Open Drawer" disabled="true" />
+                                    <appui:Button name="open-snap-temp-drawer-btn" title="Open Snap Drawer" disabled="true" />
                                     <appui:RadioGroup name="drawer-variant-switcher">
                                         <appui:Radio label="Temporary" emphasized="true" />
                                         <appui:Radio label="Permanent" emphasized="true" />
@@ -1063,6 +1064,7 @@
                                 <appui:Drawer name="temporary-drawer" anchor="Left" variant="Temporary" swipe-area-width="60" >
                                     <ui:VisualElement style="width: 200px; flex-grow: 1; justify-content: center; align-items: center;">
                                         <appui:Text text="Temporary Drawer" />
+                                        <appui:Button name="close-snap-temp-drawer-btn" title="Close Snap Drawer" disabled="true" />
                                     </ui:VisualElement>
                                 </appui:Drawer>
                             </ui:VisualElement>

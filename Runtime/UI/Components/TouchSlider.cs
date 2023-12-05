@@ -320,6 +320,20 @@ namespace Unity.AppUI.UI
         
         /// <summary>
         /// Method to implement to resolve a <typeparamref name="TValueType"/> value into a <see cref="string"/> value.
+        /// </summary>
+        /// <param name="val"> The <typeparamref name="TValueType"/> value to convert.</param>
+        /// <returns> The converted value.</returns>
+        /// <remarks>
+        /// This method is used to convert the value to a string when the user is editing the value in the input field.
+        /// This must not use the <see cref="formatString"/> property.
+        /// </remarks>
+        protected virtual string ParseRawValueToString(TValueType val)
+        {
+            return val.ToString();
+        }
+        
+        /// <summary>
+        /// Method to implement to resolve a <typeparamref name="TValueType"/> value into a <see cref="string"/> value.
         /// <para>You can use <see cref="object.ToString"/> for floating point value types for example.</para>
         /// <para>You can also round the value if you want a specific number of decimals.</para>
         /// </summary>
@@ -382,8 +396,6 @@ namespace Unity.AppUI.UI
     public abstract class TouchSlider<TValueType> : BaseSlider<TValueType, TValueType> 
         where TValueType : struct, IComparable, IEquatable<TValueType>
     {
-        const int k_EventDelay = 16;
-
         /// <summary>
         /// The TouchSlider main styling class.
         /// </summary>
@@ -559,18 +571,16 @@ namespace Unity.AppUI.UI
             m_IsEditingTextField = false;
             RemoveFromClassList(Styles.focusedUssClassName);
             HideInputField();
-
-            if (ParseStringToValue(m_InputField.value, out var val))
+            
+            var currentValueStr = ParseValueToString(value);
+            if (m_InputField.value != currentValueStr && ParseStringToValue(m_InputField.value, out var newValue))
             {
-                var newValue = GetClampedValue(val);
-
-                if (EqualityComparer<TValueType>.Default.Equals(newValue, value))
-                    return;
                 value = newValue;
+                SetValueWithoutNotify(newValue);
             }
             else
             {
-                m_InputField.value = ParseValueToString(value);
+                m_InputField.SetValueWithoutNotify(currentValueStr);
             }
         }
 
@@ -623,7 +633,13 @@ namespace Unity.AppUI.UI
         {
             m_ValueLabelElement.style.display = DisplayStyle.None;
             m_InputField.style.display = DisplayStyle.Flex;
-            m_InputField.schedule.Execute(() => m_InputField.Focus()).ExecuteLater(k_EventDelay);
+            m_InputField.schedule.Execute(OnInputFieldShown);
+        }
+
+        void OnInputFieldShown()
+        {
+            m_InputField.SetValueWithoutNotify(ParseRawValueToString(value));
+            m_InputField.Focus();
         }
 
         void HideInputField()
@@ -725,11 +741,13 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.ParseValueToString"/>
         protected override string ParseValueToString(int val)
         {
-            if (UINumericFieldsUtils.IsPercentFormatString(formatString))
-                Debug.LogWarning("Percent format string is not supported for integer values.\n" +
-                    "Please use a TouchSliderFloat instead.");
-            
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
+        }
+        
+        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.ParseRawValueToString"/>
+        protected override string ParseRawValueToString(int val)
+        {
+            return val.ToString(CultureInfo.InvariantCulture.NumberFormat);
         }
 
         /// <inheritdoc cref="BaseSlider{TValueType}.SliderLerpUnclamped"/>
@@ -818,23 +836,21 @@ namespace Unity.AppUI.UI
         protected override bool ParseStringToValue(string strValue, out float val)
         {
             var ret = UINumericFieldsUtils.StringToDouble(strValue, out var d);
-            val = ret ? UINumericFieldsUtils.ClampToFloat(d) : value;
+            var f  = ret ? UINumericFieldsUtils.ClampToFloat(d) : value;
+            val = f;
             return ret;
         }
 
         /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.ParseValueToString"/>
         protected override string ParseValueToString(float val)
         {
-            // If formatString is percent, we need to divide by 100
-            if (UINumericFieldsUtils.IsPercentFormatString(formatString))
-            {
-                val /= 100f;
-                if (highValue == 1f)
-                    Debug.LogWarning("High value is set to 1, but format string is a percent format string.\n" +
-                        "Please set high value to 100 instead.");
-            }
-            
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
+        }
+        
+        /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.ParseRawValueToString"/>
+        protected override string ParseRawValueToString(float val)
+        {
+            return val.ToString(CultureInfo.InvariantCulture.NumberFormat);
         }
 
         /// <inheritdoc cref="BaseSlider{TValueType}.SliderLerpUnclamped"/>

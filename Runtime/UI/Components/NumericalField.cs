@@ -261,10 +261,8 @@ namespace Unity.AppUI.UI
             RemoveFromClassList(Styles.focusedUssClassName);
             RemoveFromClassList(Styles.keyboardFocusUssClassName);
 
-            var val = ParseStringToValue(m_InputElement.value, out var v) ? v : value;
-            if (val.Equals(m_Value))
-                m_InputElement.SetValueWithoutNotify(ParseValueToString(m_Value)); // reset previous value text if invalid text
-
+            var valueStr = ParseValueToString(m_Value);
+            var val = valueStr != m_InputElement.value && ParseStringToValue(m_InputElement.value, out var newValue) ? newValue : m_Value;
             value = val;
             SetValueWithoutNotify(val);
         }
@@ -273,6 +271,7 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(Styles.focusedUssClassName);
             passMask = 0;
+            m_InputElement.SetValueWithoutNotify(ParseRawValueToString(m_Value));
         }
 
         void OnKeyboardFocusedIn(FocusInEvent evt)
@@ -280,6 +279,7 @@ namespace Unity.AppUI.UI
             AddToClassList(Styles.focusedUssClassName);
             AddToClassList(Styles.keyboardFocusUssClassName);
             passMask = Passes.Clear | Passes.Outline;
+            m_InputElement.SetValueWithoutNotify(ParseRawValueToString(m_Value));
         }
 
         /// <summary>
@@ -296,6 +296,16 @@ namespace Unity.AppUI.UI
         /// <param name="val">The <typeparamref name="TValueType"/> value to convert.</param>
         /// <returns>The converted value.</returns>
         protected abstract string ParseValueToString(TValueType val);
+        
+        /// <summary>
+        /// Define the conversion from a <typeparamref name="TValueType"/> value to a <see cref="string"/> value.
+        /// </summary>
+        /// <param name="val"> The <typeparamref name="TValueType"/> value to convert. </param>
+        /// <returns> The converted value. </returns>
+        /// <remarks>
+        /// This method is used to convert the value to a string without any formatting.
+        /// </remarks>
+        protected abstract string ParseRawValueToString(TValueType val);
 
         /// <summary>
         /// Check if two values of type <typeparamref name="TValueType"/> are equal.

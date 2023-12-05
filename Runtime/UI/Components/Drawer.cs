@@ -111,10 +111,31 @@ namespace Unity.AppUI.UI
         public bool isOpen
         {
             get => m_IsOpen || variant == DrawerVariant.Permanent;
-            private set
+            set
             {
-                EnableInClassList(Styles.openUssClassName, value);
-                m_IsOpen = value;
+                if (value == m_IsOpen || variant == DrawerVariant.Permanent)
+                    return;
+
+                SetOpenState(value);
+
+                if (value)
+                {
+                    if (anchor == DrawerAnchor.Left)
+                        m_DrawerElement.style.left = 0;
+                    else
+                        m_DrawerElement.style.right = 0;
+                    if (!hideBackdrop)
+                        m_Backdrop.style.opacity = backdropFinalOpacity;
+                }
+                else
+                {
+                    var size = float.IsNaN(m_DrawerElement.localBound.width) ? 16000 : m_DrawerElement.localBound.width;
+                    if (anchor == DrawerAnchor.Left)
+                        m_DrawerElement.style.left = -size;
+                    else
+                        m_DrawerElement.style.right = -size;
+                    m_Backdrop.style.opacity = 0;
+                }
             }
         }
 
@@ -257,6 +278,7 @@ namespace Unity.AppUI.UI
                 AddToClassList(variantUssClassName + m_Variant.ToString().ToLower());
                 if (m_Variant == DrawerVariant.Permanent)
                 {
+                    isOpen = true;
                     style.width = new StyleLength(StyleKeyword.Auto);
                     if (anchor == DrawerAnchor.Left)
                     {
@@ -271,24 +293,11 @@ namespace Unity.AppUI.UI
                 }
                 else
                 {
-                    if (isOpen)
-                    {
-                        Close();
-                    }
-                    else
-                    {
-                        style.width = swipeAreaWidth;
-                        if (anchor == DrawerAnchor.Left)
-                        {
-                            m_DrawerElement.style.left = -640;
-                            m_DrawerElement.style.right = new StyleLength(StyleKeyword.Auto);
-                        }
-                        else
-                        {
-                            m_DrawerElement.style.right = -640;
-                            m_DrawerElement.style.left = new StyleLength(StyleKeyword.Auto);
-                        }
-                    }
+                    isOpen = false;
+                    if (anchor == DrawerAnchor.Left)
+                        m_DrawerElement.style.right = new StyleLength(StyleKeyword.Auto);
+                    else 
+                        m_DrawerElement.style.left = new StyleLength(StyleKeyword.Auto);
                 }
             }
         }
@@ -338,9 +347,9 @@ namespace Unity.AppUI.UI
             swipeAreaWidth = 16;
             elevation = 16;
             backdropFinalOpacity = 0.33f;
-            isOpen = false;
             transitionDurationMs = 150;
             hysteresis = 16;
+            SetOpenState(false);
         }
 
         /// <summary>
@@ -348,26 +357,17 @@ namespace Unity.AppUI.UI
         /// </summary>
         public void Open()
         {
-            if (isOpen)
+            if (isOpen || variant == DrawerVariant.Permanent)
                 return;
 
             if (anchor == DrawerAnchor.Left)
                 m_DrawerElement.style.left = -m_DrawerElement.localBound.width;
             else
                 m_DrawerElement.style.right = -m_DrawerElement.localBound.width;
-
-            isOpen = true;
-            m_Backdrop.pickingMode = PickingMode.Position;
-            style.width = parent.localBound.width;
-            if (m_SwipeToOpenVector.sqrMagnitude > 0)
-            {
-                // Opened without animation, nothing to do
-            }
-            else
-            {
+            
+            SetOpenState(true);
+            if (m_SwipeToOpenVector.sqrMagnitude <= 0)
                 FinishOpenAnimation();
-            }
-            opened?.Invoke(this);
         }
 
         void FinishOpenAnimation()
@@ -399,6 +399,9 @@ namespace Unity.AppUI.UI
         /// </summary>
         public void Close()
         {
+            if (variant == DrawerVariant.Permanent)
+                return;
+            
             var size = m_DrawerElement.localBound.width;
             var d = anchor == DrawerAnchor.Left ? distance : (size - m_DrawerElement.resolvedStyle.right) / size;
             m_DrawerElement.experimental.animation.Start(d, 0, transitionDurationMs,
@@ -408,7 +411,7 @@ namespace Unity.AppUI.UI
                         element.style.left = (1 - f) * -m_DrawerElement.localBound.width;
                     else
                         element.style.right = (1 - f) * -m_DrawerElement.localBound.width;
-                }).Ease(Easing.OutQuad).OnCompleted(RequestDismiss);
+                }).Ease(Easing.OutQuad).OnCompleted(OnCloseAnimationFinished);
 
             if (backdropTransitionEnabled && !hideBackdrop)
             {
@@ -544,14 +547,29 @@ namespace Unity.AppUI.UI
                 Close();
         }
 
-        void RequestDismiss()
+        void OnCloseAnimationFinished()
         {
-            isOpen = false;
-            m_Backdrop.pickingMode = PickingMode.Ignore;
-            style.width = swipeAreaWidth;
-            closed?.Invoke(this);
+            SetOpenState(false);
+        }
 
-            //todo
+        void SetOpenState(bool value)
+        {
+            if (value)
+            {
+                AddToClassList(Styles.openUssClassName);
+                m_IsOpen = true;
+                m_Backdrop.pickingMode = PickingMode.Position;
+                style.width = new Length(100, LengthUnit.Percent);
+                opened?.Invoke(this);
+            }
+            else
+            {
+                RemoveFromClassList(Styles.openUssClassName);
+                m_IsOpen = false;
+                m_Backdrop.pickingMode = PickingMode.Ignore;
+                style.width = swipeAreaWidth;
+                closed?.Invoke(this);
+            }
         }
 
         /// <summary>

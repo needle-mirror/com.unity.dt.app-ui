@@ -70,9 +70,9 @@ namespace Unity.AppUI.UI
 
         readonly List<VisualElement> m_SelectedElements = new List<VisualElement>();
 
-        readonly List<int> m_SelectedActionIds = new List<int>();
+        readonly List<int> m_SelectedIndices = new List<int>();
 
-        readonly List<int> m_PreviouslySelectedIds = new List<int>();
+        readonly List<int> m_SelectedIds = new List<int>();
 
         readonly VisualElement m_Container;
 
@@ -87,6 +87,10 @@ namespace Unity.AppUI.UI
         Rect m_LastLayout;
 
         Dir m_CurrentDirection;
+        
+        Func<int, int> m_GetItemId;
+
+        bool m_AllowNoSelection = true;
 
         const SelectionType k_DefaultSelectionType = SelectionType.None;
 
@@ -179,8 +183,17 @@ namespace Unity.AppUI.UI
             {
                 m_SelectionType = value;
                 EnableInClassList(selectableUssClassName, m_SelectionType != SelectionType.None);
-                if (m_SelectionType == SelectionType.None || (m_SelectionType == SelectionType.Single && m_SelectedElements.Count > 1))
+                if (m_SelectionType == SelectionType.None)
+                {
                     ClearSelection();
+                }
+                else if (m_SelectionType == SelectionType.Single && m_SelectedIndices.Count != 1)
+                {
+                    if (allowNoSelection)
+                        ClearSelection();
+                    else
+                        SetSelection(new[] { m_SelectedIndices.Last() });
+                }
             }
         }
         
@@ -188,22 +201,63 @@ namespace Unity.AppUI.UI
         /// Whether the ActionGroup's menu popover should close when a selection is made.
         /// </summary>
         public bool closeOnSelection { get; set; }
+
+        /// <summary>
+        /// Callback used to get the ID of an item.
+        /// </summary>
+        public Func<int, int> getItemId
+        {
+            get => m_GetItemId;
+            set
+            {
+                m_GetItemId = value;
+                RefreshUI();
+            }
+        }
+        
+        /// <summary>
+        /// The selected items.
+        /// </summary>
+        public IEnumerable<int> selectedIndices => m_SelectedIndices;
+        
+        /// <summary>
+        /// The selected items.
+        /// </summary>
+        public IEnumerable<int> selectedIds => m_SelectedIds;
+
+        /// <summary>
+        /// Whether the ActionGroup allows no selection when in single or multi selection mode.
+        /// </summary>
+        public bool allowNoSelection
+        {
+            get => m_AllowNoSelection;
+            set
+            {
+                m_AllowNoSelection = value;
+                if (!m_AllowNoSelection && m_SelectedIndices.Count == 0)
+                    SetSelection(new[] { 0 });
+            }
+        }
         
         /// <summary>
         /// Deselects any selected items.
         /// </summary>
         public void ClearSelection()
         {
+            var notify = m_SelectedIds.Count > 0;
             ClearSelectionWithoutNotify();
-            NotifyOfSelectionChange();
+            if (notify)
+                NotifyOfSelectionChange();
         }
 
         /// <summary>
-        /// Deslects any selected items without sending an event through the visual tree.
+        /// Deselects any selected items without sending an event through the visual tree.
         /// </summary>
         public void ClearSelectionWithoutNotify()
         {
-            m_SelectedActionIds.Clear();
+            m_SelectedIndices.Clear();
+            m_SelectedIds.Clear();
+            RefreshSelectionUI(closeOnSelection);
         }
 
         /// <summary>
@@ -228,7 +282,7 @@ namespace Unity.AppUI.UI
 
             SetSelectionInternal(indices, true);
         }
-        
+
         /// <summary>
         /// Sets a collection of selected items without triggering a selection change callback.
         /// </summary>
@@ -254,82 +308,74 @@ namespace Unity.AppUI.UI
         
         void SetSelectionInternal(IEnumerable<int> indices, bool sendEvent)
         {
-            if (indices == null)
-                return;
+            indices ??= new int[] { };
 
-            var newSelection = indices.ToList();
-            if (newSelection.SequenceEqual(m_SelectedActionIds))
-                return;
+            var newIndices = indices.ToList();
+            newIndices.Sort();
+            var newIds = newIndices.Select(GetIdFromIndex).ToList();
+            newIds.Sort();
+            var hasChanged = !EnumerableExtensions.SequenceEqual(newIds, m_SelectedIds);
 
-            ClearSelectionWithoutNotify();
-            m_SelectedActionIds.AddRange(newSelection); 
+            m_SelectedIndices.Clear();
+            m_SelectedIds.Clear();
+            m_SelectedIds.AddRange(newIds);
+            m_SelectedIndices.AddRange(newIndices);
             RefreshSelectionUI(closeOnSelection);
-            if (sendEvent)
+            if (sendEvent && hasChanged)
                 NotifyOfSelectionChange();
         }
         
         void NotifyOfSelectionChange()
         {
-            if (m_PreviouslySelectedIds.SequenceEqual(m_SelectedActionIds))
-                return;
-            
-            m_PreviouslySelectedIds.Clear();
-            m_PreviouslySelectedIds.AddRange(m_SelectedActionIds);
-            selectionChanged?.Invoke(m_SelectedActionIds);
+            selectionChanged?.Invoke(m_SelectedIndices);
         }
 
         void OnActionTriggered(ActionTriggeredEvent evt)
         {
             evt.StopPropagation();
 
-            if (evt.target is ISelectableElement selectableElement && evt.target != m_MoreButton)
+            if (selectionType != SelectionType.Single && selectionType != SelectionType.Multiple)
+                return;
+
+            if (evt.target is VisualElement el && el != m_MoreButton)
             {
-                var currentSelection = new List<int>(m_SelectedActionIds);
-                var selected = selectableElement.selected;
-                //TODO actionId should be a real ID, not the index
-                var actionId = ((VisualElement) evt.target).parent.IndexOf((VisualElement) evt.target);
+                var currentSelection = new List<int>(m_SelectedIndices);
+                var index = el.parent.IndexOf(el);
                 switch (selectionType)
                 {
-                    case SelectionType.None:
-                        break;
                     case SelectionType.Single:
                     {
-                        if (!selected)
-                        {
-                            if (currentSelection.Count == 1 && currentSelection[0] == actionId)
-                                return;
-                            SetSelection(new[] { actionId });
-                        }
-                        else
-                        {
-                            if (currentSelection.Count == 0)
-                                return;
+                        if (!currentSelection.Contains(index))
+                            SetSelection(new[] { index });
+                        else if (allowNoSelection)
                             SetSelection(null);
-                        }
                         break;
                     }
                     case SelectionType.Multiple:
                     {
-                        if (!selected)
+                        if (!currentSelection.Contains(index))
                         {
-                            if (currentSelection.Contains(actionId))
-                                return;
-                            currentSelection.Add(actionId);
+                            currentSelection.Add(index);
                             SetSelection(currentSelection);
                         }
                         else
                         {
-                            if (!currentSelection.Contains(actionId))
-                                return;
-                            currentSelection.Remove(actionId);
-                            SetSelection(currentSelection);
+                            currentSelection.Remove(index);
+                            if (currentSelection.Count > 0 || allowNoSelection)
+                                SetSelection(currentSelection);
                         }
                         break;
                     }
+                    case SelectionType.None:
                     default:
-                        throw new InvalidOperationException("Invalid selection type");
+                        break;
                 }
             }
+        }
+
+        int GetIdFromIndex(int index)
+        {
+            return m_GetItemId?.Invoke(index) ?? index;
         }
         
         void OnGeometryChanged(GeometryChangedEvent evt)
@@ -352,7 +398,7 @@ namespace Unity.AppUI.UI
             {
                 var child = m_HandledChildren[i];
                 if (child is ISelectableElement selectableElement)
-                    selectableElement.SetSelectedWithoutNotify(m_SelectedActionIds.Contains(i));
+                    selectableElement.SetSelectedWithoutNotify(m_SelectedIndices.Contains(i));
             }
             
             if (selectionType == SelectionType.Single && m_FirstIndexOutOfBound >= 0)
@@ -447,7 +493,7 @@ namespace Unity.AppUI.UI
                     var item = (MenuItem) m_MenuBuilder.currentMenu.ElementAt(m_MenuBuilder.currentMenu.childCount - 1);
                     item.selectable = selectable;
                     if (selectable)
-                        item.SetValueWithoutNotify(m_SelectedActionIds.Contains(i));
+                        item.SetValueWithoutNotify(m_SelectedIndices.Contains(i));
                 }
             }
             
@@ -526,6 +572,12 @@ namespace Unity.AppUI.UI
                 name = "disabled",
                 defaultValue = false
             };
+            
+            readonly UxmlBoolAttributeDescription m_AllowNoSelection = new UxmlBoolAttributeDescription
+            {
+                name = "allow-no-selection",
+                defaultValue = true
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -544,6 +596,7 @@ namespace Unity.AppUI.UI
                 el.justified = m_Justified.GetValueFromBag(bag, cc);
                 el.selectionType = m_SelectionType.GetValueFromBag(bag, cc);
                 el.closeOnSelection = m_CloseOnSelection.GetValueFromBag(bag, cc);
+                el.allowNoSelection = m_AllowNoSelection.GetValueFromBag(bag, cc);
                 el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
