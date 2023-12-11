@@ -26,7 +26,7 @@ The UI Builder use a default theme to display the visual tree inside the Preview
 This theme is useful for Editor windows development but it doesn't match the App UI theme.
 
 To use the App UI theme in the UI Builder, choose the **App UI** theme in the **Theme** dropdown,
-or a more specific theme like **App UI Dark - Medium** or **App UI Light - Medium**.
+or a more specific theme like **App UI Dark - Medium** or **App UI Editor Dark - Small**.
 
 ### Does App UI support EditorWindow (Edit Mode)?
 

@@ -34,7 +34,7 @@
 
 .appui-menusection__title {
     /*text-transform: uppercase;*/
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-body-md);
     color: var(--appui-foregrounds-50);
     padding: var(--appui-alias-control-gap-md);
     margin-top: var(--appui-alias-control-gap-md); /*margin-block-start: var(--appui-alias-control-gap-md);*/
@@ -48,7 +48,7 @@
     flex-direction: row;
     align-items: center;
     /*gap: var(--appui-control-gap);*/
-    color: var(--appui-foregrounds-50);
+    color: var(--appui-alias-control-foreground-default);
     flex-shrink: 0;
 }
 
@@ -113,24 +113,20 @@
 
 .appui-menuitem__shortcut {
     flex-shrink: 0;
-    color: var(--appui-foregrounds-25);
-    font-size: var(--appui-font-sizes-body-xxs);
+    color: var(--appui-alias-actions-foreground-disabled);
+    font-size: var(--appui-font-sizes-body-xs);
 }
 
 .appui-menuitem--active > .appui-menuitem__label {
-    color: var(--appui-foregrounds-200);
+    color: var(--appui-alias-actions-foreground-active);
 }
 
-.appui-menuitem--selectable.is-selected > .appui-menuitem__label {
-    color: var(--appui-foregrounds-100);
+.appui-menuitem--selectable.appui-menuitem.is-selected {
+    background-color: var(--appui-alias-actions-background-color-selected);
 }
 
-.appui-picker__menu .appui-menuitem.is-selected {
-    background-color: var(--appui-base-300);
-}
-
-.appui-picker__menu .appui-menuitem.is-selected > .appui-menuitem__label {
-    color: var(--appui-foregrounds-200);
+.appui-menuitem--selectable.appui-menuitem.is-selected > .appui-menuitem__label {
+    color: var(--appui-alias-actions-foreground-selected);
 }
 
 .appui-menuitem__icon {
@@ -148,7 +144,7 @@
 }
 
 .appui-menuitem.is-hovered > .appui-menuitem__label {
-    color: var(--appui-foregrounds-200);
+    color: var(--appui-alias-actions-foreground-hover);
 }
 
 .appui-menuitem.keyboard-focus{
@@ -156,7 +152,7 @@
 }
 
 .appui-menuitem.keyboard-focus > .appui-menuitem__label {
-    color: var(--appui-foregrounds-200);
+    color: var(--appui-alias-actions-foreground-focus);
 }
 
 .appui-menuitem.is-active {
@@ -164,7 +160,7 @@
 }
 
 .appui-menuitem.is-active > .appui-menuitem__label {
-    color: var(--appui-foregrounds-200);
+    color: var(--appui-alias-actions-foreground-active);
 }
 
 .appui-menuitem:disabled {

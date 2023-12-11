@@ -60,7 +60,7 @@
     justify-content: center;
     -unity-text-align: middle-center;
     color: var(--appui-foregrounds-200);
-    -unity-font-style: bold;
+    -unity-font-definition: var(--appui-font-weights-200);
     font-size: var(--appui-font-sizes-100);
 }
 

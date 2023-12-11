@@ -72,7 +72,7 @@
 }
 
 .appui-dialog__heading > .appui-header {
-    -unity-font-style: bold; /* font-weight: var(--appui-global-font-weight-bold); */
+    -unity-font-definition: var(--appui-font-weights-200); /* font-weight: var(--appui-global-font-weight-bold); */
     flex-grow: 1;
     -unity-text-align: middle-left;
 }
@@ -175,22 +175,22 @@
 
 .appui-dialog--default .appui-dialog__primary-action,
 .appui-dialog--confirmation .appui-dialog__primary-action {
-    background-color: var(--appui-alias-actions-accent-background-default);
-    border-color: var(--appui-alias-actions-accent-background-default);
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+    border-color: var(--appui-alias-actions-accent-background-color-default);
     color: var(--appui-alias-actions-accent-foreground-default);
 }
 
 .appui-dialog--default .appui-dialog__primary-action.is-hovered,
 .appui-dialog--confirmation .appui-dialog__primary-action.is-hovered {
-    background-color: var(--appui-alias-actions-accent-background-hover);
-    border-color: var(--appui-alias-actions-accent-background-hover);
+    background-color: var(--appui-alias-actions-accent-background-color-hover);
+    border-color: var(--appui-alias-actions-accent-background-color-hover);
     color: var(--appui-alias-actions-accent-foreground-hover);
 }
 
 .appui-dialog--default .appui-dialog__primary-action.is-active,
 .appui-dialog--confirmation .appui-dialog__primary-action.is-active {
-    background-color: var(--appui-alias-actions-accent-background-active);
-    border-color: var(--appui-alias-actions-accent-background-active);
+    background-color: var(--appui-alias-actions-accent-background-color-active);
+    border-color: var(--appui-alias-actions-accent-background-color-active);
     color: var(--appui-alias-actions-accent-foreground-active);
 }
 

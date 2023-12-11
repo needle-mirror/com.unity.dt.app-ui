@@ -32,7 +32,7 @@
 
 .appui-breadcrumb-item--current.appui-link {
     color: var(--appui-foregrounds-200);
-    -unity-font-style: bold;
+    -unity-font-definition: var(--appui-font-weights-200);
 }
 
 .appui-breadcrumb-separator {

@@ -39,18 +39,18 @@
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
-    font-size: var(--appui-font-sizes-body-xs);
+    font-size: var(--appui-font-sizes-body-sm);
     color: var(--appui-foregrounds-100);
     padding-left: var(--appui-spacing-200);
     padding-right: var(--appui-spacing-200);
 }
 
 .appui-bottom-navbar-item.is-hovered {
-    background-color: var(--appui-alias-control-background-hover);
+    background-color: var(--appui-alias-control-background-color-hover);
 }
 
 .appui-bottom-navbar-item.is-active {
-    background-color: var(--appui-alias-control-background-active);
+    background-color: var(--appui-alias-control-background-color-active);
 }
 
 .appui-bottom-navbar-item.is-selected .appui-bottom-navbar-item__label,

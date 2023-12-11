@@ -66,7 +66,6 @@ namespace Unity.AppUI.UI
             {
                 name = labelUssClassName, 
                 text = k_DefaultMessage, 
-                size = TextSize.S,
                 pickingMode = PickingMode.Ignore
             };
             m_Label.AddToClassList(labelUssClassName);

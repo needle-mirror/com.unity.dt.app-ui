@@ -20,7 +20,7 @@ namespace Unity.AppUI.Editor
                 tree.CloneTree(element);
                 var root = element.Q<VisualElement>("root-main");
                 root.styleSheets.Add(
-                    AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(AssetDatabase.GUIDToAssetPath("c128b929d074542078a674f8898482fd")));
+                    AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath("b763f743b4824058b4e329c1a2592529")));
                 Samples.Examples.SetupDataBinding(root);
                 root.Query(className: "example-context-switcher-panel").ForEach(visualElement => 
                     visualElement.style.display = DisplayStyle.None);

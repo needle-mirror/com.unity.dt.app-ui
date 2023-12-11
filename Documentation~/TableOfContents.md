@@ -2,7 +2,7 @@
   * [Overview](xref:overview)
   * [What's New](xref:whats-new)
   * [Migration Guide](xref:migrate)
-  * [System Requirements](xref:system-requirements)
+  * [Requirements](xref:requirements)
   * [Installation And Setup](xref:setup)
   * [Using App UI](xref:using-app-ui)
 * References

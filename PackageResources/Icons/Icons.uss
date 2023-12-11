@@ -1,3 +1,8 @@
+.appui {
+    --appui-icon-caret-down-regular: url("./Regular/CaretDown.png");
+    --appui-icon-caret-down-fill: url("./Fill/caret-down-fill.png");
+}
+
 .appui-icon--check--bold {
     --unity-image: url("./Bold/check-bold.png");
 }
@@ -12,6 +17,10 @@
 
 .appui-icon--minus--bold {
     --unity-image: url("./Bold/minus-bold.png");
+}
+
+.appui-icon--caret-down--fill {
+    --unity-image: var(--appui-icon-caret-down-fill);
 }
 
 .appui-icon--warning--fill {
@@ -199,7 +208,7 @@
 }
 
 .appui-icon--caret-down--regular {
-    --unity-image: url("./Regular/CaretDown.png");
+    --unity-image: var(--appui-icon-caret-down-regular);
 }
 
 .appui-icon--caret-down-shallow--regular {

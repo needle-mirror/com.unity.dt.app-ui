@@ -15,27 +15,15 @@
     flex-direction: row-reverse;
 }
 
-.appui-vector2field__container > .appui-numericalfield {
+.appui-vector2field__container > * {
     flex-basis: 50%;
     width: auto;
 }
 
-.appui-vector2field__x-field {
-    margin-left: 0;
-    margin-right: var(--appui-alias-control-gap-sm);
+.appui--ltr .appui-vector2field__x-field {
+    padding-right: var(--appui-alias-control-gap-sm);
 }
 
 .appui--rtl .appui-vector2field__x-field {
-    margin-left: var(--appui-alias-control-gap-sm);
-    margin-right: 0;
-}
-
-.appui-vector2field__y-field {
-    margin-left: 0;
-    margin-right: 0;
-}
-
-.appui--rtl .appui-vector2field__y-field {
-    margin-left: 0;
-    margin-right: 0;
+    padding-left: var(--appui-alias-control-gap-sm);
 }

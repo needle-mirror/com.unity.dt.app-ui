@@ -3,7 +3,6 @@
   color: var(--appui-foregrounds-50);
   font-size: var(--appui-font-sizes-heading-md);
   /* Nothing */ /* convert from : line-height: var(--appui-global-dimension-heading-line-height);*/
-  -unity-font-style: normal; /* converted from : font-weight: var(--appui-global-font-weight-regular); */
   white-space: nowrap;
   overflow: hidden;
   -unity-text-align: middle-left;

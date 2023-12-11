@@ -55,6 +55,14 @@ namespace Unity.AppUI.UI
         /// </summary>
         public static readonly string trailingIconUssClassName = ussClassName + "__trailingicon";
         
+        const bool k_IsPasswordDefault = false;
+        
+        const bool k_IsReadOnlyDefault = false;
+        
+        const char k_MaskCharDefault = '*';
+        
+        const int k_MaxLengthDefault = -1;
+        
         readonly UnityEngine.UIElements.TextField m_InputField;
 
         readonly VisualElement m_LeadingContainer;
@@ -133,6 +141,10 @@ namespace Unity.AppUI.UI
             leadingIconName = null;
             trailingIconName = null;
             size = Size.M;
+            isPassword = k_IsPasswordDefault;
+            isReadOnly = k_IsReadOnlyDefault;
+            maskChar = k_MaskCharDefault;
+            maxLength = k_MaxLengthDefault;
 
             m_InputField.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
             m_Placeholder.RegisterValueChangedCallback(OnPlaceholderValueChanged);
@@ -204,6 +216,54 @@ namespace Unity.AppUI.UI
 
                 if (m_TrailingElement != null)
                     m_TrailingContainer.Add(m_TrailingElement);
+            }
+        }
+
+        /// <summary>
+        /// Whether the TextField is a password field.
+        /// </summary>
+        public bool isPassword
+        {
+            get => m_InputField.isPasswordField;
+            set
+            {
+                m_InputField.isPasswordField = value;
+            }
+        }
+        
+        /// <summary>
+        /// Whether the TextField is read-only.
+        /// </summary>
+        public bool isReadOnly
+        {
+            get => m_InputField.isReadOnly;
+            set
+            {
+                m_InputField.isReadOnly = value;
+            }
+        }
+        
+        /// <summary>
+        /// The TextField mask character.
+        /// </summary>
+        public char maskChar
+        {
+            get => m_InputField.maskChar;
+            set
+            {
+                m_InputField.maskChar = value;
+            }
+        }
+        
+        /// <summary>
+        /// The TextField max length.
+        /// </summary>
+        public int maxLength
+        {
+            get => m_InputField.maxLength;
+            set
+            {
+                m_InputField.maxLength = value;
             }
         }
 
@@ -426,6 +486,30 @@ namespace Unity.AppUI.UI
                 name = "value",
                 defaultValue = null
             };
+            
+            readonly UxmlBoolAttributeDescription m_IsPassword = new UxmlBoolAttributeDescription
+            {
+                name = "is-password",
+                defaultValue = k_IsPasswordDefault
+            };
+            
+            readonly UxmlBoolAttributeDescription m_IsReadOnly = new UxmlBoolAttributeDescription
+            {
+                name = "is-read-only",
+                defaultValue = k_IsReadOnlyDefault
+            };
+            
+            readonly UxmlStringAttributeDescription m_MaskChar = new UxmlStringAttributeDescription
+            {
+                name = "mask-char",
+                defaultValue = k_MaskCharDefault.ToString()
+            };
+            
+            readonly UxmlIntAttributeDescription m_MaxLength = new UxmlIntAttributeDescription
+            {
+                name = "max-length",
+                defaultValue = k_MaxLengthDefault
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -458,6 +542,22 @@ namespace Unity.AppUI.UI
                 var trailingIconName = string.Empty;
                 if (m_TrailingIconName.TryGetValueFromBag(bag, cc, ref trailingIconName))
                     el.trailingIconName = trailingIconName;
+                
+                var isPassword = k_IsPasswordDefault;
+                if (m_IsPassword.TryGetValueFromBag(bag, cc, ref isPassword))
+                    el.isPassword = isPassword;
+                
+                var isReadOnly = k_IsReadOnlyDefault;
+                if (m_IsReadOnly.TryGetValueFromBag(bag, cc, ref isReadOnly))
+                    el.isReadOnly = isReadOnly;
+                
+                var maskChar = k_MaskCharDefault.ToString();
+                if (m_MaskChar.TryGetValueFromBag(bag, cc, ref maskChar))
+                    el.maskChar = string.IsNullOrEmpty(maskChar) ? k_MaskCharDefault : maskChar[0];
+                
+                var maxLength = k_MaxLengthDefault;
+                if (m_MaxLength.TryGetValueFromBag(bag, cc, ref maxLength))
+                    el.maxLength = maxLength;
                 
                 el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }

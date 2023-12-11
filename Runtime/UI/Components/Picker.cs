@@ -214,7 +214,7 @@ namespace Unity.AppUI.UI
             var trailingContainer = new VisualElement { name = trailingContainerUssClassName, pickingMode = PickingMode.Ignore };
             trailingContainer.AddToClassList(trailingContainerUssClassName);
 
-            var caret = new Icon { name = caretUssClassName, iconName = "caret-down", pickingMode = PickingMode.Ignore };
+            var caret = new Icon { name = caretUssClassName, pickingMode = PickingMode.Ignore };
             caret.AddToClassList(caretUssClassName);
 
             hierarchy.Add(m_TitleContainer);

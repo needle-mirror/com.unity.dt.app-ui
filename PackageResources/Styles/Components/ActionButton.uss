@@ -1,8 +1,8 @@
 /* ActionButton */
 .appui-actionbutton {
-    background-color: var(--appui-base-100);
+    background-color: var(--appui-alias-actions-background-color-default);
     border-width: var(--appui-alias-control-border-width);
-    border-color: var(--appui-base-400);
+    border-color: var(--appui-alias-actions-border-color-default);
     /*border-style: var(--appui-control-border-style);*/
     border-radius: var(--appui-alias-control-border-radius);
     cursor: var(--appui-alias-control-cursor-pointer);
@@ -19,7 +19,7 @@
 
 .appui-actionbutton--quiet {
     border-color: var(--appui-color-transparent-black-0);
-    background-color: var(--appui-color-transparent-black-0);
+    background-color: var(--appui-alias-actions-quiet-background-color-default);
 }
 
 .appui-actionbutton--icon-only {
@@ -38,7 +38,7 @@
 
 .appui-actionbutton__label {
     color: var(--appui-foregrounds-100);
-    -unity-font-style: bold; /*font-weight: var(--appui-global-font-weight-semi-bold);*/
+    -unity-font-definition: var(--appui-font-weights-200); /*font-weight: var(--appui-global-font-weight-semi-bold);*/
 }
 
 .appui-actionbutton__icon {
@@ -57,23 +57,24 @@
 }
 
 .appui-actionbutton.is-hovered {
-    background-color: var(--appui-base-200);
-    border-color: var(--appui-base-500);
+    background-color: var(--appui-alias-actions-background-color-hover);
+    border-color: var(--appui-alias-actions-border-color-hover);
     color: var(--apui-foreground-200);
 }
 
 .appui-actionbutton.is-active {
-    background-color: var(--appui-base-50);
+    background-color: var(--appui-alias-actions-background-color-active);
+    border-color: var(--appui-alias-actions-border-color-active);
 }
 
 .is-selected.appui-actionbutton {
-    background-color: var(--appui-base-300);
-    border-color: var(--appui-base-400);
+    background-color: var(--appui-alias-actions-background-color-selected);
+    border-color: var(--appui-alias-actions-border-color-selected);
 }
 
 .is-selected.appui-actionbutton--accent {
-    background-color: var(--appui-accent-100);
-    border-color: var(--appui-accent-100);
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+    border-color: var(--appui-alias-actions-border-color-selected);
 }
 
 .is-selected.appui-actionbutton .appui-actionbutton__label {
@@ -98,13 +99,13 @@
 
 .appui-actionbutton:disabled {
     cursor: var(--appui-alias-control-cursor-disabled);
-    background-color: var(--appui-base-50);
-    border-color: var(--appui-base-200);
+    background-color: var(--appui-alias-actions-background-color-disabled);
+    border-color: var(--appui-alias-actions-border-color-disabled);
 }
 
 .is-selected.appui-actionbutton:disabled {
-    background-color: var(--appui-base-50);
-    border-color: var(--appui-base-200);
+    background-color: var(--appui-alias-actions-background-color-disabled);
+    border-color: var(--appui-alias-actions-border-color-disabled);
 }
 
 .appui-actionbutton:disabled .appui-actionbutton__label {
@@ -127,14 +128,14 @@
 
 .appui-actionbutton.is-hovered:disabled {
     cursor: var(--appui-alias-control-cursor-disabled);
-    background-color: var(--appui-base-50);
-    border-color: var(--appui-base-200);
+    background-color: var(--appui-alias-actions-background-color-disabled);
+    border-color: var(--appui-alias-actions-border-color-disabled);
 }
 
 .is-selected.appui-actionbutton.is-hovered:disabled,
 .is-selected.appui-actionbutton--quiet.is-hovered:disabled {
-    background-color: var(--appui-base-50);
-    border-color: var(--appui-base-200);
+    background-color: var(--appui-alias-actions-background-color-disabled);
+    border-color: var(--appui-alias-actions-border-color-disabled);
 }
 
 .appui-actionbutton--size-s {

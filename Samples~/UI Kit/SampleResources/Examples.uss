@@ -8,6 +8,11 @@
   align-items: flex-start;
 }
 
+/*.appui--editor-dark .example,*/
+/*.appui--editor-light .example {*/
+/*  background-color: var(--appui-backgrounds-200);*/
+/*}*/
+
 .appui--rtl .example {
   align-items: flex-end;
 }
@@ -46,8 +51,8 @@
 }
 
 .example-section {
-  border-width: 1px;
-  border-color: #7B61FF;
+  /*border-width: 1px;*/
+  /*border-color: #7B61FF;*/
   border-radius: var(--appui-alias-control-border-radius);
   flex-grow: 0;
   flex-shrink: 0;
@@ -55,6 +60,7 @@
   flex-wrap: nowrap;
   width: 450px;
   max-width: 97%;
+  background-color: var(--appui-backgrounds-200);
 }
 
 .example-dropzone-container {
@@ -105,13 +111,24 @@
 
 .example-context-switcher-panel {
   position: absolute;
-  top: 100px;
-  left: auto;
-  right: 18px;
-  padding: var(--appui-spacing-250);
-  border-radius: 5px;
-  width: 150px;
+  right: var(--appui-sizing-400);
+  max-height: 90%;
+  top: 50%;
+  translate: 0 -50%;
+  border-radius: var(--appui-alias-control-border-radius);
   background-color: var(--appui-backgrounds-200);
+}
+
+.example-context-switcher-panel__content {
+  padding: var(--appui-alias-control-gap-xl) var(--appui-sizing-500) var(--appui-alias-control-gap-xl) var(--appui-alias-control-gap-xl);
+}
+
+.example-context-switcher-panel__title {
+  margin: var(--appui-alias-control-gap-lg) 0 var(--appui-alias-control-gap-md) 0;
+}
+
+.example-context-switcher-panel__switcher {
+  margin-bottom: var(--appui-alias-control-gap-lg);
 }
 
 .appui--rtl .example-context-switcher-panel {
@@ -133,7 +150,7 @@
 }
 
 .appui-swipeview {
-  background-color: var(--appui-backgrounds-200);
+  background-color: var(--appui-backgrounds-100);
 }
 
 #swipeview-distance {
@@ -176,7 +193,7 @@
 }
 
 .appui-splitview {
-  background-color: var(--appui-backgrounds-200);
+  background-color: var(--appui-backgrounds-300);
 }
 
 .example-elevation-card {
@@ -198,7 +215,7 @@
   height: 40px;
   align-items: stretch;
   border-radius: var(--appui-alias-control-border-radius);
-  background-color: var(--appui-backgrounds-200);
+  background-color: var(--appui-backgrounds-100);
 }
 
 .badge-container-circular-example {

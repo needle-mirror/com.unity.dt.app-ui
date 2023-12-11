@@ -1,6 +1,12 @@
 ---
-uid: system-requirements
+uid: requirements
 ---
+
+# Pre-requisites
+
+App UI Unity Package consists mainly of a set of [UI Toolkit](xref:UIElements) components. 
+If you are not familiar with UI Toolkit, we recommend you to read the [UI Toolkit documentation](xref:UIElements)
+and the overall [Unity Documentation](https://docs.unity3d.com/Manual/index.html) before using App UI.
 
 # System Requirements
 

@@ -7,8 +7,8 @@
     /*border-style: var(--appui-control-border-style);*/
     border-radius: var(--appui-alias-control-border-radius);
     /*gap: var(--appui-control-gap);*/
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-400);
+    background-color: var(--appui-alias-field-background-color-default);
+    border-color: var(--appui-alias-field-border-color-default);
     cursor: var(--appui-alias-control-cursor-text);
     color: var(--appui-foregrounds-50);
     width: 100%;
@@ -87,14 +87,14 @@
 }
 
 .appui-textarea__placeholder {
-    color: var(--appui-foregrounds-50);
+    color: var(--appui-foregrounds-25);
     position: absolute;
     align-self: flex-start;
 }
 
 .appui-textarea:hover {
-    background-color: var(--appui-base-200);
-    border-color: var(--appui-base-500);
+    background-color: var(--appui-alias-field-background-color-hover);
+    border-color: var(--appui-alias-field-border-color-hover);
 }
 
 .appui-textarea:hover .appui-textarea__input {
@@ -102,8 +102,8 @@
 }
 
 .appui-textarea.is-focused {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-accent-100);
+    background-color: var(--appui-alias-field-background-color-focus);
+    border-color: var(--appui-alias-field-border-color-focus);
 }
 
 .appui-textarea.keyboard-focus {
@@ -121,8 +121,8 @@
 }
 
 .appui-textarea:active {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-500);
+    background-color: var(--appui-alias-field-background-color-active);
+    border-color: var(--appui-alias-field-border-color-active);
 }
 
 .appui-textarea:active .appui-textarea__input {
@@ -130,14 +130,14 @@
 }
 
 .is-invalid.appui-textarea {
-    border-color: var(--appui-destructive-100);
+    border-color: var(--appui-alias-field-border-color-invalid);
 }
 
 .appui-textarea:disabled, /*.is-disabled.appui-textarea*/
 .appui-textarea:hover:disabled /*.is-disabled.appui-textarea*/
 {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-400);
+    background-color: var(--appui-alias-field-background-color-disabled);
+    border-color: var(--appui-alias-field-border-color-disabled);
     color: var(--appui-foregrounds-25);
     cursor: var(--appui-alias-control-cursor-disabled);
 }

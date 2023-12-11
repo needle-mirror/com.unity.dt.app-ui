@@ -8,9 +8,9 @@
     /* Nothing */ /* converted from : border-style: var(--appui-control-border-style); */
     border-radius: var(--appui-alias-control-border-radius);
     cursor: var(--appui-alias-control-cursor-pointer);
-    font-size: var(--appui-font-sizes-body-sm);
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-400);
+    font-size: var(--appui-font-sizes-body-md);
+    background-color: var(--appui-alias-actions-background-color-default);
+    border-color: var(--appui-alias-actions-border-color-default);
     color: var(--appui-foregrounds-100);
     flex-shrink: 0;
 }
@@ -60,11 +60,11 @@
 }
 
 .appui-button__title {
-    -unity-font-style: bold; /* converted from : font-weight: var(--appui-global-font-weight-semi-bold); */
+    -unity-font-definition: var(--appui-font-weights-200); /* converted from : font-weight: var(--appui-global-font-weight-semi-bold); */
 }
 
 .appui-button__subtitle {
-    font-size: var(--appui-font-sizes-body-xs);
+    font-size: var(--appui-font-sizes-body-sm);
     color: var(--appui-foregrounds-50);
 }
 
@@ -123,14 +123,15 @@
     margin-right: 0; /* todo remove this when gap will be supported */
 }
 
-.appui-button--accent {
+.appui-button--accent,
+.appui-button--primary {
     background-color: var(--appui-accent-100);
     border-width: 0;
 }
 
 .appui-button--destructive {
     border-width: 0;
-    background-color: var(--appui-destructive-100);
+    background-color: var(--appui-alias-actions-destructive-default);
 }
 
 .appui-button--quiet {
@@ -139,48 +140,55 @@
 }
 
 .appui-button--accent,
+.appui-button--primary,
 .appui-button--destructive {
     color: var(--appui-color-white);
 }
 
 .appui-button--accent.appui-button--quiet,
+.appui-button--primary.appui-button--quiet,
 .appui-button--destructive.appui-button--quiet {
     color: var(--appui-foregrounds-100);
 }
 
 .appui-button--accent .appui-button__subtitle,
+.appui-button--primary .appui-button__subtitle,
 .appui-button--destructive .appui-button__subtitle {
     color: var(--appui-color-transparent-white-600);
 }
 
 .appui-button--accent.appui-button--quiet .appui-button__subtitle,
+.appui-button--primary.appui-button--quiet .appui-button__subtitle,
 .appui-button--destructive.appui-button--quiet .appui-button__subtitle {
     color: var(--appui-foregrounds-50);
 }
 
 .appui-button--accent .appui-icon,
+.appui-button--primary .appui-icon,
 .appui-button--destructive .appui-icon {
     --unity-image-tint-color: var(--appui-color-white); /* converted from : fill: var(--appui-color-white); */
 }
 
 .appui-button--accent.appui-button--quiet .appui-icon,
+.appui-button--primary.appui-button--quiet .appui-icon,
 .appui-button--destructive.appui-button--quiet .appui-icon {
     --unity-image-tint-color: var(--appui-foregrounds-100); /* converted from : fill: var(--appui-foregrounds-100); */
 }
 
 .appui-button.is-hovered {
-    background-color: var(--appui-base-200);
-    border-color: var(--appui-base-500);
+    background-color: var(--appui-alias-actions-background-color-hover);
+    border-color: var(--appui-alias-actions-border-color-hover);
     color: var(--appui-foregrounds-200);
 }
 
-.appui-button--accent.is-hovered {
+.appui-button--accent.is-hovered,
+.appui-button--primary.is-hovered {
     background-color: var(--appui-accent-50);
     color: var(--appui-color-white);
 }
 
 .appui-button--destructive.is-hovered {
-    background-color: var(--appui-destructive-50);
+    background-color: var(--appui-alias-actions-destructive-hover);
     color: var(--appui-color-white);
 }
 
@@ -195,45 +203,49 @@
 }
 
 .appui-button.is-active {
-    background-color: var(--appui-base-50);
-    border-color: var(--appui-base-400);
+    background-color: var(--appui-alias-actions-background-color-active);
+    border-color: var(--appui-alias-actions-border-color-active);
     color: var(--appui-foregrounds-200);
 }
 
-.appui-button--accent.is-active {
+.appui-button--accent.is-active,
+.appui-button--primary.is-active {
     background-color: var(--appui-accent-25);
     color: var(--appui-color-white);
 }
 
 .appui-button--destructive.is-active {
-    background-color: var(--appui-destructive-25);
+    background-color: var(--appui-alias-actions-destructive-active);
     color: var(--appui-color-white);
 }
 
 .appui-button--accent.is-hovered .appui-icon,
+.appui-button--primary.is-hovered .appui-icon,
 .appui-button--destructive.is-hovered .appui-icon,
 .appui-button--accent.is-active .appui-icon,
+.appui-button--primary.is-active .appui-icon,
 .appui-button--destructive.is-active .appui-icon {
     --unity-image-tint-color: var(--appui-color-white); /* converted from : fill: var(--appui-color-white); */
 }
 
 .appui-button:disabled {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-300);
+    background-color: var(--appui-alias-actions-background-color-disabled);
+    border-color: var(--appui-alias-actions-border-color-disabled);
     cursor: var(--appui-alias-control-cursor-disabled);
     color: var(--appui-foregrounds-25);
 }
 
-.appui-button--accent:disabled {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-300);
+.appui-button--accent:disabled,
+.appui-button--primary:disabled {
+    background-color: var(--appui-alias-actions-background-color-disabled);
+    border-color: var(--appui-alias-actions-border-color-disabled);
     cursor: var(--appui-alias-control-cursor-disabled);
     color: var(--appui-foregrounds-25);
 }
 
 .appui-button--destructive:disabled {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-300);
+    background-color: var(--appui-alias-actions-background-color-disabled);
+    border-color: var(--appui-alias-actions-border-color-disabled);
     cursor: var(--appui-alias-control-cursor-disabled);
     color: var(--appui-foregrounds-25);
 }
@@ -243,6 +255,7 @@
 }
 
 .appui-button--accent:disabled .appui-icon,
+.appui-button--primary:disabled .appui-icon,
 .appui-button--destructive:disabled .appui-icon {
     --unity-image-tint-color: var(--appui-foregrounds-25); /* converted from : fill: var(--appui-foregrounds-25); */
 }

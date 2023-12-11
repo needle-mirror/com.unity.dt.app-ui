@@ -9,7 +9,7 @@
 }
 
 .appui-drawer-header__title {
-    -unity-font-style: bold;
+    -unity-font-definition: var(--appui-font-weights-200);
     font-size: var(--appui-font-sizes-heading-md);
     color: var(--appui-foregrounds-100);
     white-space: nowrap;

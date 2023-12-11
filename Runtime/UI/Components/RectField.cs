@@ -69,17 +69,25 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
 
+            var xFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_XField = new FloatField { name = xFieldUssClassName, unit = "X" };
-            m_XField.AddToClassList(xFieldUssClassName);
+            xFieldContainer.AddToClassList(xFieldUssClassName);
+            xFieldContainer.Add(m_XField);
 
+            var yFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_YField = new FloatField { name = yFieldUssClassName, unit = "Y" };
-            m_YField.AddToClassList(yFieldUssClassName);
+            yFieldContainer.AddToClassList(yFieldUssClassName);
+            yFieldContainer.Add(m_YField);
 
+            var wFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_WField = new FloatField { name = wFieldUssClassName, unit = "W" };
-            m_WField.AddToClassList(wFieldUssClassName);
+            wFieldContainer.AddToClassList(wFieldUssClassName);
+            wFieldContainer.Add(m_WField);
 
+            var hFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_HField = new FloatField { name = hFieldUssClassName, unit = "H" };
-            m_HField.AddToClassList(hFieldUssClassName);
+            hFieldContainer.AddToClassList(hFieldUssClassName);
+            hFieldContainer.Add(m_HField);
 
             var positionLabel = new Text("Position") { size = TextSize.S, pickingMode = PickingMode.Ignore };
             positionLabel.AddToClassList(labelUssClassName);
@@ -89,14 +97,14 @@ namespace Unity.AppUI.UI
             var positionRow = new VisualElement { name = rowUssClassName, pickingMode = PickingMode.Ignore };
             positionRow.AddToClassList(rowUssClassName);
             positionRow.Add(positionLabel);
-            positionRow.Add(m_XField);
-            positionRow.Add(m_YField);
+            positionRow.Add(xFieldContainer);
+            positionRow.Add(yFieldContainer);
 
             var sizeRow = new VisualElement { name = rowUssClassName, pickingMode = PickingMode.Ignore };
             sizeRow.AddToClassList(rowUssClassName);
             sizeRow.Add(sizeLabel);
-            sizeRow.Add(m_WField);
-            sizeRow.Add(m_HField);
+            sizeRow.Add(wFieldContainer);
+            sizeRow.Add(hFieldContainer);
 
             hierarchy.Add(positionRow);
             hierarchy.Add(sizeRow);

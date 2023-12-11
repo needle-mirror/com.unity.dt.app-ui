@@ -88,6 +88,12 @@ namespace Unity.AppUI.Samples
                     case 2:
                         panel.theme = "light";
                         break;
+                    case 3:
+                        panel.theme = "editor-dark";
+                        break;
+                    case 4:
+                        panel.theme = "editor-light";
+                        break;
                 }
                 PlayerPrefs.SetInt("theme", themeSwitcher.value);
             }

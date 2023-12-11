@@ -129,7 +129,7 @@
 }
 
 .appui-slider__label {
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-body-md);
     color: var(--appui-foregrounds-100);
     white-space: nowrap;
     overflow: hidden;
@@ -144,7 +144,7 @@
 }
 
 .appui-slider__valuelabel {
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-body-md);
     color: var(--appui-foregrounds-100);
     white-space: nowrap;
     margin-left: var(--appui-alias-control-gap-md);
@@ -228,7 +228,7 @@
 .appui-slider__ticklabel {
     color: var(--appui-foregrounds-50);
     position: absolute;
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-body-md);
     top: var(--appui-sizing-300);
     flex-shrink: 0;
 }

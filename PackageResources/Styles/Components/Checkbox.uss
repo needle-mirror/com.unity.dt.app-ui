@@ -43,7 +43,7 @@
 
 .appui-checkbox__label {
     flex: 1;
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-body-md);
     overflow: hidden;
     -unity-text-overflow-position: end;
     text-overflow: ellipsis;

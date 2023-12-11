@@ -84,9 +84,9 @@ namespace Unity.AppUI.UI
         public Text(string text)
         {
             AddToClassList(ussClassName);
-
+            
             pickingMode = PickingMode.Position; // tooltip support
-
+            
             this.text = text;
             size = TextSize.M;
             primary = true;

@@ -55,14 +55,18 @@ namespace Unity.AppUI.UI
             var container = new VisualElement { name = containerUssClassName };
             container.AddToClassList(containerUssClassName);
 
+            var xFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_XField = new IntField { name = xFieldUssClassName, unit = "X" };
-            m_XField.AddToClassList(xFieldUssClassName);
+            xFieldContainer.AddToClassList(xFieldUssClassName);
+            xFieldContainer.Add(m_XField);
 
+            var yFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_YField = new IntField { name = yFieldUssClassName, unit = "Y" };
-            m_YField.AddToClassList(yFieldUssClassName);
+            yFieldContainer.AddToClassList(yFieldUssClassName);
+            yFieldContainer.Add(m_YField);
 
-            container.Add(m_XField);
-            container.Add(m_YField);
+            container.Add(xFieldContainer);
+            container.Add(yFieldContainer);
 
             hierarchy.Add(container);
 

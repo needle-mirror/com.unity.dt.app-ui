@@ -34,6 +34,13 @@ For example, if the current theme is `dark`, the context will be defined as `dar
 and the corresponding USS class `appui--dark` will be applied to the context provider element 
 that sets the context.
 
+Currently, App UI provides four themes: 
+
+- `light` 
+- `dark` (default)
+- `editor-light`
+- `editor-dark`
+
 ### Language
 
 The language context provides a way to translate your UI into different languages. 
@@ -52,6 +59,12 @@ which you can use to load the correct translation for your UI.
 The scale context provides a way to adjust the size of the UI based on the device's 
 pixel density. You can define different scaling factors for different devices, 
 and the UI will automatically adjust to the appropriate size.
+
+Currently, App UI provides three scaling factors:
+
+- `small`
+- `medium` (default)
+- `large`
 
 ### Layout Direction
 

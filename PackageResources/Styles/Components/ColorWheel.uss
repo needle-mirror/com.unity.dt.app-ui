@@ -40,9 +40,9 @@
 
     --box-shadow-offset-x: 0;
     --box-shadow-offset-y: 2;
-    --box-shadow-spread: 6;
-    --box-shadow-blur: 4;
-    --box-shadow-color: rgba(0,0,0,.75);
+    --box-shadow-spread: 3;
+    --box-shadow-blur: 2;
+    --box-shadow-color: rgba(0,0,0,.5);
 
     scale: 1.0;
     transition: scale var(--appui-animation-easing-ease-out) var(--appui-animation-duration-50);
@@ -112,9 +112,9 @@
 
     --box-shadow-offset-x: 0;
     --box-shadow-offset-y: 2;
-    --box-shadow-spread: 6;
-    --box-shadow-blur: 4;
-    --box-shadow-color: rgba(0,0,0,.75);
+    --box-shadow-spread: 3;
+    --box-shadow-blur: 2;
+    --box-shadow-color: rgba(0,0,0,.5);
     background-color: var(--appui-color-white);
 
     scale: 1.0;

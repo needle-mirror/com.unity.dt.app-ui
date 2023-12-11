@@ -154,6 +154,7 @@
     --appui-font-sizes-100: 12px;
     --appui-font-sizes-75: 10px;
     --appui-font-sizes-50: 8px;
+    --appui-font-sizes-25: 6px;
     --appui-border-width-lg: 4px;
     --appui-border-width-md: 2px;
     --appui-border-width-sm: 1px;
@@ -165,20 +166,9 @@
     --appui-border-radius-md: 3px;
     --appui-border-radius-sm: 2px;
     --appui-border-radius-xs: 1px;
-    --appui-font-sizes-heading-xxs: var(--appui-font-sizes-100);
-    --appui-font-sizes-heading-xs: var(--appui-font-sizes-200);
-    --appui-font-sizes-heading-sm: var(--appui-font-sizes-300);
-    --appui-font-sizes-heading-md: var(--appui-font-sizes-500);
-    --appui-font-sizes-heading-lg: var(--appui-font-sizes-700);
-    --appui-font-sizes-heading-xl: var(--appui-font-sizes-900);
-    --appui-font-sizes-heading-xxl: var(--appui-font-sizes-1100);
-    --appui-font-sizes-heading-xxxl: var(--appui-font-sizes-1300);
-    --appui-font-sizes-body-xxs: var(--appui-font-sizes-50);
-    --appui-font-sizes-body-xs: var(--appui-font-sizes-75);
-    --appui-font-sizes-body-sm: var(--appui-font-sizes-100);
-    --appui-font-sizes-body-md: var(--appui-font-sizes-200);
-    --appui-font-sizes-body-lg: var(--appui-font-sizes-300);
-    --appui-font-sizes-body-xl: var(--appui-font-sizes-400);
-    --appui-font-sizes-body-xxl: var(--appui-font-sizes-500);
-    --appui-font-sizes-body-xxxl: var(--appui-font-sizes-600);
+    --appui-font-weights-150: url("../../Fonts/Inter-Regular SDF.asset");
+    --appui-font-weights-200: url("../../Fonts/Inter-Regular SDF.asset");
+    --appui-font-weights-300: url("../../Fonts/Inter-Regular SDF.asset");
+    --appui-font-weights-400: url("../../Fonts/Inter-SemiBold SDF.asset");
+    --appui-font-weights-500: url("../../Fonts/Inter-Bold SDF.asset");
 }

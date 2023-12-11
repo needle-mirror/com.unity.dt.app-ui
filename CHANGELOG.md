@@ -4,6 +4,26 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-pre.10] - 2023-12-12
+
+### Fixed
+
+- Fixed auto scrolling to follow text edition's cursor in TextArea component.
+- Fixed layout for Bounds, Rect and Vector fields
+- Fixed some examples in the UI Kit Sample
+
+### Added
+
+- Added `maxLength` property in TextArea and TextField components.
+- Added `isPassword` and `maskChar` properties to TextField component.
+- Added Editor-Dark and Editor-Light themes.
+- Added `isReadonly` property to TextArea and TextField components.
+
+### Changed
+
+- Readjusted font sizes used on components to follow new design tokens
+- Most App UI component styling now use component-level design tokens for background and border colors
+
 ## [1.0.0-pre.9] - 2023-12-05
 
 ### Fixed

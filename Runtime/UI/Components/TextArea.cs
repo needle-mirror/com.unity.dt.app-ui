@@ -36,12 +36,18 @@ namespace Unity.AppUI.UI
         /// The TextArea placeholder styling class.
         /// </summary>
         public static readonly string placeholderUssClassName = ussClassName + "__placeholder";
+        
+        const bool k_IsReadOnlyDefault = false;
+        
+        const int k_MaxLengthDefault = -1;
 
         readonly UnityEngine.UIElements.TextField m_InputField;
 
         readonly LocalizedTextElement m_Placeholder;
 
+#if !UNITY_2022_1_OR_NEWER
         readonly ScrollView m_ScrollView;
+#endif
 
         Size m_Size;
 
@@ -85,19 +91,6 @@ namespace Unity.AppUI.UI
             this.SetExcludeFromFocusRing(true);
             delegatesFocus = true;
 
-            m_ScrollView = new ScrollView
-            {
-                name = scrollViewUssClassName,
-                elasticity = 0,
-                horizontalScrollerVisibility = ScrollerVisibility.Auto,
-                verticalScrollerVisibility = ScrollerVisibility.Auto,
-#if (UNITY_2021_3 && UNITY_2021_3_NIK) || (UNITY_2022_1 && UNITY_2022_1_NIK) || (UNITY_2022_2 && UNITY_2022_2_NIK) || UNITY_2022_3 || (UNITY_2023_1 && UNITY_2023_1_NIK) || UNITY_2023_2_OR_NEWER
-                nestedInteractionKind = ScrollView.NestedInteractionKind.StopScrolling,
-#endif
-            };
-            m_ScrollView.AddToClassList(scrollViewUssClassName);
-            hierarchy.Add(m_ScrollView);
-
             m_Placeholder = new LocalizedTextElement
             {
                 name = placeholderUssClassName,
@@ -110,7 +103,33 @@ namespace Unity.AppUI.UI
             m_InputField = new UnityEngine.UIElements.TextField { name = inputUssClassName, multiline = true };
             m_InputField.AddToClassList(inputUssClassName);
             m_InputField.BlinkingCursor();
+#if UNITY_2022_1_OR_NEWER
+#if UNITY_2023_1_OR_NEWER
+            m_InputField.verticalScrollerVisibility = ScrollerVisibility.Auto;
+#else
+            m_InputField.SetVerticalScrollerVisibility(ScrollerVisibility.Auto);
+#endif
+            m_InputField.style.position = Position.Absolute;
+            m_InputField.style.top = 0;
+            m_InputField.style.left = 0;
+            m_InputField.style.right = 0;
+            m_InputField.style.bottom = 0;
+            hierarchy.Add(m_InputField);
+#else
+            m_ScrollView = new ScrollView
+            {
+                name = scrollViewUssClassName,
+                elasticity = 0,
+                horizontalScrollerVisibility = ScrollerVisibility.Auto,
+                verticalScrollerVisibility = ScrollerVisibility.Auto,
+#if (UNITY_2021_3 && UNITY_2021_3_NIK) || (UNITY_2022_1 && UNITY_2022_1_NIK) || (UNITY_2022_2 && UNITY_2022_2_NIK) || UNITY_2022_3 || (UNITY_2023_1 && UNITY_2023_1_NIK) || UNITY_2023_2_OR_NEWER
+                nestedInteractionKind = ScrollView.NestedInteractionKind.StopScrolling,
+#endif
+            };
+            m_ScrollView.AddToClassList(scrollViewUssClassName);
+            hierarchy.Add(m_ScrollView);
             m_ScrollView.Add(m_InputField);
+#endif
 
             m_ResizeHandle = new VisualElement
             {
@@ -122,6 +141,8 @@ namespace Unity.AppUI.UI
             var dragManipulator = new Draggable(null, OnDrag, null);
             m_ResizeHandle.AddManipulator(dragManipulator);
             m_ResizeHandle.RegisterCallback<ClickEvent>(OnResizeHandleClicked);
+            
+            isReadOnly = k_IsReadOnlyDefault;
 
             SetValueWithoutNotify(value);
             m_InputField.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
@@ -273,6 +294,24 @@ namespace Unity.AppUI.UI
             get => ClassListContains(Styles.invalidUssClassName);
             set => EnableInClassList(Styles.invalidUssClassName, value);
         }
+        
+        /// <summary>
+        /// Whether the TextArea is read-only.
+        /// </summary>
+        public bool isReadOnly
+        {
+            get => m_InputField.isReadOnly;
+            set => m_InputField.isReadOnly = value;
+        }
+        
+        /// <summary>
+        /// The maximum length of the TextArea.
+        /// </summary>
+        public int maxLength
+        {
+            get => m_InputField.maxLength;
+            set => m_InputField.maxLength = value;
+        }
 
         /// <summary>
         /// Automatically resize the <see cref="TextArea"/> if the content is larger than the current size.
@@ -414,6 +453,18 @@ namespace Unity.AppUI.UI
                 name = "submit-modifiers",
                 defaultValue = EventModifiers.None
             };
+            
+            readonly UxmlBoolAttributeDescription m_IsReadOnly = new()
+            {
+                name = "is-read-only",
+                defaultValue = k_IsReadOnlyDefault
+            };
+            
+            readonly UxmlIntAttributeDescription m_MaxLength = new()
+            {
+                name = "max-length",
+                defaultValue = k_MaxLengthDefault
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -433,6 +484,8 @@ namespace Unity.AppUI.UI
                 el.disabled = m_Disabled.GetValueFromBag(bag, cc);
                 el.submitOnEnter = m_SubmitOnEnter.GetValueFromBag(bag, cc);
                 el.submitModifiers = m_SubmitModifiers.GetValueFromBag(bag, cc);
+                el.isReadOnly = m_IsReadOnly.GetValueFromBag(bag, cc);
+                el.maxLength = m_MaxLength.GetValueFromBag(bag, cc);
             }
         }
     }

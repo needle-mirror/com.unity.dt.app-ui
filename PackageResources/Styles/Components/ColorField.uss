@@ -53,7 +53,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     -unity-text-overflow-position: end;
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-body-md);
     -unity-text-align: middle-left;
 }
 

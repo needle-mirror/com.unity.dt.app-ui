@@ -132,13 +132,13 @@
 
 .appui-toast__message {
     color: var(--appui-foregrounds-200);
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-body-md);
     flex-shrink: 0;
 }
 
 .appui-toast__action {
-    font-size: var(--appui-font-sizes-body-sm);
-    -unity-font-style: bold; /*font-weight: 600;*/
+    font-size: var(--appui-font-sizes-body-md);
+    -unity-font-definition: var(--appui-font-weights-200); /*font-weight: 600;*/
     color: var(--appui-foregrounds-200);
     background-color: var(--appui-color-transparent-black-0);
     border-width: 0;

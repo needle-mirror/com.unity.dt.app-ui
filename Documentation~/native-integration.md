@@ -45,6 +45,9 @@ void OnSystemThemeChanged(string systemTheme) => provider.theme = systemTheme;
 
 // Setup the RadioGroup
 var themeSwitcher = new RadioGroup();
+themeSwitcher.Add(new Radio("System"));
+themeSwitcher.Add(new Radio("Dark"));
+themeSwitcher.Add(new Radio("Light"));
 void SetTheme()
 {
     Platform.systemThemeChanged -= OnSystemThemeChanged;

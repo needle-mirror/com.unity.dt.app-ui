@@ -80,7 +80,7 @@
 .appui-chip__label {
     display: flex;
     flex-shrink: 0;
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-body-md);
     padding-left: var(--appui-spacing-250);
     padding-right: var(--appui-spacing-250);
     -unity-text-align: middle-center;

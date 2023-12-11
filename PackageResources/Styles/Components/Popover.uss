@@ -31,9 +31,9 @@
     border-radius: var(--appui-alias-control-border-radius);
     background-color: var(--appui-backgrounds-200);
 
-    --box-shadow-offset-y: 10;
-    --box-shadow-spread: 20;
-    --box-shadow-blur: 15;
+    --box-shadow-offset-y: 6;
+    --box-shadow-spread: 8;
+    --box-shadow-blur: 8;
     --box-shadow-color: rgba(0,0,0,.65);
 }
 
@@ -52,7 +52,7 @@
 
 .appui-popover--menu .appui-popover__container {
     background-color: var(--appui-base-100);
-    border-color: var(--appui-base-400);
+    border-color: var(--appui-alias-menu-border-color-default);
     border-radius: var(--appui-alias-control-border-radius);
     border-width: var(--appui-alias-control-border-width);
 

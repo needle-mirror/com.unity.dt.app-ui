@@ -24,11 +24,12 @@
 }
 
 .unity-base-text-field__input--placeholder {
-    color: var(--appui-foregrounds-100);
+    color: var(--appui-foregrounds-50);
 }
 
 .unity-base-text-field__input,
 .unity-base-text-field__input * {
+    color: var(--appui-foregrounds-100);
     cursor: var(--appui-alias-control-cursor-text);
 }
 

@@ -62,18 +62,24 @@ namespace Unity.AppUI.UI
             var container = new VisualElement { name = containerUssClassName };
             container.AddToClassList(containerUssClassName);
 
+            var xFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_XField = new FloatField { name = xFieldUssClassName, unit = "X" };
-            m_XField.AddToClassList(xFieldUssClassName);
+            xFieldContainer.AddToClassList(xFieldUssClassName);
+            xFieldContainer.Add(m_XField);
 
+            var yFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_YField = new FloatField { name = yFieldUssClassName, unit = "Y" };
-            m_YField.AddToClassList(yFieldUssClassName);
+            yFieldContainer.AddToClassList(yFieldUssClassName);
+            yFieldContainer.Add(m_YField);
 
+            var zFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_ZField = new FloatField { name = zFieldUssClassName, unit = "Z" };
-            m_ZField.AddToClassList(zFieldUssClassName);
+            zFieldContainer.AddToClassList(zFieldUssClassName);
+            zFieldContainer.Add(m_ZField);
 
-            container.Add(m_XField);
-            container.Add(m_YField);
-            container.Add(m_ZField);
+            container.Add(xFieldContainer);
+            container.Add(yFieldContainer);
+            container.Add(zFieldContainer);
 
             hierarchy.Add(container);
 

@@ -359,6 +359,16 @@ namespace Unity.AppUI.Editor
                     m_CurrentTheme = "light";
                     panel.theme = m_CurrentTheme;
                 });
+                menu.AddItem(new GUIContent("Editor Dark"), m_CurrentTheme == "editor-dark", () =>
+                {
+                    m_CurrentTheme = "editor-dark";
+                    panel.theme = m_CurrentTheme;
+                });
+                menu.AddItem(new GUIContent("Editor Light"), m_CurrentTheme == "editor-light", () =>
+                {
+                    m_CurrentTheme = "editor-light";
+                    panel.theme = m_CurrentTheme;
+                });
                 menu.DropDown(m_ThemeDropdown.worldBound);
             });
             toolbar.Add(m_ThemeDropdown);
@@ -491,6 +501,9 @@ namespace Unity.AppUI.Editor
                 container.Add(uiElement);
             }
 
+            var panel = container.GetFirstAncestorOfType<Panel>();
+            panel.theme = m_CurrentTheme;
+            panel.scale = m_CurrentScale;
         }
 
         void BindListViewItem(VisualElement ve, int idx)

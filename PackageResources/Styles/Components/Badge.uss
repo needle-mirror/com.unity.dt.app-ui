@@ -61,7 +61,7 @@
 }
 
 .appui-badge__label.appui-text {
-    -unity-font-style: bold;
+    -unity-font-definition: var(--appui-font-weights-200);
     font-size: var(--appui-font-sizes-50);
     color: var(--appui-color-white);
     overflow: hidden;

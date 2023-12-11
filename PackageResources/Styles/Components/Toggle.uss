@@ -184,7 +184,7 @@
 }
 
 .appui-toggle__label {
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-body-md);
     color: var(--appui-foregrounds-100);
 }
 

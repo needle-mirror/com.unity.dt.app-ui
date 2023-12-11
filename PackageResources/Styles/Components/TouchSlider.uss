@@ -1,7 +1,7 @@
 /* TouchSlider */
 .appui-touchslider {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-300);
+    background-color: var(--appui-alias-field-background-color-default);
+    border-color: var(--appui-alias-control-border-color-default);
     border-radius: var(--appui-alias-control-border-radius);
     border-width: var(--appui-alias-control-border-width);
     display: flex;
@@ -69,7 +69,7 @@
     -unity-text-align: middle-left;
     left: var(--appui-alias-control-gap-md);
     right: auto;
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-body-md);
     color: var(--appui-foregrounds-50);
     transition: color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-100);
 }
@@ -85,7 +85,7 @@
     right: var(--appui-alias-control-gap-md);
     -unity-text-align: middle-right;
     position: absolute;
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-body-md);
     color: var(--appui-foregrounds-50);
     transition: color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-100);
 }
@@ -97,12 +97,12 @@
 }
 
 .appui-touchslider:hover {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-500);
+    background-color: var(--appui-alias-field-background-color-hover);
+    border-color: var(--appui-alias-control-border-color-hover);
 }
 
 .appui-touchslider.is-focused {
-    background-color: var(--appui-base-100);
+    background-color: var(--appui-alias-field-background-color-focus);
     border-color: var(--appui-accent-100);
 }
 
@@ -117,8 +117,8 @@
 }
 
 .appui-touchslider:active {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-400);
+    background-color: var(--appui-alias-field-background-color-active);
+    border-color: var(--appui-alias-control-border-color-active);
 }
 
 .appui-touchslider:active > .appui-touchslider__label {
@@ -134,8 +134,8 @@
 }
 
 .appui-touchslider:disabled /*.appui-touchslider.is-disabled*/ {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-400);
+    background-color: var(--appui-alias-field-background-color-disabled);
+    border-color: var(--appui-alias-control-border-color-disabled);
     cursor: var(--appui-alias-control-cursor-disabled);
 }
 

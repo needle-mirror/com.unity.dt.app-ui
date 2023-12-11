@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "1.0.0-pre.9",
+  "version": "1.0.0-pre.10",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,7 +25,7 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "f57162142f369282a3ceb27b89769a3d8a1ebc61"
+    "revision": "695ae6f9c21c826bd3bc2fc3f753a6e1a9f45ad5"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -82,10 +82,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed Selection handling in ActionGroup.\n- Fixed MacOS Native plugin to support Intel 64bits architecture with IL2CPP\n\n### Changed\n\n- In Numerical fields and sliders, the string formatting for percentage values follows now the C# standard. The formatted string of the value `1` using `0P` or `0%` will give you `100%`. If you want the user to be able to type `100` in order to get a `100%` as a formatted string in a numerical field, we suggest to use `0\\%` string format (be sure that the `highValue` of your field is set to `100` too).\n\n### Added\n\n- Added `isOpen` property setter to be able to set the open state of the `Drawer` component without animation."
+    "changelog": "### Fixed\n\n- Fixed auto scrolling to follow text edition's cursor in TextArea component.\n- Fixed layout for Bounds, Rect and Vector fields\n- Fixed some examples in the UI Kit Sample\n\n### Added\n\n- Added `maxLength` property in TextArea and TextField components.\n- Added `isPassword` and `maskChar` properties to TextField component.\n- Added Editor-Dark and Editor-Light themes.\n- Added `isReadonly` property to TextArea and TextField components.\n\n### Changed\n\n- Readjusted font sizes used on components to follow new design tokens\n- Most App UI component styling now use component-level design tokens for background and border colors"
   },
   "upmCi": {
-    "footprint": "48aff3994b1904d9a5620515b5219968879e5a5d"
+    "footprint": "b7ae11c5af651a4c838abe29718d93df19f6e42a"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@1.0/manual/index.html"
 }

@@ -69,7 +69,7 @@
 }
 
 .appui-listview-item__title {
-  -unity-font-style: bold;
+  -unity-font-definition: var(--appui-font-weights-200);
   font-size: var(--appui-font-sizes-100);
   color: var(--appui-foregrounds-200);
   overflow: hidden;

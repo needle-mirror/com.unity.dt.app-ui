@@ -56,8 +56,8 @@
 
 .appui-tabitem__label {
     color:var(--appui-foregrounds-100);
-    -unity-font-style: bold; /*font-weight: 700;*/
-    font-size: var(--appui-font-sizes-body-sm);
+    -unity-font-definition: var(--appui-font-weights-200); /*font-weight: 700;*/
+    font-size: var(--appui-font-sizes-body-md);
     flex-shrink: 0;
 }
 

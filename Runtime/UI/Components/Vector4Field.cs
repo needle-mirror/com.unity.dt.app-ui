@@ -66,27 +66,35 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
 
+            var xFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_XField = new FloatField { name = xFieldUssClassName, unit = "X" };
-            m_XField.AddToClassList(xFieldUssClassName);
+            xFieldContainer.AddToClassList(xFieldUssClassName);
+            xFieldContainer.Add(m_XField);
 
+            var yFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_YField = new FloatField { name = yFieldUssClassName, unit = "Y" };
-            m_YField.AddToClassList(yFieldUssClassName);
+            yFieldContainer.AddToClassList(yFieldUssClassName);
+            yFieldContainer.Add(m_YField);
 
+            var zFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_ZField = new FloatField { name = zFieldUssClassName, unit = "Z" };
-            m_ZField.AddToClassList(zFieldUssClassName);
+            zFieldContainer.AddToClassList(zFieldUssClassName);
+            zFieldContainer.Add(m_ZField);
 
+            var wFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_WField = new FloatField { name = wFieldUssClassName, unit = "W" };
-            m_WField.AddToClassList(wFieldUssClassName);
+            wFieldContainer.AddToClassList(wFieldUssClassName);
+            wFieldContainer.Add(m_WField);
 
             var xyRow = new VisualElement { name = rowUssClassName, pickingMode = PickingMode.Ignore };
             xyRow.AddToClassList(rowUssClassName);
-            xyRow.Add(m_XField);
-            xyRow.Add(m_YField);
+            xyRow.Add(xFieldContainer);
+            xyRow.Add(yFieldContainer);
 
             var zwRow = new VisualElement { name = rowUssClassName, pickingMode = PickingMode.Ignore };
             zwRow.AddToClassList(rowUssClassName);
-            zwRow.Add(m_ZField);
-            zwRow.Add(m_WField);
+            zwRow.Add(zFieldContainer);
+            zwRow.Add(wFieldContainer);
 
             hierarchy.Add(xyRow);
             hierarchy.Add(zwRow);

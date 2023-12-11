@@ -83,23 +83,35 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
 
+            var cXFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_CXField = new FloatField { name = xFieldUssClassName, unit = "X" };
-            m_CXField.AddToClassList(xFieldUssClassName);
+            cXFieldContainer.AddToClassList(xFieldUssClassName);
+            cXFieldContainer.Add(m_CXField);
 
+            var cYFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_CYField = new FloatField { name = yFieldUssClassName, unit = "Y" };
-            m_CYField.AddToClassList(yFieldUssClassName);
+            cYFieldContainer.AddToClassList(yFieldUssClassName);
+            cYFieldContainer.Add(m_CYField);
 
+            var cZFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_CZField = new FloatField { name = zFieldUssClassName, unit = "Z" };
-            m_CZField.AddToClassList(zFieldUssClassName);
+            cZFieldContainer.AddToClassList(zFieldUssClassName);
+            cZFieldContainer.Add(m_CZField);
 
+            var sXFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_SXField = new FloatField { name = sxFieldUssClassName, unit = "X" };
-            m_SXField.AddToClassList(sxFieldUssClassName);
+            sXFieldContainer.AddToClassList(sxFieldUssClassName);
+            sXFieldContainer.Add(m_SXField);
 
+            var sYFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_SYField = new FloatField { name = syFieldUssClassName, unit = "Y" };
-            m_SYField.AddToClassList(syFieldUssClassName);
+            sYFieldContainer.AddToClassList(syFieldUssClassName);
+            sYFieldContainer.Add(m_SYField);
 
+            var sZFieldContainer = new VisualElement { pickingMode = PickingMode.Ignore };
             m_SZField = new FloatField { name = szFieldUssClassName, unit = "Z" };
-            m_SZField.AddToClassList(szFieldUssClassName);
+            sZFieldContainer.AddToClassList(szFieldUssClassName);
+            sZFieldContainer.Add(m_SZField);
 
             var centerLabel = new Text("Center") { size = TextSize.S, pickingMode = PickingMode.Ignore };
             centerLabel.AddToClassList(labelUssClassName);
@@ -109,16 +121,16 @@ namespace Unity.AppUI.UI
             var centerRow = new VisualElement { name = rowUssClassName, pickingMode = PickingMode.Ignore };
             centerRow.AddToClassList(rowUssClassName);
             centerRow.Add(centerLabel);
-            centerRow.Add(m_CXField);
-            centerRow.Add(m_CYField);
-            centerRow.Add(m_CZField);
+            centerRow.Add(cXFieldContainer);
+            centerRow.Add(cYFieldContainer);
+            centerRow.Add(cZFieldContainer);
 
             var sizeRow = new VisualElement { name = rowUssClassName, pickingMode = PickingMode.Ignore };
             sizeRow.AddToClassList(rowUssClassName);
             sizeRow.Add(sizeLabel);
-            sizeRow.Add(m_SXField);
-            sizeRow.Add(m_SYField);
-            sizeRow.Add(m_SZField);
+            sizeRow.Add(sXFieldContainer);
+            sizeRow.Add(sYFieldContainer);
+            sizeRow.Add(sZFieldContainer);
 
             hierarchy.Add(centerRow);
             hierarchy.Add(sizeRow);

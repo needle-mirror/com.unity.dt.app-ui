@@ -17,6 +17,11 @@ namespace Unity.AppUI.UI
     public class Panel : ContextProvider
     {
         /// <summary>
+        /// Main Uss Class Name.
+        /// </summary>
+        public new static readonly string ussClassName = "appui";
+        
+        /// <summary>
         /// The name of the main UI layer.
         /// </summary>
         public const string mainContainerName = "main-container";
@@ -53,6 +58,8 @@ namespace Unity.AppUI.UI
         /// </summary>
         public Panel()
         {
+            AddToClassList(ussClassName);
+            
             // Add a layer for the main UI
             m_MainContainer = new VisualElement { name = mainContainerName, pickingMode = PickingMode.Ignore };
             SetFixedFullScreen(m_MainContainer);

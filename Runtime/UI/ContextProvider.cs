@@ -15,7 +15,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Main Uss Class Name.
         /// </summary>
-        public static readonly string ussClassName = "appui";
+        public static readonly string ussClassName = "appui-context-provider";
 
         /// <summary>
         /// Prefix used in Context USS classes.

@@ -8,7 +8,9 @@
 @import url("App UI - Dark.uss");
 @import url("App UI - Medium.uss");
 @import url("App UI - Dark.class.uss");
+@import url("App UI - Editor Dark.class.uss");
 @import url("App UI - Light.class.uss");
+@import url("App UI - Editor Light.class.uss");
 @import url("App UI - Small.class.uss");
 @import url("App UI - Medium.class.uss");
 @import url("App UI - Large.class.uss");

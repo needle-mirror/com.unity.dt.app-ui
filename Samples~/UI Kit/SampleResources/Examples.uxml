@@ -1,4 +1,4 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI" xsi="http://www.w3.org/2001/XMLSchema-instance" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
 
         <appui:Panel name="root-panel">
 
@@ -557,22 +557,22 @@
                         <ui:VisualElement class="example-section">
                             <appui:Button leading-icon="info" title="Quiet" quiet="true" />
                         </ui:VisualElement>
-                        <appui:Text text="Quiet - Primary" class="example-subtitle" />
+                        <appui:Text text="Quiet - Accent" class="example-subtitle" />
                         <ui:VisualElement class="example-section">
-                            <appui:Button leading-icon="info" title="Quiet - Primary" quiet="true" primary="true" />
+                            <appui:Button leading-icon="info" title="Quiet - Primary" quiet="true" variant="Accent" />
                         </ui:VisualElement>
                         <appui:Text text="Subtitle" class="example-subtitle" />
                         <ui:VisualElement class="example-section">
                             <appui:Button title="Title" subtitle="Subtitle" />
                         </ui:VisualElement>
-                        <appui:Text text="Primary" class="example-subtitle" />
+                        <appui:Text text="Accent" class="example-subtitle" />
                         <ui:VisualElement class="example-section">
-                            <appui:Button title="Primary button" primary="true" />
-                            <appui:Button title="Primary button" primary="true" leading-icon="info" />
+                            <appui:Button title="Primary button" variant="Accent" />
+                            <appui:Button title="Primary button" variant="Accent" leading-icon="info" />
                         </ui:VisualElement>
                         <appui:Text text="Secondary" class="example-subtitle" />
                         <ui:VisualElement class="example-section">
-                            <appui:Button title="Secondary button" primary="false" />
+                            <appui:Button title="Secondary button" />
                         </ui:VisualElement>
                         <appui:Text text="Disabled" class="example-subtitle" />
                         <ui:VisualElement class="example-section">
@@ -2245,34 +2245,39 @@
                 </ui:ScrollView>
 
                 <ui:VisualElement class="example-context-switcher-panel">
-                    <appui:Text text="&lt;b&gt;Theme&lt;/b&gt;" enable-rich-text="true" style="margin-bottom: 8px;"  />
-                    <appui:RadioGroup name="theme-switcher">
-                        <appui:Radio label="System" emphasized="true" />
-                        <appui:Radio label="Dark" emphasized="true" value="true" />
-                        <appui:Radio label="Light" emphasized="true" />
-                    </appui:RadioGroup>
-                </ui:VisualElement>
+                    <ui:ScrollView nested-interaction-kind="StopScrolling" vertical-scroller-visibility="AlwaysVisible">
+                        
+                        <ui:VisualElement class="example-context-switcher-panel__content">
 
-                <ui:VisualElement class="example-context-switcher-panel" style="margin-top: 190px;">
-                    <appui:Text text="&lt;b&gt;Scale&lt;/b&gt;" enable-rich-text="true"  style="margin-bottom: 8px;"  />
-                    <appui:RadioGroup name="scale-switcher">
-                        <appui:Radio label="Small" emphasized="true" />
-                        <appui:Radio label="Medium" value="true" emphasized="true" />
-                        <appui:Radio label="Large" emphasized="true" />
-                    </appui:RadioGroup>
-                </ui:VisualElement>
+                            <appui:Text text="&lt;b&gt;Theme&lt;/b&gt;" enable-rich-text="true" class="example-context-switcher-panel__title" />
+                            <appui:RadioGroup name="theme-switcher" class="example-context-switcher-panel__switcher" >
+                                <appui:Radio label="System" emphasized="true" />
+                                <appui:Radio label="Dark" emphasized="true" value="true" />
+                                <appui:Radio label="Light" emphasized="true" />
+                                <appui:Radio label="Editor Dark" emphasized="true" />
+                                <appui:Radio label="Editor Light" emphasized="true" />
+                            </appui:RadioGroup>
 
-                <ui:VisualElement class="example-context-switcher-panel" style="margin-top: 380px;">
-                    <appui:Text text="&lt;b&gt;Direction&lt;/b&gt;" enable-rich-text="true"  style="margin-bottom: 8px;"  />
-                    <appui:RadioGroup name="dir-switcher">
-                        <appui:Radio label="LTR" emphasized="true" value="true" />
-                        <appui:Radio label="RTL" emphasized="true" />
-                    </appui:RadioGroup>
+                            <appui:Text text="&lt;b&gt;Scale&lt;/b&gt;" enable-rich-text="true" class="example-context-switcher-panel__title" />
+                            <appui:RadioGroup name="scale-switcher" class="example-context-switcher-panel__switcher" >
+                                <appui:Radio label="Small" emphasized="true" />
+                                <appui:Radio label="Medium" value="true" emphasized="true" />
+                                <appui:Radio label="Large" emphasized="true" />
+                            </appui:RadioGroup>
+
+                            <appui:Text text="&lt;b&gt;Direction&lt;/b&gt;" enable-rich-text="true" class="example-context-switcher-panel__title" />
+                            <appui:RadioGroup name="dir-switcher" class="example-context-switcher-panel__switcher" >
+                                <appui:Radio label="LTR" emphasized="true" value="true" />
+                                <appui:Radio label="RTL" emphasized="true" />
+                            </appui:RadioGroup>
+                            
+                        </ui:VisualElement>
+                        
+                    </ui:ScrollView>
+                    
                 </ui:VisualElement>
 
             </ui:VisualElement>
-
-
 
         </appui:Panel>
 

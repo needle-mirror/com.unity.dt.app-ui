@@ -58,7 +58,7 @@
 }
 
 .appui-avatar .appui-text {
-    -unity-font-style: bold;
+    -unity-font-definition: var(--appui-font-weights-200);
     letter-spacing: -0.3px;
     overflow: hidden;
     text-overflow: ellipsis;

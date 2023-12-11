@@ -1,5 +1,5 @@
 /* ActionGroup */
-.appui-actiongroup {
+.appui-actiongroup {    
     display: flex;
     flex-direction: row;
     flex-shrink: 0;

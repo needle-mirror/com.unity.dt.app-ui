@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 #if UNITY_LOCALIZATION_PRESENT
@@ -20,6 +21,8 @@ namespace Unity.AppUI.UI
         /// The main USS class name of this element.
         /// </summary>
         public new static readonly string ussClassName = "appui-localized-text";
+        
+        static readonly CustomStyleProperty<int> k_FontWeightProperty = new ("--unity-font-weight");
 
         string m_ReferenceText;
 
