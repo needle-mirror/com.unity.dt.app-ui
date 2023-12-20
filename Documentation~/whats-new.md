@@ -10,23 +10,17 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [1.0.0-pre.10] - 2023-12-12
+## [1.0.0-pre.11] - 2023-12-21
 
 ### Fixed
 
-- Fixed auto scrolling to follow text edition's cursor in TextArea component.
-- Fixed layout for Bounds, Rect and Vector fields
-- Fixed some examples in the UI Kit Sample
-
-### Added
-
-- Added `maxLength` property in TextArea and TextField components.
-- Added `isPassword` and `maskChar` properties to TextField component.
-- Added Editor-Dark and Editor-Light themes.
-- Added `isReadonly` property to TextArea and TextField components.
+- Fixed Scroller styling.
+- Fixed styling for Disabled Quiet Button component.
+- Fixed compilation errors while not having the new Input System installed but the Input Manager setting is set to 'New' in the Project Settings.
+- Fixed border gap in TouchSlider component.
+- Fixed margins on Checkbox component without label.
 
 ### Changed
 
-- Readjusted font sizes used on components to follow new design tokens
-- Most App UI component styling now use component-level design tokens for background and border colors
+- Removed `size` property from Checkbox and Toggle components.
 

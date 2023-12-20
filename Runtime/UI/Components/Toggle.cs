@@ -13,12 +13,12 @@ namespace Unity.AppUI.UI
         /// The Toggle main styling class.
         /// </summary>
         public static readonly string ussClassName = "appui-toggle";
-
+        
         /// <summary>
         /// The Toggle size styling class.
         /// </summary>
         public static readonly string sizeUssClassName = ussClassName + "--size-";
-        
+
         /// <summary>
         /// The Toggle box styling class.
         /// </summary>
@@ -45,8 +45,6 @@ namespace Unity.AppUI.UI
         public static readonly string labelUssClassName = ussClassName + "__label";
 
         readonly LocalizedTextElement m_Label;
-
-        Size m_Size;
 
         bool m_Value;
 
@@ -89,7 +87,7 @@ namespace Unity.AppUI.UI
             hierarchy.Add(m_Box);
             hierarchy.Add(m_Label);
 
-            size = Size.M;
+            label = null;
             invalid = false;
             SetValueWithoutNotify(false);
 
@@ -112,20 +110,11 @@ namespace Unity.AppUI.UI
                 this.AddManipulator(m_Clickable);
             }
         }
-
+        
         /// <summary>
         /// The Toggle size.
         /// </summary>
-        public Size size
-        {
-            get => m_Size;
-            set
-            {
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
-                m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
-            }
-        }
+        public Size size { get; set; }
 
         /// <summary>
         /// The Toggle label.
@@ -133,7 +122,11 @@ namespace Unity.AppUI.UI
         public string label
         {
             get => m_Label.text;
-            set => m_Label.text = value;
+            set
+            {
+                m_Label.text = value;
+                m_Label.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
+            }
         }
 
         /// <summary>
@@ -219,22 +212,10 @@ namespace Unity.AppUI.UI
                 defaultValue = false
             };
 
-            readonly UxmlBoolAttributeDescription m_Emphasized = new UxmlBoolAttributeDescription
-            {
-                name = "emphasized",
-                defaultValue = false
-            };
-
             readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
             {
                 name = "label",
                 defaultValue = null
-            };
-
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
             };
 
             readonly UxmlBoolAttributeDescription m_Value = new UxmlBoolAttributeDescription
@@ -254,7 +235,6 @@ namespace Unity.AppUI.UI
                 base.Init(ve, bag, cc);
 
                 var element = (Toggle)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
                 element.value = m_Value.GetValueFromBag(bag, cc);
                 element.label = m_Label.GetValueFromBag(bag, cc);
 

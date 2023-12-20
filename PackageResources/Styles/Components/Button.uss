@@ -135,8 +135,8 @@
 }
 
 .appui-button--quiet {
-    border-color: rgba(0, 0, 0, 0);
-    background-color: rgba(0, 0, 0, 0);
+    border-color: var(--appui-alias-actions-quiet-border-color-default);
+    background-color: var(--appui-alias-actions-quiet-background-color-default);
 }
 
 .appui-button--accent,
@@ -248,6 +248,12 @@
     border-color: var(--appui-alias-actions-border-color-disabled);
     cursor: var(--appui-alias-control-cursor-disabled);
     color: var(--appui-foregrounds-25);
+}
+
+.appui-button--quiet:disabled,
+.appui-button--quiet.unity-disabled {
+    background-color: var(--appui-alias-actions-quiet-background-color-disabled);
+    border-color: var(--appui-alias-actions-quiet-border-color-disabled);
 }
 
 .appui-button:disabled .appui-icon {

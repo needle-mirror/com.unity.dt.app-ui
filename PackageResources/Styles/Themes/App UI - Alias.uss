@@ -48,7 +48,7 @@
   --appui-alias-actions-padding-horizontal: var(--appui-spacing-200);
   
   --appui-alias-actions-quiet-border-color-invalid: var(--appui-alias-actions-border-color-invalid);
-  --appui-alias-actions-quiet-border-color-disabled: var(--appui-alias-actions-border-color-disabled);
+  --appui-alias-actions-quiet-border-color-disabled: var(--appui-color-transparent-black-0);
   --appui-alias-actions-quiet-border-color-focus: var(--appui-alias-actions-border-color-focus);
   --appui-alias-actions-quiet-border-color-active: var(--appui-alias-actions-border-color-active);
   --appui-alias-actions-quiet-border-color-hover: var(--appui-alias-actions-border-color-hover);
@@ -61,7 +61,7 @@
   --appui-alias-actions-quiet-foreground-hover: var(--appui-alias-actions-foreground-hover);
   --appui-alias-actions-quiet-foreground-default: var(--appui-alias-actions-foreground-default);
   
-  --appui-alias-actions-quiet-background-color-disabled: var(--appui-alias-actions-background-color-disabled);
+  --appui-alias-actions-quiet-background-color-disabled: var(--appui-color-transparent-black-0);
   --appui-alias-actions-quiet-background-color-selected: var(--appui-alias-actions-background-color-selected);
   --appui-alias-actions-quiet-background-color-focus: var(--appui-base-50);
   --appui-alias-actions-quiet-background-color-active: var(--appui-alias-actions-background-color-active);

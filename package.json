@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "1.0.0-pre.10",
+  "version": "1.0.0-pre.11",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,7 +25,7 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "695ae6f9c21c826bd3bc2fc3f753a6e1a9f45ad5"
+    "revision": "975292a125fbdc3dd36df3701b9d18a0898fc985"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -82,10 +82,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed auto scrolling to follow text edition's cursor in TextArea component.\n- Fixed layout for Bounds, Rect and Vector fields\n- Fixed some examples in the UI Kit Sample\n\n### Added\n\n- Added `maxLength` property in TextArea and TextField components.\n- Added `isPassword` and `maskChar` properties to TextField component.\n- Added Editor-Dark and Editor-Light themes.\n- Added `isReadonly` property to TextArea and TextField components.\n\n### Changed\n\n- Readjusted font sizes used on components to follow new design tokens\n- Most App UI component styling now use component-level design tokens for background and border colors"
+    "changelog": "### Fixed\n\n- Fixed Scroller styling.\n- Fixed styling for Disabled Quiet Button component.\n- Fixed compilation errors while not having the new Input System installed but the Input Manager setting is set to 'New' in the Project Settings.\n- Fixed border gap in TouchSlider component.\n- Fixed margins on Checkbox component without label.\n\n### Changed\n\n- Removed `size` property from Checkbox and Toggle components."
   },
   "upmCi": {
-    "footprint": "b7ae11c5af651a4c838abe29718d93df19f6e42a"
+    "footprint": "84673ec072f8feb7de086a5af015b40b90b37951"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@1.0/manual/index.html"
 }

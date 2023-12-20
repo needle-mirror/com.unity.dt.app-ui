@@ -1,6 +1,14 @@
 /* ScrollView */
+.unity-scroller {
+    background-color: rgba(0,0,0,0);
+}
+
 .unity-repeat-button {
     display: none;
+}
+
+.appui--ltr .unity-scroll-view__content-and-vertical-scroll-container {
+    flex-direction: row;
 }
 
 .appui--rtl .unity-scroll-view__content-and-vertical-scroll-container {
@@ -15,8 +23,7 @@
     height: var(--appui-sizing-200);
 }
 
-.unity-scroller--vertical > .unity-scroller__slider,
-.unity-scroller--horizontal > .unity-scroller__slider {
+.unity-scroller > .unity-scroller__slider {
     margin: 0;
 }
 
@@ -34,12 +41,12 @@
     background-color: rgba(0,0,0,0);
 }
 
-.unity-scroller .unity-base-slider__tracker:hover {
+.unity-scroller .unity-base-slider__tracker:hover,
+.unity-scroller .unity-base-slider__tracker:hover:enabled {
     background-color: rgba(0,0,0,0);
 }
 
-.unity-scroller--vertical .unity-base-slider__tracker,
-.unity-scroller--horizontal .unity-base-slider__tracker {
+.unity-scroller .unity-base-slider__tracker {
     border-width: 0;
     border-radius: var(--appui-sizing-100);
 }
@@ -58,21 +65,20 @@
     min-width: var(--appui-sizing-400);
 }
 
-.unity-scroller .unity-base-slider__dragger:focus {
-    background-color: var(--appui-base-200);
-    border-width: 0;
-}
-
-.unity-scroller .unity-base-slider__dragger:hover {
+.unity-scroller .unity-base-slider__dragger:hover:enabled {
     background-color: var(--appui-base-300);
 }
 
-.unity-scroller .unity-base-slider__dragger:active {
+.unity-scroller .unity-base-slider__input:focus:enabled .unity-base-slider__dragger,
+.unity-scroller .unity-base-slider__dragger:active:enabled .unity-base-slider__dragger {
     background-color: var(--appui-base-200);
-    border-width: 0;
 }
 
-.unity-scroller .unity-base-slider__dragger:disabled {
+.unity-scroller .unity-base-slider__input:focus:enabled .unity-base-slider__dragger:hover:enabled {
+    background-color: var(--appui-base-300);
+}
+
+.unity-scroller .unity-base-slider__input:disabled .unity-base-slider__dragger:disabled {
     background-color: var(--appui-base-50);
 }
 

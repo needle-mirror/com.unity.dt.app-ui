@@ -163,7 +163,9 @@ namespace Unity.AppUI.UI
             if (m_RequestTab && evt.keyCode == KeyCode.None)
             {
                 evt.StopPropagation();
+#if !UNITY_2023_2_OR_NEWER
                 evt.PreventDefault();
+#endif
                 focusController.FocusNextInDirectionEx(this, VisualElementFocusChangeDirection.right);
             }
 
@@ -176,7 +178,9 @@ namespace Unity.AppUI.UI
             if (m_RequestSubmit && evt.keyCode == KeyCode.None)
             {
                 evt.StopPropagation();
+#if !UNITY_2023_2_OR_NEWER
                 evt.PreventDefault();
+#endif
                 submitted?.Invoke();
             }
             
@@ -203,7 +207,7 @@ namespace Unity.AppUI.UI
                 m_InputField.style.minHeight = newHeight;
         }
 
-        void OnPlaceholderValueChanged(ChangeEvent<string> evt)
+        static void OnPlaceholderValueChanged(ChangeEvent<string> evt)
         {
             
             evt.StopPropagation();

@@ -4,6 +4,20 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-pre.11] - 2023-12-21
+
+### Fixed
+
+- Fixed Scroller styling.
+- Fixed styling for Disabled Quiet Button component.
+- Fixed compilation errors while not having the new Input System installed but the Input Manager setting is set to 'New' in the Project Settings.
+- Fixed border gap in TouchSlider component.
+- Fixed margins on Checkbox component without label.
+
+### Changed
+
+- Removed `size` property from Checkbox and Toggle components.
+
 ## [1.0.0-pre.10] - 2023-12-12
 
 ### Fixed

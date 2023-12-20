@@ -3,19 +3,19 @@
     --appui-toggle__box-width-sm: var(--appui-sizing-400);
     --appui-toggle__box-width-md: var(--appui-sizing-500);
     --appui-toggle__box-width-lg: var(--appui-sizing-600);
-    
+
     --appui-toggle__box-height-sm: var(--appui-sizing-250);
     --appui-toggle__box-height-md: var(--appui-sizing-300);
     --appui-toggle__box-height-lg: var(--appui-sizing-375);
-    
+
     --appui-toggle__box-border-radius-sm: var(--appui-sizing-125);
     --appui-toggle__box-border-radius-md: var(--appui-sizing-150);
     --appui-toggle__box-border-radius-lg: var(--appui-sizing-200);
-    
+
     --appui-toggle__checkmark-size-sm: var(--appui-sizing-150);
     --appui-toggle__checkmark-size-md: var(--appui-sizing-200);
     --appui-toggle__checkmark-size-lg: var(--appui-sizing-250);
-    
+
     --appui-toggle__box-gap: var(--appui-spacing-50);
 }
 
@@ -50,11 +50,15 @@
     display: flex;
     flex-shrink: 0;
     flex-grow: 0;
+    margin: 0;
     background-color: var(--appui-base-100);
     border-width: var(--appui-alias-control-border-width);
     /*border-style: var(--appui-control-border-style);*/
     border-color: var(--appui-base-400);
     transition: background-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125), border-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
+    height: var(--appui-toggle__box-height-md);
+    width: var(--appui-toggle__box-width-md);
+    border-radius: var(--appui-toggle__box-border-radius-md);
 }
 
 .appui-toggle.is-hovered > .appui-toggle__box {
@@ -121,6 +125,9 @@
     transition: translate var(--appui-animation-duration-125) var(--appui-animation-easing-ease-out), background-color var(--appui-animation-duration-125) var(--appui-animation-easing-ease-out);
     --unity-image-tint-color: var(--appui-foregrounds-25); /*fill: var(--appui-foregrounds-25);*/
     translate: 0% 0%;
+    width: var(--appui-toggle__checkmark-size-md);
+    height: var(--appui-toggle__checkmark-size-md);
+    border-radius: var(--appui-toggle__checkmark-size-md);
 }
 
 .is-checked .appui-toggle__checkmark {
@@ -145,42 +152,6 @@
 
 .appui--rtl .is-checked > .appui-toggle__box .appui-toggle__checkmark {
     translate: 100% 0%; /*transform: translateX(100%);*/
-}
-
-.appui-toggle--size-s > .appui-toggle__box {
-    height: var(--appui-toggle__box-height-sm);
-    width: var(--appui-toggle__box-width-sm);
-    border-radius: var(--appui-toggle__box-border-radius-sm);
-}
-
-.appui-toggle--size-s .appui-toggle__checkmark {
-    width: var(--appui-toggle__checkmark-size-sm);
-    height: var(--appui-toggle__checkmark-size-sm);
-    border-radius: var(--appui-toggle__checkmark-size-sm);
-}
-
-.appui-toggle--size-m > .appui-toggle__box {
-    height: var(--appui-toggle__box-height-md);
-    width: var(--appui-toggle__box-width-md);
-    border-radius: var(--appui-toggle__box-border-radius-md);
-}
-
-.appui-toggle--size-m .appui-toggle__checkmark {
-    width: var(--appui-toggle__checkmark-size-md);
-    height: var(--appui-toggle__checkmark-size-md);
-    border-radius: var(--appui-toggle__checkmark-size-md);
-}
-
-.appui-toggle--size-l > .appui-toggle__box {
-    height: var(--appui-toggle__box-height-lg);
-    width: var(--appui-toggle__box-width-lg);
-    border-radius: var(--appui-toggle__box-border-radius-lg);
-}
-
-.appui-toggle--size-l .appui-toggle__checkmark {
-    width: var(--appui-toggle__checkmark-size-lg);
-    height: var(--appui-toggle__checkmark-size-lg);
-    border-radius: var(--appui-toggle__checkmark-size-lg);
 }
 
 .appui-toggle__label {

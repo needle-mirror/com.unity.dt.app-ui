@@ -34,7 +34,7 @@ namespace Unity.AppUI.UI
         /// The Checkbox main styling class.
         /// </summary>
         public static readonly string ussClassName = "appui-checkbox";
-
+        
         /// <summary>
         /// The Checkbox size styling class.
         /// </summary>
@@ -66,8 +66,6 @@ namespace Unity.AppUI.UI
         public static readonly string labelUssClassName = ussClassName + "__label";
 
         readonly LocalizedTextElement m_Label;
-
-        Size m_Size;
 
         CheckboxState m_Value;
 
@@ -101,9 +99,9 @@ namespace Unity.AppUI.UI
             hierarchy.Add(m_Box);
             hierarchy.Add(m_Label);
 
-            size = Size.M;
             emphasized = false;
             invalid = false;
+            label = null;
             SetValueWithoutNotify(CheckboxState.Unchecked);
 
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocus, OnPointerFocus));
@@ -141,22 +139,17 @@ namespace Unity.AppUI.UI
         public string label
         {
             get => m_Label.text;
-            set => m_Label.text = value;
-        }
-
-        /// <summary>
-        /// The Checkbox size.
-        /// </summary>
-        public Size size
-        {
-            get => m_Size;
             set
             {
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
-                m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                m_Label.text = value;
+                m_Label.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
             }
         }
+        
+        /// <summary>
+        /// The Checkbox size
+        /// </summary>
+        public Size size { get; set; }
 
         /// <summary>
         /// The Checkbox invalid state.
@@ -256,12 +249,6 @@ namespace Unity.AppUI.UI
                 defaultValue = null
             };
 
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
             readonly UxmlEnumAttributeDescription<CheckboxState> m_Value = new UxmlEnumAttributeDescription<CheckboxState>
             {
                 name = "value",
@@ -279,7 +266,6 @@ namespace Unity.AppUI.UI
                 base.Init(ve, bag, cc);
 
                 var element = (Checkbox)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
                 element.emphasized = m_Emphasized.GetValueFromBag(bag, cc);
                 element.value = m_Value.GetValueFromBag(bag, cc);
                 element.label = m_Label.GetValueFromBag(bag, cc);

@@ -102,11 +102,16 @@ namespace Unity.AppUI.Core
             InputSystem.onActionChange += OnActionChange;
 #endif
         }
-
-#if UNITY_INPUTSYSTEM_PRESENT && ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
+        
+#if ENABLE_INPUT_SYSTEM
+#pragma warning disable 649 
         Vector2 m_PointerPosition = Vector2.zero;
         bool m_PointerDown = false;
+#pragma warning restore 649
+#endif
 
+#if UNITY_INPUTSYSTEM_PRESENT && ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
+        
         void OnActionChange(object arg1, InputActionChange arg2)
         {
             var module = EventSystem.current ? EventSystem.current.currentInputModule as InputSystemUIInputModule : null;
