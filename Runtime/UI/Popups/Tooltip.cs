@@ -29,10 +29,9 @@ namespace Unity.AppUI.UI
         /// Default constructor.
         /// </summary>
         /// <param name="parentView">The popup container.</param>
-        /// <param name="context">The application context attached to this popup.</param>
         /// <param name="contentView">The content to display inside the popup.</param>
-        Tooltip(VisualElement parentView, ApplicationContext context, VisualElement contentView)
-            : base(parentView, context, contentView)
+        Tooltip(VisualElement parentView, VisualElement contentView)
+            : base(parentView, contentView)
         {
             m_Animation = contentView.experimental.animation.Start(0, 1, k_TooltipFadeInDurationMs, (element, f) => element.style.opacity = f).OnCompleted(InvokeShownEventHandlers).KeepAlive();
             m_Animation.Stop();
@@ -145,9 +144,13 @@ namespace Unity.AppUI.UI
         /// <returns>A Tooltip instance.</returns>
         public static Tooltip Build(VisualElement referenceView)
         {
-            var context = referenceView.GetContext();
-            var parentView = context.panel.tooltipContainer;
-            var tooltipElement = new Tooltip(parentView, context, new TooltipVisualElement())
+            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
+            
+            if (panel == null)
+                throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
+            
+            var parentView = panel.tooltipContainer;
+            var tooltipElement = new Tooltip(parentView, new TooltipVisualElement())
                 .SetPlacement(defaultPlacement);
 
             return tooltipElement;

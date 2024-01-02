@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+using Unity.AppUI.Core;
 #if UNITY_LOCALIZATION_PRESENT
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 using UnityEngine.ResourceManagement.AsyncOperations;
+#endif
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
 #endif
 
 namespace Unity.AppUI.UI
@@ -15,8 +18,19 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A localized text element.
     /// </summary>
-    public class LocalizedTextElement : TextElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class LocalizedTextElement : BaseTextElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId textProperty = new BindingId(nameof(text));
+        
+        internal static readonly BindingId variablesProperty = new BindingId(nameof(variables));
+        
+#endif
+        
         /// <summary>
         /// The main USS class name of this element.
         /// </summary>
@@ -50,57 +64,86 @@ namespace Unity.AppUI.UI
 
             this.text = text;
 
-            RegisterCallback<AttachToPanelEvent>(OnAttachedToPanel);
+            this.RegisterContextChangedCallback<LangContext>(OnLangContextChanged);
             RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
         }
 
         /// <summary>
         /// The reference text to use when formatting the localized string. You can also use plain text for no translation.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public new string text
         {
             get => m_ReferenceText;
             set
             {
+                var changed = m_ReferenceText != value;
                 m_ReferenceText = value;
                 UpdateTextWithCurrentLocale();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in textProperty);
+#endif
             }
         }
+        
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute("text")]
+        string textOverride
+        {
+            get => this.text;
+            set => this.text = value;
+        }
+#endif
 
         /// <summary>
         /// The variables to use when formatting the localized string.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public IList<object> variables
         {
             get => m_Variables;
             set
             {
+                var changed = m_Variables != value;
                 m_Variables = value;
                 UpdateTextWithCurrentLocale();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in variablesProperty);
+#endif
             }
         }
-
-        void OnAttachedToPanel(AttachToPanelEvent evt)
+        
+        void OnLangContextChanged(ContextChangedEvent<LangContext> evt)
         {
-            if (evt.destinationPanel != null)
-            {
-                UpdateTextWithCurrentLocale();
-# if UNITY_LOCALIZATION_PRESENT
-                var settings = LocalizationSettings.GetInstanceDontCreateDefault();
-                if (settings)
-                {
-                    settings.OnSelectedLocaleChanged -= UpdateTextWithLocale;
-                    settings.OnSelectedLocaleChanged += UpdateTextWithLocale;
-                    if (m_LocalizationSettingsHandle.IsValid())
-                        m_LocalizationSettingsHandle.Completed -= OnLocalizationConfigCompleted;
-                    m_LocalizationSettingsHandle = settings.GetInitializationOperation();
-                    m_LocalizationSettingsHandle.Completed += OnLocalizationConfigCompleted;
-                }
-# endif
-            }
+            UpdateTextWithCurrentLocale();
+            BindLocaleChanges();
         }
 
-        void OnDetachedFromPanel(DetachFromPanelEvent evt)
+        void BindLocaleChanges()
+        {
+#if UNITY_LOCALIZATION_PRESENT
+            var settings = LocalizationSettings.GetInstanceDontCreateDefault();
+            if (settings)
+            {
+                settings.OnSelectedLocaleChanged -= UpdateTextWithLocale;
+                settings.OnSelectedLocaleChanged += UpdateTextWithLocale;
+                if (m_LocalizationSettingsHandle.IsValid())
+                    m_LocalizationSettingsHandle.Completed -= OnLocalizationConfigCompleted;
+                m_LocalizationSettingsHandle = settings.GetInitializationOperation();
+                m_LocalizationSettingsHandle.Completed += OnLocalizationConfigCompleted;
+            }
+#endif
+        }
+
+        void UnbindLocaleChanges()
         {
 #if UNITY_LOCALIZATION_PRESENT
             var settings = LocalizationSettings.GetInstanceDontCreateDefault();
@@ -113,6 +156,11 @@ namespace Unity.AppUI.UI
 #endif
         }
 
+        void OnDetachedFromPanel(DetachFromPanelEvent evt)
+        {
+            UnbindLocaleChanges();
+        }
+
         void UpdateTextWithCurrentLocale()
         {
 #if UNITY_LOCALIZATION_PRESENT
@@ -123,7 +171,7 @@ namespace Unity.AppUI.UI
             if (panel == null)
                 return;
 
-            var locale = this.GetContext().locale;
+            var locale = this.GetContext<LangContext>()?.locale;
 
             if (!locale)
             {
@@ -212,16 +260,17 @@ namespace Unity.AppUI.UI
             return true;
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Uxml factory for the <see cref="LocalizedTextElement"/>.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<LocalizedTextElement, UxmlTraits> { }
 
         /// <summary>
         /// Uxml traits for the <see cref="LocalizedTextElement"/>.
         /// </summary>
-        public new class UxmlTraits : TextElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseTextElement.UxmlTraits
         {
             /// <summary>
             /// Initialize the <see cref="LocalizedTextElement"/> using the attribute bag.
@@ -237,5 +286,7 @@ namespace Unity.AppUI.UI
                 element.text = ((TextElement)ve).text;
             }
         }
+        
+#endif
     }
 }

@@ -1,15 +1,20 @@
 using System;
 using System.Globalization;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Float Field UI element.
     /// </summary>
-    public class FloatField : NumericalField<float>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class FloatField : NumericalField<float>
     {
         /// <summary>
         /// Default constructor.
@@ -69,15 +74,18 @@ namespace Unity.AppUI.UI
             return 0.001f * (Mathf.Approximately(baseValue, 0) ? 1f : baseValue);
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Factory class to instantiate a <see cref="FloatField"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<FloatField, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="FloatField"/>.
         /// </summary>
         public new class UxmlTraits : NumericalField<float>.UxmlTraits { }
+        
+#endif
     }
 }

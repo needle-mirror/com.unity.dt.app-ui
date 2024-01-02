@@ -50,11 +50,10 @@ namespace Unity.AppUI.UI
         /// Default constructor.
         /// </summary>
         /// <param name="parentView">The popup container.</param>
-        /// <param name="context">The application context attached to this popup.</param>
         /// <param name="modalView">The popup visual element itself.</param>
         /// <param name="content">The content that will appear inside this popup.</param>
-        Modal(VisualElement parentView, ApplicationContext context, ModalVisualElement modalView, VisualElement content)
-            : base(parentView, context, modalView, content)
+        Modal(VisualElement parentView, ModalVisualElement modalView, VisualElement content)
+            : base(parentView, modalView, content)
         {
         }
 
@@ -91,9 +90,13 @@ namespace Unity.AppUI.UI
         /// <returns>The <see cref="Modal"/> instance.</returns>
         public static Modal Build(VisualElement referenceView, VisualElement content)
         {
-            var context = referenceView.GetContext();
-            var parentView = context.panel.popupContainer;
-            var popup = new Modal(parentView, context, new ModalVisualElement(content), content)
+            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
+            
+            if (panel == null)
+                throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
+            
+            var parentView = panel.popupContainer;
+            var popup = new Modal(parentView, new ModalVisualElement(content), content)
                 .SetLastFocusedElement(referenceView);
             return popup;
         }

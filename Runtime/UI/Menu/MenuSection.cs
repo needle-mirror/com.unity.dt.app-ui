@@ -1,14 +1,25 @@
 using System;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A section inside a menu, with a heading.
     /// </summary>
-    public class MenuSection : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class MenuSection : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId titleProperty = new BindingId(nameof(title));
+        
+#endif
+        
         /// <summary>
         /// The MenuSection main styling class.
         /// </summary>
@@ -45,6 +56,8 @@ namespace Unity.AppUI.UI
 
             hierarchy.Add(m_Title);
             hierarchy.Add(m_Container);
+
+            title = null;
         }
 
         /// <summary>
@@ -55,26 +68,39 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The text to display in the section heading.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string title
         {
             get => m_Title.text;
             set
             {
+                var changed = m_Title.text != value;
                 m_Title.text = value;
                 m_Title.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in titleProperty);
+#endif
             }
         }
+
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// The MenuSection UXML factory.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<MenuSection, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="MenuSection"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlStringAttributeDescription m_Title = new UxmlStringAttributeDescription
             {
@@ -97,5 +123,7 @@ namespace Unity.AppUI.UI
                 element.title = m_Title.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 }

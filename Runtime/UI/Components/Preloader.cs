@@ -1,13 +1,18 @@
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A preloader visual element.
     /// </summary>
-    public class Preloader : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Preloader : BaseVisualElement
     {
         /// <summary>
         /// The Preloader's USS class name.
@@ -51,18 +56,21 @@ namespace Unity.AppUI.UI
             progress.Add(logo);
         }
         
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// USS class name of elements of this type.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Preloader, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="AccordionItem"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElement.UxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             
         }
+        
+#endif
     }
 }

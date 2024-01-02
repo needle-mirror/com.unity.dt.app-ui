@@ -321,7 +321,9 @@ namespace Unity.AppUI.Editor
             if (page.componentType != null)
                 items.Insert(0, new StoryBookStory("Canvas", null));
             m_StoryListView.itemsSource = items;
-            m_StoryListView.RefreshItems();
+            m_StoryListView.Rebuild();
+            m_StoryListView.SetSelection(new List<int> { 0 });
+            OnStorySelectionChanged(new List<int> { 0 });
         }
 
         void OnStorySelectionChanged(IEnumerable<int> indices)

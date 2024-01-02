@@ -1,6 +1,9 @@
 using System;
-using UnityEngine.Scripting;
+using UnityEngine;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -28,8 +31,26 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Button UI element.
     /// </summary>
-    public class Button : ExVisualElement, ISizeableElement, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Button : ExVisualElement, ISizeableElement, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        internal static readonly BindingId variantProperty = nameof(variant);
+        
+        internal static readonly BindingId quietProperty = nameof(quiet);
+        
+        internal static readonly BindingId titleProperty = nameof(title);
+        
+        internal static readonly BindingId subtitleProperty = nameof(subtitle);
+        
+        internal static readonly BindingId leadingIconProperty = nameof(leadingIcon);
+        
+        internal static readonly BindingId trailingIconProperty = nameof(trailingIcon);
+
+        internal static readonly BindingId sizeProperty = nameof(size);
+#endif
         /// <summary>
         /// The Button main styling class.
         /// </summary>
@@ -213,87 +234,170 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The button variant.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Header("Button")]
+#endif
         public ButtonVariant variant
         {
             get => m_Variant;
             set
             {
+                var changed = m_Variant != value;
                 RemoveFromClassList(variantUssClassName + m_Variant.ToString().ToLower());
                 m_Variant = value;
                 AddToClassList(variantUssClassName + m_Variant.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in variantProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The quiet state of the Button.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool quiet
         {
             get => ClassListContains(quietUssClassName);
-            set => EnableInClassList(quietUssClassName, value);
+            set
+            {
+                var changed = quiet != value;
+                EnableInClassList(quietUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in quietProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The title of the Button.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string title
         {
             get => m_Title.text;
             set
             {
+                var changed = m_Title.text != value;
                 m_Title.text = value;
                 m_TitleContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Title.text));
                 EnableInClassList(iconOnlyUssClassName, string.IsNullOrEmpty(m_Title.text));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in titleProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The subtitle of the Button.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string subtitle
         {
             get => m_Subtitle.text;
             set
             {
+                var changed = m_Subtitle.text != value;
                 m_Subtitle.text = value;
                 m_Subtitle.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Subtitle.text));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in subtitleProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The Button leading icon.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string leadingIcon
         {
             get => m_LeadingIcon.iconName;
             set
             {
+                var changed = m_LeadingIcon.iconName != value;
                 m_LeadingIcon.iconName = value;
                 m_LeadingContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_LeadingIcon.iconName));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in leadingIconProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The Button trailing icon.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string trailingIcon
         {
             get => m_TrailingIcon.iconName;
             set
             {
+                var changed = m_TrailingIcon.iconName != value;
                 m_TrailingIcon.iconName = value;
                 m_TrailingContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_TrailingIcon.iconName));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in trailingIconProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The Button size.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 m_LeadingIcon.size = m_Size switch
@@ -305,35 +409,27 @@ namespace Unity.AppUI.UI
                 };
                 m_TrailingIcon.size = m_LeadingIcon.size;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Defines the UxmlFactory for the Button.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Button, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Button"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : ExVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-
+            
             readonly UxmlStringAttributeDescription m_LeadingIcon = new UxmlStringAttributeDescription
             {
                 name = "leading-icon",
@@ -394,8 +490,9 @@ namespace Unity.AppUI.UI
                 element.subtitle = m_Subtitle.GetValueFromBag(bag, cc);
                 element.leadingIcon = m_LeadingIcon.GetValueFromBag(bag, cc);
                 element.trailingIcon = m_TrailingIcon.GetValueFromBag(bag, cc);
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+#endif
     }
 }

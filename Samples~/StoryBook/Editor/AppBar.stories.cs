@@ -28,13 +28,19 @@ namespace Unity.AppUI.Editor
             appBar.AddAction(new ActionButton { icon = "info", quiet = true } );
             
             
-            var scrollView = new ScrollView();
-            scrollView.style.flexGrow = 1;
-            scrollView.style.alignSelf = Align.Stretch;
-            scrollView.style.overflow = Overflow.Hidden;
-            
+            var scrollView = new ScrollView
+            {
+                style =
+                {
+                    flexGrow = 1,
+                    alignSelf = Align.Stretch,
+                    overflow = Overflow.Hidden,
+                },
+                verticalScrollerVisibility = ScrollerVisibility.Hidden
+            };
+
             root.Add(scrollView);
-            scrollView.hierarchy.Add(appBar);
+            root.Add(appBar);
 
             for (var i = 0; i < 24; i++)
             {
@@ -45,7 +51,7 @@ namespace Unity.AppUI.Editor
                 item.style.paddingBottom = 8;
                 item.style.marginBottom = 8;
                 item.style.marginLeft = 16;
-                item.style.marginRight = 8;
+                item.style.marginRight = 16;
                 item.style.marginTop = 8;
                 item.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f, 0.15f);
                 item.style.borderTopLeftRadius = 4;

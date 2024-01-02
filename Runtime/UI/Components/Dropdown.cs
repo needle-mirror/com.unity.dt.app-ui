@@ -1,15 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Dropdown item UI element.
     /// </summary>
-    public class DropdownItem : VisualElement
+    public class DropdownItem : BaseVisualElement
     {
         /// <summary>
         /// The Dropdown item main styling class.
@@ -101,8 +103,17 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Dropdown UI element.
     /// </summary>
-    public class Dropdown : Picker<DropdownItem, DropdownItem>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Dropdown : Picker<DropdownItem, DropdownItem>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly new BindingId bindTitleProperty = new BindingId(nameof(bindTitle));
+        
+#endif
+        
         /// <summary>
         /// The Dropdown main styling class.
         /// </summary>
@@ -113,6 +124,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// A method that will be called to bind the title.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public new Action<DropdownItem, IEnumerable<int>> bindTitle
         {
             get => m_CustomBindTitle;
@@ -120,6 +134,11 @@ namespace Unity.AppUI.UI
             {
                 m_CustomBindTitle = value;
                 base.bindTitle = BindTitle;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in Picker<DropdownItem,DropdownItem>.bindTitleProperty);
+                NotifyPropertyChanged(in bindTitleProperty);
+#endif
             }
         }
 
@@ -202,15 +221,18 @@ namespace Unity.AppUI.UI
             return new DropdownItem();
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Factory class to instantiate a <see cref="Dropdown"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Dropdown, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Dropdown"/>.
         /// </summary>
         public new class UxmlTraits : Picker<DropdownItem,DropdownItem>.UxmlTraits { }
+        
+#endif
     }
 }

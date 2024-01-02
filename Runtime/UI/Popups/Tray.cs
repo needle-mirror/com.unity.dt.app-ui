@@ -36,10 +36,9 @@ namespace Unity.AppUI.UI
         /// Default constructor.
         /// </summary>
         /// <param name="parentView">The popup container.</param>
-        /// <param name="context">The application context attached to this popup.</param>
         /// <param name="view">The Tray visual element itself.</param>
-        Tray(VisualElement parentView, ApplicationContext context, TrayVisualElement view)
-            : base(parentView, context, view)
+        Tray(VisualElement parentView, TrayVisualElement view)
+            : base(parentView, view)
         {
             keyboardDismissEnabled = true;
             view.RegisterCallback<ClickEvent>(OnTrayClicked);
@@ -170,9 +169,13 @@ namespace Unity.AppUI.UI
         /// <returns>The <see cref="Tray"/> instance.</returns>
         public static Tray Build(VisualElement referenceView, VisualElement content)
         {
-            var context = referenceView.GetContext();
-            var parentView = context.panel.popupContainer;
-            return new Tray(parentView, context, new TrayVisualElement(content))
+            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
+            
+            if (panel == null)
+                throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
+            
+            var parentView = panel.popupContainer;
+            return new Tray(parentView, new TrayVisualElement(content))
                 .SetLastFocusedElement(referenceView);
         }
 

@@ -66,18 +66,20 @@ namespace Unity.AppUI.UI
         bool m_ShouldFlip = true;
 
         Rect m_ContentBounds;
+        
+        Panel panel { get; }
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="parentView">The popup container.</param>
-        /// <param name="context">The application context attached to this popup.</param>
         /// <param name="view">The popup visual element itself.</param>
         /// <param name="contentView">The content that will appear inside this popup.</param>
-        protected AnchorPopup(VisualElement parentView, ApplicationContext context, VisualElement view,
-            VisualElement contentView = null)
-            : base(parentView, context, view, contentView)
-        { }
+        protected AnchorPopup(VisualElement parentView, VisualElement view, VisualElement contentView = null)
+            : base(parentView, view, contentView)
+        {
+            panel = parentView.GetFirstAncestorOfType<Panel>();
+        }
 
         /// <summary>
         /// The desired placement.
@@ -279,7 +281,7 @@ namespace Unity.AppUI.UI
         protected override void ShowView()
         {
             base.ShowView();
-            context.panel.RegisterPopup(this);
+            panel.RegisterPopup(this);
         }
 
         /// <summary>
@@ -302,7 +304,7 @@ namespace Unity.AppUI.UI
                             var scale = Mathf.Lerp(0.98f, 1f, f);
                             var opacity = Mathf.Lerp(0.0001f, 1f, f);
                             element.style.translate = new Translate(0, y, 0);
-                            element.style.scale = new Scale(new Vector3(scale, scale, 1.0f));
+                            element.style.scale = new UnityEngine.UIElements.Scale(new Vector3(scale, scale, 1.0f));
                             element.style.opacity = opacity;
                         }).Ease(Easing.OutQuad).OnCompleted(InvokeShownEventHandlers);
                     });
@@ -329,7 +331,7 @@ namespace Unity.AppUI.UI
         protected override void HideView(DismissType reason)
         {
             base.HideView(reason);
-            context.panel.UnregisterPopup(this);
+            panel.UnregisterPopup(this);
         }
 
         /// <summary>
@@ -384,7 +386,7 @@ namespace Unity.AppUI.UI
                 return;
 
             var movableElement = GetMovableElement();
-            var result = AnchorPopupUtils.ComputePosition(movableElement, m_Anchor, context.panel, new PositionOptions(placement, offset, crossOffset, shouldFlip));
+            var result = AnchorPopupUtils.ComputePosition(movableElement, m_Anchor, panel, new PositionOptions(placement, offset, crossOffset, shouldFlip));
             movableElement.style.left = result.left;
             movableElement.style.top = result.top;
             movableElement.style.marginLeft = result.marginLeft;

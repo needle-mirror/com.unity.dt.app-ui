@@ -1,9 +1,11 @@
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 #if UNITY_EDITOR
 using UnityEditor;
+#endif
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
 #endif
 
 namespace Unity.AppUI.UI
@@ -11,7 +13,10 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// LinearProgress UI element.
     /// </summary>
-    public class LinearProgress : Progress
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class LinearProgress : Progress
     {
         static readonly int k_Start = Shader.PropertyToID("_Start");
 
@@ -95,7 +100,7 @@ namespace Unity.AppUI.UI
 #endif
                 : Time.time;
 
-            s_Material.SetColor(k_Color, colorOverride ?? m_Color);
+            s_Material.SetColor(k_Color, colorOverride);
             s_Material.SetFloat(k_Start, 0);
             s_Material.SetFloat(k_End, value);
             s_Material.SetFloat(k_BufferStart, 0);
@@ -115,15 +120,18 @@ namespace Unity.AppUI.UI
             RenderTexture.active = prevRt;
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Factory class to instantiate a <see cref="LinearProgress"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<LinearProgress, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="LinearProgress"/>.
         /// </summary>
         public new class UxmlTraits : Progress.UxmlTraits { }
+        
+#endif
     }
 }

@@ -30,11 +30,10 @@ namespace Unity.AppUI.UI
         /// Constructor.
         /// </summary>
         /// <param name="parentView"> The parent view of the Menu. </param>
-        /// <param name="context"> The application context. </param>
         /// <param name="view"> The Menu visual element (used by the popup system). </param>
         /// <param name="contentView"> The Menu's content visual element. </param>
-        public MenuBuilder(VisualElement parentView, ApplicationContext context, VisualElement view, VisualElement contentView)
-            : base(parentView, context, view, contentView)
+        public MenuBuilder(VisualElement parentView, VisualElement view, VisualElement contentView)
+            : base(parentView, view, contentView)
         {
             m_MenuStack = new Stack<Menu>();
             m_MenuStack.Push((Menu)contentView);
@@ -296,14 +295,19 @@ namespace Unity.AppUI.UI
         /// <returns> The MenuBuilder instance. </returns>
         public static MenuBuilder Build(VisualElement referenceView, Menu menu = null)
         {
-            var context = referenceView.GetContext();
-            var parentView = context.panel.popupContainer;
-            menu = menu ?? new Menu();
+            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
+            
+            if (panel == null)
+                throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
+            
+            var parentView = panel.popupContainer;
+            var dir = referenceView.GetContext<DirContext>()?.dir ?? Dir.Ltr;
+            menu ??= new Menu();
             var popoverVisualElement = CreateMenuPopoverVisualElement(menu);
-            var menuBuilder = new MenuBuilder(parentView, context, popoverVisualElement, menu)
+            var menuBuilder = new MenuBuilder(parentView, popoverVisualElement, menu)
                 .SetLastFocusedElement(referenceView)
                 .SetArrowVisible(false)
-                .SetPlacement(context.dir == Dir.Ltr ? PopoverPlacement.BottomStart : PopoverPlacement.BottomEnd)
+                .SetPlacement(dir == Dir.Ltr ? PopoverPlacement.BottomStart : PopoverPlacement.BottomEnd)
                 .SetOutsideClickStrategy(OutsideClickStrategy.Pick)
                 .SetCrossOffset(-8)
                 .SetAnchor(referenceView);

@@ -1,14 +1,31 @@
 using System;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Toggle UI element.
     /// </summary>
-    public class Toggle : VisualElement, IValidatableElement<bool>, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Toggle : BaseVisualElement, IValidatableElement<bool>, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+        internal static readonly BindingId labelProperty = nameof(label);
+        
+        internal static readonly BindingId invalidProperty = nameof(invalid);
+        
+        internal static readonly BindingId validateValueProperty = nameof(validateValue);
+        
+#endif
+        
         /// <summary>
         /// The Toggle main styling class.
         /// </summary>
@@ -51,6 +68,8 @@ namespace Unity.AppUI.UI
         Pressable m_Clickable;
 
         readonly ExVisualElement m_Box;
+
+        Func<bool, bool> m_ValidateValue;
 
         /// <summary>
         /// Default constructor.
@@ -112,36 +131,75 @@ namespace Unity.AppUI.UI
         }
         
         /// <summary>
-        /// The Toggle size.
-        /// </summary>
-        public Size size { get; set; }
-
-        /// <summary>
         /// The Toggle label.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string label
         {
             get => m_Label.text;
             set
             {
+                var changed = m_Label.text != value;
                 m_Label.text = value;
                 m_Label.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The invalid state of the Toggle.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
-            set => EnableInClassList(Styles.invalidUssClassName, value);
+            set
+            {
+                var changed = ClassListContains(Styles.invalidUssClassName) != value;
+                EnableInClassList(Styles.invalidUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in invalidProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The validation function for the Toggle.
         /// </summary>
-        public Func<bool, bool> validateValue { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<bool, bool> validateValue
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+                invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Set the Toggle value without notifying the change.
@@ -157,6 +215,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Toggle value.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool value
         {
             get => m_Value;
@@ -168,6 +232,10 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
 
@@ -186,32 +254,18 @@ namespace Unity.AppUI.UI
             value = !value;
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to instantiate a <see cref="Toggle"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Toggle, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Toggle"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
-
             readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
             {
                 name = "label",
@@ -238,8 +292,10 @@ namespace Unity.AppUI.UI
                 element.value = m_Value.GetValueFromBag(bag, cc);
                 element.label = m_Label.GetValueFromBag(bag, cc);
 
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+        
+#endif
     }
 }

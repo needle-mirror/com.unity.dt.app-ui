@@ -2,16 +2,41 @@ using System;
 using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// An item contained inside a <see cref="Menu"/> element.
     /// </summary>
-    public class MenuItem : VisualElement, INotifyValueChanged<bool>, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class MenuItem : BaseVisualElement, INotifyValueChanged<bool>, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId labelProperty = new BindingId(nameof(label));
+        
+        internal static readonly BindingId shortcutProperty = new BindingId(nameof(shortcut));
+        
+        internal static readonly BindingId iconProperty = new BindingId(nameof(icon));
+        
+        internal static readonly BindingId valueProperty = new BindingId(nameof(value));
+        
+        internal static readonly BindingId selectableProperty = new BindingId(nameof(selectable));
+        
+        internal static readonly BindingId activeProperty = new BindingId(nameof(active));
+        
+        internal static readonly BindingId subMenuProperty = new BindingId(nameof(subMenu));
+        
+        internal static readonly BindingId hasSubMenuProperty = new BindingId(nameof(hasSubMenu));
+        
+#endif
+        
         static readonly Stack<Menu> k_SubMenuStack = new Stack<Menu>();
 
         internal const string checkmarkIconName = "check";
@@ -138,7 +163,7 @@ namespace Unity.AppUI.UI
         {
             var handled = false;
 
-            var ctx = this.GetContext();
+            var dir = this.GetContext<DirContext>()?.dir ?? Dir.Ltr;
 
             switch (evt.keyCode)
             {
@@ -150,14 +175,14 @@ namespace Unity.AppUI.UI
                     focusController.FocusNextInDirectionEx(VisualElementFocusChangeDirection.left);
                     handled = true;
                     break;
-                case KeyCode.RightArrow when ctx.dir is Dir.Ltr:
-                case KeyCode.LeftArrow when ctx.dir is Dir.Rtl:
+                case KeyCode.RightArrow when dir is Dir.Ltr:
+                case KeyCode.LeftArrow when dir is Dir.Rtl:
                     if (hasSubMenu)
                         clickable?.SimulateSingleClickInternal(evt);
                     handled = true;
                     break;
-                case KeyCode.LeftArrow when ctx.dir is Dir.Ltr:
-                case KeyCode.RightArrow when ctx.dir is Dir.Rtl:
+                case KeyCode.LeftArrow when dir is Dir.Ltr:
+                case KeyCode.RightArrow when dir is Dir.Rtl:
                     if (GetFirstAncestorOfType<Menu>() is { parentItem: { } item } menu)
                     {
                         CloseSubMenus(Vector2.negativeInfinity, menu);
@@ -243,13 +268,13 @@ namespace Unity.AppUI.UI
             popoverElement.style.opacity = 0.00001f;
             popover.schedule.Execute(() =>
             {
-                var ctx = this.GetContext();
+                var dir = this.GetContext<DirContext>()?.dir ?? Dir.Ltr;
                 var pos = AnchorPopupUtils
                     .ComputePosition(
                         popoverElement,
-                        this,
-                        this.GetContext().panel,
-                        new PositionOptions(ctx.dir == Dir.Ltr ? PopoverPlacement.EndTop : PopoverPlacement.StartTop,
+                        this, 
+                        GetFirstAncestorOfType<Panel>(),
+                        new PositionOptions(dir == Dir.Ltr ? PopoverPlacement.EndTop : PopoverPlacement.StartTop,
                             -4,
                             -8));
                 popoverElement.style.left = pos.left;
@@ -306,31 +331,73 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The label text value.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string label
         {
             get => m_Label.text;
-            set => m_Label.text = value;
+            set
+            {
+                var changed = m_Label.text != value;
+                m_Label.text = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelProperty);
+#endif
+            }
         }
         
         /// <summary>
         /// The shortcut text value.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string shortcut
         {
             get => m_Shortcut.text;
-            set => m_Shortcut.text = value;
+            set
+            {
+                var changed = m_Shortcut.text != value;
+                m_Shortcut.text = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in shortcutProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The icon to display next to the label.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string icon
         {
             get => m_Icon.iconName;
             set
             {
+                var changed = m_Icon.iconName != value;
                 m_Icon.iconName = value;
                 m_Icon.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in iconProperty);
+#endif
             }
         }
 
@@ -338,6 +405,12 @@ namespace Unity.AppUI.UI
         /// The selected state of the item.
         /// <remarks>You should set the item as <see cref="selectable"/> first to see any result.</remarks>
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool value
         {
             get => ClassListContains(Styles.selectedUssClassName);
@@ -350,6 +423,10 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 if (selectable)
                     SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
 
@@ -359,19 +436,49 @@ namespace Unity.AppUI.UI
         /// A selectable item is an item with a small checkmark as leading UI element.
         /// </para>
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool selectable
         {
             get => ClassListContains(selectableUssClassname);
-            set => EnableInClassList(selectableUssClassname, value);
+            set
+            {
+                var changed = selectable != value;
+                EnableInClassList(selectableUssClassname, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in selectableProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// Enable or disable the active mode of the item.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool active
         {
             get => ClassListContains(activeUssClassname);
-            set => EnableInClassList(activeUssClassname, value);
+            set
+            {
+                var changed = active != value;
+                EnableInClassList(activeUssClassname, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in activeProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -381,19 +488,34 @@ namespace Unity.AppUI.UI
         /// will appear if you trigger the item's action.
         /// </para>
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Menu subMenu
         {
             get => m_SubMenu;
             set
             {
+                var changed = m_SubMenu != value;
                 m_SubMenu = value;
                 EnableInClassList(subMenuItemUssClassname, m_SubMenu != null);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                {
+                    NotifyPropertyChanged(in subMenuProperty);
+                    NotifyPropertyChanged(in hasSubMenuProperty);
+                }
+#endif
             }
         }
 
         /// <summary>
         ///
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public bool hasSubMenu => subMenu != null;
 
         /// <summary>
@@ -426,19 +548,11 @@ namespace Unity.AppUI.UI
             }
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to be able to instantiate a MenuItem from UXML.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<MenuItem, UxmlTraits>
         {
             /// <summary>
@@ -454,14 +568,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="MenuItem"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
-
             readonly UxmlStringAttributeDescription m_Icon = new UxmlStringAttributeDescription
             {
                 name = "icon",
@@ -509,8 +617,10 @@ namespace Unity.AppUI.UI
                 element.selectable = m_Selectable.GetValueFromBag(bag, cc);
                 element.SetValueWithoutNotify(m_SelectedByDefault.GetValueFromBag(bag, cc));
 
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+        
+#endif
     }
 }

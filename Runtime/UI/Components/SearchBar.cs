@@ -1,13 +1,19 @@
 using System;
-using UnityEngine.Scripting;
+using UnityEngine;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// SearchBar UI element.
     /// </summary>
-    public class SearchBar : TextField
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class SearchBar : TextField
     {
         /// <summary>
         /// The SearchBar main styling class.
@@ -23,11 +29,24 @@ namespace Unity.AppUI.UI
             leadingIconName = "magnifying-glass";
             placeholder = "Search...";
         }
+        
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute("leading-icon-name")]
+        [HideInInspector]
+        string leadingIconNameOverride
+        {
+            get => leadingIconName;
+            set => leadingIconName = value;
+        }
+#endif
+
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to instantiate a <see cref="SearchBar"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<SearchBar, UxmlTraits> { }
+        
+#endif
     }
 }

@@ -40,5 +40,33 @@ namespace Unity.AppUI.UI
         {
             return vec.x is > 0 and <= 4096 && vec.y is > 0 and <= 4096;
         }
+
+        /// <summary>
+        /// Try to parse a <see cref="Rect"/> from a string.
+        /// </summary>
+        /// <param name="str"> The string to parse.</param>
+        /// <param name="rect"> The parsed <see cref="Rect"/>.</param>
+        /// <returns> True if the string was successfully parsed, False otherwise.</returns>
+        public static bool TryParse(string str, out Rect rect)
+        {
+            rect = default;
+            var parts = str.Split(',');
+            if (parts.Length != 4)
+            {
+                return false;
+            }
+
+            if (!float.TryParse(parts[0], out var x) ||
+                !float.TryParse(parts[1], out var y) ||
+                !float.TryParse(parts[2], out var w) ||
+                !float.TryParse(parts[3], out var h))
+            {
+                return false;
+            }
+
+            rect = new Rect(x, y, w, h);
+
+            return true;
+        }
     }
 }

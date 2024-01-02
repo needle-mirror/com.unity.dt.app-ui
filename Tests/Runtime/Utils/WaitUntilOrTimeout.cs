@@ -9,7 +9,7 @@ namespace Unity.AppUI.Tests
     /// <summary>
     /// A custom yield instruction that waits until a predicate is true or a timeout is reached.
     /// </summary>
-    public class WaitUntilOrTimeOut : CustomYieldInstruction
+    class WaitUntilOrTimeOut : CustomYieldInstruction
     {
         static readonly TimeSpan k_DefaultTimeout = TimeSpan.FromSeconds(5);
 

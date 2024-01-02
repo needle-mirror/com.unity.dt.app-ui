@@ -1,15 +1,20 @@
 using System;
 using System.Globalization;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A <see cref="VisualElement"/> that displays a numeric value and allows the user to edit it.
     /// </summary>
-    public class IntField : NumericalField<int>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class IntField : NumericalField<int>
     {
         /// <summary>
         /// Default constructor.
@@ -69,15 +74,18 @@ namespace Unity.AppUI.UI
             return Mathf.Abs(baseValue) > 100 ? Mathf.CeilToInt(baseValue * 0.1f) : 1;
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Factory class to instantiate a <see cref="IntField"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<IntField, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="IntField"/>.
         /// </summary>
         public new class UxmlTraits : NumericalField<int>.UxmlTraits { }
+        
+#endif
     }
 }

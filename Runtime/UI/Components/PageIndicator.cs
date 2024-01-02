@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -9,8 +11,21 @@ namespace Unity.AppUI.UI
     /// PageIndicator UI element.
     /// This element is used to display a list of dots that can be used to navigate between pages.
     /// </summary>
-    public class PageIndicator : VisualElement, INotifyValueChanged<int>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class PageIndicator : BaseVisualElement, INotifyValueChanged<int>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId directionProperty = nameof(direction);
+        
+        internal static readonly BindingId countProperty = nameof(count);
+        
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+#endif
+        
         /// <summary>
         /// The PageIndicator main styling class.
         /// </summary>
@@ -47,6 +62,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The number of dots.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public int count
         {
             get => hierarchy.childCount;
@@ -56,12 +77,22 @@ namespace Unity.AppUI.UI
                     return;
 
                 BuildDots(value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in countProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The currently selected dot index.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif 
         public int value
         {
             get => m_Value;
@@ -79,20 +110,36 @@ namespace Unity.AppUI.UI
                     evt.target = this;
                     SendEvent(evt);
                 }
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The PageIndicator direction (horizontal or vertical).
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Direction direction
         {
             get => m_Direction;
             set
             {
+                var changed = m_Direction != value;
                 RemoveFromClassList(variantUssClassName + m_Direction.ToString().ToLower());
                 m_Direction = value;
                 AddToClassList(variantUssClassName + m_Direction.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in directionProperty);
+#endif
             }
         }
 
@@ -236,16 +283,17 @@ namespace Unity.AppUI.UI
             ((ExVisualElement)evt.target).passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.Outline;
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Factory class to instantiate a <see cref="PageIndicator"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<PageIndicator, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="PageIndicator"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlEnumAttributeDescription<Direction> m_Direction = new UxmlEnumAttributeDescription<Direction>()
             {
@@ -284,5 +332,7 @@ namespace Unity.AppUI.UI
                     el.SetValueWithoutNotify(defaultValue);
             }
         }
+        
+#endif
     }
 }

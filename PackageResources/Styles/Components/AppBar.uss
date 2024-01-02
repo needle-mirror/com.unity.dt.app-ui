@@ -49,7 +49,7 @@
     border-bottom-color: #2e2e2e;
 }
 
-.appui-appbar__compact-title {
+.appui-appbar__compact-title.appui-localized-text {
     display: flex;
     position: absolute;
     left: 0;

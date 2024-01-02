@@ -1,5 +1,7 @@
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -27,8 +29,17 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A help text.
     /// </summary>
-    public class HelpText : LocalizedTextElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class HelpText : LocalizedTextElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId variantProperty = new BindingId(nameof(variant));
+        
+#endif
+        
         /// <summary>
         /// The HelpText main styling class.
         /// </summary>
@@ -44,14 +55,26 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The variant of the <see cref="HelpText"/>.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public HelpTextVariant variant
         {
             get => m_Variant;
             set
             {
+                var changed = m_Variant != value;
                 RemoveFromClassList(variantUssClassName + m_Variant.ToString().ToLower());
                 m_Variant = value;
                 AddToClassList(variantUssClassName + m_Variant.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in variantProperty);
+#endif
             }
         }
         
@@ -74,19 +97,11 @@ namespace Unity.AppUI.UI
             variant = HelpTextVariant.Default;
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to instantiate a <see cref="HelpText"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<HelpText, UxmlTraits> { }
 
         /// <summary>
@@ -100,12 +115,7 @@ namespace Unity.AppUI.UI
                 defaultValue = HelpTextVariant.Default,
             };
             
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-            
+                        
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
@@ -115,11 +125,9 @@ namespace Unity.AppUI.UI
                 var variant = HelpTextVariant.Default;
                 if (m_Variant.TryGetValueFromBag(bag, cc, ref variant))
                     helpText.variant = variant;
-                
-                var disabled = false;
-                if (m_Disabled.TryGetValueFromBag(bag, cc, ref disabled))
-                    helpText.disabled = disabled;
             }
         }
+        
+#endif
     }
 }

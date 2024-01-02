@@ -5,16 +5,31 @@ using System.Collections.Specialized;
 using System.Linq;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A view containing recycled rows with items inside.
     /// </summary>
-    public class GridView : BindableElement, ISerializationCallbackReceiver
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class GridView : BindableElement, ISerializationCallbackReceiver
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId itemHeightProperty = new BindingId(nameof(itemHeight));
+        
+        internal static readonly BindingId selectionTypeProperty = new BindingId(nameof(selectionType));
+        
+        internal static readonly BindingId allowNoSelectionProperty = new BindingId(nameof(allowNoSelection));
+        
+#endif
+        
         const float k_PageSizeFactor = 0.25f;
         
         /// <summary>
@@ -261,7 +276,7 @@ namespace Unity.AppUI.UI
                 ScrollToItem(index);
             }
 
-            var dir = this.GetContext().dir;
+            var dir = this.GetContext<DirContext>()?.dir ?? Dir.Ltr;
 
             switch (operation)
             {
@@ -483,6 +498,12 @@ namespace Unity.AppUI.UI
         ///
         /// This property must be set for the list view to function.
         /// </remarks>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public int itemHeight
         {
             get => m_ItemHeight;
@@ -494,6 +515,10 @@ namespace Unity.AppUI.UI
                     m_ItemHeight = value;
                     scrollView.verticalPageSize = m_ItemHeight * k_PageSizeFactor;
                     Refresh();
+                    
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                    NotifyPropertyChanged(in itemHeightProperty);
+#endif
                 }
             }
         }
@@ -624,11 +649,18 @@ namespace Unity.AppUI.UI
         ///
         /// When you set the GridView to disable selections, any current selection is cleared.
         /// </remarks>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public SelectionType selectionType
         {
             get { return m_SelectionType; }
             set
             {
+                var changed = m_SelectionType != value;
                 m_SelectionType = value;
 
                 if (m_SelectionType == SelectionType.None)
@@ -653,21 +685,38 @@ namespace Unity.AppUI.UI
                 
                 m_RangeSelectionOrigin = -1;
                 PostSelection(updatePreviousSelection: true, sendNotification: true);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in selectionTypeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Whether the GridView allows to have no selection when the selection type is <see cref="SelectionType.Single"/> or <see cref="SelectionType.Multiple"/>.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool allowNoSelection
         {
             get => m_AllowNoSelection;
 
             set
             {
+                var changed = m_AllowNoSelection != value;
                 m_AllowNoSelection = value;
                 if (HasValidDataAndBindings() && !m_AllowNoSelection && m_SelectedIndices.Count == 0 && m_ItemsSource.Count > 0)
                     SetSelectionInternal(new []{ 0 }, true, true);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in allowNoSelectionProperty);
+#endif
             }
         }
 
@@ -1432,7 +1481,8 @@ namespace Unity.AppUI.UI
         {
             var localPosition = scrollView.contentContainer.WorldToLocal(worldPosition);
             var totalWidth = scrollView.contentContainer.layout.width;
-            var posX = this.GetContext().dir == Dir.Ltr ? localPosition.x : totalWidth - localPosition.x;
+            var dir = this.GetContext<DirContext>()?.dir ?? Dir.Ltr;
+            var posX = dir == Dir.Ltr ? localPosition.x : totalWidth - localPosition.x;
             return Mathf.FloorToInt(localPosition.y / resolvedItemHeight) * columnCount + Mathf.FloorToInt(posX / resolvedItemWidth);
         }
 
@@ -1687,6 +1737,9 @@ namespace Unity.AppUI.UI
             item.style.flexGrow = 1f;
             item.style.flexShrink = 1f;
         }
+        
+#if ENABLE_UXML_TRAITS
+
 
         /// <summary>
         /// Instantiates a <see cref="GridView"/> using data from a UXML file.
@@ -1694,7 +1747,6 @@ namespace Unity.AppUI.UI
         /// <remarks>
         /// This class is added to every <see cref="VisualElement"/> created from UXML.
         /// </remarks>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<GridView, UxmlTraits> {}
 
         /// <summary>
@@ -1771,8 +1823,10 @@ namespace Unity.AppUI.UI
                 view.allowNoSelection = m_AllowNoSelection.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
 
-        internal class RecycledRow : VisualElement
+        internal class RecycledRow : BaseVisualElement
         {
             public const int kUndefinedIndex = -1;
 

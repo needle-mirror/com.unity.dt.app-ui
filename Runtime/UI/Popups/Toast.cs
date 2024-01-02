@@ -45,10 +45,9 @@ namespace Unity.AppUI.UI
         /// Default constructor.
         /// </summary>
         /// <param name="parentView">The popup container.</param>
-        /// <param name="context">The application context attached to this popup.</param>
         /// <param name="contentView">The content inside the popup.</param>
-        Toast(VisualElement parentView, ApplicationContext context, ToastVisualElement contentView)
-            : base(parentView, context, contentView)
+        Toast(VisualElement parentView, ToastVisualElement contentView)
+            : base(parentView, contentView)
         {
             contentView.actionClicked += OnToastActionClicked;
         }
@@ -115,9 +114,13 @@ namespace Unity.AppUI.UI
         /// <exception cref="ArgumentException">The provided view is not contained in a valid UI panel.</exception>
         public static Toast Build(VisualElement referenceView, string text, NotificationDuration duration)
         {
-            var context = referenceView.GetContext();
-            var parentView = context.panel.notificationContainer;
-            var bar = new Toast(parentView, context, new ToastVisualElement()).SetText(text).SetDuration(duration);
+            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
+            
+            if (panel == null)
+                throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
+            
+            var parentView = panel.notificationContainer;
+            var bar = new Toast(parentView, new ToastVisualElement()).SetText(text).SetDuration(duration);
             return bar;
         }
 
@@ -205,7 +208,12 @@ namespace Unity.AppUI.UI
                 m_TextElement.AddToClassList(messageUssClassName);
                 hierarchy.Add(m_TextElement);
 
-                m_Divider = new Divider { name = dividerUssClassName, size = Size.M, spacing = Spacing.L, vertical = true };
+                m_Divider = new Divider
+                {
+                    name = dividerUssClassName, 
+                    size = Size.M, spacing = Spacing.L, 
+                    direction = Direction.Vertical
+                };
                 m_Divider.AddToClassList(dividerUssClassName);
                 hierarchy.Add(m_Divider);
 

@@ -21,13 +21,18 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    -unity-text-align: middle-left;
     flex-shrink: 1;
     flex-grow: 1;
 }
 
+.appui--ltr .appui-actionbar__label.appui-text {
+    -unity-text-align: middle-left;
+    padding-left: var(--appui-alias-control-gap-md);
+}
+
 .appui--rtl .appui-actionbar__label.appui-text {
     -unity-text-align: middle-right;
+    padding-right: var(--appui-alias-control-gap-md);
 }
 
 .appui-actionbar__actiongroup.appui-actiongroup {

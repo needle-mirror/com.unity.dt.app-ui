@@ -123,8 +123,8 @@ namespace Unity.AppUI.Tests.UI
         {
             if (!string.IsNullOrEmpty(Utils.snapshotsOutputDir) && !Application.isEditor)
             {
-                if (typeof(ContextProvider).IsAssignableFrom(typeof(T)))
-                    Assert.Ignore("ContextProvider are not supported in snapshots");
+                if (typeof(Panel).IsAssignableFrom(typeof(T)))
+                    Assert.Ignore("Panel are not supported in snapshots");
                                 
                 foreach (var story in stories)
                 {
@@ -157,7 +157,7 @@ namespace Unity.AppUI.Tests.UI
             {
                 theme = theme,
                 scale = scale,
-                dir = dir,
+                layoutDirection = dir,
             };
             m_TestUI.rootVisualElement.Clear();
             m_TestUI.rootVisualElement.styleSheets.Add(Resources.Load<ThemeStyleSheet>("Themes/App UI"));

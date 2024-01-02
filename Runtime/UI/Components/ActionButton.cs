@@ -1,14 +1,37 @@
 using System;
-using UnityEngine.Scripting;
+using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// ActionButton UI element.
     /// </summary>
-    public class ActionButton : ExVisualElement, ISizeableElement, ISelectableElement, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class ActionButton : ExVisualElement, ISizeableElement, ISelectableElement, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        internal static readonly BindingId sizeProperty = nameof(size);
+        
+        internal static readonly BindingId labelProperty = nameof(label);
+        
+        internal static readonly BindingId iconProperty = nameof(icon);
+        
+        internal static readonly BindingId iconVariantProperty = nameof(iconVariant);
+        
+        internal static readonly BindingId quietProperty = nameof(quiet);
+        
+        internal static readonly BindingId selectedProperty = nameof(selected);
+        
+        internal static readonly BindingId accentProperty = nameof(accent);
+#endif
+        
         /// <summary>
         /// The ActionButton main styling class.
         /// </summary>
@@ -134,67 +157,152 @@ namespace Unity.AppUI.UI
             add => clickable.clicked += value;
             remove => clickable.clicked -= value;
         }
-
+        
         /// <summary>
         /// The ActionButton label.
         /// </summary>
+        [Tooltip("The ActionButton label.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Header("Action Button")]
+#endif
         public string label
         {
             get => m_LabelElement.text;
             set
             {
+                var changed = m_LabelElement.text != value;
                 m_LabelElement.text = value;
                 Refresh();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The ActionButton icon.
         /// </summary>
+        [Tooltip("The ActionButton icon.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string icon
         {
             get => m_IconElement.iconName;
             set
             {
+                var changed = m_IconElement.iconName != value;
                 m_IconElement.iconName = value;
                 Refresh();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in iconProperty);
+#endif
             }
         }
         
         /// <summary>
         /// The ActionButton icon variant.
         /// </summary>
+        [Tooltip("The ActionButton icon variant.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public IconVariant iconVariant
         {
             get => m_IconElement.variant;
-            set => m_IconElement.variant = value;
+            set
+            {
+                var changed = m_IconElement.variant != value;
+                m_IconElement.variant = value;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in iconVariantProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The selected state of the ActionButton.
         /// </summary>
+        [Tooltip("The selected state of the ActionButton")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool selected
         {
             get => ClassListContains(Styles.selectedUssClassName);
-            set => SetSelectedWithoutNotify(value);
+            set
+            {
+                var changed = selected != value;
+                SetSelectedWithoutNotify(value);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in selectedProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The quiet state of the ActionButton.
         /// </summary>
+        [Tooltip("The quiet state of the ActionButton")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool quiet
         {
             get => ClassListContains(quietUssClassName);
-            set => EnableInClassList(quietUssClassName, value);
+            set
+            {
+                var changed = quiet != value;
+                EnableInClassList(quietUssClassName, value);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in quietProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The accent variant of the ActionButton.
         /// </summary>
+        [Tooltip("The accent variant of the ActionButton")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool accent
         {
             get => ClassListContains(accentUssClassName);
-            set => EnableInClassList(accentUssClassName, value);
+            set
+            {
+                var changed = accent != value;
+                EnableInClassList(accentUssClassName, value);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in accentProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -205,14 +313,26 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The current size of the ActionButton.
         /// </summary>
+        [Tooltip("The current size of the ActionButton.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
@@ -239,33 +359,18 @@ namespace Unity.AppUI.UI
             evt.target = this;
             SendEvent(evt);
         }
-        
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
 
+#if ENABLE_UXML_TRAITS
         /// <summary>
         /// The ActionButton UXML factory.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<ActionButton, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ActionButton"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : ExVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-
             readonly UxmlStringAttributeDescription m_Icon = new UxmlStringAttributeDescription
             {
                 name = "icon",
@@ -326,8 +431,8 @@ namespace Unity.AppUI.UI
                 el.accent = m_Accent.GetValueFromBag(bag, cc);
                 el.selected = m_Selected.GetValueFromBag(bag, cc);
                 el.quiet = m_Quiet.GetValueFromBag(bag, cc);
-                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
+#endif
     }
 }

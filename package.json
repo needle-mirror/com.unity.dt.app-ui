@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "1.0.0-pre.11",
+  "version": "1.0.0-pre.12",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,7 +25,7 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "975292a125fbdc3dd36df3701b9d18a0898fc985"
+    "revision": "25bb197318ef2ce0fe7725a8025b6d1543f07b71"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -82,10 +82,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed Scroller styling.\n- Fixed styling for Disabled Quiet Button component.\n- Fixed compilation errors while not having the new Input System installed but the Input Manager setting is set to 'New' in the Project Settings.\n- Fixed border gap in TouchSlider component.\n- Fixed margins on Checkbox component without label.\n\n### Changed\n\n- Removed `size` property from Checkbox and Toggle components."
+    "changelog": "### Changed\n\n- Color related components, such as `ColorSlider` or `ColorSwatch`, support now a value of type `UnityEngine.Gradient` instead of `UnityEngine.Color` for more flexibility.\n- Removed the `disabled` boolean property on App UI components from the public C# API. The `disabled` attribute in UXML has been replaced by `enabled` UXML attribute. This change has been made in order to be more consistent with Unity 2023.3, where `enabled` UXML attribute is provided by UI Toolkit on any VisualElement.\n- Replaced `Nullable<T>` properties in components by a custom serializable implementation called `Optional<T>`\n- Renamed `Panel.dir` property with `Panel.layoutDirection`.\n- Replaced the `Divider.vertical` property by `Divider.direction` enum property.\n- Removed the `ApplicationContext` class and `VisualElementExtensions.GetContext()` method, replaced by the ne `ProvideContext` and `RegisterContextChangedCallback` API.\n- Replaced `ActionGroup.vertical` property by `ActionGroup.direction` enum property.\n\n### Added\n\n- Added support of new UI Toolkit Runtime Bindings feature through bindable properties in each App UI components. More than 420 properties can now be bound (2023.2+).\n- Added support to new UI Toolkit Uxml Serialization using source code generators.\n- Added `BaseVisualElement` and `BaseTextElement` classes which are used as base class for mostly every App UI component\n- Added numerous custom PropertyDrawers for a better experience in UIBuilder (2023.3+)\n- Added the support of `Fixed` gradient blend mode in ColorSwatch shader.\n- Added `.appui-row` USS classes which support current layout direction context.\n\n### Removed\n\n- Starting Unity 2023.3, App UI will not provide any `UxmlFactory` or `UxmlTraits` implementation, as they become obsolete and replaced by the new UITK Uxml serialization system.\n\n### Fixed\n\n- Fixed Sliders handles to not exceed the range of track element.\n- Fixed color blending in the ColorSwatch custom shader.\n- Fixed `AppBar` story in Storybook samples.\n- Fixed some styling issues on different components.\n- Cleaned up some warning messages to not get anything written in the console during package installation.\n- Fixed small errors in UI Kit sample.\n- Fixed a refresh bug in the App UI Storybook window."
   },
   "upmCi": {
-    "footprint": "84673ec072f8feb7de086a5af015b40b90b37951"
+    "footprint": "bbe98fae72622790f0bb66ad5a83103196fafc88"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@1.0/manual/index.html"
 }

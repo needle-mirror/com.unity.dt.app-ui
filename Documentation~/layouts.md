@@ -12,12 +12,7 @@ to help you create the UI of your Unity project.
 ### App UI Panel
 
 The [App UI Panel](xref:Unity.AppUI.UI.Panel) component is
-the root component of the App UI system.
-Your application should have only one App UI Panel component,
-and it should be the root of your UI document.
-
-The App UI Panel component provides a default [`ApplicationContext`](xref:Unity.AppUI.Core.ApplicationContext) object,
-based on the current system information, and a layering system to handle popups, notifications, and tooltips.
+the root component of the App UI system. At the layout level, it provides a layering system to handle popups, notifications, and tooltips. They will be displayed as overlays in the same [UIDocument](xref:UnityEngine.UIElements.UIDocument).
 
 ### Containers
 

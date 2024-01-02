@@ -1,6 +1,8 @@
 using System;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -28,8 +30,24 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Checkbox UI element.
     /// </summary>
-    public class Checkbox : VisualElement, IValidatableElement<CheckboxState>, ISizeableElement, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Checkbox : BaseVisualElement, IValidatableElement<CheckboxState>, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+        internal static readonly BindingId emphasizedProperty = nameof(emphasized);
+        
+        internal static readonly BindingId labelProperty = nameof(label);
+        
+        internal static readonly BindingId invalidProperty = nameof(invalid);
+        
+        internal static readonly BindingId validateValueProperty = nameof(validateValue);
+#endif
+        
         /// <summary>
         /// The Checkbox main styling class.
         /// </summary>
@@ -72,6 +90,8 @@ namespace Unity.AppUI.UI
         Pressable m_Clickable;
 
         readonly ExVisualElement m_Box;
+
+        Func<CheckboxState, bool> m_ValidateValue;
 
         /// <summary>
         /// Default constructor.
@@ -127,43 +147,96 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Checkbox emphasized mode.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool emphasized
         {
             get => ClassListContains(emphasizedUssClassName);
-            set => EnableInClassList(emphasizedUssClassName, value);
+            set
+            {
+                var changed = emphasized != value;
+                EnableInClassList(emphasizedUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in emphasizedProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The text displayed in the Checkbox label.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string label
         {
             get => m_Label.text;
             set
             {
+                var changed = m_Label.text != value;
                 m_Label.text = value;
                 m_Label.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelProperty);
+#endif
             }
         }
-        
-        /// <summary>
-        /// The Checkbox size
-        /// </summary>
-        public Size size { get; set; }
 
         /// <summary>
         /// The Checkbox invalid state.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
-            set => EnableInClassList(Styles.invalidUssClassName, value);
+            set
+            {
+                var changed = invalid != value;
+                EnableInClassList(Styles.invalidUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in invalidProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The Checkbox validation function.
         /// </summary>
-        public Func<CheckboxState, bool> validateValue { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<CheckboxState, bool> validateValue
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Set the Checkbox value without notifying the change.
@@ -180,6 +253,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Checkbox value.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public CheckboxState value
         {
             get => m_Value;
@@ -191,6 +270,10 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
 
@@ -211,32 +294,18 @@ namespace Unity.AppUI.UI
             m_Box.passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.Outline;
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// UXML factory for the Checkbox.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Checkbox, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Checkbox"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
-
             readonly UxmlBoolAttributeDescription m_Emphasized = new UxmlBoolAttributeDescription
             {
                 name = "emphasized",
@@ -269,8 +338,9 @@ namespace Unity.AppUI.UI
                 element.emphasized = m_Emphasized.GetValueFromBag(bag, cc);
                 element.value = m_Value.GetValueFromBag(bag, cc);
                 element.label = m_Label.GetValueFromBag(bag, cc);
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+#endif
     }
 }

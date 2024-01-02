@@ -9,5 +9,11 @@ apiRules:
       uidRegex: Unity\.AppUI\..*\.UxmlTraits
       type: Class
   - exclude:
+      uidRegex: Unity\.AppUI\..*\.UxmlSerializedData
+      type: Class
+  - exclude:
+      uidRegex: Unity\.AppUI\..*UxmlSerializedData
+      type: Class
+  - exclude:
       uidRegex: Unity\.AppUI\.Samples\..*
       type: Namespace

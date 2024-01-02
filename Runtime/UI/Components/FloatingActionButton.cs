@@ -1,14 +1,29 @@
 using System;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A floating action button.
     /// </summary>
-    public class FloatingActionButton : ExVisualElement, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class FloatingActionButton : ExVisualElement, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
+        
+        internal static readonly BindingId elevationProperty = new BindingId(nameof(elevation));
+        
+        internal static readonly BindingId accentProperty = new BindingId(nameof(accent));
+        
+#endif
+        
         /// <summary>
         /// The Floating Action Button's USS class name.
         /// </summary>
@@ -59,34 +74,76 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The elevation of this element.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public int elevation
         { 
             get => m_Elevation;
             set
             {
+                var changed = m_Elevation != value;
                 RemoveFromClassList(Styles.elevationUssClassName + m_Elevation); 
                 m_Elevation = value;
                 AddToClassList(Styles.elevationUssClassName + m_Elevation);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in elevationProperty);
+#endif
             }
         }
         
+        /// <summary>
+        /// The accent variant of this element.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool accent
         {
             get => ClassListContains(accentUssClassName);
-            set => EnableInClassList(accentUssClassName, value);
+            set
+            {
+                var changed = ClassListContains(accentUssClassName) != value;
+                EnableInClassList(accentUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in accentProperty);
+#endif
+            }
         }
         
         /// <summary>
         /// The size of this element.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
@@ -130,19 +187,11 @@ namespace Unity.AppUI.UI
             passMask = Passes.Clear | Passes.OutsetShadows | Passes.Outline;
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
         
         /// <summary>
         /// Defines the UxmlFactory for the <see cref="FloatingActionButton"/>.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<FloatingActionButton, UxmlTraits> { }
 
         /// <summary>
@@ -162,12 +211,7 @@ namespace Unity.AppUI.UI
                 defaultValue = 12,
             };
             
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-            
+                        
             readonly UxmlBoolAttributeDescription m_Accent = new UxmlBoolAttributeDescription
             {
                 name = "accent",
@@ -189,8 +233,10 @@ namespace Unity.AppUI.UI
                 element.elevation = m_Elevation.GetValueFromBag(bag, cc);
                 element.accent = m_Accent.GetValueFromBag(bag, cc);
                 
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+        
+#endif
     }
 }

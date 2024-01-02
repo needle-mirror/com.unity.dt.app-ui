@@ -1,15 +1,32 @@
 using System;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Vector4 Field UI element.
     /// </summary>
-    public class Vector4Field : VisualElement, IValidatableElement<Vector4>, ISizeableElement, INotifyValueChanging<Vector4>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Vector4Field : BaseVisualElement, IValidatableElement<Vector4>, ISizeableElement, INotifyValueChanging<Vector4>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId valueProperty = new BindingId(nameof(value));
+        
+        internal static readonly BindingId invalidProperty = new BindingId(nameof(invalid));
+        
+        internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
+        
+        internal static readonly BindingId validateValueProperty = new BindingId(nameof(validateValue));
+        
+#endif
+        
         /// <summary>
         /// The Vector4Field main styling class.
         /// </summary>
@@ -58,6 +75,8 @@ namespace Unity.AppUI.UI
         readonly FloatField m_ZField;
 
         Vector4 m_LastValue;
+
+        Func<Vector4, bool> m_ValidateValue;
 
         /// <summary>
         /// Default constructor.
@@ -121,6 +140,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the Vector4Field.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
@@ -154,6 +179,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the Vector4Field.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Vector4 value
         {
             get => m_Value;
@@ -171,6 +202,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The invalid state of the Vector4Field.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -188,7 +225,24 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The validation function of the Vector4Field.
         /// </summary>
-        public Func<Vector4, bool> validateValue { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<Vector4, bool> validateValue 
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+                invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
+#endif
+            }
+        }
         
         void OnXFieldChanging(ChangingEvent<float> evt)
         {
@@ -255,32 +309,19 @@ namespace Unity.AppUI.UI
             value = new Vector4(evt.newValue, value.y, value.z, value.w);
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+        
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to instantiate a <see cref="Vector4Field"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Vector4Field, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Vector4Field"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
-
             readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
             {
                 name = "size",
@@ -299,9 +340,9 @@ namespace Unity.AppUI.UI
 
                 var element = (Vector4Field)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
-
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 }

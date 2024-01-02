@@ -1,16 +1,33 @@
 using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A slider that allows the user to select a color value.
     /// </summary>
-    public sealed class ColorSlider : BaseSlider<float,float>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public sealed partial class ColorSlider : BaseSlider<float,float>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId sizeProperty = nameof(size);
+        
+        internal static readonly BindingId colorValueProperty = nameof(colorValue);
+        
+        internal static readonly BindingId colorRangeProperty = nameof(colorRange);
+        
+        internal static readonly BindingId incrementFactorProperty = nameof(incrementFactor);
+        
+#endif
+        
         /// <summary>
         /// The ColorSlider main styling class.
         /// </summary>
@@ -20,6 +37,11 @@ namespace Unity.AppUI.UI
         /// The ColorSlider thumb container styling class.
         /// </summary>
         public static readonly string thumbContainerUssClassName = ussClassName + "__thumbcontainer";
+        
+        /// <summary>
+        /// The ColorSlider thumb container container styling class.
+        /// </summary>
+        public static readonly string thumbContainerContainerUssClassName = ussClassName + "__thumbcontainer-container";
 
         /// <summary>
         /// The ColorSlider thumb styling class.
@@ -53,47 +75,125 @@ namespace Unity.AppUI.UI
         readonly ExVisualElement m_Thumb;
 
         readonly VisualElement m_ThumbContainer;
+        
+        readonly VisualElement m_ThumbContainerContainer;
 
         readonly VisualElement m_ThumbContent;
 
         Size m_Size;
 
+        float m_IncrementFactor;
+        
+        const float k_DefaultIncrement = 0.01f;
+
         /// <summary>
         /// The currently selected color value.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public Color colorValue => m_ThumbContent.resolvedStyle.backgroundColor;
 
         /// <summary>
         /// The current color range in the track.
         /// </summary>
-        public List<ColorEntry> colorRange
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public Gradient colorRange
         {
             get => m_TrackSwatch.value;
             set
             {
+                var changed = !m_TrackSwatch.value?.Equals(value) ?? value != null;
                 m_TrackSwatch.value = value;
                 SetValueWithoutNotify(this.value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in colorRangeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The current size of the ActionButton.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The delta value used when interacting with the slider with the keyboard.
         /// </summary>
-        public float incrementFactor { get; set; } = 0.01f;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public float incrementFactor
+        {
+            get => m_IncrementFactor;
+            set
+            {
+                var changed = !Mathf.Approximately(m_IncrementFactor, value);
+                m_IncrementFactor = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in incrementFactorProperty);
+#endif
+            }
+        }
+        
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute("low-value")]
+        [HideInInspector]
+        float lowValueAttributeOverride
+        {
+            get => lowValue;
+            set => lowValue = value;
+        }
+        
+        [UxmlAttribute("high-value")]
+        [HideInInspector]
+        float highValueAttributeOverride
+        {
+            get => highValue;
+            set => highValue = value;
+        }
+        
+        [UxmlAttribute("value")]
+        [Range(0, 1)]
+        float valueAttributeOverride
+        {
+            get => value;
+            set => this.value = value;
+        }
+#endif
 
         /// <summary>
         /// Default constructor.
@@ -112,11 +212,17 @@ namespace Unity.AppUI.UI
 
             m_TrackSwatch = new ColorSwatch { name = trackSwatchUssClassName, pickingMode = PickingMode.Ignore };
             m_TrackSwatch.AddToClassList(trackSwatchUssClassName);
-            m_TrackSwatch.SetValueWithoutNotify(new List<ColorEntry>
+            var g = new Gradient();
+            g.SetKeys(new GradientColorKey[]
             {
-                new ColorEntry(Color.clear, 0),
-                new ColorEntry(Color.clear, 1),
+                new GradientColorKey(Color.red, 0),
+                new GradientColorKey(Color.red, 1),
+            }, new GradientAlphaKey[]
+            {
+                new GradientAlphaKey(0, 0),
+                new GradientAlphaKey(1, 1),
             });
+            m_TrackSwatch.SetValueWithoutNotify(g);
 
             m_ThumbContent = new VisualElement
             {
@@ -126,6 +232,13 @@ namespace Unity.AppUI.UI
             };
             m_ThumbContent.AddToClassList(thumbContentUssClassName);
             m_ThumbContent.style.backgroundColor = Color.clear;
+            
+            m_ThumbContainerContainer = new VisualElement
+            {
+                name = thumbContainerContainerUssClassName,
+                pickingMode = PickingMode.Position,
+            };
+            m_ThumbContainerContainer.AddToClassList(thumbContainerContainerUssClassName);
 
             m_ThumbContainer = new VisualElement
             {
@@ -145,7 +258,8 @@ namespace Unity.AppUI.UI
 
             hierarchy.Add(m_Track);
             m_Track.hierarchy.Add(m_TrackSwatch);
-            hierarchy.Add(m_ThumbContainer);
+            hierarchy.Add(m_ThumbContainerContainer);
+            m_ThumbContainerContainer.hierarchy.Add(m_ThumbContainer);
             m_ThumbContainer.hierarchy.Add(m_Thumb);
             m_Thumb.hierarchy.Add(m_ThumbContent);
 
@@ -154,12 +268,22 @@ namespace Unity.AppUI.UI
             size = Size.M;
             lowValue = 0;
             highValue = 1f;
+            incrementFactor = k_DefaultIncrement;
             SetValueWithoutNotify(0);
 
             m_DraggerManipulator = new Draggable(OnTrackClicked, OnTrackDragged, OnTrackUp, OnTrackDown);
-            this.AddManipulator(m_DraggerManipulator);
+            m_ThumbContainerContainer.AddManipulator(m_DraggerManipulator);
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));
             RegisterCallback<KeyDownEvent>(OnKeyDown);
+        }
+
+        protected override void InvokeValueChangedCallbacks()
+        {
+            base.InvokeValueChangedCallbacks();
+            
+#if ENABLE_RUNTIME_DATA_BINDINGS
+            NotifyPropertyChanged(in colorValueProperty);
+#endif
         }
 
         void OnPointerFocusIn(FocusInEvent evt)
@@ -208,6 +332,11 @@ namespace Unity.AppUI.UI
                     }
                 }
             }
+        }
+
+        protected override Rect GetSliderRect()
+        {
+            return m_ThumbContainerContainer.contentRect;
         }
 
         /// <summary>
@@ -263,37 +392,21 @@ namespace Unity.AppUI.UI
 
         void RefreshUI()
         {
-            if (panel == null || !contentRect.IsValid())
-                return;
-
-            var firstIndex = colorRange.FindLastIndex(e => e.position <= m_Value);
-            firstIndex = Mathf.Max(firstIndex, 0);
-            var secondIndex = Mathf.Min(firstIndex + 1, colorRange.Count - 1);
-            var delta = (m_Value - colorRange[firstIndex].position) / Mathf.Max(0.001f, colorRange[secondIndex].position - colorRange[firstIndex].position);
-            var color = Color.Lerp(colorRange[firstIndex].color, colorRange[secondIndex].color, delta);
-            m_ThumbContent.style.backgroundColor = color;
+            m_ThumbContent.style.backgroundColor = colorRange.Evaluate(m_Value);
             m_ThumbContainer.style.left = new StyleLength(new Length(m_Value * 100f, LengthUnit.Percent));
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Instantiates an <see cref="ColorSlider"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<ColorSlider, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ColorSlider"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseSlider<float,float>.UxmlTraits
         {
             readonly UxmlFloatAttributeDescription m_Value = new UxmlFloatAttributeDescription
             {
@@ -313,11 +426,8 @@ namespace Unity.AppUI.UI
                 defaultValue = new Color(1, 0, 0, 1)
             };
 
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
+            
+            
 
             readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
             {
@@ -340,16 +450,21 @@ namespace Unity.AppUI.UI
                 Color from = Color.black, to = Color.black;
                 if (m_From.TryGetValueFromBag(bag, cc, ref from) && m_To.TryGetValueFromBag(bag, cc, ref to))
                 {
-                    var range = new List<ColorEntry>()
+                    var g = new Gradient();
+                    g.SetKeys(new GradientColorKey[]
                     {
-                        new ColorEntry(from, 0),
-                        new ColorEntry(to, 1)
-                    };
-                    el.colorRange = range;
+                        new GradientColorKey(from, 0),
+                        new GradientColorKey(to, 1),
+                    }, new GradientAlphaKey[]
+                    {
+                        new GradientAlphaKey(1, 0),
+                        new GradientAlphaKey(1, 1),
+                    });
+                    el.colorRange = g;
                 }
                 el.SetValueWithoutNotify(m_Value.GetValueFromBag(bag, cc));
-                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
+#endif
     }
 }

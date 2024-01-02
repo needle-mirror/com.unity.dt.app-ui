@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -172,8 +174,15 @@ namespace Unity.AppUI.UI
     /// The current item can be removed using the Pop method. The item below the current item becomes the new current item.
     /// The current item can be replaced using the Replace method. The item below the current item is removed and the new item is added.
     /// </summary>
-    public class StackView : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class StackView : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+
+#endif
+        
         readonly Stack<StackViewItem> m_Stack;
         
         /// <summary>
@@ -456,18 +465,21 @@ namespace Unity.AppUI.UI
             item.view = null;
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Defines the UxmlFactory for the StackView.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<StackView, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="StackView"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
 
         }
+        
+#endif
     }
 }

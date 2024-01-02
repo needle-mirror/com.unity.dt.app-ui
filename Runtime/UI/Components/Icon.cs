@@ -1,7 +1,9 @@
 using System;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -75,8 +77,23 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Icon UI component.
     /// </summary>
-    public class Icon : Image
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Icon : Image
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId iconNameProperty = new BindingId(nameof(iconName));
+        
+        internal static readonly BindingId primaryProperty = new BindingId(nameof(primary));
+        
+        internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
+        
+        internal static readonly BindingId variantProperty = new BindingId(nameof(variant));
+        
+#endif
+        
         /// <summary>
         /// The Icon main styling class.
         /// </summary>
@@ -118,84 +135,122 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The primary variant of the Icon.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool primary
         {
             get => ClassListContains(primaryUssClassName);
-            set => EnableInClassList(primaryUssClassName, value);
+            set
+            {
+                var changed = ClassListContains(primaryUssClassName) != value;
+                EnableInClassList(primaryUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in primaryProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The size of the Icon.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public IconSize size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The name of the Icon.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string iconName
         {
             get => m_IconName;
             set
             {
+                var changed = m_IconName != value;
                 RemoveFromClassList(ussClassName + "--" + m_IconName + "--" + m_Variant.ToString().ToLower());
                 RemoveFromClassList(ussClassName + "--" + m_IconName);
                 m_IconName = value;
                 AddToClassList(ussClassName + "--" + m_IconName + "--" + m_Variant.ToString().ToLower());
                 AddToClassList(ussClassName + "--" + m_IconName);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in iconNameProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The variant of the Icon.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public IconVariant variant
         {
             get => m_Variant;
             set
             {
+                var changed = m_Variant != value;
                 RemoveFromClassList(ussClassName + "--" + m_IconName + "--" + m_Variant.ToString().ToLower());
                 RemoveFromClassList(ussClassName + "--" + m_IconName);
                 m_Variant = value;
                 AddToClassList(ussClassName + "--" + m_IconName + "--" + m_Variant.ToString().ToLower());
                 AddToClassList(ussClassName + "--" + m_IconName);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in variantProperty);
+#endif
             } 
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to instantiate a <see cref="Icon"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Icon, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Icon"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : Image.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-
+            
             readonly UxmlStringAttributeDescription m_IconName = new UxmlStringAttributeDescription
             {
                 name = "icon-name",
@@ -236,8 +291,10 @@ namespace Unity.AppUI.UI
                 element.size = m_Size.GetValueFromBag(bag, cc);
                 element.iconName = m_IconName.GetValueFromBag(bag, cc);
                 element.variant = m_Variant.GetValueFromBag(bag, cc);
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+        
+#endif
     }
 }

@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -27,7 +29,10 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// An Item from a Picker.
     /// </summary>
-    public class PickerItem : VisualElement, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class PickerItem : BaseVisualElement, IPressable
     {
         /// <summary>
         /// The main styling class for the PickerItem.
@@ -109,8 +114,33 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Picker UI element.
     /// </summary>
-    public abstract class Picker : ExVisualElement, INotifyValueChanged<IEnumerable<int>>, ISizeableElement, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public abstract partial class Picker : ExVisualElement, INotifyValueChanged<IEnumerable<int>>, ISizeableElement, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId closeOnSelectionProperty = new BindingId(nameof(closeOnSelection));
+        
+        internal static readonly BindingId defaultMessageProperty = new BindingId(nameof(defaultMessage));
+        
+        internal static readonly BindingId defaultValueProperty = new BindingId(nameof(defaultValue));
+        
+        internal static readonly BindingId sourceItemsProperty = new BindingId(nameof(sourceItems));
+        
+        internal static readonly BindingId emphasizedProperty = new BindingId(nameof(emphasized));
+        
+        internal static readonly BindingId selectionTypeProperty = new BindingId(nameof(selectionType));
+        
+        internal static readonly BindingId selectedIndexProperty = new BindingId(nameof(selectedIndex));
+        
+        internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
+        
+        internal static readonly BindingId valueProperty = new BindingId(nameof(value));
+        
+#endif
+        
         /// <summary>
         /// The Picker main styling class.
         /// </summary>
@@ -173,6 +203,8 @@ namespace Unity.AppUI.UI
 
         MenuBuilder m_MenuBuilder;
         
+        bool m_CloseOnSelection;
+        
         /// <summary>
         /// The container for the Picker title.
         /// </summary>
@@ -224,17 +256,38 @@ namespace Unity.AppUI.UI
             defaultValue = defaultIndices;
             size = Size.M;
             sourceItems = items;
+            closeOnSelection = true;
             
             if (defaultIndices is { Length: >0 })
                 SetValueWithoutNotify(defaultIndices);
 
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));
         }
-        
+
         /// <summary>
         /// Close the picker menu automatically when an item is selected.
         /// </summary>
-        public bool closeOnSelection { get; set; } = true;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool closeOnSelection
+        {
+            get => m_CloseOnSelection;
+            set
+            {
+                if (m_CloseOnSelection == value)
+                    return;
+                
+                m_CloseOnSelection = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in closeOnSelectionProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Clickable Manipulator for this Picker.
@@ -256,34 +309,58 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Picker default message when no item is selected.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string defaultMessage
         {
             get => m_DefaultMessage;
             set
             {
+                if (m_DefaultMessage == value)
+                    return;
                 m_DefaultMessage = value;
                 RefreshUI();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in defaultMessageProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The Picker default value. This is the value that will be selected if no value is set.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public int[] defaultValue
         {
             get => m_DefaultValue;
 
             set
             {
+                if (m_DefaultValue == value)
+                    return;
                 m_DefaultValue = value;
                 if (!m_ValueSet)
                     SetValueWithoutNotify(m_DefaultValue);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in defaultValueProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The source items collection.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public IList sourceItems
         {
             get => m_SourceItems;
@@ -295,12 +372,22 @@ namespace Unity.AppUI.UI
                 m_SourceItems = value;
                 m_ValueSet = false;
                 RefreshUI();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in sourceItemsProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The Picker size.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
@@ -309,16 +396,33 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The Picker emphasized mode.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool emphasized
         {
             get => ClassListContains(emphasizedUssClassName);
-            set => EnableInClassList(emphasizedUssClassName, value);
+            set
+            {
+                EnableInClassList(emphasizedUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in emphasizedProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -327,6 +431,12 @@ namespace Unity.AppUI.UI
         /// <remarks>
         /// If the selection type is changed, the Picker value will be reset.
         /// </remarks>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public PickerSelectionType selectionType
         {
             get => m_SelectionType;
@@ -334,16 +444,30 @@ namespace Unity.AppUI.UI
             {
                 m_SelectionType = value;
                 this.value = new int[] { };
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in selectionTypeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Quick access to the currently selected index for a Picker in Single selection mode.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public int selectedIndex
         {
             get => m_Value.Count > 0 ? m_Value[0] : -1;
-            set => this.value = new[] { value };
+            set
+            {
+                this.value = new[] { value };
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in selectedIndexProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -393,6 +517,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Picker value. This is the index of the selected item.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public IEnumerable<int> value
         {
             get => m_Value;
@@ -407,6 +534,11 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(newValue);
                 SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+                NotifyPropertyChanged(in selectedIndexProperty);
+#endif
             }
         }
         
@@ -539,26 +671,14 @@ namespace Unity.AppUI.UI
             return menu;
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Picker"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : ExVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-
+            
             readonly UxmlBoolAttributeDescription m_Emphasized = new UxmlBoolAttributeDescription
             {
                 name = "emphasized",
@@ -597,10 +717,12 @@ namespace Unity.AppUI.UI
                 el.size = m_Size.GetValueFromBag(bag, cc);
                 el.emphasized = m_Emphasized.GetValueFromBag(bag, cc);
                 el.closeOnSelection = m_CloseOnSelection.GetValueFromBag(bag, cc);
-                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
+                
                 el.selectionType = m_SelectionType.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 
     /// <summary>
@@ -608,10 +730,27 @@ namespace Unity.AppUI.UI
     /// </summary>
     /// <typeparam name="TItemType"> The type of the items contained in the Picker. </typeparam>
     /// <typeparam name="TTitleType"> The type of the title contained in the Picker. </typeparam>
-    public abstract class Picker<TItemType, TTitleType> : Picker
-        where TItemType : VisualElement, new()
-        where TTitleType : VisualElement, new()
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public abstract partial class Picker<TItemType, TTitleType> : Picker
+        where TItemType : BaseVisualElement, new()
+        where TTitleType : BaseVisualElement, new()
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId bindItemProperty = new BindingId(nameof(bindItem));
+        
+        internal static readonly BindingId bindTitleProperty = new BindingId(nameof(bindTitle));
+        
+        internal static readonly BindingId makeItemProperty = new BindingId(nameof(makeItem));
+        
+        internal static readonly BindingId makeTitleProperty = new BindingId(nameof(makeTitle));
+        
+        internal static readonly BindingId unbindItemProperty = new BindingId(nameof(unbindItem));
+        
+#endif
+        
         Action<TItemType, int> m_BindItem;
 
         Func<TItemType> m_MakeItem;
@@ -619,65 +758,116 @@ namespace Unity.AppUI.UI
         Func<TTitleType> m_MakeTitle;
         
         Action<TTitleType, IEnumerable<int>> m_BindTitle;
-        
+
+        Action<TItemType, int> m_UnbindItem;
+
         /// <summary>
         /// The function used to create a Picker item.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Func<TItemType> makeItem
         {
             get => m_MakeItem;
             set
             {
+                if (m_MakeItem == value)
+                    return;
                 m_MakeItem = value;
                 RefreshListUI();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in makeItemProperty);
+#endif
             }
         }
         
         /// <summary>
         /// The function used to bind a Picker item.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Action<TItemType, int> bindItem
         {
             get => m_BindItem;
             set
             {
+                if (m_BindItem == value)
+                    return;
                 m_BindItem = value;
                 RefreshListUI();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in bindItemProperty);
+#endif
             }
         }
         
         /// <summary>
         /// The function used to unbind a Picker item.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Action<TItemType, int> unbindItem
         {
-            get;
-            set;
+            get => m_UnbindItem;
+            set
+            {
+                if (m_UnbindItem == value)
+                    return;
+                m_UnbindItem = value;
+                RefreshListUI();
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in unbindItemProperty);
+#endif
+            }
         }
         
         /// <summary>
         /// The function used to create a Picker title.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Func<TTitleType> makeTitle
         {
             get => m_MakeTitle;
             set
             {
+                if (m_MakeTitle == value)
+                    return;
                 m_MakeTitle = value;
                 RefreshTitleUI();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in makeTitleProperty);
+#endif
             }
         }
         
         /// <summary>
         /// The function used to bind a Picker title.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Action<TTitleType, IEnumerable<int>> bindTitle
         {
             get => m_BindTitle;
             set
             {
+                if (m_BindTitle == value)
+                    return;
                 m_BindTitle = value;
                 RefreshTitleUI();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in bindTitleProperty);
+#endif
             }
         }
 
@@ -753,10 +943,13 @@ namespace Unity.AppUI.UI
             return m_Items[index] as TItemType;
         }
         
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Picker{T,TU}"/>.
         /// </summary>
-        [Preserve]
         public new class UxmlTraits : Picker.UxmlTraits { }
+        
+#endif
     }
 }

@@ -1,17 +1,29 @@
 using System;
-using System.Collections.Generic;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements.Experimental;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Item used inside an <see cref="Accordion"/> element.
     /// </summary>
-    public class AccordionItem : VisualElement, INotifyValueChanged<bool>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class AccordionItem : BaseVisualElement, INotifyValueChanged<bool>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        internal static readonly BindingId titleProperty = nameof(title);
+        
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+        internal static readonly BindingId trailingContentTemplateProperty = nameof(trailingContentTemplate);
+#endif
+        
         const string k_IndicatorIconName = "caret-down";
         
         /// <summary>
@@ -67,6 +79,8 @@ namespace Unity.AppUI.UI
         ValueAnimation<float> m_Anim;
 
         IVisualElementScheduledItem m_ScheduledHeightResolver;
+
+        VisualTreeAsset m_TrailingContentTemplate;
 
         /// <summary>
         /// Default constructor.
@@ -148,17 +162,68 @@ namespace Unity.AppUI.UI
         public VisualElement trailingContainer { get; }
 
         /// <summary>
+        /// The header's trailing container template of the AccordionItem.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Header("Accordion Item")]
+#endif
+        public VisualTreeAsset trailingContentTemplate
+        {
+            get => m_TrailingContentTemplate;
+            set
+            {
+                var changed = m_TrailingContentTemplate != value;
+                m_TrailingContentTemplate = value;
+                trailingContainer.Clear();
+                if (m_TrailingContentTemplate)
+                    m_TrailingContentTemplate.CloneTree(trailingContainer);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in trailingContentTemplateProperty);
+#endif
+            }
+        }
+
+        /// <summary>
         /// The title of the AccordionItem.
         /// </summary>
+        [Tooltip("The title of the AccordionItem.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string title
         {
             get => m_HeaderTextElement.text;
-            set => m_HeaderTextElement.text = value;
+            set
+            {
+                var previousValue = m_HeaderTextElement.text;
+                
+                m_HeaderTextElement.text = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (previousValue != value)
+                    NotifyPropertyChanged(titleProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The value of the item, which represents its open state.
         /// </summary>
+        [Tooltip("The value of the item, which represents its open state.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool value
         {
             get => ClassListContains(Styles.openUssClassName);
@@ -174,6 +239,10 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
                 SendEvent(itemEvt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(valueProperty);
+#endif
             }
         }
 
@@ -192,78 +261,40 @@ namespace Unity.AppUI.UI
             if (newValue)
             {
                 m_ContentParentElement.style.height = m_ContentElement.resolvedStyle.height;
-                // m_ContentParentElement.style.height = new StyleLength(StyleKeyword.Auto);
-                // m_ContentElement.style.opacity = 0.0000f;
-                // m_ContentElement.style.visibility = Visibility.Hidden;
-                // m_ContentElement.style.position = Position.Absolute;
-
-                //m_ScheduledHeightResolver = m_ContentElement.schedule.Execute(OnHeightResolved);
             }
             else
             {
                 m_ContentParentElement.style.height = 0;
-                //var startHeight = m_ContentElement.resolvedStyle.height;
-                //startHeight = float.IsNaN(startHeight) ? 0 : startHeight;
-                // m_Anim = m_ContentElement.experimental.animation.Start(startHeight, 0, 125, (element, f) =>
-                // {
-                //     element.style.height = f;
-                // }).Ease(Easing.OutQuad).KeepAlive();
             }
             EnableInClassList(Styles.openUssClassName, newValue);
         }
-
-        // void OnHeightResolved()
-        // {
-        //     var height = m_ContentElement.resolvedStyle.height;
-        //     m_ContentElement.style.height = 0;
-        //     m_ContentElement.style.maxHeight = new StyleLength(StyleKeyword.Null);
-        //     m_ContentElement.style.visibility = new StyleEnum<Visibility>(StyleKeyword.Null);
-        //     m_ContentElement.style.position = new StyleEnum<Position>(StyleKeyword.Null);
-        //
-        //     m_Anim?.Stop();
-        //     m_Anim?.Recycle();
-        //     m_Anim = m_ContentElement.experimental.animation.Start(0, 1f, 125, (element, f) =>
-        //     {
-        //         element.style.height = f * height;
-        //         element.style.opacity = f;
-        //     }).Ease(Easing.OutQuad).KeepAlive();
-        // }
 
         void OnClicked()
         {
             value = !value;
         }
 
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
-
+#if ENABLE_UXML_TRAITS
         /// <summary>
         /// Class to be able to use the <see cref="AccordionItem"/> in UXML.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<AccordionItem, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="AccordionItem"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-
             readonly UxmlStringAttributeDescription m_Title = new UxmlStringAttributeDescription
             {
                 name = "title",
                 defaultValue = "Header",
+            };
+            
+            readonly UxmlBoolAttributeDescription m_Value = new UxmlBoolAttributeDescription
+            {
+                name = "value",
+                defaultValue = false,
             };
 
             /// <summary>
@@ -279,20 +310,30 @@ namespace Unity.AppUI.UI
 
                 var element = (AccordionItem)ve;
                 element.title = m_Title.GetValueFromBag(bag, cc);
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+                element.value = m_Value.GetValueFromBag(bag, cc);
             }
         }
+#endif
     }
 
     /// <summary>
     /// Accordion UI element.
     /// </summary>
-    public class Accordion : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Accordion : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        internal static readonly BindingId isExclusiveProperty = nameof(isExclusive);
+#endif
+        
         /// <summary>
         /// The Accordion main styling class.
         /// </summary>
         public static readonly string ussClassName = "appui-accordion";
+        
+        bool m_IsExclusive;
 
         /// <summary>
         /// The behavior of the Accordion when multiple items are open.
@@ -300,7 +341,28 @@ namespace Unity.AppUI.UI
         /// If true, a maximum of one item can be open at a time.
         /// </para>
         /// </summary>
-        public bool isExclusive { get; set; } = false;
+        [Tooltip("If true, a maximum of one item can be open at a time.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Header("Accordion")]
+#endif
+        public bool isExclusive
+        {
+            get => m_IsExclusive;
+            set
+            {
+                var previousValue = m_IsExclusive;
+                m_IsExclusive = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (previousValue != value)
+                    NotifyPropertyChanged(isExclusiveProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Default constructor.
@@ -312,6 +374,8 @@ namespace Unity.AppUI.UI
             RegisterCallback<AccordionItemValueChangedEvent>(OnAccordionItemValueChanged);
 
             pickingMode = PickingMode.Ignore;
+            
+            isExclusive = false;
         }
 
         void OnAccordionItemValueChanged(AccordionItemValueChangedEvent evt)
@@ -332,16 +396,16 @@ namespace Unity.AppUI.UI
             }
         }
 
+#if ENABLE_UXML_TRAITS
         /// <summary>
         /// The UXML factory for the Accordion.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Accordion, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Accordion"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             /// <summary>
             /// The behavior of the Accordion when multiple items are open.
@@ -370,5 +434,6 @@ namespace Unity.AppUI.UI
                 element.isExclusive = m_IsExclusive.GetValueFromBag(bag, cc);
             }
         }
+#endif
     }
 }

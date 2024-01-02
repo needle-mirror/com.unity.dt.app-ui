@@ -1,15 +1,20 @@
 using System;
 using System.Globalization;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Double Field UI element.
     /// </summary>
-    public class DoubleField : NumericalField<double>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class DoubleField : NumericalField<double>
     {
         /// <summary>
         /// Default constructor.
@@ -69,15 +74,17 @@ namespace Unity.AppUI.UI
             return 0.001f * (AreEqual(baseValue, 0) ? 1f : (float)baseValue);
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Factory class to instantiate a <see cref="DoubleField"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<DoubleField, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="DoubleField"/>.
         /// </summary>
         public new class UxmlTraits : NumericalField<double>.UxmlTraits { }
+#endif
     }
 }

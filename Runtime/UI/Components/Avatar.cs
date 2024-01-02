@@ -1,6 +1,9 @@
+using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -28,8 +31,25 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Avatar UI element.
     /// </summary>
-    public class Avatar : VisualElement, ISizeableElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Avatar : BaseVisualElement, ISizeableElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        internal static readonly BindingId backgroundColorProperty = nameof(backgroundColor);
+        
+        internal static readonly BindingId outlineColorProperty = nameof(outlineColor);
+        
+        internal static readonly BindingId outlineWidthProperty = nameof(outlineWidth);
+        
+        internal static readonly BindingId sizeProperty = nameof(size);
+        
+        internal static readonly BindingId srcProperty = nameof(src);
+        
+        internal static readonly BindingId variantProperty = nameof(variant);
+#endif
+        
         /// <summary>
         /// The Avatar main styling class.
         /// </summary>
@@ -58,11 +78,11 @@ namespace Unity.AppUI.UI
 
         readonly ExVisualElement m_Container;
 
-        Color? m_BackgroundColor;
+        Optional<Color> m_BackgroundColor;
 
-        Color? m_OutlineColor;
+        Optional<Color> m_OutlineColor;
 
-        float m_OutlineWidth;
+        Optional<float> m_OutlineWidth;
 
         AvatarVariant m_Variant;
 
@@ -74,6 +94,13 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Avatar size.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Header("Avatar")]
+#endif
         public Size size
         {
             get => m_Size;
@@ -88,6 +115,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Avatar variant.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public AvatarVariant variant
         {
             get => m_Variant;
@@ -98,86 +131,111 @@ namespace Unity.AppUI.UI
                 AddToClassList(variantUssClassName + m_Variant.ToString().ToLower());
             }
         }
+
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute("src")]
+#endif
+        Object srcTex
+        {
+            get => src.GetSelectedImage();
+            set => src = BackgroundExtensions.FromObject(value);
+        }
         
         /// <summary>
         /// The Avatar source image.
         /// </summary>
-        public StyleBackground src
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Background src
         {
-            get => m_Container.style.backgroundImage;
-            set => m_Container.style.backgroundImage = value;
+            get => m_Container.style.backgroundImage.value;
+            set
+            {
+                var changed = m_Container.style.backgroundImage.value != value;
+                m_Container.style.backgroundImage = value;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(srcProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The Avatar background color.
         /// </summary>
-        public Color? backgroundColor
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public Optional<Color> backgroundColor
         {
             get => m_BackgroundColor;
             set
             {
                 m_BackgroundColor = value;
-                m_Container.style.backgroundColor = m_BackgroundColor ?? new StyleColor(StyleKeyword.Null);
+                m_Container.style.backgroundColor = m_BackgroundColor.IsSet ? 
+                    m_BackgroundColor.Value : new StyleColor(StyleKeyword.Null);
             }
         }
 
         /// <summary>
         /// The Avatar outline width.
         /// </summary>
-        public float outlineWidth
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public Optional<float> outlineWidth
         {
             get => m_OutlineWidth;
             set
             {
                 m_OutlineWidth = value;
-                RefreshBorders();
+                
+                var borderWidthStyle = m_OutlineWidth.IsSet ? m_OutlineWidth.Value : new StyleFloat(StyleKeyword.Null);
+                style.borderBottomWidth = borderWidthStyle;
+                style.borderLeftWidth = borderWidthStyle;
+                style.borderRightWidth = borderWidthStyle;
+                style.borderTopWidth = borderWidthStyle;
             }
-        }
-
-        /// <summary>
-        /// Refresh the Avatar borders.
-        /// </summary>
-        void RefreshBorders()
-        {
-            style.borderBottomWidth = m_OutlineColor.HasValue ? m_OutlineWidth : 0;
-            style.borderLeftWidth = m_OutlineColor.HasValue ? m_OutlineWidth : 0;
-            style.borderRightWidth = m_OutlineColor.HasValue ? m_OutlineWidth : 0;
-            style.borderTopWidth = m_OutlineColor.HasValue ? m_OutlineWidth : 0;
         }
 
         /// <summary>
         /// The Avatar outline color.
         /// </summary>
-        public Color? outlineColor
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public Optional<Color> outlineColor
         {
             get => m_OutlineColor;
             set
             {
                 m_OutlineColor = value;
                 
-                style.borderBottomColor = m_OutlineColor ?? new StyleColor(StyleKeyword.Null);
-                style.borderLeftColor = m_OutlineColor ?? new StyleColor(StyleKeyword.Null);
-                style.borderRightColor = m_OutlineColor ?? new StyleColor(StyleKeyword.Null);
-                style.borderTopColor = m_OutlineColor ?? new StyleColor(StyleKeyword.Null);
+                var colorStyle = m_OutlineColor.IsSet ? m_OutlineColor.Value : new StyleColor(StyleKeyword.Null);
+                style.borderBottomColor = colorStyle;
+                style.borderLeftColor = colorStyle;
+                style.borderRightColor = colorStyle;
+                style.borderTopColor = colorStyle;
                 
                 const float paddingValue = 1;
                 
-                style.paddingBottom = m_OutlineColor.HasValue ? paddingValue : 0;
-                style.paddingLeft = m_OutlineColor.HasValue ? paddingValue : 0;
-                style.paddingRight = m_OutlineColor.HasValue ? paddingValue : 0;
-                style.paddingTop = m_OutlineColor.HasValue ? paddingValue : 0;
+                var paddingStyle = m_OutlineColor.IsSet ? paddingValue : new StyleLength(StyleKeyword.Null);
                 
-                RefreshBorders();
+                style.paddingBottom = paddingStyle;
+                style.paddingLeft = paddingStyle;
+                style.paddingRight = paddingStyle;
+                style.paddingTop = paddingStyle;
             }
-        }
-
-        /// <summary>
-        /// The Avatar background image.
-        /// </summary>
-        public StyleBackground backgroundImage
-        {
-            get => m_Container.resolvedStyle.backgroundImage;
-            set => m_Container.style.backgroundImage = value;
         }
 
         /// <summary>
@@ -195,10 +253,10 @@ namespace Unity.AppUI.UI
 
             size = k_DefaultSize;
             variant = k_DefaultVariant;
-            backgroundColor = null;
-            outlineColor = null;
+            backgroundColor = Optional<Color>.none;
+            outlineColor = Optional<Color>.none;
             outlineWidth = 2;
-            src = null;
+            src = new Background();
             
             this.RegisterContextChangedCallback<AvatarVariantContext>(OnVariantContextChanged);
             this.RegisterContextChangedCallback<SizeContext>(OnSizeContextChanged);
@@ -216,32 +274,18 @@ namespace Unity.AppUI.UI
                 variant = evt.context.variant;
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
-
+#if ENABLE_UXML_TRAITS
         /// <summary>
         /// Defines the UxmlFactory for the Avatar.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Avatar, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Avatar"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-
+            
             readonly UxmlColorAttributeDescription m_BackgroundColor = new UxmlColorAttributeDescription
             {
                 name = "background-color",
@@ -298,10 +342,10 @@ namespace Unity.AppUI.UI
                     element.outlineColor = bgColor;
                 string src = null;
                 if (m_Src.TryGetValueFromBag(bag, cc, ref src))
-                    element.src = new StyleBackground(Resources.Load<Texture2D>(src));
+                    element.src = BackgroundExtensions.FromObject(Resources.Load(src));
                 element.outlineWidth = m_OutlineWidth.GetValueFromBag(bag, cc);
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
+#endif
     }
 }

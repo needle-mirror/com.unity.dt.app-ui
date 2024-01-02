@@ -1,6 +1,10 @@
 using System;
 using Unity.AppUI.Bridge;
+using Unity.AppUI.Core;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -8,9 +12,32 @@ namespace Unity.AppUI.UI
     /// Numerical Field UI element.
     /// </summary>
     /// <typeparam name="TValueType">The type of the numerical value.</typeparam>
-    public abstract class NumericalField<TValueType> : ExVisualElement, IValidatableElement<TValueType>, ISizeableElement, INotifyValueChanging<TValueType>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif 
+    public abstract partial class NumericalField<TValueType> : ExVisualElement, IValidatableElement<TValueType>, ISizeableElement, INotifyValueChanging<TValueType>
         where TValueType : struct, IComparable, IComparable<TValueType>, IFormattable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId valueProperty = new BindingId(nameof(value));
+        
+        internal static readonly BindingId formatStringProperty = new BindingId(nameof(formatString));
+        
+        internal static readonly BindingId unitProperty = new BindingId(nameof(unit));
+        
+        internal static readonly BindingId invalidProperty = new BindingId(nameof(invalid));
+        
+        internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
+        
+        internal static readonly BindingId lowValueProperty = new BindingId(nameof(lowValue));
+        
+        internal static readonly BindingId highValueProperty = new BindingId(nameof(highValue));
+        
+        internal static readonly BindingId validateValueProperty = new BindingId(nameof(validateValue));
+        
+#endif
+        
         /// <summary>
         /// The NumericalField main styling class.
         /// </summary>
@@ -80,16 +107,34 @@ namespace Unity.AppUI.UI
         /// </summary>
         protected TValueType m_LastValue;
 
+        Optional<TValueType> m_LowValue;
+
+        Optional<TValueType> m_HighValue;
+
+        Func<TValueType, bool> m_ValidateValue;
+
         /// <summary>
         /// The format string of the element.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string formatString
         {
             get => m_FormatString;
             set
             {
+                var changed = m_FormatString != value;
                 m_FormatString = value;
                 SetValueWithoutNotify(this.value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in formatStringProperty);
+#endif
             }
         }
 
@@ -135,9 +180,9 @@ namespace Unity.AppUI.UI
             evt.StopPropagation();
             if (ParseStringToValue(evt.newValue, out var newValue))
             {
-                if (lowValue.HasValue)
+                if (lowValue.IsSet)
                     newValue = Max(newValue, lowValue.Value);
-                if (highValue.HasValue)
+                if (highValue.IsSet)
                     newValue = Min(newValue, highValue.Value);
 
                 var previousValue = m_Value;
@@ -163,25 +208,77 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The unit of the element.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string unit
         {
             get => m_UnitElement.text;
             set
             {
+                var changed = m_UnitElement.text != value;
                 m_UnitElement.text = value;
                 m_UnitElement.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_UnitElement.text));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in unitProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Minimum value.
         /// </summary>
-        public TValueType? lowValue { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public Optional<TValueType> lowValue
+        {
+            get => m_LowValue;
+            set
+            {
+                var changed = m_LowValue != value;
+                m_LowValue = value;
+                SetValueWithoutNotify(this.value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in lowValueProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Maximum value.
         /// </summary>
-        public TValueType? highValue { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public Optional<TValueType> highValue
+        {
+            get => m_HighValue;
+            set
+            {
+                var changed = m_HighValue != value;
+                m_HighValue = value;
+                SetValueWithoutNotify(this.value);
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in highValueProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// The content container of the element.
@@ -191,14 +288,26 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the element.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
@@ -208,9 +317,9 @@ namespace Unity.AppUI.UI
         /// <param name="newValue"> The new value of the element. </param>
         public void SetValueWithoutNotify(TValueType newValue)
         {
-            if (lowValue.HasValue)
+            if (lowValue.IsSet)
                 newValue = Max(newValue, lowValue.Value);
-            if (highValue.HasValue)
+            if (highValue.IsSet)
                 newValue = Min(newValue, highValue.Value);
             m_Value = newValue;
             m_LastValue = m_Value;
@@ -222,15 +331,21 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the element.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public TValueType value
         {
             get => string.IsNullOrEmpty(m_InputElement.value) && ParseStringToValue(m_InputElement.value, out var val) ? val : m_Value;
             set
             {
                 var val = value;
-                if (lowValue.HasValue)
+                if (lowValue.IsSet)
                     val = Max(val, lowValue.Value);
-                if (highValue.HasValue)
+                if (highValue.IsSet)
                     val = Min(val, highValue.Value);
                 if (AreEqual(m_LastValue, val) && AreEqual(m_Value, val))
                     return;
@@ -239,22 +354,59 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(val);
                 SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The invalid state of the element.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
-            set => EnableInClassList(Styles.invalidUssClassName, value);
+            set
+            {
+                var changed = ClassListContains(Styles.invalidUssClassName) != value;
+                EnableInClassList(Styles.invalidUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in invalidProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// Method to validate the value.
         /// </summary>
-        public Func<TValueType, bool> validateValue { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<TValueType, bool> validateValue
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+                if (m_ValidateValue != null)
+                    invalid = !m_ValidateValue(this.value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
+#endif
+            }
+        }
 
         void OnFocusedOut(FocusOutEvent evt)
         {
@@ -346,26 +498,13 @@ namespace Unity.AppUI.UI
         /// <returns></returns>
         protected abstract float GetIncrementFactor(TValueType baseValue);
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="NumericalField{TValueType}"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : ExVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
-
             readonly UxmlStringAttributeDescription m_HighValue = new UxmlStringAttributeDescription { name = "high-value", defaultValue = null };
 
             readonly UxmlStringAttributeDescription m_LowValue = new UxmlStringAttributeDescription { name = "low-value", defaultValue = null };
@@ -416,8 +555,10 @@ namespace Unity.AppUI.UI
                 if (m_Format.TryGetValueFromBag(bag, cc, ref formatStr) && !string.IsNullOrEmpty(formatStr))
                     element.formatString = formatStr;
 
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+        
+#endif
     }
 }

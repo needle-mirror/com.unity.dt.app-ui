@@ -1,15 +1,36 @@
 using System;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Color Field UI element.
     /// </summary>
-    public class ColorField : ExVisualElement, IValidatableElement<Color>, INotifyValueChanging<Color>, ISizeableElement, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class ColorField : ExVisualElement, IValidatableElement<Color>, INotifyValueChanging<Color>, ISizeableElement, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+
+        internal static readonly BindingId sizeProperty = nameof(size);
+        
+        internal static readonly BindingId swatchOnlyProperty = nameof(swatchOnly);
+        
+        internal static readonly BindingId inlinePickerProperty = nameof(inlinePicker);
+        
+        internal static readonly BindingId invalidProperty = nameof(invalid);
+        
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+        internal static readonly BindingId validateValueProperty = nameof(validateValue);
+
+#endif
+        
         /// <summary>
         /// The ColorField main styling class.
         /// </summary>
@@ -50,6 +71,10 @@ namespace Unity.AppUI.UI
         Color m_PreviousValue;
 
         ColorPicker m_Picker;
+
+        bool m_InlinePicker;
+
+        Func<Color, bool> m_ValidateValue;
 
         /// <summary>
         /// Default constructor.
@@ -187,45 +212,122 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The ColorField size.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The ColorField type. When this is true, the ColorField will only show the swatch.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool swatchOnly
         {
             get => ClassListContains(swatchOnlyUssClassName);
-            set => EnableInClassList(swatchOnlyUssClassName, value);
+            set
+            { 
+                var changed = ClassListContains(swatchOnlyUssClassName) != value;
+                EnableInClassList(swatchOnlyUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in swatchOnlyProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The ColorPicker position relative to the ColorField. When this is true, the ColorPicker will be inlined
         /// instead of being displayed in a Popover.
         /// </summary>
-        public bool inlinePicker { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool inlinePicker
+        {
+            get => m_InlinePicker;
+            set
+            {
+                var changed = m_InlinePicker != value;
+                m_InlinePicker = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in inlinePickerProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// The ColorField invalid state.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
-            set => EnableInClassList(Styles.invalidUssClassName, value);
+            set
+            {
+                var changed = ClassListContains(Styles.invalidUssClassName) != value;
+                EnableInClassList(Styles.invalidUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in invalidProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The ColorField validation function.
         /// </summary>
-        public Func<Color, bool> validateValue { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<Color, bool> validateValue
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Sets the ColorField value without notifying the ColorField.
@@ -242,6 +344,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The ColorField value.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Color value
         {
             get => m_Value;
@@ -254,35 +362,26 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Class to instantiate a <see cref="ColorField"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<ColorField, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ColorField"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : ExVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-
+            
             readonly UxmlBoolAttributeDescription m_Invalid = new UxmlBoolAttributeDescription
             {
                 name = "invalid",
@@ -322,8 +421,9 @@ namespace Unity.AppUI.UI
                 element.invalid = m_Invalid.GetValueFromBag(bag, cc);
                 element.swatchOnly = m_SwatchOnly.GetValueFromBag(bag, cc);
                 element.inlinePicker = m_InlinePicker.GetValueFromBag(bag, cc);
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+#endif
     }
 }

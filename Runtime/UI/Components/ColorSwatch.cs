@@ -2,16 +2,33 @@ using System;
 using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A color swatch is a visual element that displays a color or a gradient.
     /// </summary>
-    public class ColorSwatch : VisualElement, INotifyValueChanged<List<ColorEntry>>, ISizeableElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class ColorSwatch : BaseVisualElement, INotifyValueChanged<Gradient>, ISizeableElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId sizeProperty = nameof(size);
+        
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+        internal static readonly BindingId colorProperty = nameof(color);
+        
+        internal static readonly BindingId roundProperty = nameof(round);
+        
+#endif
+        
         const int k_MaxGradientSteps = 11;
 
         /// <summary>
@@ -40,7 +57,7 @@ namespace Unity.AppUI.UI
 
         static readonly CustomStyleProperty<int> k_UssCheckerSize = new CustomStyleProperty<int>("--checker-size");
 
-        List<ColorEntry> m_Value;
+        Gradient m_Value;
 
         static Material s_Material;
 
@@ -65,85 +82,132 @@ namespace Unity.AppUI.UI
         static readonly int k_Width = Shader.PropertyToID("_Width");
 
         static readonly int k_Height = Shader.PropertyToID("_Height");
+        
+        static readonly int k_IsFixed = Shader.PropertyToID("_IsFixed");
 
-        static readonly int k_Count = Shader.PropertyToID("_Count");
+        static readonly int k_ColorCount = Shader.PropertyToID("_ColorCount");
 
-        static readonly int k_Positions = Shader.PropertyToID("_Positions");
-
+        static readonly int k_AlphaCount = Shader.PropertyToID("_AlphaCount");
+        
         static readonly int k_Colors = Shader.PropertyToID("_Colors");
+        
+        static readonly int k_Alphas = Shader.PropertyToID("_Alphas");
 
-        readonly List<Color> m_ColorList = new List<Color>();
-
-        readonly List<float> m_PositionList = new List<float>();
+        ComputeBuffer m_ColorBuffer;
+        
+        ComputeBuffer m_AlphaBuffer;
 
         Size m_Size;
 
         /// <summary>
         /// The color entry list.
         /// </summary>
-        public List<ColorEntry> value
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public Gradient value
         {
             get => m_Value;
             set
             {
-                if (m_Value == value)
+                if (m_Value == null && value == null)
                     return;
-
-                if (m_Value != null && value != null && m_Value.Count == value.Count)
-                {
-                    var equal = true;
-                    for (var i = 0; i < m_Value.Count; i++)
-                    {
-                        if (!m_Value[i].Equals(value[i]))
-                        {
-                            equal = false;
-                            break;
-                        }
-                    }
-
-                    if (equal)
-                        return;
-                }
                 
-                using var evt = ChangeEvent<List<ColorEntry>>.GetPooled(m_Value, value);
+                if (m_Value != null && m_Value.Equals(value))
+                    return;
+                
+                using var evt = ChangeEvent<Gradient>.GetPooled(m_Value, value);
                 SetValueWithoutNotify(value);
                 evt.target = this;
                 SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+                NotifyPropertyChanged(in colorProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The single color of the <see cref="ColorSwatch"/>.
-        /// Setting this property will overwrite the current color entry list to contain only the given single color value.
-        /// The property's getter always return the first item of the color entry list.
+        /// Setting this property will overwrite the current gradient value to contain only the given single color value.
+        /// The property's getter always return the first item of the gradient.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Color color
         {
-            get => value is { Count: > 0 } ? value[0].color : default;
-            set => this.value = new List<ColorEntry> { new ColorEntry(value, 0) };
+            get => value?.Evaluate(0) ?? default;
+            set
+            {
+                var g = this.value ?? new Gradient();
+                g.SetKeys(new[]
+                {
+                    new GradientColorKey(value, 0)
+                }, new[]
+                {
+                    new GradientAlphaKey(value.a, 0)
+                });
+                this.value = g;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in colorProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The size of the <see cref="ColorSwatch"/> element.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Round variant of the <see cref="ColorSwatch"/>.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool round
         {
             get => ClassListContains(roundUssClassName);
-            set => EnableInClassList(roundUssClassName, value);
+            set
+            {
+                var changed = ClassListContains(roundUssClassName) != value;
+                EnableInClassList(roundUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in roundProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -172,36 +236,6 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// Add a color entry in the current swatch.
-        /// This methods is useful to create gradients dynamically.
-        /// </summary>
-        /// <param name="newColor">The color to add.</param>
-        /// <param name="position">At which position the given color should be added. The expected value must be normalized.</param>
-        /// <returns>The index of the added color entry in the list.</returns>
-        public int AddColor(Color newColor, float position)
-        {
-            var newVal = new List<ColorEntry>(value);
-            var index = newVal.FindLastIndex(col => col.position < position) + 1;
-            newVal.Insert(index, new ColorEntry(newColor, position));
-            value = newVal;
-            return index;
-        }
-
-        /// <summary>
-        /// Remove a color entry from the current list.
-        /// </summary>
-        /// <param name="index">The index of the color entry to remove.</param>
-        public void RemoveColor(int index)
-        {
-            var newVal = new List<ColorEntry>(value);
-            if (index < newVal.Count && index >= 0)
-            {
-                newVal.RemoveAt(index);
-                value = newVal;
-            }
-        }
-
-        /// <summary>
         /// Force the refresh of the visual element.
         /// </summary>
         public void Refresh()
@@ -213,7 +247,7 @@ namespace Unity.AppUI.UI
         /// Set the color entry list value, without being notified of any changes.
         /// </summary>
         /// <param name="newValue">The new color entry list.</param>
-        public void SetValueWithoutNotify(List<ColorEntry> newValue)
+        public void SetValueWithoutNotify(Gradient newValue)
         {
             m_Value = newValue;
             GenerateTextures();
@@ -230,6 +264,12 @@ namespace Unity.AppUI.UI
                 RenderTexture.ReleaseTemporary(m_RT);
 
             m_RT = null;
+            
+            m_ColorBuffer?.Release();
+            m_ColorBuffer = null;
+            
+            m_AlphaBuffer?.Release();
+            m_AlphaBuffer = null;
         }
 
         void OnGeometryChanged(GeometryChangedEvent evt)
@@ -298,33 +338,38 @@ namespace Unity.AppUI.UI
                 m_RT.Create();
             }
 
-            m_ColorList.Clear();
-            m_PositionList.Clear();
-            if (m_Value != null)
+            if (m_ColorBuffer == null || m_ColorBuffer.count != m_Value?.colorKeys.Length)
             {
-                foreach (var v in m_Value)
-                {
-                    m_ColorList.Add(v.color);
-                    m_PositionList.Add(v.position);
-                }
+                m_ColorBuffer?.Release();
+                m_ColorBuffer = m_Value?.colorKeys?.Length > 0 ? 
+                    new ComputeBuffer(m_Value.colorKeys.Length, sizeof(float) * 5) : null;
             }
-            while (m_ColorList.Count < k_MaxGradientSteps)
+            
+            if (m_AlphaBuffer == null || m_AlphaBuffer.count != m_Value?.alphaKeys.Length)
             {
-                m_ColorList.Add(new Color());
-                m_PositionList.Add(-1);
+                m_AlphaBuffer?.Release();
+                m_AlphaBuffer = m_Value?.alphaKeys?.Length > 0 ? 
+                    new ComputeBuffer(m_Value.alphaKeys.Length, sizeof(float) * 2) : null;
             }
-
-            s_Material.SetColorArray(k_Colors, m_ColorList.ToArray());
-            s_Material.SetFloatArray(k_Positions, m_PositionList.ToArray());
-            s_Material.SetInt(k_Count, m_Value?.Count ?? 0);
+            
+            m_ColorBuffer?.SetData(m_Value?.colorKeys ?? Array.Empty<GradientColorKey>());
+            m_AlphaBuffer?.SetData(m_Value?.alphaKeys ?? Array.Empty<GradientAlphaKey>());
+            
+            s_Material.SetInt(k_ColorCount, m_Value?.colorKeys?.Length ?? 0);
+            s_Material.SetInt(k_AlphaCount, m_Value?.alphaKeys?.Length ?? 0);
+            s_Material.SetBuffer(k_Colors, m_ColorBuffer);
+            s_Material.SetBuffer(k_Alphas, m_AlphaBuffer);
             s_Material.SetColor(k_CheckerColor1, m_CheckerColor1);
             s_Material.SetColor(k_CheckerColor2, m_CheckerColor2);
             s_Material.SetFloat(k_CheckerSize, m_CheckerSize);
             s_Material.SetFloat(k_Width, rect.width);
             s_Material.SetFloat(k_Height, rect.height);
+            s_Material.SetInt(k_IsFixed, m_Value?.mode == GradientMode.Fixed ? 1 : 0);
 
             var prevRt = RenderTexture.active;
-            Graphics.Blit(null, m_RT, s_Material);
+            Graphics.Blit(null, m_RT, s_Material, 0);
+            if (m_ColorBuffer != null && m_AlphaBuffer != null)
+                Graphics.Blit(null, m_RT, s_Material, 1);
             RenderTexture.active = prevRt;
 
             if (m_Image.image != m_RT)
@@ -332,16 +377,17 @@ namespace Unity.AppUI.UI
             m_Image.MarkDirtyRepaint();
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Instantiates an <see cref="ColorSwatch"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<ColorSwatch, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ColorSwatch"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
             {
@@ -349,10 +395,10 @@ namespace Unity.AppUI.UI
                 defaultValue = Size.M,
             };
 
-            readonly UxmlColorAttributeDescription m_Color = new UxmlColorAttributeDescription
+            readonly UxmlStringAttributeDescription m_Value = new UxmlStringAttributeDescription
             {
-                name = "color",
-                defaultValue = Color.clear,
+                name = "value",
+                defaultValue = null,
             };
 
             readonly UxmlBoolAttributeDescription m_Round = new UxmlBoolAttributeDescription
@@ -373,12 +419,12 @@ namespace Unity.AppUI.UI
                 var element = (ColorSwatch)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
                 element.round = m_Round.GetValueFromBag(bag, cc);
-                var c = Color.clear;
-                if (m_Color.TryGetValueFromBag(bag, cc, ref c))
-                {
-                    element.color = c;
-                }
+
+                var valueFromBag = m_Value.GetValueFromBag(bag, cc);
+                if (!string.IsNullOrEmpty(valueFromBag) && GradientExtensions.TryParse(valueFromBag, out var gradient))
+                    element.value = gradient;
             }
         }
+#endif
     }
 }

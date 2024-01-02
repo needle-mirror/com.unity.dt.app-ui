@@ -1,9 +1,10 @@
 using System;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
-using Object = UnityEngine.Object;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -112,8 +113,21 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A visual element that can be used as a normal VisualElement but with additional styling options like shadows, borders, outline, etc.
     /// </summary>
-    public class ExVisualElement : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class ExVisualElement : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId backgroundColorProperty = new BindingId(nameof(backgroundColor));
+        
+        internal static readonly BindingId outlineColorProperty = new BindingId(nameof(outlineColor));
+        
+        internal static readonly BindingId passMaskProperty = new BindingId(nameof(passMask));
+        
+#endif
+        
         /// <summary>
         /// Rendering passes that will be executed. This is used to optimize and fine-tune the rendering.
         /// </summary>
@@ -307,7 +321,7 @@ namespace Unity.AppUI.UI
 
         static readonly int k_ShadowInset = Shader.PropertyToID("_ShadowInset");
 
-        Color? m_OutlineColorByCode;
+        Optional<Color> m_OutlineColorByCode;
 
         Vector2 m_PreviousSize;
 
@@ -317,7 +331,7 @@ namespace Unity.AppUI.UI
 
         static readonly int k_BackgroundSize = Shader.PropertyToID("_BackgroundSize");
 
-        Color? m_BackgroundColorByCode;
+        Optional<Color> m_BackgroundColorByCode;
 
         Passes m_PassMask = (Passes)0xFF;
 
@@ -334,45 +348,63 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The outline color of this element. Setting this will override the outline color defined in the USS.
         /// </summary>
-        public Color? outlineColor
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Color outlineColor
         {
-            get => m_OutlineColorByCode;
+            get => m_OutlineColorByCode.IsSet ? m_OutlineColorByCode.Value : m_Style.outlineColor;
             set
             {
-                if (m_OutlineColorByCode == value)
-                    return;
-
+                var changed = outlineColor != value;
                 m_OutlineColorByCode = value;
                 MarkDirtyRepaint();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in outlineColorProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The background color of this element. Setting this will override the background color defined in the USS.
         /// </summary>
-        public Color? backgroundColor
+        public Color backgroundColor
         {
-            get => m_BackgroundColorByCode;
+            get => m_BackgroundColorByCode.IsSet ? m_BackgroundColorByCode.Value : m_Style.backgroundColor;
             set
             {
-                if (m_BackgroundColorByCode == value)
-                    return;
-
+                var changed = backgroundColor != value;
                 m_BackgroundColorByCode = value;
                 MarkDirtyRepaint();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in backgroundColorProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The mask of passes to render.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Passes passMask
         {
             get => m_PassMask;
             set
             {
+                if (m_PassMask == value)
+                    return;
                 m_PassMask = value;
                 MarkDirtyRepaint();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in passMaskProperty);
+#endif
             }
         }
 
@@ -399,8 +431,8 @@ namespace Unity.AppUI.UI
 
         void GenerateVisualContentInternal(MeshGenerationContext mgc)
         {
-            m_Style.outlineColor = m_OutlineColorByCode ?? m_Style.outlineColor;
-            m_Style.backgroundColor = m_BackgroundColorByCode ?? m_Style.backgroundColor;
+            m_Style.outlineColor = outlineColor;
+            m_Style.backgroundColor = backgroundColor;
             GenerateVisualContent(mgc);
         }
 
@@ -699,15 +731,16 @@ namespace Unity.AppUI.UI
             return biggestRect;
         }
 
+#if ENABLE_UXML_TRAITS
         /// <summary>
         /// Factory class to instantiate a <see cref="ExVisualElement"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<ExVisualElement, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ExVisualElement"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits { }
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits { }
+#endif
     }
 }

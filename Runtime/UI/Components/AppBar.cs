@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.UI
@@ -10,8 +9,24 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// AppBar is a component that can be used to display a title, a back button, a drawer button and a set of actions.
     /// </summary>
-    public class AppBar : ExVisualElement    
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class AppBar : ExVisualElement    
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        internal static readonly BindingId stretchProperty = nameof(stretch);
+        
+        internal static readonly BindingId compactProperty = nameof(compact);
+        
+        internal static readonly BindingId expandedHeightProperty = nameof(expandedHeight);
+        
+        internal static readonly BindingId elevationProperty = nameof(elevation);
+        
+        internal static readonly BindingId showBackButtonProperty = nameof(showBackButton);
+        
+        internal static readonly BindingId showDrawerButtonProperty = nameof(showDrawerButton);
+#endif
         /// <summary>
         /// Main USS class name of the AppBar.
         /// </summary>
@@ -388,11 +403,10 @@ namespace Unity.AppUI.UI
             if (newStretch)
                 stretchTriggered?.Invoke(delta);
         }
-        
+#if ENABLE_UXML_TRAITS
         /// <summary>
         /// UXML factory for the AppBar.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<AppBar, UxmlTraits> {}
 
         /// <summary>
@@ -447,5 +461,6 @@ namespace Unity.AppUI.UI
                 appBar.showDrawerButton = m_ShowDrawerButton.GetValueFromBag(bag, cc);
             }
         }
+#endif
     }
 }

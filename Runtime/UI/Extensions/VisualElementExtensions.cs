@@ -14,25 +14,28 @@ namespace Unity.AppUI.UI
         static readonly WeakReferenceTable<VisualElement, AdditionalData> k_AdditionalDataCache =
             new WeakReferenceTable<VisualElement, AdditionalData>();
 
-        /// <summary>
-        /// Get the current application context associated with the current <see cref="VisualElement"/> object.
-        /// </summary>
-        /// <param name="ve">The <see cref="VisualElement"/> object.</param>
-        /// <returns>The application context for this element.</returns>
-        /// <exception cref="ArgumentNullException">The provided <see cref="VisualElement"/> object must be not null.</exception>
-        public static ApplicationContext GetContext(this VisualElement ve)
+        static bool TryGetValue(VisualElement key, out AdditionalData val)
         {
-            if (ve == null)
-                throw new ArgumentNullException(nameof(ve));
-
-            var p = ve;
-            // ReSharper disable once UseNegatedPatternInIsExpression
-            while (p != null && !(p is ContextProvider)) p = p.parent;
-
-            if (p is ContextProvider contextProvider)
-                return contextProvider.context;
-
-            return default;
+            if (key is BaseVisualElement bve)
+            {
+                val = bve.additionalData;
+                return val != null;
+            }
+            if (key is BaseTextElement bte)
+            {
+                val = bte.additionalData;
+                return val != null;
+            }
+            return k_AdditionalDataCache.TryGetValue(key, out val);
+        }
+        
+        static AdditionalData GetOrCreateValue(VisualElement key)
+        {
+            if (key is BaseVisualElement bve)
+                return bve.additionalData ?? (bve.additionalData = new AdditionalData());
+            if (key is BaseTextElement bte)
+                return bte.additionalData ?? (bte.additionalData = new AdditionalData());
+            return k_AdditionalDataCache.GetOrCreateValue(key);
         }
 
         /// <summary>
@@ -69,21 +72,21 @@ namespace Unity.AppUI.UI
         /// </summary>
         /// <param name="element">The <see cref="VisualElement"/> which contains a tooltip.</param>
         /// <returns>The preferred placement, previously set using <see cref="SetPreferredTooltipPlacement"/>
-        /// or the closest value set on a parent <see cref="ContextProvider"/> element.</returns>
+        /// or the closest value set on an element.</returns>
         /// <exception cref="ArgumentNullException">The <see cref="VisualElement"/> object can't be null.</exception>
         public static PopoverPlacement GetPreferredTooltipPlacement(this VisualElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            if (element is ContextProvider provider && provider.preferredTooltipPlacement.HasValue)
-                return provider.preferredTooltipPlacement.Value;
+            if (element is IContextOverrideElement {preferredTooltipPlacementOverride: {IsSet:true}} provider)
+                return provider.preferredTooltipPlacementOverride.Value;
 
-            if (k_AdditionalDataCache.TryGetValue(element, out var data))
-                return data.preferredTooltipPlacement;
+            if (TryGetValue(element, out var data) && data.preferredTooltipPlacement.IsSet)
+                return data.preferredTooltipPlacement.Value;
 
-            var context = element.GetContext();
-            return context.preferredTooltipPlacement.GetValueOrDefault(Tooltip.defaultPlacement);
+            var context = element.GetContext<TooltipPlacementContext>();
+            return context!.placement;
         }
 
         /// <summary>
@@ -92,19 +95,26 @@ namespace Unity.AppUI.UI
         /// <param name="element">The target visual element.</param>
         /// <param name="placement">The placement value.</param>
         /// <exception cref="ArgumentNullException">The <see cref="VisualElement"/> object can't be null.</exception>
-        public static void SetPreferredTooltipPlacement(this VisualElement element, PopoverPlacement placement)
+        public static void SetPreferredTooltipPlacement(this VisualElement element, OptionalEnum<PopoverPlacement> placement)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            if (element is ContextProvider provider)
+            if (element is IContextOverrideElement el)
             {
-                provider.preferredTooltipPlacement = placement;
+                el.preferredTooltipPlacementOverride = placement;
                 return;
             }
 
-            var data = k_AdditionalDataCache.GetOrCreateValue(element);
-            data.preferredTooltipPlacement = placement;
+            if (placement.IsSet)
+            {
+                var data = GetOrCreateValue(element);
+                data.preferredTooltipPlacement = placement;
+            }
+            else if (TryGetValue(element, out var data))
+            {
+                data.preferredTooltipPlacement = placement;
+            }
         }
         
         /// <summary>
@@ -118,7 +128,7 @@ namespace Unity.AppUI.UI
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            return k_AdditionalDataCache.TryGetValue(element, out var data) ? data.tooltipTemplate : null;
+            return TryGetValue(element, out var data) ? data.tooltipTemplate : null;
         }
         
         /// <summary>
@@ -132,7 +142,7 @@ namespace Unity.AppUI.UI
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
             
-            var data = k_AdditionalDataCache.GetOrCreateValue(element);
+            var data = GetOrCreateValue(element);
             data.tooltipTemplate = template;
         }
 
@@ -140,7 +150,7 @@ namespace Unity.AppUI.UI
         /// Additional Data that should be stored on any <see cref="VisualElement"/> object.
         /// </summary>
         // ReSharper disable once ClassNeverInstantiated.Local
-        class AdditionalData
+        internal class AdditionalData
         {
             /// <summary>
             /// Callbacks to invoke when the element is attached to a panel to send the context changed event.
@@ -163,11 +173,11 @@ namespace Unity.AppUI.UI
             /// The Contexts collection.
             /// </summary>
             internal Dictionary<Type, IContext> contexts { get; } = new ();
-                
+
             /// <summary>
             /// The preferred placement for a tooltip.
             /// </summary>
-            public PopoverPlacement preferredTooltipPlacement { get; set; } = Tooltip.defaultPlacement;
+            public OptionalEnum<PopoverPlacement> preferredTooltipPlacement { get; set; } = OptionalEnum<PopoverPlacement>.none;
 
             /// <summary>
             /// The tooltip template to use for this element.
@@ -192,7 +202,7 @@ namespace Unity.AppUI.UI
             
             while (el != null)
             {
-                if (k_AdditionalDataCache.TryGetValue(el, out var data) && data.contexts.ContainsKey(typeof(T))) 
+                if (TryGetValue(el, out var data) && data.contexts.ContainsKey(typeof(T))) 
                     return el;
 
                 el = el.parent;
@@ -220,7 +230,7 @@ namespace Unity.AppUI.UI
 
             if (element.GetContextProvider<T>() is { } provider)
             {
-                k_AdditionalDataCache.TryGetValue(provider, out var data);
+                TryGetValue(provider, out var data);
                 return (T)data.contexts[typeof(T)];
             }
 
@@ -239,7 +249,7 @@ namespace Unity.AppUI.UI
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
             
-            if (k_AdditionalDataCache.TryGetValue(element, out var data) && data.contexts.ContainsKey(typeof(T)))
+            if (TryGetValue(element, out var data) && data.contexts.ContainsKey(typeof(T)))
                 return (T)data.contexts[typeof(T)];
             
             return default;
@@ -258,7 +268,7 @@ namespace Unity.AppUI.UI
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            var data = k_AdditionalDataCache.GetOrCreateValue(element);
+            var data = GetOrCreateValue(element);
             
             void OnAttached(AttachToPanelEvent evt)
             {
@@ -306,7 +316,7 @@ namespace Unity.AppUI.UI
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            return k_AdditionalDataCache.TryGetValue(element, out var data) && data.contexts.ContainsKey(typeof(T));
+            return TryGetValue(element, out var data) && data.contexts.ContainsKey(typeof(T));
         }
 
         /// <summary>
@@ -339,7 +349,7 @@ namespace Unity.AppUI.UI
                     SendContextChangedEventLocal();
             }
             
-            var data = k_AdditionalDataCache.GetOrCreateValue(element);
+            var data = GetOrCreateValue(element);
             if (data.contextChangedCallbacksPerType.TryGetValue(typeof(T), out var callbacks))
             {
                 if (!callbacks.Contains(callback))
@@ -380,7 +390,7 @@ namespace Unity.AppUI.UI
             if (callback == null)
                 throw new ArgumentNullException(nameof(callback));
             
-            if (k_AdditionalDataCache.TryGetValue(element, out var data) && 
+            if (TryGetValue(element, out var data) && 
                 data.contextChangedCallbacksPerType.TryGetValue(typeof(T), out var callbacks))
             {
                 var index = callbacks.IndexOf(callback);
@@ -412,7 +422,7 @@ namespace Unity.AppUI.UI
                 if (parent.IsContextProvider<T>())
                     return;
 
-                if (k_AdditionalDataCache.TryGetValue(parent, out var data)
+                if (TryGetValue(parent, out var data)
                     && data.contextChangedCallbacksPerType.TryGetValue(typeof(T), out var callbacks))
                 {
                     foreach (var cb in callbacks)

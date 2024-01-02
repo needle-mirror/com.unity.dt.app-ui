@@ -9,30 +9,62 @@ uid: localization
 App UI provides localization features through the [**Localization**](https://docs.unity3d.com/Packages/com.unity.localization@1.4/manual/index.html) 
 Unity package from UPM.
 
-## ContextProvider
+## Language Context
 
-The [ContextProvider](xref:Unity.AppUI.UI.ContextProvider) element is a component that provides the [ApplicationContext](xref:Unity.AppUI.Core.ApplicationContext) to its children.
-With this component, you can define the global context for your application, or override the context for a specific part of your UI.
-In terms of localization, the [ContextProvider](xref:Unity.AppUI.UI.ContextProvider) is used to define the current locale identifier for the current scope of the application.
+Thanks to the [Context feature](xref:contexts), App UI provides a way to translate your UI into different languages.
 
-> [!NOTE]
-> For more information about the ContextProvider, see the [ContextProvider documentation](xref:contexts).
+By default, the root [Panel](xref:Unity.AppUI.UI.Panel) element will provide an initial [LangContext](xref:Unity.AppUI.Core.LangContext) context to its children.
 
-Here is an example of how to get a the localized string of a given entry using the locale defined inside the [ApplicationContext](xref:Unity.AppUI.Core.ApplicationContext):
+Here is an example of how to get a the localized string of a given entry using the locale defined inside the [LangContext](xref:Unity.AppUI.Core.LangContext):
 
 ```csharp
 
 using Unity.AppUI.UI;
-using UnityEngine.UIElements;
 
-public class MyComponent : VisualElement
+public class MyComponent : BaseVisualElement
 {
-    [...]
-
-    public void OnButtonClick()
+    public MyComponent()
     {
-        var locale = this.GetContext().locale;
-        var translatedString = LocalizationSettings.Instance.GetLocalizedString("table_name", "entry_key", locale);
+        this.RegisterContextChangedCallback<LangContext>(OnLangContextChanged);
+    }
+
+    // This method will be called when the LangContext changes
+    void OnLangContextChanged(ContextChangedEvent<LangContext> evt)
+    {
+        var ctx = evt.context;
+        if (ctx != null)
+        {
+            var translatedString = LocalizationSettings.Instance.GetLocalizedString("table_name", "entry_key", ctx.locale);
+        }
+    }
+
+    // This method will check for the currently provided locale
+    // without using any listener
+    public void TranslateNow()
+    {
+        var ctx = this.GetContext<LangContext>();
+        if (ctx != null)
+        {
+            var translatedString = LocalizationSettings.Instance.GetLocalizedString("table_name", "entry_key", ctx.locale);
+        }
+    }
+}
+
+```
+
+And if you want to provide a new language to a part of your UI, just provide a new [LangContext](xref:Unity.AppUI.Core.LangContext) to the root element of this part of the UI:
+
+```csharp
+
+using Unity.AppUI.UI;
+
+public class MyComponent : BaseVisualElement
+{
+    public MyComponent()
+    {
+        var newLangContext = new LangContext();
+        newLangContext.locale = "fr-FR";
+        this.AddContext(newLangContext);
     }
 }
 

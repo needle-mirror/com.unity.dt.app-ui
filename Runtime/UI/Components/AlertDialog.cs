@@ -2,8 +2,10 @@ using System;
 using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -52,8 +54,18 @@ namespace Unity.AppUI.UI
     /// Use a <see cref="Modal"/> to display an <see cref="AlertDialog"/> object.
     /// </remarks>
     /// </summary>
-    public class AlertDialog : BaseDialog, IDismissInvocator
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class AlertDialog : BaseDialog, IDismissInvocator
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        internal static readonly BindingId variantProperty = nameof(variant);
+        
+        internal static readonly BindingId isPrimaryActionDisabledProperty = nameof(isPrimaryActionDisabled);
+        
+        internal static readonly BindingId isSecondaryActionDisabledProperty = nameof(isSecondaryActionDisabled);
+#endif
         /// <summary>
         /// The AlertDialog primary action styling class.
         /// </summary>
@@ -168,33 +180,74 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The current variant used by the AlertDialog.
         /// </summary>
+        [Tooltip("The current semantic variant used by the AlertDialog.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Header("Alert Dialog")]
+#endif
         public AlertSemantic variant
         {
             get => m_Variant;
             set
             {
+                var changed = m_Variant != value;
                 RemoveFromClassList(ussClassName + "--" + m_Variant.ToString().ToLower());
                 m_Variant = value;
                 AddToClassList(ussClassName + "--" + m_Variant.ToString().ToLower());
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in variantProperty);
+#endif
             }
         }
         
         /// <summary>
         /// Is the primary action button disabled.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool isPrimaryActionDisabled
         {
             get => !m_PrimaryButton.enabledSelf;
-            set => m_PrimaryButton.SetEnabled(!value);
+            set
+            {
+                var changed = !m_PrimaryButton.enabledSelf != value;
+                m_PrimaryButton.SetEnabled(!value);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in isPrimaryActionDisabledProperty);
+#endif
+            }
         }
         
         /// <summary>
         /// Is the secondary action button disabled.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool isSecondaryActionDisabled
         {
             get => !m_SecondaryButton.enabledSelf;
-            set => m_SecondaryButton.SetEnabled(!value);
+            set
+            {
+                var changed = !m_SecondaryButton.enabledSelf != value;
+                m_SecondaryButton.SetEnabled(!value);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in isSecondaryActionDisabledProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -259,11 +312,10 @@ namespace Unity.AppUI.UI
             m_CancelButton.userData = cancelAction;
             m_CancelButton.RemoveFromClassList(Styles.hiddenUssClassName);
         }
-
+#if ENABLE_UXML_TRAITS
         /// <summary>
         /// The UXML factory for the AlertDialog.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<AlertDialog, UxmlTraits> { }
 
         /// <summary>
@@ -305,5 +357,6 @@ namespace Unity.AppUI.UI
                 element.isSecondaryActionDisabled = m_IsSecondaryActionDisabled.GetValueFromBag(bag, cc);
             }
         }
+#endif
     }
 }

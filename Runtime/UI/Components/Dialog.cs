@@ -1,15 +1,30 @@
 using System;
 using Unity.AppUI.Core;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Base class for Dialogs (<see cref="Dialog"/>, <see cref="AlertDialog"/>, etc).
     /// </summary>
-    public abstract class BaseDialog : VisualElement, ISizeableElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public abstract partial class BaseDialog : BaseVisualElement, ISizeableElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId titlePropertyKey = new BindingId(nameof(title));
+        
+        internal static readonly BindingId descriptionPropertyKey = new BindingId(nameof(description));
+        
+        internal static readonly BindingId sizePropertyKey = new BindingId(nameof(size));
+        
+#endif
+        
         /// <summary>
         /// The Dialog main styling class.
         /// </summary>
@@ -114,13 +129,25 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Dialog title.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string title
         {
             get => m_Header.text;
             set
             {
+                var changed = m_Header.text != value;
                 m_Header.text = value;
                 RefreshHeading();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in titlePropertyKey);
+#endif
             }
         }
 
@@ -144,30 +171,59 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Dialog description. This is the text displayed in the content container.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string description
         {
             get => m_Content.text;
-            set => m_Content.text = value;
+            set
+            { 
+                var changed = m_Content.text != value;
+                m_Content.text = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in descriptionPropertyKey);
+#endif
+            }
         }
 
         /// <summary>
         /// The Dialog size.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizePropertyKey);
+#endif
             }
         }
+        
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="BaseDialog"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
             {
@@ -196,13 +252,24 @@ namespace Unity.AppUI.UI
                 element.title = m_Title.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 
     /// <summary>
     /// Dialog UI element.
     /// </summary>
-    public class Dialog : BaseDialog, IDismissInvocator
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Dialog : BaseDialog, IDismissInvocator
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId dismissablePropertyKey = new BindingId(nameof(dismissable));
+        
+#endif
+        
         /// <summary>
         /// The Dialog close button styling class.
         /// </summary>
@@ -236,13 +303,25 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Set the <see cref="Dialog"/> dismissable by itself using a <see cref="closeButton"/>.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool dismissable
         {
             get => ClassListContains(dismissableUssClassName);
             set
             {
+                var changed = ClassListContains(dismissableUssClassName) != value;
                 EnableInClassList(dismissableUssClassName, value);
                 RefreshHeading();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in dismissablePropertyKey);
+#endif
             }
         }
 
@@ -260,10 +339,11 @@ namespace Unity.AppUI.UI
                 dismissRequested?.Invoke(DismissType.Manual);
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Factory class to instantiate a <see cref="Dialog"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Dialog, UxmlTraits> { }
 
         /// <summary>
@@ -291,5 +371,6 @@ namespace Unity.AppUI.UI
                 element.dismissable = m_Dismissable.GetValueFromBag(bag, cc);
             }
         }
+#endif
     }
 }

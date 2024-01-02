@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Unity.AppUI.Core
 {
     /// <summary>
@@ -8,11 +10,13 @@ namespace Unity.AppUI.Core
         /// <summary>
         /// Left to right.
         /// </summary>
+        [InspectorName("Left to Right")]
         Ltr,
 
         /// <summary>
         /// Right to left.
         /// </summary>
+        [InspectorName("Right to Left")]
         Rtl
     }
 

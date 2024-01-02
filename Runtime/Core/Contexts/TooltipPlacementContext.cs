@@ -1,3 +1,4 @@
+using System;
 using Unity.AppUI.UI;
 
 namespace Unity.AppUI.Core

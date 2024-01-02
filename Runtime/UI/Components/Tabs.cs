@@ -3,13 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Direction of a UI container. This is used on <see cref="Tabs"/> UI elements for example.
+    /// Direction of a UI container.
     /// </summary>
     public enum Direction
     {
@@ -27,8 +29,22 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// An item used in <see cref="Tabs"/> bar.
     /// </summary>
-    public class TabItem : VisualElement, ISelectableElement, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class TabItem : BaseVisualElement, ISelectableElement, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId selectedProperty = nameof(selected);
+        
+        internal static readonly BindingId labelProperty = nameof(label);
+        
+        internal static readonly BindingId iconProperty = nameof(icon);
+        
+#endif
+        
+        
         /// <summary>
         /// The TabItem main styling class.
         /// </summary>
@@ -84,26 +100,50 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The TabItem label.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string label
         {
             get => m_Label.text;
             set
             {
+                var changed = m_Label.text != value;
                 m_Label.text = value;
                 m_Label.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Label.text));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The TabItem icon.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string icon
         {
             get => m_Icon.iconName;
             set
             {
+                var changed = m_Icon.iconName != value;
                 m_Icon.iconName = value;
                 m_Icon.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Icon.iconName));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in iconProperty);
+#endif
             }
         }
 
@@ -127,10 +167,22 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The selected state of the TabItem.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public bool selected
         {
             get => ClassListContains(Styles.selectedUssClassName);
-            set => SetSelectedWithoutNotify(value);
+            set
+            {
+                var changed = selected != value;
+                SetSelectedWithoutNotify(value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in selectedProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -142,32 +194,19 @@ namespace Unity.AppUI.UI
             EnableInClassList(Styles.selectedUssClassName, newValue);
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to instantiate a <see cref="TabItem"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<TabItem, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TabItem"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-
+            
             readonly UxmlStringAttributeDescription m_Icon = new UxmlStringAttributeDescription
             {
                 name = "icon",
@@ -194,16 +233,41 @@ namespace Unity.AppUI.UI
                 el.icon = m_Icon.GetValueFromBag(bag, cc);
                 el.label = m_Label.GetValueFromBag(bag, cc);
 
-                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
+                
             }
         }
+        
+#endif
     }
 
     /// <summary>
     /// Tabs UI element.
     /// </summary>
-    public class Tabs : VisualElement, INotifyValueChanged<int>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Tabs : BaseVisualElement, INotifyValueChanged<int>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId sizeProperty = nameof(size);
+        
+        internal static readonly BindingId directionProperty = nameof(direction);
+        
+        internal static readonly BindingId emphasizedProperty = nameof(emphasized);
+        
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+        internal static readonly BindingId itemsProperty = nameof(items);
+        
+        internal static readonly BindingId sourceItemsProperty = nameof(sourceItems);
+        
+        internal static readonly BindingId bindItemProperty = nameof(bindItem);
+        
+        internal static readonly BindingId unbindItemProperty = nameof(unbindItem);
+        
+#endif
+        
         /// <summary>
         /// The Tabs main styling class.
         /// </summary>
@@ -262,8 +326,6 @@ namespace Unity.AppUI.UI
         IList m_SourceItems;
 
         int m_Value;
-
-        bool m_ValueSet;
         
         IVisualElementScheduledItem m_ScheduledRefreshIndicator;
 
@@ -321,7 +383,7 @@ namespace Unity.AppUI.UI
             size = Size.M;
             emphasized = false;
             direction = Direction.Horizontal;
-            defaultValue = 0;
+            value = 0;
 
             RegisterCallback<KeyDownEvent>(OnKeyDown);
             this.RegisterContextChangedCallback<DirContext>(OnDirectionChanged);
@@ -339,25 +401,44 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the Tabs.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The direction of the Tabs. Horizontal or Vertical.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Direction direction
         {
             get => m_Direction;
             set
             {
+                var changed = m_Direction != value;
                 RemoveFromClassList(orientationUssClassName + m_Direction.ToString().ToLower());
                 m_Direction = value;
                 AddToClassList(orientationUssClassName + m_Direction.ToString().ToLower());
@@ -366,53 +447,97 @@ namespace Unity.AppUI.UI
                     Direction.Vertical => ScrollViewMode.Vertical,
                     _ => ScrollViewMode.Horizontal
                 };
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in directionProperty);
+#endif
             }
         }
         
         /// <summary>
         /// The current list of items used to populate the Tabs.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public IList items => m_SourceItems ?? m_StaticItems;
 
         /// <summary>
         /// The emphasized mode of the Tabs.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool emphasized
         {
             get => ClassListContains(emphasizedUssClassName);
-            set => EnableInClassList(emphasizedUssClassName, value);
+            set
+            {
+                var changed = emphasized != value;
+                EnableInClassList(emphasizedUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in emphasizedProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// Method to bind the TabItem.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Action<TabItem, int> bindItem
         {
             get => m_BindItem;
 
             set
             {
+                var changed = m_BindItem != value;
                 m_BindItem = value;
                 RefreshItems();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in bindItemProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Method to unbind the TabItem.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Action<TabItem, int> unbindItem
         {
             get => m_UnbindItem;
             set
             {
+                var changed = m_UnbindItem != value;
                 m_UnbindItem = value;
                 RefreshItems();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in unbindItemProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Collection of items used to populate the Tabs.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public IList sourceItems
         {
             get => m_SourceItems;
@@ -422,11 +547,15 @@ namespace Unity.AppUI.UI
                     return;
 
                 m_SourceItems = value;
-                m_ValueSet = false;
                 
                 m_PollHierarchyItem?.Pause();
                 m_PollHierarchyItem = null;
                 RefreshItems();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in sourceItemsProperty);
+                NotifyPropertyChanged(in itemsProperty);
+#endif
             }
         }
 
@@ -441,20 +570,6 @@ namespace Unity.AppUI.UI
         public VisualElement itemContainer => m_Container;
 
         /// <summary>
-        /// The default value of the Tabs. This is the value that will be selected if no value is set.
-        /// </summary>
-        public int defaultValue
-        {
-            get => m_DefaultValue;
-            set
-            {
-                m_DefaultValue = value;
-                if (!m_ValueSet)
-                    SetValueWithoutNotify(m_DefaultValue);
-            }
-        }
-
-        /// <summary>
         /// Set the value of the Tabs without notifying the change.
         /// </summary>
         /// <param name="newValue"> The new value.</param>
@@ -467,7 +582,6 @@ namespace Unity.AppUI.UI
 
             var previousValue = m_Value;
             m_Value = newValue;
-            m_ValueSet = true;
 
             // refresh selection visually
             if (previousValue >= 0 && previousValue < m_Items.Count && previousValue != m_Value)
@@ -544,6 +658,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the Tabs. This is the index of the selected TabItem.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public int value
         {
             get => m_Value;
@@ -560,6 +680,10 @@ namespace Unity.AppUI.UI
                     evt.target = this;
                     SendEvent(evt);
                 }
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
 
@@ -638,6 +762,11 @@ namespace Unity.AppUI.UI
                 {
                     m_StaticItems.Add((TabItem)c);
                 }
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in itemsProperty);
+#endif
+                
                 RefreshItems();
             }
         }
@@ -646,7 +775,7 @@ namespace Unity.AppUI.UI
         {
             for (var i = 0; i < itemContainer.childCount; i++)
             {
-                var item = (TabItem)ElementAt(i);
+                var item = (TabItem)itemContainer.ElementAt(i);
                 unbindItem?.Invoke(item, i);
                 item.UnregisterCallback<GeometryChangedEvent>(OnItemGeometryChanged);
             }
@@ -679,7 +808,7 @@ namespace Unity.AppUI.UI
             if (itemContainer.childCount > 0)
                 SetValueWithoutNotify(Mathf.Clamp(m_Value, 0, itemContainer.childCount - 1));
             else
-                m_Value = -1;
+                value = -1;
         }
 
         void OnItemGeometryChanged(GeometryChangedEvent evt)
@@ -697,19 +826,11 @@ namespace Unity.AppUI.UI
             }
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to instantiate a <see cref="Tabs"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Tabs, UxmlTraits>
         {
             /// <summary>
@@ -724,18 +845,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Tabs"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlIntAttributeDescription m_DefaultValue = new UxmlIntAttributeDescription
             {
-                name = "default-value",
+                name = "value",
                 defaultValue = 0
-            };
-
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
             };
 
             readonly UxmlBoolAttributeDescription m_Emphasized = new UxmlBoolAttributeDescription
@@ -770,10 +885,10 @@ namespace Unity.AppUI.UI
                 el.size = m_Size.GetValueFromBag(bag, cc);
                 el.direction = m_Orientation.GetValueFromBag(bag, cc);
                 el.emphasized = m_Emphasized.GetValueFromBag(bag, cc);
-                el.defaultValue = m_DefaultValue.GetValueFromBag(bag, cc);
-
-                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
+                el.value = m_DefaultValue.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 }

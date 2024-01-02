@@ -1,13 +1,26 @@
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A link visual element.
     /// </summary>
-    public class Link : LocalizedTextElement, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Link : LocalizedTextElement, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId sizeProperty = nameof(size);
+        
+        internal static readonly BindingId urlProperty = nameof(url);
+        
+#endif
+        
         /// <summary>
         /// The Link's USS class name.
         /// </summary>
@@ -21,6 +34,8 @@ namespace Unity.AppUI.UI
         Pressable m_Clickable;
 
         TextSize m_Size;
+
+        string m_Url;
 
         /// <summary>
         /// The clickable manipulator.
@@ -42,21 +57,52 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the link.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public TextSize size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
-        
+
         /// <summary>
         /// The URL of the link.
         /// </summary>
-        public string url { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public string url
+        {
+            get => m_Url;
+            set
+            {
+                var changed = m_Url != value;
+                m_Url = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in urlProperty);
+#endif
+            }
+        }
         
         /// <summary>
         /// Default constructor.
@@ -91,19 +137,11 @@ namespace Unity.AppUI.UI
             this.AddManipulator(new KeyboardFocusController());
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Defines the UxmlFactory for the Link.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Link, UxmlTraits> { }
 
         /// <summary>
@@ -111,12 +149,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new class UxmlTraits : LocalizedTextElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-
+            
             readonly UxmlEnumAttributeDescription<TextSize> m_Size = new UxmlEnumAttributeDescription<TextSize>
             {
                 name = "size",
@@ -141,10 +174,12 @@ namespace Unity.AppUI.UI
 
                 var element = (Link)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
-                var url = m_Url.GetValueFromBag(bag, cc);
-                element.url = string.IsNullOrEmpty(url) ? element.url : url;
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+                string url = element.url;
+                if (m_Url.TryGetValueFromBag(bag, cc, ref url))
+                    element.url = url;
             }
         }
+        
+#endif
     }
 }

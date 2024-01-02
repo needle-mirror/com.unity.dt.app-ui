@@ -1,15 +1,30 @@
 using System;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Divider UI element.
     /// </summary>
-    public class Divider : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Divider : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId directionProperty = new BindingId(nameof(direction));
+        
+        internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
+        
+        internal static readonly BindingId spacingProperty = new BindingId(nameof(spacing));
+        
+#endif
+        
         /// <summary>
         /// The Divider main styling class.
         /// </summary>
@@ -28,7 +43,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Divider vertical mode styling class.
         /// </summary>
-        public static readonly string verticalUssClassName = ussClassName + "--vertical";
+        public static readonly string verticalUssClassName = ussClassName + "--";
 
         /// <summary>
         /// The Divider content styling class.
@@ -43,6 +58,8 @@ namespace Unity.AppUI.UI
         Size m_Size;
 
         Spacing m_Spacing;
+
+        Direction m_Direction;
 
         /// <summary>
         /// Default constructor.
@@ -59,56 +76,98 @@ namespace Unity.AppUI.UI
 
             size = Size.M;
             spacing = Spacing.M;
-            vertical = false;
+            direction = Direction.Horizontal;
         }
 
         /// <summary>
         /// The orientation of the Divider.
         /// </summary>
-        public bool vertical
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public Direction direction
         {
-            get => ClassListContains(verticalUssClassName);
-            set => EnableInClassList(verticalUssClassName, value);
+            get => m_Direction;
+            set
+            {
+                var changed = m_Direction != value;
+                RemoveFromClassList(verticalUssClassName + m_Direction.ToString().ToLower());
+                m_Direction = value;
+                AddToClassList(verticalUssClassName + m_Direction.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in directionProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The size of the Divider.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The spacing of the Divider.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Spacing spacing
         {
             get => m_Spacing;
             set
             {
+                var changed = m_Spacing != value;
                 RemoveFromClassList(spacingUssClassName + m_Spacing.ToString().ToLower());
                 m_Spacing = value;
                 AddToClassList(spacingUssClassName + m_Spacing.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in spacingProperty);
+#endif
             }
         }
+
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// The UXML factory for the Divider.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Divider, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Divider"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
             {
@@ -122,10 +181,10 @@ namespace Unity.AppUI.UI
                 defaultValue = Spacing.M,
             };
 
-            readonly UxmlBoolAttributeDescription m_Vertical = new UxmlBoolAttributeDescription
+            readonly UxmlEnumAttributeDescription<Direction> m_Direction = new UxmlEnumAttributeDescription<Direction>
             {
-                name = "vertical",
-                defaultValue = false
+                name = "direction",
+                defaultValue = Direction.Horizontal,
             };
 
             /// <summary>
@@ -141,9 +200,10 @@ namespace Unity.AppUI.UI
 
                 var element = (Divider)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
-                element.vertical = m_Vertical.GetValueFromBag(bag, cc);
+                element.direction = m_Direction.GetValueFromBag(bag, cc);
                 element.spacing = m_Spacing.GetValueFromBag(bag, cc);
             }
         }
+#endif
     }
 }

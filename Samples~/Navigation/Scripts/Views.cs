@@ -1,4 +1,5 @@
 using System.Linq;
+using Unity.AppUI.Core;
 using UnityEngine;
 using Unity.AppUI.Navigation;
 using Unity.AppUI.UI;
@@ -270,7 +271,7 @@ namespace Unity.AppUI.Samples.Navigation
         
         protected override void OnEnter(NavController controller, NavDestination destination, Argument[] args)
         {
-            var theme = this.GetContext().theme;
+            var theme = this.GetContext<ThemeContext>().theme;
             m_ThemeSettingRow.value = theme;
             m_ThemeSettingRow.clickable.clicked += () => 
             {
@@ -300,7 +301,8 @@ namespace Unity.AppUI.Samples.Navigation
         void OnValueChanged(ChangeEvent<int> evt)
         {
             var theme = evt.newValue == 0 ? "dark" : "light";
-            this.GetContext().closestProvider.theme = theme;
+            var closestProvider = this.GetContextProvider<ThemeContext>();
+            closestProvider.ProvideContext(new ThemeContext(theme));
         }
 
         protected override void OnEnter(NavController controller, NavDestination destination, Argument[] args)
@@ -356,7 +358,7 @@ namespace Unity.AppUI.Samples.Navigation
 
             drawer.swipeAreaWidth = 16;
             drawer.Add(new DrawerHeader());
-            drawer.Add(new Divider { vertical = false });
+            drawer.Add(new Divider { direction = Direction.Horizontal });
 
             var homeButton = new MenuItem
             {

@@ -62,7 +62,7 @@ Here are the available settings:
 > [!NOTE]
 > USS stands for **Unity Style Sheets**. It is the new UI styling system introduced with UI Toolkit.
 >
-> This stylesheet system is not a superset of CSS (yet), which means that some CSS properties might not work as expected.
+> This stylesheet system is not a superset of CSS, which means that some CSS properties might not work as expected.
 >
 > Fore more information about USS, see the [official documentation](https://docs.unity3d.com/Manual/UIE-about-uss.html).
 

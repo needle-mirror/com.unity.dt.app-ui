@@ -129,8 +129,8 @@ namespace Unity.AppUI.UI
                         isActive = true;
                         m_DragStarted?.Invoke(evt);
                         
-                        var panel = target.GetContext().panel;
-                        if (s_VisualElement.parent != panel.tooltipContainer)
+                        var panel = target.GetFirstAncestorOfType<Panel>();
+                        if (panel != null && s_VisualElement.parent != panel.tooltipContainer)
                             panel.tooltipContainer.Add(s_VisualElement);
                     }
                 }

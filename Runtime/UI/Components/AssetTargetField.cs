@@ -1,7 +1,6 @@
 using System;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.UI
@@ -10,8 +9,20 @@ namespace Unity.AppUI.UI
     /// AssetTarget Field UI element.
     /// </summary>
     // todo This has to work with an AssetReferencePicker
-    class AssetTargetField : VisualElement, IValidatableElement<AssetReference>, ISizeableElement, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    partial class AssetTargetField : BaseVisualElement, IValidatableElement<AssetReference>, ISizeableElement, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        internal static readonly BindingId sizeProperty = nameof(size);
+        
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+        internal static readonly BindingId invalidProperty = nameof(invalid);
+        
+        internal static readonly BindingId validateValueProperty = nameof(validateValue);
+#endif
         const string k_DefaultIconName = "scene";
 
         /// <summary>
@@ -52,6 +63,8 @@ namespace Unity.AppUI.UI
         Type m_Type;
 
         Pressable m_Clickable;
+
+        Func<AssetReference, bool> m_ValidateValue;
 
         /// <summary>
         /// Default constructor.
@@ -150,7 +163,21 @@ namespace Unity.AppUI.UI
             set => EnableInClassList(Styles.invalidUssClassName, value);
         }
 
-        public Func<AssetReference, bool> validateValue { get; set; }
+        public Func<AssetReference, bool> validateValue 
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+                invalid = !m_ValidateValue?.Invoke(this.value) ?? false;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
+#endif
+            }
+        }
 
         public void SetValueWithoutNotify(AssetReference newValue)
         {
@@ -172,31 +199,16 @@ namespace Unity.AppUI.UI
                 SendEvent(evt);
             }
         }
-        
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
 
-        [Preserve]
+#if ENABLE_UXML_TRAITS
         public new class UxmlFactory : UxmlFactory<AssetTargetField, UxmlTraits> { }
-
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="AssetTargetField"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-
+            
             readonly UxmlBoolAttributeDescription m_Invalid = new UxmlBoolAttributeDescription
             {
                 name = "invalid",
@@ -222,8 +234,9 @@ namespace Unity.AppUI.UI
                 var element = (AssetTargetField)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
                 element.invalid = m_Invalid.GetValueFromBag(bag, cc);
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+#endif
     }
 }

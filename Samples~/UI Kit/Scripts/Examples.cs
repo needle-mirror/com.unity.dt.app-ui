@@ -62,7 +62,7 @@ namespace Unity.AppUI.Samples
                 }
 
             };
-
+            
             var themeSwitcher = root.Q<RadioGroup>("theme-switcher");
             var scaleSwitcher = root.Q<RadioGroup>("scale-switcher");
             var dirSwitcher = root.Q<RadioGroup>("dir-switcher");
@@ -120,10 +120,10 @@ namespace Unity.AppUI.Samples
                 switch (dirSwitcher.value)
                 {
                     case 0:
-                        panel.dir = Dir.Ltr;
+                        panel.layoutDirection = Dir.Ltr;
                         break;
                     case 1:
-                        panel.dir = Dir.Rtl;
+                        panel.layoutDirection = Dir.Rtl;
                         break;
                 }
                 PlayerPrefs.SetInt("dir", dirSwitcher.value);
@@ -243,19 +243,24 @@ namespace Unity.AppUI.Samples
 #endif
                     ;
 
-            root.Q<UI.Avatar>("avatar-with-picture").src = img;
+            root.Q<UI.Avatar>("avatar-with-picture").src = Background.FromTexture2D(img);
 
-            root.Q<ColorSlider>("rainbow-slider").colorRange = new List<ColorEntry>
-            {
-                new ColorEntry(Color.red, 0),
-                new ColorEntry(Color.yellow, 0.2f),
-                new ColorEntry(Color.green, 0.45f),
-                new ColorEntry(Color.cyan, 0.55f),
-                new ColorEntry(Color.blue, 0.66f),
-                new ColorEntry(Color.magenta, 0.85f),
-                new ColorEntry(Color.red, 1f),
-            };
-
+            root.Q<ColorSlider>("rainbow-slider").colorRange.SetKeys(
+                new GradientColorKey[] {
+                    new GradientColorKey(Color.red, 0),
+                    new GradientColorKey(Color.yellow, 0.2f),
+                    new GradientColorKey(Color.green, 0.45f),
+                    new GradientColorKey(Color.cyan, 0.55f),
+                    new GradientColorKey(Color.blue, 0.66f),
+                    new GradientColorKey(Color.magenta, 0.85f),
+                    new GradientColorKey(Color.red, 1f),
+                },
+                new GradientAlphaKey[] {
+                    new GradientAlphaKey(1, 0),
+                    new GradientAlphaKey(1, 1)
+                }
+            );
+            
             root.Q<ActionButton>("menu-action-code").clickable.clickedWithEventInfo += (evt =>
                 OpenMenu((VisualElement)evt.target));
             

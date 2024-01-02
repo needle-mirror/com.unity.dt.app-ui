@@ -1,7 +1,10 @@
 using System;
+using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -72,8 +75,32 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Badge UI element.
     /// </summary>
-    public class Badge : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Badge : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+
+        internal static readonly BindingId backgroundColorProperty = nameof(backgroundColor);
+        
+        internal static readonly BindingId colorProperty = nameof(color);
+        
+        internal static readonly BindingId variantProperty = nameof(variant);
+        
+        internal static readonly BindingId overlapTypeProperty = nameof(overlapType);
+        
+        internal static readonly BindingId horizontalAnchorProperty = nameof(horizontalAnchor);
+        
+        internal static readonly BindingId verticalAnchorProperty = nameof(verticalAnchor);
+        
+        internal static readonly BindingId contentProperty = nameof(content);
+        
+        internal static readonly BindingId maxProperty = nameof(max);
+        
+        internal static readonly BindingId showZeroProperty = nameof(showZero);
+
+#endif
         /// <summary>
         /// The Badge main styling class.
         /// </summary>
@@ -114,7 +141,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public static readonly string verticalAnchorUssClassName = ussClassName + "--anchor-vertical-";
         
-        Color? m_BackgroundColor;
+        Optional<Color> m_BackgroundColor;
 
         BadgeVariant m_Variant;
 
@@ -132,7 +159,7 @@ namespace Unity.AppUI.UI
 
         int m_Max;
 
-        Color? m_Color;
+        Optional<Color> m_Color;
 
         readonly VisualElement m_BadgeElement;
 
@@ -144,121 +171,222 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The background color of the Badge.
         /// </summary>
-        public Color? backgroundColor
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Header("Badge")]
+#endif
+        public Optional<Color> backgroundColor
         {
             get => m_BackgroundColor;
             set
             {
+                var changed = m_BackgroundColor != value;
                 m_BackgroundColor = value;
-                m_BadgeElement.style.backgroundColor = m_BackgroundColor ?? new StyleColor(StyleKeyword.Null);
+                m_BadgeElement.style.backgroundColor = m_BackgroundColor.IsSet ? 
+                    m_BackgroundColor.Value : new StyleColor(StyleKeyword.Null);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in backgroundColorProperty);
+#endif
             }
         }
         
         /// <summary>
         /// The content color of the Badge.
         /// </summary>
-        public Color? color
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public Optional<Color> color
         {
             get => m_Color;
             set
             {
+                var changed = m_Color != value;
                 m_Color = value;
-                m_LabelElement.style.color = m_Color ?? new StyleColor(StyleKeyword.Null);
+                m_LabelElement.style.color = m_Color.IsSet ? m_Color.Value : new StyleColor(StyleKeyword.Null);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in colorProperty);
+#endif
             }
         }
         
         /// <summary>
         /// The variant of the Badge.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public BadgeVariant variant
         {
             get => m_Variant;
             set
             {
+                var changed = m_Variant != value;
                 RemoveFromClassList(variantClassName + m_Variant.ToString().ToLower());
                 m_Variant = value;
                 AddToClassList(variantClassName + m_Variant.ToString().ToLower());
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in variantProperty);
+#endif
             }
         }
         
         /// <summary>
         /// The overlap type of the Badge.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public BadgeOverlapType overlapType
         {
             get => m_BadgeOverlapType;
             set
             {
+                var changed = m_BadgeOverlapType != value;
                 RemoveFromClassList(overlapUssClassName + m_BadgeOverlapType.ToString().ToLower());
                 m_BadgeOverlapType = value;
                 AddToClassList(overlapUssClassName + m_BadgeOverlapType.ToString().ToLower());
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in overlapTypeProperty);
+#endif
             }
         }
         
         /// <summary>
         /// The horizontal anchor of the Badge.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public HorizontalAnchor horizontalAnchor
         {
             get => m_HorizontalAnchor;
             set
             {
+                var changed = m_HorizontalAnchor != value;
                 RemoveFromClassList(horizontalAnchorUssClassName + m_HorizontalAnchor.ToString().ToLower());
                 m_HorizontalAnchor = value;
                 AddToClassList(horizontalAnchorUssClassName + m_HorizontalAnchor.ToString().ToLower());
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in horizontalAnchorProperty);
+#endif
             }
         }
         
         /// <summary>
         /// The vertical anchor of the Badge.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public VerticalAnchor verticalAnchor
         {
             get => m_VerticalAnchor;
             set
             {
+                var changed = m_VerticalAnchor != value;
                 RemoveFromClassList(verticalAnchorUssClassName + m_VerticalAnchor.ToString().ToLower());
                 m_VerticalAnchor = value;
                 AddToClassList(verticalAnchorUssClassName + m_VerticalAnchor.ToString().ToLower());
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in verticalAnchorProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The text of the Badge.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public int content
         {
             get => m_Content;
             set
             {
+                var changed = m_Content != value;
                 m_Content = value;
                 RefreshContent();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in contentProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The maximum value of the Badge.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public int max
         {
             get => m_Max;
             set
             {
+                var changed = m_Max != value;
                 m_Max = value;
                 RefreshContent();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in maxProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Whether the Badge should show zero values.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool showZero
         {
             get => m_ShowZero;
             set
             {
+                var changed = m_ShowZero != value;
                 m_ShowZero = value;
                 RefreshContent();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in showZeroProperty);
+#endif
             }
         }
 
@@ -285,8 +413,8 @@ namespace Unity.AppUI.UI
             m_LabelElement.AddToClassList(labelUssClassName);
             m_BadgeElement.Add(m_LabelElement);
 
-            backgroundColor = null;
-            color = null;
+            backgroundColor = Optional<Color>.none;
+            color = Optional<Color>.none;
             variant = BadgeVariant.Default;
             overlapType = BadgeOverlapType.Rectangular;
             horizontalAnchor = HorizontalAnchor.Right;
@@ -296,16 +424,16 @@ namespace Unity.AppUI.UI
             content = 0;
         }
 
+#if ENABLE_UXML_TRAITS
         /// <summary>
         /// Defines the UxmlFactory for the Badge.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Badge, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Badge"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlColorAttributeDescription m_BackgroundColor = new UxmlColorAttributeDescription
             {
@@ -389,5 +517,6 @@ namespace Unity.AppUI.UI
                 el.showZero = m_ShowZero.GetValueFromBag(bag, cc);
             }
         }
+#endif
     }
 }

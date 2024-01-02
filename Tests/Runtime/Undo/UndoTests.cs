@@ -6,7 +6,7 @@ using Unity.AppUI.Undo;
 namespace Unity.AppUI.Tests.Undo
 {
     [TestFixture]
-    public class UndoTests
+    class UndoTests
     {
         [Test]
         public void CanUndoAndRedo()

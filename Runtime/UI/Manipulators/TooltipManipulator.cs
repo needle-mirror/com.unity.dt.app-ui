@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -84,7 +85,7 @@ namespace Unity.AppUI.UI
 
         void ShowTooltip()
         {
-            var delay = m_AnchorElement?.GetContext().tooltipDelayMs ?? defaultDelayMs;
+            var delay = m_AnchorElement?.GetContext<TooltipDelayContext>()?.tooltipDelayMs ?? defaultDelayMs;
             m_ScheduledItem?.ExecuteLater(delay);
         }
 

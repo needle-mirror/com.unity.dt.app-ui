@@ -1,5 +1,7 @@
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -27,8 +29,25 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A label for a field.
     /// </summary>
-    public class FieldLabel : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class FieldLabel : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId labelProperty = new BindingId(nameof(label));
+        
+        internal static readonly BindingId requiredProperty = new BindingId(nameof(required));
+        
+        internal static readonly BindingId indicatorTypeProperty = new BindingId(nameof(indicatorType));
+        
+        internal static readonly BindingId requiredTextProperty = new BindingId(nameof(requiredText));
+        
+        internal static readonly BindingId labelOverflowProperty = new BindingId(nameof(labelOverflow));
+        
+#endif
+        
         /// <summary>
         /// The FieldLabel main styling class.
         /// </summary>
@@ -67,11 +86,18 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Whether the field is required.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool required
         {
             get => ClassListContains(requiredUssClassName);
             set
             {
+                var changed = required != value;
                 EnableInClassList(requiredUssClassName, value);
                 m_RequiredLabelElement.text = m_IndicatorType switch
                 {
@@ -79,57 +105,113 @@ namespace Unity.AppUI.UI
                     IndicatorType.Text => m_RequiredText,
                     _ => null
                 };
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in requiredProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The type of indicator to display when a field is required.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public IndicatorType indicatorType
         {
             get => m_IndicatorType;
             set
             {
+                var changed = m_IndicatorType != value;
                 RemoveFromClassList(ussClassName + "--" + m_IndicatorType.ToString().ToLower());
                 m_IndicatorType = value;
                 AddToClassList(ussClassName + "--" + m_IndicatorType.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in indicatorTypeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The text to display next to the label when the field is required and the indicator type is <see cref="IndicatorType.Text"/>.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string requiredText
         {
             get => m_RequiredText;
             set
             {
+                var changed = m_RequiredText != value;
                 m_RequiredText = value;
                 if (m_IndicatorType == IndicatorType.Text)
                     m_RequiredLabelElement.text = m_RequiredText;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in requiredTextProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The text to display in the label.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string label
         {
             get => m_LabelElement.text;
-            set => m_LabelElement.text = value;
+            set
+            {
+                var changed = m_LabelElement.text != value;
+                m_LabelElement.text = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelProperty);
+#endif
+            }
         }
         
         /// <summary>
         /// The text overflow mode.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public TextOverflow labelOverflow
         {
             get => m_LabelOverflow;
             set
             {
+                var changed = m_LabelOverflow != value;
                 RemoveFromClassList(labelOverflowUssClassName + m_LabelOverflow.ToString().ToLower());
                 m_LabelOverflow = value;
                 AddToClassList(labelOverflowUssClassName + m_LabelOverflow.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelOverflowProperty);
+#endif
             }
         }
 
@@ -171,25 +253,17 @@ namespace Unity.AppUI.UI
             labelOverflow = TextOverflow.Ellipsis;
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
         
         /// <summary>
         /// Factory class to instantiate a <see cref="FieldLabel"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<FieldLabel, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="FieldLabel"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlBoolAttributeDescription m_Required = new UxmlBoolAttributeDescription
             {
@@ -209,11 +283,8 @@ namespace Unity.AppUI.UI
                 defaultValue = string.Empty
             };
             
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
+            
+            
             
             readonly UxmlStringAttributeDescription m_RequiredText = new UxmlStringAttributeDescription
             {
@@ -244,10 +315,6 @@ namespace Unity.AppUI.UI
                 var label = string.Empty;
                 if (m_Label.TryGetValueFromBag(bag, cc, ref label))
                     fieldLabel.label = label;
-
-                var disabled = false;
-                if (m_Disabled.TryGetValueFromBag(bag, cc, ref disabled))
-                    fieldLabel.disabled = disabled;
                 
                 var requiredText = string.Empty;
                 if (m_RequiredText.TryGetValueFromBag(bag, cc, ref requiredText))
@@ -258,5 +325,6 @@ namespace Unity.AppUI.UI
                     fieldLabel.labelOverflow = labelOverflow;
             }
         }
+#endif
     }
 }

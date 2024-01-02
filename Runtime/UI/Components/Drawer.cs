@@ -1,8 +1,10 @@
 using System;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -10,8 +12,39 @@ namespace Unity.AppUI.UI
     /// Drawer UI element. A drawer is a UI element that slides in from the side of the screen. It can be used to display
     /// additional content or to display a menu.
     /// </summary>
-    public class Drawer : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Drawer : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+
+        internal static readonly BindingId swipeableProperty = new BindingId(nameof(swipeable));
+        
+        internal static readonly BindingId isOpenProperty = new BindingId(nameof(isOpen));
+        
+        internal static readonly BindingId distanceProperty = new BindingId(nameof(distance));
+        
+        internal static readonly BindingId swipeAreaWidthProperty = new BindingId(nameof(swipeAreaWidth));
+        
+        internal static readonly BindingId hysteresisProperty = new BindingId(nameof(hysteresis));
+        
+        internal static readonly BindingId elevationProperty = new BindingId(nameof(elevation));
+        
+        internal static readonly BindingId anchorProperty = new BindingId(nameof(anchor));
+        
+        internal static readonly BindingId variantProperty = new BindingId(nameof(variant));
+        
+        internal static readonly BindingId backdropTransitionEnabledProperty = new BindingId(nameof(backdropTransitionEnabled));
+        
+        internal static readonly BindingId hideBackdropProperty = new BindingId(nameof(hideBackdrop));
+        
+        internal static readonly BindingId backdropFinalOpacityProperty = new BindingId(nameof(backdropFinalOpacity));
+        
+        internal static readonly BindingId transitionDurationMsProperty = new BindingId(nameof(transitionDurationMs));
+        
+#endif        
+        
         /// <summary>
         /// The Drawer main styling class.
         /// </summary>
@@ -70,6 +103,14 @@ namespace Unity.AppUI.UI
 
         Vector2 m_UpPosition;
 
+        int m_TransitionDurationMs;
+
+        bool m_BackdropTransitionEnabled;
+
+        float m_Hysteresis;
+
+        float m_BackdropFinalOpacity;
+
         /// <summary>
         /// Event fired when the drawer is closed.
         /// </summary>
@@ -83,11 +124,36 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The opacity of the backdrop when the drawer is open.
         /// </summary>
-        public float backdropFinalOpacity { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public float backdropFinalOpacity 
+        {
+            get => m_BackdropFinalOpacity;
+            set
+            {
+                var changed = !Mathf.Approximately(m_BackdropFinalOpacity, value);
+                m_BackdropFinalOpacity = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in backdropFinalOpacityProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Ability to swipe the drawer to open it or close it.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool swipeable
         {
             get
@@ -102,12 +168,19 @@ namespace Unity.AppUI.UI
 
                 m_Swipeable = value;
                 m_SwipeManipulator?.Cancel();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in swipeableProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Check if the drawer is open.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public bool isOpen
         {
             get => m_IsOpen || variant == DrawerVariant.Permanent;
@@ -116,7 +189,7 @@ namespace Unity.AppUI.UI
                 if (value == m_IsOpen || variant == DrawerVariant.Permanent)
                     return;
 
-                SetOpenState(value);
+                SetOpenState(value); // calls NotifyPropertyChanged(in isOpenProperty) and others events
 
                 if (value)
                 {
@@ -136,26 +209,85 @@ namespace Unity.AppUI.UI
                         m_DrawerElement.style.right = -size;
                     m_Backdrop.style.opacity = 0;
                 }
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in distanceProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The duration of the transition when opening or closing the drawer in milliseconds.
         /// </summary>
-        public int transitionDurationMs { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public int transitionDurationMs
+        {
+            get => m_TransitionDurationMs;
+            set
+            {
+                if (m_TransitionDurationMs == value)
+                    return;
+                
+                m_TransitionDurationMs = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in transitionDurationMsProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Enable or disable the transition animation for the backdrop when opening or closing the drawer.
         /// </summary>
-        public bool backdropTransitionEnabled { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool backdropTransitionEnabled
+        {
+            get => m_BackdropTransitionEnabled;
+            set
+            {
+                if (m_BackdropTransitionEnabled == value)
+                    return;
+
+                m_BackdropTransitionEnabled = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in backdropTransitionEnabledProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Show or hide the backdrop of this drawer.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool hideBackdrop
         {
             get => m_Backdrop.ClassListContains(Styles.hiddenUssClassName);
-            set => m_Backdrop.EnableInClassList(Styles.hiddenUssClassName, value);
+            set
+            {
+                var changed = m_Backdrop.ClassListContains(Styles.hiddenUssClassName) != value;
+                m_Backdrop.EnableInClassList(Styles.hiddenUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in hideBackdropProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -167,6 +299,9 @@ namespace Unity.AppUI.UI
         /// The normalized distance of the drawer from the edge of the screen. 0 means the drawer is closed, 1 means the
         /// drawer is fully open.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public float distance
         {
             get
@@ -183,31 +318,69 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the swipe area to open the drawer.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public float swipeAreaWidth
         {
             get => m_SwipeAreaWidth;
 
             set
             {
+                var changed = !Mathf.Approximately(m_SwipeAreaWidth, value);
                 m_SwipeAreaWidth = value;
                 if (m_Variant == DrawerVariant.Temporary)
                     style.width = m_SwipeAreaWidth;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in swipeAreaWidthProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The distance threshold to interact with the drawer when swiping.
         /// </summary>
-        public float hysteresis { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public float hysteresis
+        {
+            get => m_Hysteresis;
+            set
+            {
+                var changed = !Mathf.Approximately(m_Hysteresis, value);
+                m_Hysteresis = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in hysteresisProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// The elevation level of the drawer.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public float elevation
         {
             get => m_Elevation;
             set
             {
+                var changed = !Mathf.Approximately(m_Elevation, value);
                 m_DrawerContainer.RemoveFromClassList(elevationUssClassName + m_Elevation.ToString().ToLower());
                 m_Elevation = value;
                 m_DrawerContainer.passMask = m_Elevation > 0
@@ -224,17 +397,29 @@ namespace Unity.AppUI.UI
                     m_DrawerElement.style.paddingLeft = m_Elevation;
                     m_DrawerElement.style.paddingRight = 0;
                 }
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in elevationProperty);
+#endif
             }
         }
 
         /// <summary>
-        ///
+        /// The anchor of the drawer. The drawer will be anchored to the left or right side of the screen.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public DrawerAnchor anchor
         {
             get => m_Anchor;
             set
             {
+                var changed = m_Anchor != value;
                 RemoveFromClassList(variantUssClassName + m_Anchor.ToString().ToLower());
                 m_Anchor = value;
 
@@ -261,6 +446,14 @@ namespace Unity.AppUI.UI
                     m_DrawerElement.style.paddingRight = 0;
                 }
                 AddToClassList(variantUssClassName + m_Anchor.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                {
+                    NotifyPropertyChanged(in anchorProperty);
+                    NotifyPropertyChanged(in distanceProperty);
+                }
+#endif
             }
         }
 
@@ -268,11 +461,18 @@ namespace Unity.AppUI.UI
         /// The variant of the drawer. Permanent drawers are always open and cannot be closed. Temporary drawers can be
         /// opened and closed.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public DrawerVariant variant
         {
             get => m_Variant;
             set
             {
+                var changed = m_Variant != value;
                 RemoveFromClassList(variantUssClassName + m_Variant.ToString().ToLower());
                 m_Variant = value;
                 AddToClassList(variantUssClassName + m_Variant.ToString().ToLower());
@@ -299,6 +499,15 @@ namespace Unity.AppUI.UI
                     else 
                         m_DrawerElement.style.left = new StyleLength(StyleKeyword.Auto);
                 }
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                {
+                    NotifyPropertyChanged(in variantProperty);
+                    NotifyPropertyChanged(in isOpenProperty);
+                    NotifyPropertyChanged(in distanceProperty);
+                }
+#endif
             }
         }
 
@@ -337,7 +546,11 @@ namespace Unity.AppUI.UI
             hierarchy.Add(m_DrawerElement);
             m_DrawerElement.hierarchy.Add(m_DrawerContainer);
 
-            m_SwipeManipulator = new Scrollable(OnDrag, OnUp, OnDown, OnCancel) { direction = ScrollViewMode.Horizontal };
+            m_SwipeManipulator = new Scrollable(OnDrag, OnUp, OnDown, OnCancel)
+            {
+                direction = ScrollViewMode.Horizontal,
+                threshold = 1f,
+            };
             this.AddManipulator(m_SwipeManipulator);
 
             anchor = DrawerAnchor.Left;
@@ -348,7 +561,7 @@ namespace Unity.AppUI.UI
             elevation = 16;
             backdropFinalOpacity = 0.33f;
             transitionDurationMs = 150;
-            hysteresis = 16;
+            hysteresis = 8;
             SetOpenState(false);
         }
 
@@ -365,6 +578,10 @@ namespace Unity.AppUI.UI
             else
                 m_DrawerElement.style.right = -m_DrawerElement.localBound.width;
             
+#if ENABLE_RUNTIME_DATA_BINDINGS
+            NotifyPropertyChanged(in distanceProperty);
+#endif
+            
             SetOpenState(true);
             if (m_SwipeToOpenVector.sqrMagnitude <= 0)
                 FinishOpenAnimation();
@@ -379,6 +596,10 @@ namespace Unity.AppUI.UI
                     element.style.left = (1 - f) * -m_DrawerElement.localBound.width;
                 else
                     element.style.right = (1 - f) * m_DrawerElement.localBound.width;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in distanceProperty);
+#endif
             }).Ease(Easing.OutQuad);
 
             if (backdropTransitionEnabled && !hideBackdrop)
@@ -411,6 +632,10 @@ namespace Unity.AppUI.UI
                         element.style.left = (1 - f) * -m_DrawerElement.localBound.width;
                     else
                         element.style.right = (1 - f) * -m_DrawerElement.localBound.width;
+                    
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                    NotifyPropertyChanged(in distanceProperty);
+#endif
                 }).Ease(Easing.OutQuad).OnCompleted(OnCloseAnimationFinished);
 
             if (backdropTransitionEnabled && !hideBackdrop)
@@ -518,6 +743,10 @@ namespace Unity.AppUI.UI
                     m_DrawerElement.style.right = newRightValue;
                     d = (size + newRightValue) / size;
                 }
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in distanceProperty);
+#endif
 
                 if (backdropTransitionEnabled && !hideBackdrop)
                     m_Backdrop.style.opacity = Mathf.Lerp(0, backdropFinalOpacity, d);
@@ -570,18 +799,24 @@ namespace Unity.AppUI.UI
                 style.width = swipeAreaWidth;
                 closed?.Invoke(this);
             }
+            
+#if ENABLE_RUNTIME_DATA_BINDINGS
+            NotifyPropertyChanged(in isOpenProperty);
+            NotifyPropertyChanged(in distanceProperty);
+#endif
         }
+
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to instantiate a <see cref="Drawer"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Drawer, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Drawer"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlEnumAttributeDescription<DrawerAnchor> m_Anchor =
                 new UxmlEnumAttributeDescription<DrawerAnchor>()
@@ -643,7 +878,7 @@ namespace Unity.AppUI.UI
                 new UxmlFloatAttributeDescription()
                 {
                     name = "hysteresis",
-                    defaultValue = 16f,
+                    defaultValue = 8f,
                 };
 
             readonly UxmlIntAttributeDescription m_Elevation =
@@ -676,6 +911,8 @@ namespace Unity.AppUI.UI
                 el.elevation = m_Elevation.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 
     /// <summary>

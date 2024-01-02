@@ -2,16 +2,44 @@ using System;
 using System.Collections.Generic;
 using Unity.AppUI.Bridge;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Text Area UI element.
     /// </summary>
-    public class TextArea : ExVisualElement, IValidatableElement<string>, INotifyValueChanging<string>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class TextArea : ExVisualElement, IValidatableElement<string>, INotifyValueChanging<string>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+        internal static readonly BindingId isReadOnlyProperty = nameof(isReadOnly);
+        
+        internal static readonly BindingId maxLengthProperty = nameof(maxLength);
+        
+        internal static readonly BindingId placeholderProperty = nameof(placeholder);
+        
+        internal static readonly BindingId autoResizeProperty = nameof(autoResize);
+        
+        internal static readonly BindingId submitOnEnterProperty = nameof(submitOnEnter);
+        
+        internal static readonly BindingId submitModifiersProperty = nameof(submitModifiers);
+        
+        internal static readonly BindingId validateValueProperty = nameof(validateValue);
+        
+        internal static readonly BindingId invalidProperty = nameof(invalid);
+        
+#endif
+        
+        
         /// <summary>
         /// The TextArea main styling class.
         /// </summary>
@@ -60,6 +88,14 @@ namespace Unity.AppUI.UI
         bool m_RequestSubmit;
 
         bool m_RequestTab;
+
+        EventModifiers m_SubmitModifiers;
+
+        bool m_SubmitOnEnter;
+
+        Func<string, bool> m_ValidateValue;
+
+        bool m_AutoResize;
 
         /// <summary>
         /// Event triggered when the user presses the Enter key and <see cref="submitOnEnter"/> is true.
@@ -143,6 +179,11 @@ namespace Unity.AppUI.UI
             m_ResizeHandle.RegisterCallback<ClickEvent>(OnResizeHandleClicked);
             
             isReadOnly = k_IsReadOnlyDefault;
+            maxLength = k_MaxLengthDefault;
+            autoResize = false;
+            placeholder = string.Empty;
+            submitModifiers = EventModifiers.None;
+            submitOnEnter = false;
 
             SetValueWithoutNotify(value);
             m_InputField.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
@@ -209,7 +250,6 @@ namespace Unity.AppUI.UI
 
         static void OnPlaceholderValueChanged(ChangeEvent<string> evt)
         {
-            
             evt.StopPropagation();
         }
 
@@ -279,42 +319,118 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The TextArea placeholder text.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string placeholder
         {
             get => m_Placeholder.text;
-            set => m_Placeholder.text = value;
+            set
+            {
+                var changed = m_Placeholder.text != value;
+                m_Placeholder.text = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in placeholderProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The validation function for the TextArea.
         /// </summary>
-        public Func<string, bool> validateValue { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<string, bool> validateValue
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// The invalid state of the TextArea.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
-            set => EnableInClassList(Styles.invalidUssClassName, value);
+            set
+            {
+                var changed = ClassListContains(Styles.invalidUssClassName) != value;
+                EnableInClassList(Styles.invalidUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in invalidProperty);
+#endif
+            }
         }
         
         /// <summary>
         /// Whether the TextArea is read-only.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool isReadOnly
         {
             get => m_InputField.isReadOnly;
-            set => m_InputField.isReadOnly = value;
+            set
+            {
+                var changed = m_InputField.isReadOnly != value;
+                m_InputField.isReadOnly = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in isReadOnlyProperty);
+#endif
+            }
         }
         
         /// <summary>
         /// The maximum length of the TextArea.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public int maxLength
         {
             get => m_InputField.maxLength;
-            set => m_InputField.maxLength = value;
+            set
+            {
+                var changed = m_InputField.maxLength != value;
+                m_InputField.maxLength = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in maxLengthProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -326,7 +442,26 @@ namespace Unity.AppUI.UI
         /// <remarks>
         /// If the user manually resizes the <see cref="TextArea"/>, the auto resize will be disabled.
         /// </remarks>
-        public bool autoResize { get; set; } = false;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool autoResize
+        {
+            get => m_AutoResize;
+            set
+            {
+                var changed = m_AutoResize != value;
+                m_AutoResize = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in autoResizeProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Set the TextArea value without notifying the change.
@@ -339,20 +474,64 @@ namespace Unity.AppUI.UI
             RefreshUI();
             if (validateValue != null) invalid = !validateValue(m_Value);
         }
-        
+
         /// <summary>
         /// Whether the TextArea should invoke the <see cref="submitted"/> event when the user presses the Enter key.
         /// </summary>
-        public bool submitOnEnter { get; set; } = false;
-        
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool submitOnEnter
+        {
+            get => m_SubmitOnEnter;
+            set
+            {
+                var changed = m_SubmitOnEnter != value;
+                m_SubmitOnEnter = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in submitOnEnterProperty);
+#endif
+            }
+        }
+
         /// <summary>
         /// The modifiers required to submit the TextArea.
         /// </summary>
-        public EventModifiers submitModifiers { get; set; } = EventModifiers.None;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public EventModifiers submitModifiers
+        {
+            get => m_SubmitModifiers;
+            set
+            {
+                var changed = m_SubmitModifiers != value;
+                m_SubmitModifiers = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in submitModifiersProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// The TextArea value.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string value
         {
             get => m_InputField.value;
@@ -369,6 +548,10 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
 
@@ -402,32 +585,18 @@ namespace Unity.AppUI.UI
             m_Placeholder.EnableInClassList(Styles.hiddenUssClassName, !string.IsNullOrEmpty(m_Value));
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to instantiate a <see cref="TextArea"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<TextArea, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TextArea"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : ExVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new()
-            {
-                name = "disabled",
-                defaultValue = false
-            };
-
             readonly UxmlStringAttributeDescription m_Placeholder = new()
             {
                 name = "placeholder",
@@ -485,12 +654,14 @@ namespace Unity.AppUI.UI
                 el.placeholder = m_Placeholder.GetValueFromBag(bag, cc);
                 el.autoResize = m_AutoResize.GetValueFromBag(bag, cc);
                 el.value = m_Value.GetValueFromBag(bag, cc);
-                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
+                
                 el.submitOnEnter = m_SubmitOnEnter.GetValueFromBag(bag, cc);
                 el.submitModifiers = m_SubmitModifiers.GetValueFromBag(bag, cc);
                 el.isReadOnly = m_IsReadOnly.GetValueFromBag(bag, cc);
                 el.maxLength = m_MaxLength.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 }

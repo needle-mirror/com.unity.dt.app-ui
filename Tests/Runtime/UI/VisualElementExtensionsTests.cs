@@ -12,39 +12,24 @@ namespace Unity.AppUI.Tests.UI
     class VisualElementExtensionsTests
     {
         [Test]
-        public void VisualElementExtensions_GetContext_ShouldThrowWithInvalidArg()
-        {
-            VisualElement v = null;
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                v.GetContext();
-            });
-        }
-
-        [Test]
-        public void VisualElementExtensions_GetContext_ShouldReturnDefaultWithoutContextProvider()
-        {
-            var v = new VisualElement();
-            Assert.DoesNotThrow(() =>
-            {
-                var ctx = v.GetContext();
-                UnityEngine.Assertions.Assert.AreEqual(default(ApplicationContext), ctx);
-            });
-        }
-
-        [Test]
         public void VisualElementExtensions_GetContext_ShouldReturnContextFromApplication()
         {
             var v = new Panel();
-            ApplicationContext ctx = default;
+            
+            LangContext langContext = default;
+            ThemeContext themeContext = default;
+            ScaleContext scaleContext = default;
+            
             Assert.DoesNotThrow(() =>
             {
-                ctx = v.GetContext();
+                langContext = v.GetContext<LangContext>();
+                themeContext = v.GetContext<ThemeContext>();
+                scaleContext = v.GetContext<ScaleContext>();
             });
-            Assert.AreEqual(v.lang, ctx.lang);
-            Assert.AreEqual(v.theme, ctx.theme);
-            Assert.AreEqual(v.scale, ctx.scale);
-            Assert.AreEqual(v, ctx.panel);
+            
+            Assert.AreEqual(v.lang, langContext.lang);
+            Assert.AreEqual(v.theme, themeContext.theme);
+            Assert.AreEqual(v.scale, scaleContext.scale);
         }
 
         [Test]
@@ -55,24 +40,27 @@ namespace Unity.AppUI.Tests.UI
         public void VisualElementExtensions_GetContext_ShouldComputeContextWithOverrides(string lang, string theme)
         {
             var v = new Panel();
-            var overrideElement = new ContextProvider
-            {
-                lang = lang,
-                theme = theme
-            };
-            Assert.AreEqual(lang, overrideElement.lang);
-            Assert.AreEqual(theme, overrideElement.theme);
+            var overrideElement = new VisualElement();
+            overrideElement.ProvideContext(new LangContext(lang));
+            overrideElement.ProvideContext(new ThemeContext(theme));
+           
+            Assert.AreEqual(lang, overrideElement.GetSelfContext<LangContext>().lang);
+            Assert.AreEqual(theme, overrideElement.GetSelfContext<ThemeContext>().theme);
             v.Add(overrideElement);
 
-            ApplicationContext ctx = default;
+            LangContext langContext = default;
+            ThemeContext themeContext = default;
+            ScaleContext scaleContext = default;
+            
             Assert.DoesNotThrow(() =>
             {
-                ctx = overrideElement.GetContext();
+                langContext = overrideElement.GetContext<LangContext>();
+                themeContext = overrideElement.GetContext<ThemeContext>();
+                scaleContext = overrideElement.GetContext<ScaleContext>();
             });
-            Assert.AreEqual(overrideElement.lang, ctx.lang);
-            Assert.AreEqual(overrideElement.theme, ctx.theme);
-            Assert.AreEqual(v.scale, ctx.scale);
-            Assert.AreEqual(v, ctx.panel);
+            Assert.AreEqual(overrideElement.GetSelfContext<LangContext>().lang, langContext.lang);
+            Assert.AreEqual(overrideElement.GetSelfContext<ThemeContext>().theme, themeContext.theme);
+            Assert.AreEqual(v.scale, scaleContext.scale);
         }
     }
 }

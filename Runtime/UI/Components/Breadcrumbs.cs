@@ -1,12 +1,18 @@
-using UnityEngine.Scripting;
+using UnityEngine;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Breadcrumbs visual element.
     /// </summary>
-    public class Breadcrumbs : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Breadcrumbs : BaseVisualElement
     {
         /// <summary>
         /// The Breadcrumbs' USS class name.
@@ -21,26 +27,34 @@ namespace Unity.AppUI.UI
             AddToClassList(ussClassName);
         }
         
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// UXML Factory for Breadcrumbs.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Breadcrumbs, UxmlTraits> { }
 
         /// <summary>
         /// UXML Traits for Breadcrumbs.
         /// </summary>
-        public new class UxmlTraits : VisualElement.UxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             
         }
+#endif
     }
 
     /// <summary>
     /// BreadcrumbItem visual element.
     /// </summary>
-    public class BreadcrumbItem : Link
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class BreadcrumbItem : Link
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        internal static readonly BindingId isCurrentProperty = nameof(isCurrent);
+#endif
         /// <summary>
         /// The BreadcrumbItem's USS class name.
         /// </summary>
@@ -54,10 +68,26 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Whether the BreadcrumbItem is the current item.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Header("Breadcrumb Item")]
+#endif
         public bool isCurrent
         {
             get => ClassListContains(currentUssClassName);
-            set => EnableInClassList(currentUssClassName, value);
+            set
+            {
+                var changed = isCurrent != value;
+                EnableInClassList(currentUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in isCurrentProperty);
+#endif
+            }
         }
         
         /// <summary>
@@ -68,10 +98,11 @@ namespace Unity.AppUI.UI
             AddToClassList(ussClassName);
         }
         
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// UXML Factory for BreadcrumbItem.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<BreadcrumbItem, UxmlTraits> { }
 
         /// <summary>
@@ -93,12 +124,16 @@ namespace Unity.AppUI.UI
                 item.isCurrent = m_IsCurrent.GetValueFromBag(bag, cc);
             }
         }
+#endif
     }
 
     /// <summary>
     /// BreadcrumbSeparator visual element.
     /// </summary>
-    public class BreadcrumbSeparator : TextElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class BreadcrumbSeparator : BaseTextElement
     {
         /// <summary>
         /// The BreadcrumbSeparator's USS class name.
@@ -115,16 +150,17 @@ namespace Unity.AppUI.UI
             text = "/";
         }
         
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// UXML Factory for BreadcrumbSeparator.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<BreadcrumbSeparator, UxmlTraits> { }
         
         /// <summary>
         /// UXML Traits for BreadcrumbSeparator.
         /// </summary>
-        public new class UxmlTraits : TextElement.UxmlTraits
+        public new class UxmlTraits : BaseTextElement.UxmlTraits
         {
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
@@ -136,5 +172,6 @@ namespace Unity.AppUI.UI
                     separator.text = "/";
             }
         }
+#endif
     }
 }

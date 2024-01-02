@@ -1,15 +1,32 @@
 using System;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A wrapper to display a menu when a trigger has been activated.
     /// </summary>
-    public class MenuTrigger : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class MenuTrigger : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId triggerProperty = new BindingId(nameof(trigger));
+        
+        internal static readonly BindingId anchorProperty = new BindingId(nameof(anchor));
+        
+        internal static readonly BindingId menuProperty = new BindingId(nameof(menu));
+        
+        internal static readonly BindingId closeOnSelectionProperty = new BindingId(nameof(closeOnSelection));
+        
+#endif
+        
         string m_AnchorName;
 
         /// <summary>
@@ -17,28 +34,108 @@ namespace Unity.AppUI.UI
         /// </summary>
         public MenuTrigger()
         {
+            pickingMode = PickingMode.Ignore;
+            
+            anchor = null;
+            closeOnSelection = true;
+            
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         }
+        
+        VisualElement m_Trigger;
 
         /// <summary>
         /// The trigger used to determine when to display them <see cref="menu"/>.
         /// </summary>
-        public VisualElement trigger { get; private set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
+        public VisualElement trigger
+        {
+            get => m_Trigger;
+            private set
+            {
+                var changed = m_Trigger != value;
+                m_Trigger = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in triggerProperty);
+#endif
+            }
+        }
+        
+        VisualElement m_Anchor;
 
         /// <summary>
         /// The UI element used as an anchor for the menu's popover.
         /// </summary>
-        public VisualElement anchor { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public VisualElement anchor
+        {
+            get => m_Anchor;
+            set
+            {
+                var changed = m_Anchor != value;
+                m_Anchor = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in anchorProperty);
+#endif
+            }
+        }
+        
+        Menu m_Menu;
 
         /// <summary>
         /// The menu to display.
         /// </summary>
-        public Menu menu { get; private set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
+        public Menu menu
+        {
+            get => m_Menu;
+            private set
+            {
+                var changed = m_Menu != value;
+                m_Menu = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in menuProperty);
+#endif
+            }
+        }
         
+        bool m_CloseOnSelection = true;
+
         /// <summary>
         /// Whether the menu should close when a selection is made.
         /// </summary>
-        public bool closeOnSelection { get; set; } = true;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool closeOnSelection
+        {
+            get => m_CloseOnSelection;
+            set
+            {
+                var changed = m_CloseOnSelection != value;
+                m_CloseOnSelection = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in closeOnSelectionProperty);
+#endif
+            }
+        }
 
         void OnGeometryChanged(GeometryChangedEvent evt)
         {
@@ -74,7 +171,7 @@ namespace Unity.AppUI.UI
             }
 
             // we can also try to find the anchor (if any has been given with the UXML attribute)
-            if (!string.IsNullOrEmpty(m_AnchorName) && panel != null)
+            if (anchor != null && !string.IsNullOrEmpty(m_AnchorName) && panel != null)
             {
                 var anchorElement = panel.visualTree.Q<VisualElement>(m_AnchorName);
                 if (anchorElement != null)
@@ -91,16 +188,17 @@ namespace Unity.AppUI.UI
             popover.Show();
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// UXML factory for the <see cref="MenuTrigger"/>.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<MenuTrigger, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="MenuTrigger"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlStringAttributeDescription m_Anchor = new UxmlStringAttributeDescription
             {
@@ -130,5 +228,7 @@ namespace Unity.AppUI.UI
                 el.closeOnSelection = m_CloseOnSelection.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 }

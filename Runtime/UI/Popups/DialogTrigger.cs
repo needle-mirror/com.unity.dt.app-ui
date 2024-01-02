@@ -1,7 +1,9 @@
 using System;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -83,8 +85,55 @@ namespace Unity.AppUI.UI
     /// linking the Dialog's open state with the trigger's press state. Additionally,
     /// it allows you to customize the type and positioning of the Dialog.
     /// </summary>
-    public class DialogTrigger : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class DialogTrigger : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId triggerProperty = new BindingId(nameof(trigger));
+        
+        internal static readonly BindingId anchorProperty = new BindingId(nameof(anchor));
+        
+        internal static readonly BindingId dialogProperty = new BindingId(nameof(dialog));
+        
+        internal static readonly BindingId typeProperty = new BindingId(nameof(type));
+        
+        internal static readonly BindingId trayPositionProperty = new BindingId(nameof(trayPosition));
+        
+        internal static readonly BindingId traySizeProperty = new BindingId(nameof(traySize));
+        
+        internal static readonly BindingId trayExpandableProperty = new BindingId(nameof(trayExpandable));
+        
+        internal static readonly BindingId transitionDurationProperty = new BindingId(nameof(transitionDuration));
+        
+        internal static readonly BindingId trayMarginProperty = new BindingId(nameof(trayMargin));
+        
+        internal static readonly BindingId hideArrowProperty = new BindingId(nameof(hideArrow));
+        
+        internal static readonly BindingId mobileTypeProperty = new BindingId(nameof(mobileType));
+        
+        internal static readonly BindingId containerPaddingProperty = new BindingId(nameof(containerPadding));
+        
+        internal static readonly BindingId offsetProperty = new BindingId(nameof(offset));
+        
+        internal static readonly BindingId crossOffsetProperty = new BindingId(nameof(crossOffset));
+        
+        internal static readonly BindingId shouldFlipProperty = new BindingId(nameof(shouldFlip));
+        
+        internal static readonly BindingId isOpenProperty = new BindingId(nameof(isOpen));
+        
+        internal static readonly BindingId keyboardDismissDisabledProperty = new BindingId(nameof(keyboardDismissDisabled));
+        
+        internal static readonly BindingId outsideClickDismissEnabledProperty = new BindingId(nameof(outsideClickDismissEnabled));
+        
+        internal static readonly BindingId modalBackdropProperty = new BindingId(nameof(modalBackdrop));
+        
+        internal static readonly BindingId placementProperty = new BindingId(nameof(placement));
+        
+#endif
+        
         string m_AnchorName = null;
 
         /// <summary>
@@ -92,51 +141,220 @@ namespace Unity.AppUI.UI
         /// </summary>
         public DialogTrigger()
         {
+            pickingMode = PickingMode.Ignore;
+            
+            anchor = null;
+            type = PopupPresentationType.Modal;
+            trayPosition = TrayPosition.Bottom;
+            traySize = 200;
+            trayExpandable = false;
+            trayMargin = 0;
+            transitionDuration = 150;
+            hideArrow = false;
+            mobileType = MobilePopupPresentationType.Modal;
+            containerPadding = 0;
+            offset = 0;
+            crossOffset = 0;
+            shouldFlip = true;
+            keyboardDismissDisabled = false;
+            outsideClickDismissEnabled = true;
+            modalBackdrop = false;
+            placement = PopoverPlacement.Top;
+            
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         }
+        
+        Dialog m_Dialog;
 
         /// <summary>
         /// The dialog to display.
         /// </summary>
-        public Dialog dialog { get; private set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
+        public Dialog dialog
+        {
+            get => m_Dialog;
+            private set
+            {
+                var changed = m_Dialog != value;
+                m_Dialog = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in dialogProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// The trigger that will be used to start the display of the <see cref="dialog"/> element.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public VisualElement trigger { get; private set; }
+        
+        PopupPresentationType m_Type;
 
         /// <summary>
         /// The type of presentation used for this <see cref="dialog"/> element.
         /// <remarks>Some types are not available on mobile, to specify different presentation on mobile context
         /// use the <see cref="mobileType"/> property.</remarks>
         /// </summary>
-        public PopupPresentationType type { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public PopupPresentationType type
+        {
+            get => m_Type;
+            set
+            {
+                var changed = m_Type != value;
+                m_Type = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in typeProperty);
+#endif
+            }
+        }
+        
+        TrayPosition m_TrayPosition;
 
         /// <summary>
         /// The position of the Tray element.
         /// <remarks>This property is useful only if you set the <see cref="type"/> property to <see cref="PopupPresentationType.Tray"/>.</remarks>
         /// </summary>
-        public TrayPosition trayPosition { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public TrayPosition trayPosition
+        {
+            get => m_TrayPosition;
+            set
+            {
+                var changed = m_TrayPosition != value;
+                m_TrayPosition = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in trayPositionProperty);
+#endif
+            }
+        }
+        
+        float m_TraySize;
 
         /// <summary>
         /// The size of the Tray element.
         /// </summary>
-        public float traySize { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public float traySize 
+        {
+            get => m_TraySize;
+            set
+            {
+                var changed = m_TraySize != value;
+                m_TraySize = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in traySizeProperty);
+#endif
+            }
+        }
+        
+        bool m_TrayExpandable;
 
         /// <summary>
         /// Make the Tray element expandable.
         /// </summary>
-        public bool trayExpandable { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool trayExpandable
+        {
+            get => m_TrayExpandable;
+            set
+            {
+                var changed = m_TrayExpandable != value;
+                m_TrayExpandable = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in trayExpandableProperty);
+#endif
+            }
+        }
+        
+        int m_TransitionDuration;
 
         /// <summary>
         /// The duration of the transition in milliseconds.
         /// </summary>
-        public int transitionDuration { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public int transitionDuration
+        {
+            get => m_TransitionDuration;
+            set
+            {
+                var changed = m_TransitionDuration != value;
+                m_TransitionDuration = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in transitionDurationProperty);
+#endif
+            }
+        }
+        
+        float m_TrayMargin;
 
         /// <summary>
         /// The margin in pixels of the Tray element.
         /// </summary>
-        public float trayMargin { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public float trayMargin
+        {
+            get => m_TrayMargin;
+            set
+            {
+                var changed = m_TrayMargin != value;
+                m_TrayMargin = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in trayMarginProperty);
+#endif
+            }
+        }
+        
+        bool m_HideArrow;
 
         /// <summary>
         /// Should the arrow be hidden.
@@ -144,42 +362,207 @@ namespace Unity.AppUI.UI
         /// This property is only useful with <see cref="PopupPresentationType.Popover"/> presentation type.
         /// </remarks>
         /// </summary>
-        public bool hideArrow { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool hideArrow 
+        {
+            get => m_HideArrow;
+            set
+            {
+                var changed = m_HideArrow != value;
+                m_HideArrow = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in hideArrowProperty);
+#endif
+            }
+        }
+        
+        MobilePopupPresentationType m_MobileType;
 
         /// <summary>
         /// The type of presentation used for this <see cref="dialog"/> element on mobile platforms.
         /// </summary>
-        public MobilePopupPresentationType mobileType { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public MobilePopupPresentationType mobileType 
+        {
+            get => m_MobileType;
+            set
+            {
+                var changed = m_MobileType != value;
+                m_MobileType = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in mobileTypeProperty);
+#endif
+            }
+        }
+        
+        int m_ContainerPadding;
 
         /// <summary>
         /// The padding in pixels of the content inside the Popup.
         /// </summary>
-        public int containerPadding { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public int containerPadding 
+        {
+            get => m_ContainerPadding;
+            set
+            {
+                var changed = m_ContainerPadding != value;
+                m_ContainerPadding = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in containerPaddingProperty);
+#endif
+            }
+        }
+        
+        int m_Offset;
 
         /// <summary>
         /// The offset in pixels in the direction of the <see cref="placement"/> primary vector.
         /// </summary>
-        public int offset { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public int offset 
+        {
+            get => m_Offset;
+            set
+            {
+                var changed = m_Offset != value;
+                m_Offset = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in offsetProperty);
+#endif
+            }
+        }
+        
+        int m_CrossOffset;
 
         /// <summary>
         /// The offset in pixels in the direction of the <see cref="placement"/> secondary vector.
         /// </summary>
-        public int crossOffset { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public int crossOffset
+        {
+            get => m_CrossOffset;
+            set
+            {
+                var changed = m_CrossOffset != value;
+                m_CrossOffset = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in crossOffsetProperty);
+#endif
+            }
+        }
+        
+        bool m_ShouldFlip;
 
         /// <summary>
         /// Should the Popover <see cref="placement"/> be flipped if there's not enough space.
         /// </summary>
-        public bool shouldFlip { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool shouldFlip
+        {
+            get => m_ShouldFlip;
+            set
+            {
+                var changed = m_ShouldFlip != value;
+                m_ShouldFlip = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in shouldFlipProperty);
+#endif
+            }
+        }
+        
+        bool m_IsOpen;
 
         /// <summary>
         /// The open state of the dialog.
         /// </summary>
-        public bool isOpen { get; private set; } = false;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
+        public bool isOpen 
+        {
+            get => m_IsOpen;
+            private set
+            {
+                var changed = m_IsOpen != value;
+                m_IsOpen = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in isOpenProperty);
+#endif
+            }
+        }
+        
+        bool m_KeyboardDismissDisabled;
 
         /// <summary>
         /// Disallow the use of Escape key or Return button to dismiss the <see cref="dialog"/>.
         /// </summary>
-        public bool keyboardDismissDisabled { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool keyboardDismissDisabled
+        {
+            get => m_KeyboardDismissDisabled;
+            set
+            {
+                var changed = m_KeyboardDismissDisabled != value;
+                m_KeyboardDismissDisabled = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in keyboardDismissDisabledProperty);
+#endif
+            }
+        }
+        
+        bool m_OutsideClickDismissEnabled;
 
         /// <summary>
         /// Allow the use of clicking outside the <see cref="dialog"/> to dismiss it.
@@ -187,7 +570,28 @@ namespace Unity.AppUI.UI
         /// <remarks>
         /// This property works only with <see cref="PopupPresentationType.Popover"/> presentation type.
         /// </remarks>
-        public bool outsideClickDismissEnabled { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool outsideClickDismissEnabled 
+        {
+            get => m_OutsideClickDismissEnabled;
+            set
+            {
+                var changed = m_OutsideClickDismissEnabled != value;
+                m_OutsideClickDismissEnabled = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in outsideClickDismissEnabledProperty);
+#endif
+            }
+        }
+        
+        bool m_ModalBackdrop;
 
         /// <summary>
         /// Enable or disable the blocking of the UI behind the <see cref="dialog"/>.
@@ -195,19 +599,77 @@ namespace Unity.AppUI.UI
         /// <remarks>
         /// This property works only with <see cref="PopupPresentationType.Popover"/> presentation type.
         /// </remarks>
-        public bool modalBackdrop { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool modalBackdrop 
+        {
+            get => m_ModalBackdrop;
+            set
+            {
+                var changed = m_ModalBackdrop != value;
+                m_ModalBackdrop = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in modalBackdropProperty);
+#endif
+            }
+        }
+        
+        VisualElement m_Anchor;
 
         /// <summary>
         /// The UI element used as an anchor.
         /// <remarks>This is only useful for presentations using popups of type <see cref="AnchorPopup{T}"/>.</remarks>
         /// </summary>
-        public VisualElement anchor { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public VisualElement anchor
+        {
+            get => m_Anchor;
+            set
+            {
+                var changed = m_Anchor != value;
+                m_Anchor = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in anchorProperty);
+#endif
+            }
+        }
+        
+        PopoverPlacement m_Placement;
 
         /// <summary>
         /// The placement of the Popover.
         /// <remarks>This is only useful for presentations using popups of type <see cref="AnchorPopup{T}"/>.</remarks>
         /// </summary>
-        public PopoverPlacement placement { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public PopoverPlacement placement
+        {
+            get => m_Placement;
+            set
+            {
+                var changed = m_Placement != value;
+                m_Placement = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in placementProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// The content container of the DialogTrigger.
@@ -299,16 +761,17 @@ namespace Unity.AppUI.UI
             isOpen = true;
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Class used to instantiate <see cref="DialogTrigger"/> from UXML.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<DialogTrigger, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="DialogTrigger"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlStringAttributeDescription m_Anchor = new UxmlStringAttributeDescription
             {
@@ -442,5 +905,7 @@ namespace Unity.AppUI.UI
                 el.modalBackdrop = m_ModalBackdrop.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 }

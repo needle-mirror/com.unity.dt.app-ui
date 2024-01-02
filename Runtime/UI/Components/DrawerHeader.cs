@@ -1,11 +1,14 @@
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A drawer header visual element.
     /// </summary>
-    public class DrawerHeader : VisualElement
+    public class DrawerHeader : BaseVisualElement
     {
         /// <summary>
         /// The DrawerHeader's USS class name.

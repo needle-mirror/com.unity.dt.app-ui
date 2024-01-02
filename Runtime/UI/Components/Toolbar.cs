@@ -1,6 +1,8 @@
 using System;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -38,8 +40,22 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Accordion visual element.
     /// </summary>
-    public class Toolbar : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Toolbar : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId dockModeProperty = new BindingId(nameof(dockMode));
+        
+        internal static readonly BindingId draggableProperty = new BindingId(nameof(draggable));
+        
+        internal static readonly BindingId directionProperty = new BindingId(nameof(direction));
+        
+#endif
+        
+        
         /// <summary>
         /// The Toolbar's USS class name.
         /// </summary>
@@ -90,37 +106,76 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The dock mode of the Toolbar.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public ToolbarDockMode dockMode
         {
             get => m_DockMode;
             set
             {
+                var changed = m_DockMode != value;
                 RemoveFromClassList(variantUssClassName + m_DockMode.ToString().ToLower());
                 m_DockMode = value;
                 AddToClassList(variantUssClassName + m_DockMode.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in dockModeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Whether the Toolbar is draggable.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool draggable
         {
             get => ClassListContains(draggableUssClassName);
-            set => EnableInClassList(draggableUssClassName, value);
+            set
+            {
+                var changed = ClassListContains(draggableUssClassName) != value;
+                EnableInClassList(draggableUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in draggableProperty);
+#endif
+            }
         }
         
         /// <summary>
         /// The direction of the Toolbar.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Direction direction
         {
             get => m_Direction;
             set
             {
+                var changed = m_Direction != value;
                 RemoveFromClassList(variantUssClassName + m_Direction.ToString().ToLower());
                 m_Direction = value;
                 AddToClassList(variantUssClassName + m_Direction.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in directionProperty);
+#endif
             }
         }
 
@@ -163,16 +218,17 @@ namespace Unity.AppUI.UI
             direction = Direction.Horizontal;
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// UXML Factory for Toolbar.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Toolbar, UxmlTraits> { }
         
         /// <summary>
         /// UXML Traits for Toolbar.
         /// </summary>
-        public new class UxmlTraits : VisualElement.UxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlEnumAttributeDescription<ToolbarDockMode> m_DockMode = new UxmlEnumAttributeDescription<ToolbarDockMode> { name = "dock-mode", defaultValue = ToolbarDockMode.Floating };
 
@@ -191,5 +247,7 @@ namespace Unity.AppUI.UI
                 toolbar.direction = m_Direction.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 }

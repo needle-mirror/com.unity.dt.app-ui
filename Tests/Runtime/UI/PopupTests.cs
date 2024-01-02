@@ -85,8 +85,6 @@ namespace Unity.AppUI.Tests.UI
             m_Popup = CreatePopup();
             Assert.IsNotNull(m_Popup);
             
-            Assert.IsNotNull(m_Popup.context);
-            
             Assert.IsNotNull(m_Popup.view);
 
             if (shouldContainView)

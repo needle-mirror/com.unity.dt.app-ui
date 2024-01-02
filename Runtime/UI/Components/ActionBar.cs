@@ -1,16 +1,27 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Scripting;
+using UnityEngine;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// ActionBar UI element.
     /// </summary>
-    public class ActionBar : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class ActionBar : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        internal static readonly BindingId messageProperty = nameof(message);
+        
+        internal static readonly BindingId collectionViewProperty = nameof(collectionView);
+#endif
         
 #if UNITY_LOCALIZATION_PRESENT
         const string k_DefaultMessage = "@AppUI:selectedItemsMessage";
@@ -82,6 +93,11 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The collection view attached to this <see cref="ActionBar"/>.
         /// </summary>
+        [Tooltip("The collection view attached to this ActionBar. " +
+            "The collection view is used to get the selected indices and the items source.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public BaseVerticalCollectionView collectionView
         {
             get => m_CollectionView;
@@ -109,11 +125,17 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The list of selected indices from the Collection View.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public IEnumerable<int> selectedIndices => m_CollectionView?.selectedIndices ?? new List<int>();
 
         /// <summary>
         /// The items source from the Collection View.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public IList itemsSource => m_CollectionView?.itemsSource;
 
         /// <summary>
@@ -121,13 +143,33 @@ namespace Unity.AppUI.UI
         /// <remarks>We recommend to use a SmartString text in order to adjust the
         /// text based on the number of selected items.</remarks>
         /// </summary>
+        /// <example>
+        /// <code>
+        /// {itemCount:plural:Nothing selected|One selected item|{} selected items}
+        /// </code>
+        /// </example>
+        [Tooltip("Text used for item selection message.\n\n" +
+            "We recommend to use a SmartString text in order to adjust the text based on the number of selected items.\n" +
+            "Example: {itemCount:plural:Nothing selected|One selected item|{} selected items}")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Header("Action Bar")]
+#endif
         public string message
         {
             get => m_Message;
             set
             {
+                var previousValue = m_Message;
                 m_Message = value;
                 RefreshUI();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (previousValue != value)
+                    NotifyPropertyChanged(messageProperty);
+#endif
             }
         }
 
@@ -201,17 +243,17 @@ namespace Unity.AppUI.UI
                 m_Label.text = string.Format(m_Message, selectionCount);
 #endif
         }
-
+        
+#if ENABLE_UXML_TRAITS
         /// <summary>
         /// The UXML factory for the <see cref="ActionBar"/>.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<ActionBar, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ActionBar"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlStringAttributeDescription m_Message = new UxmlStringAttributeDescription
             {
@@ -233,5 +275,6 @@ namespace Unity.AppUI.UI
                 el.message = m_Message.GetValueFromBag(bag, cc);
             }
         }
+#endif
     }
 }

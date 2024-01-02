@@ -1,8 +1,10 @@
 using System;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -10,8 +12,35 @@ namespace Unity.AppUI.UI
     /// A color wheel that allows the user to select a color hue by rotating the wheel.
     /// It is also possible to set the saturation and brightness and opacity of the wheel.
     /// </summary>
-    public class ColorWheel : VisualElement, INotifyValueChanging<float>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class ColorWheel : BaseVisualElement, INotifyValueChanging<float>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+ 
+        internal static readonly BindingId valuePropertyKey = new BindingId(nameof(value));
+        
+        internal static readonly BindingId incrementFactorProperty = new BindingId(nameof(incrementFactor));
+        
+        internal static readonly BindingId opacityPropertyKey = new BindingId(nameof(opacity));
+        
+        internal static readonly BindingId brightnessPropertyKey = new BindingId(nameof(brightness));
+        
+        internal static readonly BindingId saturationPropertyKey = new BindingId(nameof(saturation));
+        
+        internal static readonly BindingId innerRadiusPropertyKey = new BindingId(nameof(innerRadius));
+        
+        internal static readonly BindingId checkerSizePropertyKey = new BindingId(nameof(checkerSize));
+        
+        internal static readonly BindingId checkerColor1PropertyKey = new BindingId(nameof(checkerColor1));
+        
+        internal static readonly BindingId checkerColor2PropertyKey = new BindingId(nameof(checkerColor2));
+        
+        internal static readonly BindingId selectedColorPropertyKey = new BindingId(nameof(selectedColor));
+        
+#endif
+        
         const float k_InvTwoPI = 0.15915494309f;
 
         const float k_TwoPI = 6.28318530718f;
@@ -72,11 +101,17 @@ namespace Unity.AppUI.UI
 
         readonly Image m_Image;
 
-        Color m_CheckerColor1;
+        Color m_CheckerColor1FromStyle;
 
-        Color m_CheckerColor2;
+        Optional<Color> m_CheckerColor1FromCode;
 
-        int m_CheckerSize;
+        Color m_CheckerColor2FromStyle;
+        
+        Optional<Color> m_CheckerColor2FromCode;
+
+        int m_CheckerSizeFromStyle = k_DefaultCheckerSize;
+        
+        Optional<int> m_CheckerSizeFromCode;
 
         RenderTexture m_RT;
 
@@ -86,13 +121,21 @@ namespace Unity.AppUI.UI
 
         static Material s_Material;
 
-        float m_Opacity = 1f;
+        float m_OpacityFromStyle = k_DefaultOpacity;
+        
+        Optional<float> m_OpacityFromCode;
 
-        float m_Brightness = 1f;
+        float m_BrightnessFromStyle = k_DefaultBrightness;
 
-        float m_Saturation = 1f;
+        Optional<float> m_BrightnessFromCode;
 
-        float m_InnerRadius = 0.4f;
+        float m_SaturationFromStyle = k_DefaultSaturation;
+
+        Optional<float> m_SaturationFromCode;
+
+        float m_InnerRadiusFromStyle = k_DefaultInnerRadius;
+
+        Optional<float> m_InnerRadiusFromCode;
 
         readonly Draggable m_DraggerManipulator;
 
@@ -102,9 +145,29 @@ namespace Unity.AppUI.UI
 
         readonly VisualElement m_ThumbSwatch;
 
+        float m_IncrementFactor = k_DefaultIncrementFactor;
+
+        const float k_DefaultIncrementFactor = 0.01f;
+        
+        const float k_DefaultInnerRadius = 0.4f;
+        
+        const int k_DefaultCheckerSize = 4;
+        
+        const float k_DefaultOpacity = 1f;
+        
+        const float k_DefaultBrightness = 1f;
+        
+        const float k_DefaultSaturation = 1f;
+
         /// <summary>
         /// The hue value of the color wheel.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public float value
         {
             get => m_Value;
@@ -117,121 +180,251 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(validValue);
                 evt.target = this;
                 SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valuePropertyKey);
+                NotifyPropertyChanged(in selectedColorPropertyKey);
+#endif
             }
         }
 
         /// <summary>
         /// The opacity of the color wheel. Note that a checkerboard pattern is always drawn behind the color wheel.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Range(0,1)]
+#endif
         public float opacity
         {
-            get => m_Opacity;
+            get => m_OpacityFromCode.IsSet ? m_OpacityFromCode.Value : m_OpacityFromStyle;
             set
             {
                 var validatedValue = Mathf.Clamp01(value);
-                if (Mathf.Approximately(validatedValue, m_Opacity))
-                    return;
-                m_Opacity = value;
-                GenerateTextures();
+                var changed = !Mathf.Approximately(validatedValue, opacity);
+                m_OpacityFromCode = validatedValue;
+                
+                if (changed)
+                    GenerateTextures();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in opacityPropertyKey);
+#endif
             }
         }
 
         /// <summary>
         /// The brightness of the color wheel.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Range(0,1)]
+#endif
         public float brightness
         {
-            get => m_Brightness;
+            get => m_BrightnessFromCode.IsSet ? m_BrightnessFromCode.Value : m_BrightnessFromStyle;
             set
             {
                 var validatedValue = Mathf.Clamp01(value);
-                if (Mathf.Approximately(validatedValue, m_Brightness))
-                    return;
-                m_Brightness = value;
-                GenerateTextures();
+                var changed = !Mathf.Approximately(validatedValue, brightness);
+                m_BrightnessFromCode = validatedValue;
+                
+                if (changed)
+                    GenerateTextures();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                {
+                    NotifyPropertyChanged(in brightnessPropertyKey);
+                    NotifyPropertyChanged(in selectedColorPropertyKey);
+                }
+#endif
             }
         }
 
         /// <summary>
         /// The saturation of the color wheel.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Range(0,1)]
+#endif
         public float saturation
         {
-            get => m_Saturation;
+            get => m_SaturationFromCode.IsSet ? m_SaturationFromCode.Value : m_SaturationFromStyle;
             set
             {
                 var validatedValue = Mathf.Clamp01(value);
-                if (Mathf.Approximately(validatedValue, m_Saturation))
-                    return;
-                m_Saturation = value;
-                GenerateTextures();
+                var changed = !Mathf.Approximately(validatedValue, saturation);
+                m_SaturationFromCode = validatedValue;
+                
+                if (changed)
+                    GenerateTextures();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                {
+                    NotifyPropertyChanged(in saturationPropertyKey);
+                    NotifyPropertyChanged(in selectedColorPropertyKey);
+                }
+#endif
             }
         }
 
         /// <summary>
         /// The inner radius of the color wheel.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Range(0,0.49999f)]
+#endif
         public float innerRadius
         {
-            get => m_InnerRadius;
+            get => m_InnerRadiusFromCode.IsSet ? m_InnerRadiusFromCode.Value : m_InnerRadiusFromStyle;
             set
             {
-                var validatedValue = Mathf.Clamp(value, 0, 0.499f);
-                if (Mathf.Approximately(validatedValue, m_InnerRadius))
-                    return;
-                m_InnerRadius = value;
-                GenerateTextures();
+                var validatedValue = Mathf.Clamp(value, 0, 0.5f - Mathf.Epsilon);
+                var changed = !Mathf.Approximately(validatedValue, innerRadius);
+                m_InnerRadiusFromCode = value;
+                
+                if (changed)
+                    GenerateTextures();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in innerRadiusPropertyKey);
+#endif
             }
         }
 
         /// <summary>
         /// The size of the checkerboard pattern.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Min(0)]
+#endif
         public int checkerSize
         {
-            get => m_CheckerSize;
+            get => m_CheckerSizeFromCode.IsSet ? m_CheckerSizeFromCode.Value : m_CheckerSizeFromStyle;
             set
             {
-                m_CheckerSize = value;
-                GenerateTextures();
+                var changed = checkerSize != value;
+                m_CheckerSizeFromCode = value;
+                
+                if (changed)
+                    GenerateTextures();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in checkerSizePropertyKey);
+#endif
             }
         }
 
         /// <summary>
         /// The first color of the checkerboard pattern.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Color checkerColor1
         {
-            get => m_CheckerColor1;
+            get => m_CheckerColor1FromCode.IsSet ? m_CheckerColor1FromCode.Value : m_CheckerColor1FromStyle;
             set
             {
-                m_CheckerColor1 = value;
-                GenerateTextures();
+                var changed = checkerColor1 != value;
+                m_CheckerColor1FromCode = value;
+                
+                if (changed)
+                    GenerateTextures();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in checkerColor1PropertyKey);
+#endif
             }
         }
 
         /// <summary>
         /// The second color of the checkerboard pattern.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Color checkerColor2
         {
-            get => m_CheckerColor2;
+            get => m_CheckerColor2FromCode.IsSet ? m_CheckerColor2FromCode.Value : m_CheckerColor2FromStyle;
             set
             {
-                m_CheckerColor2 = value;
-                GenerateTextures();
+                var changed = checkerColor2 != value;
+                m_CheckerColor2FromCode = value;
+                
+                if (changed)
+                    GenerateTextures();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in checkerColor2PropertyKey);
+#endif
             }
         }
 
         /// <summary>
         /// The currently selected color.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public Color selectedColor => Color.HSVToRGB(value, saturation, brightness);
 
         /// <summary>
         /// The factor by which the value is incremented when interacting with the wheel from the keyboard.
         /// </summary>
-        public float incrementFactor { get; set; } = 0.01f;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Min(0.00001f)]
+#endif
+        public float incrementFactor
+        {
+            get => m_IncrementFactor;
+            set
+            {
+                if (Mathf.Approximately(m_IncrementFactor, value))
+                    return;
+                
+                m_IncrementFactor = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in incrementFactorProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Default constructor.
@@ -275,6 +468,8 @@ namespace Unity.AppUI.UI
             RegisterCallback<KeyDownEvent>(OnKeyDown);
 
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));
+            
+            incrementFactor = k_DefaultIncrementFactor;
 
             SetValueWithoutNotify(0);
         }
@@ -367,43 +562,43 @@ namespace Unity.AppUI.UI
 
             if (evt.customStyle.TryGetValue(k_UssCheckerColor1, out var ussCheckerColor1))
             {
-                m_CheckerColor1 = ussCheckerColor1;
+                m_CheckerColor1FromStyle = ussCheckerColor1;
                 changed = true;
             }
 
             if (evt.customStyle.TryGetValue(k_UssCheckerColor2, out var ussCheckerColor2))
             {
-                m_CheckerColor2 = ussCheckerColor2;
+                m_CheckerColor2FromStyle = ussCheckerColor2;
                 changed = true;
             }
 
             if (evt.customStyle.TryGetValue(k_UssCheckerSize, out var ussCheckerSize))
             {
-                m_CheckerSize = ussCheckerSize;
+                m_CheckerSizeFromStyle = ussCheckerSize;
                 changed = true;
             }
 
             if (evt.customStyle.TryGetValue(k_UssOpacity, out var ussOpacity))
             {
-                m_Opacity = ussOpacity;
+                m_OpacityFromStyle = ussOpacity;
                 changed = true;
             }
 
             if (evt.customStyle.TryGetValue(k_UssBrightness, out var ussBrightness))
             {
-                m_Brightness = ussBrightness;
+                m_BrightnessFromStyle = ussBrightness;
                 changed = true;
             }
 
             if (evt.customStyle.TryGetValue(k_UssSaturation, out var ussSaturation))
             {
-                m_Saturation = ussSaturation;
+                m_SaturationFromStyle = ussSaturation;
                 changed = true;
             }
 
             if (evt.customStyle.TryGetValue(k_UssInnerRadius, out var ussInnerRadius))
             {
-                m_InnerRadius = ussInnerRadius;
+                m_InnerRadiusFromStyle = ussInnerRadius;
                 changed = true;
             }
 
@@ -503,9 +698,9 @@ namespace Unity.AppUI.UI
                 m_RT.Create();
             }
 
-            s_Material.SetColor(k_CheckerColor1, m_CheckerColor1);
-            s_Material.SetColor(k_CheckerColor2, m_CheckerColor2);
-            s_Material.SetFloat(k_CheckerSize, m_CheckerSize);
+            s_Material.SetColor(k_CheckerColor1, checkerColor1);
+            s_Material.SetColor(k_CheckerColor2, checkerColor2);
+            s_Material.SetFloat(k_CheckerSize, checkerSize);
             s_Material.SetFloat(k_Width, rect.width);
             s_Material.SetFloat(k_Height, rect.height);
             s_Material.SetFloat(k_AA, 2.0f / texSize.x);
@@ -534,36 +729,28 @@ namespace Unity.AppUI.UI
             return (/*Mathf.Atan2(refPoint.y, refPoint.x)*/ -Mathf.Atan2(direction.y, direction.x)) * k_InvTwoPI;
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Instantiates an <see cref="ColorWheel"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<ColorWheel, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ColorWheel"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
-
             readonly UxmlFloatAttributeDescription m_Value = new UxmlFloatAttributeDescription
             {
                 name = "value",
                 defaultValue = 0
+            };
+            
+            readonly UxmlFloatAttributeDescription m_IncrementFactor = new UxmlFloatAttributeDescription
+            {
+                name = "increment-factor",
+                defaultValue = k_DefaultIncrementFactor
             };
 
             /// <summary>
@@ -578,8 +765,13 @@ namespace Unity.AppUI.UI
 
                 var el = (ColorWheel)ve;
                 el.SetValueWithoutNotify(m_Value.GetValueFromBag(bag, cc));
-                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
+                
+                var incrementFactor = k_DefaultIncrementFactor;
+                if (m_IncrementFactor.TryGetValueFromBag(bag, cc, ref incrementFactor))
+                    el.incrementFactor = incrementFactor;
+                
             }
         }
+#endif
     }
 }

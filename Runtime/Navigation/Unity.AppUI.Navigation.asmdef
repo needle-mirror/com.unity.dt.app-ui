@@ -11,6 +11,27 @@
     "precompiledReferences": [],
     "autoReferenced": false,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "Unity",
+            "expression": "2023.2",
+            "define": "ENABLE_UXML_SERIALIZED_DATA"
+        },
+        {
+            "name": "Unity",
+            "expression": "2023.2",
+            "define": "ENABLE_RUNTIME_DATA_BINDINGS"
+        },
+        {
+            "name": "Unity",
+            "expression": "[2021.3,2023.3)",
+            "define": "ENABLE_ENABLED_UXML_PROPERTY"
+        },
+        {
+            "name": "Unity",
+            "expression": "[2021.3,2023.2]",
+            "define": "ENABLE_UXML_TRAITS"
+        }
+    ],
     "noEngineReferences": false
 }

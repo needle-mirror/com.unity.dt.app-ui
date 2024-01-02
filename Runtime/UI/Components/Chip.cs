@@ -1,15 +1,34 @@
 using System;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Chip UI element.
     /// </summary>
-    public class Chip : VisualElement, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Chip : BaseVisualElement, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+
+        internal static readonly BindingId deleteIconProperty = nameof(deleteIcon);
+        
+        internal static readonly BindingId ornamentProperty = nameof(ornament);
+        
+        internal static readonly BindingId labelProperty = nameof(label);
+        
+        internal static readonly BindingId variantProperty = nameof(variant);
+        
+        internal static readonly BindingId deletableProperty = nameof(deletable);
+        
+#endif
+        
         /// <summary>
         /// The possible variants for a <see cref="Chip"/>.
         /// </summary>
@@ -94,6 +113,8 @@ namespace Unity.AppUI.UI
 
         readonly VisualElement m_OrnamentContainer;
 
+        readonly Pressable m_Deletable;
+
         /// <summary>
         /// The content container of the Chip. This is the ornament container.
         /// </summary>
@@ -102,50 +123,125 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The icon name for the delete button.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string deleteIcon
         {
             get => m_DeleteIcon.iconName;
-            set => m_DeleteIcon.iconName = value;
+            set
+            {
+                var changed = m_DeleteIcon.iconName != value;
+                m_DeleteIcon.iconName = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in deleteIconProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The Chip variant.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Variant variant
         {
             get => m_Variant;
             set
             {
+                var changed = m_Variant != value;
                 RemoveFromClassList(variantUssClassName + m_Variant.ToString().ToLower());
                 m_Variant = value;
                 AddToClassList(variantUssClassName + m_Variant.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in variantProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The Chip ornament.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public VisualElement ornament
         {
             get => m_Ornament;
             set
             {
+                var changed = m_Ornament != value;
                 if (m_Ornament != null && m_Ornament.parent == m_OrnamentContainer)
                     m_OrnamentContainer.Remove(m_Ornament);
                 m_Ornament = value;
                 if (m_Ornament != null)
                     m_OrnamentContainer.Add(m_Ornament);
                 EnableInClassList(withOrnamentUssClassName, m_Ornament != null);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in ornamentProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The Chip label.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string label
         {
             get => m_Label.text;
-            set => m_Label.text = value;
+            set
+            {
+                var changed = m_Label.text != value;
+                m_Label.text = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelProperty);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Set the Chip as deletable.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool deletable
+        {
+            get => ClassListContains(deletableUssClassName);
+            set
+            {
+                var changed = ClassListContains(deletableUssClassName) != value;
+                EnableInClassList(deletableUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in deletableProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -168,39 +264,19 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Event fired when the Chip is clicked.
         /// </summary>
-        public event EventHandler clicked
+        public event Action clicked
         {
-            add
-            {
-                if (m_Clicked == null && value != null)
-                    AddToClassList(clickableUssClassName);
-                m_Clicked += value;
-            }
-            remove
-            {
-                m_Clicked -= value;
-                if (m_Clicked == null)
-                    RemoveFromClassList(clickableUssClassName);
-            }
+            add => m_Clickable.clicked += value;
+            remove => m_Clickable.clicked -= value;
         }
 
         /// <summary>
         /// Event fired when the Chip is deleted.
         /// </summary>
-        public event EventHandler deleted
+        public event Action deleted
         {
-            add
-            {
-                if (m_Deleted == null && value != null)
-                    AddToClassList(deletableUssClassName);
-                m_Deleted += value;
-            }
-            remove
-            {
-                m_Deleted -= value;
-                if (m_Deleted == null)
-                    RemoveFromClassList(deletableUssClassName);
-            }
+            add => m_Deletable.clicked += value;
+            remove => m_Deletable.clicked -= value;
         }
 
         /// <summary>
@@ -210,7 +286,7 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
             pickingMode = PickingMode.Position;
-            clickable = new Pressable(OnClickedInternal);
+            clickable = new Pressable();
             focusable = true;
             tabIndex = 0;
 
@@ -224,7 +300,8 @@ namespace Unity.AppUI.UI
 
             m_DeleteButton = new VisualElement { name = deleteButtonUssClassName, pickingMode = PickingMode.Position, focusable = true };
             m_DeleteButton.AddToClassList(deleteButtonUssClassName);
-            m_DeleteButton.AddManipulator(new Pressable(OnDeletedInternal));
+            m_Deletable = new Pressable();
+            m_DeleteButton.AddManipulator(m_Deletable);
             hierarchy.Add(m_DeleteButton);
 
             m_DeleteIcon = new Icon { name = deleteIconUssClassName, pickingMode = PickingMode.Ignore };
@@ -234,43 +311,24 @@ namespace Unity.AppUI.UI
             deleteIcon = k_DefaultDeleteIconName;
             variant = Variant.Filled;
             ornament = null;
-        }
-
-        void OnDeletedInternal()
-        {
-            m_Deleted?.Invoke(this, EventArgs.Empty);
-        }
-
-        void OnClickedInternal()
-        {
-            m_Clicked?.Invoke(this, EventArgs.Empty);
+            
+            AddToClassList(clickableUssClassName);
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Defines the UxmlFactory for the Chip.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Chip, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Chip"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
+            
+            
 
             readonly UxmlEnumAttributeDescription<Variant> m_Variant = new UxmlEnumAttributeDescription<Variant>
             {
@@ -304,8 +362,9 @@ namespace Unity.AppUI.UI
                 element.variant = m_Variant.GetValueFromBag(bag, cc);
                 element.label = m_Label.GetValueFromBag(bag, cc);
                 element.deleteIcon = m_DeleteIcon.GetValueFromBag(bag, cc);
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+#endif
     }
 }

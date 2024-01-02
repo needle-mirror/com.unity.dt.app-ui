@@ -16,7 +16,7 @@
                             <appui:AccordionItem title="Hello">
                                 <appui:Button title="Click Here" />
                             </appui:AccordionItem>
-                            <appui:AccordionItem title="Disabled Item" disabled="true">
+                            <appui:AccordionItem title="Disabled Item" enabled="false">
                                 <appui:Button title="Click Here Too" />
                             </appui:AccordionItem>
                             <appui:AccordionItem title="Another Item">
@@ -31,7 +31,7 @@
                             <appui:AccordionItem title="Hello">
                                 <appui:Button title="Click Here" />
                             </appui:AccordionItem>
-                            <appui:AccordionItem title="Disabled Item" disabled="true">
+                            <appui:AccordionItem title="Disabled Item" enabled="false">
                                 <appui:Button title="Click Here Too" />
                             </appui:AccordionItem>
                             <appui:AccordionItem title="Another Item">
@@ -89,15 +89,15 @@
                     </ui:VisualElement>
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:ActionButton label="Action 1" icon="info" disabled="true" />
+                        <appui:ActionButton label="Action 1" icon="info" enabled="false" />
                     </ui:VisualElement>
                     <appui:Text text="Selected - Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:ActionButton label="Action 1" icon="info" disabled="true" selected="true" />
+                        <appui:ActionButton label="Action 1" icon="info" enabled="false" selected="true" />
                     </ui:VisualElement>
                     <appui:Text text="Selected - Disabled - Accent" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:ActionButton label="Action 1" icon="info" disabled="true" selected="true" accent="true" />
+                        <appui:ActionButton label="Action 1" icon="info" enabled="false" selected="true" accent="true" />
                     </ui:VisualElement>
                     <appui:Text text="Quiet" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
@@ -178,7 +178,7 @@
                     <ui:VisualElement class="example-section">
                         <appui:SplitView orientation="Vertical" fixed-pane-index="0" fixed-pane-initial-dimension="100" style="height: 200px;">
                             <ui:VisualElement style="width: 100%; height: 100%; align-items: flex-start;">
-                                <appui:ActionGroup vertical="true" style="max-height: 100%;">
+                                <appui:ActionGroup direction="Vertical" style="max-height: 100%;">
                                     <appui:ActionButton icon="arrow-up" />
                                     <appui:ActionButton icon="arrow-down" />
                                     <appui:ActionButton icon="arrow-left" />
@@ -252,33 +252,33 @@
                     <!-- ActionGroup Vertical -->
                     <appui:Text text="Vertical" class="example-subtitle" />
                     <ui:VisualElement class="example-section" style="align-items: flex-start;">
-                        <appui:ActionGroup vertical="true">
+                        <appui:ActionGroup direction="Vertical">
                             <appui:ActionButton label="Cut" />
                             <appui:ActionButton label="Copy" />
                             <appui:ActionButton label="Paste" />
                         </appui:ActionGroup>
                     </ui:VisualElement>
                     <ui:VisualElement class="example-section" style="align-items: flex-start;">
-                        <appui:ActionGroup vertical="true">
+                        <appui:ActionGroup direction="Vertical">
                             <appui:ActionButton label="Copy" />
                         </appui:ActionGroup>
                     </ui:VisualElement>
                     <appui:Text text="Vertical - Quiet" class="example-subtitle" />
                     <ui:VisualElement class="example-section" style="align-items: flex-start;">
-                        <appui:ActionGroup vertical="true" quiet="true">
+                        <appui:ActionGroup direction="Vertical" quiet="true">
                             <appui:ActionButton label="Cut" quiet="true" />
                             <appui:ActionButton label="Copy" quiet="true" />
                             <appui:ActionButton label="Paste" quiet="true" />
                         </appui:ActionGroup>
                     </ui:VisualElement>
                     <ui:VisualElement class="example-section" style="align-items: flex-start;">
-                        <appui:ActionGroup vertical="true" quiet="true">
+                        <appui:ActionGroup direction="Vertical" quiet="true">
                             <appui:ActionButton label="Copy" quiet="true" />
                         </appui:ActionGroup>
                     </ui:VisualElement>
                     <appui:Text text="Vertical - Justified" class="example-subtitle" />
                     <ui:VisualElement class="example-section" style="align-items: flex-start;">
-                        <appui:ActionGroup vertical="true" justified="true">
+                        <appui:ActionGroup direction="Vertical" justified="true">
                             <appui:ActionButton label="Cut" />
                             <appui:ActionButton label="Copy" />
                             <appui:ActionButton label="Paste" />
@@ -286,7 +286,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Vertical - Justified (Icon only)" class="example-subtitle" />
                     <ui:VisualElement class="example-section" style="align-items: flex-start;">
-                        <appui:ActionGroup vertical="true" justified="true">
+                        <appui:ActionGroup direction="Vertical" justified="true">
                             <appui:ActionButton icon="info" />
                             <appui:ActionButton icon="info" />
                             <appui:ActionButton icon="info" />
@@ -294,7 +294,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Vertical - Compact" class="example-subtitle" />
                     <ui:VisualElement class="example-section" style="align-items: flex-start;">
-                        <appui:ActionGroup vertical="true" compact="true">
+                        <appui:ActionGroup direction="Vertical" compact="true">
                             <appui:ActionButton label="Cut" />
                             <appui:ActionButton label="Copy" />
                             <appui:ActionButton label="Paste" />
@@ -302,7 +302,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Vertical - Compact &amp; Justified" class="example-subtitle" />
                     <ui:VisualElement class="example-section" style="align-items: flex-start;">
-                        <appui:ActionGroup vertical="true" compact="true" justified="true">
+                        <appui:ActionGroup direction="Vertical" compact="true" justified="true">
                             <appui:ActionButton label="Cut" />
                             <appui:ActionButton label="Copy" />
                             <appui:ActionButton label="Paste" />
@@ -310,14 +310,14 @@
                     </ui:VisualElement>
                     <appui:Text text="Vertical - Compact &amp; Justified (Icon only)" class="example-subtitle" />
                     <ui:VisualElement class="example-section" style="align-items: flex-start;">
-                        <appui:ActionGroup vertical="true" justified="true" compact="true">
+                        <appui:ActionGroup direction="Vertical" justified="true" compact="true">
                             <appui:ActionButton icon="info" />
                             <appui:ActionButton icon="info" />
                             <appui:ActionButton icon="info" />
                         </appui:ActionGroup>
                     </ui:VisualElement>
                     <ui:VisualElement class="example-section" style="align-items: flex-start;">
-                        <appui:ActionGroup vertical="true" justified="true" compact="true">
+                        <appui:ActionGroup direction="Vertical" justified="true" compact="true">
                             <appui:ActionButton icon="info" />
                         </appui:ActionGroup>
                     </ui:VisualElement>
@@ -394,7 +394,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Avatar outline-color="#4D70EE" background-color="#4D70EE" disabled="true">
+                        <appui:Avatar outline-color="#4D70EE" background-color="#4D70EE" enabled="false">
                             <appui:Text text="MB" style="color: #fff;" />
                         </appui:Avatar>
                     </ui:VisualElement>
@@ -489,22 +489,22 @@
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item">
                                 <ui:VisualElement class="badge-container-example">
-                                    <appui:Badge name="badge-1" variant="Default" vertical-anchor="Top" horizontal-anchor="Right" overlap-type="Rectangular" />
+                                    <appui:Badge name="badge-1" variant="Default" overlap-type="Rectangular" />
                                 </ui:VisualElement>
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <ui:VisualElement class="badge-container-example">
-                                    <appui:Badge name="badge-2" variant="Dot" vertical-anchor="Bottom" horizontal-anchor="Left" overlap-type="Rectangular" />
+                                    <appui:Badge name="badge-2" variant="Dot" overlap-type="Rectangular" />
                                 </ui:VisualElement>
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <ui:VisualElement class="badge-container-example badge-container-circular-example">
-                                    <appui:Badge name="badge-3" variant="Default" vertical-anchor="Top" horizontal-anchor="Left" overlap-type="Circular"/>
+                                    <appui:Badge name="badge-3" variant="Default" overlap-type="Circular"/>
                                 </ui:VisualElement>
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <ui:VisualElement class="badge-container-example badge-container-circular-example">
-                                    <appui:Badge name="badge-4" variant="Dot" vertical-anchor="Bottom" horizontal-anchor="Right" overlap-type="Circular"/>
+                                    <appui:Badge name="badge-4" variant="Dot" overlap-type="Circular"/>
                                 </ui:VisualElement>
                             </ui:VisualElement>
                         </ui:VisualElement>
@@ -576,7 +576,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Button title="Disabled button" leading-icon="info" disabled="true" />
+                        <appui:Button title="Disabled button" leading-icon="info" enabled="false" />
                     </ui:VisualElement>
 
                     <!-- Canvas -->
@@ -614,7 +614,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Intermediate - Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Checkbox label="Intermediate Disabled" value="Intermediate" disabled="true" />
+                        <appui:Checkbox label="Intermediate Disabled" value="Intermediate" enabled="false" />
                     </ui:VisualElement>
                     <appui:Text text="Intermediate - Invalid" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
@@ -622,7 +622,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Intermediate - Disabled - Invalid" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Checkbox label="Intermediate Disabled Invalid" value="Intermediate" disabled="true" class="is-invalid" />
+                        <appui:Checkbox label="Intermediate Disabled Invalid" value="Intermediate" enabled="false" class="is-invalid" />
                     </ui:VisualElement>
                     <appui:Text text="Emphasized - Unchecked" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
@@ -638,7 +638,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Emphasized - Intermediate - Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Checkbox label="Intermediate Disabled" value="Intermediate" emphasized="true" disabled="true" />
+                        <appui:Checkbox label="Intermediate Disabled" value="Intermediate" emphasized="true" enabled="false" />
                     </ui:VisualElement>
                     <appui:Text text="Emphasized - Intermediate - Invalid" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
@@ -646,7 +646,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Emphasized - Intermediate - Disabled - Invalid" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Checkbox label="Intermediate Disabled Invalid" value="Intermediate" emphasized="true" disabled="true" class="is-invalid" />
+                        <appui:Checkbox label="Intermediate Disabled Invalid" value="Intermediate" emphasized="true" enabled="false" class="is-invalid" />
                     </ui:VisualElement>
 
                     <!-- Chip -->
@@ -696,8 +696,8 @@
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="example-row">
-                            <appui:Chip variant="Filled" label="Disabled" class="appui-chip--deletable" disabled="true" />
-                            <appui:Chip variant="Outlined" label="Disabled" class="appui-chip--deletable" disabled="true" />
+                            <appui:Chip variant="Filled" label="Disabled" class="appui-chip--deletable" enabled="false" />
+                            <appui:Chip variant="Outlined" label="Disabled" class="appui-chip--deletable" enabled="false" />
                         </ui:VisualElement>
                     </ui:VisualElement>
 
@@ -764,7 +764,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:ColorField disabled="true" />
+                        <appui:ColorField enabled="false" />
                     </ui:VisualElement>
 
 
@@ -797,7 +797,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:ColorSlider value="0.25" from="#FF000000" to="#FF0000FF" disabled="true"/>
+                        <appui:ColorSlider value="0.25" from="#FF000000" to="#FF0000FF" enabled="false"/>
                     </ui:VisualElement>
                     <appui:Text text="Invalid" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
@@ -805,7 +805,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Invalid &amp; Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:ColorSlider value="0.5" from="#FF000000" to="#FF0000FF" disabled="true" class="is-invalid"/>
+                        <appui:ColorSlider value="0.5" from="#FF000000" to="#FF0000FF" enabled="false" class="is-invalid"/>
                     </ui:VisualElement>
 
                     <!-- ColorSwatch -->
@@ -839,7 +839,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:ColorWheel style="width: 200px; height: 200px;" disabled="true" />
+                        <appui:ColorWheel style="width: 200px; height: 200px;" enabled="false" />
                     </ui:VisualElement>
 
                     <!-- ContextProvider -->
@@ -950,7 +950,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Popover - Keyboard Dismiss Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section example-section-fullwidth">
-                        <appui:DialogTrigger type="Popover" keyboard-dismiss-disabled="true">
+                        <appui:DialogTrigger type="Popover" keyboard-dismiss-enabled="false">
                             <appui:ActionButton label="Click here!" />
                             <appui:Dialog title="Hello">
                                 <appui:Text text="Lorem ipsum..." />
@@ -1003,10 +1003,10 @@
                     <appui:Text text="Vertical" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="example-row" style="height: 40px;justify-content: flex-start;">
-                            <appui:Divider vertical="true" spacing="None" />
-                            <appui:Divider vertical="true" spacing="S" />
-                            <appui:Divider vertical="true" spacing="M" />
-                            <appui:Divider vertical="true" spacing="L" />
+                            <appui:Divider direction="Vertical" spacing="None" />
+                            <appui:Divider direction="Vertical" spacing="S" />
+                            <appui:Divider direction="Vertical" spacing="M" />
+                            <appui:Divider direction="Vertical" spacing="L" />
                         </ui:VisualElement>
                     </ui:VisualElement>
 
@@ -1044,8 +1044,8 @@
                             </appui:Drawer>
                             <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
                                 <appui:Text text="Main Content" />
-                                <appui:Button name="open-temp-drawer-btn" title="Open Drawer" disabled="true" />
-                                <appui:Button name="open-snap-temp-drawer-btn" title="Open Snap Drawer" disabled="true" />
+                                <appui:Button name="open-temp-drawer-btn" title="Open Drawer" enabled="false" />
+                                <appui:Button name="open-snap-temp-drawer-btn" title="Open Snap Drawer" enabled="false" />
                                 <appui:RadioGroup name="drawer-variant-switcher">
                                     <appui:Radio label="Temporary" emphasized="true" />
                                     <appui:Radio label="Permanent" emphasized="true" />
@@ -1054,7 +1054,7 @@
                             <appui:Drawer name="temporary-drawer" anchor="Left" variant="Temporary" swipe-area-width="60" >
                                 <ui:VisualElement style="width: 200px; flex-grow: 1; justify-content: center; align-items: center;">
                                     <appui:Text text="Temporary Drawer" />
-                                    <appui:Button name="close-snap-temp-drawer-btn" title="Close Snap Drawer" disabled="true" />
+                                    <appui:Button name="close-snap-temp-drawer-btn" title="Close Snap Drawer" enabled="false" />
                                 </ui:VisualElement>
                             </appui:Drawer>
                         </ui:VisualElement>
@@ -1081,10 +1081,10 @@
                         <appui:Dropdown name="dropdown3" selection-type="Multiple" emphasized="false" close-on-selection="false">
                         </appui:Dropdown>
                         <appui:Text text="Primary &amp; Disabled" class="example-subtitle" />
-                        <appui:Dropdown emphasized="true" disabled="true">
+                        <appui:Dropdown emphasized="true" enabled="false">
                         </appui:Dropdown>
                         <appui:Text text="Secondary &amp; Disabled" class="example-subtitle" />
-                        <appui:Dropdown emphasized="false" disabled="true">
+                        <appui:Dropdown emphasized="false" enabled="false">
                         </appui:Dropdown>
                     </ui:VisualElement>
 
@@ -1218,11 +1218,11 @@
                         <appui:Text text="Float Field - With Unit" class="example-subtitle" />
                         <appui:FloatField unit="C" />
                         <appui:Text text="Float Field - Disabled" class="example-subtitle" />
-                        <appui:FloatField unit="C" disabled="true" />
+                        <appui:FloatField unit="C" enabled="false" />
                         <appui:Text text="Float Field - Invalid" class="example-subtitle" />
                         <appui:FloatField unit="C" class="is-invalid" />
                         <appui:Text text="Float Field - Invalid and Disabled" class="example-subtitle" />
-                        <appui:FloatField unit="C" class="is-invalid" disabled="true" />
+                        <appui:FloatField unit="C" class="is-invalid" enabled="false" />
                         <appui:Text text="Int Field - Small" class="example-subtitle" />
                         <appui:IntField size="S" />
                         <appui:Text text="Int Field - Medium" class="example-subtitle" />
@@ -1232,11 +1232,11 @@
                         <appui:Text text="Int Field - With Units" class="example-subtitle" />
                         <appui:IntField unit="C" />
                         <appui:Text text="Int Field - Disabled" class="example-subtitle" />
-                        <appui:IntField unit="C" disabled="true" />
+                        <appui:IntField unit="C" enabled="false" />
                         <appui:Text text="Int Field - Invalid" class="example-subtitle" />
                         <appui:IntField unit="C" class="is-invalid" />
                         <appui:Text text="Int Field - Invalid And Disabled" class="example-subtitle" />
-                        <appui:IntField unit="C" class="is-invalid" disabled="true" />
+                        <appui:IntField unit="C" class="is-invalid" enabled="false" />
                         <appui:Text text="Long Field" class="example-subtitle" />
                         <appui:LongField />
                         <appui:Text text="Double Field" class="example-subtitle" />
@@ -1254,7 +1254,7 @@
                         <appui:Text text="Vector4 Field - Invalid" class="example-subtitle" />
                         <appui:Vector4Field class="is-invalid" />
                         <appui:Text text="Vector4 Field - Disabled" class="example-subtitle" />
-                        <appui:Vector4Field disabled="true" />
+                        <appui:Vector4Field enabled="false" />
                         <appui:Text text="Rect Field" class="example-subtitle" />
                         <appui:RectField />
                         <appui:Text text="RectInt Field" class="example-subtitle" />
@@ -1306,7 +1306,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Heading text="Disabled header" disabled="true" />
+                        <appui:Heading text="Disabled header" enabled="false" />
                     </ui:VisualElement>
 
                     <!-- Icon -->
@@ -1335,7 +1335,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Icon size="M" disabled="true" primary="true" icon-name="info" />
+                        <appui:Icon size="M" enabled="false" primary="true" icon-name="info" />
                     </ui:VisualElement>
 
                     <!-- IconButton -->
@@ -1368,7 +1368,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section align-start">
-                        <appui:IconButton icon="info" disabled="true" />
+                        <appui:IconButton icon="info" enabled="false" />
                     </ui:VisualElement>
 
                     <!-- InputLabel -->
@@ -1384,8 +1384,8 @@
                         <appui:InputLabel direction="Horizontal" label="Large">
                             <appui:TextField size="L" />
                         </appui:InputLabel>
-                        <appui:InputLabel direction="Horizontal" label="Disabled" disabled="true">
-                            <appui:TextField size="L" disabled="true" />
+                        <appui:InputLabel direction="Horizontal" label="Disabled" enabled="false">
+                            <appui:TextField size="L" enabled="false" />
                         </appui:InputLabel>
                     </ui:VisualElement>
                     <appui:Text text="Vertical - Sizing" class="example-subtitle" />
@@ -1399,8 +1399,8 @@
                         <appui:InputLabel direction="Vertical" label="Large">
                             <appui:TextField size="L" />
                         </appui:InputLabel>
-                        <appui:InputLabel direction="Vertical" label="Disabled" disabled="true">
-                            <appui:TextField size="L" disabled="true" />
+                        <appui:InputLabel direction="Vertical" label="Disabled" enabled="false">
+                            <appui:TextField size="L" enabled="false" />
                         </appui:InputLabel>
                     </ui:VisualElement>
                     <appui:Text text="Horizontal - Required" class="example-subtitle" />
@@ -1414,8 +1414,8 @@
                         <appui:InputLabel direction="Horizontal" label="Destructive" required="true" help-message="The value is not valid." help-variant="Destructive">
                             <appui:TextField size="M" />
                         </appui:InputLabel>
-                        <appui:InputLabel direction="Horizontal" label="Disabled" required="true" help-message="The value is not valid." help-variant="Destructive" disabled="true">
-                            <appui:TextField size="M" disabled="true" />
+                        <appui:InputLabel direction="Horizontal" label="Disabled" required="true" help-message="The value is not valid." help-variant="Destructive" enabled="false">
+                            <appui:TextField size="M" enabled="false" />
                         </appui:InputLabel>
                     </ui:VisualElement>
                     <appui:Text text="Vertical - Required" class="example-subtitle" />
@@ -1429,8 +1429,8 @@
                         <appui:InputLabel direction="Vertical" label="Destructive" required="true" help-message="The value is not valid." help-variant="Destructive">
                             <appui:TextField size="M" />
                         </appui:InputLabel>
-                        <appui:InputLabel direction="Vertical" label="Disabled" required="true" help-message="The value is not valid." help-variant="Destructive" disabled="true">
-                            <appui:TextField size="M" disabled="true" />
+                        <appui:InputLabel direction="Vertical" label="Disabled" required="true" help-message="The value is not valid." help-variant="Destructive" enabled="false">
+                            <appui:TextField size="M" enabled="false" />
                         </appui:InputLabel>
                     </ui:VisualElement>
                     <appui:Text text="Label Overflow" class="example-subtitle" />
@@ -1497,7 +1497,7 @@
                                 <appui:MenuItem label="Item 2" icon="info">
                                     <appui:Menu>
                                         <appui:MenuItem label="Sub Item 1" />
-                                        <appui:MenuItem label="Sub Item 2" disabled="true" />
+                                        <appui:MenuItem label="Sub Item 2" enabled="false" />
                                         <appui:MenuItem label="Sub Item 3">
                                             <appui:Menu>
                                                 <appui:MenuSection title="Nested Menu">
@@ -1511,7 +1511,7 @@
                                 <appui:MenuDivider />
                                 <appui:MenuSection title="Section Header">
                                     <appui:MenuItem label="Item 3" selectable="true" default-selected="true" />
-                                    <appui:MenuItem label="Item 4" selectable="true" default-selected="true" disabled="true" />
+                                    <appui:MenuItem label="Item 4" selectable="true" default-selected="true" enabled="false" />
                                     <appui:MenuItem label="Item 5" selectable="true" />
                                 </appui:MenuSection>
                             </appui:Menu>
@@ -1668,21 +1668,21 @@
                                 <appui:RadioGroup>
                                     <appui:Radio size="S" label="Choice 1" />
                                     <appui:Radio size="S" label="Choice 2" value="true" />
-                                    <appui:Radio size="S" label="Choice 3" disabled="true" />
+                                    <appui:Radio size="S" label="Choice 3" enabled="false" />
                                 </appui:RadioGroup>
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <appui:RadioGroup>
                                     <appui:Radio size="M" label="Choice 1" />
                                     <appui:Radio size="M" label="Choice 2" value="true" />
-                                    <appui:Radio size="M" label="Choice 3" disabled="true" />
+                                    <appui:Radio size="M" label="Choice 3" enabled="false" />
                                 </appui:RadioGroup>
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <appui:RadioGroup>
                                     <appui:Radio size="L" label="Choice 1" />
                                     <appui:Radio size="L" label="Choice 2" value="true" />
-                                    <appui:Radio size="L" label="Choice 3" disabled="true" />
+                                    <appui:Radio size="L" label="Choice 3" enabled="false" />
                                 </appui:RadioGroup>
                             </ui:VisualElement>
                         </ui:VisualElement>
@@ -1692,7 +1692,7 @@
                         <appui:RadioGroup>
                             <appui:Radio label="Choice 1" emphasized="true" />
                             <appui:Radio label="Choice 2" value="true" emphasized="true" />
-                            <appui:Radio label="Choice 3" disabled="true" emphasized="true" />
+                            <appui:Radio label="Choice 3" enabled="false" emphasized="true" />
                         </appui:RadioGroup>
                     </ui:VisualElement>
                     <appui:Text text="Invalid" class="example-subtitle" />
@@ -1700,7 +1700,7 @@
                         <appui:RadioGroup>
                             <appui:Radio label="Choice 1" class="is-invalid"/>
                             <appui:Radio label="Choice 2" value="true" class="is-invalid"/>
-                            <appui:Radio label="Choice 3" disabled="true" class="is-invalid" />
+                            <appui:Radio label="Choice 3" enabled="false" class="is-invalid" />
                         </appui:RadioGroup>
                     </ui:VisualElement>
 
@@ -1749,7 +1749,7 @@
                         <appui:SliderFloat low-value="0" high-value="100" value="50" />
                         <ui:VisualElement style="height: 8px;" />
                         <appui:Text text="Disabled" class="example-subtitle" />
-                        <appui:SliderFloat low-value="0" high-value="100" value="50" disabled="true" />
+                        <appui:SliderFloat low-value="0" high-value="100" value="50" enabled="false" />
                         <ui:VisualElement style="height: 8px;" />
                         <appui:Text text="Invalid" class="example-subtitle" />
                         <appui:SliderFloat low-value="0" high-value="100" value="50" class="is-invalid" />
@@ -1833,7 +1833,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:SVSquare style="width: 200px; height: 200px;" reference-hue="0" disabled="true" />
+                        <appui:SVSquare style="width: 200px; height: 200px;" reference-hue="0" enabled="false" />
                     </ui:VisualElement>
 
                     <!-- SwipeView -->
@@ -1956,7 +1956,7 @@
                     <ui:VisualElement class="example-section">
                         <appui:Tabs>
                             <appui:TabItem label="Tab 1" />
-                            <appui:TabItem label="Tab 2" disabled="true" />
+                            <appui:TabItem label="Tab 2" enabled="false" />
                             <appui:TabItem label="Tab 3" />
                         </appui:Tabs>
                     </ui:VisualElement>
@@ -1964,7 +1964,7 @@
                     <ui:VisualElement class="example-section">
                         <appui:Tabs>
                             <appui:TabItem label="Tab 1" icon="info" />
-                            <appui:TabItem label="Tab 2" icon="info" disabled="true" />
+                            <appui:TabItem label="Tab 2" icon="info" enabled="false" />
                             <appui:TabItem label="Tab 3" icon="info" />
                         </appui:Tabs>
                     </ui:VisualElement>
@@ -1972,7 +1972,7 @@
                     <ui:VisualElement class="example-section">
                         <appui:Tabs emphasized="true">
                             <appui:TabItem label="Tab 1" icon="info" />
-                            <appui:TabItem label="Tab 2" icon="info" disabled="true" />
+                            <appui:TabItem label="Tab 2" icon="info" enabled="false" />
                             <appui:TabItem label="Tab 3" icon="info" />
                         </appui:Tabs>
                     </ui:VisualElement>
@@ -1980,7 +1980,7 @@
                     <ui:VisualElement class="example-section">
                         <appui:Tabs direction="Vertical">
                             <appui:TabItem label="Tab 1" />
-                            <appui:TabItem label="Tab 2" disabled="true" />
+                            <appui:TabItem label="Tab 2" enabled="false" />
                             <appui:TabItem label="Tab 3" />
                         </appui:Tabs>
                     </ui:VisualElement>
@@ -1988,7 +1988,7 @@
                     <ui:VisualElement class="example-section">
                         <appui:Tabs direction="Vertical">
                             <appui:TabItem label="Tab 1" icon="info" />
-                            <appui:TabItem label="Tab 2" icon="info" disabled="true" />
+                            <appui:TabItem label="Tab 2" icon="info" enabled="false" />
                             <appui:TabItem label="Tab 3" icon="info" />
                         </appui:Tabs>
                     </ui:VisualElement>
@@ -1996,7 +1996,7 @@
                     <ui:VisualElement class="example-section">
                         <appui:Tabs direction="Vertical" emphasized="true">
                             <appui:TabItem label="Tab 1" icon="info" />
-                            <appui:TabItem label="Tab 2" icon="info" disabled="true" />
+                            <appui:TabItem label="Tab 2" icon="info" enabled="false" />
                             <appui:TabItem label="Tab 3" icon="info" />
                         </appui:Tabs>
                     </ui:VisualElement>
@@ -2049,7 +2049,7 @@
                         <appui:Text text="Secondary" class="example-subtitle" />
                         <appui:Text text="Secondary text" primary="false" />
                         <appui:Text text="Disabled" class="example-subtitle" />
-                        <appui:Text text="Secondary text" disabled="true" />
+                        <appui:Text text="Secondary text" enabled="false" />
                     </ui:VisualElement>
 
                     <!-- TextArea -->
@@ -2058,11 +2058,11 @@
                         <appui:Text text="Default" class="example-subtitle" />
                         <appui:TextArea placeholder="Enter a text..." />
                         <appui:Text text="Disabled" class="example-subtitle" />
-                        <appui:TextArea placeholder="Enter a text..." disabled="true" />
+                        <appui:TextArea placeholder="Enter a text..." enabled="false" />
                         <appui:Text text="Invalid" class="example-subtitle" />
                         <appui:TextArea placeholder="Enter a text..." class="is-invalid" />
                         <appui:Text text="Invalid - Disabled" class="example-subtitle" />
-                        <appui:TextArea placeholder="Enter a text..." disabled="true" class="is-invalid" />
+                        <appui:TextArea placeholder="Enter a text..." enabled="false" class="is-invalid" />
                     </ui:VisualElement>
 
                     <!-- TextField -->
@@ -2075,11 +2075,11 @@
                         <appui:Text text="Large" class="example-subtitle" />
                         <appui:TextField size="L" placeholder="Enter a text..." trailing-icon="info"  />
                         <appui:Text text="Large - Leading Icon - Trailing Icon" class="example-subtitle" />
-                        <appui:TextField size="L" placeholder="Enter a text..." disabled="true" leading-icon-name="info"  trailing-icon="info"  />
+                        <appui:TextField size="L" placeholder="Enter a text..." enabled="false" leading-icon-name="info"  trailing-icon="info"  />
                         <appui:Text text="Large - Invalid" class="example-subtitle" />
                         <appui:TextField size="L" placeholder="Enter a text..." class="is-invalid" />
                         <appui:Text text="Large - Invalid - Disabled" class="example-subtitle" />
-                        <appui:TextField size="L" placeholder="Enter a text..." disabled="true" class="is-invalid" />
+                        <appui:TextField size="L" placeholder="Enter a text..." enabled="false" class="is-invalid" />
                     </ui:VisualElement>
 
                     <!-- Toast -->
@@ -2127,15 +2127,15 @@
                         <appui:Text text="Emphasized And Unchecked" class="example-subtitle" />
                         <appui:Toggle label="False" value="false" emphasized="true" />
                         <appui:Text text="Emphasized Checked And Disabled" class="example-subtitle" />
-                        <appui:Toggle label="True Disabled" value="true" emphasized="true" disabled="true" />
+                        <appui:Toggle label="True Disabled" value="true" emphasized="true" enabled="false" />
                         <appui:Text text="Unchecked" class="example-subtitle" />
                         <appui:Toggle label="False" value="false" />
                         <appui:Text text="Unchecked And Disabled" class="example-subtitle" />
-                        <appui:Toggle label="False Disabled" value="false" disabled="true" />
+                        <appui:Toggle label="False Disabled" value="false" enabled="false" />
                         <appui:Text text="Checked And Invalid" class="example-subtitle" />
                         <appui:Toggle label="True Invalid" value="true" class="is-invalid" />
                         <appui:Text text="Unchecked And Invalid And Disabled" class="example-subtitle" />
-                        <appui:Toggle label="False Disabled Invalid" value="false" disabled="true" class="is-invalid" />
+                        <appui:Toggle label="False Disabled Invalid" value="false" enabled="false" class="is-invalid" />
                     </ui:VisualElement>
 
                     <!-- Toolbar -->
@@ -2145,9 +2145,9 @@
                         <appui:Toolbar dock-mode="Floating">
                             <appui:ActionButton icon="info" quiet="true" />
                             <appui:ActionButton icon="info" quiet="true" />
-                            <appui:Divider vertical="true" />
+                            <appui:Divider direction="Vertical" />
                             <appui:ActionButton icon="info" quiet="true" />
-                            <appui:Divider vertical="true" />
+                            <appui:Divider direction="Vertical" />
                             <appui:ActionGroup quiet="true">
                                 <appui:ActionButton icon="info" quiet="true" />
                                 <appui:ActionButton icon="info" quiet="true" />
@@ -2215,11 +2215,11 @@
                         <appui:Text text="Default" class="example-subtitle" />
                         <appui:TouchSliderFloat label="TEMPERATURE" low-value="-100" high-value="100" value="0" />
                         <appui:Text text="Disabled" class="example-subtitle" />
-                        <appui:TouchSliderFloat label="TEMPERATURE" low-value="-100" high-value="100" value="0" disabled="true" />
+                        <appui:TouchSliderFloat label="TEMPERATURE" low-value="-100" high-value="100" value="0" enabled="false" />
                         <appui:Text text="Invalid" class="example-subtitle" />
                         <appui:TouchSliderFloat label="TEMPERATURE" low-value="-100" high-value="100" value="0" class="is-invalid" />
                         <appui:Text text="Invalid And Disabled" class="example-subtitle" />
-                        <appui:TouchSliderFloat label="TEMPERATURE" low-value="-100" high-value="100" value="0" class="is-invalid" disabled="true" />
+                        <appui:TouchSliderFloat label="TEMPERATURE" low-value="-100" high-value="100" value="0" class="is-invalid" enabled="false" />
                         <appui:Text text="Small" class="example-subtitle" />
                         <appui:TouchSliderFloat label="TEMPERATURE" low-value="-100" high-value="100" value="0" size="S" />
                         <appui:Text text="Medium" class="example-subtitle" />

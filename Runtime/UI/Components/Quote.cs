@@ -1,14 +1,26 @@
+using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Quote UI element.
     /// </summary>
-    public class Quote : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Quote : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId colorProperty = nameof(color);
+        
+#endif
+        
         /// <summary>
         /// The Quote main styling class.
         /// </summary>
@@ -21,7 +33,7 @@ namespace Unity.AppUI.UI
 
         readonly VisualElement m_Container;
 
-        Color? m_InlineColor;
+        Optional<Color> m_InlineColor;
 
         /// <summary>
         /// The content container of the Quote.
@@ -31,14 +43,27 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Quote outline color.
         /// </summary>
-        public Color? color
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public Optional<Color> color
         {
             get => m_InlineColor;
             set
             {
                 m_InlineColor = value;
-                style.borderLeftColor = m_InlineColor ?? new StyleColor(StyleKeyword.Null);
-                style.borderRightColor = m_InlineColor ?? new StyleColor(StyleKeyword.Null);
+                var borderColor = m_InlineColor.IsSet ? m_InlineColor.Value : new StyleColor(StyleKeyword.Null);
+                var previousBorderColor = resolvedStyle.borderLeftColor;
+                style.borderLeftColor = borderColor;
+                style.borderRightColor = borderColor;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (borderColor != previousBorderColor)
+                    NotifyPropertyChanged(in colorProperty);
+#endif
             }
         }
         
@@ -55,35 +80,22 @@ namespace Unity.AppUI.UI
             m_Container.AddToClassList(containerUssClassName);
             hierarchy.Add(m_Container);
 
-            color = null;
+            color = Optional<Color>.none;
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Defines the UxmlFactory for the Quote.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Quote, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Quote"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-
+            
             readonly UxmlColorAttributeDescription m_Color = new UxmlColorAttributeDescription
             {
                 name = "color",
@@ -106,8 +118,10 @@ namespace Unity.AppUI.UI
                 if (m_Color.TryGetValueFromBag(bag, cc, ref color))
                     element.color = color;
                 
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+        
+#endif
     }
 }

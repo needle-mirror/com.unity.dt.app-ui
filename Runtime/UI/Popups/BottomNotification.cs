@@ -46,10 +46,9 @@ namespace Unity.AppUI.UI
         /// Default constructor.
         /// </summary>
         /// <param name="parentView">The popup container.</param>
-        /// <param name="context">The application context attached to this popup.</param>
         /// <param name="view">The popup visual element itself.</param>
-        protected BottomNotification(VisualElement parentView, ApplicationContext context, VisualElement view)
-            : base(parentView, context, view)
+        protected BottomNotification(VisualElement parentView, VisualElement view)
+            : base(parentView, view)
         {
             m_ManagerCallback = new ManagerCallback(this);
             keyboardDismissEnabled = false;

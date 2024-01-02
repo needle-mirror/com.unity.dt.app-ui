@@ -1,7 +1,6 @@
 using System;
 using Unity.AppUI.UI;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
 
@@ -11,7 +10,10 @@ namespace Unity.AppUI.Navigation
     /// The NavHost is the UI element that manages the navigation stack.
     /// It will manage the display of <see cref="NavigationScreen"/> objects through its <see cref="NavController"/>.
     /// </summary>
-    public class NavHost : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA 
+    [UxmlElement]
+#endif
+    public partial class NavHost : VisualElement
     {
         /// <summary>
         /// The NavHost main styling class.
@@ -293,19 +295,19 @@ namespace Unity.AppUI.Navigation
                     return noneAnimation;
             }
         }
-
+#if ENABLE_UXML_TRAITS
         /// <summary>
         /// The UXML Factory for the <see cref="NavHost"/>.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<NavHost, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the UXML traits for the <see cref="NavHost"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : VisualElement.UxmlTraits
         {
             
         }
+#endif
     }
 }

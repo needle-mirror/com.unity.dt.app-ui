@@ -1,15 +1,32 @@
 using System;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// RectInt Field UI element.
     /// </summary>
-    public class RectIntField : VisualElement, IValidatableElement<RectInt>, ISizeableElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class RectIntField : BaseVisualElement, IValidatableElement<RectInt>, ISizeableElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+        internal static readonly BindingId invalidProperty = nameof(invalid);
+        
+        internal static readonly BindingId validateValueProperty = nameof(validateValue);
+        
+        internal static readonly BindingId sizeProperty = nameof(size);
+        
+#endif
+        
         /// <summary>
         /// The RectIntField main styling class.
         /// </summary>
@@ -61,6 +78,8 @@ namespace Unity.AppUI.UI
         readonly IntField m_YField;
 
         readonly IntField m_HField;
+
+        Func<RectInt, bool> m_ValidateValue;
 
         /// <summary>
         /// Default constructor.
@@ -126,11 +145,18 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the RectIntField.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
@@ -138,6 +164,11 @@ namespace Unity.AppUI.UI
                 m_YField.size = m_Size;
                 m_HField.size = m_Size;
                 m_WField.size = m_Size;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
@@ -158,6 +189,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the RectIntField.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public RectInt value
         {
             get => m_Value;
@@ -169,30 +206,63 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The invalid state of the RectIntField.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
             set
             {
+                var changed = invalid != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
 
                 m_XField.EnableInClassList(Styles.invalidUssClassName, value);
                 m_YField.EnableInClassList(Styles.invalidUssClassName, value);
                 m_HField.EnableInClassList(Styles.invalidUssClassName, value);
                 m_WField.EnableInClassList(Styles.invalidUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in invalidProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The callback to validate the value of the RectIntField.
         /// </summary>
-        public Func<RectInt, bool> validateValue { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<RectInt, bool> validateValue
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+                invalid = !validateValue?.Invoke(m_Value) ?? false;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
+#endif
+            }
+        }
 
         void OnHFieldChanged(ChangeEvent<int> evt)
         {
@@ -214,32 +284,18 @@ namespace Unity.AppUI.UI
             value = new RectInt(evt.newValue, value.y, value.width, value.height);
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to instantiate a <see cref="RectIntField"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<RectIntField, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="RectIntField"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
-
             readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
             {
                 name = "size",
@@ -258,9 +314,9 @@ namespace Unity.AppUI.UI
 
                 var element = (RectIntField)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
-
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 }

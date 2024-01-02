@@ -1,5 +1,7 @@
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -47,8 +49,17 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Spacer visual element.
     /// </summary>
-    public class Spacer : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Spacer : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId spacingProperty = nameof(spacing);
+        
+#endif
+        
         const SpacerSpacing k_DefaultSpacing = SpacerSpacing.M;
         
         /// <summary>
@@ -78,23 +89,36 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The spacer's spacing.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public SpacerSpacing spacing
         {
             get => m_Spacing;
             set
             {
+                var changed = m_Spacing != value;
                 RemoveFromClassList(spacingUssClassName + m_Spacing.ToString().ToLower());
                 m_Spacing = value;
                 AddToClassList(spacingUssClassName + m_Spacing.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in spacingProperty);
+#endif
             }
         }
         
+#if ENABLE_UXML_TRAITS
+
         /// <inheritdoc cref="UnityEngine.UIElements.UxmlFactory{Spacer,UxmlTraits}"/>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Spacer, UxmlTraits> { }
         
         /// <inheritdoc cref="UnityEngine.UIElements.VisualElement.UxmlTraits"/>
-        public new class UxmlTraits : VisualElement.UxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlEnumAttributeDescription<SpacerSpacing> m_Spacing =
                 new UxmlEnumAttributeDescription<SpacerSpacing>
@@ -111,5 +135,7 @@ namespace Unity.AppUI.UI
                 element.spacing = m_Spacing.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 }

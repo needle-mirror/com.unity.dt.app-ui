@@ -1,16 +1,31 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A container for a set of <see cref="Radio"/> UI elements.
     /// </summary>
-    public class RadioGroup : VisualElement, INotifyValueChanged<int>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class RadioGroup : BaseVisualElement, INotifyValueChanged<int>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId bindItemProperty = nameof(bindItem);
+        
+        internal static readonly BindingId sourceItemsProperty = nameof(sourceItems);
+        
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+#endif
+        
         /// <summary>
         /// The RadioGroup main styling class.
         /// </summary>
@@ -46,6 +61,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The function invoked to bind display data per item.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Action<Radio, int> bindItem
         {
             get => m_BindItem;
@@ -54,6 +72,10 @@ namespace Unity.AppUI.UI
                 m_BindItem = value;
                 if (sourceItems != null)
                     Refresh();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in bindItemProperty);
+#endif
             }
         }
 
@@ -65,6 +87,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The collection of items that will be displayed as Radio component.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public IList sourceItems
         {
             get => m_Items;
@@ -72,6 +97,10 @@ namespace Unity.AppUI.UI
             {
                 m_Items = value;
                 Refresh();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in sourceItemsProperty);
+#endif
             }
         }
 
@@ -79,6 +108,12 @@ namespace Unity.AppUI.UI
         /// The selected item index.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"> if the value is out of range.</exception>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public int value
         {
             get => m_Value;
@@ -92,6 +127,10 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
 
@@ -143,18 +182,40 @@ namespace Unity.AppUI.UI
             }
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Factory class to instantiate a <see cref="RadioGroup"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<RadioGroup, UxmlTraits> { }
+        
+#endif
     }
 
     /// <summary>
     /// Radio UI element.
     /// </summary>
-    public class Radio : VisualElement, IValidatableElement<bool>, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Radio : BaseVisualElement, IValidatableElement<bool>, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId sizeProperty = nameof(size);
+        
+        internal static readonly BindingId emphasizedProperty = nameof(emphasized);
+        
+        internal static readonly BindingId labelProperty = nameof(label);
+        
+        internal static readonly BindingId invalidProperty = nameof(invalid);
+        
+        internal static readonly BindingId validateValueProperty = nameof(validateValue);
+        
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+#endif
+        
         /// <summary>
         /// The Radio main styling class.
         /// </summary>
@@ -194,6 +255,8 @@ namespace Unity.AppUI.UI
         Pressable m_Clickable;
 
         readonly ExVisualElement m_Box;
+
+        Func<bool, bool> m_ValidateValue;
 
         /// <summary>
         /// Default constructor.
@@ -246,48 +309,122 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Radio size.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The Radio emphasized mode.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool emphasized
         {
             get => ClassListContains(emphasizedUssClassName);
-            set => EnableInClassList(emphasizedUssClassName, value);
+            set
+            {
+                var changed = emphasized != value;
+                EnableInClassList(emphasizedUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in emphasizedProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The Radio label.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string label
         {
             get => m_Label.text;
-            set => m_Label.text = value;
+            set
+            {
+                var changed = m_Label.text != value;
+                m_Label.text = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The Radio invalid state.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
-            set => EnableInClassList(Styles.invalidUssClassName, value);
+            set
+            {
+                var changed = invalid != value;
+                EnableInClassList(Styles.invalidUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in invalidProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The Radio validation function.
         /// </summary>
-        public Func<bool, bool> validateValue { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<bool, bool> validateValue 
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+                invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Sets the Radio value without notifying the listeners.
@@ -303,6 +440,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Radio value.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool value
         {
             get => m_Value;
@@ -314,6 +457,10 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
 
@@ -332,32 +479,18 @@ namespace Unity.AppUI.UI
             m_Box.passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.Outline;
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to instantiate a <see cref="Radio"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Radio, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Radio"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
-
             readonly UxmlBoolAttributeDescription m_Emphasized = new UxmlBoolAttributeDescription
             {
                 name = "emphasized",
@@ -397,8 +530,9 @@ namespace Unity.AppUI.UI
                 element.emphasized = m_Emphasized.GetValueFromBag(bag, cc);
                 element.value = m_Value.GetValueFromBag(bag, cc);
                 element.label = m_Label.GetValueFromBag(bag, cc);
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 }

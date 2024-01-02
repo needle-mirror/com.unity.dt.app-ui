@@ -1,12 +1,15 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A list view item visual element.
     /// </summary>
-    public class ListViewItem : VisualElement
+    public class ListViewItem : BaseVisualElement
     {
         /// <summary>
         /// The ListViewItem's USS class name.

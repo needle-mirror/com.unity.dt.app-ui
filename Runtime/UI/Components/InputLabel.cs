@@ -1,5 +1,7 @@
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -22,8 +24,33 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// InputLabel UI element.
     /// </summary>
-    public class InputLabel : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class InputLabel : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId labelProperty = new BindingId(nameof(label));
+        
+        internal static readonly BindingId directionProperty = new BindingId(nameof(direction));
+        
+        internal static readonly BindingId labelOverflowProperty = new BindingId(nameof(labelOverflow));
+        
+        internal static readonly BindingId inputAlignmentProperty = new BindingId(nameof(inputAlignment));
+        
+        internal static readonly BindingId requiredProperty = new BindingId(nameof(required));
+        
+        internal static readonly BindingId indicatorTypeProperty = new BindingId(nameof(indicatorType));
+        
+        internal static readonly BindingId requiredTextProperty = new BindingId(nameof(requiredText));
+        
+        internal static readonly BindingId helpMessageProperty = new BindingId(nameof(helpMessage));
+        
+        internal static readonly BindingId helpVariantProperty = new BindingId(nameof(helpVariant));
+        
+#endif
+        
         /// <summary>
         /// The InputLabel main styling class.
         /// </summary>
@@ -92,104 +119,224 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The label value.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string label
         {
             get => m_FieldLabel.label;
             set
             {
+                var changed = m_FieldLabel.label != value;
                 m_FieldLabel.label = value;
                 m_FieldLabel.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The orientation of the label.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Direction direction
         {
             get => m_Direction;
             set
             {
+                var changed = m_Direction != value;
                 RemoveFromClassList(orientationUssClassName + m_Direction.ToString().ToLower());
                 m_Direction = value;
                 AddToClassList(orientationUssClassName + m_Direction.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in directionProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The text overflow mode.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public TextOverflow labelOverflow
         {
             get => m_FieldLabel.labelOverflow;
-            set => m_FieldLabel.labelOverflow = value;
+            set
+            {
+                var changed = m_FieldLabel.labelOverflow != value;
+                m_FieldLabel.labelOverflow = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelOverflowProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The alignment of the input.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Align inputAlignment
         {
             get => m_InputAlignment;
             set
             {
+                var changed = m_InputAlignment != value;
                 RemoveFromClassList(inputAlignmentUssClassName + m_InputAlignment.ToString().ToLower());
                 m_InputAlignment = value;
                 AddToClassList(inputAlignmentUssClassName + m_InputAlignment.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in inputAlignmentProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Whether the input is required or not in the form. This will add an asterisk next to the label.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool required
         {
             get => m_FieldLabel.required;
             set
             {
+                var changed = m_FieldLabel.required != value;
                 m_FieldLabel.required = value;
                 EnableInClassList(Styles.requiredUssClassName,  m_FieldLabel.required);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in requiredProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The requirement indicator to display.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public IndicatorType indicatorType
         {
             get => m_FieldLabel.indicatorType;
-            set => m_FieldLabel.indicatorType = value;
+            set
+            {
+                var changed = m_FieldLabel.indicatorType != value;
+                m_FieldLabel.indicatorType = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in indicatorTypeProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The requirement indicator to display.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string requiredText
         {
             get => m_FieldLabel.requiredText;
-            set => m_FieldLabel.requiredText = value;
+            set
+            {
+                var changed = m_FieldLabel.requiredText != value;
+                m_FieldLabel.requiredText = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in requiredTextProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The error message to display.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string helpMessage
         {
             get => m_HelpText.text;
             set
             {
+                var changed = m_HelpText.text != value;
                 m_HelpText.text = value;
                 EnableInClassList(withHelpTextUssClassName, !string.IsNullOrEmpty(value));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in helpMessageProperty);
+#endif
             }
         }
         
         /// <summary>
         /// The variant of the <see cref="HelpText"/>.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public HelpTextVariant helpVariant
         {
             get => m_HelpText.variant;
-            set => m_HelpText.variant = value;
+            set
+            {
+                var changed = m_HelpText.variant != value;
+                m_HelpText.variant = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in helpVariantProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -249,32 +396,19 @@ namespace Unity.AppUI.UI
             helpVariant = HelpTextVariant.Destructive;
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to instantiate a <see cref="InputLabel"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<InputLabel, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="InputLabel"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-
+            
             readonly UxmlEnumAttributeDescription<TextSize> m_Size = new UxmlEnumAttributeDescription<TextSize>
             {
                 name = "size",
@@ -357,10 +491,6 @@ namespace Unity.AppUI.UI
                 if (m_Label.TryGetValueFromBag(bag, cc, ref label))
                     element.label = label;
                 
-                var disabled = false;
-                if (m_Disabled.TryGetValueFromBag(bag, cc, ref disabled))
-                    element.disabled = disabled;
-                
                 var required = false;
                 if (m_Required.TryGetValueFromBag(bag, cc, ref required))
                     element.required = required;
@@ -378,5 +508,7 @@ namespace Unity.AppUI.UI
                     element.requiredText = requiredText;
             }
         }
+        
+#endif
     }
 }

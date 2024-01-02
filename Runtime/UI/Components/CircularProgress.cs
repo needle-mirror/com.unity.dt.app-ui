@@ -1,9 +1,11 @@
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 #if UNITY_EDITOR
 using UnityEditor;
+#endif
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
 #endif
 
 namespace Unity.AppUI.UI
@@ -11,8 +13,17 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// CircularProgress UI element. This is a circular progress bar.
     /// </summary>
-    public class CircularProgress : Progress
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class CircularProgress : Progress
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+
+        internal static readonly BindingId innerRadiusProperty = nameof(innerRadius);
+        
+#endif
+        
         static Material s_Material;
 
         /// <summary>
@@ -37,11 +48,34 @@ namespace Unity.AppUI.UI
         static readonly int k_BufferOpacity = Shader.PropertyToID("_BufferOpacity");
 
         static readonly int k_Phase = Shader.PropertyToID("_Phase");
-        
+
+        float m_InnerRadius = k_DefaultInnerRadius;
+
+        const float k_DefaultInnerRadius = 0.38f;
+
         /// <summary>
         /// The inner radius of the CircularProgress.
         /// </summary>
-        public float innerRadius { get; set; } = 0.38f;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public float innerRadius
+        {
+            get => m_InnerRadius;
+            set
+            {
+                var changed = m_InnerRadius != value;
+                m_InnerRadius = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in innerRadiusProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Default constructor.
@@ -49,6 +83,8 @@ namespace Unity.AppUI.UI
         public CircularProgress()
         {
             AddToClassList(ussClassName);
+            
+            innerRadius = k_DefaultInnerRadius;
         }
 
         /// <summary>
@@ -98,7 +134,7 @@ namespace Unity.AppUI.UI
 #endif
                 : Time.time;
 
-            s_Material.SetColor(k_Color, colorOverride ?? m_Color);
+            s_Material.SetColor(k_Color, colorOverride);
             s_Material.SetFloat(k_InnerRadius, innerRadius);
             s_Material.SetFloat(k_Start, 0);
             s_Material.SetFloat(k_End, value);
@@ -117,15 +153,17 @@ namespace Unity.AppUI.UI
             RenderTexture.active = prevRt;
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Defines the UxmlFactory for the CircularProgress.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<CircularProgress, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="CircularProgress"/>.
         /// </summary>
         public new class UxmlTraits : Progress.UxmlTraits { }
+#endif
     }
 }

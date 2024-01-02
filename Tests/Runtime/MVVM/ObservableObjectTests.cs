@@ -8,7 +8,7 @@ namespace Unity.AppUI.Tests.MVVM
 {
     [TestFixture]
     [TestOf(typeof(ObservableObject))]
-    public class ObservableObjectTests
+    class ObservableObjectTests
     {
         [Test]
         public void CanSetProperties()

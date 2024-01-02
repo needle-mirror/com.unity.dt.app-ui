@@ -4,16 +4,35 @@ using System.Globalization;
 using System.Text;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// ColorPicker UI Element.
     /// </summary>
-    public class ColorPicker : VisualElement, INotifyValueChanged<Color>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class ColorPicker : VisualElement, INotifyValueChanged<Color>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId valueProperty = new BindingId(nameof(value));
+        
+        internal static readonly BindingId previousValueProperty = new BindingId(nameof(previousValue));
+        
+        internal static readonly BindingId showAlphaProperty = new BindingId(nameof(showAlpha));
+        
+        internal static readonly BindingId showToolbarProperty = new BindingId(nameof(showToolbar));
+        
+        internal static readonly BindingId showHexProperty = new BindingId(nameof(showHex));
+        
+#endif
+        
         /// <summary>
         /// The type of channels sliders to display in the ColorPicker.
         /// </summary>
@@ -158,6 +177,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The current color value.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Color value
         {
             get => m_Value;
@@ -172,43 +197,108 @@ namespace Unity.AppUI.UI
 
                 if (changed)
                     SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The previous color value. This color will be displayed in the toolbar.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Color previousValue
         {
             get => m_Toolbar.previousColor;
-            set => m_Toolbar.previousColor = value;
+            set
+            { 
+                var changed = m_Toolbar.previousColor != value;
+                m_Toolbar.previousColor = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in previousValueProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// Determines if the ColorPicker should display the alpha slider.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool showAlpha
         {
             get => !m_AlphaSlider.ClassListContains(Styles.hiddenUssClassName);
-            set => m_AlphaSlider.EnableInClassList(Styles.hiddenUssClassName, !value);
+            set
+            {
+                var changed = showAlpha != value;
+                m_AlphaSlider.EnableInClassList(Styles.hiddenUssClassName, !value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in showAlphaProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// Determines if the ColorPicker should display the toolbar.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool showToolbar
         {
             get => !m_Toolbar.ClassListContains(Styles.hiddenUssClassName);
-            set => m_Toolbar.EnableInClassList(Styles.hiddenUssClassName, !value);
+            set
+            {
+                var changed = showToolbar != value;
+                m_Toolbar.EnableInClassList(Styles.hiddenUssClassName, !value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in showToolbarProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// Determines if the ColorPicker should display the hex field.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool showHex
         {
             get => !m_HexField.ClassListContains(Styles.hiddenUssClassName);
-            set => m_HexField.EnableInClassList(Styles.hiddenUssClassName, !value);
+            set
+            {
+                var changed = showHex != value;
+                m_HexField.EnableInClassList(Styles.hiddenUssClassName, !value);
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in showHexProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -425,11 +515,15 @@ namespace Unity.AppUI.UI
             m_Wheel.SetValueWithoutNotify(h);
             m_SvSquare.referenceHue = h;
             m_SvSquare.SetValueWithoutNotify(new Vector2(s, v));
-            m_AlphaSlider.colorRange = new List<ColorEntry>
+            m_AlphaSlider.colorRange.SetKeys(new[]
             {
-                new ColorEntry(new Color(c.r, c.g, c.b, 0), 0),
-                new ColorEntry(new Color(c.r, c.g, c.b, 1), 1)
-            };
+                new GradientColorKey(new Color(c.r, c.g, c.b, 0), 0),
+                new GradientColorKey(new Color(c.r, c.g, c.b, 1), 1)
+            }, new[]
+            {
+                new GradientAlphaKey(0, 0),
+                new GradientAlphaKey(1, 1)
+            });
             m_AlphaSlider.SetValueWithoutNotify(c.a);
 
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.r * 255));
@@ -458,11 +552,15 @@ namespace Unity.AppUI.UI
             m_Wheel.SetValueWithoutNotify(h);
             m_SvSquare.referenceHue = h;
             m_SvSquare.SetValueWithoutNotify(new Vector2(s, v));
-            m_AlphaSlider.colorRange = new List<ColorEntry>
+            m_AlphaSlider.colorRange.SetKeys(new[]
             {
-                new ColorEntry(new Color(m_Value.r, m_Value.g, m_Value.b, 0), 0),
-                new ColorEntry(new Color(m_Value.r, m_Value.g, m_Value.b, 1), 1)
-            };
+                new GradientColorKey(new Color(m_Value.r, m_Value.g, m_Value.b, 0), 0),
+                new GradientColorKey(new Color(m_Value.r, m_Value.g, m_Value.b, 1), 1)
+            }, new[]
+            {
+                new GradientAlphaKey(0, 0),
+                new GradientAlphaKey(1, 1)
+            });
             m_AlphaSlider.SetValueWithoutNotify(m_Value.a);
 
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(m_Value.r * 255));
@@ -528,12 +626,16 @@ namespace Unity.AppUI.UI
             m_SvSquare.referenceHue = evt.newValue;
             var c = m_SvSquare.selectedColor;
             c.a = m_AlphaSlider.value;
-
-            m_AlphaSlider.colorRange = new List<ColorEntry>
+            
+            m_AlphaSlider.colorRange.SetKeys(new[]
             {
-                new ColorEntry(new Color(c.r, c.g, c.b, 0), 0),
-                new ColorEntry(new Color(c.r, c.g, c.b, 1), 1)
-            };
+                new GradientColorKey(new Color(c.r, c.g, c.b, 0), 0),
+                new GradientColorKey(new Color(c.r, c.g, c.b, 1), 1)
+            }, new[]
+            {
+                new GradientAlphaKey(0, 0),
+                new GradientAlphaKey(1, 1)
+            });
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.r * 255));
             m_GreenChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.g * 255));
             m_BlueChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.b * 255));
@@ -559,11 +661,15 @@ namespace Unity.AppUI.UI
             var c = m_SvSquare.selectedColor;
             c.a = m_AlphaSlider.value;
 
-            m_AlphaSlider.colorRange = new List<ColorEntry>
+            m_AlphaSlider.colorRange.SetKeys(new[]
             {
-                new ColorEntry(new Color(c.r, c.g, c.b, 0), 0),
-                new ColorEntry(new Color(c.r, c.g, c.b, 1), 1)
-            };
+                new GradientColorKey(new Color(c.r, c.g, c.b, 0), 0),
+                new GradientColorKey(new Color(c.r, c.g, c.b, 1), 1)
+            }, new[]
+            {
+                new GradientAlphaKey(0, 0),
+                new GradientAlphaKey(1, 1)
+            });
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.r * 255));
             m_GreenChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.g * 255));
             m_BlueChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.b * 255));
@@ -593,11 +699,15 @@ namespace Unity.AppUI.UI
             m_Wheel.SetValueWithoutNotify(h);
             m_SvSquare.referenceHue = h;
             m_SvSquare.SetValueWithoutNotify(new Vector2(s, v));
-            m_AlphaSlider.colorRange = new List<ColorEntry>
+            m_AlphaSlider.colorRange.SetKeys(new[]
             {
-                new ColorEntry(new Color(c.r, c.g, c.b, 0), 0),
-                new ColorEntry(new Color(c.r, c.g, c.b, 1), 1)
-            };
+                new GradientColorKey(new Color(c.r, c.g, c.b, 0), 0),
+                new GradientColorKey(new Color(c.r, c.g, c.b, 1), 1)
+            }, new[]
+            {
+                new GradientAlphaKey(0, 0),
+                new GradientAlphaKey(1, 1)
+            });
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.r * 255));
             m_HueSlider.SetValueWithoutNotify(h);
             m_SaturationSlider.SetValueWithoutNotify(s);
@@ -619,11 +729,15 @@ namespace Unity.AppUI.UI
             m_Wheel.SetValueWithoutNotify(h);
             m_SvSquare.referenceHue = h;
             m_SvSquare.SetValueWithoutNotify(new Vector2(s, v));
-            m_AlphaSlider.colorRange = new List<ColorEntry>
+            m_AlphaSlider.colorRange.SetKeys(new[]
             {
-                new ColorEntry(new Color(c.r, c.g, c.b, 0), 0),
-                new ColorEntry(new Color(c.r, c.g, c.b, 1), 1)
-            };
+                new GradientColorKey(new Color(c.r, c.g, c.b, 0), 0),
+                new GradientColorKey(new Color(c.r, c.g, c.b, 1), 1)
+            }, new[]
+            {
+                new GradientAlphaKey(0, 0),
+                new GradientAlphaKey(1, 1)
+            });
             m_RedFChannelSlider.SetValueWithoutNotify(c.r);
             m_HueSlider.SetValueWithoutNotify(h);
             m_SaturationSlider.SetValueWithoutNotify(s);
@@ -645,11 +759,15 @@ namespace Unity.AppUI.UI
             m_Wheel.SetValueWithoutNotify(h);
             m_SvSquare.referenceHue = h;
             m_SvSquare.SetValueWithoutNotify(new Vector2(s, v));
-            m_AlphaSlider.colorRange = new List<ColorEntry>
+            m_AlphaSlider.colorRange.SetKeys(new[]
             {
-                new ColorEntry(new Color(c.r, c.g, c.b, 0), 0),
-                new ColorEntry(new Color(c.r, c.g, c.b, 1), 1)
-            };
+                new GradientColorKey(new Color(c.r, c.g, c.b, 0), 0),
+                new GradientColorKey(new Color(c.r, c.g, c.b, 1), 1)
+            }, new[]
+            {
+                new GradientAlphaKey(0, 0),
+                new GradientAlphaKey(1, 1)
+            });
             m_GreenChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.g * 255));
             m_HueSlider.SetValueWithoutNotify(h);
             m_SaturationSlider.SetValueWithoutNotify(s);
@@ -671,11 +789,15 @@ namespace Unity.AppUI.UI
             m_Wheel.SetValueWithoutNotify(h);
             m_SvSquare.referenceHue = h;
             m_SvSquare.SetValueWithoutNotify(new Vector2(s, v));
-            m_AlphaSlider.colorRange = new List<ColorEntry>
+            m_AlphaSlider.colorRange.SetKeys(new[]
             {
-                new ColorEntry(new Color(c.r, c.g, c.b, 0), 0),
-                new ColorEntry(new Color(c.r, c.g, c.b, 1), 1)
-            };
+                new GradientColorKey(new Color(c.r, c.g, c.b, 0), 0),
+                new GradientColorKey(new Color(c.r, c.g, c.b, 1), 1)
+            }, new[]
+            {
+                new GradientAlphaKey(0, 0),
+                new GradientAlphaKey(1, 1)
+            });
             m_GreenFChannelSlider.SetValueWithoutNotify(c.g);
             m_HueSlider.SetValueWithoutNotify(h);
             m_SaturationSlider.SetValueWithoutNotify(s);
@@ -697,11 +819,15 @@ namespace Unity.AppUI.UI
             m_Wheel.SetValueWithoutNotify(h);
             m_SvSquare.referenceHue = h;
             m_SvSquare.SetValueWithoutNotify(new Vector2(s, v));
-            m_AlphaSlider.colorRange = new List<ColorEntry>
+            m_AlphaSlider.colorRange.SetKeys(new[]
             {
-                new ColorEntry(new Color(c.r, c.g, c.b, 0), 0),
-                new ColorEntry(new Color(c.r, c.g, c.b, 1), 1)
-            };
+                new GradientColorKey(new Color(c.r, c.g, c.b, 0), 0),
+                new GradientColorKey(new Color(c.r, c.g, c.b, 1), 1)
+            }, new[]
+            {
+                new GradientAlphaKey(0, 0),
+                new GradientAlphaKey(1, 1)
+            });
             m_BlueChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.b * 255));
             m_HueSlider.SetValueWithoutNotify(h);
             m_SaturationSlider.SetValueWithoutNotify(s);
@@ -723,11 +849,15 @@ namespace Unity.AppUI.UI
             m_Wheel.SetValueWithoutNotify(h);
             m_SvSquare.referenceHue = h;
             m_SvSquare.SetValueWithoutNotify(new Vector2(s, v));
-            m_AlphaSlider.colorRange = new List<ColorEntry>
+            m_AlphaSlider.colorRange.SetKeys(new[]
             {
-                new ColorEntry(new Color(c.r, c.g, c.b, 0), 0),
-                new ColorEntry(new Color(c.r, c.g, c.b, 1), 1)
-            };
+                new GradientColorKey(new Color(c.r, c.g, c.b, 0), 0),
+                new GradientColorKey(new Color(c.r, c.g, c.b, 1), 1)
+            }, new[]
+            {
+                new GradientAlphaKey(0, 0),
+                new GradientAlphaKey(1, 1)
+            });
             m_BlueFChannelSlider.SetValueWithoutNotify(c.b);
             m_HueSlider.SetValueWithoutNotify(h);
             m_SaturationSlider.SetValueWithoutNotify(s);
@@ -747,11 +877,15 @@ namespace Unity.AppUI.UI
             c.a = m_AlphaSlider.value;
             m_Wheel.SetValueWithoutNotify(evt.newValue);
             m_SvSquare.referenceHue = evt.newValue;
-            m_AlphaSlider.colorRange = new List<ColorEntry>
+            m_AlphaSlider.colorRange.SetKeys(new[]
             {
-                new ColorEntry(new Color(c.r, c.g, c.b, 0), 0),
-                new ColorEntry(new Color(c.r, c.g, c.b, 1), 1)
-            };
+                new GradientColorKey(new Color(c.r, c.g, c.b, 0), 0),
+                new GradientColorKey(new Color(c.r, c.g, c.b, 1), 1)
+            }, new[]
+            {
+                new GradientAlphaKey(0, 0),
+                new GradientAlphaKey(1, 1)
+            });
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.r * 255));
             m_GreenChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.g * 255));
             m_BlueChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.b * 255));
@@ -772,11 +906,15 @@ namespace Unity.AppUI.UI
             var c = Color.HSVToRGB(m_HueSlider.value, evt.newValue, m_BrightnessSlider.value);
             c.a = m_AlphaSlider.value;
             m_SvSquare.SetValueWithoutNotify(new Vector2(evt.newValue, m_BrightnessSlider.value));
-            m_AlphaSlider.colorRange = new List<ColorEntry>
+            m_AlphaSlider.colorRange.SetKeys(new[]
             {
-                new ColorEntry(new Color(c.r, c.g, c.b, 0), 0),
-                new ColorEntry(new Color(c.r, c.g, c.b, 1), 1)
-            };
+                new GradientColorKey(new Color(c.r, c.g, c.b, 0), 0),
+                new GradientColorKey(new Color(c.r, c.g, c.b, 1), 1)
+            }, new[]
+            {
+                new GradientAlphaKey(0, 0),
+                new GradientAlphaKey(1, 1)
+            });
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.r * 255));
             m_GreenChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.g * 255));
             m_BlueChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.b * 255));
@@ -797,11 +935,15 @@ namespace Unity.AppUI.UI
             var c = Color.HSVToRGB(m_HueSlider.value, m_SaturationSlider.value, evt.newValue);
             c.a = m_AlphaSlider.value;
             m_SvSquare.SetValueWithoutNotify(new Vector2(m_SaturationSlider.value, evt.newValue));
-            m_AlphaSlider.colorRange = new List<ColorEntry>
+            m_AlphaSlider.colorRange.SetKeys(new[]
             {
-                new ColorEntry(new Color(c.r, c.g, c.b, 0), 0),
-                new ColorEntry(new Color(c.r, c.g, c.b, 1), 1)
-            };
+                new GradientColorKey(new Color(c.r, c.g, c.b, 0), 0),
+                new GradientColorKey(new Color(c.r, c.g, c.b, 1), 1)
+            }, new[]
+            {
+                new GradientAlphaKey(0, 0),
+                new GradientAlphaKey(1, 1)
+            });
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.r * 255));
             m_GreenChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.g * 255));
             m_BlueChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.b * 255));
@@ -842,16 +984,17 @@ namespace Unity.AppUI.UI
             }
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Class used to create a <see cref="ColorPicker"/> using UXML.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<ColorPicker, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ColorPicker"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : VisualElement.UxmlTraits
         {
             readonly UxmlBoolAttributeDescription m_ShowAlpha = new UxmlBoolAttributeDescription
             {
@@ -888,5 +1031,7 @@ namespace Unity.AppUI.UI
                 el.showHex = m_ShowHex.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 }

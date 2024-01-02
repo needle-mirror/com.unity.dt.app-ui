@@ -3,18 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
-    
-    
     /// <summary>
     /// ActionGroup UI element.
     /// </summary>
-    public class ActionGroup : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class ActionGroup : BaseVisualElement
     {
+        
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        internal static readonly BindingId quietProperty = nameof(quiet);
+        
+        internal static readonly BindingId compactProperty = nameof(compact);
+        
+        internal static readonly BindingId directionProperty = nameof(direction);
+        
+        internal static readonly BindingId justifiedProperty = nameof(justified);
+        
+        internal static readonly BindingId selectionTypeProperty = nameof(selectionType);
+        
+        internal static readonly BindingId closeOnSelectionProperty = nameof(closeOnSelection);
+        
+        internal static readonly BindingId allowNoSelectionProperty = nameof(allowNoSelection);
+#endif
+        
         const string k_MultiSelectWithOverflowMsg =
             "Having a single selection in an ActionGroup with overflow can lead to unexpected behavior.\n" +
             "Consider using SelectionType.None or SelectionType.Multiple instead, or try to avoid overflow.";
@@ -37,7 +57,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The ActionGroup vertical mode styling class.
         /// </summary>
-        public static readonly string verticalUssClassName = ussClassName + "--vertical";
+        public static readonly string verticalUssClassName = ussClassName + "--";
 
         /// <summary>
         /// The ActionGroup justified mode styling class.
@@ -67,9 +87,7 @@ namespace Unity.AppUI.UI
         SelectionType m_SelectionType = k_DefaultSelectionType;
 
         readonly List<VisualElement> m_HandledChildren = new List<VisualElement>();
-
-        readonly List<VisualElement> m_SelectedElements = new List<VisualElement>();
-
+        
         readonly List<int> m_SelectedIndices = new List<int>();
 
         readonly List<int> m_SelectedIds = new List<int>();
@@ -86,11 +104,15 @@ namespace Unity.AppUI.UI
 
         Rect m_LastLayout;
 
-        Dir m_CurrentDirection;
+        Dir m_CurrentLayoutDirection;
         
         Func<int, int> m_GetItemId;
 
         bool m_AllowNoSelection = true;
+
+        bool m_CloseOnSelection;
+
+        Direction m_Direction;
 
         const SelectionType k_DefaultSelectionType = SelectionType.None;
 
@@ -114,7 +136,7 @@ namespace Unity.AppUI.UI
             m_MoreButton.AddToClassList(moreButtonUssClassName);
             m_MoreButton.clicked += OnMoreButtonClicked;
             hierarchy.Add(m_MoreButton);
-            vertical = false;
+            direction = Direction.Horizontal;
             closeOnSelection = true;
 
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
@@ -124,7 +146,7 @@ namespace Unity.AppUI.UI
 
         void OnDirectionChanged(ContextChangedEvent<DirContext> evt)
         {
-            m_CurrentDirection = evt.context?.dir ?? Dir.Ltr;
+            m_CurrentLayoutDirection = evt.context?.dir ?? Dir.Ltr;
             schedule.Execute(RefreshUI);
         }
 
@@ -136,51 +158,126 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The quiet state of the ActionGroup.
         /// </summary>
+        [Tooltip("The quiet state of the ActionGroup. A quiet ActionGroup has no background and no border.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Header("Action Group")]
+#endif
         public bool quiet
         {
             get => ClassListContains(quietUssClassName);
-            set => EnableInClassList(quietUssClassName, value);
+            set
+            {
+                var changed = quiet != value;
+                EnableInClassList(quietUssClassName, value);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in quietProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The compact state of the ActionGroup.
         /// </summary>
+        [Tooltip("The compact state of the ActionGroup. A compact ActionGroup doesn't have any gap between its items.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool compact
         {
             get => ClassListContains(compactUssClassName);
-            set => EnableInClassList(compactUssClassName, value);
+            set
+            {
+                var changed = compact != value;
+                EnableInClassList(compactUssClassName, value);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in compactProperty);
+#endif
+            }
         }
 
         /// <summary>
-        /// The vertical state of the ActionGroup.
+        /// The orientation of the ActionGroup.
         /// </summary>
-        public bool vertical
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public Direction direction
         {
-            get => ClassListContains(verticalUssClassName);
+            get => m_Direction;
             set
             {
-                EnableInClassList(verticalUssClassName, value);
-                m_MoreButton.icon = value ? "dots-three-vertical" : "dots-three";
+                var changed = m_Direction != value;
+                RemoveFromClassList(verticalUssClassName + m_Direction.ToString().ToLower());
+                m_Direction = value;
+                AddToClassList(verticalUssClassName + m_Direction.ToString().ToLower());
+                m_MoreButton.icon = m_Direction switch
+                {
+                    Direction.Horizontal => "dots-three",
+                    Direction.Vertical => "dots-three-vertical",
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in directionProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The justified state of the ActionGroup.
         /// </summary>
+        [Tooltip("The justified state of the ActionGroup. A justified ActionGroup has its items stretched to fill the available space.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool justified
         {
             get => ClassListContains(justifiedUssClassName);
-            set => EnableInClassList(justifiedUssClassName, value);
+            set
+            {
+                var changed = justified != value;
+                EnableInClassList(justifiedUssClassName, value);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in justifiedProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The selection type of the ActionGroup.
         /// </summary>
+        [Tooltip("The selection type of the ActionGroup. " +
+            "A selection type of None means that no item can be selected. " +
+            "A selection type of Single means that only one item can be selected at a time. " +
+            "A selection type of Multiple means that multiple items can be selected at a time.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public SelectionType selectionType
         {
             get => m_SelectionType;
             set
             {
+                var changed = m_SelectionType != value;
                 m_SelectionType = value;
                 EnableInClassList(selectableUssClassName, m_SelectionType != SelectionType.None);
                 if (m_SelectionType == SelectionType.None)
@@ -194,13 +291,36 @@ namespace Unity.AppUI.UI
                     else
                         SetSelection(new[] { m_SelectedIndices.Last() });
                 }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in selectionTypeProperty);
+#endif
             }
         }
-        
+
         /// <summary>
         /// Whether the ActionGroup's menu popover should close when a selection is made.
         /// </summary>
-        public bool closeOnSelection { get; set; }
+        [Tooltip("Whether the ActionGroup's menu popover should close when a selection is made.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool closeOnSelection
+        {
+            get => m_CloseOnSelection;
+            set
+            {
+                var changed = m_CloseOnSelection != value;
+                m_CloseOnSelection = value;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in closeOnSelectionProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Callback used to get the ID of an item.
@@ -228,14 +348,26 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Whether the ActionGroup allows no selection when in single or multi selection mode.
         /// </summary>
+        [Tooltip("Whether the ActionGroup allows no selection when in single or multi selection mode.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool allowNoSelection
         {
             get => m_AllowNoSelection;
             set
             {
+                var changed = m_AllowNoSelection != value;
                 m_AllowNoSelection = value;
                 if (!m_AllowNoSelection && m_SelectedIndices.Count == 0)
                     SetSelection(new[] { 0 });
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in allowNoSelectionProperty);
+#endif
             }
         }
         
@@ -412,14 +544,32 @@ namespace Unity.AppUI.UI
             
             m_LastContainerLayout = m_Container.layout;
             m_LastLayout = layout;
-            
-            var size = vertical ? layout.height : layout.width;
-            var outOfBounds = vertical ? size < m_Container.layout.height : size < m_Container.layout.width;
+            var moreButtonStyle = m_MoreButton.resolvedStyle;
 
-            var moreButtonSize = vertical ? 
-                m_MoreButton.resolvedStyle.height + m_MoreButton.resolvedStyle.marginTop + m_MoreButton.resolvedStyle.marginBottom : 
-                m_MoreButton.resolvedStyle.width + m_MoreButton.resolvedStyle.marginLeft + m_MoreButton.resolvedStyle.marginRight;
+            float size;
+            float containerSize;
+            float moreButtonSize;
+            Func<VisualElement, float> getChildSize; 
+
+            switch (m_Direction)
+            {
+                case Direction.Horizontal:
+                    size = layout.width;
+                    containerSize = m_Container.layout.width;
+                    moreButtonSize = moreButtonStyle.width + moreButtonStyle.marginLeft + moreButtonStyle.marginRight;
+                    getChildSize = GetElementFullWidth;
+                    break;
+                case Direction.Vertical:
+                    size = layout.height;
+                    containerSize = m_Container.layout.height;
+                    moreButtonSize = moreButtonStyle.height + moreButtonStyle.marginTop + moreButtonStyle.marginBottom;
+                    getChildSize = GetElementFullHeight;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             
+            var outOfBounds = size < containerSize;
             var spaceUsed = outOfBounds ? moreButtonSize : 0;
             m_FirstIndexOutOfBound = -1;
             for (var i = 0; i < m_HandledChildren.Count; i++)
@@ -435,9 +585,7 @@ namespace Unity.AppUI.UI
 
                 if (outOfBounds)
                 {
-                    var childSize = vertical ? 
-                        child.resolvedStyle.height + child.resolvedStyle.marginTop + child.resolvedStyle.marginBottom : 
-                        child.resolvedStyle.width + child.resolvedStyle.marginLeft + child.resolvedStyle.marginRight;
+                    var childSize = getChildSize.Invoke(child);
                     var newSpaceUsed = spaceUsed + childSize;
                     if (spaceUsed <= size && newSpaceUsed > size)
                     {
@@ -445,7 +593,7 @@ namespace Unity.AppUI.UI
                         m_FirstIndexOutOfBound = i;
                     }
                     spaceUsed += childSize;
-                    child.visible = spaceUsed <= (vertical ? layout.height : layout.width);
+                    child.visible = spaceUsed <= size;
                 }
                 else
                 {
@@ -456,15 +604,20 @@ namespace Unity.AppUI.UI
             m_MoreButton.visible = m_FirstIndexOutOfBound >= 0;
             if (m_FirstIndexOutOfBound >= 0) // overflow detected
             {
-                if (vertical)
+                switch (m_Direction)
                 {
-                    m_MoreButton.style.top = m_HandledChildren[m_FirstIndexOutOfBound].layout.y;
-                }
-                else
-                {
-                    m_MoreButton.style.left = m_CurrentDirection == Dir.Ltr ? 
-                        m_HandledChildren[m_FirstIndexOutOfBound].layout.x : 
-                        m_HandledChildren[m_FirstIndexOutOfBound].layout.xMax + (size - m_Container.layout.width) - moreButtonSize;
+                    case Direction.Horizontal:
+                        m_MoreButton.style.left = m_CurrentLayoutDirection == Dir.Ltr ? 
+                            m_HandledChildren[m_FirstIndexOutOfBound].layout.x : 
+                            m_HandledChildren[m_FirstIndexOutOfBound].layout.xMax + (size - m_Container.layout.width) - moreButtonSize;
+                        m_MoreButton.style.top = new StyleLength(StyleKeyword.Null);
+                        break;
+                    case Direction.Vertical:
+                        m_MoreButton.style.top = m_HandledChildren[m_FirstIndexOutOfBound].layout.y;
+                        m_MoreButton.style.left = new StyleLength(StyleKeyword.Null);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
                 m_MoreButton.EnableInClassList("unity-first-child", m_FirstIndexOutOfBound == 0);
             }
@@ -472,17 +625,35 @@ namespace Unity.AppUI.UI
             RefreshSelectionUI();
         }
 
+        static float GetElementFullWidth(VisualElement ve)
+        {
+            var style = ve.resolvedStyle;
+            return style.width + style.marginLeft + style.marginRight;
+        }
+        
+        static float GetElementFullHeight(VisualElement ve)
+        {
+            var style = ve.resolvedStyle;
+            return style.height + style.marginTop + style.marginBottom;
+        }
+
         void OnMoreButtonClicked()
         {
             if (m_FirstIndexOutOfBound < 0)
                 return;
 
-            var ctx = this.GetContext();
-            var horizontalPlacement = ctx.dir == Dir.Ltr ? PopoverPlacement.BottomStart : PopoverPlacement.BottomEnd;
+            var dir = this.GetContext<DirContext>()?.dir ?? Dir.Ltr;
+            var horizontalPlacement = dir == Dir.Ltr ? PopoverPlacement.BottomStart : PopoverPlacement.BottomEnd;
+            var placement = m_Direction switch
+            {
+                Direction.Horizontal => horizontalPlacement,
+                Direction.Vertical => PopoverPlacement.EndBottom,
+                _ => throw new ArgumentOutOfRangeException()
+            };
             m_MenuBuilder?.Dismiss(DismissType.Consecutive);
             m_MenuBuilder = MenuBuilder.Build(m_MoreButton)
                 .SetCloseOnSelection(closeOnSelection)
-                .SetPlacement(vertical ? PopoverPlacement.EndBottom : horizontalPlacement);
+                .SetPlacement(placement);
 
             var selectable = selectionType != SelectionType.None;
             for (var i = m_FirstIndexOutOfBound; i < m_HandledChildren.Count; i++)
@@ -510,26 +681,17 @@ namespace Unity.AppUI.UI
                 btn.clickable?.InvokePressed(evt);
             }
         }
-        
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
 
+#if ENABLE_UXML_TRAITS
         /// <summary>
         /// The UXML factory for the ActionGroup.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<ActionGroup, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ActionGroup"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlBoolAttributeDescription m_Compact = new UxmlBoolAttributeDescription
             {
@@ -549,10 +711,10 @@ namespace Unity.AppUI.UI
                 defaultValue = false
             };
 
-            readonly UxmlBoolAttributeDescription m_Vertical = new UxmlBoolAttributeDescription
+            readonly UxmlEnumAttributeDescription<Direction> m_Direction = new UxmlEnumAttributeDescription<Direction>
             {
-                name = "vertical",
-                defaultValue = false
+                name = "direction",
+                defaultValue = Direction.Horizontal
             };
             
             readonly UxmlEnumAttributeDescription<SelectionType> m_SelectionType = new UxmlEnumAttributeDescription<SelectionType>
@@ -565,12 +727,6 @@ namespace Unity.AppUI.UI
             {
                 name = "close-on-selection",
                 defaultValue = true
-            };
-            
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
             };
             
             readonly UxmlBoolAttributeDescription m_AllowNoSelection = new UxmlBoolAttributeDescription
@@ -592,13 +748,13 @@ namespace Unity.AppUI.UI
                 var el = (ActionGroup)ve;
                 el.quiet = m_Quiet.GetValueFromBag(bag, cc);
                 el.compact = m_Compact.GetValueFromBag(bag, cc);
-                el.vertical = m_Vertical.GetValueFromBag(bag, cc);
+                el.direction = m_Direction.GetValueFromBag(bag, cc);
                 el.justified = m_Justified.GetValueFromBag(bag, cc);
                 el.selectionType = m_SelectionType.GetValueFromBag(bag, cc);
                 el.closeOnSelection = m_CloseOnSelection.GetValueFromBag(bag, cc);
                 el.allowNoSelection = m_AllowNoSelection.GetValueFromBag(bag, cc);
-                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
+#endif
     }
 }

@@ -1,14 +1,36 @@
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A base class for all progress UI elements. This class is not meant to be used directly.
     /// </summary>
-    public abstract class Progress : VisualElement, ISizeableElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public abstract partial class Progress : BaseVisualElement, ISizeableElement
     {       
+#if ENABLE_RUNTIME_DATA_BINDINGS
+
+        internal static readonly BindingId valueProperty = new BindingId(nameof(value));
+        
+        internal static readonly BindingId bufferValueProperty = new BindingId(nameof(bufferValue));
+        
+        internal static readonly BindingId bufferOpacityProperty = new BindingId(nameof(bufferOpacity));
+        
+        internal static readonly BindingId colorOverrideProperty = new BindingId(nameof(colorOverride));
+        
+        internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
+        
+        internal static readonly BindingId variantProperty = new BindingId(nameof(variant));
+        
+#endif
+        
         static readonly Vertex[] k_Vertices = new Vertex[4];
         static readonly ushort[] k_Indices = { 0, 1, 2, 2, 3, 0 };
         
@@ -66,7 +88,7 @@ namespace Unity.AppUI.UI
 
         Size m_Size;
 
-        Color? m_ColorOverride;
+        Optional<Color> m_ColorFromCode;
 
         Variant m_Variant;
 
@@ -89,7 +111,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The main color of the progress.
         /// </summary>
-        protected Color m_Color;
+        protected Color m_ColorFromStyle;
 
         float m_BufferOpacity = 0.1f;
 
@@ -122,7 +144,7 @@ namespace Unity.AppUI.UI
             m_Container.AddToClassList(containerUssClassName);
             hierarchy.Add(m_Container);
 
-            m_Color = new Color(0.82f, 0.82f, 0.82f);
+            m_ColorFromStyle = new Color(0.82f, 0.82f, 0.82f);
             variant = Variant.Indeterminate;
             size = Size.M;
             value = 0;
@@ -211,80 +233,152 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The LinearProgress size.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The variant of the progress.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Variant variant
         {
             get => m_Variant;
             set
             {
+                var changed = m_Variant != value;
                 RemoveFromClassList(variantUssClassName + m_Variant.ToString().ToLower());
                 m_Variant = value;
                 AddToClassList(variantUssClassName + m_Variant.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in variantProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The opacity of the secondary progress (buffer).
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public float bufferOpacity
         {
             get => m_BufferOpacity;
             set
             {
+                var changed = m_BufferOpacity != value;
                 m_BufferOpacity = value;
                 MarkContentDirtyRepaint();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in bufferOpacityProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The color of the progress.
         /// </summary>
-        public Color? colorOverride
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public Color colorOverride
         {
-            get => m_ColorOverride;
+            get => m_ColorFromCode.IsSet ? m_ColorFromCode.Value : m_ColorFromStyle;
             set
             {
-                m_ColorOverride = value;
+                var changed = colorOverride != value;
+                m_ColorFromCode = value;
                 MarkContentDirtyRepaint();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in colorOverrideProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The progress value (normalized).
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public float value
         {
             get => m_Value;
             set
             {
+                if (Mathf.Approximately(m_Value, value))
+                    return;
                 m_Value = value;
                 MarkContentDirtyRepaint();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The secondary progress (buffer) value (normalized).
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public float bufferValue
         {
             get => m_BufferValue;
             set
             {
+                if (Mathf.Approximately(m_BufferValue, value))
+                    return;
                 m_BufferValue = value;
                 MarkContentDirtyRepaint();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in bufferValueProperty);
+#endif
             }
         }
 
@@ -306,7 +400,7 @@ namespace Unity.AppUI.UI
         {
             if (evt.customStyle.TryGetValue(k_UssColor, out var c))
             {
-                m_Color = c;
+                m_ColorFromStyle = c;
             }
 
             MarkContentDirtyRepaint();
@@ -316,11 +410,13 @@ namespace Unity.AppUI.UI
         /// Generates the textures for the progress.
         /// </summary>
         protected virtual void GenerateTextures() { }
+        
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Progress"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
             {
@@ -380,5 +476,7 @@ namespace Unity.AppUI.UI
                     element.colorOverride = color;
             }
         }
+        
+#endif
     }
 }

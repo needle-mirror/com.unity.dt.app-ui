@@ -1,7 +1,9 @@
 using System;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -49,8 +51,19 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Heading UI element.
     /// </summary>
-    public sealed class Heading : LocalizedTextElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public sealed partial class Heading : LocalizedTextElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId primaryProperty = new BindingId(nameof(primary));
+        
+        internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
+        
+#endif
+        
         /// <summary>
         /// The Heading main styling class.
         /// </summary>
@@ -93,39 +106,58 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The primary variant of the Heading.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool primary
         {
             get => ClassListContains(primaryUssClassName);
-            set => EnableInClassList(primaryUssClassName, value);
+            set
+            {
+                var changed = ClassListContains(primaryUssClassName) != value;
+                EnableInClassList(primaryUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in primaryProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The size of the Heading.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public HeadingSize size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to instantiate a <see cref="Heading"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Heading, UxmlTraits> { }
 
         /// <summary>
@@ -133,12 +165,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new class UxmlTraits : LocalizedTextElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-
+            
             readonly UxmlBoolAttributeDescription m_Primary = new UxmlBoolAttributeDescription
             {
                 name = "primary",
@@ -164,8 +191,10 @@ namespace Unity.AppUI.UI
                 var element = (Heading)ve;
                 element.primary = m_Primary.GetValueFromBag(bag, cc);
                 element.size = m_Size.GetValueFromBag(bag, cc);
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+        
+#endif
     }
 }

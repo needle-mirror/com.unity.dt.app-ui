@@ -8,6 +8,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Possible placements for a Popover.
     /// </summary>
+    [Serializable]
     public enum PopoverPlacement
     {
         /// <summary>
@@ -288,11 +289,10 @@ namespace Unity.AppUI.UI
         /// Default constructor.
         /// </summary>
         /// <param name="parentView">The popup container.</param>
-        /// <param name="context">The application context attached to this popup.</param>
         /// <param name="popover">The popup visual element itself.</param>
         /// <param name="contentView">The content that will appear inside this popup.</param>
-        Popover(VisualElement parentView, ApplicationContext context, PopoverVisualElement popover, VisualElement contentView)
-            : base(parentView, context, popover, contentView)
+        Popover(VisualElement parentView, PopoverVisualElement popover, VisualElement contentView)
+            : base(parentView, popover, contentView)
         {
             parentView.panel.visualTree.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
             parentView.panel.visualTree.RegisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
@@ -308,10 +308,14 @@ namespace Unity.AppUI.UI
         /// <returns>The <see cref="Popover"/> instance.</returns>
         public static Popover Build(VisualElement referenceView, VisualElement contentView)
         {
-            var context = referenceView.GetContext();
-            var parentView = context.panel.popupContainer;
+            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
+            
+            if (panel == null)
+                throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
+            
+            var parentView = panel.popupContainer;
             var popoverVisualElement = new PopoverVisualElement(contentView);
-            var popoverElement = new Popover(parentView, context, popoverVisualElement, contentView)
+            var popoverElement = new Popover(parentView, popoverVisualElement, contentView)
                 .SetAnchor(referenceView)
                 .SetLastFocusedElement(referenceView);
             return popoverElement;

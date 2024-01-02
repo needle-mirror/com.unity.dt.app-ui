@@ -2,8 +2,10 @@ using System;
 using System.Globalization;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -30,9 +32,30 @@ namespace Unity.AppUI.UI
     /// Base class for Sliders (<see cref="SliderFloat"/>, <see cref="SliderInt"/>).
     /// </summary>
     /// <typeparam name="TValueType">A comparable value type.</typeparam>
-    public abstract class SliderBase<TValueType> : BaseSlider<TValueType, TValueType> 
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public abstract partial class SliderBase<TValueType> : BaseSlider<TValueType, TValueType> 
         where TValueType : struct, IEquatable<TValueType>, IComparable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId filledProperty = new BindingId(nameof(filled));
+        
+        internal static readonly BindingId fillOffsetProperty = new BindingId(nameof(fillOffset));
+        
+        internal static readonly BindingId inlineValueProperty = new BindingId(nameof(inlineValue));
+        
+        internal static readonly BindingId labelProperty = new BindingId(nameof(label));
+        
+        internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
+        
+        internal static readonly BindingId tickCountProperty = new BindingId(nameof(tickCount));
+        
+        internal static readonly BindingId tickLabelProperty = new BindingId(nameof(tickLabel));
+        
+#endif
+        
         /// <summary>
         /// The Slider main styling class.
         /// </summary>
@@ -77,6 +100,16 @@ namespace Unity.AppUI.UI
         /// The Slider track styling class.
         /// </summary>
         public static readonly string trackUssClassName = ussClassName + "__track";
+        
+        /// <summary>
+        /// The Slider padded container styling class.
+        /// </summary>
+        public static readonly string paddedContainerUssClassName = ussClassName + "__padded-container";
+        
+        /// <summary>
+        /// The Slider progress container styling class.
+        /// </summary>
+        public static readonly string interactiveAreaUssClassName = ussClassName + "__interactive-area";
 
         /// <summary>
         /// The Slider progress styling class.
@@ -151,6 +184,10 @@ namespace Unity.AppUI.UI
 
         string m_LabelStr;
 
+        readonly VisualElement m_InteractiveArea;
+
+        readonly VisualElement m_PaddedContainer;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -158,7 +195,7 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
 
-            pickingMode = PickingMode.Position;
+            pickingMode = PickingMode.Ignore;
             focusable = true;
             tabIndex = 0;
 
@@ -191,10 +228,14 @@ namespace Unity.AppUI.UI
             track.AddToClassList(trackUssClassName);
             m_Controls.hierarchy.Add(track);
 
-            m_Ticks = new VisualElement { name = ticksUssClassName, pickingMode = PickingMode.Ignore };
+            m_Ticks = new VisualElement
+            {
+                name = ticksUssClassName, 
+                pickingMode = PickingMode.Ignore
+            };
             m_Ticks.AddToClassList(ticksUssClassName);
             m_Controls.hierarchy.Add(m_Ticks);
-
+            
             m_Progress = new VisualElement
             {
                 name = progressUssClassName,
@@ -204,6 +245,22 @@ namespace Unity.AppUI.UI
             m_Progress.AddToClassList(progressUssClassName);
             m_Controls.hierarchy.Add(m_Progress);
 
+            m_PaddedContainer = new VisualElement
+            {
+                name = paddedContainerUssClassName,
+                pickingMode = PickingMode.Ignore,
+            };
+            m_PaddedContainer.AddToClassList(paddedContainerUssClassName);
+            m_Controls.hierarchy.Add(m_PaddedContainer);
+            
+            m_InteractiveArea = new VisualElement
+            {
+                name = interactiveAreaUssClassName,
+                pickingMode = PickingMode.Position,
+            };
+            m_InteractiveArea.AddToClassList(interactiveAreaUssClassName);
+            m_PaddedContainer.hierarchy.Add(m_InteractiveArea);
+
             m_HandleContainer = new VisualElement
             {
                 name = handleContainerUssClassName,
@@ -211,7 +268,7 @@ namespace Unity.AppUI.UI
                 usageHints = UsageHints.DynamicTransform,
             };
             m_HandleContainer.AddToClassList(handleContainerUssClassName);
-            m_Controls.hierarchy.Add(m_HandleContainer);
+            m_InteractiveArea.hierarchy.Add(m_HandleContainer);
 
             m_Handle = new ExVisualElement
             {
@@ -231,7 +288,7 @@ namespace Unity.AppUI.UI
 
             RegisterCallback<KeyDownEvent>(OnKeyDown);
             m_DraggerManipulator = new Draggable(OnTrackClicked, OnTrackDragged, OnTrackUp, OnTrackDown);
-            this.AddManipulator(m_DraggerManipulator);
+            m_InteractiveArea.AddManipulator(m_DraggerManipulator);
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));
         }
 
@@ -283,65 +340,120 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// If the slider progress is filled.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool filled
         {
             get => !m_Progress.ClassListContains(Styles.hiddenUssClassName);
             set
             {
+                var changed = !m_Progress.ClassListContains(Styles.hiddenUssClassName) != value;
                 m_Progress.EnableInClassList(Styles.hiddenUssClassName, !value);
                 RefreshUI();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in filledProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The inline mode for the slider value element.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public InlineValue inlineValue
         {
             get => m_InlineValue;
             set
             {
+                var changed = m_InlineValue != value;
                 RemoveFromClassList(inlineValueUssClassName + m_InlineValue.ToString().ToLower());
                 m_InlineValue = value;
                 if (m_InlineValue != InlineValue.None)
                     AddToClassList(inlineValueUssClassName + m_InlineValue.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in inlineValueProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Should be normalized.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public float fillOffset
         {
             get => m_FillOffset;
             set
             {
+                var changed = !Mathf.Approximately(m_FillOffset, value);
                 m_FillOffset = value;
                 RefreshUI();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in fillOffsetProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Text which will be used for the Slider label.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string label
         {
             get => m_LabelStr;
             set
             {
+                var changed = m_LabelStr != value;
                 m_LabelStr = value;
                 RefreshLabel();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The number of ticks to display on the slider.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public int tickCount
         {
             get => m_TickCount;
             set
             {
+                var changed = m_TickCount != value;
                 m_TickCount = value;
                 m_Ticks.EnableInClassList(Styles.hiddenUssClassName, m_TickCount <= 0);
                 m_Ticks.Clear();
@@ -353,33 +465,62 @@ namespace Unity.AppUI.UI
                 }
 
                 RefreshTickLabels();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in tickCountProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Should the tick labels be displayed.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool tickLabel
         {
             get => m_TickLabel;
             set
             {
+                var changed = m_TickLabel != value;
                 m_TickLabel = value;
                 RefreshTickLabels();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in tickLabelProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The size of the slider.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
@@ -402,7 +543,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.GetSliderRect"/>
-        protected override Rect GetSliderRect() => this.WorldToLocal(m_Controls.LocalToWorld(m_Controls.contentRect));
+        protected override Rect GetSliderRect() => m_InteractiveArea.contentRect;
 
         /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.OnSliderRangeChanged"/>
         protected override void OnSliderRangeChanged()
@@ -476,26 +617,13 @@ namespace Unity.AppUI.UI
             return result;
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="SliderBase{TValueType}"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseSlider<TValueType,TValueType>.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
-
             readonly UxmlBoolAttributeDescription m_Filled = new UxmlBoolAttributeDescription
             {
                 name = "filled",
@@ -566,28 +694,101 @@ namespace Unity.AppUI.UI
                 string formatStr = null;
                 if (m_Format.TryGetValueFromBag(bag, cc, ref formatStr) && !string.IsNullOrEmpty(formatStr))
                     el.formatString = formatStr;
-
-                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 
     /// <summary>
     /// Slider UI element for floating point values.
     /// </summary>
-    public class SliderFloat : SliderBase<float>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class SliderFloat : SliderBase<float>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId incrementFactorProperty = new BindingId(nameof(incrementFactor));
+        
+#endif
+        
+        const float k_DefaultIncrement = 0.1f;
+        
+        float m_IncrementFactor = k_DefaultIncrement;
+
         /// <summary>
         /// The increment factor used when the slider is interacted with using the keyboard.
         /// </summary>
-        public float incrementFactor { get; set; } = 0.1f;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Min(0.0001f)]
+#endif
+        public float incrementFactor
+        {
+            get => m_IncrementFactor;
+            set
+            {
+                var changed = !Mathf.Approximately(m_IncrementFactor, value);
+                m_IncrementFactor = Mathf.Max(0.0001f, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in incrementFactorProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public SliderFloat()
         {
-            formatString = UINumericFieldsUtils.k_FloatFieldFormatString;
+            formatStringOverride = UINumericFieldsUtils.k_FloatFieldFormatString;
+            incrementFactor = k_DefaultIncrement;
+            lowValueOverride = 0;
+            highValueOverride = 100f;
+            valueOverride = 0;
+        }
+        
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute("low-value")]
+#endif
+        float lowValueOverride
+        {
+            get => lowValue;
+            set => lowValue = value;
+        }
+        
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute("high-value")]
+#endif
+        float highValueOverride
+        {
+            get => highValue;
+            set => highValue = value;
+        }
+        
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute("value")]
+#endif
+        float valueOverride
+        {
+            get => value;
+            set => this.value = value;
+        }
+        
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute("format-string")]
+#endif
+        string formatStringOverride
+        {
+            get => formatString;
+            set => formatString = value;
         }
 
         /// <inheritdoc cref="BaseSlider{TValueType}.ParseStringToValue"/>
@@ -628,10 +829,11 @@ namespace Unity.AppUI.UI
             return val - incrementFactor;
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Factory class to instantiate a <see cref="SliderFloat"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<SliderFloat, UxmlTraits> { }
 
         /// <summary>
@@ -673,24 +875,99 @@ namespace Unity.AppUI.UI
                 el.value = m_Value.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 
     /// <summary>
     /// Slider UI element for integer values.
     /// </summary>
-    public class SliderInt : SliderBase<int>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class SliderInt : SliderBase<int>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId incrementFactorProperty = new BindingId(nameof(incrementFactor));
+        
+#endif
+        
+        const int k_DefaultIncrement = 1;
+        
+        int m_IncrementFactor = k_DefaultIncrement;
+
         /// <summary>
         /// The increment factor used when the slider is interacted with using the keyboard.
         /// </summary>
-        public int incrementFactor { get; set; } = 1;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Min(1)]
+#endif
+        public int incrementFactor
+        {
+            get => m_IncrementFactor;
+            set
+            {
+                var changed = m_IncrementFactor != value;
+                m_IncrementFactor = Mathf.Max(1, value);
 
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in incrementFactorProperty);
+#endif
+            }
+        }
+        
         /// <summary>
         /// Default constructor.
         /// </summary>
         public SliderInt()
         {
-            formatString = UINumericFieldsUtils.k_IntFieldFormatString;
+            formatStringOverride = UINumericFieldsUtils.k_IntFieldFormatString;
+            incrementFactor = k_DefaultIncrement;
+            lowValueOverride = 0;
+            highValueOverride = 100;
+            valueOverride = 0;
+        }
+        
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute("low-value")]
+#endif
+        int lowValueOverride
+        {
+            get => lowValue;
+            set => lowValue = value;
+        }
+        
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute("high-value")]
+#endif
+        int highValueOverride
+        {
+            get => highValue;
+            set => highValue = value;
+        }
+        
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute("value")]
+#endif
+        int valueOverride
+        {
+            get => value;
+            set => this.value = value;
+        }
+        
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute("format-string")]
+#endif
+        string formatStringOverride
+        {
+            get => formatString;
+            set => formatString = value;
         }
 
         /// <inheritdoc cref="BaseSlider{TValueType}.ParseStringToValue"/>
@@ -735,10 +1012,11 @@ namespace Unity.AppUI.UI
             return val - incrementFactor;
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Factory class to instantiate a <see cref="SliderInt"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<SliderInt, UxmlTraits> { }
 
         /// <summary>
@@ -780,5 +1058,7 @@ namespace Unity.AppUI.UI
                 el.value = m_Value.GetValueFromBag(bag, cc);
             }
         }
+        
+#endif
     }
 }

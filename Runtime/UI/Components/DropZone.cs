@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -31,7 +33,10 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A drop zone is a container that can be used to drop content into.
     /// </summary>
-    public class DropZone : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class DropZone : BaseVisualElement
     {
         /// <summary>
         /// Delegate used to find any droppable object(s) that can be dropped on the target using the current drag and drop path data.
@@ -301,15 +306,18 @@ namespace Unity.AppUI.UI
             }
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// The UXML factory for the DropZone.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<DropZone, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="DropZone"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits { }
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits { }
+        
+#endif
     }
 }

@@ -18,7 +18,6 @@ Shader "Hidden/App UI/SVSquare"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-            #include "AppUI.cginc"
 
             struct appdata
             {

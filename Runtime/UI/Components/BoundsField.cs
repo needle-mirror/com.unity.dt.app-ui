@@ -1,15 +1,29 @@
 using System;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Bounds Field UI element.
     /// </summary>
-    public class BoundsField : VisualElement, IValidatableElement<Bounds>, ISizeableElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class BoundsField : BaseVisualElement, IValidatableElement<Bounds>, ISizeableElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+        internal static readonly BindingId sizeProperty = nameof(size);
+        
+        internal static readonly BindingId invalidProperty = nameof(invalid);
+        
+        internal static readonly BindingId validateValueProperty = nameof(validateValue);
+#endif
         /// <summary>
         /// The BoundsField main styling class.
         /// </summary>
@@ -63,6 +77,8 @@ namespace Unity.AppUI.UI
         Size m_Size;
 
         Bounds m_Value;
+        
+        Func<Bounds, bool> m_ValidateValue;
 
         readonly FloatField m_CXField;
 
@@ -154,11 +170,19 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The BoundsField size.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Header("Bounds Field")]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
@@ -168,6 +192,11 @@ namespace Unity.AppUI.UI
                 m_SXField.size = m_Size;
                 m_SYField.size = m_Size;
                 m_SZField.size = m_Size;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
@@ -190,6 +219,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the BoundsField.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Bounds value
         {
             get => m_Value;
@@ -201,17 +236,28 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Set the validation state of the BoundsField.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
             set
             {
+                var changed = invalid != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
 
                 m_CXField.EnableInClassList(Styles.invalidUssClassName, value);
@@ -220,13 +266,36 @@ namespace Unity.AppUI.UI
                 m_SXField.EnableInClassList(Styles.invalidUssClassName, value);
                 m_SYField.EnableInClassList(Styles.invalidUssClassName, value);
                 m_SZField.EnableInClassList(Styles.invalidUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in invalidProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The validation function of the BoundsField.
         /// </summary>
-        public Func<Bounds, bool> validateValue { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<Bounds, bool> validateValue
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+                if (validateValue != null) 
+                    invalid = !validateValue(m_Value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
+#endif
+            }
+        }
 
         void OnCZFieldChanged(ChangeEvent<float> evt)
         {
@@ -258,32 +327,17 @@ namespace Unity.AppUI.UI
             value = new Bounds(value.center, new Vector3(value.size.x, value.size.y, evt.newValue));
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
-
+#if ENABLE_UXML_TRAITS
         /// <summary>
         /// Class to instantiate a <see cref="BoundsField"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<BoundsField, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="BoundsField"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
-
             readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
             {
                 name = "size",
@@ -303,8 +357,9 @@ namespace Unity.AppUI.UI
                 var element = (BoundsField)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
 
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+#endif
     }
 }

@@ -1,14 +1,25 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A toolbar that contains a color swatch for the previous color, a color swatch for the current color, and an eye dropper button.
     /// </summary>
-    public class ColorToolbar : VisualElement
+    public class ColorToolbar : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId previousColorPropertyKey = new BindingId(nameof(previousColor));
+        
+        internal static readonly BindingId currentColorPropertyKey = new BindingId(nameof(currentColor));
+        
+#endif
+        
         /// <summary>
         /// The main Uss class name of this element.
         /// </summary>
@@ -52,19 +63,45 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The previous color swatch value.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Color previousColor
         {
             get => m_PreviousColorSwatch.color;
-            set => m_PreviousColorSwatch.color = value;
+            set
+            {
+                if (m_PreviousColorSwatch.color == value)
+                    return;
+                
+                m_PreviousColorSwatch.color = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in previousColorPropertyKey);
+#endif
+            }
         }
 
         /// <summary>
         /// The current color swatch value.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Color currentColor
         {
             get => m_CurrentColorSwatch.color;
-            set => m_CurrentColorSwatch.color = value;
+            set
+            { 
+                if (m_CurrentColorSwatch.color == value)
+                    return;
+                
+                m_CurrentColorSwatch.color = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in currentColorPropertyKey);
+#endif
+            }
         }
 
         /// <summary>

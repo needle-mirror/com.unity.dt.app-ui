@@ -1,15 +1,20 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Menu UI element.
     /// </summary>
-    public class Menu : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class Menu : BaseVisualElement
     {
         /// <summary>
         /// The Menu main styling class.
@@ -106,16 +111,17 @@ namespace Unity.AppUI.UI
             return this.GetChildren<MenuItem>(true);
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Class to be able to instantiate a <see cref="Menu"/> from UXML.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<Menu, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Menu"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -129,5 +135,7 @@ namespace Unity.AppUI.UI
                 base.Init(ve, bag, cc);
             }
         }
+        
+#endif
     }
 }

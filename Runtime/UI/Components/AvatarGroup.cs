@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -61,8 +63,26 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// AvatarGroup UI element.
     /// </summary>
-    public class AvatarGroup : VisualElement
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class AvatarGroup : BaseVisualElement
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        internal static readonly BindingId maxProperty = nameof(max);
+        
+        internal static readonly BindingId spacingProperty = nameof(spacing);
+        
+        internal static readonly BindingId sizeProperty = nameof(size);
+        
+        internal static readonly BindingId variantProperty = nameof(variant);
+        
+        internal static readonly BindingId totalProperty = nameof(total);
+        
+        internal static readonly BindingId sourceItemsProperty = nameof(sourceItems);
+        
+        internal static readonly BindingId bindItemProperty = nameof(bindItem);
+#endif
         /// <summary>
         /// The render surplus delegate.
         /// </summary>
@@ -104,6 +124,8 @@ namespace Unity.AppUI.UI
         Size m_Size;
 
         AvatarGroupSpacing m_Spacing;
+        
+        int m_Max = k_DefaultMax;
 
         /// <summary>
         /// The AvatarGroup content container.
@@ -113,7 +135,26 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The maximum number of avatars to display before the overflow.
         /// </summary>
-        public int max { get; set; } = k_DefaultMax;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Header("Avatar Group")]
+#endif
+        public int max
+        {
+            get => m_Max;
+            set
+            {
+                var changed = m_Max != value;
+                m_Max = value;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in maxProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// The custom render function for the surplus avatars.
@@ -123,46 +164,82 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The spacing between avatars.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public AvatarGroupSpacing spacing
         {
             get => m_Spacing;
             set
             {
+                var changed = m_Spacing != value;
                 RemoveFromClassList(spacingUssClassName + m_Spacing.ToString().ToLower());
                 m_Spacing = value;
                 AddToClassList(spacingUssClassName + m_Spacing.ToString().ToLower());
                 Refresh();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in spacingProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The size of avatars.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 m_Size = value;
                 this.ProvideContext(new SizeContext(value));
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The AvatarGroup total count.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public int total => m_Total ?? m_SourceItems?.Count ?? 0;
 
         /// <summary>
         /// The AvatarGroup variant.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public AvatarVariant variant
         {
             get => m_Variant;
             set
             {
+                var changed = m_Variant != value;
                 m_Variant = value;
                 this.ProvideContext(new AvatarVariantContext(value));
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in variantProperty);
+#endif
             }
         }
 
@@ -175,33 +252,57 @@ namespace Unity.AppUI.UI
         /// </remarks>
         public void SetCustomTotal(int? customTotal)
         {
+            var previousTotal = total;
             m_Total = customTotal;
             Refresh();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+            if (previousTotal != total)
+                NotifyPropertyChanged(in totalProperty);
+#endif
         }
 
         /// <summary>
         /// The collection of items that will be displayed as Radio component.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public IList sourceItems
         {
             get => m_SourceItems;
             set
             {
+                var changed = m_SourceItems != value;
+                var previousTotal = total;
                 m_SourceItems = value;
                 Refresh();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sourceItemsProperty);
+                if (previousTotal != total)
+                    NotifyPropertyChanged(in totalProperty);
+#endif
             }
         }
 
         /// <summary>
         /// Method used to bind an item to a child Avatar.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Action<Avatar, int> bindItem
         {
             get => m_BindItem;
             set
             {
+                var changed = m_BindItem != value;
                 m_BindItem = value;
                 Refresh();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in bindItemProperty);
+#endif
             }
         }
         
@@ -213,6 +314,7 @@ namespace Unity.AppUI.UI
             pickingMode = PickingMode.Ignore;
             AddToClassList(ussClassName);
 
+            max = k_DefaultMax;
             variant = k_DefaultVariant;
             size = k_DefaultSize;
             spacing = k_DefaultSpacing;
@@ -266,19 +368,10 @@ namespace Unity.AppUI.UI
             return avatar;
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
-
+#if ENABLE_UXML_TRAITS
         /// <summary>
         /// Defines the UxmlFactory for the AvatarGroup.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<AvatarGroup, UxmlTraits>
         {
             /// <summary>
@@ -293,7 +386,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="AvatarGroup"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
             readonly UxmlIntAttributeDescription m_Max = new UxmlIntAttributeDescription
             {
@@ -325,12 +418,7 @@ namespace Unity.AppUI.UI
                 defaultValue = k_DefaultVariant,
             };
             
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-            
+                        
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
             /// </summary>
@@ -352,8 +440,9 @@ namespace Unity.AppUI.UI
                 if (m_CustomTotal.TryGetValueFromBag(bag, cc, ref total))
                     element.SetCustomTotal(total);
                 
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+#endif
     }
 }

@@ -7,9 +7,9 @@
     border-radius: 100px;
     flex-shrink: 0;
 
-    --checker-color-1: rgba(239, 239, 239, 1);
-    --checker-color-2: rgba(189, 189, 189, 1);
-    --checker-size: 5;
+    --checker-color-1: #cbcbcb;
+    --checker-color-2: #9d9d9d;
+    --checker-size: 4;
 
     --opacity: 1;
     --brightness: 1;

@@ -1,15 +1,46 @@
 using System;
 using Unity.AppUI.Bridge;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Text Field UI element.
     /// </summary>
-    public class TextField : ExVisualElement, IValidatableElement<string>, INotifyValueChanging<string>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class TextField : ExVisualElement, IValidatableElement<string>, INotifyValueChanging<string>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+        internal static readonly BindingId isReadOnlyProperty = nameof(isReadOnly);
+        
+        internal static readonly BindingId maxLengthProperty = nameof(maxLength);
+        
+        internal static readonly BindingId placeholderProperty = nameof(placeholder);
+        
+        internal static readonly BindingId validateValueProperty = nameof(validateValue);
+        
+        internal static readonly BindingId invalidProperty = nameof(invalid);
+        
+        internal static readonly BindingId isPasswordProperty = nameof(isPassword);
+        
+        internal static readonly BindingId maskCharProperty = nameof(maskChar);
+        
+        internal static readonly BindingId sizeProperty = nameof(size);
+        
+        internal static readonly BindingId leadingIconNameProperty = nameof(leadingIconName);
+        
+        internal static readonly BindingId trailingIconNameProperty = nameof(trailingIconName);
+        
+#endif
+        
         /// <summary>
         /// The TextField main styling class.
         /// </summary>
@@ -80,6 +111,8 @@ namespace Unity.AppUI.UI
         VisualElement m_LeadingElement;
 
         VisualElement m_TrailingElement;
+
+        Func<string, bool> m_ValidateValue;
 
         /// <summary>
         /// Default constructor.
@@ -222,63 +255,132 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Whether the TextField is a password field.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool isPassword
         {
             get => m_InputField.isPasswordField;
             set
             {
+                var changed = m_InputField.isPasswordField != value;
                 m_InputField.isPasswordField = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in isPasswordProperty);
+#endif
             }
         }
         
         /// <summary>
         /// Whether the TextField is read-only.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool isReadOnly
         {
             get => m_InputField.isReadOnly;
             set
             {
+                var changed = m_InputField.isReadOnly != value;
                 m_InputField.isReadOnly = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in isReadOnlyProperty);
+#endif
             }
         }
         
         /// <summary>
         /// The TextField mask character.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public char maskChar
         {
             get => m_InputField.maskChar;
             set
             {
+                var changed = m_InputField.maskChar != value;
                 m_InputField.maskChar = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in maskCharProperty);
+#endif
             }
         }
         
         /// <summary>
         /// The TextField max length.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public int maxLength
         {
             get => m_InputField.maxLength;
             set
             {
+                var changed = m_InputField.maxLength != value;
                 m_InputField.maxLength = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in maxLengthProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The TextField placeholder text.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string placeholder
         {
             get => m_Placeholder.text;
-            set => m_Placeholder.text = value;
+            set
+            {
+                var changed = m_Placeholder.text != value;
+                m_Placeholder.text = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in placeholderProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The trailing icon name.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string trailingIconName
         {
             get => (trailingElement as Icon)?.iconName;
@@ -287,14 +389,26 @@ namespace Unity.AppUI.UI
                 if (trailingElement is not Icon icon)
                     return;
 
+                var changed = icon.iconName != value;
                 icon.iconName = value;
                 m_TrailingContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(icon.iconName));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in trailingIconNameProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The leading icon name.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string leadingIconName
         {
             get => (leadingElement as Icon)?.iconName;
@@ -303,19 +417,32 @@ namespace Unity.AppUI.UI
                 if (leadingElement is not Icon icon)
                     return;
 
+                var changed = icon.iconName != value;
                 icon.iconName = value;
                 m_LeadingContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(icon.iconName));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in leadingIconNameProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The TextField size.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
@@ -351,21 +478,58 @@ namespace Unity.AppUI.UI
                         };
                         break;
                 }
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The validation function for the TextField.
         /// </summary>
-        public Func<string, bool> validateValue { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<string, bool> validateValue
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+                invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// The invalid state of the TextField.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
-            set => EnableInClassList(Styles.invalidUssClassName, value);
+            set
+            {
+                var changed = ClassListContains(Styles.invalidUssClassName) != value;
+                EnableInClassList(Styles.invalidUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in invalidProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -383,6 +547,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The TextField value.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string value
         {
             get => m_InputField.value;
@@ -399,6 +569,10 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
         }
 
@@ -431,32 +605,18 @@ namespace Unity.AppUI.UI
             m_Placeholder.EnableInClassList(Styles.hiddenUssClassName, !string.IsNullOrEmpty(m_Value));
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Factory class to instantiate a <see cref="TextField"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<TextField, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TextField"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : ExVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
-
             readonly UxmlStringAttributeDescription m_LeadingIconName = new UxmlStringAttributeDescription
             {
                 name = "leading-icon-name",
@@ -559,8 +719,10 @@ namespace Unity.AppUI.UI
                 if (m_MaxLength.TryGetValueFromBag(bag, cc, ref maxLength))
                     el.maxLength = maxLength;
                 
-                el.disabled = m_Disabled.GetValueFromBag(bag, cc);
+                
             }
         }
+        
+#endif
     }
 }

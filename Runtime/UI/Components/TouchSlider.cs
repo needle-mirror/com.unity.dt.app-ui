@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -14,10 +16,29 @@ namespace Unity.AppUI.UI
     /// </summary>
     /// <typeparam name="TValueType">A comparable value type.</typeparam>
     /// <typeparam name="THandleValueType">A value type for a single handle of the slider. This can be the same as <typeparamref name="TValueType"/>.</typeparam>
-    public abstract class BaseSlider<TValueType, THandleValueType> : ExVisualElement, IValidatableElement<TValueType>, INotifyValueChanging<TValueType>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public abstract partial class BaseSlider<TValueType, THandleValueType> : ExVisualElement, IValidatableElement<TValueType>, INotifyValueChanging<TValueType>
         where TValueType : IEquatable<TValueType>
         where THandleValueType : struct, IComparable, IEquatable<THandleValueType>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId lowValueProperty = nameof(lowValue);
+        
+        internal static readonly BindingId highValueProperty = nameof(highValue);
+        
+        internal static readonly BindingId formatStringProperty = nameof(formatString);
+        
+        internal static readonly BindingId valueProperty = nameof(value);
+        
+        internal static readonly BindingId invalidProperty = nameof(invalid);
+        
+        internal static readonly BindingId validateValueProperty = nameof(validateValue);
+        
+#endif
+        
         /// <summary>
         /// The dragger manipulator used to move the slider.
         /// </summary>
@@ -50,6 +71,8 @@ namespace Unity.AppUI.UI
         /// </summary>
         protected Dir m_CurrentDirection;
 
+        Func<TValueType, bool> m_ValidateValue;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -63,6 +86,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Specify the minimum value in the range of this slider.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public THandleValueType lowValue
         {
             get => m_LowValue;
@@ -72,6 +98,10 @@ namespace Unity.AppUI.UI
                 {
                     m_LowValue = value;
                     OnSliderRangeChanged();
+                    
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                    NotifyPropertyChanged(in lowValueProperty);
+#endif
                 }
             }
         }
@@ -79,6 +109,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Specify the maximum value in the range of this slider.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public THandleValueType highValue
         {
             get => m_HighValue;
@@ -88,6 +121,10 @@ namespace Unity.AppUI.UI
                 {
                     m_HighValue = value;
                     OnSliderRangeChanged();
+                    
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                    NotifyPropertyChanged(in highValueProperty);
+#endif
                 }
             }
         }
@@ -95,13 +132,22 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The format string used to display the value of the slider.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public string formatString
         {
             get => m_FormatString;
             set
             {
+                var changed = m_FormatString != value;
                 m_FormatString = value;
                 SetValueWithoutNotify(this.value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in formatStringProperty);
+#endif
             }
         }
 
@@ -114,6 +160,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The current value of the slider.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public TValueType value
         {
             get => m_Value;
@@ -129,6 +178,11 @@ namespace Unity.AppUI.UI
                         evt.target = this;
                         SetValueWithoutNotify(newValue);
                         SendEvent(evt);
+                        
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                        NotifyPropertyChanged(in valueProperty);
+#endif
+                        InvokeValueChangedCallbacks();
                     }
                     else
                     {
@@ -141,16 +195,49 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The invalid state of the slider.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
-            set => EnableInClassList(Styles.invalidUssClassName, value);
+            set
+            {
+                if (invalid == value)
+                    return;
+                
+                EnableInClassList(Styles.invalidUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in invalidProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The validation function used to validate the value of the slider.
         /// </summary>
-        public Func<TValueType, bool> validateValue { get; set; }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<TValueType, bool> validateValue
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+                invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Called when the low or high value of Slider has changed.
@@ -159,6 +246,11 @@ namespace Unity.AppUI.UI
         {
             ClampValue();
         }
+        
+        /// <summary>
+        /// Called when the value of the slider has changed via the <see cref="value"/> property.
+        /// </summary>
+        protected virtual void InvokeValueChangedCallbacks() {}
 
         /// <summary>
         /// Event callback called when the geometry of the slider has changed in the layout.
@@ -387,15 +479,36 @@ namespace Unity.AppUI.UI
         /// <param name="val"> The value to increment.</param>
         /// <returns> The incremented value.</returns>
         protected abstract THandleValueType Increment(THandleValueType val);
+        
+#if ENABLE_UXML_TRAITS
+        
+        /// <summary>
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="BaseSlider{TValueType,THandleValueType}"/>.
+        /// </summary>
+        public new class UxmlTraits : ExVisualElement.UxmlTraits {}
+        
+#endif
+
     }
 
     /// <summary>
     /// Base class for TouchSlider UI elements (<see cref="TouchSliderFloat"/>, <see cref="TouchSliderInt"/>).
     /// </summary>
     /// <typeparam name="TValueType">A comparable value type.</typeparam>
-    public abstract class TouchSlider<TValueType> : BaseSlider<TValueType, TValueType> 
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public abstract partial class TouchSlider<TValueType> : BaseSlider<TValueType, TValueType> 
         where TValueType : struct, IComparable, IEquatable<TValueType>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId sizeProperty = nameof(size);
+        
+        internal static readonly BindingId labelProperty = nameof(label);
+        
+#endif
+        
         /// <summary>
         /// The TouchSlider main styling class.
         /// </summary>
@@ -503,6 +616,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Specify the size of the slider.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
@@ -518,6 +637,12 @@ namespace Unity.AppUI.UI
         /// Specify a unit for the value encapsulated in this slider.
         /// <para>This unit will be displayed next to value into the slider.</para>
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string label
         {
             get => m_LabelElement.text;
@@ -659,26 +784,13 @@ namespace Unity.AppUI.UI
             return result;
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
+#if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TouchSlider{TValueType}"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : BaseSlider<TValueType, TValueType>.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false
-            };
-
             readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription { name = "label" };
 
             readonly UxmlStringAttributeDescription m_Format = new UxmlStringAttributeDescription { name = "format-string", defaultValue = null };
@@ -707,28 +819,98 @@ namespace Unity.AppUI.UI
                 if (m_Format.TryGetValueFromBag(bag, cc, ref formatStr) && !string.IsNullOrEmpty(formatStr))
                     element.formatString = formatStr;
 
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+        
+#endif
     }
 
     /// <summary>
     /// TouchSlider UI element for integer values.
     /// </summary>
-    public class TouchSliderInt : TouchSlider<int>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class TouchSliderInt : TouchSlider<int>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId incrementFactorProperty = nameof(incrementFactor);
+        
+#endif
+        
+        const int k_DefaultIncrementFactor = 1;
+        
+        int m_IncrementFactor = k_DefaultIncrementFactor;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
         public TouchSliderInt()
         {
             formatString = UINumericFieldsUtils.k_IntFieldFormatString;
+            incrementFactor = k_DefaultIncrementFactor;
+            
+            lowValue = 0;
+            highValue = 1;
+            value = 0;
         }
 
         /// <summary>
         /// The increment factor for the slider.
         /// </summary>
-        public int incrementFactor { get; set; } = 1;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Min(1)]
+#endif
+        public int incrementFactor
+        {
+            get => m_IncrementFactor;
+            set
+            {
+                var changed = m_IncrementFactor != value;
+                m_IncrementFactor = Mathf.Max(1, value);
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in incrementFactorProperty);
+#endif
+            }
+        }
+        
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute("low-value")]
+        int lowValueOverride
+        {
+            get => lowValue;
+            set => lowValue = value;
+        }
+        
+        [UxmlAttribute("high-value")]
+        int highValueOverride
+        {
+            get => highValue;
+            set => highValue = value;
+        }
+        
+        [UxmlAttribute("value")]
+        int valueOverride
+        {
+            get => value;
+            set => this.value = value;
+        }
+        
+        [UxmlAttribute("format-string")]
+        string formatStringOverride
+        {
+            get => formatString;
+            set => formatString = value;
+        }
+#endif
 
         /// <inheritdoc cref="BaseSlider{TValueType}.ParseStringToValue"/>
         protected override bool ParseStringToValue(string strValue, out int val)
@@ -774,10 +956,11 @@ namespace Unity.AppUI.UI
             return val - incrementFactor;
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Factory class to instantiate a <see cref="TouchSliderInt"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<TouchSliderInt, UxmlTraits> { }
 
         /// <summary>
@@ -812,25 +995,95 @@ namespace Unity.AppUI.UI
                 elem.SetValueWithoutNotify(val);
             }
         }
+        
+#endif
     }
 
     /// <summary>
     /// TouchSlider UI element for floating point values.
     /// </summary>
-    public class TouchSliderFloat : TouchSlider<float>
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class TouchSliderFloat : TouchSlider<float>
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId incrementFactorProperty = nameof(incrementFactor);
+
+#endif
+        
+        const float k_DefaultIncrement = 0.1f;
+        
+        float m_IncrementFactor = k_DefaultIncrement;
+        
         /// <summary>
         /// Default constructor.
         /// </summary>
         public TouchSliderFloat()
         {
             formatString = UINumericFieldsUtils.k_FloatFieldFormatString;
+            incrementFactor = k_DefaultIncrement;
+            
+            lowValue = 0f;
+            highValue = 1f;
+            value = 0;
         }
 
         /// <summary>
         /// The increment factor for the slider.
         /// </summary>
-        public float incrementFactor { get; set; } = 0.1f;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+        [Min(0.0001f)]
+#endif
+        public float incrementFactor
+        {
+            get => m_IncrementFactor;
+            set
+            {
+                var changed = !Mathf.Approximately(m_IncrementFactor, value);
+                m_IncrementFactor = Mathf.Max(0.0001f, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in incrementFactorProperty);
+#endif
+            }
+        }
+        
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute("low-value")]
+        float lowValueOverride
+        {
+            get => lowValue;
+            set => lowValue = value;
+        }
+        
+        [UxmlAttribute("high-value")]
+        float highValueOverride
+        {
+            get => highValue;
+            set => highValue = value;
+        }
+        
+        [UxmlAttribute("value")]
+        float valueOverride
+        {
+            get => value;
+            set => this.value = value;
+        }
+        
+        [UxmlAttribute("format-string")]
+        string formatStringOverride
+        {
+            get => formatString;
+            set => formatString = value;
+        }
+#endif
 
         /// <inheritdoc cref="BaseSlider{TValueType}.ParseStringToValue"/>
         protected override bool ParseStringToValue(string strValue, out float val)
@@ -877,10 +1130,11 @@ namespace Unity.AppUI.UI
             return val - incrementFactor;
         }
 
+#if ENABLE_UXML_TRAITS
+
         /// <summary>
         /// Factory class to instantiate a <see cref="TouchSliderFloat"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<TouchSliderFloat, UxmlTraits> { }
 
         /// <summary>
@@ -915,5 +1169,7 @@ namespace Unity.AppUI.UI
                 elem.SetValueWithoutNotify(val);
             }
         }
+        
+#endif
     }
 }

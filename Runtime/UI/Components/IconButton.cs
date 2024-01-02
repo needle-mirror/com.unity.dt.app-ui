@@ -1,14 +1,33 @@
 using System;
-using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// IconButton UI element.
     /// </summary>
-    public class IconButton : ExVisualElement, ISizeableElement, IPressable
+#if ENABLE_UXML_SERIALIZED_DATA
+    [UxmlElement]
+#endif
+    public partial class IconButton : ExVisualElement, ISizeableElement, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        
+        internal static readonly BindingId iconProperty = new BindingId(nameof(icon));
+        
+        internal static readonly BindingId primaryProperty = new BindingId(nameof(primary));
+        
+        internal static readonly BindingId quietProperty = new BindingId(nameof(quiet));
+        
+        internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
+        
+        internal static readonly BindingId variantProperty = new BindingId(nameof(variant));
+        
+#endif
+        
         /// <summary>
         /// The IconButton main styling class.
         /// </summary>
@@ -84,6 +103,7 @@ namespace Unity.AppUI.UI
             quiet = false;
             icon = iconName;
             size = Size.M;
+            variant = IconVariant.Regular;
 
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));
         }
@@ -127,51 +147,115 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Use the primary variant of the Button.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool primary
         {
             get => ClassListContains(primaryUssClassName);
-            set => EnableInClassList(primaryUssClassName, value);
+            set
+            {
+                var changed = ClassListContains(primaryUssClassName) != value;
+                EnableInClassList(primaryUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in primaryProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The quiet state of the Button.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public bool quiet
         {
             get => ClassListContains(quietUssClassName);
-            set => EnableInClassList(quietUssClassName, value);
+            set
+            {
+                var changed = ClassListContains(quietUssClassName) != value;
+                EnableInClassList(quietUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in quietProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The IconButton icon.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public string icon
         {
             get => m_Icon.iconName;
             set
             {
+                var changed = m_Icon.iconName != value;
                 m_Icon.iconName = value;
                 m_Container.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Icon.iconName));
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in iconProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The IconButton icon variant.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public IconVariant variant
         {
             get => m_Icon.variant;
-            set => m_Icon.variant = value;
+            set
+            {
+                var changed = m_Icon.variant != value;
+                m_Icon.variant = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in variantProperty);
+#endif
+            }
         }
 
         /// <summary>
         /// The Button size.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public Size size
         {
             get => m_Size;
             set
             {
+                var changed = m_Size != value;
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 m_Icon.size = m_Size switch
@@ -182,35 +266,27 @@ namespace Unity.AppUI.UI
                     _ => IconSize.M
                 };
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in sizeProperty);
+#endif
             }
         }
         
-        /// <summary>
-        /// Whether the element is disabled.
-        /// </summary>
-        public bool disabled
-        {
-            get => !enabledSelf;
-            set => SetEnabled(!value);
-        }
-
+        
+#if ENABLE_UXML_TRAITS
         /// <summary>
         /// Factory class to instantiate a <see cref="IconButton"/> using the data read from a UXML file.
         /// </summary>
-        [Preserve]
         public new class UxmlFactory : UxmlFactory<IconButton, UxmlTraits> { }
 
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="IconButton"/>.
         /// </summary>
-        public new class UxmlTraits : VisualElementExtendedUxmlTraits
+        public new class UxmlTraits : ExVisualElement.UxmlTraits
         {
-            readonly UxmlBoolAttributeDescription m_Disabled = new UxmlBoolAttributeDescription
-            {
-                name = "disabled",
-                defaultValue = false,
-            };
-
+            
             readonly UxmlStringAttributeDescription m_Icon = new UxmlStringAttributeDescription
             {
                 name = "icon",
@@ -257,8 +333,10 @@ namespace Unity.AppUI.UI
                 element.quiet = m_Quiet.GetValueFromBag(bag, cc);
                 element.icon = m_Icon.GetValueFromBag(bag, cc);
                 element.variant = m_Variant.GetValueFromBag(bag, cc);
-                element.disabled = m_Disabled.GetValueFromBag(bag, cc);
+
             }
         }
+        
+#endif
     }
 }

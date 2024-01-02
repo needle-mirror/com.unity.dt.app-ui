@@ -31,13 +31,11 @@ namespace Unity.AppUI.UI
         /// Default constructor.
         /// </summary>
         /// <param name="parentView">The popup container.</param>
-        /// <param name="context">The application context attached to this popup.</param>
         /// <param name="view">The popup visual element itself.</param>
         /// <param name="contentView">The content that will appear inside this popup.</param>
         /// <exception cref="ArgumentException">The container can't be null.</exception>
-        protected Popup(VisualElement parentView, ApplicationContext context, VisualElement view, VisualElement contentView = null)
+        protected Popup(VisualElement parentView, VisualElement view, VisualElement contentView = null)
         {
-            this.context = context;
             this.contentView = contentView;
             targetParent = parentView ?? throw new ArgumentException("The parent view can't be null.");
             this.view = view ?? throw new ArgumentException("The view can't be null.");
@@ -95,11 +93,6 @@ namespace Unity.AppUI.UI
         /// The content of the popup.
         /// </summary>
         public VisualElement contentView { get; }
-
-        /// <summary>
-        /// The <see cref="ApplicationContext"/> linked to this popup.
-        /// </summary>
-        public ApplicationContext context { get; }
 
         /// <summary>
         /// Dismiss the <see cref="Popup"/>.
@@ -315,11 +308,10 @@ namespace Unity.AppUI.UI
         /// Default constructor.
         /// </summary>
         /// <param name="parentView">The popup container.</param>
-        /// <param name="context">The application context attached to this popup.</param>
         /// <param name="view">The popup visual element itself.</param>
         /// <param name="contentView">The content that will appear inside this popup.</param>
-        protected Popup(VisualElement parentView, ApplicationContext context, VisualElement view, VisualElement contentView = null)
-            : base(parentView, context, view, contentView) { }
+        protected Popup(VisualElement parentView, VisualElement view, VisualElement contentView = null)
+            : base(parentView, view, contentView) { }
 
         /// <summary>
         /// Event triggered when the popup has become visible.

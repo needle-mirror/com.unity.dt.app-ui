@@ -13,7 +13,7 @@ namespace Unity.AppUI.Tests.Core
 {
     [TestFixture]
     [TestOf(typeof(IContext))]
-    public class ContextTests
+    class ContextTests
     {
         UIDocument m_TestUI;
 

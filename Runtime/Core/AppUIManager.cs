@@ -104,10 +104,10 @@ namespace Unity.AppUI.Core
         }
         
 #if ENABLE_INPUT_SYSTEM
-#pragma warning disable 649 
+#pragma warning disable 414
         Vector2 m_PointerPosition = Vector2.zero;
         bool m_PointerDown = false;
-#pragma warning restore 649
+#pragma warning restore 414
 #endif
 
 #if UNITY_INPUTSYSTEM_PRESENT && ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER

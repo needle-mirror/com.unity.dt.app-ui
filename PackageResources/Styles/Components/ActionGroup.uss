@@ -2,7 +2,7 @@
 .appui-actiongroup {    
     display: flex;
     flex-direction: row;
-    flex-shrink: 0;
+    flex-shrink: 1;
     flex-grow: 1;
     justify-content: flex-start;
     align-items: stretch;

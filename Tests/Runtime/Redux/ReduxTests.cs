@@ -7,7 +7,7 @@ using Action = Unity.AppUI.Redux.Action;
 namespace Unity.AppUI.Tests.Redux
 {
     [TestFixture]
-    public class ReduxTests
+    class ReduxTests
     {
         record DummyState {}
 

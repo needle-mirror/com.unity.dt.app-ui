@@ -8,20 +8,11 @@ Contexts in App UI are a powerful way to manage application
 state in a more predictable and testable way. 
 Instead of using global variables or singletons, 
 you can encapsulate state and behavior into smaller, 
-more focused units called contexts.
+more focused units called contexts. A context is associated to a specific [VisualElement](xref:UnityEngine.UIElements.VisualElement) and will be propagated down its children.
 
-## ApplicationContext
+## Default Contexts
 
-The [ApplicationContext](xref:Unity.AppUI.Core.ApplicationContext)
-is a special context in App UI that provides access to some 
-global settings of the application, such as the current theme, language, and scale. 
-You can use these settings to customize the appearance and behavior of your UI, 
-depending on the user's preferences.
-
-You can access the scoped 
-[ApplicationContext](xref:Unity.AppUI.Core.ApplicationContext)
-for a given component by calling the method 
-[GetContext](xref:Unity.AppUI.UI.VisualElementExtensions).
+App UI comes with several contexts types that are mandatory for the UI to work properly.
 
 ### Theme
 
@@ -70,30 +61,22 @@ Currently, App UI provides three scaling factors:
 
 The layout direction context provides a way to adjust the layout of the UI based on the
 current language. Some languages are read from right to left, so the UI should be mirrored
-to reflect this behavior. The context property name is `dir` and the possible values are 
+to reflect this behavior. The possible values are 
 [LTR](xref:Unity.AppUI.Core.Dir.Ltr) and [RTL](xref:Unity.AppUI.Core.Dir.Rtl). 
 For more information about layout direction, see the [Accessibility](xref:accessibility) page.
 
-### Panel
+## Context Components
 
-You can retrieve the instance of the root [App UI Panel](xref:Unity.AppUI.UI.Panel)
-from the application context. This is useful if you want to access the panel's
-properties or methods from a component that is not a direct child of the panel.
+Any component can be a context provider. But App UI provides some components that are designed to be used as context providers.
 
-## ContextProvider
+- [Panel](xref:Unity.AppUI.UI.Panel)
+- [ContextProvider](xref:Unity.AppUI.UI.ContextProvider)
 
-The [ContextProvider](xref:Unity.AppUI.UI.ContextProvider) 
-is a component that allows you to create and manage your own contexts. 
-You can use it to encapsulate state and behavior into smaller,
-more focused units that can be reused across your application.
-
-## App UI Panel - The root context provider
+## Root Panel
 
 The [App UI Panel](xref:Unity.AppUI.UI.Panel) is a special
-[ContextProvider](xref:Unity.AppUI.UI.ContextProvider) that is
-must be added to the root of the UI. It provides access to the global 
-[ApplicationContext](xref:Unity.AppUI.Core.ApplicationContext)
-for this visual tree.
+[VisualElement](xref:UnityEngine.UIElements.VisualElement) that
+must be added to the root of the [UIDocument](xref:UnityEngine.UIElements.UIDocument). It provides access to the global contexts for this [UIDocument](xref:UnityEngine.UIElements.UIDocument).
 
 ## Provide and Consume your own Contexts
 
@@ -145,5 +128,38 @@ public void ConsumeContext()
     
     // You can also unregister the callback
     myElement.UnregisterContextChangedCallback<MyContext>(OnMyContextChanged);
+}
+```
+
+### Custom Components as Context Providers
+
+If you want to create a custom component that is also a context provider or listener, make sure to inherit from the [BaseVisualElement](xref:Unity.AppUI.UI.BaseVisualElement) or [BaseTextElement](xref:Unity.AppUI.UI.BaseTextElement) class.
+
+While this is optional, it will optimize memory usage.
+
+```cs
+using Unity.AppUI.Core;
+using Unity.AppUI.UI;
+
+public class MyCustomComponent : BaseVisualElement
+{
+    public MyCustomComponent()
+    {
+        // Provide a custom context
+        ProvideContext(new MyContext(42));
+
+        // Or Register the context changed callback
+        RegisterContextChangedCallback<MyContext>(OnMyContextChanged);
+    }
+    
+    public void OnContextChanged<T>(ContextChangedEvent<T> evt) where T : class, IContext
+    {
+        // Do something with the context
+    }
+    
+    void OnMyContextChanged(ContextChangedEvent<MyContext> evt)
+    {
+        // Do something with the context
+    }
 }
 ```
