@@ -220,6 +220,9 @@ namespace Unity.AppUI.Navigation
         /// <returns> The destination if found, null otherwise. </returns>
         public NavDestination FindDestinationByRoute(string route)
         {
+            if (string.IsNullOrEmpty(route))
+                return null;
+            
             foreach (var component in m_Nodes)
             {
                 if (component.name == route)

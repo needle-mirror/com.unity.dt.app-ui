@@ -4,6 +4,25 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-pre.13] - 2024-01-14
+
+### Removed
+
+- Removed Relocations folder from MacOS native plugin debug symbols bundle
+
+### Fixed
+
+- Fixed TextField and NumericalField text offset during FocusOut event
+
+### Added
+
+- Added missing API documentation
+- Added more tests
+
+### Changed
+
+- Changed assembly definition files to support new UXML Serialization starting Unity 2023.3.0a1
+
 ## [1.0.0-pre.12] - 2024-01-03
 
 ### Changed

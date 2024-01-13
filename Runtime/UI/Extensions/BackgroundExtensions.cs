@@ -3,9 +3,17 @@ using UnityEngine.UIElements;
 
 namespace Unity.AppUI.UI
 {
+    /// <summary>
+    /// Extension methods for <see cref="Background"/> objects.
+    /// </summary>
     public static class BackgroundExtensions
     {
 #if !UNITY_2023_2_OR_NEWER
+        /// <summary>
+        /// Gets the selected image from the background.
+        /// </summary>
+        /// <param name="bg"> The background to get the image from. </param>
+        /// <returns> The selected image. </returns>
         public static Object GetSelectedImage(this Background bg)
         {
             if (bg == default)
@@ -21,6 +29,14 @@ namespace Unity.AppUI.UI
         }
 #endif
 
+        /// <summary>
+        /// Creates a new <see cref="Background"/> from a Unity image asset.
+        /// </summary>
+        /// <param name="obj"> The image asset to create the background from. </param>
+        /// <returns> The created background. </returns>
+        /// <remarks>
+        /// The image asset can be a <see cref="Texture2D"/>, <see cref="Sprite"/>, <see cref="RenderTexture"/> or <see cref="VectorImage"/>.
+        /// </remarks>
         public static Background FromObject(Object obj)
         {
             return obj switch

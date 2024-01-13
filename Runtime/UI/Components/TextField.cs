@@ -581,6 +581,9 @@ namespace Unity.AppUI.UI
             RemoveFromClassList(Styles.focusedUssClassName);
             RemoveFromClassList(Styles.keyboardFocusUssClassName);
             value = m_InputField.value;
+#if UNITY_2022_1_OR_NEWER
+            m_InputField.cursorIndex = 0;
+#endif
         }
 
         void OnFocusedIn(FocusInEvent evt)

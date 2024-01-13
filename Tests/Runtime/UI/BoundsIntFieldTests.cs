@@ -23,5 +23,11 @@ namespace Unity.AppUI.Tests.UI
             var field = new BoundsIntField();
             return field;
         }
+        
+        protected override IEnumerable<string> uxmlTestCases => new[]
+        {
+            @"<appui:BoundsIntField />",
+            @"<appui:BoundsIntField value=""0,0,100,100"" size=""M"" invalid=""false"" />"
+        };
     }
 }

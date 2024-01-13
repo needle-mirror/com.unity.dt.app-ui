@@ -38,7 +38,8 @@ inside a [RadioGroup](xref:Unity.AppUI.UI.RadioGroup):
 
 ```csharp
 // Get the closest provider, assuming you call this method from a UI Toolkit element
-var provider = this.GetContext().closestProvider;
+// contained in a hierarchy that has a ThemeContext provider
+var provider = this.GetContextProvider<ThemeContext>();
 
 // Create the callback that will be called when the system theme changes
 void OnSystemThemeChanged(string systemTheme) => provider.theme = systemTheme;

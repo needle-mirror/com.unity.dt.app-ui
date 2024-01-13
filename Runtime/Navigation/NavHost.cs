@@ -147,7 +147,10 @@ namespace Unity.AppUI.Navigation
             var item = new VisualElement { name = itemUssClassName, pickingMode = PickingMode.Ignore };
             item.AddToClassList(itemUssClassName);
 
-            var screen = (NavigationScreen) Activator.CreateInstance(Type.GetType(template)!);
+            var screenType = (string.IsNullOrEmpty(template) || Type.GetType(template) is not {} t) ? 
+                typeof(NavigationScreen) : t;
+            
+            var screen = (NavigationScreen) Activator.CreateInstance(screenType!);
             item.Add(screen);
 
             if (destination.showBottomNavBar)

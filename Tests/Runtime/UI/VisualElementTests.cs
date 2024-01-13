@@ -24,9 +24,17 @@ namespace Unity.AppUI.Tests.UI
         protected virtual string mainUssClassName => null;
 
         protected virtual bool uxmlConstructable => true;
+        
+        protected virtual IEnumerable<string> uxmlTestCases
+        {
+            get
+            {
+                yield return "<" + uxmlNamespaceName + ":" + componentName + " />";
+            }
+        }
 
         protected virtual string uxmlNamespaceName => "appui";
-
+        
         protected record StoryContext(UIDocument document, Panel panel)
         {
             public UIDocument document { get; } = document;
@@ -97,26 +105,38 @@ namespace Unity.AppUI.Tests.UI
                 Assert.IsTrue(m_VisualElement.ClassListContains(mainUssClassName));
         }
 
-        [Test]
+        [UnityTest]
         [Order(2)]
-        public void UxmlConstruction_ShouldSucceed()
+        public IEnumerator UxmlConstruction_ShouldSucceed()
         {
             if (!uxmlConstructable || !Application.isEditor)
             {
                 // skip test and mark as ignored
                 Assert.Ignore("UXML construction not supported for this type");
-                return;
+                yield break;
             }
 
-            Assert.DoesNotThrow(() =>
+            var cases = uxmlTestCases;
+            
+            if (cases == null)
             {
-                var msg = $"<{uxmlNamespaceName}:" + typeof(T).Name + " />";
-                var content = "<ui:UXML xmlns:ui=\"UnityEngine.UIElements\" xmlns:appui=\"Unity.AppUI.UI\" xmlns:nav=\"Unity.AppUI.Navigation\" >" + msg + "</ui:UXML>";
-                var asset = Utils.LoadUxmlTemplateFromString(content);
-                m_TestUI.visualTreeAsset = asset;
-            });
-        }
+                Assert.Ignore("No UXML test cases defined");
+                yield break;
+            }
 
+            foreach (var uxmlTestCase in cases)
+            {
+                Assert.DoesNotThrow(() =>
+                {
+                    var content = "<ui:UXML xmlns:ui=\"UnityEngine.UIElements\" xmlns:appui=\"Unity.AppUI.UI\" xmlns:nav=\"Unity.AppUI.Navigation\" >" + uxmlTestCase + "</ui:UXML>";
+                    var asset = Utils.LoadUxmlTemplateFromString(content);
+                    m_TestUI.visualTreeAsset = asset;
+                });
+                
+                yield return null;
+            }
+        }
+        
         [UnityTest]
         [Order(3)]
         public IEnumerator CreateSnapshot()

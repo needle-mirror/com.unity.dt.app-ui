@@ -16,7 +16,27 @@ namespace Unity.AppUI.Tests.UI
     class ActionGroupTests : VisualElementTests<ActionGroup>
     {
         protected override string mainUssClassName => ActionGroup.ussClassName;
-        
+
+        protected override IEnumerable<string> uxmlTestCases => new[]
+        {
+            @"<appui:ActionGroup/>",
+            @"<appui:ActionGroup quiet=""false"" compact=""false"">
+                <appui:ActionButton icon=""info""/>
+                <appui:ActionButton icon=""info""/>
+                <appui:ActionButton icon=""info""/>
+            </appui:ActionGroup>",
+            @"<appui:ActionGroup selection-type=""Single"" allow-no-selection=""false"" quiet=""false"" compact=""true"" direction=""Horizontal"" justified=""true"" close-on-selection=""true"">
+                <appui:ActionButton icon=""info""/>
+                <appui:ActionButton icon=""info""/>
+                <appui:ActionButton icon=""info""/>
+            </appui:ActionGroup>",
+            @"<appui:ActionGroup selection-type=""Multiple"" allow-no-selection=""true"" quiet=""false"" compact=""false"" direction=""Vertical"" justified=""false"" close-on-selection=""false"">
+                <appui:ActionButton icon=""info""/>
+                <appui:ActionButton icon=""info""/>
+                <appui:ActionButton icon=""info""/>
+            </appui:ActionGroup>",
+        };
+
         [UnityTest]
         public IEnumerator HandleSelectionByInteraction()
         {

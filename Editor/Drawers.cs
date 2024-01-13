@@ -10,17 +10,35 @@ namespace Unity.AppUI.Editor
 {
     // Generic Property Drawers
     
+    /// <summary>
+    /// Draws the Inspector GUI for an optional property
+    /// </summary>
+    /// <typeparam name="T"> The type of the optional property </typeparam>
+    /// <typeparam name="TU"> The type of the field used to edit the value of the optional property </typeparam>
     public class OptionalPropertyDrawer<T, TU> : PropertyDrawer
         where TU : BindableElement, INotifyValueChanged<T>, new()
     {
+        /// <summary>
+        /// Whether the optional property has a value
+        /// </summary>
         protected SerializedProperty m_HasValue;
 
+        /// <summary>
+        /// The value of the optional property
+        /// </summary>
         protected SerializedProperty m_Value;
         
+        /// <summary>
+        /// The toggle component used to edit the hasValue property
+        /// </summary>
         protected UnityEngine.UIElements.Toggle m_HasValueField;
         
+        /// <summary>
+        /// The field component used to edit the value property
+        /// </summary>
         protected TU m_ValueField;
 
+        /// <inheritdoc cref="PropertyDrawer.CreatePropertyGUI" />
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             m_HasValue = property.FindPropertyRelative("isSet");
@@ -82,6 +100,10 @@ namespace Unity.AppUI.Editor
             return field;
         }
 
+        /// <summary>
+        /// Sets the value of the property in the serialized object
+        /// </summary>
+        /// <param name="newValue"> The new value of the property </param>
         protected virtual void SetValue(T newValue)
         {
             
@@ -93,6 +115,11 @@ namespace Unity.AppUI.Editor
         }
     }
 
+    /// <summary>
+    /// Draws the Inspector GUI for an optional value property
+    /// </summary>
+    /// <typeparam name="T"> The type of the optional property </typeparam>
+    /// <typeparam name="TU"> The type of the field used to edit the value of the optional property </typeparam>
     public class OptionalValuePropertyDrawer<T, TU> : OptionalPropertyDrawer<T, TU>
         where T : struct, IComparable, IComparable<T>, IFormattable
         where TU : BindableElement, INotifyValueChanged<T>, new()
@@ -100,6 +127,10 @@ namespace Unity.AppUI.Editor
         
     }
     
+    /// <summary>
+    /// Draws the Inspector GUI for an optional enum property
+    /// </summary>
+    /// <typeparam name="T"> The type of the optional property </typeparam>
     public class OptionalEnumPropertyDrawer<T> : PropertyDrawer
         where T : struct, Enum
     {
@@ -111,6 +142,7 @@ namespace Unity.AppUI.Editor
         
         EnumField m_ValueField;
 
+        /// <inheritdoc cref="PropertyDrawer.CreatePropertyGUI" />
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             m_HasValue = property.FindPropertyRelative("isSet");
@@ -176,60 +208,99 @@ namespace Unity.AppUI.Editor
     
     // Specific Property Drawers
     
+    /// <summary>
+    /// Draws the Inspector GUI for an optional preferred tooltip placement property
+    /// </summary>
     [CustomPropertyDrawer(typeof(OptionalEnum<UI.PopoverPlacement>))]
     public class OptionalPreferredTooltipPlacementDrawer : OptionalEnumPropertyDrawer<UI.PopoverPlacement> { }
     
+    /// <summary>
+    /// Draws the Inspector GUI for an optional layout direction property
+    /// </summary>
     [CustomPropertyDrawer(typeof(OptionalEnum<Dir>))]
     public class OptionalDirDrawer : OptionalEnumPropertyDrawer<Dir> { }
 
+    /// <summary>
+    /// Draws the Inspector GUI for an optional integer property
+    /// </summary>
     [CustomPropertyDrawer(typeof(Optional<int>))]
     public class OptionalIntDrawer : OptionalValuePropertyDrawer<int, IntegerField>
     {
+        /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(int newValue) => m_Value.intValue = newValue;
     }
     
+    /// <summary>
+    /// Draws the Inspector GUI for an optional long property
+    /// </summary>
     [CustomPropertyDrawer(typeof(Optional<long>))]
     public class OptionalLongDrawer : OptionalValuePropertyDrawer<long, LongField>
     {
+        /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(long newValue) => m_Value.longValue = newValue;
     }
     
+    /// <summary>
+    /// Draws the Inspector GUI for an optional float property
+    /// </summary>
     [CustomPropertyDrawer(typeof(Optional<float>))]
     public class OptionalFloatDrawer : OptionalValuePropertyDrawer<float, FloatField>
     {
+        /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(float newValue) => m_Value.floatValue = newValue;
     }
     
+    /// <summary>
+    /// Draws the Inspector GUI for an optional double property
+    /// </summary>
     [CustomPropertyDrawer(typeof(Optional<double>))]
     public class OptionalDoubleDrawer : OptionalValuePropertyDrawer<double, DoubleField>
     {
+        /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(double newValue) => m_Value.doubleValue = newValue;
     }
     
+    /// <summary>
+    /// Draws the Inspector GUI for an optional string property
+    /// </summary>
     [CustomPropertyDrawer(typeof(Optional<string>))]
     public class OptionalStringDrawer : OptionalPropertyDrawer<string, TextField>
     {
+        /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(string newValue) => m_Value.stringValue = newValue;
     }
     
+    /// <summary>
+    /// Draws the Inspector GUI for an optional color property
+    /// </summary>
     [CustomPropertyDrawer(typeof(Optional<Color>))]
     public class OptionalColorDrawer : OptionalPropertyDrawer<Color, ColorField>
     {
+        /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(Color newValue) => m_Value.colorValue = newValue;
     }
     
+    /// <summary>
+    /// Draws the Inspector GUI for an optional rect property
+    /// </summary>
     [CustomPropertyDrawer(typeof(Optional<Rect>))]
     public class OptionalRectDrawer : OptionalPropertyDrawer<Rect, RectField>
     {
+        /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(Rect newValue) => m_Value.rectValue = newValue;
     }
 
-    public class ScaleField : DropdownField
+    /// <summary>
+    /// Custom Field for <see cref="UI.Panel.scale"/> and <see cref="UI.BaseVisualElement.scaleOverride"/> property.
+    /// </summary>
+    public class ScaleField : DropdownField 
     {
         static readonly List<string> k_ScaleOptions = new List<string> { "small", "medium", "large" };
         
+        /// <inheritdoc cref="DropdownField" />
         public ScaleField() : this(null) { }
         
+        /// <inheritdoc cref="DropdownField" />
         public ScaleField(string label) 
             : base(label, k_ScaleOptions, 1, Core.StringExtensions.Capitalize, Core.StringExtensions.Capitalize)
         {
@@ -237,12 +308,17 @@ namespace Unity.AppUI.Editor
         }
     }
     
+    /// <summary>
+    /// Custom Field for <see cref="UI.Panel.theme"/> and <see cref="UI.BaseVisualElement.themeOverride"/> property.
+    /// </summary>
     public class ThemeField : DropdownField
     {
         static readonly List<string> k_ScaleOptions = new List<string> { "dark", "light", "editor-dark", "editor-light" };
         
+        /// <inheritdoc cref="DropdownField" />
         public ThemeField() : this(null) { }
         
+        /// <inheritdoc cref="DropdownField" />
         public ThemeField(string label) 
             : base(label, k_ScaleOptions, 1, Core.StringExtensions.Capitalize, Core.StringExtensions.Capitalize)
         {
@@ -250,15 +326,23 @@ namespace Unity.AppUI.Editor
         }
     }
 
+    /// <summary>
+    /// Draws the Inspector GUI for an optional scale property
+    /// </summary>
     [CustomPropertyDrawer(typeof(UI.OptionalScaleDrawerAttribute))]
     public class OptionalScaleDrawer : OptionalPropertyDrawer<string, ScaleField>
     {
+        /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(string newValue) => m_Value.stringValue = newValue;
     }
     
+    /// <summary>
+    /// Draws the Inspector GUI for a scale property
+    /// </summary>
     [CustomPropertyDrawer(typeof(UI.ScaleDrawerAttribute))]
     public class ScaleDrawer : PropertyDrawer
     {
+        /// <inheritdoc cref="PropertyDrawer.CreatePropertyGUI" />
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             var field = new ScaleField(property.displayName)
@@ -270,15 +354,23 @@ namespace Unity.AppUI.Editor
         }
     }
     
+    /// <summary>
+    /// Draws the Inspector GUI for an optional theme property
+    /// </summary>
     [CustomPropertyDrawer(typeof(UI.OptionalThemeDrawerAttribute))]
     public class OptionalThemeDrawer : OptionalPropertyDrawer<string, ThemeField>
     {
+        /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(string newValue) => m_Value.stringValue = newValue;
     }
     
+    /// <summary>
+    /// Draws the Inspector GUI for a theme property
+    /// </summary>
     [CustomPropertyDrawer(typeof(UI.ThemeDrawerAttribute))]
     public class ThemeDrawer : PropertyDrawer
     {
+        /// <inheritdoc cref="PropertyDrawer.CreatePropertyGUI" />
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             var field = new ThemeField(property.displayName)
@@ -290,9 +382,13 @@ namespace Unity.AppUI.Editor
         }
     }
     
+    /// <summary>
+    /// Draws the Inspector GUI for an optional dir property
+    /// </summary>
     [CustomPropertyDrawer(typeof(UI.DefaultPropertyDrawerAttribute))]
     public class DirDrawer : PropertyDrawer
     {
+        /// <inheritdoc cref="PropertyDrawer.CreatePropertyGUI" />
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             var field = new PropertyField(property);

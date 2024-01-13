@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Unity.AppUI.Navigation;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -107,21 +108,53 @@ namespace Unity.AppUI.Tests
 
             return true;
         }
+        
+        static PanelSettings s_PanelSettingsInstance;    
+    
+        internal static PanelSettings panelSettingsInstance
+        {
+            get
+            {
+                if (!s_PanelSettingsInstance)
+                {
+                    s_PanelSettingsInstance = ScriptableObject.CreateInstance<PanelSettings>();
+                    s_PanelSettingsInstance.scaleMode = PanelScaleMode.ConstantPhysicalSize;
+#if UNITY_EDITOR
+                    s_PanelSettingsInstance.themeStyleSheet = AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(
+                        "Packages/com.unity.dt.app-ui/PackageResources/Styles/Themes/App UI.tss");
+#else
+                    s_PanelSettingsInstance.themeStyleSheet = Resources.Load<ThemeStyleSheet>("Themes/App UI");
+#endif
+                }
+                
+                return s_PanelSettingsInstance;
+            }
+        }
+        
+        static NavGraphViewAsset s_NavGraphTestAsset;
+        
+        internal static NavGraphViewAsset navGraphTestAsset
+        {
+            get
+            {
+                if (!s_NavGraphTestAsset)
+                {
+#if UNITY_EDITOR
+                    s_NavGraphTestAsset = AssetDatabase.LoadAssetAtPath<NavGraphViewAsset>(
+                        "Packages/com.unity.dt.app-ui/Tests/Runtime/Navigation/NavGraphTestAsset.asset");
+#endif
+                }
+
+                return s_NavGraphTestAsset;
+            }
+        }
 
         internal static UIDocument ConstructTestUI()
         {
             var obj = new GameObject("TestUI");
             obj.AddComponent<Camera>();
             var doc = obj.AddComponent<UIDocument>();
-            var panelSettings = ScriptableObject.CreateInstance<PanelSettings>();
-            panelSettings.scaleMode = PanelScaleMode.ConstantPhysicalSize;
-#if UNITY_EDITOR
-            panelSettings.themeStyleSheet = AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(
-                "Packages/com.unity.dt.app-ui/PackageResources/Styles/Themes/App UI.tss");
-#else
-            panelSettings.themeStyleSheet = Resources.Load<ThemeStyleSheet>("Themes/App UI");
-#endif
-            doc.panelSettings = panelSettings;
+            doc.panelSettings = panelSettingsInstance;
 
             return doc;
         }

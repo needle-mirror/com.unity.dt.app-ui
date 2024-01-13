@@ -277,6 +277,7 @@ namespace Unity.AppUI.UI
             RegisterCallback<KeyDownEvent>(OnKeyDown);
         }
 
+        /// <inheritdoc cref="BaseSlider{T,TU}.InvokeValueChangedCallbacks"/> 
         protected override void InvokeValueChangedCallbacks()
         {
             base.InvokeValueChangedCallbacks();
@@ -334,6 +335,7 @@ namespace Unity.AppUI.UI
             }
         }
 
+        /// <inheritdoc cref="BaseSlider{T,TU}.GetSliderRect"/>
         protected override Rect GetSliderRect()
         {
             return m_ThumbContainerContainer.contentRect;

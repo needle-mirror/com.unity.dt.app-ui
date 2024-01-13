@@ -1,6 +1,7 @@
 using System;
 using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.UIElements;
 #if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
@@ -417,6 +418,9 @@ namespace Unity.AppUI.UI
             var val = valueStr != m_InputElement.value && ParseStringToValue(m_InputElement.value, out var newValue) ? newValue : m_Value;
             value = val;
             SetValueWithoutNotify(val);
+#if UNITY_2022_1_OR_NEWER
+            m_InputElement.cursorIndex = 0;
+#endif
         }
 
         void OnFocusedIn(FocusInEvent evt)

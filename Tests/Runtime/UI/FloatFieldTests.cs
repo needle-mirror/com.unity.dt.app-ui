@@ -21,8 +21,12 @@ namespace Unity.AppUI.Tests.UI
         public IEnumerator CanSetValue([ValueSource(nameof(k_CanSetValueCases))]float expected)
         {
             m_TestUI.rootVisualElement.Clear();
+            var panel = new Panel();
             var field = new FloatField();
-            m_TestUI.rootVisualElement.Add(field);
+            m_TestUI.rootVisualElement.Add(panel);
+            panel.Add(field);
+            
+            yield return null;
             
             var callCount = 0;
             void ValueChanged(ChangeEvent<float> evt)
@@ -68,8 +72,12 @@ namespace Unity.AppUI.Tests.UI
             }
             
             m_TestUI.rootVisualElement.Clear();
+            var panel = new Panel();
             var field = new FloatField();
-            m_TestUI.rootVisualElement.Add(field);
+            m_TestUI.rootVisualElement.Add(panel);
+            panel.Add(field);
+            
+            yield return null;
             
             field.Focus();
             
@@ -97,6 +105,8 @@ namespace Unity.AppUI.Tests.UI
             yield return new WaitUntilOrTimeOut(() => changingCount > 0);
             
             Assert.AreEqual(1, changingCount);
+            
+            Assert.AreEqual(0, changedCount);
             
             field.Blur();
             
