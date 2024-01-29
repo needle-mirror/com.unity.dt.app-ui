@@ -8,6 +8,7 @@ using UnityEngine.TestTools;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
+using VisualElementExtensions = Unity.AppUI.UI.VisualElementExtensions;
 
 namespace Unity.AppUI.Tests.Core
 {
@@ -84,10 +85,8 @@ namespace Unity.AppUI.Tests.Core
         [Test]
         public void SendContextChangedEventWithNullElementThrows()
         {
-            VisualElement el = null;
-            
             // ReSharper disable once ExpressionIsAlwaysNull
-            Assert.Throws<ArgumentNullException>(() => el.SendContextChangedEvent<TestContext>(null));
+            Assert.Throws<ArgumentNullException>(() => VisualElementExtensions.SendContextChangedEvent<TestContext>(null));
         }
         
         [Test]
@@ -135,7 +134,7 @@ namespace Unity.AppUI.Tests.Core
             Assert.AreEqual(context, context2);
         }
 
-        [UnityTest]
+        [UnityTest, Order(10)]
         public IEnumerator CanUseContextWhenAttachedToPanel()
         {
             var scene = SceneManager.CreateScene("ContextTestScene-" + Random.Range(1, 1000000));
@@ -215,6 +214,23 @@ namespace Unity.AppUI.Tests.Core
             
             Assert.AreEqual(3, received);
         }
+
+        [UnityTest, Order(11)]
+        public IEnumerator CanProvideAndListenToContextChanges()
+        {
+            m_TestUI.rootVisualElement.Clear();
+            
+            yield return null;
+            
+            var element = new ProviderTestElement();
+            Assert.AreEqual(1, element.received, "The element should have received one context change event");
+            
+            m_TestUI.rootVisualElement.Add(element);
+            
+            yield return null;
+            
+            Assert.AreEqual(1, element.received, "The element should have received one context change events");
+        }
         
         [OneTimeTearDown]
         public void OneTimeTearDown()
@@ -252,6 +268,23 @@ namespace Unity.AppUI.Tests.Core
             void OnContextReceived(ContextChangedEvent<TestContext> evt)
             {
                 contextReceived = evt.context == referenceContext;
+            }
+        }
+
+        class ProviderTestElement : VisualElement
+        {
+            public int received { get; private set; }
+            
+            public ProviderTestElement()
+            {
+                this.RegisterContextChangedCallback<TestContext>(OnContextReceived);
+                
+                this.ProvideContext(new TestContext());
+            }
+
+            void OnContextReceived(ContextChangedEvent<TestContext> evt)
+            {
+                received++;
             }
         }
     }

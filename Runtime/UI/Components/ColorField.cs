@@ -13,7 +13,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public partial class ColorField : ExVisualElement, IValidatableElement<Color>, INotifyValueChanging<Color>, ISizeableElement, IPressable
+    public partial class ColorField : ExVisualElement, IInputElement<Color>, INotifyValueChanging<Color>, ISizeableElement, IPressable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
 

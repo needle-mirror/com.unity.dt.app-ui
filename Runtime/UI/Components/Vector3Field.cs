@@ -13,7 +13,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public partial class Vector3Field : BaseVisualElement, IValidatableElement<Vector3>, ISizeableElement, INotifyValueChanging<Vector3>
+    public partial class Vector3Field : BaseVisualElement, IInputElement<Vector3>, ISizeableElement, INotifyValueChanging<Vector3>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         

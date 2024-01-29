@@ -12,7 +12,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public partial class Toggle : BaseVisualElement, IValidatableElement<bool>, IPressable
+    public partial class Toggle : BaseVisualElement, IInputElement<bool>, IPressable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         

@@ -33,7 +33,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public partial class Checkbox : BaseVisualElement, IValidatableElement<CheckboxState>, IPressable
+    public partial class Checkbox : BaseVisualElement, IInputElement<CheckboxState>, IPressable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
 

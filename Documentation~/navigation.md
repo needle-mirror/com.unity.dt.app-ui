@@ -57,9 +57,11 @@ navigation back stack and will request the navigation host to display a new page
 
 A navigation controller is always attached to a single navigation host. It is created automatically when a navigation host is instantiated.
 
-## Navigation Visual Controller
+## Navigation Visual Components
 
-A navigation visual controller is a component that can be used to control the content of the navigation components. A navigation visual controller is defined by a [NavVisualController](xref:Unity.AppUI.Navigation.INavVisualController) interface.
+### Handling Visual Components Globally : Navigation Visual Controller
+
+A navigation visual controller is a component that can be used to control the content of the navigation components. A navigation visual controller is defined by a [INavVisualController](xref:Unity.AppUI.Navigation.INavVisualController) interface.
 
 You can implement this interface to control the content of the navigation components. 
 
@@ -112,6 +114,20 @@ Then you can assign this controller to the navigation host:
 ```cs
 var navHost = new NavHost();
 navHost.visualController = new MyVisualController();
+```
+
+### Handling Navigation Visual Components Per Navigation Screen
+
+You also have the possibility to implement [SetupAppBar](xref:Unity.AppUI.Navigation.NavigationScreen.SetupAppBar), [SetupBottomNavBar](xref:Unity.AppUI.Navigation.NavigationScreen.SetupBottomNavBar) and [SetupDrawer](xref:Unity.AppUI.Navigation.NavigationScreen.SetupDrawer) methods directly in your implementation of [NavigationScreen](xref:Unity.AppUI.Navigation.NavigationScreen).
+
+```cs
+class MyAppHomeScreen : NavigationScreen
+{
+    public override void SetupAppBar(AppBar appBar, NavController navController)
+    {
+        appBar.title = "Home";
+    }
+}
 ```
 
 ## Components

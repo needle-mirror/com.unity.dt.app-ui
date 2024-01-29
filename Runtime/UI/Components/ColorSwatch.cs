@@ -116,9 +116,6 @@ namespace Unity.AppUI.UI
                 if (m_Value == null && value == null)
                     return;
                 
-                if (m_Value != null && m_Value.Equals(value))
-                    return;
-                
                 using var evt = ChangeEvent<Gradient>.GetPooled(m_Value, value);
                 SetValueWithoutNotify(value);
                 evt.target = this;
@@ -295,15 +292,16 @@ namespace Unity.AppUI.UI
 
         void OnStylesResolved(CustomStyleResolvedEvent evt)
         {
-            if (evt.customStyle.TryGetValue(k_UssCheckerColor1, out var checkerColor1)
-                && evt.customStyle.TryGetValue(k_UssCheckerColor2, out var checkerColor2)
-                && evt.customStyle.TryGetValue(k_UssCheckerSize, out var checkerSize))
-            {
+            if (evt.customStyle.TryGetValue(k_UssCheckerColor1, out var checkerColor1))
                 m_CheckerColor1 = checkerColor1;
+                    
+            if (evt.customStyle.TryGetValue(k_UssCheckerColor2, out var checkerColor2))
                 m_CheckerColor2 = checkerColor2;
+                    
+            if (evt.customStyle.TryGetValue(k_UssCheckerSize, out var checkerSize))
                 m_CheckerSize = checkerSize;
-                GenerateTextures();
-            }
+                
+            GenerateTextures();
         }
 
         void GenerateTextures()
@@ -372,9 +370,8 @@ namespace Unity.AppUI.UI
                 Graphics.Blit(null, m_RT, s_Material, 1);
             RenderTexture.active = prevRt;
 
-            if (m_Image.image != m_RT)
-                m_Image.image = m_RT;
-            m_Image.MarkDirtyRepaint();
+            m_Image.image = null;
+            m_Image.image = m_RT;
         }
 
 #if ENABLE_UXML_TRAITS

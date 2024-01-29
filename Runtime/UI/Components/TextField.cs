@@ -13,7 +13,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public partial class TextField : ExVisualElement, IValidatableElement<string>, INotifyValueChanging<string>
+    public partial class TextField : ExVisualElement, IInputElement<string>, INotifyValueChanging<string>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         

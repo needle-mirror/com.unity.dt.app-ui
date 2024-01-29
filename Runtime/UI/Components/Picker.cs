@@ -117,7 +117,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public abstract partial class Picker : ExVisualElement, INotifyValueChanged<IEnumerable<int>>, ISizeableElement, IPressable
+    public abstract partial class Picker : ExVisualElement, IInputElement<IEnumerable<int>>, ISizeableElement, IPressable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         
@@ -138,6 +138,10 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
         
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
+        
+        internal static readonly BindingId invalidProperty = new BindingId(nameof(invalid));
+        
+        internal static readonly BindingId validateValueProperty = new BindingId(nameof(validateValue));
         
 #endif
         
@@ -204,6 +208,8 @@ namespace Unity.AppUI.UI
         MenuBuilder m_MenuBuilder;
         
         bool m_CloseOnSelection;
+        
+        Func<IEnumerable<int>, bool> m_ValidateValue;
         
         /// <summary>
         /// The container for the Picker title.
@@ -469,6 +475,51 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
+        
+        /// <summary>
+        /// The Picker invalid state.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool invalid
+        {
+            get => ClassListContains(Styles.invalidUssClassName);
+            set
+            {
+                var changed = invalid != value;
+                EnableInClassList(Styles.invalidUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in invalidProperty);
+#endif
+            }
+        }
+        
+        /// <summary>
+        /// The Picker validation function.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<IEnumerable<int>, bool> validateValue
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Set the Picker value without notifying any listeners.
@@ -512,6 +563,9 @@ namespace Unity.AppUI.UI
                     item.EnableInClassList(Styles.selectedUssClassName, isSelected);
                 }
             }
+            
+            if (m_ValidateValue != null)
+                invalid = !m_ValidateValue.Invoke(m_Value);
         }
 
         /// <summary>

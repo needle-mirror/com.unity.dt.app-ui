@@ -14,14 +14,8 @@ namespace Unity.AppUI.Tests.UI
         {
             get
             {
-                yield return new Story("Default", DefaultStory);
+                yield return new Story("Default", (ctx) => new BoundsIntField());
             }
-        }
-
-        static UnityEngine.UIElements.VisualElement DefaultStory(StoryContext context)
-        {
-            var field = new BoundsIntField();
-            return field;
         }
         
         protected override IEnumerable<string> uxmlTestCases => new[]

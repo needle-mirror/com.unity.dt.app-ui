@@ -156,16 +156,18 @@ namespace Unity.AppUI.Navigation
             if (destination.showBottomNavBar)
             {
                 var bottomNavBar = new BottomNavBar();
-                visualController?.SetupBottomNavBar(bottomNavBar, destination, navController);
                 item.Add(bottomNavBar);
+                visualController?.SetupBottomNavBar(bottomNavBar, destination, navController);
+                screen.SetupBottomNavBar(bottomNavBar);
             }
             
             AppBar appBar = null;
             if (destination.showAppBar)
             {
                 appBar = new AppBar();
-                visualController?.SetupAppBar(appBar, destination, navController);
                 item.Add(appBar);
+                visualController?.SetupAppBar(appBar, destination, navController);
+                screen.SetupAppBar(appBar);
 
                 if (appBar.stretch)
                 {
@@ -193,8 +195,9 @@ namespace Unity.AppUI.Navigation
             if (destination.showDrawer)
             {
                 var drawer = new Drawer();
-                visualController?.SetupDrawer(drawer, destination, navController);
                 item.Add(drawer);
+                visualController?.SetupDrawer(drawer, destination, navController);
+                screen.SetupDrawer(drawer);
                 
                 if (destination.showAppBar && !navController.canGoBack)
                 {

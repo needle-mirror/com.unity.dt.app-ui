@@ -524,6 +524,7 @@ namespace Unity.AppUI.UI
                 new GradientAlphaKey(0, 0),
                 new GradientAlphaKey(1, 1)
             });
+            m_AlphaSlider.colorRange = m_AlphaSlider.colorRange;
             m_AlphaSlider.SetValueWithoutNotify(c.a);
 
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.r * 255));
@@ -561,6 +562,7 @@ namespace Unity.AppUI.UI
                 new GradientAlphaKey(0, 0),
                 new GradientAlphaKey(1, 1)
             });
+            m_AlphaSlider.colorRange = m_AlphaSlider.colorRange;
             m_AlphaSlider.SetValueWithoutNotify(m_Value.a);
 
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(m_Value.r * 255));
@@ -636,6 +638,7 @@ namespace Unity.AppUI.UI
                 new GradientAlphaKey(0, 0),
                 new GradientAlphaKey(1, 1)
             });
+            m_AlphaSlider.colorRange = m_AlphaSlider.colorRange;
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.r * 255));
             m_GreenChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.g * 255));
             m_BlueChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.b * 255));
@@ -670,6 +673,7 @@ namespace Unity.AppUI.UI
                 new GradientAlphaKey(0, 0),
                 new GradientAlphaKey(1, 1)
             });
+            m_AlphaSlider.colorRange = m_AlphaSlider.colorRange;
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.r * 255));
             m_GreenChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.g * 255));
             m_BlueChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.b * 255));
@@ -708,6 +712,7 @@ namespace Unity.AppUI.UI
                 new GradientAlphaKey(0, 0),
                 new GradientAlphaKey(1, 1)
             });
+            m_AlphaSlider.colorRange = m_AlphaSlider.colorRange;
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.r * 255));
             m_HueSlider.SetValueWithoutNotify(h);
             m_SaturationSlider.SetValueWithoutNotify(s);
@@ -738,6 +743,7 @@ namespace Unity.AppUI.UI
                 new GradientAlphaKey(0, 0),
                 new GradientAlphaKey(1, 1)
             });
+            m_AlphaSlider.colorRange = m_AlphaSlider.colorRange;
             m_RedFChannelSlider.SetValueWithoutNotify(c.r);
             m_HueSlider.SetValueWithoutNotify(h);
             m_SaturationSlider.SetValueWithoutNotify(s);
@@ -768,6 +774,7 @@ namespace Unity.AppUI.UI
                 new GradientAlphaKey(0, 0),
                 new GradientAlphaKey(1, 1)
             });
+            m_AlphaSlider.colorRange = m_AlphaSlider.colorRange;
             m_GreenChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.g * 255));
             m_HueSlider.SetValueWithoutNotify(h);
             m_SaturationSlider.SetValueWithoutNotify(s);
@@ -798,6 +805,7 @@ namespace Unity.AppUI.UI
                 new GradientAlphaKey(0, 0),
                 new GradientAlphaKey(1, 1)
             });
+            m_AlphaSlider.colorRange = m_AlphaSlider.colorRange;
             m_GreenFChannelSlider.SetValueWithoutNotify(c.g);
             m_HueSlider.SetValueWithoutNotify(h);
             m_SaturationSlider.SetValueWithoutNotify(s);
@@ -828,6 +836,7 @@ namespace Unity.AppUI.UI
                 new GradientAlphaKey(0, 0),
                 new GradientAlphaKey(1, 1)
             });
+            m_AlphaSlider.colorRange = m_AlphaSlider.colorRange;
             m_BlueChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.b * 255));
             m_HueSlider.SetValueWithoutNotify(h);
             m_SaturationSlider.SetValueWithoutNotify(s);
@@ -858,6 +867,7 @@ namespace Unity.AppUI.UI
                 new GradientAlphaKey(0, 0),
                 new GradientAlphaKey(1, 1)
             });
+            m_AlphaSlider.colorRange = m_AlphaSlider.colorRange;
             m_BlueFChannelSlider.SetValueWithoutNotify(c.b);
             m_HueSlider.SetValueWithoutNotify(h);
             m_SaturationSlider.SetValueWithoutNotify(s);
@@ -886,6 +896,7 @@ namespace Unity.AppUI.UI
                 new GradientAlphaKey(0, 0),
                 new GradientAlphaKey(1, 1)
             });
+            m_AlphaSlider.colorRange = m_AlphaSlider.colorRange;
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.r * 255));
             m_GreenChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.g * 255));
             m_BlueChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.b * 255));
@@ -915,6 +926,7 @@ namespace Unity.AppUI.UI
                 new GradientAlphaKey(0, 0),
                 new GradientAlphaKey(1, 1)
             });
+            m_AlphaSlider.colorRange = m_AlphaSlider.colorRange;
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.r * 255));
             m_GreenChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.g * 255));
             m_BlueChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.b * 255));
@@ -944,6 +956,7 @@ namespace Unity.AppUI.UI
                 new GradientAlphaKey(0, 0),
                 new GradientAlphaKey(1, 1)
             });
+            m_AlphaSlider.colorRange = m_AlphaSlider.colorRange;
             m_RedChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.r * 255));
             m_GreenChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.g * 255));
             m_BlueChannelSlider.SetValueWithoutNotify(Mathf.RoundToInt(c.b * 255));

@@ -126,14 +126,6 @@ namespace Unity.AppUI.UI
                 m_RT.Create();
             }
 
-            var time = Application.isEditor ?
-#if UNITY_EDITOR
-                (float)EditorApplication.timeSinceStartup
-#else
-                Time.time
-#endif
-                : Time.time;
-
             s_Material.SetColor(k_Color, colorOverride);
             s_Material.SetFloat(k_InnerRadius, innerRadius);
             s_Material.SetFloat(k_Start, 0);
@@ -141,7 +133,7 @@ namespace Unity.AppUI.UI
             s_Material.SetFloat(k_BufferStart, 0);
             s_Material.SetFloat(k_BufferEnd, bufferValue);
             s_Material.SetFloat(k_AA, 2.0f / rectSize.x);
-            s_Material.SetVector(k_Phase, new Vector4(time / 20, time, time * 2, time * 3));
+            s_Material.SetVector(k_Phase, TimeUtils.GetCurrentTimeVector());
             s_Material.SetFloat(k_BufferOpacity, bufferOpacity);
             if (variant == Variant.Indeterminate)
                 s_Material.EnableKeyword("PROGRESS_INDETERMINATE");

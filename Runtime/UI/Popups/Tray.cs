@@ -556,10 +556,12 @@ namespace Unity.AppUI.UI
                         case TrayPosition.Right:
                             m_Container.style.width = size;
                             m_Container.style.height = new StyleLength(new Length(100, LengthUnit.Percent));
+                            m_Draggable.dragDirection = Draggable.DragDirection.Horizontal;
                             break;
                         case TrayPosition.Bottom:
                             m_Container.style.height = size;
                             m_Container.style.width = new StyleLength(new Length(100, LengthUnit.Percent));
+                            m_Draggable.dragDirection = Draggable.DragDirection.Vertical;
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

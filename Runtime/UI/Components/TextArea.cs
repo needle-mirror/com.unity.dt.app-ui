@@ -15,7 +15,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public partial class TextArea : ExVisualElement, IValidatableElement<string>, INotifyValueChanging<string>
+    public partial class TextArea : ExVisualElement, IInputElement<string>, INotifyValueChanging<string>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         
@@ -174,7 +174,10 @@ namespace Unity.AppUI.UI
             };
             m_ResizeHandle.AddToClassList(resizeHandleUssClassName);
             hierarchy.Add(m_ResizeHandle);
-            var dragManipulator = new Draggable(null, OnDrag, null);
+            var dragManipulator = new Draggable(null, OnDrag, null)
+            {
+                dragDirection = Draggable.DragDirection.Vertical
+            };
             m_ResizeHandle.AddManipulator(dragManipulator);
             m_ResizeHandle.RegisterCallback<ClickEvent>(OnResizeHandleClicked);
             

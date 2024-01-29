@@ -30,6 +30,8 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId tooltipPlacementProperty = nameof(preferredTooltipPlacement);
         
         internal static readonly BindingId tooltipDelayMsProperty = nameof(tooltipDelayMs);
+        
+        internal static readonly BindingId forceUseTooltipSystemProperty = nameof(forceUseTooltipSystem);
 #endif
         
         /// <summary>
@@ -61,14 +63,34 @@ namespace Unity.AppUI.UI
         /// The name of the Tooltip layer.
         /// </summary>
         public const string tooltipContainerName = "tooltip-container";
+
+        /// <summary>
+        /// The default language for this panel.
+        /// </summary>
+        internal const string defaultLang = "en";
+
+        /// <summary>
+        /// The default scale for this panel.
+        /// </summary>
+        internal const string defaultScale = "medium";
+
+        /// <summary>
+        /// The default theme for this panel.
+        /// </summary>
+        internal const string defaultTheme = "dark";
         
-        const string k_DefaultLang = "en";
+        /// <summary>
+        /// The default layout direction for this panel.
+        /// </summary>
+        internal const Dir defaultDir = Dir.Ltr;
+
+        string m_PreviousTheme;
         
-        const string k_DefaultScale = "medium";
+        string m_PreviousScale;
         
-        const string k_DefaultTheme = "dark";
+        Dir m_PreviousDir;
         
-        const Dir k_DefaultDir = Dir.Ltr;
+        string m_PreviousLang;
         
         readonly VisualElement m_MainContainer;
 
@@ -81,6 +103,8 @@ namespace Unity.AppUI.UI
         readonly List<Popup> m_DismissablePopups = new List<Popup>();
 
         TooltipManipulator m_TooltipManipulator;
+
+        bool m_ForceUseTooltipSystem;
 
         /// <summary>
         /// Default constructor.
@@ -114,15 +138,91 @@ namespace Unity.AppUI.UI
 
             RegisterCallback<AttachToPanelEvent>(OnAttachedToPanel);
             RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
-
-            lang = k_DefaultLang;
-            scale = k_DefaultScale;
-            theme = k_DefaultTheme;
-            layoutDirection = k_DefaultDir;
+            
+            this.RegisterContextChangedCallback<ThemeContext>(OnThemeContextChanged);
+            this.RegisterContextChangedCallback<ScaleContext>(OnScaleContextChanged);
+            this.RegisterContextChangedCallback<DirContext>(OnDirContextChanged);
+            this.RegisterContextChangedCallback<LangContext>(OnLangContextChanged);
+            
+            lang = defaultLang;
+            scale = defaultScale;
+            theme = defaultTheme;
+            layoutDirection = defaultDir;
             preferredTooltipPlacement = Tooltip.defaultPlacement;
             tooltipDelayMs = TooltipManipulator.defaultDelayMs;
         }
+
+        void OnThemeContextChanged(ContextChangedEvent<ThemeContext> evt)
+        {
+            // only handle the event if it comes from this panel
+            if (this.GetContextProvider<ThemeContext>() != this)
+                return;
+
+            var newTheme = evt.context?.theme;
+            if (m_PreviousTheme != newTheme)
+            {
+                if (m_PreviousTheme != null)
+                    RemoveFromClassList(contextPrefix + m_PreviousTheme);
+                if (newTheme != null)
+                    AddToClassList(contextPrefix + newTheme);
+
+                m_PreviousTheme = newTheme;
+            }
+        }
         
+        void OnScaleContextChanged(ContextChangedEvent<ScaleContext> evt)
+        {
+            // only handle the event if it comes from this panel
+            if (this.GetContextProvider<ScaleContext>() != this)
+                return;
+
+            var newScale = evt.context?.scale;
+            if (m_PreviousScale != newScale)
+            {
+                if (m_PreviousScale != null)
+                    RemoveFromClassList(contextPrefix + m_PreviousScale);
+                if (newScale != null) 
+                    AddToClassList(contextPrefix + newScale);
+            
+                m_PreviousScale = newScale;
+            }
+        }
+        
+        void OnDirContextChanged(ContextChangedEvent<DirContext> evt)
+        {
+            // only handle the event if it comes from this panel
+            if (this.GetContextProvider<DirContext>() != this)
+                return;
+
+            var newDir = evt.context?.dir ?? defaultDir;
+            // cannot check if previous value is different than the new one here because its an enum
+            // but we don't need to check if class list contains the new/old values because it is already
+            // checked by UIElements API
+            AddToClassList(contextPrefix + newDir.ToString().ToLower());
+            if (m_PreviousDir != newDir)
+                RemoveFromClassList(contextPrefix + m_PreviousDir.ToString().ToLower());
+            
+            m_PreviousDir = newDir;
+        }
+        
+        void OnLangContextChanged(ContextChangedEvent<LangContext> evt)
+        {
+            // only handle the event if it comes from this panel
+            if (this.GetContextProvider<LangContext>() != this)
+                return;
+
+            var newLang = evt.context?.lang;
+            if (m_PreviousLang != newLang)
+            {
+                if (m_PreviousLang != null)
+                    RemoveFromClassList(contextPrefix + m_PreviousLang);
+                if (newLang != null)
+                    AddToClassList(contextPrefix + newLang);
+
+                m_PreviousLang = newLang;
+            }
+        }
+
         /// <summary>
         /// The default language for this panel.
         /// </summary>
@@ -136,16 +236,12 @@ namespace Unity.AppUI.UI
 #endif
         public string lang
         {
-            get => this.GetSelfContext<LangContext>()?.lang ?? k_DefaultLang;
+            get => this.GetSelfContext<LangContext>()?.lang ?? defaultLang;
             set
             {
                 var previous = this.GetSelfContext<LangContext>();
                 if (previous == null || previous.lang != value)
                 {
-                    if (!string.IsNullOrEmpty(previous?.lang))
-                        RemoveFromClassList(contextPrefix + previous.lang);
-                    if (!string.IsNullOrEmpty(value))
-                        AddToClassList(contextPrefix + value);
                     this.ProvideContext(string.IsNullOrEmpty(value) ? null : new LangContext(value));
 #if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in langProperty);
@@ -166,18 +262,14 @@ namespace Unity.AppUI.UI
 #endif
         public string scale
         {
-            get => this.GetSelfContext<ScaleContext>()?.scale ?? k_DefaultScale;
+            get => this.GetSelfContext<ScaleContext>()?.scale ?? defaultScale;
             set
             {
                 if (string.IsNullOrEmpty(value))
-                    Debug.LogError("Scale cannot be null or empty on a Panel element.");
+                    throw new ArgumentException("Scale cannot be null or empty on a Panel element.");
                 var previous = this.GetSelfContext<ScaleContext>();
                 if (previous == null || previous.scale != value)
                 {
-                    if (!string.IsNullOrEmpty(previous?.scale))
-                        RemoveFromClassList(contextPrefix + previous.scale);
-                    if (!string.IsNullOrEmpty(value))
-                        AddToClassList(contextPrefix + value);
                     this.ProvideContext(new ScaleContext(value));
 #if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in scaleProperty);
@@ -198,18 +290,14 @@ namespace Unity.AppUI.UI
 #endif
         public string theme
         {
-            get => this.GetSelfContext<ThemeContext>()?.theme ?? k_DefaultTheme;
+            get => this.GetSelfContext<ThemeContext>()?.theme ?? defaultTheme;
             set
             {
                 if (string.IsNullOrEmpty(value))
-                    Debug.LogError("Theme cannot be null or empty on a Panel element.");
+                    throw new ArgumentException("Theme cannot be null or empty on a Panel element.");
                 var previous = this.GetSelfContext<ThemeContext>();
                 if (previous == null || previous.theme != value)
                 {
-                    if (!string.IsNullOrEmpty(previous?.theme))
-                        RemoveFromClassList(contextPrefix + previous.theme);
-                    if (!string.IsNullOrEmpty(value))
-                        AddToClassList(contextPrefix + value);
                     this.ProvideContext(new ThemeContext(value));
 #if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in themeProperty);
@@ -236,9 +324,6 @@ namespace Unity.AppUI.UI
                 var previous = this.GetSelfContext<DirContext>();
                 if (previous == null || previous.dir != value)
                 {
-                    if (previous != null)
-                        RemoveFromClassList(contextPrefix + previous.dir.ToString().ToLower());
-                    AddToClassList(contextPrefix + value.ToString().ToLower());
                     this.ProvideContext(new DirContext(value));
 #if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in layoutDirectionProperty);
@@ -302,6 +387,31 @@ namespace Unity.AppUI.UI
                 }
             }
         }
+        
+        /// <summary>
+        /// If true, the panel will use the tooltip system, even if the default UI-Toolkit tooltips are enabled.
+        /// </summary>
+        [Tooltip("Force the use of the tooltip system, even if the default UI-Toolkit tooltips are enabled.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool forceUseTooltipSystem
+        {
+            get => m_ForceUseTooltipSystem;
+            set
+            {
+                m_ForceUseTooltipSystem = value;
+                if (m_TooltipManipulator != null)
+                    m_TooltipManipulator.force = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in forceUseTooltipSystemProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// The main UI layer container.
@@ -342,6 +452,7 @@ namespace Unity.AppUI.UI
                     m_TooltipManipulator = new TooltipManipulator();
                     this.AddManipulator(m_TooltipManipulator);
                 }
+                m_TooltipManipulator.force = forceUseTooltipSystem;
 
                 Core.AppUI.RegisterPanel(this);
             }
@@ -436,13 +547,13 @@ namespace Unity.AppUI.UI
             readonly UxmlStringAttributeDescription m_Lang = new UxmlStringAttributeDescription
             {
                 name = "lang",
-                defaultValue = k_DefaultLang
+                defaultValue = defaultLang
             };
             
             readonly UxmlStringAttributeDescription m_Scale = new UxmlStringAttributeDescription
             {
                 name = "scale", 
-                defaultValue = k_DefaultScale,
+                defaultValue = defaultScale,
                 restriction = new UxmlEnumeration
                 {
                     values = new[] { "small", "medium", "large" }
@@ -452,7 +563,7 @@ namespace Unity.AppUI.UI
             readonly UxmlStringAttributeDescription m_Theme = new UxmlStringAttributeDescription
             {
                 name = "theme", 
-                defaultValue = k_DefaultTheme,
+                defaultValue = defaultTheme,
                 restriction = new UxmlEnumeration
                 {
                     values = new[] { "light", "dark", "editor-dark", "editor-light" }
@@ -462,7 +573,7 @@ namespace Unity.AppUI.UI
             readonly UxmlEnumAttributeDescription<Dir> m_Dir = new UxmlEnumAttributeDescription<Dir>
             {
                 name = "dir", 
-                defaultValue = k_DefaultDir
+                defaultValue = defaultDir
             };
             
             readonly UxmlEnumAttributeDescription<PopoverPlacement> m_PreferredTooltipPlacement = new UxmlEnumAttributeDescription<PopoverPlacement>
@@ -475,6 +586,12 @@ namespace Unity.AppUI.UI
             {
                 name = "tooltip-delay-ms", 
                 defaultValue = TooltipManipulator.defaultDelayMs
+            };
+            
+            readonly UxmlBoolAttributeDescription m_ForceUseTooltipSystem = new UxmlBoolAttributeDescription
+            {
+                name = "force-use-tooltip-system", 
+                defaultValue = false
             };
 
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
@@ -489,6 +606,7 @@ namespace Unity.AppUI.UI
                 panel.layoutDirection = m_Dir.GetValueFromBag(bag, cc);
                 panel.preferredTooltipPlacement = m_PreferredTooltipPlacement.GetValueFromBag(bag, cc);
                 panel.tooltipDelayMs = m_TooltipDelayMs.GetValueFromBag(bag, cc);
+                panel.forceUseTooltipSystem = m_ForceUseTooltipSystem.GetValueFromBag(bag, cc);
             }
         }
 #endif

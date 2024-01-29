@@ -85,7 +85,7 @@ If you want to create your own context, you can use [IContext](xref:Unity.AppUI.
 and [RegisterContextChangedCallback](xref:Unity.AppUI.UI.VisualElementExtensions.RegisterContextChangedCallback``1(UnityEngine.UIElements.VisualElement,UnityEngine.UIElements.EventCallback{Unity.AppUI.UI.ContextChangedEvent{``0}}))
 to provide and consume your own context.
 
-Contexts will be propagated down the visual tree starting at the provider element, so any child element can access the context.
+Contexts will be propagated down the visual tree starting at the provider element (included), so this element or any of its child element can access the context.
 The propagation will stop as soon as a child element provides a new context of the same type.
 
 The [ContextChangedEvent](xref:Unity.AppUI.UI.ContextChangedEvent`1) will be triggered whenever one of the visual tree ancestors
@@ -149,6 +149,7 @@ public class MyCustomComponent : BaseVisualElement
         ProvideContext(new MyContext(42));
 
         // Or Register the context changed callback
+        // Note that this callback will be also called when the listener element is also a the provider
         RegisterContextChangedCallback<MyContext>(OnMyContextChanged);
     }
     

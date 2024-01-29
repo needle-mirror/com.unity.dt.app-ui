@@ -13,7 +13,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public partial class RectField : BaseVisualElement, IValidatableElement<Rect>, ISizeableElement
+    public partial class RectField : BaseVisualElement, IInputElement<Rect>, ISizeableElement, INotifyValueChanging<Rect>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         
@@ -135,6 +135,11 @@ namespace Unity.AppUI.UI
             m_YField.RegisterValueChangedCallback(OnYFieldChanged);
             m_HField.RegisterValueChangedCallback(OnHFieldChanged);
             m_WField.RegisterValueChangedCallback(OnWFieldChanged);
+            
+            m_XField.RegisterValueChangingCallback(OnXFieldChanging);
+            m_YField.RegisterValueChangingCallback(OnYFieldChanging);
+            m_HField.RegisterValueChangingCallback(OnHFieldChanging);
+            m_WField.RegisterValueChangingCallback(OnWFieldChanging);
         }
 
         /// <summary>
@@ -282,6 +287,51 @@ namespace Unity.AppUI.UI
         void OnXFieldChanged(ChangeEvent<float> evt)
         {
             value = new Rect(evt.newValue, value.y, value.width, value.height);
+        }
+        
+        void OnHFieldChanging(ChangingEvent<float> evt)
+        {
+            evt.StopPropagation();
+            var val = new Rect(value.x, value.y, value.width, evt.newValue);
+            TrySendChangingEvent(val);
+        }
+
+        void OnWFieldChanging(ChangingEvent<float> evt)
+        {
+            evt.StopPropagation();
+            var val = new Rect(value.x, value.y, evt.newValue, value.height);
+            TrySendChangingEvent(val);
+        }
+
+        void OnYFieldChanging(ChangingEvent<float> evt)
+        {
+            evt.StopPropagation();
+            var val = new Rect(value.x, evt.newValue, value.width, value.height);
+            TrySendChangingEvent(val);
+        }
+
+        void OnXFieldChanging(ChangingEvent<float> evt)
+        {
+            evt.StopPropagation();
+            var val = new Rect(evt.newValue, value.y, value.width, value.height);
+            TrySendChangingEvent(val);
+        }
+        
+        void TrySendChangingEvent(Rect newVal)
+        {
+            var previousValue = m_Value;
+            m_Value = newVal;
+            
+            if (m_Value != previousValue)
+            {
+                if (validateValue != null) invalid = !validateValue(m_Value);
+                
+                using var changeEvent = ChangingEvent<Rect>.GetPooled();
+                changeEvent.target = this;
+                changeEvent.previousValue = previousValue;
+                changeEvent.newValue = m_Value;
+                SendEvent(changeEvent);
+            }
         }
         
 #if ENABLE_UXML_TRAITS

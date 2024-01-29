@@ -12,7 +12,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    partial class AssetTargetField : BaseVisualElement, IValidatableElement<AssetReference>, ISizeableElement, IPressable
+    partial class AssetTargetField : BaseVisualElement, IInputElement<AssetReference>, ISizeableElement, IPressable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId sizeProperty = nameof(size);

@@ -10,6 +10,20 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => CircularProgress.ussClassName;
 
+        protected override IEnumerable<Story> stories
+        {
+            get
+            {
+                yield return new Story("Default", ctx => new CircularProgress());
+                yield return new Story("Determinate", ctx => new CircularProgress
+                {
+                    variant = Progress.Variant.Determinate,
+                    bufferValue = 0.75f,
+                    value = 0.5f,
+                });
+            }
+        }
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:CircularProgress />",

@@ -13,7 +13,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public partial class BoundsIntField : BaseVisualElement, IValidatableElement<BoundsInt>, ISizeableElement
+    public partial class BoundsIntField : BaseVisualElement, IInputElement<BoundsInt>, ISizeableElement, INotifyValueChanging<BoundsInt>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId valueProperty = nameof(value);
@@ -160,6 +160,13 @@ namespace Unity.AppUI.UI
             m_SXField.RegisterValueChangedCallback(OnSXFieldChanged);
             m_SYField.RegisterValueChangedCallback(OnSYFieldChanged);
             m_SZField.RegisterValueChangedCallback(OnSZFieldChanged);
+            
+            m_CXField.RegisterValueChangingCallback(OnCXFieldChanging);
+            m_CYField.RegisterValueChangingCallback(OnCYFieldChanging);
+            m_CZField.RegisterValueChangingCallback(OnCZFieldChanging);
+            m_SXField.RegisterValueChangingCallback(OnSXFieldChanging);
+            m_SYField.RegisterValueChangingCallback(OnSYFieldChanging);
+            m_SZField.RegisterValueChangingCallback(OnSZFieldChanging);
         }
 
         /// <summary>
@@ -325,6 +332,59 @@ namespace Unity.AppUI.UI
         void OnSZFieldChanged(ChangeEvent<int> evt)
         {
             value = new BoundsInt(value.position, new Vector3Int(value.size.x, value.size.y, evt.newValue));
+        }
+        
+        void OnCZFieldChanging(ChangingEvent<int> evt)
+        {
+            evt.StopPropagation();
+            TrySendChangingEvent(new BoundsInt(new Vector3Int(value.position.x, value.position.y, evt.newValue), value.size));
+        }
+        
+        void OnCYFieldChanging(ChangingEvent<int> evt)
+        {
+            evt.StopPropagation();
+            TrySendChangingEvent(new BoundsInt(new Vector3Int(value.position.x, evt.newValue, value.position.z), value.size));
+        }
+        
+        void OnCXFieldChanging(ChangingEvent<int> evt)
+        {
+            evt.StopPropagation();
+            TrySendChangingEvent(new BoundsInt(new Vector3Int(evt.newValue, value.position.y, value.position.z), value.size));
+        }
+        
+        void OnSXFieldChanging(ChangingEvent<int> evt)
+        {
+            evt.StopPropagation();
+            TrySendChangingEvent(new BoundsInt(value.position, new Vector3Int(evt.newValue, value.size.y, value.size.z)));
+        }
+        
+        void OnSYFieldChanging(ChangingEvent<int> evt)
+        {
+            evt.StopPropagation();
+            TrySendChangingEvent(new BoundsInt(value.position, new Vector3Int(value.size.x, evt.newValue, value.size.z)));
+        }
+        
+        void OnSZFieldChanging(ChangingEvent<int> evt)
+        {
+            evt.StopPropagation();
+            TrySendChangingEvent(new BoundsInt(value.position, new Vector3Int(value.size.x, value.size.y, evt.newValue)));
+        }
+        
+        void TrySendChangingEvent(BoundsInt newVal)
+        {
+            var previousValue = m_Value;
+            m_Value = newVal;
+            
+            if (m_Value != previousValue)
+            {
+                if (validateValue != null) invalid = !validateValue(m_Value);
+                
+                using var changeEvent = ChangingEvent<BoundsInt>.GetPooled();
+                changeEvent.target = this;
+                changeEvent.previousValue = previousValue;
+                changeEvent.newValue = m_Value;
+                SendEvent(changeEvent);
+            }
         }
         
 #if ENABLE_UXML_TRAITS

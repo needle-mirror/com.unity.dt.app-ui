@@ -15,7 +15,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public partial class ColorWheel : BaseVisualElement, INotifyValueChanging<float>
+    public partial class ColorWheel : BaseVisualElement, IInputElement<float>, INotifyValueChanging<float>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
  
@@ -38,6 +38,10 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId checkerColor2PropertyKey = new BindingId(nameof(checkerColor2));
         
         internal static readonly BindingId selectedColorPropertyKey = new BindingId(nameof(selectedColor));
+        
+        internal static readonly BindingId invalidProperty = new BindingId(nameof(invalid));
+        
+        internal static readonly BindingId validateValueProperty = new BindingId(nameof(validateValue));
         
 #endif
         
@@ -158,6 +162,8 @@ namespace Unity.AppUI.UI
         const float k_DefaultBrightness = 1f;
         
         const float k_DefaultSaturation = 1f;
+        
+        Func<float, bool> m_ValidateValue;
 
         /// <summary>
         /// The hue value of the color wheel.
@@ -425,6 +431,51 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
+        
+        /// <summary>
+        /// The ColorWheel invalid state.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool invalid
+        {
+            get => ClassListContains(Styles.invalidUssClassName);
+            set
+            {
+                var changed = invalid != value;
+                EnableInClassList(Styles.invalidUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in invalidProperty);
+#endif
+            }
+        }
+        
+        /// <summary>
+        /// The ColorWheel validation function.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<float, bool> validateValue
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Default constructor.
@@ -664,6 +715,9 @@ namespace Unity.AppUI.UI
             m_Thumb.style.top = y - selectorSize * 0.5f;
             m_Thumb.style.left = x - selectorSize * 0.5f;
             m_ThumbSwatch.style.backgroundColor = selectedColor;
+            
+            if (m_ValidateValue != null)
+                invalid = !m_ValidateValue(newValue);
         }
 
         void GenerateTextures()

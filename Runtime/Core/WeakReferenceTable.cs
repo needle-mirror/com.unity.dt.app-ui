@@ -1,3 +1,4 @@
+#if !UNITY_EDITOR && ENABLE_IL2CPP && !CONDITIONAL_WEAK_TABLE_IL2CPP
 using System;
 using System.Collections.Generic;
 
@@ -69,3 +70,5 @@ namespace Unity.AppUI.Core
         }
     }
 }
+
+#endif // !UNITY_EDITOR && ENABLE_IL2CPP && !CONDITIONAL_WEAK_TABLE_IL2CPP

@@ -7,13 +7,11 @@ uid: faq
 ### Why can't I see the App UI components in the UI Builder components library?
 
 By default, the UI Builder components library only shows the components that are available outside of
-the `UnityEngine.*` namespace. If you want to see the App UI components, you need to enable
+the `UnityEngine.*` and `Unity.*` namespaces. If you want to see the App UI components, you need to enable
 the **Developer Mode** of the Unity Editor.
 
 > [!NOTE]
-> Before 0.3.0, the App UI components were in the `UnityEngine` namespace, so they were
-> not visible in the UI Builder components library. Starting from 0.3.0, the App UI components
-> are in the `Unity.AppUI` namespace, and you should not have this issue anymore.
+> App UI components are officially available in the UI Builder components library starting from Unity 2022.3.19f1, 2023.2.9f1 and 2023.3.0b5.
 
 To enable the **Developer Mode** of the Unity Editor, open the **About Unity** window and
 while focusing on the **About Unity** window, type `internal` on your keyboard. This will
@@ -64,7 +62,17 @@ To avoid this message, you have 2 options:
 
 Yes, the New Input System is supported. You can use the App UI components with the New Input System.
 
-- To install the New Input System, go to **Window > Package Manager** and install the **Input System** package.
+To install the New Input System, go to **Window > Package Manager** and install the **Input System** package.
+
+#### For Unity 2023.2 and newer
+
+From **Unity 2023.2.x** and newer, the Input System and UI Toolkit are fully integrated. To configure UI Input you can
+configure the UI action map of project-wide actions in **[Project Settings > Input System Package > Input Actions](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.8/manual/Workflow-Actions.html)**.
+
+#### For older versions of Unity
+
+For older versions, the integration between the Input System and the UI system is handled by the [InputSystemUIInputModule](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.7/api/UnityEngine.InputSystem.UI.InputSystemUIInputModule.html) component.
+
 - In your scene, you will need to add the **Input System UI Module** component to your Event System.
   You can create a new Event System by going to **GameObject > UI > Event System**.
 - You should see a message in the Inspector view asking you to update the Event System.
@@ -72,6 +80,9 @@ Yes, the New Input System is supported. You can use the App UI components with t
   ![input-system-ui-module](images/input-system-ui-module.png)
 - You can now use the App UI components with the New Input System.
   ![input-system-ui-module](images/input-system-ui-module-2.png)
+
+For more information about UI Toolkit support for the New Input System, see their
+[documentation](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.8/manual/UISupport.html#ui-toolkit-support) page.
 
 ### Why does the Editor maximize docked windows when I try to zoom into an App UI [Canvas](xref:Unity.AppUI.UI.Canvas) component using an Apple trackpad?
 

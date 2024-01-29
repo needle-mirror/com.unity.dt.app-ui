@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -17,6 +18,15 @@ namespace Unity.AppUI.UI
         IVisualElementScheduledItem m_ScheduledItem;
 
         Tooltip m_Tooltip;
+        
+        /// <summary>
+        /// If true, this manipulator will force the picked tooltip to be displayed, no matter the context.
+        /// </summary>
+        /// <remarks>
+        /// This is useful in an environment where default UI-Toolkit tooltips are disabled,
+        /// but you still want to display tooltips.
+        /// </remarks>
+        public bool force { get; set; }
         
         protected override void RegisterCallbacksOnTarget()
         {
@@ -72,7 +82,7 @@ namespace Unity.AppUI.UI
                 m_Tooltip.SetContent(template);
                 hasTooltip = true;
             }
-            else if (target.panel.contextType == ContextType.Player && !string.IsNullOrEmpty(m_AnchorElement?.tooltip))
+            else if (CanDisplayTooltipInCurrentContext(m_AnchorElement) && !string.IsNullOrEmpty(m_AnchorElement?.tooltip))
             {
                 m_Tooltip.SetText(m_AnchorElement.tooltip);
                 hasTooltip = true;
@@ -81,6 +91,12 @@ namespace Unity.AppUI.UI
             // 4 - If the tne new tooltip is not null, start delay
             if (hasTooltip)
                 ShowTooltip();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        bool CanDisplayTooltipInCurrentContext(VisualElement refElement)
+        {
+            return force || target.panel.contextType == ContextType.Player;
         }
 
         void ShowTooltip()

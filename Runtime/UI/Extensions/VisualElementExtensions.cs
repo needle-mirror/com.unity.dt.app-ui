@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Runtime.CompilerServices;
 
 namespace Unity.AppUI.UI
 {
@@ -11,8 +12,13 @@ namespace Unity.AppUI.UI
     /// </summary>
     public static class VisualElementExtensions
     {
+#if !UNITY_EDITOR && ENABLE_IL2CPP && !CONDITIONAL_WEAK_TABLE_IL2CPP
         static readonly WeakReferenceTable<VisualElement, AdditionalData> k_AdditionalDataCache =
             new WeakReferenceTable<VisualElement, AdditionalData>();
+#else
+        static readonly ConditionalWeakTable<VisualElement, AdditionalData> k_AdditionalDataCache =
+            new ConditionalWeakTable<VisualElement, AdditionalData>();
+#endif
 
         static bool TryGetValue(VisualElement key, out AdditionalData val)
         {
@@ -173,6 +179,11 @@ namespace Unity.AppUI.UI
             /// The Contexts collection.
             /// </summary>
             internal Dictionary<Type, IContext> contexts { get; } = new ();
+            
+            /// <summary>
+            /// The previous Contexts collection.
+            /// </summary>
+            internal Dictionary<Type, IContext> previousContexts { get; } = new ();
 
             /// <summary>
             /// The preferred placement for a tooltip.
@@ -182,7 +193,7 @@ namespace Unity.AppUI.UI
             /// <summary>
             /// The tooltip template to use for this element.
             /// </summary>
-            public VisualElement tooltipTemplate { get; set; } = null;
+            public VisualElement tooltipTemplate { get; set; }
         }
 
         /// <summary>
@@ -273,7 +284,7 @@ namespace Unity.AppUI.UI
             void OnAttached(AttachToPanelEvent evt)
             {
                 if (evt.destinationPanel != null)
-                    element.SendContextChangedEvent(context);
+                    element.SendContextChangedEvent<T>();
             }
 
             if (context == null)
@@ -281,8 +292,7 @@ namespace Unity.AppUI.UI
                 if (data.contexts.ContainsKey(typeof(T)))
                 {
                     data.contexts.Remove(typeof(T));
-                    var ancestorContext = element.GetContext<T>();
-                    element.SendContextChangedEvent(ancestorContext);
+                    element.SendContextChangedEvent<T>();
                 }
                 if (data.sendContextChangedOnAttachedToPanelCallbacksPerType.TryGetValue(typeof(T), out var callback))
                 {
@@ -299,7 +309,7 @@ namespace Unity.AppUI.UI
                     data.sendContextChangedOnAttachedToPanelCallbacksPerType[typeof(T)] = callback;
                     element.RegisterCallback(callback);
                 }
-                element.SendContextChangedEvent(context);
+                element.SendContextChangedEvent<T>();
             }
         }
         
@@ -338,6 +348,14 @@ namespace Unity.AppUI.UI
             void SendContextChangedEventLocal()
             {
                 var context = element.GetContext<T>();
+                
+                if (TryGetValue(element, out var data) && data.previousContexts.ContainsKey(typeof(T)))
+                {
+                    var previousContext = data.previousContexts[typeof(T)];
+                    if (previousContext != null && previousContext.Equals(context))
+                        return;
+                }
+                
                 using var evt = ContextChangedEvent<T>.GetPooled(context);
                 evt.target = element;
                 callback(evt);
@@ -405,31 +423,46 @@ namespace Unity.AppUI.UI
             }
         }
         
-        internal static void SendContextChangedEvent<T>(this VisualElement element, T context) 
+        internal static void SendContextChangedEvent<T>(this VisualElement element) 
             where T : IContext
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
             
-            if (element.panel == null)
-                return;
+            var context = element.GetContext<T>();
             
             using var evt = ContextChangedEvent<T>.GetPooled(context);
             evt.target = element;
+
+            void CallCallbacks(VisualElement el, ContextChangedEvent<T> evt)
+            {
+                if (TryGetValue(el, out var data))
+                {
+                    if (data.previousContexts.ContainsKey(typeof(T)))
+                    {
+                        var previousContext = data.previousContexts[typeof(T)];
+                        if (previousContext != null && previousContext.Equals(evt.context))
+                            return;
+                    }
+                    
+                    data.previousContexts[typeof(T)] = evt.context;
+                    
+                    if (data.contextChangedCallbacksPerType.TryGetValue(typeof(T), out var callbacks))
+                    {
+                        foreach (var cb in callbacks)
+                        {
+                            ((EventCallback<ContextChangedEvent<T>>)cb).Invoke(evt);
+                        }
+                    }
+                }
+            }
             
             void SendContextChangedEventToChildren(VisualElement parent, ContextChangedEvent<T> evt)
             {
                 if (parent.IsContextProvider<T>())
                     return;
 
-                if (TryGetValue(parent, out var data)
-                    && data.contextChangedCallbacksPerType.TryGetValue(typeof(T), out var callbacks))
-                {
-                    foreach (var cb in callbacks)
-                    {
-                        ((EventCallback<ContextChangedEvent<T>>)cb).Invoke(evt);
-                    }
-                }
+                CallCallbacks(parent, evt);
                 
                 foreach (var c in parent.Children())
                 {
@@ -437,6 +470,7 @@ namespace Unity.AppUI.UI
                 }
             }
 
+            CallCallbacks(element, evt);
             foreach (var child in element.Children())
             {
                 SendContextChangedEventToChildren(child, evt);

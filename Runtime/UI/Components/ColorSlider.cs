@@ -271,7 +271,10 @@ namespace Unity.AppUI.UI
             incrementFactor = k_DefaultIncrement;
             SetValueWithoutNotify(0);
 
-            m_DraggerManipulator = new Draggable(OnTrackClicked, OnTrackDragged, OnTrackUp, OnTrackDown);
+            m_DraggerManipulator = new Draggable(OnTrackClicked, OnTrackDragged, OnTrackUp, OnTrackDown)
+            {
+                dragDirection = Draggable.DragDirection.Horizontal
+            };
             m_ThumbContainerContainer.AddManipulator(m_DraggerManipulator);
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));
             RegisterCallback<KeyDownEvent>(OnKeyDown);

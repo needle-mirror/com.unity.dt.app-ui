@@ -1,3 +1,4 @@
+using System;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -15,7 +16,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public partial class SVSquare : BaseVisualElement, INotifyValueChanging<Vector2>
+    public partial class SVSquare : BaseVisualElement, IInputElement<Vector2>, INotifyValueChanging<Vector2>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         
@@ -32,6 +33,10 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId valueProperty = nameof(value);
         
         internal static readonly BindingId incrementFactorProperty = nameof(incrementFactor);
+        
+        internal static readonly BindingId invalidProperty = nameof(invalid);
+        
+        internal static readonly BindingId validateValueProperty = nameof(validateValue);
         
 #endif
         
@@ -80,6 +85,8 @@ namespace Unity.AppUI.UI
         float m_IncrementFactor;
         
         const float k_DefaultIncrementFactor = 0.01f;
+        
+        Func<Vector2, bool> m_ValidateValue;
 
         /// <summary>
         /// Selected brightness value.
@@ -207,6 +214,51 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in incrementFactorProperty);
+#endif
+            }
+        }
+        
+        /// <summary>
+        /// The SVSquare invalid state.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool invalid
+        {
+            get => ClassListContains(Styles.invalidUssClassName);
+            set
+            {
+                var changed = invalid != value;
+                EnableInClassList(Styles.invalidUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in invalidProperty);
+#endif
+            }
+        }
+        
+        /// <summary>
+        /// The SVSquare validation function.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<Vector2, bool> validateValue
+        {
+            get => m_ValidateValue;
+            set
+            {
+                var changed = m_ValidateValue != value;
+                m_ValidateValue = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in validateValueProperty);
 #endif
             }
         }
@@ -398,6 +450,9 @@ namespace Unity.AppUI.UI
             m_Thumb.style.top = (paddingRect.height - brightness * paddingRect.height) - m_Thumb.resolvedStyle.height * 0.5f;
             m_Thumb.style.left = saturation * paddingRect.width - m_Thumb.resolvedStyle.width * 0.5f;
             m_ThumbSwatch.style.backgroundColor = selectedColor;
+            
+            if (m_ValidateValue != null)
+                invalid = !m_ValidateValue(newValue);
         }
 
         Vector2 ComputeValue(Vector2 localPosition)

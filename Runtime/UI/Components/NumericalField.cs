@@ -16,7 +16,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif 
-    public abstract partial class NumericalField<TValueType> : ExVisualElement, IValidatableElement<TValueType>, ISizeableElement, INotifyValueChanging<TValueType>
+    public abstract partial class NumericalField<TValueType> : ExVisualElement, IInputElement<TValueType>, ISizeableElement, INotifyValueChanging<TValueType>
         where TValueType : struct, IComparable, IComparable<TValueType>, IFormattable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS

@@ -51,7 +51,7 @@ namespace Unity.AppUI.Tests.UI
         {
             get 
             { 
-                yield break;
+                yield return new Story("Default", (ctx) => new T());
             }
         }
 
@@ -76,6 +76,7 @@ namespace Unity.AppUI.Tests.UI
                 }
                 m_TestUI = Utils.ConstructTestUI();
                 Screen.SetResolution(1200, 600, FullScreenMode.Windowed);
+                TimeUtils.timeOverride = 1f;
             }
             m_TestUI.rootVisualElement.Clear();
             m_SetupDone = true;
@@ -84,6 +85,7 @@ namespace Unity.AppUI.Tests.UI
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
+            TimeUtils.timeOverride = null;
             if (m_TestUI)
                 Object.Destroy(m_TestUI.gameObject);
 
@@ -141,35 +143,31 @@ namespace Unity.AppUI.Tests.UI
         [Order(3)]
         public IEnumerator CreateSnapshot()
         {
-            if (!string.IsNullOrEmpty(Utils.snapshotsOutputDir) && !Application.isEditor)
-            {
-                if (typeof(Panel).IsAssignableFrom(typeof(T)))
-                    Assert.Ignore("Panel are not supported in snapshots");
+            if (string.IsNullOrEmpty(Utils.snapshotsOutputDir) || Application.isEditor)
+                Assert.Ignore("Snapshots are generated only in Standalone Player and when SNAPSHOTS_OUTPUT_DIR is set");
+                
+            if (typeof(Panel).IsAssignableFrom(typeof(T)))
+                Assert.Ignore("Panel are not supported in snapshots");
                                 
-                foreach (var story in stories)
+            foreach (var story in stories)
+            {
+                foreach (var theme in Utils.themes)
                 {
-                    foreach (var theme in Utils.themes)
+                    foreach (var scale in Utils.scales)
                     {
-                        foreach (var scale in Utils.scales)
+                        foreach (var dir in Enum.GetValues(typeof(Dir)))
                         {
-                            foreach (var dir in Enum.GetValues(typeof(Dir)))
-                            {
-                                yield return CreateSnapshotInternal(story, theme, scale, (Dir)dir);
-                            }
+                            yield return CreateSnapshotInternal(story, theme, scale, (Dir)dir);
                         }
                     }
                 }
-            }
-            else
-            {
-                Assert.Ignore("Snapshots are generated only Standalone Player and when SNAPSHOTS_OUTPUT_DIR is set");
             }
         }
 
         IEnumerator CreateSnapshotInternal(Story story, string theme, string scale, Dir dir)
         {
             var outputFilePath = Path.GetFullPath(
-                Path.Combine(Utils.snapshotsOutputDir, 
+                Path.Combine(Utils.snapshotsOutputDir ?? Application.dataPath, 
                     $"{componentName}.{story.name}.{theme}.{dir.ToString().ToLower()}.{scale}.png"));
             
             Screen.SetResolution(1200, 600, FullScreenMode.Windowed);

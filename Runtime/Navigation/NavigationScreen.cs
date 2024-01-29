@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.UI;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.Navigation
@@ -75,6 +76,45 @@ namespace Unity.AppUI.Navigation
         /// This method is called before the screen is removed from the <see cref="NavHost"/>.
         /// </remarks>
         protected virtual void OnExit(NavController controller, NavDestination destination, Argument[] args)
+        {
+            
+        }
+        
+        /// <summary>
+        /// Implement this method to setup the <see cref="BottomNavBar"/> of this screen specifically.
+        /// </summary>
+        /// <param name="bottomNavBar"> The <see cref="BottomNavBar"/> to setup. </param>
+        /// <remarks>
+        /// To setup the <see cref="BottomNavBar"/> globally, use <see cref="INavVisualController.SetupBottomNavBar"/>
+        /// in your implementation of <see cref="INavVisualController"/>.
+        /// </remarks>
+        protected internal virtual void SetupBottomNavBar(BottomNavBar bottomNavBar)
+        {
+            
+        }
+
+        /// <summary>
+        /// Implement this method to setup the <see cref="AppBar"/> of this screen specifically.
+        /// </summary>
+        /// <param name="appBar"> The <see cref="AppBar"/> to setup. </param>
+        /// <remarks>
+        /// To setup the <see cref="AppBar"/> globally, use <see cref="INavVisualController.SetupAppBar"/>
+        /// in your implementation of <see cref="INavVisualController"/>.
+        /// </remarks>
+        protected internal virtual void SetupAppBar(AppBar appBar)
+        {
+            
+        }
+
+        /// <summary>
+        /// Implement this method to setup the <see cref="Drawer"/> of this screen specifically.
+        /// </summary>
+        /// <param name="drawer"> The <see cref="Drawer"/> to setup. </param>
+        /// <remarks>
+        /// To setup the <see cref="Drawer"/> globally, use <see cref="INavVisualController.SetupDrawer"/>
+        /// in your implementation of <see cref="INavVisualController"/>.
+        /// </remarks>
+        protected internal virtual void SetupDrawer(Drawer drawer)
         {
             
         }
