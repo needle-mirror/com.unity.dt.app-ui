@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "1.0.0-pre.14",
+  "version": "1.0.0-pre.15",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,7 +25,7 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "2aff86e9413adb3a67e7aa0b24b08a8f0067e17b"
+    "revision": "fb920d457fc3970f350e80838dda2a8eca51ef5d"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -82,10 +82,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed ColorSwatch refresh when the Gradient reference value didn't change but Gradient keys have changed\n- Added support of Windows 11 for ARM\n- Fixed ColorPicker Alpha channel slider refresh when the picked color has changed\n- Fixed calls for ContextChanged callbacks registered by the context provider itself\n\n### Added\n\n- Added new IInputElement interface in the public API\n- Added the possibility to setup navigation visual components from your NavigationScreen implementation directly. You are still able to create a global setup using your own implementation of the INavVisualController interface that you have set on your NavHost.\n- Added the support of a specific drag direction and drag threshold in the Draggable manipulator. Specifying a direction will avoid to prevent scrolling in the opposite direction if this maniuplator is used inside a ScrollView for example.\n- Added forceUseTooltipSystem property on the Panel component to force the use of App UI tooltips system regardless the state of UI-Toolkit default tooltip system. This can be useful in a context where UITK tooltips can't be displayed in the Editor.\n- Added mention about full integration of UI Toolkit with the New Input System starting 2023.2 in the documentation\n\n### Changed\n\n- All user input related UI controls now inherit from the new IInputElement interface. This has no impact on the current implementation (some addition in certain components).\n- Use ConditionalWeakTable whenever possible (Editor and no IL2CPP builds)"
+    "changelog": "### Removed\n\n- Removed the `margin` property from the Tray component.\n- Removed the `size` property of the `Tray` component. The Tray component will fit its content in the screen automatically and doen't need anymore any specific size to be set.\n- Removed the `expandable` property from the Tray component. A Tray component is should not be expandable by definition. If you are willing to have some scrollable content inside a Tray component, a new component called ScrollableTray will be avilable in future release of App UI.\n\n### Fixed\n\n- Fixed styling on BottomNavBar items\n- Fixed refresh of the `ActionGroup` component\n- Fixed Tooltip maximum size\n\n### Added\n\n- Added monitoring of AccordionItem content size to make AccordionItem fit its content when it is already open.\n\n### Changed\n\n- Use the ConditionalWeakTable for new releases of Unity where a fix from IL2CPP has landed."
   },
   "upmCi": {
-    "footprint": "2e654fd5d1c855fc36a74b350c3bf8a6f568af67"
+    "footprint": "bc381a620142d39b193bac20eb1d304be4cf0b4c"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@1.0/manual/index.html"
 }

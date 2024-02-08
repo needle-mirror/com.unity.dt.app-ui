@@ -76,10 +76,6 @@ namespace Unity.AppUI.UI
 
         readonly ExVisualElement m_HeaderElement;
 
-        ValueAnimation<float> m_Anim;
-
-        IVisualElementScheduledItem m_ScheduledHeightResolver;
-
         VisualTreeAsset m_TrailingContentTemplate;
 
         /// <summary>
@@ -134,11 +130,22 @@ namespace Unity.AppUI.UI
             };
             m_ContentElement.AddToClassList(contentUssClassName);
             m_ContentParentElement.hierarchy.Add(m_ContentElement);
+            m_ContentElement.RegisterCallback<GeometryChangedEvent>(OnContentGeometryChanged);
 
             hierarchy.Add(headingElement);
             hierarchy.Add(m_ContentParentElement);
             
             SetValueWithoutNotify(false);
+        }
+        
+        void OnContentGeometryChanged(GeometryChangedEvent evt)
+        {
+            if (value)
+            {
+                if (float.IsNaN(evt.newRect.height) || Mathf.Approximately(evt.newRect.height, m_ContentParentElement.resolvedStyle.height))
+                    return;
+                m_ContentParentElement.style.height = evt.newRect.height;
+            }
         }
 
         void OnFocus(FocusInEvent evt)
@@ -252,12 +259,6 @@ namespace Unity.AppUI.UI
         /// <param name="newValue">The new open state of the item.</param>
         public void SetValueWithoutNotify(bool newValue)
         {
-            m_Anim?.Stop();
-            m_Anim?.Recycle();
-            m_Anim = null;
-            m_ScheduledHeightResolver?.Pause();
-            m_ScheduledHeightResolver = null;
-            
             if (newValue)
             {
                 m_ContentParentElement.style.height = m_ContentElement.resolvedStyle.height;

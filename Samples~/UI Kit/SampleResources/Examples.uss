@@ -87,7 +87,7 @@
 .example-row {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   flex-wrap: nowrap;
   flex-grow: 0;
   flex-shrink: 0;
@@ -98,7 +98,7 @@
 .example-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   padding: 0 var(--appui-alias-control-gap-md);
   flex-shrink: 0;
   flex-grow: 0;

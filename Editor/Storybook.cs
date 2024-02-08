@@ -278,7 +278,7 @@ namespace Unity.AppUI.Editor
             m_ListView = new ListView(m_StoriesList, -1f, MakeListVIewItem, BindListViewItem);
             m_StoryListView = new ListView(null, -1f, MakeListVIewItem, BindStoryListViewItem);
             m_Preview = CreateDetailPage();
-#if UNITY_2022_2_SIC
+#if UITK_SELECTED_INDICES_CHANGED
             m_ListView.selectedIndicesChanged += OnSelectionChanged;
             m_StoryListView.selectedIndicesChanged += OnStorySelectionChanged;
 #else

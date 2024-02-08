@@ -4,6 +4,28 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.0-pre.15] - 2024-02-09
+
+### Removed
+
+- Removed the `margin` property from the Tray component.
+- Removed the `size` property of the `Tray` component. The Tray component will fit its content in the screen automatically and doen't need anymore any specific size to be set.
+- Removed the `expandable` property from the Tray component. A Tray component is should not be expandable by definition. If you are willing to have some scrollable content inside a Tray component, a new component called ScrollableTray will be avilable in future release of App UI.
+
+### Fixed
+
+- Fixed styling on BottomNavBar items
+- Fixed refresh of the `ActionGroup` component
+- Fixed Tooltip maximum size
+
+### Added
+
+- Added monitoring of AccordionItem content size to make AccordionItem fit its content when it is already open.
+
+### Changed
+
+- Use the ConditionalWeakTable for new releases of Unity where a fix from IL2CPP has landed.
+
 ## [1.0.0-pre.14] - 2024-01-30
 
 ### Fixed

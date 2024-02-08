@@ -7,7 +7,6 @@
     display: flex;
     margin-bottom: var(--appui-alias-control-gap-sm);
     margin-top: var(--appui-alias-control-gap-sm);
-    width: 100%;
     flex-shrink: 0;
 }
 

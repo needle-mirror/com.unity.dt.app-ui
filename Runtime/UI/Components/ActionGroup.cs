@@ -130,7 +130,13 @@ namespace Unity.AppUI.UI
             m_Container.AddToClassList(containerUssClassName);
             hierarchy.Add(m_Container);
             
-            m_MoreButton = new ActionButton { name = moreButtonUssClassName, icon = "dots-three", iconVariant = IconVariant.Bold };
+            m_MoreButton = new ActionButton
+            {
+                name = moreButtonUssClassName, 
+                icon = "dots-three", 
+                iconVariant = IconVariant.Bold,
+                usageHints = UsageHints.DynamicTransform
+            };
             m_MoreButton.AddToClassList(ussClassName + "__item");
             m_MoreButton.AddToClassList("unity-last-child");
             m_MoreButton.AddToClassList(moreButtonUssClassName);
@@ -140,6 +146,7 @@ namespace Unity.AppUI.UI
             closeOnSelection = true;
 
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+            m_MoreButton.RegisterCallback<GeometryChangedEvent>(OnMoreButtonGeometryChanged);
             RegisterCallback<ActionTriggeredEvent>(OnActionTriggered);
             this.RegisterContextChangedCallback<DirContext>(OnDirectionChanged);
         }
@@ -517,6 +524,11 @@ namespace Unity.AppUI.UI
             
             RefreshUI();
         }
+        
+        void OnMoreButtonGeometryChanged(GeometryChangedEvent evt)
+        {
+            RefreshUI();
+        }
 
         void RefreshSelectionUI(bool dismissPopover = true)
         {
@@ -539,12 +551,16 @@ namespace Unity.AppUI.UI
         
         void RefreshUI()
         {
-            if (!layout.IsValid() || (m_Container.layout == m_LastContainerLayout && layout == m_LastLayout))
+            var actionGroupLayout = layout;
+            var containerLayout = m_Container.layout;
+
+            if (!actionGroupLayout.IsValid() || (containerLayout == m_LastContainerLayout && actionGroupLayout == m_LastLayout))
                 return;
             
-            m_LastContainerLayout = m_Container.layout;
-            m_LastLayout = layout;
+            m_LastContainerLayout = containerLayout;
+            m_LastLayout = actionGroupLayout;
             var moreButtonStyle = m_MoreButton.resolvedStyle;
+            var moreButtonLayout = m_MoreButton.layout;
 
             float size;
             float containerSize;
@@ -554,15 +570,17 @@ namespace Unity.AppUI.UI
             switch (m_Direction)
             {
                 case Direction.Horizontal:
-                    size = layout.width;
-                    containerSize = m_Container.layout.width;
-                    moreButtonSize = moreButtonStyle.width + moreButtonStyle.marginLeft + moreButtonStyle.marginRight;
+                    size = actionGroupLayout.width;
+                    containerSize = containerLayout.width;
+                    moreButtonSize = moreButtonStyle.width + (m_CurrentLayoutDirection == Dir.Ltr
+                        ? moreButtonStyle.marginLeft
+                        : moreButtonStyle.marginRight);
                     getChildSize = GetElementFullWidth;
                     break;
                 case Direction.Vertical:
-                    size = layout.height;
-                    containerSize = m_Container.layout.height;
-                    moreButtonSize = moreButtonStyle.height + moreButtonStyle.marginTop + moreButtonStyle.marginBottom;
+                    size = actionGroupLayout.height;
+                    containerSize = containerLayout.height;
+                    moreButtonSize = moreButtonStyle.height + moreButtonStyle.marginTop;
                     getChildSize = GetElementFullHeight;
                     break;
                 default:
@@ -604,21 +622,24 @@ namespace Unity.AppUI.UI
             m_MoreButton.visible = m_FirstIndexOutOfBound >= 0;
             if (m_FirstIndexOutOfBound >= 0) // overflow detected
             {
-                switch (m_Direction)
+                var firstChildOutOfBoundLayout = m_HandledChildren[m_FirstIndexOutOfBound].layout;
+                var left = m_Direction switch
                 {
-                    case Direction.Horizontal:
-                        m_MoreButton.style.left = m_CurrentLayoutDirection == Dir.Ltr ? 
-                            m_HandledChildren[m_FirstIndexOutOfBound].layout.x : 
-                            m_HandledChildren[m_FirstIndexOutOfBound].layout.xMax + (size - m_Container.layout.width) - moreButtonSize;
-                        m_MoreButton.style.top = new StyleLength(StyleKeyword.Null);
-                        break;
-                    case Direction.Vertical:
-                        m_MoreButton.style.top = m_HandledChildren[m_FirstIndexOutOfBound].layout.y;
-                        m_MoreButton.style.left = new StyleLength(StyleKeyword.Null);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                    Direction.Horizontal when m_CurrentLayoutDirection == Dir.Ltr => firstChildOutOfBoundLayout.x,
+                    Direction.Horizontal => firstChildOutOfBoundLayout.xMax + (size - containerSize) - moreButtonSize,
+                    Direction.Vertical => containerLayout.x,
+                    _ => 0
+                };
+                var top = m_Direction switch
+                {
+                    Direction.Horizontal => containerLayout.y,
+                    Direction.Vertical => firstChildOutOfBoundLayout.y,
+                    _ => 0
+                };
+                if (!Mathf.Approximately(moreButtonLayout.x, left))
+                    m_MoreButton.style.left = left;
+                if (!Mathf.Approximately(moreButtonLayout.y, top))
+                    m_MoreButton.style.top = top;
                 m_MoreButton.EnableInClassList("unity-first-child", m_FirstIndexOutOfBound == 0);
             }
 

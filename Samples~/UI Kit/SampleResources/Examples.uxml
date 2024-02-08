@@ -965,12 +965,6 @@
                                 <appui:Text text="Lorem ipsum..." />
                             </appui:Dialog>
                         </appui:DialogTrigger>
-                        <appui:DialogTrigger type="Tray" tray-position="Bottom" tray-expandable="true">
-                            <appui:ActionButton label="Bottom Tray - Expandable" />
-                            <appui:Dialog title="Hello">
-                                <appui:Text text="Lorem ipsum..." />
-                            </appui:Dialog>
-                        </appui:DialogTrigger>
                     </ui:VisualElement>
                     <appui:Text text="Tray - Left" class="example-subtitle" />
                     <ui:VisualElement class="example-section example-section-fullwidth">

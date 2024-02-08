@@ -10,7 +10,6 @@
     border-color: var(--appui-alias-field-border-color-default);
     padding: 0 var(--appui-alias-control-gap-md);
     cursor: var(--appui-alias-control-cursor-text);
-    width: 100%;
     flex-shrink: 0;
 }
 

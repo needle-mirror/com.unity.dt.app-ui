@@ -83,25 +83,50 @@ namespace Unity.AppUI.UI
                 if (view.parent != null)
                 {
                     tray.visible = true;
-                    var fr = tray.position switch
+                    var fromValue = tray.position switch
                     {
-                        TrayPosition.Left => -tray.trayElement.resolvedStyle.width,
-                        TrayPosition.Right => -tray.trayElement.resolvedStyle.width,
-                        TrayPosition.Bottom => -tray.trayElement.resolvedStyle.height,
+                        TrayPosition.Left => -view.parent.resolvedStyle.width,
+                        TrayPosition.Right => -view.parent.resolvedStyle.width,
+                        TrayPosition.Bottom => -view.parent.resolvedStyle.height,
                         _ => throw new ArgumentOutOfRangeException(nameof(tray.position), tray.position, "Unknown Tray position")
                     };
-                    Action<VisualElement, float> interpolation = tray.position switch
+                    switch (tray.position)
                     {
-                        TrayPosition.Left => (element, f) => element.style.marginLeft = f,
-                        TrayPosition.Right => (element, f) => element.style.marginRight = f,
-                        TrayPosition.Bottom => (element, f) => element.style.marginBottom = f,
-                        _ => throw new ArgumentOutOfRangeException(nameof(tray.position), tray.position, "Unknown Tray position")
-                    };
-                    tray.experimental.animation
-                        .Start(fr, 0, k_TraySlideInDurationMs, interpolation)
-                        .Ease(Easing.OutQuad)
-                        .OnCompleted(InvokeShownEventHandlers).Start();
-                    tray.draggedOff += OnTrayDraggedOff;
+                        case TrayPosition.Left:
+                            tray.trayElement.style.left = fromValue;
+                            break;
+                        case TrayPosition.Right:
+                            tray.trayElement.style.right = fromValue;
+                            break;
+                        case TrayPosition.Bottom:
+                            tray.trayElement.style.bottom = fromValue;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(tray.position), tray.position, "Unknown Tray position");
+                    }
+                    tray.schedule.Execute(() =>
+                    {
+                        fromValue = tray.position switch
+                        {
+                            TrayPosition.Left => -tray.trayElement.layout.width,
+                            TrayPosition.Right => -tray.trayElement.layout.width,
+                            TrayPosition.Bottom => -tray.trayElement.layout.height,
+                            _ => throw new ArgumentOutOfRangeException(nameof(tray.position), tray.position, "Unknown Tray position")
+                        };
+                        const float toValue = 0f;
+                        Action<VisualElement, float> interpolation = tray.position switch
+                        {
+                            TrayPosition.Left => (element, f) => element.style.left = f,
+                            TrayPosition.Right => (element, f) => element.style.right = f,
+                            TrayPosition.Bottom => (element, f) => element.style.bottom = f,
+                            _ => throw new ArgumentOutOfRangeException(nameof(tray.position), tray.position, "Unknown Tray position")
+                        };
+                        tray.trayElement.experimental.animation
+                            .Start(fromValue, toValue, k_TraySlideInDurationMs, interpolation)
+                            .Ease(Easing.OutQuad)
+                            .OnCompleted(InvokeShownEventHandlers).Start();
+                        tray.draggedOff += OnTrayDraggedOff;
+                    });
                 }
             });
         }
@@ -114,39 +139,30 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="Popup.AnimateViewOut"/>
         protected override void AnimateViewOut(DismissType reason)
         {
-            switch (tray.position)
+            var fromValue = tray.position switch
             {
-                case TrayPosition.Left:
-                    tray.trayElement.style.width = tray.trayElement.resolvedStyle.width;
-                    tray.trayElement.style.right = new StyleLength(StyleKeyword.Auto);
-                    break;
-                case TrayPosition.Right:
-                    tray.trayElement.style.width = tray.trayElement.resolvedStyle.width;
-                    tray.trayElement.style.left = new StyleLength(StyleKeyword.Auto);
-                    break;
-                case TrayPosition.Bottom:
-                    tray.trayElement.style.height = tray.trayElement.resolvedStyle.height;
-                    tray.trayElement.style.top = new StyleLength(StyleKeyword.Auto);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            var to = tray.position switch
+                TrayPosition.Left => tray.trayElement.layout.xMin,
+                TrayPosition.Right => tray.layout.width - tray.trayElement.layout.xMax,
+                TrayPosition.Bottom => tray.layout.height - tray.trayElement.layout.yMax,
+                _ => throw new ArgumentOutOfRangeException(nameof(tray.position), tray.position, "Unknown Tray position")
+            };
+            var toValue = tray.position switch
             {
-                TrayPosition.Left => -tray.trayElement.resolvedStyle.width,
-                TrayPosition.Right => -tray.trayElement.resolvedStyle.width,
-                TrayPosition.Bottom => -tray.trayElement.resolvedStyle.height,
+                TrayPosition.Left => -tray.trayElement.layout.width,
+                TrayPosition.Right => -tray.trayElement.layout.width,
+                TrayPosition.Bottom => -tray.trayElement.layout.height,
                 _ => throw new ArgumentOutOfRangeException(nameof(tray.position), tray.position, "Unknown Tray position")
             };
             Action<VisualElement, float> interpolation = tray.position switch
             {
-                TrayPosition.Left => (element, f) => element.style.marginLeft = f,
-                TrayPosition.Right => (element, f) => element.style.marginRight = f,
-                TrayPosition.Bottom => (element, f) => element.style.marginBottom = f,
+                TrayPosition.Left => (element, f) => element.style.left = f,
+                TrayPosition.Right => (element, f) => element.style.right = f,
+                TrayPosition.Bottom => (element, f) => element.style.bottom = f,
                 _ => throw new ArgumentOutOfRangeException(nameof(tray.position), tray.position, "Unknown Tray position")
             };
-            tray.experimental.animation
-                .Start(0, to, k_TraySlideInDurationMs, interpolation)
+            var duration = Mathf.FloorToInt(Mathf.Abs(fromValue - toValue) / -toValue * k_TraySlideInDurationMs);
+            tray.trayElement.experimental.animation
+                .Start(fromValue, toValue, duration, interpolation)
                 .OnCompleted(() =>
             {
                 view.visible = false;
@@ -202,28 +218,6 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// Set to true to make the tray expandable.
-        /// </summary>
-        /// <param name="expandable"> True to make the tray expandable.</param>
-        /// <returns> The <see cref="Tray"/> instance.</returns>
-        public Tray SetExpandable(bool expandable)
-        {
-            tray.expandable = expandable;
-            return this;
-        }
-
-        /// <summary>
-        /// Set the margin of the tray.
-        /// </summary>
-        /// <param name="margin"> The margin of the tray.</param>
-        /// <returns> The <see cref="Tray"/> instance.</returns>
-        public Tray SetMargin(float margin)
-        {
-            tray.margin = margin;
-            return this;
-        }
-
-        /// <summary>
         /// Set the transition duration.
         /// </summary>
         /// <param name="durationMs"> The transition duration in milliseconds.</param>
@@ -231,17 +225,6 @@ namespace Unity.AppUI.UI
         public Tray SetTransitionDuration(int durationMs)
         {
             tray.transitionDurationMs = durationMs;
-            return this;
-        }
-
-        /// <summary>
-        /// Set the size of the tray.
-        /// </summary>
-        /// <param name="size"> The size of the tray.</param>
-        /// <returns> The <see cref="Tray"/> instance.</returns>
-        public Tray SetSize(float size)
-        {
-            tray.size = size;
             return this;
         }
 
@@ -265,9 +248,7 @@ namespace Unity.AppUI.UI
             public static readonly string trayUssClassName = ussClassName + "__tray";
 
             public static readonly string containerUssClassName = ussClassName + "__container";
-
-            public static readonly string contentUssClassName = ussClassName + "__content";
-
+            
             /// <summary>
             /// Event triggered when the user has dragged almost completely the tray out of the screen.
             /// </summary>
@@ -280,64 +261,13 @@ namespace Unity.AppUI.UI
             readonly Draggable m_Draggable;
 
             readonly VisualElement m_HandleZone;
-
-            float m_StartHeight = float.NaN;
-
+            
             bool m_OnHandleZone;
-
-            float m_StartWidth = float.NaN;
-
-            float m_Top;
-
-            float m_StartTop;
-
-            float m_Left;
-
-            float m_StartLeft;
-
-            float m_Right;
-
-            float m_StartRight;
-
-            readonly VisualElement m_Content;
-
+            
             public bool showHandle
             {
                 get => !m_HandleZone.ClassListContains(Styles.hiddenUssClassName);
                 set => m_HandleZone.EnableInClassList(Styles.hiddenUssClassName, !value);
-            }
-
-            public bool expandable { get; set; }
-
-            public float margin { get; set; }
-
-            public float size
-            {
-                get => position switch
-                {
-                    TrayPosition.Left => m_Container.resolvedStyle.width,
-                    TrayPosition.Right => m_Container.resolvedStyle.width,
-                    TrayPosition.Bottom => m_Container.resolvedStyle.height,
-                    _ => 0
-                };
-
-                set
-                {
-                    switch (position)
-                    {
-                        case TrayPosition.Left:
-                        case TrayPosition.Right:
-                            m_Container.style.width = value;
-                            m_Container.style.height = new StyleLength(new Length(100, LengthUnit.Percent));
-                            break;
-                        case TrayPosition.Bottom:
-                            m_Container.style.height = value;
-                            m_Container.style.width = new StyleLength(new Length(100, LengthUnit.Percent));
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
             }
 
             public int transitionDurationMs { get; set; } = 150;
@@ -365,17 +295,14 @@ namespace Unity.AppUI.UI
                 trayElement.AddManipulator(m_Draggable);
                 m_Container = new VisualElement { name = containerUssClassName, focusable = false, pickingMode = PickingMode.Ignore };
                 m_Container.AddToClassList(containerUssClassName);
-                m_Content = new VisualElement { name = contentUssClassName, focusable = false, pickingMode = PickingMode.Ignore };
-                m_Content.AddToClassList(contentUssClassName);
 
                 hierarchy.Add(trayElement);
                 m_HandleZone.Add(handle);
                 trayElement.hierarchy.Add(m_HandleZone);
                 trayElement.hierarchy.Add(m_Container);
-                m_Container.hierarchy.Add(m_Content);
-
-                m_Content.Add(content);
-
+                
+                m_Container.hierarchy.Add(content);
+                
                 position = TrayPosition.Bottom;
                 showHandle = true;
             }
@@ -389,23 +316,46 @@ namespace Unity.AppUI.UI
             {
                 if (!m_OnHandleZone)
                     return;
+                
+                var minPos = m_Position switch
+                {
+                    TrayPosition.Left => -trayElement.layout.width,
+                    TrayPosition.Right => -trayElement.layout.width,
+                    TrayPosition.Bottom => -trayElement.layout.height,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
 
-                switch (m_Position)
+                const float maxPos = 0f;
+                
+                var currentPos = m_Position switch
+                {
+                    TrayPosition.Left => trayElement.layout.xMin,
+                    TrayPosition.Right => layout.width - trayElement.layout.xMax,
+                    TrayPosition.Bottom => layout.height - trayElement.layout.yMax,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                
+                var newPos = m_Position switch
+                {
+                    TrayPosition.Left => Mathf.Clamp(currentPos + draggable.deltaPos.x, minPos, maxPos),
+                    TrayPosition.Right => Mathf.Clamp(currentPos - draggable.deltaPos.x, minPos, maxPos),
+                    TrayPosition.Bottom => Mathf.Clamp(currentPos - draggable.deltaPos.y, minPos, maxPos),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                switch (position)
                 {
                     case TrayPosition.Left:
-                        m_Right = expandable ? m_Right - draggable.deltaPos.x : Mathf.Max(m_Right - draggable.deltaPos.x, m_StartRight);
-                        trayElement.style.right = m_Right;
+                        trayElement.style.left = newPos;
                         break;
                     case TrayPosition.Right:
-                        m_Left = expandable ? m_Left + draggable.deltaPos.x : Mathf.Max(m_Left + draggable.deltaPos.x, m_StartLeft);
-                        trayElement.style.left = m_Left;
+                        trayElement.style.right = newPos;
                         break;
                     case TrayPosition.Bottom:
-                        m_Top = expandable ? m_Top + draggable.deltaPos.y : Mathf.Max(m_Top + draggable.deltaPos.y, m_StartTop);
-                        trayElement.style.top = m_Top;
+                        trayElement.style.bottom = newPos;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(m_Position), m_Position, "Unknown Tray position");
+                        throw new ArgumentOutOfRangeException(nameof(position), position, "Unknown Tray position");
                 }
             }
 
@@ -413,99 +363,50 @@ namespace Unity.AppUI.UI
             {
                 if (!m_OnHandleZone)
                     return;
-
-                var trayStyle = trayElement.resolvedStyle;
-
-                switch (m_Position)
+                
+                var fromValue = m_Position switch
                 {
-                    case TrayPosition.Left:
-                        {
-                            var right = resolvedStyle.width - trayStyle.width;
-                            var distToRight = expandable ? Mathf.Abs(right) : float.MaxValue;
-                            var distToLeft = Mathf.Abs(trayStyle.width);
-                            var distToStartWidth = Mathf.Abs(trayStyle.width - m_StartWidth);
-                            if (distToRight < distToLeft && distToRight < distToStartWidth)
-                            {
-                                experimental.animation.Start(right, margin, transitionDurationMs, (_, f) =>
-                                {
-                                    trayElement.style.right = f;
-                                }).Ease(Easing.OutQuad);
-                            }
-                            else if (distToLeft < distToRight && distToLeft < distToStartWidth)
-                            {
-                                experimental.animation.Start(right, resolvedStyle.width, transitionDurationMs, (_, f) =>
-                                {
-                                    trayElement.style.right = f;
-                                }).Ease(Easing.OutQuad).OnCompleted(InvokeDraggedOff);
-                            }
-                            else // distToStartWidth
-                            {
-                                experimental.animation.Start(right, resolvedStyle.width - m_StartWidth, transitionDurationMs, (_, f) =>
-                                {
-                                    trayElement.style.right = f;
-                                }).Ease(Easing.OutQuad);
-                            }
-                        }
-                        break;
-                    case TrayPosition.Right:
-                        {
-                            var distToRight = Mathf.Abs(trayStyle.width);
-                            var distToLeft = expandable ? Mathf.Abs(trayStyle.left) : float.MaxValue;
-                            var distToStartWidth = Mathf.Abs(trayStyle.width - m_StartWidth);
-                            if (distToLeft < distToRight && distToLeft < distToStartWidth)
-                            {
-                                experimental.animation.Start(trayStyle.left, margin, transitionDurationMs, (_, f) =>
-                                {
-                                    trayElement.style.left = f;
-                                }).Ease(Easing.OutQuad);
-                            }
-                            else if (distToRight < distToLeft && distToRight < distToStartWidth)
-                            {
-                                experimental.animation.Start(trayStyle.left, resolvedStyle.width, transitionDurationMs, (_, f) =>
-                                {
-                                    trayElement.style.left = f;
-                                }).Ease(Easing.OutQuad).OnCompleted(InvokeDraggedOff);
-                            }
-                            else // distToStartWidth
-                            {
-                                experimental.animation.Start(trayStyle.left, resolvedStyle.width - m_StartWidth, transitionDurationMs, (_, f) =>
-                                {
-                                    trayElement.style.left = f;
-                                }).Ease(Easing.OutQuad);
-                            }
-                        }
-                        break;
-                    case TrayPosition.Bottom:
-                        {
-                            var distToTop = expandable ? Mathf.Abs(trayStyle.top) : float.MaxValue;
-                            var distToBottom = Mathf.Abs(trayStyle.height);
-                            var distToStartHeight = Mathf.Abs(trayStyle.height - m_StartHeight);
-                            if (distToTop < distToBottom && distToTop < distToStartHeight)
-                            {
-                                experimental.animation.Start(trayStyle.top, margin, transitionDurationMs, (_, f) =>
-                                {
-                                    trayElement.style.top = f;
-                                }).Ease(Easing.OutQuad);
-                            }
-                            else if (distToBottom < distToTop && distToBottom < distToStartHeight)
-                            {
-                                experimental.animation.Start(trayStyle.top, resolvedStyle.height, transitionDurationMs, (_, f) =>
-                                {
-                                    trayElement.style.top = f;
-                                }).Ease(Easing.OutQuad).OnCompleted(InvokeDraggedOff);
-                            }
-                            else // distToStartHeight
-                            {
-                                experimental.animation.Start(trayStyle.top, resolvedStyle.height - m_StartHeight, transitionDurationMs, (_, f) =>
-                                {
-                                    trayElement.style.top = f;
-                                }).Ease(Easing.OutQuad);
-                            }
-                        }
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(m_Position), m_Position, "Unknown Tray position");
-                }
+                    TrayPosition.Left => trayElement.layout.xMin,
+                    TrayPosition.Right => layout.width - trayElement.layout.xMax,
+                    TrayPosition.Bottom => layout.height - trayElement.layout.yMax,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                
+                var shouldCollapse = m_Position switch
+                {
+                    TrayPosition.Left => fromValue < -trayElement.layout.width * .25f,
+                    TrayPosition.Right => fromValue < -trayElement.layout.width * .25f,
+                    TrayPosition.Bottom => fromValue < -trayElement.layout.height * .25f,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                
+                var toValue = m_Position switch
+                {
+                    TrayPosition.Left when shouldCollapse => -trayElement.layout.width,
+                    TrayPosition.Right when shouldCollapse => -trayElement.layout.width,
+                    TrayPosition.Bottom when shouldCollapse => -trayElement.layout.height,
+                    TrayPosition.Left => 0,
+                    TrayPosition.Right => 0,
+                    TrayPosition.Bottom => 0,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                
+                Action<VisualElement, float> interpolation = m_Position switch
+                {
+                    TrayPosition.Left => (element, f) => element.style.left = f,
+                    TrayPosition.Right => (element, f) => element.style.right = f,
+                    TrayPosition.Bottom => (element, f) => element.style.bottom = f,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                
+                trayElement.experimental.animation.Start(fromValue, toValue, transitionDurationMs, interpolation)
+                    .Ease(Easing.OutQuad)
+                    .OnCompleted(() =>
+                    {
+                        if (shouldCollapse)
+                            InvokeDraggedOff();
+                    })
+                    .Start();
 
                 m_OnHandleZone = false;
             }
@@ -523,19 +424,7 @@ namespace Unity.AppUI.UI
                     return;
                 }
 
-                var trayStyle = trayElement.resolvedStyle;
-
                 m_OnHandleZone = true;
-                if (float.IsNaN(m_StartHeight))
-                    m_StartHeight = trayStyle.height;
-                if (float.IsNaN(m_StartWidth))
-                    m_StartWidth = trayStyle.width;
-                m_Top = trayStyle.top;
-                m_StartTop = m_Top;
-                m_Left = trayStyle.left;
-                m_StartLeft = m_Left;
-                m_Right = resolvedStyle.width - trayStyle.width;
-                m_StartRight = m_Right;
             }
 
             public VisualElement trayElement { get; }
@@ -550,26 +439,36 @@ namespace Unity.AppUI.UI
                     EnableInClassList(rightTrayUssClassName, m_Position == TrayPosition.Right);
                     EnableInClassList(bottomTrayUssClassName, m_Position == TrayPosition.Bottom);
 
-                    switch (m_Position)
+                    trayElement.style.top = new StyleLength(StyleKeyword.Null);
+                    switch (position)
                     {
                         case TrayPosition.Left:
+                            trayElement.style.right = new StyleLength(StyleKeyword.Null);
+                            trayElement.style.bottom = new StyleLength(StyleKeyword.Null);
+                            break;
                         case TrayPosition.Right:
-                            m_Container.style.width = size;
-                            m_Container.style.height = new StyleLength(new Length(100, LengthUnit.Percent));
-                            m_Draggable.dragDirection = Draggable.DragDirection.Horizontal;
+                            trayElement.style.left = new StyleLength(StyleKeyword.Null);
+                            trayElement.style.bottom = new StyleLength(StyleKeyword.Null);
                             break;
                         case TrayPosition.Bottom:
-                            m_Container.style.height = size;
-                            m_Container.style.width = new StyleLength(new Length(100, LengthUnit.Percent));
-                            m_Draggable.dragDirection = Draggable.DragDirection.Vertical;
+                            trayElement.style.left = new StyleLength(StyleKeyword.Null);
+                            trayElement.style.right = new StyleLength(StyleKeyword.Null);
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            throw new ArgumentOutOfRangeException(nameof(position), position, "Unknown Tray position");
                     }
+                    
+                    m_Draggable.dragDirection = m_Position switch
+                    {
+                        TrayPosition.Left => Draggable.DragDirection.Horizontal,
+                        TrayPosition.Right => Draggable.DragDirection.Horizontal,
+                        TrayPosition.Bottom => Draggable.DragDirection.Vertical,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
                 }
             }
 
-            public override VisualElement contentContainer => m_Content;
+            public override VisualElement contentContainer => m_Container;
         }
     }
 }

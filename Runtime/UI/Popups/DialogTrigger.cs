@@ -102,13 +102,7 @@ namespace Unity.AppUI.UI
         
         internal static readonly BindingId trayPositionProperty = new BindingId(nameof(trayPosition));
         
-        internal static readonly BindingId traySizeProperty = new BindingId(nameof(traySize));
-        
-        internal static readonly BindingId trayExpandableProperty = new BindingId(nameof(trayExpandable));
-        
         internal static readonly BindingId transitionDurationProperty = new BindingId(nameof(transitionDuration));
-        
-        internal static readonly BindingId trayMarginProperty = new BindingId(nameof(trayMargin));
         
         internal static readonly BindingId hideArrowProperty = new BindingId(nameof(hideArrow));
         
@@ -146,9 +140,6 @@ namespace Unity.AppUI.UI
             anchor = null;
             type = PopupPresentationType.Modal;
             trayPosition = TrayPosition.Bottom;
-            traySize = 200;
-            trayExpandable = false;
-            trayMargin = 0;
             transitionDuration = 150;
             hideArrow = false;
             mobileType = MobilePopupPresentationType.Modal;
@@ -250,58 +241,6 @@ namespace Unity.AppUI.UI
             }
         }
         
-        float m_TraySize;
-
-        /// <summary>
-        /// The size of the Tray element.
-        /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
-        [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
-        [UxmlAttribute]
-#endif
-        public float traySize 
-        {
-            get => m_TraySize;
-            set
-            {
-                var changed = m_TraySize != value;
-                m_TraySize = value;
-                
-#if ENABLE_RUNTIME_DATA_BINDINGS
-                if (changed)
-                    NotifyPropertyChanged(in traySizeProperty);
-#endif
-            }
-        }
-        
-        bool m_TrayExpandable;
-
-        /// <summary>
-        /// Make the Tray element expandable.
-        /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
-        [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
-        [UxmlAttribute]
-#endif
-        public bool trayExpandable
-        {
-            get => m_TrayExpandable;
-            set
-            {
-                var changed = m_TrayExpandable != value;
-                m_TrayExpandable = value;
-
-#if ENABLE_RUNTIME_DATA_BINDINGS
-                if (changed)
-                    NotifyPropertyChanged(in trayExpandableProperty);
-#endif
-            }
-        }
-        
         int m_TransitionDuration;
 
         /// <summary>
@@ -324,32 +263,6 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in transitionDurationProperty);
-#endif
-            }
-        }
-        
-        float m_TrayMargin;
-
-        /// <summary>
-        /// The margin in pixels of the Tray element.
-        /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
-        [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
-        [UxmlAttribute]
-#endif
-        public float trayMargin
-        {
-            get => m_TrayMargin;
-            set
-            {
-                var changed = m_TrayMargin != value;
-                m_TrayMargin = value;
-
-#if ENABLE_RUNTIME_DATA_BINDINGS
-                if (changed)
-                    NotifyPropertyChanged(in trayMarginProperty);
 #endif
             }
         }
@@ -742,9 +655,6 @@ namespace Unity.AppUI.UI
                 case PopupPresentationType.Tray:
                     Tray.Build(trigger, dialog)
                         .SetPosition(trayPosition)
-                        .SetSize(traySize)
-                        .SetExpandable(trayExpandable)
-                        .SetMargin(trayMargin)
                         .SetTransitionDuration(transitionDuration)
                         .Show();
                     break;
@@ -851,28 +761,10 @@ namespace Unity.AppUI.UI
                 defaultValue = TrayPosition.Bottom
             };
 
-            readonly UxmlFloatAttributeDescription m_TraySize = new UxmlFloatAttributeDescription
-            {
-                name = "tray-size",
-                defaultValue = 200
-            };
-
-            readonly UxmlBoolAttributeDescription m_TrayExpandable = new UxmlBoolAttributeDescription
-            {
-                name = "tray-expandable",
-                defaultValue = false
-            };
-
             readonly UxmlIntAttributeDescription m_TransitionDuration = new UxmlIntAttributeDescription
             {
                 name = "transition-duration",
                 defaultValue = 150
-            };
-
-            readonly UxmlFloatAttributeDescription m_TrayMargin = new UxmlFloatAttributeDescription
-            {
-                name = "tray-margin",
-                defaultValue = 0
             };
 
             /// <summary>
@@ -888,9 +780,6 @@ namespace Unity.AppUI.UI
 
                 el.type = m_Type.GetValueFromBag(bag, cc);
                 el.trayPosition = m_TrayPosition.GetValueFromBag(bag, cc);
-                el.traySize = m_TraySize.GetValueFromBag(bag, cc);
-                el.trayExpandable = m_TrayExpandable.GetValueFromBag(bag, cc);
-                el.trayMargin = m_TrayMargin.GetValueFromBag(bag, cc);
                 el.transitionDuration = m_TransitionDuration.GetValueFromBag(bag, cc);
                 el.mobileType = m_MobileType.GetValueFromBag(bag, cc);
                 el.hideArrow = m_HideArrow.GetValueFromBag(bag, cc);

@@ -56,7 +56,7 @@
 .appui-bottom-navbar-item.is-selected .appui-bottom-navbar-item__label,
 .appui-bottom-navbar-item.is-selected .appui-bottom-navbar-item__icon {
     color: var(--appui-foregrounds-200);
-    --unity-image-tint-color: var(--appui--foregrounds-200);
+    --unity-image-tint-color: var(--appui-foregrounds-200);
 }
 
 .appui-bottom-navbar-item:disabled,

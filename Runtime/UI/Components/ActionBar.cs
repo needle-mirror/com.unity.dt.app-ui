@@ -105,14 +105,14 @@ namespace Unity.AppUI.UI
             set
             {
                 if (m_CollectionView != null)
-#if UNITY_2022_2_SIC
+#if UITK_SELECTED_INDICES_CHANGED
                     m_CollectionView.selectedIndicesChanged -= OnSelectedIndicesChanged;
 #else
                     m_CollectionView.onSelectedIndicesChange -= OnSelectedIndicesChanged;
 #endif
                 m_CollectionView = value;
                 if (m_CollectionView != null)
-#if UNITY_2022_2_SIC
+#if UITK_SELECTED_INDICES_CHANGED
                     m_CollectionView.selectedIndicesChanged += OnSelectedIndicesChanged;
 #else
                     m_CollectionView.onSelectedIndicesChange += OnSelectedIndicesChanged;

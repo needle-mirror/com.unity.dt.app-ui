@@ -31,11 +31,13 @@
     display: flex;
     position: absolute;
     overflow: hidden;
+    flex-shrink: 0;
+    max-height: 100%;
+    max-width: 100%;
     background-color: var(--appui-backgrounds-200);
 }
 
 .appui-tray--bottom .appui-tray__tray {
-    bottom: 0;
     width: 100%;
     max-width: 640px;
     flex-direction: column;
@@ -44,7 +46,6 @@
 }
 
 .appui-tray--left .appui-tray__tray {
-    left: 0;
     height: 100%;
     flex-direction: row-reverse;
     border-bottom-right-radius: var(--appui-border-radius-lg);
@@ -52,7 +53,6 @@
 }
 
 .appui-tray--right .appui-tray__tray {
-    right: 0;
     height: 100%;
     flex-direction: row;
     border-top-left-radius: var(--appui-border-radius-lg);
@@ -65,7 +65,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: var(--appui-control-gap);
+    padding: var(--appui-alias-control-gap-md);
     cursor: var(--appui-alias-control-cursor-grab);
 }
 
@@ -93,7 +93,7 @@
 .appui-tray__container {
     display: flex;
     flex-direction: column;
-    flex-shrink: 0;
+    flex-shrink: 1;
     flex-grow: 1;
 }
 
@@ -107,9 +107,4 @@
 
 .appui-tray--bottom .appui-tray__container {
     justify-content: flex-start;
-}
-
-.appui-tray__content {
-    display: flex;
-    position: absolute;
 }

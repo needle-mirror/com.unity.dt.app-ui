@@ -131,7 +131,7 @@ namespace Unity.AppUI.UI
             m_ScrollView = new ScrollView
             {
                 name = scrollViewUssClassName,
-#if (UNITY_2021_3 && UNITY_2021_3_NIK) || (UNITY_2022_1 && UNITY_2022_1_NIK) || (UNITY_2022_2 && UNITY_2022_2_NIK) || UNITY_2022_3 || (UNITY_2023_1 && UNITY_2023_1_NIK) || UNITY_2023_2_OR_NEWER
+#if UITK_NESTED_INTERACTION_KIND
                 nestedInteractionKind = ScrollView.NestedInteractionKind.StopScrolling,
 #endif
                 mode = ScrollViewMode.Horizontal,

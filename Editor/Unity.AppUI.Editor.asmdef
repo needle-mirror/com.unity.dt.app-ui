@@ -19,7 +19,7 @@
         {
             "name": "Unity",
             "expression": "2022.2.0a9",
-            "define": "UNITY_2022_2_SIC"
+            "define": "UITK_SELECTED_INDICES_CHANGED"
         },
         {
             "name": "Unity",
