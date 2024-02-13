@@ -39,7 +39,7 @@
     width: var(--appui-sizing-200);
     height: var(--appui-sizing-200);
     cursor: var(--appui-alias-control-cursor-nsresize);
-    background-image: url("../../Icons/TextAreaResizer.png");
+    background-image: var(--appui-icon-resize-handle-regular);
     -unity-background-image-tint-color: var(--appui-foregrounds-50);
 }
 

@@ -81,25 +81,13 @@ Shader "Hidden/App UI/ColorSwatch"
                 float4 vertex : SV_POSITION;
             };
 
-            struct ColorStop
-            {
-                float4 color;
-                float position;
-            };
-
-            struct AlphaStop
-            {
-                float alpha;
-                float position;
-            };
-
-            #define MAX_GRADIENT_COLORS_COUNT 11
-
+            #define COLORSWATCH_MAX_ITEMS 16
+            
             uniform int _ColorCount;
             uniform int _AlphaCount;
-            int _IsFixed;
-            StructuredBuffer<ColorStop> _Colors;
-            StructuredBuffer<AlphaStop> _Alphas;
+            uniform int _IsFixed;
+            uniform float4 _Colors[COLORSWATCH_MAX_ITEMS];
+            uniform float4 _Alphas[COLORSWATCH_MAX_ITEMS];
 
             v2f vert (appdata v)
             {
@@ -111,15 +99,11 @@ Shader "Hidden/App UI/ColorSwatch"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                const int colorCount = min(_ColorCount, MAX_GRADIENT_COLORS_COUNT);
-                const int alphaCount = min(_AlphaCount, MAX_GRADIENT_COLORS_COUNT);
+                const int color_count = _ColorCount;
+                const int alpha_count = _AlphaCount;
 
-                clip(colorCount + alphaCount - 1);
-
-                if (colorCount == 1 && alphaCount == 1)
-                {
-                    return fixed4(_Colors[0].color.rgb, _Alphas[0].alpha);
-                }
+                if (color_count == 0 || alpha_count == 0)
+                    return fixed4(0, 0, 0, 0);
 
                 const float current_position = i.uv.x;
 
@@ -129,31 +113,32 @@ Shader "Hidden/App UI/ColorSwatch"
                 int first_alpha_index = 0;
 
                 UNITY_UNROLL
-                for (int index = 0; index < colorCount; index++)
+                for (int index = 0; index < COLORSWATCH_MAX_ITEMS; index++)
                 {
-                    first_color_index = max(first_color_index, step(_Colors[index].position, current_position) * index);
+                    if (index < color_count)
+                        first_color_index = max(first_color_index, step(_Colors[index].w, current_position) * index);
+
+                    if (index < alpha_count)
+                        first_alpha_index = max(first_alpha_index, step(_Alphas[index].y, current_position) * index);
+
+                    if (index >= color_count && index >= alpha_count)
+                        break;
                 }
 
-                UNITY_UNROLL
-                for (int index = 0; index < alphaCount; index++)
-                {
-                    first_alpha_index = max(first_alpha_index, step(_Alphas[index].position, current_position) * index);
-                }
-
-                const int second_color_index = min(first_color_index + 1, colorCount - 1);
-                const int second_alpha_index = min(first_alpha_index + 1, alphaCount - 1);
+                const int second_color_index = min(first_color_index + 1, color_count - 1);
+                const int second_alpha_index = min(first_alpha_index + 1, alpha_count - 1);
                 
-                const float colorDelta = (current_position - _Colors[first_color_index].position) / max(0.00001, _Colors[second_color_index].position - _Colors[first_color_index].position);
-                const float alphaDelta = (current_position - _Alphas[first_alpha_index].position) / max(0.00001, _Alphas[second_alpha_index].position - _Alphas[first_alpha_index].position);
+                const float colorDelta = (current_position - _Colors[first_color_index].w) / max(0.00001, _Colors[second_color_index].w - _Colors[first_color_index].w);
+                const float alphaDelta = (current_position - _Alphas[first_alpha_index].y) / max(0.00001, _Alphas[second_alpha_index].y - _Alphas[first_alpha_index].y);
 
                 const float smoothColorDelta = lerp(smoothstep(0.0, 1.0, colorDelta), step(0.0, colorDelta), _IsFixed);
                 const float smoothAlphaDelta = lerp(smoothstep(0.0, 1.0, alphaDelta), step(0.0, alphaDelta), _IsFixed);
                 
-                const fixed3 first_color = _Colors[first_color_index].color.rgb;
-                const fixed3 second_color = _Colors[second_color_index].color.rgb;
+                const fixed3 first_color = _Colors[first_color_index].rgb;
+                const fixed3 second_color = _Colors[second_color_index].rgb;
 
-                const float first_alpha = _Alphas[first_alpha_index].alpha;
-                const float second_alpha = _Alphas[second_alpha_index].alpha;
+                const float first_alpha = _Alphas[first_alpha_index].x;
+                const float second_alpha = _Alphas[second_alpha_index].x;
 
                 const fixed3 lerped_color = lerp(first_color, second_color, smoothColorDelta);
                 const float lerped_alpha = lerp(first_alpha, second_alpha, smoothAlphaDelta);

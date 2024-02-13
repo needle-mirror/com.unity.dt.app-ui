@@ -29,7 +29,7 @@ namespace Unity.AppUI.UI
         
 #endif
         
-        const int k_MaxGradientSteps = 11;
+        const int k_MaxGradientSteps = 16;
 
         /// <summary>
         /// The ColorSwatch main styling class.
@@ -93,9 +93,19 @@ namespace Unity.AppUI.UI
         
         static readonly int k_Alphas = Shader.PropertyToID("_Alphas");
 
-        ComputeBuffer m_ColorBuffer;
+        static readonly Color[] k_ColorsVector = new Color[k_MaxGradientSteps];
         
-        ComputeBuffer m_AlphaBuffer;
+        static readonly Vector4[] k_AlphasVectors = new Vector4[k_MaxGradientSteps];
+        
+        static readonly GradientColorKey[] k_DefaultColorKeys = new[]
+        {
+            new GradientColorKey(Color.black, 0),
+        };
+        
+        static readonly GradientAlphaKey[] k_DefaultAlphaKeys = new[]
+        {
+            new GradientAlphaKey(1, 0),
+        };
 
         Size m_Size;
 
@@ -261,12 +271,6 @@ namespace Unity.AppUI.UI
                 RenderTexture.ReleaseTemporary(m_RT);
 
             m_RT = null;
-            
-            m_ColorBuffer?.Release();
-            m_ColorBuffer = null;
-            
-            m_AlphaBuffer?.Release();
-            m_AlphaBuffer = null;
         }
 
         void OnGeometryChanged(GeometryChangedEvent evt)
@@ -335,28 +339,34 @@ namespace Unity.AppUI.UI
                 m_RT = RenderTexture.GetTemporary((int)texSize.x, (int)texSize.y, 24);
                 m_RT.Create();
             }
+            
+            var colorCount = Mathf.Min(m_Value?.colorKeys?.Length ?? k_DefaultColorKeys.Length, k_MaxGradientSteps);
+            var alphaCount = Mathf.Min(m_Value?.alphaKeys?.Length ?? k_DefaultAlphaKeys.Length, k_MaxGradientSteps);
 
-            if (m_ColorBuffer == null || m_ColorBuffer.count != m_Value?.colorKeys.Length)
+            var colorKeys = m_Value?.colorKeys ?? k_DefaultColorKeys;
+            for (var i = 0; i < colorCount; i++)
             {
-                m_ColorBuffer?.Release();
-                m_ColorBuffer = m_Value?.colorKeys?.Length > 0 ? 
-                    new ComputeBuffer(m_Value.colorKeys.Length, sizeof(float) * 5) : null;
+                k_ColorsVector[i] = new Color(
+                    colorKeys[i].color.r,
+                    colorKeys[i].color.g,
+                    colorKeys[i].color.b,
+                    colorKeys[i].time);
             }
             
-            if (m_AlphaBuffer == null || m_AlphaBuffer.count != m_Value?.alphaKeys.Length)
+            var alphaKeys = m_Value?.alphaKeys ?? k_DefaultAlphaKeys;
+            for (var i = 0; i < alphaCount; i++)
             {
-                m_AlphaBuffer?.Release();
-                m_AlphaBuffer = m_Value?.alphaKeys?.Length > 0 ? 
-                    new ComputeBuffer(m_Value.alphaKeys.Length, sizeof(float) * 2) : null;
+                k_AlphasVectors[i] = new Vector4(
+                    alphaKeys[i].alpha,
+                    alphaKeys[i].time,
+                    0,
+                    0);
             }
             
-            m_ColorBuffer?.SetData(m_Value?.colorKeys ?? Array.Empty<GradientColorKey>());
-            m_AlphaBuffer?.SetData(m_Value?.alphaKeys ?? Array.Empty<GradientAlphaKey>());
-            
-            s_Material.SetInt(k_ColorCount, m_Value?.colorKeys?.Length ?? 0);
-            s_Material.SetInt(k_AlphaCount, m_Value?.alphaKeys?.Length ?? 0);
-            s_Material.SetBuffer(k_Colors, m_ColorBuffer);
-            s_Material.SetBuffer(k_Alphas, m_AlphaBuffer);
+            s_Material.SetInt(k_ColorCount, colorCount);
+            s_Material.SetInt(k_AlphaCount, alphaCount);
+            s_Material.SetColorArray(k_Colors, k_ColorsVector);
+            s_Material.SetVectorArray(k_Alphas, k_AlphasVectors);
             s_Material.SetColor(k_CheckerColor1, m_CheckerColor1);
             s_Material.SetColor(k_CheckerColor2, m_CheckerColor2);
             s_Material.SetFloat(k_CheckerSize, m_CheckerSize);
@@ -366,7 +376,7 @@ namespace Unity.AppUI.UI
 
             var prevRt = RenderTexture.active;
             Graphics.Blit(null, m_RT, s_Material, 0);
-            if (m_ColorBuffer != null && m_AlphaBuffer != null)
+            if (m_Value != null)
                 Graphics.Blit(null, m_RT, s_Material, 1);
             RenderTexture.active = prevRt;
 

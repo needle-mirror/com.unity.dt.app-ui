@@ -4,6 +4,120 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2024-02-14
+
+### Fixed
+
+- Fixed ColorSwatch shader to support Shader Model older than 5.0
+
+## [1.0.0] - 2024-02-12
+
+### Changed
+
+- Color related components, such as `ColorSlider` or `ColorSwatch`, support now a value of type `UnityEngine.Gradient` instead of `UnityEngine.Color` for more flexibility.
+- Removed the `disabled` boolean property on App UI components from the public C# API. The `disabled` attribute in UXML has been replaced by `enabled` UXML attribute. This change has been made in order to be more consistent with Unity 2023.3, where `enabled` UXML attribute is provided by UI Toolkit on any VisualElement.
+- Replaced `Nullable<T>` properties in components by a custom serializable implementation called `Optional<T>`
+- Renamed `Panel.dir` property with `Panel.layoutDirection`.
+- Replaced the `Divider.vertical` property by `Divider.direction` enum property.
+- Removed the `ApplicationContext` class and `VisualElementExtensions.GetContext()` method, replaced by the ne `ProvideContext` and `RegisterContextChangedCallback` API.
+- Replaced `ActionGroup.vertical` property by `ActionGroup.direction` enum property.
+- Migrated code into the App UI monorepo at https://github.com/Unity-Technologies/unity-app-ui
+- Renamed `format` UXML Attribute to `format-string` to bind correctly in UIBuilder
+- Readjusted font sizes used on components to follow new design tokens
+- Changed assembly definition files to support new UXML Serialization starting Unity 2023.3.0a1
+- Removed `size` property from Checkbox and Toggle components.
+- In Numerical fields and sliders, the string formatting for percentage values follows now the C# standard. The formatted string of the value `1` using `0P` or `0%` will give you `100%`. If you want the user to be able to type `100` in order to get a `100%` as a formatted string in a numerical field, we suggest to use `0\%` string format (be sure that the `highValue` of your field is set to `100` too).
+- Previously the Panel Constructor set the default scale context to "large" on mobile platforms, now the default scale context for any platform is "medium".
+- All user input related UI controls now inherit from the new IInputElement interface. This has no impact on the current implementation (some addition in certain components).
+- The `MacroCommand.Flush` method will now call `UndoCommand.Flush` on its child commands from the most recent to the oldest one.
+  This is the same order as the one used by the `MacroCommand.Undo` method.
+- Most App UI component styling now use component-level design tokens for background and border colors
+- Renamed CircularProgress and LinearProgress `color` Uxml Attribute to `color-override` to bind correctly in UIBuilder
+- Runtime Tooltips won't be displayed if the picked element has `.is-open` USS class currently applied.
+- Use the ConditionalWeakTable for new releases of Unity where a fix from IL2CPP has landed.
+- Float Fields using a string format set on Percentage (P) will now use the same value as what you typed
+- Use ConditionalWeakTable whenever possible (Editor and no IL2CPP builds)
+
+### Added
+
+- Added support of new UI Toolkit Runtime Bindings feature through bindable properties in each App UI components. More than 420 properties can now be bound (2023.2+).
+- Added support to new UI Toolkit Uxml Serialization using source code generators.
+- Added `BaseVisualElement` and `BaseTextElement` classes which are used as base class for mostly every App UI component
+- Added numerous custom PropertyDrawers for a better experience in UIBuilder (2023.3+)
+- Added Layout Direction `dir` context in the App UI `ApplicationContext`.
+- Added `maxLength` property in TextArea and TextField components.
+- Added `isPassword` and `maskChar` properties to TextField component.
+- Added Editor-Dark and Editor-Light themes.
+- Added others Inter font variants
+- Added the support of `Fixed` gradient blend mode in ColorSwatch shader.
+- Added `.appui-row` USS classes which support current layout direction context.
+- Added new IInputElement interface in the public API
+- Added missing API documentation
+- Added new methods to push sub-menus in `MenuBuilder` class.
+- Added monitoring of AccordionItem content size to make AccordionItem fit its content when it is already open.
+- Added the possibility to setup navigation visual components from your NavigationScreen implementation directly. You are still able to create a global setup using your own implementation of the INavVisualController interface that you have set on your NavHost.
+- Added `Spacer` component.
+- Added the support of a specific drag direction and drag threshold in the Draggable manipulator. Specifying a direction will avoid to prevent scrolling in the opposite direction if this maniuplator is used inside a ScrollView for example.
+- Added `submit-on-enter` property in `TextArea` component.
+- Added more tests
+- Added support of LTR and RTL layout direction in most App UI components
+- Added `submit-modifiers` property in `TextArea` component.
+- Added forceUseTooltipSystem property on the Panel component to force the use of App UI tooltips system regardless the state of UI-Toolkit default tooltip system. This can be useful in a context where UITK tooltips can't be displayed in the Editor.
+- Added `submitted` event property in `TextArea` component.
+- Added mention about full integration of UI Toolkit with the New Input System starting 2023.2 in the documentation
+- Added `subMenuOpened` event property in `MenuItem` UI component.
+- Added `accent` property to the `FloatingActionButton` component.
+- Added `isReadonly` property to TextArea and TextField components.
+- Added `isOpen` property setter to be able to set the open state of the `Drawer` component without animation.
+
+### Removed
+
+- Starting Unity 2023.3, App UI will not provide any `UxmlFactory` or `UxmlTraits` implementation, as they become obsolete and replaced by the new UITK Uxml serialization system.
+- Removed Relocations folder from MacOS native plugin debug symbols bundle
+- Removed the `margin` property from the Tray component.
+- Removed the `size` property of the `Tray` component. The Tray component will fit its content in the screen automatically and doen't need anymore any specific size to be set.
+- Removed the `expandable` property from the Tray component. A Tray component is should not be expandable by definition. If you are willing to have some scrollable content inside a Tray component, a new component called ScrollableTray will be avilable in future release of App UI.
+
+### Fixed
+
+- Fixed Unity crashes when polling TabItem elements inside Tabs component.
+- Fixed Scroller styling.
+- Fixed TextField and NumericalField text offset during FocusOut event
+- Fixed auto scrolling to follow text edition's cursor in TextArea component.
+- Fixed mouse capture during Pointer down event in Pressable manipulator for Unity versions older than 2023.1.
+- Fixed tab key handling to switch focus in `TextArea` component.
+- Fixed styling on BottomNavBar items
+- Fixed Sliders handles to not exceed the range of track element.
+- Fixed Selection handling in ActionGroup.
+- Fixed styling for Disabled Quiet Button component.
+- Fixed color blending in the ColorSwatch custom shader.
+- Fixed ColorSwatch refresh when the Gradient reference value didn't change but Gradient keys have changed
+- Fixed compilation errors while not having the new Input System installed but the Input Manager setting is set to 'New' in the Project Settings.
+- Added support of Windows 11 for ARM
+- Fixed layout for Bounds, Rect and Vector fields
+- Fixed the height of Toast components to be `auto`.
+- Fixed `AppBar` story in Storybook samples.
+- Fixed UI Kit Sample with Progress components' color overrides.
+- Fixed `border-radius` usage in `ExVisualElement` component.
+- Fixed some styling issues on different components.
+- Fixed USS icons to match with App UI Symbols names
+- Cleaned up some warning messages to not get anything written in the console during package installation.
+- Fixed small errors in UI Kit sample.
+- Fixed a refresh bug in the App UI Storybook window.
+- Fixed some examples in the UI Kit Sample
+- Fixed refresh of the `ActionGroup` component
+- Fixed MacOS Native plugin to support Intel 64bits architecture with IL2CPP
+- Fixed typo in App UI Elevation's USS selector.
+- Fixed box-shadows border-radius calculation
+- Fixed border gap in TouchSlider component.
+- Fixed margins on Checkbox component without label.
+- Fixed ColorPicker Alpha channel slider refresh when the picked color has changed
+- Fixed `isPrimaryActionDisabled` and `isSecondaryActionDisabled` property setters
+- Fixed calls for ContextChanged callbacks registered by the context provider itself
+- Fixed some unit tests
+- Fixed Tooltip maximum size
+- Fixed `MacroCommand.Undo` and `MacroCommand.Redo` methods.
+
 ## [1.0.0-pre.15] - 2024-02-09
 
 ### Removed

@@ -431,8 +431,11 @@ namespace Unity.AppUI.UI
                 defaultValue = new Color(1, 0, 0, 1)
             };
 
-            
-            
+            readonly UxmlStringAttributeDescription m_ColorRange = new UxmlStringAttributeDescription
+            {
+                name = "color-range",
+                defaultValue = null,
+            };
 
             readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
             {
@@ -458,16 +461,19 @@ namespace Unity.AppUI.UI
                     var g = new Gradient();
                     g.SetKeys(new GradientColorKey[]
                     {
-                        new GradientColorKey(from, 0),
-                        new GradientColorKey(to, 1),
+                        new GradientColorKey(new Color(from.r, from.g, from.b, 1f), 0),
+                        new GradientColorKey(new Color(to.r, to.g, to.b, 1f), 1),
                     }, new GradientAlphaKey[]
                     {
-                        new GradientAlphaKey(1, 0),
-                        new GradientAlphaKey(1, 1),
+                        new GradientAlphaKey(from.a, 0),
+                        new GradientAlphaKey(to.a, 1),
                     });
                     el.colorRange = g;
                 }
                 el.SetValueWithoutNotify(m_Value.GetValueFromBag(bag, cc));
+                var colorRange = m_ColorRange.GetValueFromBag(bag, cc);
+                if (!string.IsNullOrEmpty(colorRange) && GradientExtensions.TryParse(colorRange, out var gradient))
+                    el.colorRange = gradient;
             }
         }
 #endif
