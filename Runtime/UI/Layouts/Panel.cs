@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
+#if UNITY_LOCALIZATION_PRESENT
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
+#endif
 #if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
 #endif
@@ -143,13 +147,43 @@ namespace Unity.AppUI.UI
             this.RegisterContextChangedCallback<ScaleContext>(OnScaleContextChanged);
             this.RegisterContextChangedCallback<DirContext>(OnDirContextChanged);
             this.RegisterContextChangedCallback<LangContext>(OnLangContextChanged);
-            
+
             lang = defaultLang;
             scale = defaultScale;
             theme = defaultTheme;
             layoutDirection = defaultDir;
             preferredTooltipPlacement = Tooltip.defaultPlacement;
             tooltipDelayMs = TooltipManipulator.defaultDelayMs;
+        }
+
+        string GetLang()
+        {
+            var ret = defaultLang;
+#if UNITY_LOCALIZATION_PRESENT
+            var localizationSettings = LocalizationSettings.GetInstanceDontCreateDefault();
+            if (localizationSettings != null)
+            {
+                ret = localizationSettings.GetSelectedLocale()?.Identifier.Code ?? defaultLang;
+                localizationSettings.OnSelectedLocaleChanged += OnSelectedLocaleChanged;
+            }
+#endif
+            return ret;
+        }
+        
+#if UNITY_LOCALIZATION_PRESENT
+        void OnSelectedLocaleChanged(Locale locale)
+        {
+            lang = locale ? locale.Identifier.Code ?? defaultLang : defaultLang;
+        }
+#endif
+        
+        void UnregisterLocalizationCallback()
+        {
+#if UNITY_LOCALIZATION_PRESENT
+            var localizationSettings = LocalizationSettings.GetInstanceDontCreateDefault();
+            if (localizationSettings != null)
+                localizationSettings.OnSelectedLocaleChanged -= OnSelectedLocaleChanged;
+#endif
         }
 
         void OnThemeContextChanged(ContextChangedEvent<ThemeContext> evt)
@@ -268,7 +302,7 @@ namespace Unity.AppUI.UI
                 if (string.IsNullOrEmpty(value))
                     throw new ArgumentException("Scale cannot be null or empty on a Panel element.");
                 var previous = this.GetSelfContext<ScaleContext>();
-                if (previous == null || previous.scale != value)
+                if (previous?.scale != value)
                 {
                     this.ProvideContext(new ScaleContext(value));
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -296,7 +330,7 @@ namespace Unity.AppUI.UI
                 if (string.IsNullOrEmpty(value))
                     throw new ArgumentException("Theme cannot be null or empty on a Panel element.");
                 var previous = this.GetSelfContext<ThemeContext>();
-                if (previous == null || previous.theme != value)
+                if (previous?.theme != value)
                 {
                     this.ProvideContext(new ThemeContext(value));
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -439,6 +473,7 @@ namespace Unity.AppUI.UI
             {
                 if (m_TooltipManipulator != null)
                     this.RemoveManipulator(m_TooltipManipulator);
+                UnregisterLocalizationCallback();
                 Core.AppUI.UnregisterPanel(this);
             }
         }
@@ -455,6 +490,7 @@ namespace Unity.AppUI.UI
                 m_TooltipManipulator.force = forceUseTooltipSystem;
 
                 Core.AppUI.RegisterPanel(this);
+                lang = GetLang();
             }
         }
 

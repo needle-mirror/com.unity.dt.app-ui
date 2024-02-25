@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -223,6 +224,7 @@ namespace Unity.AppUI.UI
                 horizontalScrollerVisibility = ScrollerVisibility.Hidden
             };
             scrollView.StretchToParentSize();
+            scrollView.contentContainer.SetDisableClipping(false);
             scrollView.verticalScroller.valueChanged += OnScroll;
             
             dragger = new Dragger(OnDraggerStarted, OnDraggerMoved, OnDraggerEnded, OnDraggerCanceled);
@@ -1325,7 +1327,8 @@ namespace Unity.AppUI.UI
             if (evt.destinationPanel == null)
                 return;
             
-            scrollView.AddManipulator(dragger);
+            if (!UnityEngine.Device.Application.isMobilePlatform)
+                scrollView.AddManipulator(dragger);
 
             scrollView.RegisterCallback<ClickEvent>(OnClick);
             scrollView.RegisterCallback<PointerDownEvent>(OnPointerDown);

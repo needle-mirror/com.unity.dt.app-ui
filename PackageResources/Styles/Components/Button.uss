@@ -142,7 +142,7 @@
 .appui-button--accent,
 .appui-button--primary,
 .appui-button--destructive {
-    color: var(--appui-color-white);
+    color: var(--appui-alias-actions-accent-foreground-color-default);
 }
 
 .appui-button--accent.appui-button--quiet,
@@ -166,7 +166,7 @@
 .appui-button--accent .appui-icon,
 .appui-button--primary .appui-icon,
 .appui-button--destructive .appui-icon {
-    --unity-image-tint-color: var(--appui-color-white); /* converted from : fill: var(--appui-color-white); */
+    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default); /* converted from : fill: var(--appui-alias-actions-accent-foreground-color-default); */
 }
 
 .appui-button--accent.appui-button--quiet .appui-icon,
@@ -184,12 +184,12 @@
 .appui-button--accent.is-hovered,
 .appui-button--primary.is-hovered {
     background-color: var(--appui-accent-50);
-    color: var(--appui-color-white);
+    color: var(--appui-alias-actions-accent-foreground-color-hover);
 }
 
 .appui-button--destructive.is-hovered {
     background-color: var(--appui-alias-actions-destructive-hover);
-    color: var(--appui-color-white);
+    color: var(--appui-alias-actions-accent-foreground-color-hover);
 }
 
 .appui-button.keyboard-focus {
@@ -211,12 +211,12 @@
 .appui-button--accent.is-active,
 .appui-button--primary.is-active {
     background-color: var(--appui-accent-25);
-    color: var(--appui-color-white);
+    color: var(--appui-alias-actions-accent-foreground-color-active);
 }
 
 .appui-button--destructive.is-active {
     background-color: var(--appui-alias-actions-destructive-active);
-    color: var(--appui-color-white);
+    color: var(--appui-alias-actions-accent-foreground-color-active);
 }
 
 .appui-button--accent.is-hovered .appui-icon,
@@ -225,7 +225,7 @@
 .appui-button--accent.is-active .appui-icon,
 .appui-button--primary.is-active .appui-icon,
 .appui-button--destructive.is-active .appui-icon {
-    --unity-image-tint-color: var(--appui-color-white); /* converted from : fill: var(--appui-color-white); */
+    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default); /* converted from : fill: var(--appui-alias-actions-accent-foreground-color-default); */
 }
 
 .appui-button:disabled {

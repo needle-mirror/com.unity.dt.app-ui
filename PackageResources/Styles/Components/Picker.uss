@@ -11,8 +11,8 @@
     background-color: var(--appui-alias-actions-background-color-default);
     border-color: var(--appui-alias-actions-border-color-default);
     font-size: var(--appui-font-sizes-body-md);
-    color: var(--appui-alias-actions-foreground-default);
-    --unity-image-tint-color: var(--appui-alias-actions-foreground-default); /*fill: var(--appui-alias-actions-foreground-default);*/
+    color: var(--appui-alias-actions-foreground-color-default);
+    --unity-image-tint-color: var(--appui-alias-actions-foreground-color-default); /*fill: var(--appui-alias-actions-foreground-color-default);*/
     cursor: var(--appui-alias-control-cursor-pointer);
     flex-shrink: 0;
 }
@@ -28,30 +28,30 @@
 .appui-picker.is-hovered {
     background-color: var(--appui-alias-actions-background-color-hover);
     border-color: var(--appui-alias-actions-border-color-hover);
-    color: var(--appui-alias-actions-foreground-hover);
-    --unity-image-tint-color: var(--appui-alias-actions-foreground-hover); /*fill: var(--appui-alias-actions-foreground-hover);*/
+    color: var(--appui-alias-actions-foreground-color-hover);
+    --unity-image-tint-color: var(--appui-alias-actions-foreground-color-hover); /*fill: var(--appui-alias-actions-foreground-color-hover);*/
 }
 
 .appui-picker.is-active {
     background-color: var(--appui-alias-actions-background-color-active);
     border-color: var(--appui-alias-actions-border-color-active);
-    color: var(--appui-alias-actions-foreground-active);
-    --unity-image-tint-color: var(--appui-alias-actions-foreground-active); /*fill: var(--appui-alias-actions-foreground-active);*/
+    color: var(--appui-alias-actions-foreground-color-active);
+    --unity-image-tint-color: var(--appui-alias-actions-foreground-color-active); /*fill: var(--appui-alias-actions-foreground-color-active);*/
 }
 
 .appui-picker--emphasized {
     background-color: var(--appui-accent-100);
     border-color: var(--appui-alias-actions-accent-background-color-default);
-    color: var(--appui-color-white);
-    --unity-image-tint-color: var(--appui-color-white); /*fill: var(--appui-color-white);*/
+    color: var(--appui-alias-actions-accent-foreground-color-default);
+    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default); /*fill: var(--appui-alias-actions-accent-foreground-color-default);*/
     -unity-font-definition: var(--appui-font-weights-200); /*font-weight: 700;*/
 }
 
 .appui-picker--emphasized.is-hovered {
     background-color: var(--appui-accent-200);
     border-color: var(--appui-alias-actions-accent-background-color-hover);
-    color: var(--appui-color-white);
-    --unity-image-tint-color: var(--appui-color-white); /*fill: var(--appui-color-white);*/
+    color: var(--appui-alias-actions-accent-foreground-color-hover);
+    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-hover); /*fill: var(--appui-alias-actions-accent-foreground-color-hover);*/
 }
 
 .appui-picker--emphasized.keyboard-focus {
@@ -67,8 +67,8 @@
 .appui-picker--emphasized.is-active {
     background-color: var(--appui-accent-50);
     border-color: var(--appui-alias-actions-accent-background-color-active);
-    color: var(--appui-color-white);
-    --unity-image-tint-color: var(--appui-color-white); /*fill: var(--appui-color-white);*/
+    color: var(--appui-alias-actions-accent-foreground-color-active);
+    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-active); /*fill: var(--appui-alias-actions-accent-foreground-color-active);*/
 }
 
 .appui-picker:disabled {
@@ -119,7 +119,7 @@
     flex-direction: row;
     align-items: center;
     /*gap: var(--appui-control-gap);*/
-    color: var(--appui-alias-actions-foreground-default);
+    color: var(--appui-alias-actions-foreground-color-default);
     flex-shrink: 0;
     cursor: var(--appui-alias-control-cursor-pointer);
     overflow: hidden;
@@ -131,22 +131,22 @@
 
 .appui-picker-item.is-hovered {
     background-color: var(--appui-color-transparent-black-100);
-    color: var(--appui-alias-actions-foreground-hover);
+    color: var(--appui-alias-actions-foreground-color-hover);
 }
 
 .appui-picker-item.keyboard-focus{
     background-color: var(--appui-color-transparent-black-100);
-    color: var(--appui-alias-actions-foreground-focus);
+    color: var(--appui-alias-actions-foreground-color-focus);
 }
 
 .appui-picker-item.is-active {
     background-color: var(--appui-color-transparent-black-100);
-    color: var(--appui-alias-actions-foreground-active);
+    color: var(--appui-alias-actions-foreground-color-active);
 }
 
 .appui-picker-item.is-selected {
     background-color: var(--appui-alias-actions-background-color-selected);
-    color: var(--appui-alias-actions-foreground-selected);
+    color: var(--appui-alias-actions-foreground-color-selected);
 }
 
 .appui-picker-item:disabled {

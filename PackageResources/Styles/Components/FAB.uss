@@ -13,12 +13,12 @@
 
 .appui-fab--accent {
     background-color: var(--appui-accent-100);
-    color: var(--appui-color-white);
+    color: var(--appui-alias-actions-foreground-color-default);
 }
 
 .appui-fab.appui-fab--accent * {
-    color: var(--appui-color-white);
-    --unity-image-tint-color: var(--appui-color-white);
+    color: var(--appui-alias-actions-foreground-color-default);
+    --unity-image-tint-color: var(--appui-alias-actions-foreground-color-default);
 }
 
 .appui-fab--size-s {

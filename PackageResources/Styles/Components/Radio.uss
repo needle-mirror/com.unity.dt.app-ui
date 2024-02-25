@@ -122,7 +122,7 @@
 
 .appui-radio--emphasized .appui-radio__checkmark,
 .is-invalid .appui-radio__checkmark {
-    background-color: var(--appui-color-white);
+    background-color: var(--appui-alias-actions-accent-foreground-color-default);
 }
 
 .appui-radio.is-checked > .appui-radio__button  > .appui-radio__checkmark {

@@ -66,6 +66,16 @@ namespace Unity.AppUI.Bridge
         {
             return element.excludeFromFocusRing;
         }
+        
+        internal static void SetDisableClipping(this VisualElement element, bool disableClipping)
+        {
+            element.disableClipping = disableClipping;
+        }
+        
+        internal static bool GetDisableClipping(this VisualElement element)
+        {
+            return element.disableClipping;
+        }
 
 #else // REFLECTION
         
@@ -83,6 +93,10 @@ namespace Unity.AppUI.Bridge
         
         static readonly System.Reflection.PropertyInfo k_WorldBoundingBox =
             typeof(VisualElement).GetProperty("worldBoundingBox", 
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        
+        static readonly System.Reflection.PropertyInfo k_DisableClipping =
+            typeof(VisualElement).GetProperty("disableClipping", 
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
         
         internal static void SetPseudoStates(this VisualElement element, PseudoStates pseudoStates)
@@ -118,6 +132,16 @@ namespace Unity.AppUI.Bridge
         internal static bool GetExcludeFromFocusRing(this VisualElement element)
         {
             return (bool)k_ExcludeFromFocusRing.GetValue(element);
+        }
+        
+        internal static void SetDisableClipping(this VisualElement element, bool disableClipping)
+        {
+            k_DisableClipping.SetValue(element, disableClipping);
+        }
+        
+        internal static bool GetDisableClipping(this VisualElement element)
+        {
+            return (bool)k_DisableClipping.GetValue(element);
         }
         
 #endif

@@ -59,7 +59,7 @@
 .appui-actionbutton.is-hovered {
     background-color: var(--appui-alias-actions-background-color-hover);
     border-color: var(--appui-alias-actions-border-color-hover);
-    color: var(--apui-foreground-200);
+    color: var(--apui-foreground-color-200);
 }
 
 .appui-actionbutton.is-active {
@@ -78,13 +78,13 @@
 }
 
 .is-selected.appui-actionbutton .appui-actionbutton__label {
-    color: var(--appui-color-white);
-    --unity-image-tint-color: var(--appui-color-white);
+    color: var(--appui-alias-actions-accent-foreground-color-default);
+    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default);
 }
 
 .is-selected.appui-actionbutton .appui-icon {
-    --unity-image-tint-color: var(--appui-color-white); /*fill: var(--appui-color-white);*/
-    color: var(--appui-color-white);
+    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default);
+    color: var(--appui-alias-actions-accent-foreground-color-default);
 }
 
 .appui-actionbutton .appui-icon {

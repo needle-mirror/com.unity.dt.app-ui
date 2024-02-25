@@ -296,6 +296,7 @@ namespace Unity.AppUI.UI
                 {
                     view.visible = true;
                     RefreshPosition();
+                    contentView?.RegisterCallback<GeometryChangedEvent>(OnContentGeometryChanged);
                     view.schedule.Execute(() =>
                     {
                         view.experimental.animation.Start(0, 1f, k_AnchorPopUpFadeInDurationMs, (element, f) =>
@@ -331,6 +332,7 @@ namespace Unity.AppUI.UI
         protected override void HideView(DismissType reason)
         {
             base.HideView(reason);
+            contentView?.UnregisterCallback<GeometryChangedEvent>(OnContentGeometryChanged);
             panel.UnregisterPopup(this);
         }
 
@@ -353,6 +355,12 @@ namespace Unity.AppUI.UI
         {
             view.visible = false;
             InvokeDismissedEventHandlers(reason);
+        }
+        
+        void OnContentGeometryChanged(GeometryChangedEvent evt)
+        {
+            if (!Mathf.Approximately(evt.newRect.width, evt.oldRect.width) || !Mathf.Approximately(evt.newRect.height, evt.oldRect.height))
+                RefreshPosition();
         }
 
         void AnchorUpdate(TimerState timerState)

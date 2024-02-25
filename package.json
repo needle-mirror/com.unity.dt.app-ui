@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,7 +25,7 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "017df77b67d88927882bb282c8a6f514381ce41c"
+    "revision": "d4072836007c23234964b17bf952f3764a8a5d98"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -82,10 +82,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed ColorSwatch shader to support Shader Model older than 5.0"
+    "changelog": "### Fixed\n\n- Fixed the clipping flag on the GridView's ScrollView content container to prevent overscroll on touch devices.\n- Fixed unit tests\n- Disabled the dragging feature in the GridView when used on touch devices.\n\n### Added\n\n- Improved Localization Unity Package support with `LangContext` propagation."
   },
   "upmCi": {
-    "footprint": "fbc4f3b7f40d6d9a97d2808554f6c1089cda41a9"
+    "footprint": "8bc0a362f9f10e5c8fa923cf8b1202a353721673"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@1.0/manual/index.html"
 }

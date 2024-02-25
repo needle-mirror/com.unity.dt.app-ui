@@ -221,7 +221,7 @@ namespace Unity.AppUI.UI
                 }
             }
 
-            if (Application.isMobilePlatform)
+            if (UnityEngine.Device.Application.isMobilePlatform)
                 return;
 
             if (subMenu != null)
@@ -232,7 +232,7 @@ namespace Unity.AppUI.UI
         {
             Blur();
 
-            if (Application.isMobilePlatform)
+            if (UnityEngine.Device.Application.isMobilePlatform)
                 return;
 
             if (subMenu != null)

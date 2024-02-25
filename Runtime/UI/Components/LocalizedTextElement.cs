@@ -45,7 +45,10 @@ namespace Unity.AppUI.UI
 # if UNITY_LOCALIZATION_PRESENT
         AsyncOperationHandle<LocalizationSettings> m_LocalizationSettingsHandle;
 
-        AsyncOperationHandle<LocalizedDatabase<StringTable, StringTableEntry>.TableEntryResult> m_GetTableOp;
+        static readonly Dictionary<string, AsyncOperationHandle<StringTable>> s_GetTableOps = 
+            new Dictionary<string, AsyncOperationHandle<StringTable>>();
+
+        string m_Entry;
 #endif
 
         /// <summary>
@@ -89,6 +92,8 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
+        
+        internal string localizedText => base.text;
         
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("text")]
@@ -165,9 +170,6 @@ namespace Unity.AppUI.UI
         {
 #if UNITY_LOCALIZATION_PRESENT
             
-            if (m_GetTableOp.IsValid())
-                m_GetTableOp.Completed -= OnTableFound;
-            
             if (panel == null)
                 return;
 
@@ -189,8 +191,15 @@ namespace Unity.AppUI.UI
                     return;
                 }
 
-                m_GetTableOp = db.GetTableEntryAsync(table, entry, locale);
-                m_GetTableOp.Completed += OnTableFound;
+                m_Entry = entry;
+                if (!s_GetTableOps.TryGetValue(table + "/" + locale.Identifier.Code, out var op))
+                    s_GetTableOps[table + "/" + locale.Identifier.Code] = db.GetTableAsync(table, locale);
+                op = s_GetTableOps[table + "/" + locale.Identifier.Code];
+
+                if (op.IsDone)
+                    OnTableFound(op);
+                else
+                    op.Completed += OnTableFound;
             }
             else
             {
@@ -203,18 +212,24 @@ namespace Unity.AppUI.UI
 
 #if UNITY_LOCALIZATION_PRESENT
         
-        void OnTableFound(AsyncOperationHandle<LocalizedDatabase<StringTable,StringTableEntry>.TableEntryResult> op) 
+        void OnTableFound(AsyncOperationHandle<StringTable> op) 
         {
-            if (op.Status == AsyncOperationStatus.Succeeded)
+            if (op.IsValid() && op.Status == AsyncOperationStatus.Succeeded)
             {
-                var dbEntry = op.Result.Entry;
-                if (dbEntry == null || dbEntry.IsSmart && (m_Variables == null || m_Variables.Count == 0))
+                if (op.Result.GetEntry(m_Entry) is {} dbEntry)
                 {
-                    base.text = m_ReferenceText;
+                    if (dbEntry.IsSmart && (m_Variables == null || m_Variables.Count == 0))
+                    {
+                        base.text = m_ReferenceText;
+                    }
+                    else
+                    {
+                        base.text = dbEntry.GetLocalizedString(m_Variables);
+                    }
                 }
                 else
                 {
-                    base.text = dbEntry.GetLocalizedString(m_Variables);
+                    base.text = m_ReferenceText;
                 }
             }
             else

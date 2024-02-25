@@ -32,7 +32,7 @@
 .example-title {
   color: var(--appui-foregrounds-100);
   -unity-font-definition: url('/Packages/com.unity.dt.app-ui/PackageResources/Fonts/NotoSans-Black.ttf');
-  font-size: var(--appui-font-sizes-1300);
+  font-size: var(--appui-font-sizes-600);
   margin: var(--appui-spacing-400) 0 0 0;
 }
 

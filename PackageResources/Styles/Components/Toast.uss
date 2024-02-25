@@ -55,16 +55,16 @@
 }
 
 .appui-toast--informative .appui-toast__message {
-    color: var(--appui-color-white);
+    color: var(--appui-alias-actions-accent-foreground-color-default);
 }
 
 .appui-toast--informative .appui-toast__action {
-    color: var(--appui-color-white);
+    color: var(--appui-alias-actions-accent-foreground-color-default);
 }
 
 .appui-toast--informative .appui-icon {
-    color: var(--appui-color-white);
-    --unity-image-tint-color: var(--appui-color-white);
+    color: var(--appui-alias-actions-accent-foreground-color-default);
+    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default);
 }
 
 .appui-toast--positive {
