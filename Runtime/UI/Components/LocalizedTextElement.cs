@@ -83,13 +83,15 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_ReferenceText != value;
-                m_ReferenceText = value;
-                UpdateTextWithCurrentLocale();
-                
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
+                {
+                    m_ReferenceText = value;
+                    UpdateTextWithCurrentLocale();
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in textProperty);
 #endif
+                }
             }
         }
         

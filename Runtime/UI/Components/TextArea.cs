@@ -138,7 +138,7 @@ namespace Unity.AppUI.UI
 
             m_InputField = new UnityEngine.UIElements.TextField { name = inputUssClassName, multiline = true };
             m_InputField.AddToClassList(inputUssClassName);
-            m_InputField.BlinkingCursor();
+            m_InputField.AddManipulator(new BlinkingCursor());
 #if UNITY_2022_1_OR_NEWER
 #if UNITY_2023_1_OR_NEWER
             m_InputField.verticalScrollerVisibility = ScrollerVisibility.Auto;

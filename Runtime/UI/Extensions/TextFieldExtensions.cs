@@ -1,3 +1,6 @@
+using System;
+using UnityEngine.UIElements;
+
 namespace Unity.AppUI.UI
 {
     /// <summary>
@@ -11,15 +14,7 @@ namespace Unity.AppUI.UI
         /// <param name="tf">The <see cref="TextField"/> object.</param>
         public static void BlinkingCursor(this UnityEngine.UIElements.TextField tf)
         {
-            const string transparentCursorUssClassName = "appui-text-cursor--transparent";
-
-            tf.schedule.Execute(() =>
-            {
-                if (tf.ClassListContains(transparentCursorUssClassName))
-                    tf.RemoveFromClassList(transparentCursorUssClassName);
-                else
-                    tf.AddToClassList(transparentCursorUssClassName);
-            }).Every(500);
+            tf.AddManipulator(new BlinkingCursor());
         }
     }
 }

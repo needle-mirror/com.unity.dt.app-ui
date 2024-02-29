@@ -10,15 +10,11 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [1.0.2] - 2024-02-26
+## [1.0.3] - 2024-03-01
 
 ### Fixed
 
-- Fixed the clipping flag on the GridView's ScrollView content container to prevent overscroll on touch devices.
-- Fixed unit tests
-- Disabled the dragging feature in the GridView when used on touch devices.
-
-### Added
-
-- Improved Localization Unity Package support with `LangContext` propagation.
+- Use equlity check while setting a new `text` value in a `LocalizedTextElement`.
+- Fixed performance issues with the blinking text cursor in input fields.
+- Fixed styling of the Toast Action container
 

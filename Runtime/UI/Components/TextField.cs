@@ -157,7 +157,7 @@ namespace Unity.AppUI.UI
 
             m_InputField = new UnityEngine.UIElements.TextField { name = inputUssClassName };
             m_InputField.AddToClassList(inputUssClassName);
-            m_InputField.BlinkingCursor();
+            m_InputField.AddManipulator(new BlinkingCursor());
             inputContainer.hierarchy.Add(m_InputField);
 
             m_TrailingContainer = new VisualElement { name = trailingContainerUssClassName, pickingMode = PickingMode.Ignore };

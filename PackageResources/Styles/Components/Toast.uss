@@ -25,6 +25,14 @@
     flex-direction: row-reverse;
 }
 
+.appui-toast__actioncontainer {
+    flex-direction: row;
+}
+
+.appui--rtl .appui-toast__actioncontainer {
+    flex-direction: row-reverse;
+}
+
 .appui-toast > .appui-divider {
     margin-left: var(--appui-spacing-150); /*margin-inline-start: 18px;*/
     margin-right: var(--appui-spacing-150);

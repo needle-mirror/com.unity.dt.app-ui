@@ -112,7 +112,6 @@ namespace Unity.AppUI.UI
         }
 
 #if ENABLE_UXML_TRAITS
-
         /// <summary>
         /// Class to be able to instantiate a <see cref="Menu"/> from UXML.
         /// </summary>
@@ -135,7 +134,6 @@ namespace Unity.AppUI.UI
                 base.Init(ve, bag, cc);
             }
         }
-        
 #endif
     }
 }

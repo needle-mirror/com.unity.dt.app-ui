@@ -161,7 +161,7 @@ namespace Unity.AppUI.UI
 
             m_InputElement = new UnityEngine.UIElements.TextField { name = inputUssClassName, pickingMode = PickingMode.Ignore };
             m_InputElement.AddToClassList(inputUssClassName);
-            m_InputElement.BlinkingCursor();
+            m_InputElement.AddManipulator(new BlinkingCursor());
             m_UnitElement = new LocalizedTextElement { name = unitUssClassName, pickingMode = PickingMode.Ignore };
             m_UnitElement.AddToClassList(unitUssClassName);
 

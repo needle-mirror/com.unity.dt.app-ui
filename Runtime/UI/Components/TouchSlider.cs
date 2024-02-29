@@ -110,7 +110,7 @@ namespace Unity.AppUI.UI
             m_ContainerElement.Add(m_ValueLabelElement);
 
             m_InputField = new UnityEngine.UIElements.TextField { name = valueUssClassName, pickingMode = PickingMode.Position };
-            m_InputField.BlinkingCursor();
+            m_InputField.AddManipulator(new BlinkingCursor());
             m_InputField.AddToClassList(valueUssClassName);
             m_InputField.RegisterCallback<FocusEvent>(OnInputFocusedIn);
             m_InputField.RegisterCallback<FocusOutEvent>(OnInputFocusedOut);
