@@ -8,6 +8,9 @@ uid: overview
  <img src="images/replica-app-ui.png" alt="Unity App UI Banner">
 </p>
 
+> [!WARNING]
+> **FOR INTERNAL UNITY USE ONLY. THIS FRAMEWORK IS NOT SUPPORTED AND IS USED AT YOUR OWN RISK.**
+
 ## Introduction
 
 Welcome to App UI, a powerful and flexible framework for building beautiful, high-performance user interfaces in Unity.

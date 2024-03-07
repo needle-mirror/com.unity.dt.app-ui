@@ -119,6 +119,16 @@ namespace Unity.AppUI.UI
         /// this class affects every item element located beside, or below the stylesheet in the visual tree.
         /// </remarks>
         const string k_ItemUssClassName = ussClassName + "__item";
+        
+        /// <summary>
+        /// The first column USS class name for GridView elements.
+        /// </summary>
+        static readonly string k_FirstColumnUssClassName = ussClassName + "__first-column";
+
+        /// <summary>
+        /// The last column USS class name for GridView elements.
+        /// </summary>
+        static readonly string k_LastColumnUssClassName = ussClassName + "__last-column";
 
         /// <summary>
         /// The USS class name of selected item elements in the GridView.
@@ -1560,6 +1570,9 @@ namespace Unity.AppUI.UI
                         for (var colIndex = 0; colIndex < columnCount; colIndex++)
                         {
                             var index = rowIndex * columnCount + colIndex + m_FirstVisibleIndex;
+                            
+                            var isFirstColumn = colIndex == 0;
+                            var isLastColumn = colIndex == columnCount - 1;
 
                             if (index < itemsSource.Count)
                             {
@@ -1574,6 +1587,8 @@ namespace Unity.AppUI.UI
                                 }
 
                                 Setup(item, index);
+                                item.EnableInClassList(k_FirstColumnUssClassName, isFirstColumn);
+                                item.EnableInClassList(k_LastColumnUssClassName, isLastColumn);
                             }
                             else
                             {
@@ -1583,6 +1598,8 @@ namespace Unity.AppUI.UI
                                 {
                                     m_RowPool[rowIndex].RemoveAt(colIndex);
                                     m_RowPool[rowIndex].Insert(colIndex, CreateDummyItemElement());
+                                    m_RowPool[rowIndex][colIndex].EnableInClassList(k_FirstColumnUssClassName, isFirstColumn);
+                                    m_RowPool[rowIndex][colIndex].EnableInClassList(k_LastColumnUssClassName, isLastColumn);
                                     m_RowPool[rowIndex].ids.RemoveAt(colIndex);
                                     m_RowPool[rowIndex].ids.Insert(colIndex, RecycledRow.kUndefinedIndex);
                                     m_RowPool[rowIndex].indices.RemoveAt(colIndex);
@@ -1688,6 +1705,11 @@ namespace Unity.AppUI.UI
                                 recycledRow.ids.Add(RecycledRow.kUndefinedIndex);
                                 recycledRow.indices.Add(RecycledRow.kUndefinedIndex);
                             }
+                            
+                            var isFirstColumn = indexInRow == 0;
+                            var isLastColumn = indexInRow == columnCount - 1;
+                            item.EnableInClassList(k_FirstColumnUssClassName, isFirstColumn);
+                            item.EnableInClassList(k_LastColumnUssClassName, isLastColumn);
                         }
 
                         m_RowPool.Add(recycledRow);

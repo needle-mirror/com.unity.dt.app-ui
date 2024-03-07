@@ -1,5 +1,7 @@
 # App UI
 
+> **FOR INTERNAL UNITY USE ONLY. THIS FRAMEWORK IS NOT SUPPORTED AND IS USED AT YOUR OWN RISK.**
+
 ## What is App UI?
 
 This package is the UI Toolkit implementation of the **App UI Design System**.

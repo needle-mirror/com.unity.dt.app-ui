@@ -4,6 +4,20 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2024-03-08
+
+### Fixed
+
+- Fixed GridFour icon PNG file
+- Fixed font weight on AppBar title elements.
+- Fixed accent color in Editor Dark theme
+- Fixed ActionGroup Refresh strategy.
+
+### Added
+
+- Added gutter USS custom property for the GridView component.
+- Added answer in the FAQ documentation about MacOS quarantine attribute.
+
 ## [1.0.3] - 2024-03-01
 
 ### Fixed
@@ -11,18 +25,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Use equlity check while setting a new `text` value in a `LocalizedTextElement`.
 - Fixed performance issues with the blinking text cursor in input fields.
 - Fixed styling of the Toast Action container
-
-## [1.0.2] - 2024-02-26
-
-### Fixed
-
-- Fixed the clipping flag on the GridView's ScrollView content container to prevent overscroll on touch devices.
-- Fixed unit tests
-- Disabled the dragging feature in the GridView when used on touch devices.
-
-### Added
-
-- Improved Localization Unity Package support with `LangContext` propagation.
 
 ## [1.0.2] - 2024-02-26
 

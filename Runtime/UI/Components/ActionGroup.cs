@@ -103,6 +103,8 @@ namespace Unity.AppUI.UI
         Rect m_LastContainerLayout;
 
         Rect m_LastLayout;
+        
+        int m_LastChildCount = 0;
 
         Dir m_CurrentLayoutDirection;
         
@@ -553,10 +555,15 @@ namespace Unity.AppUI.UI
         {
             var actionGroupLayout = layout;
             var containerLayout = m_Container.layout;
-
-            if (!actionGroupLayout.IsValid() || (containerLayout == m_LastContainerLayout && actionGroupLayout == m_LastLayout))
+            var groupChildCount = m_HandledChildren.Count;
+            
+            if (!actionGroupLayout.IsValid() || (
+                    containerLayout == m_LastContainerLayout 
+                    && actionGroupLayout == m_LastLayout
+                    && groupChildCount == m_LastChildCount))
                 return;
             
+            m_LastChildCount = groupChildCount;
             m_LastContainerLayout = containerLayout;
             m_LastLayout = actionGroupLayout;
             var moreButtonStyle = m_MoreButton.resolvedStyle;

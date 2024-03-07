@@ -64,13 +64,14 @@
     font-size: var(--appui-font-sizes-100);
 }
 
-.appui-appbar__large-title {
+.appui-appbar__large-title.appui-localized-text {
     display: flex;
     font-size: var(--appui-font-sizes-900);
     color: var(--appui-foregrounds-200);
     -unity-text-align: lower-left;
     position: absolute;
     bottom: var(--appui-spacing-300);
+    -unity-font-definition: var(--appui-font-weights-200);
     left: var(--appui-spacing-250);
 }
 

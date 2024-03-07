@@ -90,3 +90,30 @@ This is a known issue with the Unity Editor on macOS.
 To avoid this issue temporarily, you can disable the **Zoom gesture** in the **Trackpad** settings of your Mac. By 
 disabling the gesture, you will still be able to zoom in and out in the Canvas component, but the Editor will not 
 handle them anymore.
+
+### I got a message "AppUINativePlugin.bundle is damaged and can't be opened" when I try to run my project on macOS, what should I do?
+
+It is possible that the native plugins used by App UI are not correctly signed for the current macOS version you are using.
+To fix this issue, you can try to upgrade the App UI package if possible, or you can use the `xattr` command to remove 
+the quarantine attribute from the `AppUINativePlugin.bundle` file.
+
+```sh
+xattr -d com.apple.quarantine <path-to-AppUINativePlugin.bundle>
+```
+
+Example when you are using App UI version 1.0.3:
+
+```sh
+xattr -d com.apple.quarantine <project-path>/Library/PackageCache/com.unity.dt.app-ui@1.0.3/Runtime/Core/Platform/macOS/Plugins/AppUINativePlugin.bundle
+```
+
+> ![WARNING]
+> Be careful when using the `xattr` command, as it can remove the quarantine attribute from any file.
+> Keep in mind that removing the quarantine attribute from a file can be a security risk, and the 
+> attribute will be removed only for your machine. This is proposed as a workaround and until
+> the issue is fixed in the App UI package in next releases.
+
+### I got a message "DllNotFoundException: AppUINativePlugin assembly" when I try to run my project on macOS, what should I do?
+
+This error message is caused by the `AppUINativePlugin.bundle` file not being correctly loaded by the Unity Editor.
+Follow the steps in the previous question to fix this issue.

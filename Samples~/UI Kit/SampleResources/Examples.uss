@@ -230,6 +230,7 @@
   border-width: 2px;
   border-color: rgba(0,0,0,0);
   border-radius: var(--appui-alias-control-border-radius);
+  padding: var(--appui-alias-control-gap-md);
 }
 
 .appui-grid-view__item.is-selected .appui-text {

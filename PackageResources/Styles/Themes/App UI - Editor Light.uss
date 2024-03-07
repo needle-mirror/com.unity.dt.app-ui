@@ -9,11 +9,11 @@
   --appui-warning-100: var(--appui-color-orange-800);
   --appui-warning-50: var(--appui-color-orange-700);
   --appui-warning-25: var(--appui-color-orange-600);
-  --appui-destructive-300: var(--appui-color-red-1000);
-  --appui-destructive-200: var(--appui-color-red-900);
-  --appui-destructive-100: var(--appui-color-red-800);
-  --appui-destructive-50: var(--appui-color-red-700);
-  --appui-destructive-25: var(--appui-color-red-600);
+  --appui-destructive-300: #b64043;
+  --appui-destructive-200: #ce5256;
+  --appui-destructive-100: #de6d70;
+  --appui-destructive-50: #e87e81;
+  --appui-destructive-25: #f5a1a4;
   --appui-accent-300: #649ce3;
   --appui-accent-200: #80b3ee;
   --appui-accent-100: #96C3FB;
