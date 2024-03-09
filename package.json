@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,7 +25,7 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "537832130bc5c51f86ac01badcfc537ade33d38f"
+    "revision": "c20a1f66f668ae39c0feb9110323a05c011d9b44"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -82,10 +82,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed GridFour icon PNG file\n- Fixed font weight on AppBar title elements.\n- Fixed accent color in Editor Dark theme\n- Fixed ActionGroup Refresh strategy.\n\n### Added\n\n- Added gutter USS custom property for the GridView component.\n- Added answer in the FAQ documentation about MacOS quarantine attribute."
+    "changelog": "### Fixed\n\n- Fixed Hero banner in the documentation homepage"
   },
   "upmCi": {
-    "footprint": "03bcc974dc9ba164985be33000fda9ec94eeaca3"
+    "footprint": "2ada1a9cf9c983be3e96b5d97fb374549d56c5f8"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@1.0/manual/index.html"
 }
