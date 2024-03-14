@@ -31,6 +31,7 @@
     width: 12px;
     height: 12px;
     rotate: 45deg;
+    scale: 0.8;
     background-color: var(--appui-backgrounds-300);
 }
 

@@ -200,6 +200,10 @@ namespace Unity.AppUI.UI
         {
             if (evt.keyCode == KeyCode.Tab && !evt.shiftKey)
             {
+                evt.StopPropagation();
+#if !UNITY_2023_2_OR_NEWER
+                evt.PreventDefault();
+#endif
                 m_RequestTab = true;
                 return;
             }
@@ -215,6 +219,10 @@ namespace Unity.AppUI.UI
 
             if (submitOnEnter && evt.keyCode is KeyCode.Return or KeyCode.KeypadEnter && evt.modifiers == submitModifiers)
             {
+                evt.StopPropagation();
+#if !UNITY_2023_2_OR_NEWER
+                evt.PreventDefault();
+#endif
                 m_RequestSubmit = true;
                 return;
             }
@@ -258,7 +266,6 @@ namespace Unity.AppUI.UI
 
         void OnInputValueChanged(ChangeEvent<string> e)
         {
-            
             e.StopPropagation();
 
             if (autoResize)
@@ -271,6 +278,7 @@ namespace Unity.AppUI.UI
             evt.newValue = m_Value;
             
             if (validateValue != null) invalid = !validateValue(m_Value);
+            RefreshUI();
             SendEvent(evt);
         }
 
@@ -569,7 +577,6 @@ namespace Unity.AppUI.UI
         void OnFocusedIn(FocusInEvent evt)
         {
             AddToClassList(Styles.focusedUssClassName);
-            m_Placeholder.AddToClassList(Styles.hiddenUssClassName);
             passMask = 0;
             m_PreviousValue = m_Value;
         }
@@ -578,7 +585,6 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(Styles.focusedUssClassName);
             AddToClassList(Styles.keyboardFocusUssClassName);
-            m_Placeholder.AddToClassList(Styles.hiddenUssClassName);
             passMask = Passes.Clear | Passes.Outline;
             m_PreviousValue = m_Value;
         }

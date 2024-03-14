@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,7 +25,7 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "c20a1f66f668ae39c0feb9110323a05c011d9b44"
+    "revision": "7f0fb7000471f2556ce0fe8ff191bd41db2ef44d"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -82,10 +82,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed Hero banner in the documentation homepage"
+    "changelog": "### Fixed\n\n- Fixed the tooltip tip size to not be displayed over tooltip content.\n- Fixed the handling of Tab key to focus the next component from a TextArea\n- Fixed size of the Radio button for pixel alignment on 96dpi screens."
   },
   "upmCi": {
-    "footprint": "2ada1a9cf9c983be3e96b5d97fb374549d56c5f8"
+    "footprint": "f4377ae4c6d75b427b6a8bc646e01713f345813e"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@1.0/manual/index.html"
 }

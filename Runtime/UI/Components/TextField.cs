@@ -186,7 +186,6 @@ namespace Unity.AppUI.UI
 
         void OnInputValueChanged(ChangeEvent<string> e)
         {
-            
             e.StopPropagation();
             
             using var evt = ChangingEvent<string>.GetPooled();
@@ -196,12 +195,12 @@ namespace Unity.AppUI.UI
             evt.newValue = m_Value;
             
             if (validateValue != null) invalid = !validateValue(m_Value);
+            RefreshUI();
             SendEvent(evt);
         }
 
         void OnPlaceholderValueChanged(ChangeEvent<string> evt)
         {
-            
             evt.StopPropagation();
         }
 
@@ -589,7 +588,6 @@ namespace Unity.AppUI.UI
         void OnFocusedIn(FocusInEvent evt)
         {
             AddToClassList(Styles.focusedUssClassName);
-            m_Placeholder.AddToClassList(Styles.hiddenUssClassName);
             passMask = 0;
             m_PreviousValue = m_Value;
         }
@@ -598,7 +596,6 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(Styles.focusedUssClassName);
             AddToClassList(Styles.keyboardFocusUssClassName);
-            m_Placeholder.AddToClassList(Styles.hiddenUssClassName);
             passMask = Passes.Clear | Passes.Outline;
             m_PreviousValue = m_Value;
         }

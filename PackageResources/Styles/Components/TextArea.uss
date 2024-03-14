@@ -73,6 +73,7 @@
     color: var(--appui-foregrounds-25);
     position: absolute;
     align-self: flex-start;
+    padding: var(--appui-sizing-60);
 }
 
 .appui-textarea:hover {
