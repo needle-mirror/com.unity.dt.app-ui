@@ -51,37 +51,37 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Checkbox main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-checkbox";
+        public const string ussClassName = "appui-checkbox";
         
         /// <summary>
         /// The Checkbox size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The Checkbox emphasized mode styling class.
         /// </summary>
-        public static readonly string emphasizedUssClassName = ussClassName + "--emphasized";
+        public const string emphasizedUssClassName = ussClassName + "--emphasized";
 
         /// <summary>
         /// The Checkbox box styling class.
         /// </summary>
-        public static readonly string boxUssClassName = ussClassName + "__box";
+        public const string boxUssClassName = ussClassName + "__box";
 
         /// <summary>
         /// The Checkbox checkmark styling class.
         /// </summary>
-        public static readonly string checkmarkUssClassName = ussClassName + "__checkmark";
+        public const string checkmarkUssClassName = ussClassName + "__checkmark";
 
         /// <summary>
         /// The Checkbox partial checkmark styling class.
         /// </summary>
-        public static readonly string partialCheckmarkUssClassName = ussClassName + "__partialcheckmark";
+        public const string partialCheckmarkUssClassName = ussClassName + "__partialcheckmark";
 
         /// <summary>
         /// The Checkbox label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
+        public const string labelUssClassName = ussClassName + "__label";
 
         readonly LocalizedTextElement m_Label;
 

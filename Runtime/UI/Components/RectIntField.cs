@@ -30,42 +30,43 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The RectIntField main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-rectfield";
+        public const string ussClassName = "appui-rectfield";
 
         /// <summary>
         /// The RectIntField row styling class.
         /// </summary>
-        public static readonly string rowUssClassName = ussClassName + "__row";
+        public const string rowUssClassName = ussClassName + "__row";
 
         /// <summary>
         /// The RectIntField size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The RectIntField X NumericalField styling class.
         /// </summary>
-        public static readonly string xFieldUssClassName = ussClassName + "__x-field";
+        public const string xFieldUssClassName = ussClassName + "__x-field";
 
         /// <summary>
         /// The RectIntField Y NumericalField styling class.
         /// </summary>
-        public static readonly string yFieldUssClassName = ussClassName + "__y-field";
+        public const string yFieldUssClassName = ussClassName + "__y-field";
 
         /// <summary>
         /// The RectIntField H NumericalField styling class.
         /// </summary>
-        public static readonly string hFieldUssClassName = ussClassName + "__h-field";
+        public const string hFieldUssClassName = ussClassName + "__h-field";
 
         /// <summary>
         /// The RectIntField W NumericalField styling class.
         /// </summary>
-        public static readonly string wFieldUssClassName = ussClassName + "__w-field";
+        public const string wFieldUssClassName = ussClassName + "__w-field";
 
         /// <summary>
         /// The RectIntField Label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
+        public const string labelUssClassName = ussClassName + "__label";
 
         Size m_Size;
 
@@ -162,9 +163,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Size != value;
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 m_XField.size = m_Size;
                 m_YField.size = m_Size;
                 m_HField.size = m_Size;

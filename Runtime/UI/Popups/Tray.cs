@@ -233,21 +233,21 @@ namespace Unity.AppUI.UI
         /// </summary>
         class TrayVisualElement : VisualElement
         {
-            public static readonly string ussClassName = "appui-tray";
+            public const string ussClassName = "appui-tray";
 
-            public static readonly string leftTrayUssClassName = ussClassName + "--left";
+            public const string leftTrayUssClassName = ussClassName + "--left";
 
-            public static readonly string rightTrayUssClassName = ussClassName + "--right";
+            public const string rightTrayUssClassName = ussClassName + "--right";
 
-            public static readonly string bottomTrayUssClassName = ussClassName + "--bottom";
+            public const string bottomTrayUssClassName = ussClassName + "--bottom";
 
-            public static readonly string handleZoneUssClassName = ussClassName + "__handle-zone";
+            public const string handleZoneUssClassName = ussClassName + "__handle-zone";
 
-            public static readonly string handleUssClassName = ussClassName + "__handle";
+            public const string handleUssClassName = ussClassName + "__handle";
 
-            public static readonly string trayUssClassName = ussClassName + "__tray";
+            public const string trayUssClassName = ussClassName + "__tray";
 
-            public static readonly string containerUssClassName = ussClassName + "__container";
+            public const string containerUssClassName = ussClassName + "__container";
             
             /// <summary>
             /// Event triggered when the user has dragged almost completely the tray out of the screen.

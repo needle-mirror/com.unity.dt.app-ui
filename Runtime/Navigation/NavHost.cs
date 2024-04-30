@@ -18,17 +18,17 @@ namespace Unity.AppUI.Navigation
         /// <summary>
         /// The NavHost main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-navhost";
+        public const string ussClassName = "appui-navhost";
         
         /// <summary>
         /// The NavHost container styling class.
         /// </summary>
-        public static readonly string containerUssClassName = ussClassName + "__container";
+        public const string containerUssClassName = ussClassName + "__container";
         
         /// <summary>
         /// The NavHost item styling class.
         /// </summary>
-        public static readonly string itemUssClassName = ussClassName + "__item";
+        public const string itemUssClassName = ussClassName + "__item";
 
         /// <summary>
         /// The controller that manages the navigation stack.

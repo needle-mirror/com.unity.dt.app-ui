@@ -30,27 +30,28 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Vector2Field main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-vector2field";
+        public const string ussClassName = "appui-vector2field";
 
         /// <summary>
         /// The Vector2Field size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The Vector2Field container styling class.
         /// </summary>
-        public static readonly string containerUssClassName = ussClassName + "__container";
+        public const string containerUssClassName = ussClassName + "__container";
 
         /// <summary>
         /// The Vector2Field X NumericalField styling class.
         /// </summary>
-        public static readonly string xFieldUssClassName = ussClassName + "__x-field";
+        public const string xFieldUssClassName = ussClassName + "__x-field";
 
         /// <summary>
         /// The Vector2Field Y NumericalField styling class.
         /// </summary>
-        public static readonly string yFieldUssClassName = ussClassName + "__y-field";
+        public const string yFieldUssClassName = ussClassName + "__y-field";
 
         Size m_Size;
 
@@ -118,9 +119,9 @@ namespace Unity.AppUI.UI
             get => m_Size;
             set
             {
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 m_XField.size = m_Size;
                 m_YField.size = m_Size;
             }

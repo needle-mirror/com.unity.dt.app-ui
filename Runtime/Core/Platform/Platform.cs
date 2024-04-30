@@ -419,7 +419,7 @@ namespace Unity.AppUI.Core
         static Vector2 s_DeltaPos0;
         static Vector2 s_DeltaPos1;
 
-        enum GestureType 
+        internal enum GestureType 
         {
             Unknown,
             Pan,

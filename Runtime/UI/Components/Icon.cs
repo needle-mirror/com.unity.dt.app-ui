@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -41,6 +42,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Variant values for <see cref="Icon"/> elements.
     /// </summary>
+    [GenerateLowerCaseStrings]
     public enum IconVariant
     {
         /// <summary>
@@ -97,17 +99,18 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Icon main styling class.
         /// </summary>
-        public new static readonly string ussClassName = "appui-icon";
+        public new const string ussClassName = "appui-icon";
 
         /// <summary>
         /// The Icon primary variant styling class.
         /// </summary>
-        public static readonly string primaryUssClassName = ussClassName + "--primary";
+        public const string primaryUssClassName = ussClassName + "--primary";
 
         /// <summary>
         /// The Icon size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(IconSize))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         string m_IconName;
 
@@ -171,9 +174,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Size != value;
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
@@ -197,11 +200,11 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_IconName != value;
-                RemoveFromClassList(ussClassName + "--" + m_IconName + "--" + m_Variant.ToString().ToLower());
-                RemoveFromClassList(ussClassName + "--" + m_IconName);
+                RemoveFromClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName, "--", m_Variant.ToLowerCase()));
+                RemoveFromClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName));
                 m_IconName = value;
-                AddToClassList(ussClassName + "--" + m_IconName + "--" + m_Variant.ToString().ToLower());
-                AddToClassList(ussClassName + "--" + m_IconName);
+                AddToClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName, "--", m_Variant.ToLowerCase()));
+                AddToClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
@@ -225,11 +228,11 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Variant != value;
-                RemoveFromClassList(ussClassName + "--" + m_IconName + "--" + m_Variant.ToString().ToLower());
-                RemoveFromClassList(ussClassName + "--" + m_IconName);
+                RemoveFromClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName, "--", m_Variant.ToLowerCase()));
+                RemoveFromClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName));
                 m_Variant = value;
-                AddToClassList(ussClassName + "--" + m_IconName + "--" + m_Variant.ToString().ToLower());
-                AddToClassList(ussClassName + "--" + m_IconName);
+                AddToClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName, "--", m_Variant.ToLowerCase()));
+                AddToClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

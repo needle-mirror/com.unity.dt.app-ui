@@ -16,8 +16,17 @@ namespace Unity.AppUI.UI
         [Flags]
         public enum DragDirection
         {
+            /// <summary>
+            /// Horizontal drag.
+            /// </summary>
             Horizontal = 1 << 0,
+            /// <summary>
+            /// Vertical drag.
+            /// </summary>
             Vertical = 1 << 1,
+            /// <summary>
+            /// Free drag.
+            /// </summary>
             Free = Horizontal | Vertical,
         }
         

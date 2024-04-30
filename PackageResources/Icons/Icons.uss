@@ -1,10 +1,10 @@
 .appui {
-    --appui-icon-caret-down-fill: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/CaretDown.png");
-    --appui-icon-warning-fill: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/Warning.png");
     --appui-icon-check-bold: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Check.png");
     --appui-icon-dots-three-bold: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThree.png");
     --appui-icon-dots-three-vertical-bold: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThreeVertical.png");
     --appui-icon-minus-bold: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Minus.png");
+    --appui-icon-caret-down-fill: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/CaretDown.png");
+    --appui-icon-warning-fill: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/Warning.png");
     --appui-icon-360-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/360.png");
     --appui-icon-ar-mode-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ArMode.png");
     --appui-icon-ar-mode-off-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ArModeOff.png");

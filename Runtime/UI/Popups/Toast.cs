@@ -161,151 +161,154 @@ namespace Unity.AppUI.UI
             toast.text = txt;
             return this;
         }
+    }
+    
+    /// <summary>
+    /// The Toast UI Element.
+    /// </summary>
+    sealed partial class ToastVisualElement : ExVisualElement
+    {
+        public const string ussClassName = "appui-toast";
+        
+        [EnumName("GetNotificationStyleUssClassName", typeof(NotificationStyle))]
+        public const string variantUssClassName = ussClassName + "--";
 
-        /// <summary>
-        /// The Toast UI Element.
-        /// </summary>
-        sealed class ToastVisualElement : ExVisualElement
+        public const string messageUssClassName = ussClassName + "__message";
+
+        public const string iconUssClassName = ussClassName + "__icon";
+
+        public const string dividerUssClassName = ussClassName + "__divider";
+
+        public const string actionContainerUssClassName = ussClassName + "__actioncontainer";
+
+        public const string actionUssClassName = ussClassName + "__action";
+
+        readonly VisualElement m_ActionContainer;
+
+        readonly Dictionary<int, ActionItem> m_Actions = new Dictionary<int, ActionItem>();
+
+        readonly Divider m_Divider;
+
+        readonly Icon m_Icon;
+
+        NotificationStyle m_Style;
+
+        readonly LocalizedTextElement m_TextElement;
+
+        public ToastVisualElement()
         {
-            public static readonly string ussClassName = "appui-toast";
+            AddToClassList(ussClassName);
 
-            public static readonly string messageUssClassName = ussClassName + "__message";
+            passMask = Passes.Clear | Passes.OutsetShadows;
 
-            public static readonly string iconUssClassName = ussClassName + "__icon";
+            style.position = Position.Absolute;
+            style.bottom = 0;
 
-            public static readonly string dividerUssClassName = ussClassName + "__divider";
+            m_Icon = new Icon { name = iconUssClassName };
+            m_Icon.AddToClassList(iconUssClassName);
+            hierarchy.Add(m_Icon);
 
-            public static readonly string actionContainerUssClassName = ussClassName + "__actioncontainer";
+            m_TextElement = new LocalizedTextElement { name = messageUssClassName };
+            m_TextElement.AddToClassList(messageUssClassName);
+            hierarchy.Add(m_TextElement);
 
-            public static readonly string actionUssClassName = ussClassName + "__action";
-
-            readonly VisualElement m_ActionContainer;
-
-            readonly Dictionary<int, ActionItem> m_Actions = new Dictionary<int, ActionItem>();
-
-            readonly Divider m_Divider;
-
-            readonly Icon m_Icon;
-
-            NotificationStyle m_Style;
-
-            readonly LocalizedTextElement m_TextElement;
-
-            public ToastVisualElement()
+            m_Divider = new Divider
             {
-                AddToClassList(ussClassName);
+                name = dividerUssClassName, 
+                size = Size.M, spacing = Spacing.L, 
+                direction = Direction.Vertical
+            };
+            m_Divider.AddToClassList(dividerUssClassName);
+            hierarchy.Add(m_Divider);
 
-                passMask = Passes.Clear | Passes.OutsetShadows;
+            m_ActionContainer = new VisualElement { name = actionContainerUssClassName };
+            m_ActionContainer.AddToClassList(actionContainerUssClassName);
+            hierarchy.Add(m_ActionContainer);
 
-                style.position = Position.Absolute;
-                style.bottom = 0;
+            notificationStyle = NotificationStyle.Default;
+            text = "";
+            icon = null;
+            RefreshActionContainer();
+        }
 
-                m_Icon = new Icon { name = iconUssClassName };
-                m_Icon.AddToClassList(iconUssClassName);
-                hierarchy.Add(m_Icon);
+        public string icon
+        {
+            get => m_Icon.iconName;
+            set
+            {
+                m_Icon.iconName = value;
+                m_Icon.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Icon.iconName));
+            }
+        }
 
-                m_TextElement = new LocalizedTextElement { name = messageUssClassName };
-                m_TextElement.AddToClassList(messageUssClassName);
-                hierarchy.Add(m_TextElement);
+        public string text
+        {
+            get => m_TextElement.text;
+            set => m_TextElement.text = value;
+        }
 
-                m_Divider = new Divider
-                {
-                    name = dividerUssClassName, 
-                    size = Size.M, spacing = Spacing.L, 
-                    direction = Direction.Vertical
-                };
-                m_Divider.AddToClassList(dividerUssClassName);
-                hierarchy.Add(m_Divider);
+        public AnimationMode animationMode { get; set; } = AnimationMode.Fade;
 
-                m_ActionContainer = new VisualElement { name = actionContainerUssClassName };
-                m_ActionContainer.AddToClassList(actionContainerUssClassName);
-                hierarchy.Add(m_ActionContainer);
+        public NotificationStyle notificationStyle
+        {
+            get => m_Style;
 
-                notificationStyle = NotificationStyle.Default;
-                text = "";
-                icon = null;
+            set
+            {
+                RemoveFromClassList(GetNotificationStyleUssClassName(m_Style));
+                m_Style = value;
+                AddToClassList(GetNotificationStyleUssClassName(m_Style));
+            }
+        }
+
+        public event Action<int> actionClicked;
+
+        void RefreshActionContainer()
+        {
+            var noActions = m_Actions.Count == 0;
+            foreach (var child in m_ActionContainer.Children())
+            {
+                child.UnregisterCallback<ClickEvent>(ActionClicked);
+                child.userData = null;
+            }
+
+            m_ActionContainer.Clear();
+            foreach (var actionKvp in m_Actions) CreateActionItem(actionKvp.Value);
+            m_Divider.EnableInClassList(Styles.hiddenUssClassName, noActions);
+            m_ActionContainer.EnableInClassList(Styles.hiddenUssClassName, noActions);
+        }
+
+        void CreateActionItem(ActionItem item)
+        {
+            //todo use ActionButton in order to use Clickable for events
+            var actionButton = new LocalizedTextElement { focusable = true, text = item.text };
+            actionButton.AddToClassList(actionUssClassName);
+            m_ActionContainer.Add(actionButton);
+            actionButton.userData = item;
+            actionButton.RegisterCallback<ClickEvent>(ActionClicked);
+        }
+
+        void ActionClicked(ClickEvent evt)
+        {
+            if (evt.target is VisualElement ve && ve.userData is ActionItem actionItem)
+            {
+                actionItem.callback?.Invoke();
+                actionClicked?.Invoke(actionItem.key);
+            }
+        }
+
+        public void SetAction(int key, string displayText, Action callback)
+        {
+            m_Actions[key] = new ActionItem { callback = callback, key = key, text = displayText };
+            RefreshActionContainer();
+        }
+
+        public void RemoveAction(int key)
+        {
+            if (m_Actions.ContainsKey(key))
+            {
+                m_Actions.Remove(key);
                 RefreshActionContainer();
-            }
-
-            public string icon
-            {
-                get => m_Icon.iconName;
-                set
-                {
-                    m_Icon.iconName = value;
-                    m_Icon.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Icon.iconName));
-                }
-            }
-
-            public string text
-            {
-                get => m_TextElement.text;
-                set => m_TextElement.text = value;
-            }
-
-            public AnimationMode animationMode { get; set; } = AnimationMode.Fade;
-
-            public NotificationStyle notificationStyle
-            {
-                get => m_Style;
-
-                set
-                {
-                    RemoveFromClassList(ussClassName + "--" + m_Style.ToString().ToLower());
-                    m_Style = value;
-                    AddToClassList(ussClassName + "--" + m_Style.ToString().ToLower());
-                }
-            }
-
-            public event Action<int> actionClicked;
-
-            void RefreshActionContainer()
-            {
-                var noActions = m_Actions.Count == 0;
-                foreach (var child in m_ActionContainer.Children())
-                {
-                    child.UnregisterCallback<ClickEvent>(ActionClicked);
-                    child.userData = null;
-                }
-
-                m_ActionContainer.Clear();
-                foreach (var actionKvp in m_Actions) CreateActionItem(actionKvp.Value);
-                m_Divider.EnableInClassList(Styles.hiddenUssClassName, noActions);
-                m_ActionContainer.EnableInClassList(Styles.hiddenUssClassName, noActions);
-            }
-
-            void CreateActionItem(ActionItem item)
-            {
-                //todo use ActionButton in order to use Clickable for events
-                var actionButton = new LocalizedTextElement { focusable = true, text = item.text };
-                actionButton.AddToClassList(actionUssClassName);
-                m_ActionContainer.Add(actionButton);
-                actionButton.userData = item;
-                actionButton.RegisterCallback<ClickEvent>(ActionClicked);
-            }
-
-            void ActionClicked(ClickEvent evt)
-            {
-                if (evt.target is VisualElement ve && ve.userData is ActionItem actionItem)
-                {
-                    actionItem.callback?.Invoke();
-                    actionClicked?.Invoke(actionItem.key);
-                }
-            }
-
-            public void SetAction(int key, string displayText, Action callback)
-            {
-                m_Actions[key] = new ActionItem { callback = callback, key = key, text = displayText };
-                RefreshActionContainer();
-            }
-
-            public void RemoveAction(int key)
-            {
-                if (m_Actions.ContainsKey(key))
-                {
-                    m_Actions.Remove(key);
-                    RefreshActionContainer();
-                }
             }
         }
     }

@@ -53,22 +53,24 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Avatar main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-avatar";
+        public const string ussClassName = "appui-avatar";
 
         /// <summary>
         /// The Avatar container styling class.
         /// </summary>
-        public static readonly string containerUssClassName = ussClassName + "__container";
+        public const string containerUssClassName = ussClassName + "__container";
 
         /// <summary>
         /// The Avatar size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
         
         /// <summary>
         /// The Avatar variant styling class.
         /// </summary>
-        public static readonly string variantUssClassName = ussClassName + "--";
+        [EnumName("GetVariantUssClassName", typeof(AvatarVariant))]
+        public const string variantUssClassName = ussClassName + "--";
         
         const Size k_DefaultSize = Size.M;
         
@@ -106,9 +108,9 @@ namespace Unity.AppUI.UI
             get => m_Size;
             set
             {
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
             }
         }
 
@@ -126,9 +128,9 @@ namespace Unity.AppUI.UI
             get => m_Variant;
             set
             {
-                RemoveFromClassList(variantUssClassName + m_Variant.ToString().ToLower());
+                RemoveFromClassList(GetVariantUssClassName(m_Variant));
                 m_Variant = value;
-                AddToClassList(variantUssClassName + m_Variant.ToString().ToLower());
+                AddToClassList(GetVariantUssClassName(m_Variant));
             }
         }
 

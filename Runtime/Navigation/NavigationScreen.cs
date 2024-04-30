@@ -15,22 +15,22 @@ namespace Unity.AppUI.Navigation
         /// <summary>
         /// The NavigationScreen main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-navigation-screen";
+        public const string ussClassName = "appui-navigation-screen";
         
         /// <summary>
         /// The NavigationScreen container styling class.
         /// </summary>
-        public static readonly string containerUssClassName = ussClassName + "__container";
+        public const string containerUssClassName = ussClassName + "__container";
         
         /// <summary>
         /// The NavigationScreen with app bar styling class.
         /// </summary>
-        public static readonly string withAppBarUssClassName = ussClassName + "--with-appbar";
+        public const string withAppBarUssClassName = ussClassName + "--with-appbar";
         
         /// <summary>
         /// The NavigationScreen with compact app bar styling class.
         /// </summary>
-        public static readonly string withCompactAppBarUssClassName = withAppBarUssClassName + "--compact";
+        public const string withCompactAppBarUssClassName = withAppBarUssClassName + "--compact";
 
         /// <summary>
         /// Child elements are added to this element.

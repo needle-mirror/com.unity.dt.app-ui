@@ -70,7 +70,7 @@
     padding: var(--appui-alias-control-gap-sm) 0;
     flex-shrink: 0;
     flex-grow: 0;
-    -unity-font-definition: var(--appui-font-weights-300);
+    -unity-font-definition: var(--appui-font-weights-200);
     color: var(--appui-foregrounds-25);
     min-height: var(--appui-alias-control-sizing-lg-height);
 }
@@ -112,14 +112,15 @@
 .appui-text.appui-date-picker-pane__day-button--in-range {
     background-color: var(--appui-accent-25);
     color: var(--appui-alias-actions-accent-foreground-color-default);
-    -unity-font-definition: var(--appui-font-weights-300);
+    -unity-font-definition: var(--appui-font-weights-200);
     border-radius: 0;
 }
 
 .appui-text.appui-date-picker-pane__day-button.is-selected {
     background-color: var(--appui-alias-actions-accent-background-color-default);
     color: var(--appui-alias-actions-accent-foreground-color-default);
-    -unity-font-definition: var(--appui-font-weights-400);
+    -unity-font-definition: var(--appui-font-weights-200);
+    -unity-font-style: bold;
     border-radius: var(--appui-alias-control-border-radius);
 }
 

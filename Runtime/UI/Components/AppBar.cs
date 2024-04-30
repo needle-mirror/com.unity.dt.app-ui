@@ -30,62 +30,67 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Main USS class name of the AppBar.
         /// </summary>
-        public static readonly string ussClassName = "appui-appbar";
+        public const string ussClassName = "appui-appbar";
+
+        /// <summary>
+        /// USS class name of the AppBar's elevation.
+        /// </summary>
+        public const string elevationUssClassName = Styles.elevationUssClassName;
         
         /// <summary>
         /// USS class name of the AppBar's bar.
         /// </summary>
-        public static readonly string barUssClassName = ussClassName + "__bar";
+        public const string barUssClassName = ussClassName + "__bar";
         
         /// <summary>
         /// USS class name of the AppBar's bottom element.
         /// </summary>
-        public static readonly string bottomUssClassName = ussClassName + "__bottom";
+        public const string bottomUssClassName = ussClassName + "__bottom";
         
         /// <summary>
         /// USS class name of the AppBar's bottom border element.
         /// </summary>
-        public static readonly string bottomBorderUssClassName = ussClassName + "__bottom-border";
+        public const string bottomBorderUssClassName = ussClassName + "__bottom-border";
 
         /// <summary>
         /// USS class name of the AppBar's compact title.
         /// </summary>
-        public static readonly string compactTitleUssClassName = ussClassName + "__compact-title";
+        public const string compactTitleUssClassName = ussClassName + "__compact-title";
         
         /// <summary>
         /// USS class name of the AppBar's large title.
         /// </summary>
-        public static readonly string largeTitleUssClassName = ussClassName + "__large-title";
+        public const string largeTitleUssClassName = ussClassName + "__large-title";
         
         /// <summary>
         /// USS class name of the AppBar's action container.
         /// </summary>
-        public static readonly string actionContainerUssClassName = ussClassName + "__action-container";
+        public const string actionContainerUssClassName = ussClassName + "__action-container";
         
         /// <summary>
         /// USS class name of the AppBar's back button.
         /// </summary>
-        public static readonly string backButtonUssClassName = ussClassName + "__back-button";
+        public const string backButtonUssClassName = ussClassName + "__back-button";
         
         /// <summary>
         /// USS class name of the AppBar's drawer button.
         /// </summary>
-        public static readonly string drawerButtonUssClassName = ussClassName + "__drawer-button";
+        public const string drawerButtonUssClassName = ussClassName + "__drawer-button";
         
         /// <summary>
         /// USS class name of the AppBar's flexible space.
         /// </summary>
-        public static readonly string flexibleSpaceUssClassName = ussClassName + "__flexible-space";
+        public const string flexibleSpaceUssClassName = ussClassName + "__flexible-space";
         
         /// <summary>
         /// USS class name of the AppBar's stretch variant.
         /// </summary>
-        public static readonly string stretchUssClassName = ussClassName + "--stretch";
+        public const string stretchUssClassName = ussClassName + "--stretch";
         
         /// <summary>
         /// USS class name of the AppBar's compact variant.
         /// </summary>
-        public static readonly string compactUssClassName = ussClassName + "--compact";
+        public const string compactUssClassName = ussClassName + "--compact";
         
         /// <summary>
         /// Event triggered when the AppBar is being stretched. The float parameter is the stretch ratio (0.0 to 1.0).
@@ -219,9 +224,9 @@ namespace Unity.AppUI.UI
             get => m_Elevation;
             set
             {
-                RemoveFromClassList("appui-elevation-" + m_Elevation);
+                RemoveFromClassList(MemoryUtils.Concatenate(elevationUssClassName, m_Elevation.ToString()));
                 m_Elevation = value;
-                AddToClassList("appui-elevation-" + m_Elevation);
+                AddToClassList(MemoryUtils.Concatenate(elevationUssClassName, m_Elevation.ToString()));
             }
         }
         

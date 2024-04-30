@@ -410,25 +410,25 @@ namespace Unity.AppUI.UI
         /// </summary>
         internal class PopoverVisualElement : VisualElement, IPlaceableElement
         {
-            public static readonly string ussClassName = "appui-popover";
+            public const string ussClassName = "appui-popover";
 
-            public static readonly string modalBackdropUssClassName = ussClassName + "--modal-backdrop";
+            public const string modalBackdropUssClassName = ussClassName + "--modal-backdrop";
 
-            public static readonly string popoverUssClassName = ussClassName + "__popover";
+            public const string popoverUssClassName = ussClassName + "__popover";
 
-            public static readonly string containerUssClassName = ussClassName + "__container";
+            public const string containerUssClassName = ussClassName + "__container";
 
-            public static readonly string shadowElementUssClassName = ussClassName + "__shadow-element";
+            public const string shadowElementUssClassName = ussClassName + "__shadow-element";
 
-            public static readonly string tipUssClassName = ussClassName + "__tip";
+            public const string tipUssClassName = ussClassName + "__tip";
 
-            public static readonly string upUssClassName = ussClassName + "--up";
+            public const string upUssClassName = ussClassName + "--up";
 
-            public static readonly string downUssClassName = ussClassName + "--down";
+            public const string downUssClassName = ussClassName + "--down";
 
-            public static readonly string leftUssClassName = ussClassName + "--left";
+            public const string leftUssClassName = ussClassName + "--left";
 
-            public static readonly string rightUssClassName = ussClassName + "--right";
+            public const string rightUssClassName = ussClassName + "--right";
 
             readonly VisualElement m_ContentContainer;
 

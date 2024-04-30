@@ -40,102 +40,104 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Slider main styling class.
         /// </summary>
-        public static readonly string ussClassName = SliderBase<TValueType>.ussClassName;
+        public const string ussClassName = SliderBase<TValueType>.ussClassName;
 
         /// <summary>
         /// The Slider size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = SliderBase<TValueType>.sizeUssClassName;
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = SliderBase<TValueType>.sizeUssClassName;
 
         /// <summary>
         /// The Slider with tick labels variant styling class.
         /// </summary>
-        public static readonly string tickLabelVariantUssClassName = SliderBase<TValueType>.tickLabelVariantUssClassName;
+        public const string tickLabelVariantUssClassName = SliderBase<TValueType>.tickLabelVariantUssClassName;
 
         /// <summary>
         /// The Slider no label variant styling class.
         /// </summary>
-        public static readonly string noLabelUssClassName = SliderBase<TValueType>.noLabelUssClassName;
+        public const string noLabelUssClassName = SliderBase<TValueType>.noLabelUssClassName;
 
         /// <summary>
         /// The Slider tick styling class.
         /// </summary>
-        public static readonly string tickUssClassName = SliderBase<TValueType>.tickUssClassName;
+        public const string tickUssClassName = SliderBase<TValueType>.tickUssClassName;
 
         /// <summary>
         /// The Slider inline value styling class.
         /// </summary>
-        public static readonly string inlineValueUssClassName = SliderBase<TValueType>.inlineValueUssClassName;
+        [EnumName("GetInlineValueUssClassName", typeof(InlineValue))]
+        public const string inlineValueUssClassName = SliderBase<TValueType>.inlineValueUssClassName;
 
         /// <summary>
         /// The Slider tick label styling class.
         /// </summary>
-        public static readonly string tickLabelUssClassName = SliderBase<TValueType>.tickLabelUssClassName;
+        public const string tickLabelUssClassName = SliderBase<TValueType>.tickLabelUssClassName;
 
         /// <summary>
         /// The Slider ticks container styling class.
         /// </summary>
-        public static readonly string ticksUssClassName = SliderBase<TValueType>.ticksUssClassName;
+        public const string ticksUssClassName = SliderBase<TValueType>.ticksUssClassName;
 
         /// <summary>
         /// The Slider track styling class.
         /// </summary>
-        public static readonly string trackUssClassName = SliderBase<TValueType>.trackUssClassName;
+        public const string trackUssClassName = SliderBase<TValueType>.trackUssClassName;
         
         /// <summary>
         /// The Slider padded container styling class.
         /// </summary>
-        public static readonly string paddedContainerUssClassName = SliderBase<TValueType>.paddedContainerUssClassName;
+        public const string paddedContainerUssClassName = SliderBase<TValueType>.paddedContainerUssClassName;
         
         /// <summary>
         /// The Slider progress container styling class.
         /// </summary>
-        public static readonly string progressContainerUssClassName = SliderBase<TValueType>.interactiveAreaUssClassName;
+        public const string progressContainerUssClassName = SliderBase<TValueType>.interactiveAreaUssClassName;
 
         /// <summary>
         /// The Slider progress styling class.
         /// </summary>
-        public static readonly string progressUssClassName = SliderBase<TValueType>.progressUssClassName;
+        public const string progressUssClassName = SliderBase<TValueType>.progressUssClassName;
 
         /// <summary>
         /// The Slider handle styling class.
         /// </summary>
-        public static readonly string handleUssClassName = SliderBase<TValueType>.handleUssClassName;
+        public const string handleUssClassName = SliderBase<TValueType>.handleUssClassName;
 
         /// <summary>
         /// The Slider handle container styling class.
         /// </summary>
-        public static readonly string handleContainerUssClassName = SliderBase<TValueType>.handleContainerUssClassName;
+        public const string handleContainerUssClassName = SliderBase<TValueType>.handleContainerUssClassName;
 
         /// <summary>
         /// The Slider label container styling class.
         /// </summary>
-        public static readonly string labelContainerUssClassName = SliderBase<TValueType>.labelContainerUssClassName;
+        public const string labelContainerUssClassName = SliderBase<TValueType>.labelContainerUssClassName;
 
         /// <summary>
         /// The Slider label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = SliderBase<TValueType>.labelUssClassName;
+        public const string labelUssClassName = SliderBase<TValueType>.labelUssClassName;
 
         /// <summary>
         /// The Slider value label styling class.
         /// </summary>
-        public static readonly string valueLabelUssClassName = SliderBase<TValueType>.valueLabelUssClassName;
+        public const string valueLabelUssClassName = SliderBase<TValueType>.valueLabelUssClassName;
 
         /// <summary>
         /// The Slider inline value label styling class.
         /// </summary>
-        public static readonly string inlineValueLabelUssClassName = SliderBase<TValueType>.inlineValueLabelUssClassName;
+        public const string inlineValueLabelUssClassName = SliderBase<TValueType>.inlineValueLabelUssClassName;
 
         /// <summary>
         /// The Slider controls styling class.
         /// </summary>
-        public static readonly string controlsUssClassName = SliderBase<TValueType>.controlsUssClassName;
+        public const string controlsUssClassName = SliderBase<TValueType>.controlsUssClassName;
 
         /// <summary>
         /// The Slider control container styling class.
         /// </summary>
-        public static readonly string controlContainerUssClassName = SliderBase<TValueType>.controlContainerUssClassName;
+        public const string controlContainerUssClassName = SliderBase<TValueType>.controlContainerUssClassName;
         
         float m_FillOffset;
 
@@ -385,10 +387,10 @@ namespace Unity.AppUI.UI
             get => m_InlineValue;
             set
             {
-                RemoveFromClassList(inlineValueUssClassName + m_InlineValue.ToString().ToLower());
+                RemoveFromClassList(GetInlineValueUssClassName(m_InlineValue));
                 m_InlineValue = value;
                 if (m_InlineValue != InlineValue.None)
-                    AddToClassList(inlineValueUssClassName + m_InlineValue.ToString().ToLower());
+                    AddToClassList(GetInlineValueUssClassName(m_InlineValue));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in inlineValueProperty);
@@ -488,9 +490,9 @@ namespace Unity.AppUI.UI
             get => m_Size;
             set
             {
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in sizeProperty);

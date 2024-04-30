@@ -28,12 +28,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The MenuSection title styling class.
         /// </summary>
-        public static readonly string titleUssClassName = ussClassName + "__title";
+        public const string titleUssClassName = ussClassName + "__title";
 
         /// <summary>
         /// The MenuSection container styling class.
         /// </summary>
-        public static readonly string containerUssClassName = ussClassName + "__container";
+        public const string containerUssClassName = ussClassName + "__container";
 
         readonly VisualElement m_Container;
 

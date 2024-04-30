@@ -4,6 +4,22 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2024-05-01
+
+### Fixed
+
+- Reduced the amount of heap memory allocation for String values used in USS classes
+- Fixed the support of new Android entrypoints in Unity starting 2023.2
+
+### Removed
+
+- Removed the usage of self-provided fonts in App UI default themes.
+- Removed provided Fonts assets from the package.
+
+### Added
+
+- Added AppUIGameActivity for Android builds in Unity 2023.2+
+
 ## [1.0.6] - 2024-03-15
 
 ### Fixed

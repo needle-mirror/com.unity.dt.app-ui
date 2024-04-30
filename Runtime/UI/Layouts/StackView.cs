@@ -62,7 +62,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The main styling class of the StackViewItem. This is the class that is used in the USS file.
         /// </summary>
-        public static readonly string ussClassName = "appui-stackview-item";
+        public const string ussClassName = "appui-stackview-item";
 
         /// <summary>
         /// Default constructor.
@@ -207,7 +207,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The main styling class of the StackView. This is the class that is used in the USS file.
         /// </summary>
-        public static readonly string ussClassName = "appui-stackview";
+        public const string ussClassName = "appui-stackview";
 
         bool m_Initialized;
 

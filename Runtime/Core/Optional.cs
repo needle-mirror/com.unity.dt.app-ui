@@ -227,7 +227,7 @@ namespace Unity.AppUI.Core
         /// <summary>
         /// The USS class name of this element.
         /// </summary>
-        public new static readonly string ussClassName = "unity-optional-field";
+        public new const string ussClassName = "unity-optional-field";
 
         /// <summary>
         /// Constructs an <see cref="OptionalField{T}"/> with the given label and visual input.
@@ -251,7 +251,7 @@ namespace Unity.AppUI.Core
         /// <summary>
         /// The USS class name of this element.
         /// </summary>
-        public new static readonly string ussClassName = "unity-optional-field";
+        public new const string ussClassName = "unity-optional-field";
 
         /// <summary>
         /// Constructs an <see cref="OptionalEnumField{T}"/> with the given label and visual input.

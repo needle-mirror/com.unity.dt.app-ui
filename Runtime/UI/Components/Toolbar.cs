@@ -59,32 +59,34 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Toolbar's USS class name.
         /// </summary>
-        public static readonly string ussClassName = "appui-toolbar";
+        public const string ussClassName = "appui-toolbar";
         
         /// <summary>
         /// The Toolbar's drag bar USS class name.
         /// </summary>
-        public static readonly string dragBarUssClassName = ussClassName + "__drag-bar";
+        public const string dragBarUssClassName = ussClassName + "__drag-bar";
         
         /// <summary>
         /// The Toolbar's drag bar indicator USS class name.
         /// </summary>
-        public static readonly string dragBarIndicatorUssClassName = dragBarUssClassName + "-indicator";
+        public const string dragBarIndicatorUssClassName = dragBarUssClassName + "-indicator";
         
         /// <summary>
         /// The Toolbar's container USS class name.
         /// </summary>
-        public static readonly string containerUssClassName = ussClassName + "__container";
+        public const string containerUssClassName = ussClassName + "__container";
         
         /// <summary>
         /// The Toolbar's variant USS class name.
         /// </summary>
-        public static readonly string variantUssClassName = ussClassName + "--";
+        [EnumName("GetDockModeUssClassName", typeof(ToolbarDockMode))]
+        [EnumName("GetDirectionUssClassName", typeof(Direction))]
+        public const string variantUssClassName = ussClassName + "--";
         
         /// <summary>
         /// The Toolbar's draggable USS class name.
         /// </summary>
-        public static readonly string draggableUssClassName = ussClassName + "--draggable";
+        public const string draggableUssClassName = ussClassName + "--draggable";
 
         readonly VisualElement m_Container;
 
@@ -118,9 +120,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_DockMode != value;
-                RemoveFromClassList(variantUssClassName + m_DockMode.ToString().ToLower());
+                RemoveFromClassList(GetDockModeUssClassName(m_DockMode));
                 m_DockMode = value;
-                AddToClassList(variantUssClassName + m_DockMode.ToString().ToLower());
+                AddToClassList(GetDockModeUssClassName(m_DockMode));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
@@ -168,9 +170,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Direction != value;
-                RemoveFromClassList(variantUssClassName + m_Direction.ToString().ToLower());
+                RemoveFromClassList(GetDirectionUssClassName(m_Direction));
                 m_Direction = value;
-                AddToClassList(variantUssClassName + m_Direction.ToString().ToLower());
+                AddToClassList(GetDirectionUssClassName(m_Direction));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

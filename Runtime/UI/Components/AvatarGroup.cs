@@ -93,17 +93,18 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The AvatarGroup main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-avatar-group";
+        public const string ussClassName = "appui-avatar-group";
         
         /// <summary>
         /// The AvatarGroup surplus styling class.
         /// </summary>
-        public static readonly string surplusUssClassName = ussClassName + "__surplus";
+        public const string surplusUssClassName = ussClassName + "__surplus";
         
         /// <summary>
         /// The AvatarGroup spacing styling class.
         /// </summary>
-        public static readonly string spacingUssClassName = ussClassName + "--spacing-";
+        [EnumName("GetSpacingUssClassName", typeof(AvatarGroupSpacing))]
+        public const string spacingUssClassName = ussClassName + "--spacing-";
 
         const int k_DefaultMax = 5;
         
@@ -176,9 +177,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Spacing != value;
-                RemoveFromClassList(spacingUssClassName + m_Spacing.ToString().ToLower());
+                RemoveFromClassList(GetSpacingUssClassName(m_Spacing));
                 m_Spacing = value;
-                AddToClassList(spacingUssClassName + m_Spacing.ToString().ToLower());
+                AddToClassList(GetSpacingUssClassName(m_Spacing));
                 Refresh();
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

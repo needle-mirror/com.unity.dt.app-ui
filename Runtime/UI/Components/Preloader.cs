@@ -17,17 +17,17 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Preloader's USS class name.
         /// </summary>
-        public static readonly string ussClassName = "appui-preloader";
+        public const string ussClassName = "appui-preloader";
         
         /// <summary>
         /// The Preloader's circular progress USS class name.
         /// </summary>
-        public static readonly string circularProgressUssClassName = ussClassName + "__circular-progress";
+        public const string circularProgressUssClassName = ussClassName + "__circular-progress";
         
         /// <summary>
         /// The Preloader's logo USS class name.
         /// </summary>
-        public static readonly string logoUssClassName = ussClassName + "__logo";
+        public const string logoUssClassName = ussClassName + "__logo";
         
         /// <summary>
         /// Constructor.

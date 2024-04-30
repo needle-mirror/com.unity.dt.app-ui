@@ -130,29 +130,35 @@ namespace Unity.AppUI.UI
         public const string ussClassName = "appui-canvas";
         
         /// <summary>
+        /// USS class name prefix for the cursor.
+        /// </summary>
+        [EnumName("GetGrabModeUssClassName", typeof(GrabMode))]
+        public const string cursorUssClassName = Styles.cursorUsClassNamePrefix;
+        
+        /// <summary>
         /// USS class name of the background element of this type.
         /// </summary>
-        public static readonly string backgroundUssClassName = ussClassName + "__background";
+        public const string backgroundUssClassName = ussClassName + "__background";
         
         /// <summary>
         /// USS class name of the viewport element of this type.
         /// </summary>
-        public static readonly string viewportUssClassName = ussClassName + "__viewport";
+        public const string viewportUssClassName = ussClassName + "__viewport";
         
         /// <summary>
         /// USS class name of the viewport container element of this type.
         /// </summary>
-        public static readonly string viewportContainerUssClassName = ussClassName + "__viewport-container";
+        public const string viewportContainerUssClassName = ussClassName + "__viewport-container";
         
         /// <summary>
         /// USS class name of the horizontal scroller element of this type.
         /// </summary>
-        public static readonly string horizontalScrollerUssClassName = ussClassName + "__horizontal-scroller";
+        public const string horizontalScrollerUssClassName = ussClassName + "__horizontal-scroller";
         
         /// <summary>
         /// USS class name of the vertical scroller element of this type.
         /// </summary>
-        public static readonly string verticalScrollerUssClassName = ussClassName + "__vertical-scroller";
+        public const string verticalScrollerUssClassName = ussClassName + "__vertical-scroller";
         
         /// <summary>
         /// Event that is triggered when the scroll position of the Canvas has changed.
@@ -544,10 +550,10 @@ namespace Unity.AppUI.UI
                 if (m_GrabMode == value)
                     return;
                 
-                RemoveFromClassList("cursor--" + m_GrabMode.ToString().ToLower());
+                RemoveFromClassList(GetGrabModeUssClassName(m_GrabMode));
                 m_GrabMode = value;
-                AddToClassList("cursor--" + m_GrabMode.ToString().ToLower());
-                
+                AddToClassList(GetGrabModeUssClassName(m_GrabMode));
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in grabModeProperty);
 #endif

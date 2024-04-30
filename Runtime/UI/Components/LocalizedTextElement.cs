@@ -34,7 +34,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The main USS class name of this element.
         /// </summary>
-        public new static readonly string ussClassName = "appui-localized-text";
+        public new const string ussClassName = "appui-localized-text";
         
         static readonly CustomStyleProperty<int> k_FontWeightProperty = new ("--unity-font-weight");
 

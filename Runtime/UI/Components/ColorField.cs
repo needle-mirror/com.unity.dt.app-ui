@@ -34,27 +34,28 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The ColorField main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-colorfield";
+        public const string ussClassName = "appui-colorfield";
 
         /// <summary>
         /// The ColorField color swatch styling class.
         /// </summary>
-        public static readonly string colorSwatchUssClassName = ussClassName + "__color-swatch";
+        public const string colorSwatchUssClassName = ussClassName + "__color-swatch";
 
         /// <summary>
         /// The ColorField label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
+        public const string labelUssClassName = ussClassName + "__label";
 
         /// <summary>
         /// The ColorField size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The ColorField swatch only styling class.
         /// </summary>
-        public static readonly string swatchOnlyUssClassName = ussClassName + "--swatch-only";
+        public const string swatchOnlyUssClassName = ussClassName + "--swatch-only";
 
         readonly ColorSwatch m_SwatchElement;
 
@@ -224,9 +225,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Size != value;
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

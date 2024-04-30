@@ -33,7 +33,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The RadioGroup main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-radiogroup";
+        public const string ussClassName = "appui-radiogroup";
 
         Action<Radio, int> m_BindItem;
 

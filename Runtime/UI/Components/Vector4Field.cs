@@ -30,37 +30,38 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Vector4Field main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-vector4field";
+        public const string ussClassName = "appui-vector4field";
 
         /// <summary>
         /// The Vector4Field row styling class.
         /// </summary>
-        public static readonly string rowUssClassName = ussClassName + "__row";
+        public const string rowUssClassName = ussClassName + "__row";
 
         /// <summary>
         /// The Vector4Field size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The Vector4Field X NumericalField styling class.
         /// </summary>
-        public static readonly string xFieldUssClassName = ussClassName + "__x-field";
+        public const string xFieldUssClassName = ussClassName + "__x-field";
 
         /// <summary>
         /// The Vector4Field Y NumericalField styling class.
         /// </summary>
-        public static readonly string yFieldUssClassName = ussClassName + "__y-field";
+        public const string yFieldUssClassName = ussClassName + "__y-field";
 
         /// <summary>
         /// The Vector4Field Z NumericalField styling class.
         /// </summary>
-        public static readonly string zFieldUssClassName = ussClassName + "__z-field";
+        public const string zFieldUssClassName = ussClassName + "__z-field";
 
         /// <summary>
         /// The Vector4Field W NumericalField styling class.
         /// </summary>
-        public static readonly string wFieldUssClassName = ussClassName + "__w-field";
+        public const string wFieldUssClassName = ussClassName + "__w-field";
 
         Size m_Size;
 
@@ -151,9 +152,9 @@ namespace Unity.AppUI.UI
             get => m_Size;
             set
             {
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 m_XField.size = m_Size;
                 m_YField.size = m_Size;
                 m_ZField.size = m_Size;

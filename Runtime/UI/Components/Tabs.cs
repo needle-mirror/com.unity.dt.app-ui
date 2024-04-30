@@ -57,37 +57,39 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Tabs main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-tabs";
+        public const string ussClassName = "appui-tabs";
 
         /// <summary>
         /// The Tabs size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The Tabs direction styling class.
         /// </summary>
-        public static readonly string orientationUssClassName = ussClassName + "--";
+        [EnumName("GetOrientationUssClassName", typeof(Direction))]
+        public const string orientationUssClassName = ussClassName + "--";
 
         /// <summary>
         /// The Tabs emphasized mode styling class.
         /// </summary>
-        public static readonly string emphasizedUssClassName = ussClassName + "--emphasized";
+        public const string emphasizedUssClassName = ussClassName + "--emphasized";
 
         /// <summary>
         /// The Tabs container styling class.
         /// </summary>
-        public static readonly string containerUssClassName = ussClassName + "__container";
+        public const string containerUssClassName = ussClassName + "__container";
         
         /// <summary>
         /// The Tabs ScrollView styling class.
         /// </summary>
-        public static readonly string scrollViewUssClassName = ussClassName + "__scroll-view";
+        public const string scrollViewUssClassName = ussClassName + "__scroll-view";
 
         /// <summary>
         /// The Tabs indicator styling class.
         /// </summary>
-        public static readonly string indicatorUssClassName = ussClassName + "__indicator";
+        public const string indicatorUssClassName = ussClassName + "__indicator";
 
         readonly VisualElement m_Indicator;
 
@@ -199,9 +201,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Size != value;
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
@@ -225,9 +227,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Direction != value;
-                RemoveFromClassList(orientationUssClassName + m_Direction.ToString().ToLower());
+                RemoveFromClassList(GetOrientationUssClassName(m_Direction));
                 m_Direction = value;
-                AddToClassList(orientationUssClassName + m_Direction.ToString().ToLower());
+                AddToClassList(GetOrientationUssClassName(m_Direction));
                 m_ScrollView.mode = m_Direction switch
                 {
                     Direction.Vertical => ScrollViewMode.Vertical,

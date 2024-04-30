@@ -59,102 +59,104 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Slider main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-slider";
+        public const string ussClassName = "appui-slider";
 
         /// <summary>
         /// The Slider size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The Slider with tick labels variant styling class.
         /// </summary>
-        public static readonly string tickLabelVariantUssClassName = ussClassName + "--tick-labels";
+        public const string tickLabelVariantUssClassName = ussClassName + "--tick-labels";
 
         /// <summary>
         /// The Slider no label variant styling class.
         /// </summary>
-        public static readonly string noLabelUssClassName = ussClassName + "--no-label";
+        public const string noLabelUssClassName = ussClassName + "--no-label";
 
         /// <summary>
         /// The Slider tick styling class.
         /// </summary>
-        public static readonly string tickUssClassName = ussClassName + "__tick";
+        public const string tickUssClassName = ussClassName + "__tick";
 
         /// <summary>
         /// The Slider inline value styling class.
         /// </summary>
-        public static readonly string inlineValueUssClassName = ussClassName + "--inline-value-";
+        [EnumName("GetInlineValueUssClassName", typeof(InlineValue))]
+        public const string inlineValueUssClassName = ussClassName + "--inline-value-";
 
         /// <summary>
         /// The Slider tick label styling class.
         /// </summary>
-        public static readonly string tickLabelUssClassName = ussClassName + "__ticklabel";
+        public const string tickLabelUssClassName = ussClassName + "__ticklabel";
 
         /// <summary>
         /// The Slider ticks container styling class.
         /// </summary>
-        public static readonly string ticksUssClassName = ussClassName + "__ticks";
+        public const string ticksUssClassName = ussClassName + "__ticks";
 
         /// <summary>
         /// The Slider track styling class.
         /// </summary>
-        public static readonly string trackUssClassName = ussClassName + "__track";
+        public const string trackUssClassName = ussClassName + "__track";
         
         /// <summary>
         /// The Slider padded container styling class.
         /// </summary>
-        public static readonly string paddedContainerUssClassName = ussClassName + "__padded-container";
+        public const string paddedContainerUssClassName = ussClassName + "__padded-container";
         
         /// <summary>
         /// The Slider progress container styling class.
         /// </summary>
-        public static readonly string interactiveAreaUssClassName = ussClassName + "__interactive-area";
+        public const string interactiveAreaUssClassName = ussClassName + "__interactive-area";
 
         /// <summary>
         /// The Slider progress styling class.
         /// </summary>
-        public static readonly string progressUssClassName = ussClassName + "__progress";
+        public const string progressUssClassName = ussClassName + "__progress";
 
         /// <summary>
         /// The Slider handle styling class.
         /// </summary>
-        public static readonly string handleUssClassName = ussClassName + "__handle";
+        public const string handleUssClassName = ussClassName + "__handle";
 
         /// <summary>
         /// The Slider handle container styling class.
         /// </summary>
-        public static readonly string handleContainerUssClassName = ussClassName + "__handle-container";
+        public const string handleContainerUssClassName = ussClassName + "__handle-container";
 
         /// <summary>
         /// The Slider label container styling class.
         /// </summary>
-        public static readonly string labelContainerUssClassName = ussClassName + "__labelcontainer";
+        public const string labelContainerUssClassName = ussClassName + "__labelcontainer";
 
         /// <summary>
         /// The Slider label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
+        public const string labelUssClassName = ussClassName + "__label";
 
         /// <summary>
         /// The Slider value label styling class.
         /// </summary>
-        public static readonly string valueLabelUssClassName = ussClassName + "__valuelabel";
+        public const string valueLabelUssClassName = ussClassName + "__valuelabel";
 
         /// <summary>
         /// The Slider inline value label styling class.
         /// </summary>
-        public static readonly string inlineValueLabelUssClassName = ussClassName + "__inline-valuelabel";
+        public const string inlineValueLabelUssClassName = ussClassName + "__inline-valuelabel";
 
         /// <summary>
         /// The Slider controls styling class.
         /// </summary>
-        public static readonly string controlsUssClassName = ussClassName + "__controls";
+        public const string controlsUssClassName = ussClassName + "__controls";
 
         /// <summary>
         /// The Slider control container styling class.
         /// </summary>
-        public static readonly string controlContainerUssClassName = ussClassName + "__control-container";
+        public const string controlContainerUssClassName = ussClassName + "__control-container";
 
         float m_FillOffset;
 
@@ -380,10 +382,10 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_InlineValue != value;
-                RemoveFromClassList(inlineValueUssClassName + m_InlineValue.ToString().ToLower());
+                RemoveFromClassList(GetInlineValueUssClassName(m_InlineValue));
                 m_InlineValue = value;
                 if (m_InlineValue != InlineValue.None)
-                    AddToClassList(inlineValueUssClassName + m_InlineValue.ToString().ToLower());
+                    AddToClassList(GetInlineValueUssClassName(m_InlineValue));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
@@ -516,9 +518,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Size != value;
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

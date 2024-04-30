@@ -54,62 +54,64 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Button main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-button";
+        public const string ussClassName = "appui-button";
 
         /// <summary>
         /// The Button variant styling class.
         /// </summary>
-        public static readonly string variantUssClassName = ussClassName + "--";
+        [EnumName("GetVariantUssClassName", typeof(ButtonVariant))]
+        public const string variantUssClassName = ussClassName + "--";
 
         /// <summary>
         /// The Button quiet mode styling class.
         /// </summary>
-        public static readonly string quietUssClassName = ussClassName + "--quiet";
+        public const string quietUssClassName = ussClassName + "--quiet";
         
         /// <summary>
         /// The Button leading container styling class.
         /// </summary>
-        public static readonly string leadingContainerUssClassName = ussClassName + "__leadingcontainer";
+        public const string leadingContainerUssClassName = ussClassName + "__leadingcontainer";
 
         /// <summary>
         /// The Button title container styling class.
         /// </summary>
-        public static readonly string titleContainerUssClassName = ussClassName + "__titlecontainer";
+        public const string titleContainerUssClassName = ussClassName + "__titlecontainer";
 
         /// <summary>
         /// The Button trailing container styling class.
         /// </summary>
-        public static readonly string trailingContainerUssClassName = ussClassName + "__trailingcontainer";
+        public const string trailingContainerUssClassName = ussClassName + "__trailingcontainer";
 
         /// <summary>
         /// The Button trailing icon styling class.
         /// </summary>
-        public static readonly string trailingIconUssClassName = ussClassName + "__trailingicon";
+        public const string trailingIconUssClassName = ussClassName + "__trailingicon";
 
         /// <summary>
         /// The Button leading icon styling class.
         /// </summary>
-        public static readonly string leadingIconUssClassName = ussClassName + "__leadingicon";
+        public const string leadingIconUssClassName = ussClassName + "__leadingicon";
 
         /// <summary>
         /// The Button title styling class.
         /// </summary>
-        public static readonly string titleUssClassName = ussClassName + "__title";
+        public const string titleUssClassName = ussClassName + "__title";
 
         /// <summary>
         /// The Button subtitle styling class.
         /// </summary>
-        public static readonly string subtitleUssClassName = ussClassName + "__subtitle";
+        public const string subtitleUssClassName = ussClassName + "__subtitle";
 
         /// <summary>
         /// The Button size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The Button icon only variant styling class.
         /// </summary>
-        public static readonly string iconOnlyUssClassName = ussClassName + "--icon-only";
+        public const string iconOnlyUssClassName = ussClassName + "--icon-only";
 
         readonly VisualElement m_LeadingContainer;
 
@@ -247,9 +249,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Variant != value;
-                RemoveFromClassList(variantUssClassName + m_Variant.ToString().ToLower());
+                RemoveFromClassList(GetVariantUssClassName(m_Variant));
                 m_Variant = value;
-                AddToClassList(variantUssClassName + m_Variant.ToString().ToLower());
+                AddToClassList(GetVariantUssClassName(m_Variant));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
@@ -398,7 +400,7 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Size != value;
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 m_LeadingIcon.size = m_Size switch
                 {
@@ -408,7 +410,7 @@ namespace Unity.AppUI.UI
                     _ => IconSize.M
                 };
                 m_TrailingIcon.size = m_LeadingIcon.size;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

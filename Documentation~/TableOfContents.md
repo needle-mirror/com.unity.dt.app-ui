@@ -29,6 +29,7 @@
   * [Styling](xref:styling)
   * [Custom Icons](xref:custom-icons)
   * [Create Your Own UI Components](xref:custom-ui-components)
+  * [Custom Typography](xref:custom-typography)
 * Samples
   * [UI Kit](xref:ui-kit)
   * [Storybook](xref:storybook)

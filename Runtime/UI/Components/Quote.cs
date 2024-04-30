@@ -24,12 +24,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Quote main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-quote";
+        public const string ussClassName = "appui-quote";
 
         /// <summary>
         /// The Quote container styling class.
         /// </summary>
-        public static readonly string containerUssClassName = ussClassName + "__container";
+        public const string containerUssClassName = ussClassName + "__container";
 
         readonly VisualElement m_Container;
 

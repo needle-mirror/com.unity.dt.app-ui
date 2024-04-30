@@ -7,11 +7,11 @@ namespace Unity.AppUI.UI
     /// </summary>
     static class UINumericFieldsUtils
     {
-        public static readonly string k_AllowedCharactersForFloat = "inftynaeINFTYNAE0123456789.,-*/+%^()cosqrludxvRL=pP#";
-        public static readonly string k_AllowedCharactersForInt = "0123456789-*/+%^()cosintaqrtelfundxvRL,=pPI#";
-        public static readonly string k_DoubleFieldFormatString = "R";
-        public static readonly string k_FloatFieldFormatString = "g7";
-        public static readonly string k_IntFieldFormatString = "#######0";
+        public const string k_AllowedCharactersForFloat = "inftynaeINFTYNAE0123456789.,-*/+%^()cosqrludxvRL=pP#";
+        public const string k_AllowedCharactersForInt = "0123456789-*/+%^()cosintaqrtelfundxvRL,=pPI#";
+        public const string k_DoubleFieldFormatString = "R";
+        public const string k_FloatFieldFormatString = "g7";
+        public const string k_IntFieldFormatString = "#######0";
 
         /// <summary>
         /// Convert a string to a double by evaluating it as an expression.

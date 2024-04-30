@@ -43,12 +43,13 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The HelpText main styling class.
         /// </summary>
-        public new static readonly string ussClassName = "appui-help-text";
+        public new const string ussClassName = "appui-help-text";
         
         /// <summary>
         /// The HelpText variant styling class.
         /// </summary>
-        public static readonly string variantUssClassName = ussClassName + "--";
+        [EnumName("GetVariantUssClassName", typeof(HelpTextVariant))]
+        public const string variantUssClassName = ussClassName + "--";
 
         HelpTextVariant m_Variant;
 
@@ -67,9 +68,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Variant != value;
-                RemoveFromClassList(variantUssClassName + m_Variant.ToString().ToLower());
+                RemoveFromClassList(GetVariantUssClassName(m_Variant));
                 m_Variant = value;
-                AddToClassList(variantUssClassName + m_Variant.ToString().ToLower());
+                AddToClassList(GetVariantUssClassName(m_Variant));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

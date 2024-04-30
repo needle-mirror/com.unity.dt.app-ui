@@ -43,27 +43,27 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The TextArea main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-textarea";
+        public const string ussClassName = "appui-textarea";
 
         /// <summary>
         /// The TextArea input container styling class.
         /// </summary>
-        public static readonly string scrollViewUssClassName = ussClassName + "__scrollview";
+        public const string scrollViewUssClassName = ussClassName + "__scrollview";
 
         /// <summary>
         /// The TextArea resize handle styling class.
         /// </summary>
-        public static readonly string resizeHandleUssClassName = ussClassName + "__resize-handle";
+        public const string resizeHandleUssClassName = ussClassName + "__resize-handle";
 
         /// <summary>
         /// The TextArea input styling class.
         /// </summary>
-        public static readonly string inputUssClassName = ussClassName + "__input";
+        public const string inputUssClassName = ussClassName + "__input";
 
         /// <summary>
         /// The TextArea placeholder styling class.
         /// </summary>
-        public static readonly string placeholderUssClassName = ussClassName + "__placeholder";
+        public const string placeholderUssClassName = ussClassName + "__placeholder";
         
         const bool k_IsReadOnlyDefault = false;
         

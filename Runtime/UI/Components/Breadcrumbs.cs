@@ -17,7 +17,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Breadcrumbs' USS class name.
         /// </summary>
-        public static readonly string ussClassName = "appui-breadcrumbs";
+        public const string ussClassName = "appui-breadcrumbs";
         
         /// <summary>
         /// Constructor.
@@ -58,12 +58,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The BreadcrumbItem's USS class name.
         /// </summary>
-        public new static readonly string ussClassName = "appui-breadcrumb-item";
+        public new const string ussClassName = "appui-breadcrumb-item";
         
         /// <summary>
         /// The BreadcrumbItem's active USS class name.
         /// </summary>
-        public static readonly string currentUssClassName = ussClassName + "--current";
+        public const string currentUssClassName = ussClassName + "--current";
 
         /// <summary>
         /// Whether the BreadcrumbItem is the current item.
@@ -138,7 +138,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The BreadcrumbSeparator's USS class name.
         /// </summary>
-        public new static readonly string ussClassName = "appui-breadcrumb-separator";
+        public new const string ussClassName = "appui-breadcrumb-separator";
         
         /// <summary>
         /// Default constructor.

@@ -37,7 +37,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The main styling class for the PickerItem.
         /// </summary>
-        public static readonly string ussClassName = "appui-picker-item";
+        public const string ussClassName = "appui-picker-item";
 
         Pressable m_Clickable;
 
@@ -148,42 +148,43 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Picker main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-picker";
+        public const string ussClassName = "appui-picker";
 
         /// <summary>
         /// The Picker title container styling class.
         /// </summary>
-        public static readonly string titleContainerUssClassName = ussClassName + "__titlecontainer";
+        public const string titleContainerUssClassName = ussClassName + "__titlecontainer";
 
         /// <summary>
         /// The Picker title styling class.
         /// </summary>
-        public static readonly string titleUssClassName = ussClassName + "__title";
+        public const string titleUssClassName = ussClassName + "__title";
 
         /// <summary>
         /// The Picker trailing container styling class.
         /// </summary>
-        public static readonly string trailingContainerUssClassName = ussClassName + "__trailingcontainer";
+        public const string trailingContainerUssClassName = ussClassName + "__trailingcontainer";
 
         /// <summary>
         /// The Picker caret styling class.
         /// </summary>
-        public static readonly string caretUssClassName = ussClassName + "__caret";
+        public const string caretUssClassName = ussClassName + "__caret";
 
         /// <summary>
         /// The Picker size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The Picker emphasized mode styling class.
         /// </summary>
-        public static readonly string emphasizedUssClassName = ussClassName + "--emphasized";
+        public const string emphasizedUssClassName = ussClassName + "--emphasized";
 
         /// <summary>
         /// The Picker menu styling class.
         /// </summary>
-        public static readonly string appuiPickerMenu = ussClassName + "__menu";
+        public const string appuiPickerMenu = ussClassName + "__menu";
 
         /// <summary>
         /// The list of items contained in the Picker.
@@ -399,9 +400,9 @@ namespace Unity.AppUI.UI
             get => m_Size;
             set
             {
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in sizeProperty);

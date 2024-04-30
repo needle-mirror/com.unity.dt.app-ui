@@ -65,12 +65,13 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The spacer's main USS class name.
         /// </summary>
-        public static readonly string ussClassName = "appui-spacer";
+        public const string ussClassName = "appui-spacer";
         
         /// <summary>
         /// The spacer's spacing USS class name.
         /// </summary>
-        public static readonly string spacingUssClassName = ussClassName + "--spacing-";
+        [EnumName("GetSpacingUssClassName", typeof(SpacerSpacing))]
+        public const string spacingUssClassName = ussClassName + "--spacing-";
 
         SpacerSpacing m_Spacing = k_DefaultSpacing;
 
@@ -101,9 +102,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Spacing != value;
-                RemoveFromClassList(spacingUssClassName + m_Spacing.ToString().ToLower());
+                RemoveFromClassList(GetSpacingUssClassName(m_Spacing));
                 m_Spacing = value;
-                AddToClassList(spacingUssClassName + m_Spacing.ToString().ToLower());
+                AddToClassList(GetSpacingUssClassName(m_Spacing));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

@@ -69,22 +69,22 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The AlertDialog primary action styling class.
         /// </summary>
-        public static readonly string primaryActionUssClassName = ussClassName + "__primary-action";
+        public const string primaryActionUssClassName = ussClassName + "__primary-action";
 
         /// <summary>
         /// The AlertDialog secondary action styling class.
         /// </summary>
-        public static readonly string secondaryActionUssClassName = ussClassName + "__secondary-action";
+        public const string secondaryActionUssClassName = ussClassName + "__secondary-action";
 
         /// <summary>
         /// The AlertDialog cancel action styling class.
         /// </summary>
-        public static readonly string cancelActionUssClassName = ussClassName + "__cancel-action";
+        public const string cancelActionUssClassName = ussClassName + "__cancel-action";
         
         /// <summary>
         /// The AlertDialog icon styling class.
         /// </summary>
-        public static readonly string iconUssClassName = ussClassName + "__icon";
+        public const string iconUssClassName = ussClassName + "__icon";
 
         readonly Button m_CancelButton;
 
@@ -194,9 +194,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Variant != value;
-                RemoveFromClassList(ussClassName + "--" + m_Variant.ToString().ToLower());
+                RemoveFromClassList(GetVariantUssClassName(m_Variant));
                 m_Variant = value;
-                AddToClassList(ussClassName + "--" + m_Variant.ToString().ToLower());
+                AddToClassList(GetVariantUssClassName(m_Variant));
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);

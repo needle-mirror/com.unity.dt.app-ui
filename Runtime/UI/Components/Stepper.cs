@@ -26,47 +26,48 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Stepper main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-stepper";
+        public const string ussClassName = "appui-stepper";
 
         /// <summary>
         /// The Stepper size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The Stepper increment icon styling class.
         /// </summary>
-        public static readonly string incIconUssClassName = ussClassName + "__icon";
+        public const string incIconUssClassName = ussClassName + "__icon";
 
         /// <summary>
         /// The Stepper decrement icon styling class.
         /// </summary>
-        public static readonly string decIconUssClassName = ussClassName + "__icon";
+        public const string decIconUssClassName = ussClassName + "__icon";
 
         /// <summary>
         /// The Stepper increment icon container styling class.
         /// </summary>
-        public static readonly string incIconContainerUssClassName = ussClassName + "__iconcontainer";
+        public const string incIconContainerUssClassName = ussClassName + "__iconcontainer";
 
         /// <summary>
         /// The Stepper decrement icon container styling class.
         /// </summary>
-        public static readonly string decIconContainerUssClassName = ussClassName + "__iconcontainer";
+        public const string decIconContainerUssClassName = ussClassName + "__iconcontainer";
 
         /// <summary>
         /// The Stepper decrement button styling class.
         /// </summary>
-        public static readonly string decButtonUssClassName = ussClassName + "__decbutton";
+        public const string decButtonUssClassName = ussClassName + "__decbutton";
 
         /// <summary>
         /// The Stepper increment button styling class.
         /// </summary>
-        public static readonly string incButtonUssClassName = ussClassName + "__incbutton";
+        public const string incButtonUssClassName = ussClassName + "__incbutton";
 
         /// <summary>
         /// The Stepper general button styling class.
         /// </summary>
-        public static readonly string buttonUssClassName = ussClassName + "__button";
+        public const string buttonUssClassName = ussClassName + "__button";
 
         Size m_Size;
 
@@ -145,9 +146,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Size != value;
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

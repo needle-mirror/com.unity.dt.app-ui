@@ -10,7 +10,7 @@ namespace Unity.AppUI.Core
         /// <summary>
         /// Left to right.
         /// </summary>
-        [InspectorName("Left to Right")]
+        [InspectorName("Left to Right")] 
         Ltr,
 
         /// <summary>

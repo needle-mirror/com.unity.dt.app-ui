@@ -41,7 +41,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Progress main styling class.
         /// </summary>
-        public new static readonly string ussClassName = "appui-linear-progress";
+        public new const string ussClassName = "appui-linear-progress";
 
         static readonly int k_Phase = Shader.PropertyToID("_Phase");
 

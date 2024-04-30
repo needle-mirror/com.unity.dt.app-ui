@@ -9,57 +9,58 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A list view item visual element.
     /// </summary>
-    public class ListViewItem : BaseVisualElement
+    public partial class ListViewItem : BaseVisualElement
     {
         /// <summary>
         /// The ListViewItem's USS class name.
         /// </summary>
-        public static readonly string ussClassName = "appui-listview-item";
+        public const string ussClassName = "appui-listview-item";
         
         /// <summary>
         /// The ListViewItem's loading USS class name.
         /// </summary>
-        public static readonly string loadingUssClassName = ussClassName + "--loading";
+        public const string loadingUssClassName = ussClassName + "--loading";
         
         /// <summary>
         /// The ListViewItem's size USS class name.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
         
         /// <summary>
         /// The ListViewItem's title USS class name.
         /// </summary>
-        public static readonly string titleUssClassName = ussClassName + "__title";
+        public const string titleUssClassName = ussClassName + "__title";
         
         /// <summary>
         /// The ListViewItem's subtitle USS class name.
         /// </summary>
-        public static readonly string subtitleUssClassName = ussClassName + "__subtitle";
+        public const string subtitleUssClassName = ussClassName + "__subtitle";
         
         /// <summary>
         /// The ListViewItem's thumbnail USS class name.
         /// </summary>
-        public static readonly string thumbnailUssClassName = ussClassName + "__thumbnail";
+        public const string thumbnailUssClassName = ussClassName + "__thumbnail";
         
         /// <summary>
         /// The ListViewItem's container USS class name.
         /// </summary>
-        public static readonly string containerUssClassName = ussClassName + "__container";
+        public const string containerUssClassName = ussClassName + "__container";
         
         /// <summary>
         /// The ListViewItem's leading container USS class name.
         /// </summary>
-        public static readonly string leadingContainerUssClassName = ussClassName + "__leading-container";
+        public const string leadingContainerUssClassName = ussClassName + "__leading-container";
         
         /// <summary>
         /// The ListViewItem's trailing container USS class name.
         /// </summary>
-        public static readonly string trailingContainerUssClassName = ussClassName + "__trailing-container";
+        public const string trailingContainerUssClassName = ussClassName + "__trailing-container";
 
         /// <summary>
         /// The ListViewItem's options button USS class name.
         /// </summary>
-        public static readonly string optionsButtonUssClassName = ussClassName + "__options-button";
+        public const string optionsButtonUssClassName = ussClassName + "__options-button";
 
         VisualElement m_Container;
         
@@ -111,9 +112,9 @@ namespace Unity.AppUI.UI
             get => m_Size;
             set
             {
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
             }
         }
         

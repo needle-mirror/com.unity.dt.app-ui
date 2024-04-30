@@ -29,6 +29,12 @@ namespace Unity.AppUI.UI
         
         internal static readonly BindingId layoutDirectionOverrideProperty = nameof(layoutDirectionOverride);
 #endif
+
+        /// <summary>
+        /// The context prefix used as USS selector.
+        /// </summary>
+        [EnumName("GetLayoutDirectionUssClassName", typeof(Dir))]
+        public const string contextPrefix = Panel.contextPrefix;
         
         internal VisualElementExtensions.AdditionalData additionalData;
         
@@ -69,9 +75,9 @@ namespace Unity.AppUI.UI
                     return;
                 
                 if (!string.IsNullOrEmpty(previous?.scale))
-                    RemoveFromClassList(Panel.contextPrefix + previous.scale);
+                    RemoveFromClassList(MemoryUtils.Concatenate(Panel.contextPrefix, previous.scale));
                 if (!string.IsNullOrEmpty(newCtx?.scale))
-                    AddToClassList(Panel.contextPrefix + newCtx.scale);
+                    AddToClassList(MemoryUtils.Concatenate(Panel.contextPrefix, newCtx.scale));
                 this.ProvideContext(newCtx);
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in scaleOverrideProperty);
@@ -103,9 +109,9 @@ namespace Unity.AppUI.UI
                     return;
 
                 if (!string.IsNullOrEmpty(previous?.theme))
-                    RemoveFromClassList(Panel.contextPrefix + previous.theme);
+                    RemoveFromClassList(MemoryUtils.Concatenate(Panel.contextPrefix, previous.theme));
                 if (!string.IsNullOrEmpty(newCtx?.theme))
-                    AddToClassList(Panel.contextPrefix + newCtx.theme);
+                    AddToClassList(MemoryUtils.Concatenate(Panel.contextPrefix, newCtx.theme));
                 this.ProvideContext(newCtx);
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in themeOverrideProperty);
@@ -136,9 +142,9 @@ namespace Unity.AppUI.UI
                     return;
 
                 if (!string.IsNullOrEmpty(previous?.lang))
-                    RemoveFromClassList(Panel.contextPrefix + previous.lang);
+                    RemoveFromClassList(MemoryUtils.Concatenate(Panel.contextPrefix, previous.lang));
                 if (!string.IsNullOrEmpty(newCtx?.lang))
-                    AddToClassList(Panel.contextPrefix + newCtx.lang);
+                    AddToClassList(MemoryUtils.Concatenate(Panel.contextPrefix, newCtx.lang));
                 this.ProvideContext(newCtx);
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in langOverrideProperty);
@@ -169,9 +175,9 @@ namespace Unity.AppUI.UI
                     return;
 
                 if (previous != null)
-                    RemoveFromClassList(Panel.contextPrefix + previous.dir.ToString().ToLower());
+                    RemoveFromClassList(GetLayoutDirectionUssClassName(previous.dir));
                 if (newCtx != null)
-                    AddToClassList(Panel.contextPrefix + newCtx.dir.ToString().ToLower());
+                    AddToClassList(GetLayoutDirectionUssClassName(newCtx.dir));
                 this.ProvideContext(newCtx);
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in layoutDirectionOverrideProperty);

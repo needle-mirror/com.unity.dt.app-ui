@@ -31,42 +31,43 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The ColorSlider main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-colorslider";
+        public const string ussClassName = "appui-colorslider";
 
         /// <summary>
         /// The ColorSlider thumb container styling class.
         /// </summary>
-        public static readonly string thumbContainerUssClassName = ussClassName + "__thumbcontainer";
+        public const string thumbContainerUssClassName = ussClassName + "__thumbcontainer";
         
         /// <summary>
         /// The ColorSlider thumb container container styling class.
         /// </summary>
-        public static readonly string thumbContainerContainerUssClassName = ussClassName + "__thumbcontainer-container";
+        public const string thumbContainerContainerUssClassName = ussClassName + "__thumbcontainer-container";
 
         /// <summary>
         /// The ColorSlider thumb styling class.
         /// </summary>
-        public static readonly string thumbUssClassName = ussClassName + "__thumb";
+        public const string thumbUssClassName = ussClassName + "__thumb";
 
         /// <summary>
         /// The ColorSlider track styling class.
         /// </summary>
-        public static readonly string trackUssClassName = ussClassName + "__track";
+        public const string trackUssClassName = ussClassName + "__track";
 
         /// <summary>
         /// The ColorSlider track swatch styling class.
         /// </summary>
-        public static readonly string trackSwatchUssClassName = ussClassName + "__colorcontainer";
+        public const string trackSwatchUssClassName = ussClassName + "__colorcontainer";
 
         /// <summary>
         /// The ColorSlider thumb content styling class.
         /// </summary>
-        public static readonly string thumbContentUssClassName = ussClassName + "__thumb-content";
+        public const string thumbContentUssClassName = ussClassName + "__thumb-content";
 
         /// <summary>
         /// The ColorSlider size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         readonly ColorSwatch m_TrackSwatch;
 
@@ -134,9 +135,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Size != value;
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

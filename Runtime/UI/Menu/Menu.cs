@@ -19,17 +19,17 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Menu main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-menu";
+        public const string ussClassName = "appui-menu";
 
         /// <summary>
         /// The Menu container styling class.
         /// </summary>
-        public static readonly string containerUssClassName = ussClassName + "__container";
+        public const string containerUssClassName = ussClassName + "__container";
 
         /// <summary>
         /// The Menu selectable mode styling class.
         /// </summary>
-        public static readonly string selectableUssClassName = ussClassName + "--selectable";
+        public const string selectableUssClassName = ussClassName + "--selectable";
 
         readonly ScrollView m_ScrollView;
 

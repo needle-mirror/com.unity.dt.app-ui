@@ -16,22 +16,22 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Dropdown item main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-dropdown-item";
+        public const string ussClassName = "appui-dropdown-item";
         
         /// <summary>
         /// The Dropdown item label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
+        public const string labelUssClassName = ussClassName + "__label";
         
         /// <summary>
         /// The Dropdown item icon styling class.
         /// </summary>
-        public static readonly string iconUssClassName = ussClassName + "__icon";
+        public const string iconUssClassName = ussClassName + "__icon";
         
         /// <summary>
         /// The Dropdown item checkmark styling class.
         /// </summary>
-        public static readonly string checkmarkUssClassName = ussClassName + "__checkmark";
+        public const string checkmarkUssClassName = ussClassName + "__checkmark";
         
         /// <summary>
         /// The Dropdown item label.
@@ -117,7 +117,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Dropdown main styling class.
         /// </summary>
-        public new static readonly string ussClassName = "appui-dropdown";
+        public new const string ussClassName = "appui-dropdown";
         
         Action<DropdownItem, IEnumerable<int>> m_CustomBindTitle;
 

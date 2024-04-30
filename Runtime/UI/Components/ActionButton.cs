@@ -35,42 +35,43 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The ActionButton main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-actionbutton";
+        public const string ussClassName = "appui-actionbutton";
 
         /// <summary>
         /// The ActionButton icon styling class.
         /// </summary>
-        public static readonly string iconUssClassName = ussClassName + "__icon";
+        public const string iconUssClassName = ussClassName + "__icon";
 
         /// <summary>
         /// The ActionButton label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
+        public const string labelUssClassName = ussClassName + "__label";
 
         /// <summary>
         /// The ActionButton icon and label variant styling class.
         /// </summary>
-        public static readonly string iconAndLabelUssClassName = ussClassName + "--icon-and-label";
+        public const string iconAndLabelUssClassName = ussClassName + "--icon-and-label";
 
         /// <summary>
         /// The ActionButton icon only variant styling class.
         /// </summary>
-        public static readonly string iconOnlyUssClassName = ussClassName + "--icon-only";
+        public const string iconOnlyUssClassName = ussClassName + "--icon-only";
 
         /// <summary>
         /// The ActionButton quiet variant styling class.
         /// </summary>
-        public static readonly string quietUssClassName = ussClassName + "--quiet";
+        public const string quietUssClassName = ussClassName + "--quiet";
 
         /// <summary>
         /// The ActionButton size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The ActionButton accent styling class.
         /// </summary>
-        public static readonly string accentUssClassName = ussClassName + "--accent";
+        public const string accentUssClassName = ussClassName + "--accent";
 
         readonly Icon m_IconElement;
 
@@ -326,9 +327,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Size != value;
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);

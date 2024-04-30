@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
@@ -48,32 +49,34 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Drawer main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-drawer";
+        public const string ussClassName = "appui-drawer";
 
         /// <summary>
         /// The Drawer backdrop styling class.
         /// </summary>
-        public static readonly string backdropUssClassName = ussClassName + "__backdrop";
+        public const string backdropUssClassName = ussClassName + "__backdrop";
 
         /// <summary>
         /// The Drawer element styling class.
         /// </summary>
-        public static readonly string drawerUssClassName = ussClassName + "__drawer";
+        public const string drawerUssClassName = ussClassName + "__drawer";
 
         /// <summary>
         /// The Drawer container styling class.
         /// </summary>
-        public static readonly string drawerContainerUssClassName = ussClassName + "__drawer-container";
+        public const string drawerContainerUssClassName = ussClassName + "__drawer-container";
 
         /// <summary>
         /// The Drawer variant styling class.
         /// </summary>
-        public static readonly string variantUssClassName = ussClassName + "--";
+        [EnumName("GetVariantUssClassName", typeof(DrawerVariant))]
+        [EnumName("GetAnchorUssClassName", typeof(DrawerAnchor))]
+        public const string variantUssClassName = ussClassName + "--";
 
         /// <summary>
         /// The elevation styling class prefix.
         /// </summary>
-        public static readonly string elevationUssClassName = "appui-elevation-";
+        public const string elevationUssClassName = Styles.elevationUssClassName;
 
         readonly VisualElement m_Backdrop;
 
@@ -381,12 +384,12 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = !Mathf.Approximately(m_Elevation, value);
-                m_DrawerContainer.RemoveFromClassList(elevationUssClassName + m_Elevation.ToString().ToLower());
+                m_DrawerContainer.RemoveFromClassList(MemoryUtils.Concatenate(elevationUssClassName, m_Elevation.ToString()));
                 m_Elevation = value;
                 m_DrawerContainer.passMask = m_Elevation > 0
                     ? ExVisualElement.Passes.Clear | ExVisualElement.Passes.OutsetShadows
                     : 0;
-                m_DrawerContainer.AddToClassList(elevationUssClassName + m_Elevation.ToString().ToLower());
+                m_DrawerContainer.AddToClassList(MemoryUtils.Concatenate(elevationUssClassName, m_Elevation.ToString()));
                 if (anchor == DrawerAnchor.Left)
                 {
                     m_DrawerElement.style.paddingRight = m_Elevation;
@@ -420,7 +423,7 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Anchor != value;
-                RemoveFromClassList(variantUssClassName + m_Anchor.ToString().ToLower());
+                RemoveFromClassList(GetAnchorUssClassName(m_Anchor));
                 m_Anchor = value;
 
                 if (m_Anchor == DrawerAnchor.Left)
@@ -445,7 +448,7 @@ namespace Unity.AppUI.UI
                     m_DrawerElement.style.paddingLeft = m_Elevation;
                     m_DrawerElement.style.paddingRight = 0;
                 }
-                AddToClassList(variantUssClassName + m_Anchor.ToString().ToLower());
+                AddToClassList(GetAnchorUssClassName(m_Anchor));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
@@ -473,9 +476,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Variant != value;
-                RemoveFromClassList(variantUssClassName + m_Variant.ToString().ToLower());
+                RemoveFromClassList(GetVariantUssClassName(m_Variant));
                 m_Variant = value;
-                AddToClassList(variantUssClassName + m_Variant.ToString().ToLower());
+                AddToClassList(GetVariantUssClassName(m_Variant));
                 if (m_Variant == DrawerVariant.Permanent)
                 {
                     isOpen = true;
@@ -918,7 +921,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// The variant of the Drawer.
     /// </summary>
-    public enum DrawerVariant
+    public enum DrawerVariant 
     {
         /// <summary>
         /// The Drawer is temporary and will be dismissed when the user clicks outside of it.

@@ -17,7 +17,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The MenuDivider main styling class.
         /// </summary>
-        public static readonly string dividerClassName = "appui-menu__divider";
+        public const string dividerClassName = "appui-menu__divider";
 
         /// <summary>
         /// Default constructor.

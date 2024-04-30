@@ -29,27 +29,28 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The PageIndicator main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-page-indicator";
+        public const string ussClassName = "appui-page-indicator";
 
         /// <summary>
         /// The PageIndicator direction styling class.
         /// </summary>
-        public static readonly string variantUssClassName = ussClassName + "--";
+        [EnumName("GetDirectionUssClassName", typeof(Direction))]
+        public const string variantUssClassName = ussClassName + "--";
 
         /// <summary>
         /// The PageIndicator dot styling class.
         /// </summary>
-        public static readonly string dotUssClassName = ussClassName + "__dot";
+        public const string dotUssClassName = ussClassName + "__dot";
 
         /// <summary>
         /// The PageIndicator dot background styling class.
         /// </summary>
-        public static readonly string dotBackgroundUssClassName = ussClassName + "__dot-background";
+        public const string dotBackgroundUssClassName = ussClassName + "__dot-background";
 
         /// <summary>
         /// The PageIndicator dot content styling class.
         /// </summary>
-        public static readonly string dotContentUssClassName = ussClassName + "__dot-content";
+        public const string dotContentUssClassName = ussClassName + "__dot-content";
 
         Direction m_Direction;
 
@@ -132,9 +133,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Direction != value;
-                RemoveFromClassList(variantUssClassName + m_Direction.ToString().ToLower());
+                RemoveFromClassList(GetDirectionUssClassName(m_Direction));
                 m_Direction = value;
-                AddToClassList(variantUssClassName + m_Direction.ToString().ToLower());
+                AddToClassList(GetDirectionUssClassName(m_Direction));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

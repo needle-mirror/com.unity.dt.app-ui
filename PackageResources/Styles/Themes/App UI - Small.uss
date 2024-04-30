@@ -166,9 +166,5 @@
     --appui-border-radius-md: 3px;
     --appui-border-radius-sm: 2px;
     --appui-border-radius-xs: 1px;
-    --appui-font-weights-150: url("../../Fonts/Inter-Regular SDF.asset");
-    --appui-font-weights-200: url("../../Fonts/Inter-Regular SDF.asset");
-    --appui-font-weights-300: url("../../Fonts/Inter-Regular SDF.asset");
-    --appui-font-weights-400: url("../../Fonts/Inter-SemiBold SDF.asset");
-    --appui-font-weights-500: url("../../Fonts/Inter-Bold SDF.asset");
+    --appui-font-weights-200: url("../../Fonts/Inter-Regular.ttf");
 }

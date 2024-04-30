@@ -46,47 +46,47 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The MenuItem main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-menuitem";
+        public const string ussClassName = "appui-menuitem";
 
         /// <summary>
         /// The MenuItem label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
+        public const string labelUssClassName = ussClassName + "__label";
         
         /// <summary>
         /// The MenuItem shortcut styling class.
         /// </summary>
-        public static readonly string shortcutUssClassName = ussClassName + "__shortcut";
+        public const string shortcutUssClassName = ussClassName + "__shortcut";
 
         /// <summary>
         /// The MenuItem icon styling class.
         /// </summary>
-        public static readonly string iconUssClassName = ussClassName + "__icon";
+        public const string iconUssClassName = ussClassName + "__icon";
 
         /// <summary>
         /// The MenuItem checkmark styling class.
         /// </summary>
-        public static readonly string checkmarkUssClassName = ussClassName + "__checkmark";
+        public const string checkmarkUssClassName = ussClassName + "__checkmark";
 
         /// <summary>
         /// The MenuItem submenu mode styling class.
         /// </summary>
-        public static readonly string subMenuItemUssClassname = ussClassName + "--submenu";
+        public const string subMenuItemUssClassname = ussClassName + "--submenu";
 
         /// <summary>
         /// The MenuItem submenu icon styling class.
         /// </summary>
-        public static readonly string subMenuIconUssClassname = ussClassName + "__submenu-icon";
+        public const string subMenuIconUssClassname = ussClassName + "__submenu-icon";
 
         /// <summary>
         /// The MenuItem selectable mode styling class.
         /// </summary>
-        public static readonly string selectableUssClassname = ussClassName + "--selectable";
+        public const string selectableUssClassname = ussClassName + "--selectable";
         
         /// <summary>
         /// The MenuItem active styling class.
         /// </summary>
-        public static readonly string activeUssClassname = ussClassName + "--active";
+        public const string activeUssClassname = ussClassName + "--active";
 
         /// <summary>
         /// The content container of the MenuItem.

@@ -27,52 +27,53 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The BoundsField main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-boundsfield";
+        public const string ussClassName = "appui-boundsfield";
 
         /// <summary>
         /// The BoundsField row styling class.
         /// </summary>
-        public static readonly string rowUssClassName = ussClassName + "__row";
+        public const string rowUssClassName = ussClassName + "__row";
 
         /// <summary>
         /// The BoundsField size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The BoundsField X NumericalField styling class.
         /// </summary>
-        public static readonly string xFieldUssClassName = ussClassName + "__x-field";
+        public const string xFieldUssClassName = ussClassName + "__x-field";
 
         /// <summary>
         /// The BoundsField Y NumericalField styling class.
         /// </summary>
-        public static readonly string yFieldUssClassName = ussClassName + "__y-field";
+        public const string yFieldUssClassName = ussClassName + "__y-field";
 
         /// <summary>
         /// The BoundsField Z NumericalField styling class.
         /// </summary>
-        public static readonly string zFieldUssClassName = ussClassName + "__z-field";
+        public const string zFieldUssClassName = ussClassName + "__z-field";
 
         /// <summary>
         /// The BoundsField X NumericalField styling class.
         /// </summary>
-        public static readonly string sxFieldUssClassName = ussClassName + "__sx-field";
+        public const string sxFieldUssClassName = ussClassName + "__sx-field";
 
         /// <summary>
         /// The BoundsField Y NumericalField styling class.
         /// </summary>
-        public static readonly string syFieldUssClassName = ussClassName + "__sy-field";
+        public const string syFieldUssClassName = ussClassName + "__sy-field";
 
         /// <summary>
         /// The BoundsField Z NumericalField styling class.
         /// </summary>
-        public static readonly string szFieldUssClassName = ussClassName + "__sz-field";
+        public const string szFieldUssClassName = ussClassName + "__sz-field";
 
         /// <summary>
         /// The BoundsField Label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
+        public const string labelUssClassName = ussClassName + "__label";
 
         Size m_Size;
 
@@ -190,9 +191,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Size != value;
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 m_CXField.size = m_Size;
                 m_CYField.size = m_Size;
                 m_CZField.size = m_Size;

@@ -161,21 +161,21 @@ namespace Unity.AppUI.UI
         /// </summary>
         sealed class TooltipVisualElement : VisualElement, IPlaceableElement
         {
-            public static readonly string ussClassName = "appui-tooltip";
+            public const string ussClassName = "appui-tooltip";
 
-            public static readonly string containerUssClassName = ussClassName + "__container";
+            public const string containerUssClassName = ussClassName + "__container";
 
-            public static readonly string contentUssClassName = ussClassName + "__content";
+            public const string contentUssClassName = ussClassName + "__content";
 
-            public static readonly string tipUssClassName = ussClassName + "__tip";
+            public const string tipUssClassName = ussClassName + "__tip";
 
-            public static readonly string upDirectionUssClassName = ussClassName + "--up";
+            public const string upDirectionUssClassName = ussClassName + "--up";
 
-            public static readonly string downDirectionUssClassName = ussClassName + "--down";
+            public const string downDirectionUssClassName = ussClassName + "--down";
 
-            public static readonly string leftDirectionUssClassName = ussClassName + "--left";
+            public const string leftDirectionUssClassName = ussClassName + "--left";
 
-            public static readonly string rightDirectionUssClassName = ussClassName + "--right";
+            public const string rightDirectionUssClassName = ussClassName + "--right";
 
             readonly ExVisualElement m_Container;
 

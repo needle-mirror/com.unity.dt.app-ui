@@ -51,27 +51,34 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The FieldLabel main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-field-label";
+        public const string ussClassName = "appui-field-label";
+        
+        /// <summary>
+        /// The FieldLabel variant styling class.
+        /// </summary>
+        [EnumName("GetIndicatorTypeUssClassName", typeof(IndicatorType))]
+        public const string variantUssClassName = ussClassName + "--";
         
         /// <summary>
         /// The FieldLabel required variant styling class.
         /// </summary>
-        public static readonly string requiredUssClassName = ussClassName + "--required";
+        public const string requiredUssClassName = ussClassName + "--required";
         
         /// <summary>
         /// The FieldLabel label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
+        public const string labelUssClassName = ussClassName + "__label";
         
         /// <summary>
         /// The FieldLabel required label styling class.
         /// </summary>
-        public static readonly string requiredLabelUssClassName = ussClassName + "__required-label";
+        public const string requiredLabelUssClassName = ussClassName + "__required-label";
         
         /// <summary>
         /// The FieldLabel label overflow variant styling class.
         /// </summary>
-        public static readonly string labelOverflowUssClassName = ussClassName + "--label-overflow-";
+        [EnumName("GetLabelOverflowUssClassName", typeof(TextOverflow))]
+        public const string labelOverflowUssClassName = ussClassName + "--label-overflow-";
         
         readonly LocalizedTextElement m_LabelElement;
         
@@ -128,9 +135,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_IndicatorType != value;
-                RemoveFromClassList(ussClassName + "--" + m_IndicatorType.ToString().ToLower());
+                RemoveFromClassList(GetIndicatorTypeUssClassName(m_IndicatorType));
                 m_IndicatorType = value;
-                AddToClassList(ussClassName + "--" + m_IndicatorType.ToString().ToLower());
+                AddToClassList(GetIndicatorTypeUssClassName(m_IndicatorType));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
@@ -204,9 +211,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_LabelOverflow != value;
-                RemoveFromClassList(labelOverflowUssClassName + m_LabelOverflow.ToString().ToLower());
+                RemoveFromClassList(GetLabelOverflowUssClassName(m_LabelOverflow));
                 m_LabelOverflow = value;
-                AddToClassList(labelOverflowUssClassName + m_LabelOverflow.ToString().ToLower());
+                AddToClassList(GetLabelOverflowUssClassName(m_LabelOverflow));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

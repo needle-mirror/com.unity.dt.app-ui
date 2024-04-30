@@ -32,22 +32,22 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The ActionBar main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-actionbar";
+        public const string ussClassName = "appui-actionbar";
 
         /// <summary>
         /// The ActionBar action group styling class.
         /// </summary>
-        public static readonly string actionGroupUssClassName = ussClassName + "__actiongroup";
+        public const string actionGroupUssClassName = ussClassName + "__actiongroup";
 
         /// <summary>
         /// The ActionBar checkbox styling class.
         /// </summary>
-        public static readonly string checkboxUssClassName = ussClassName + "__checkbox";
+        public const string checkboxUssClassName = ussClassName + "__checkbox";
         
         /// <summary>
         /// The ActionBar label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
+        public const string labelUssClassName = ussClassName + "__label";
 
         readonly ActionGroup m_ActionGroup;
 

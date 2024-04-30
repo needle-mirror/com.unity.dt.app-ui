@@ -32,17 +32,17 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The TabItem main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-tabitem";
+        public const string ussClassName = "appui-tabitem";
 
         /// <summary>
         /// The TabItem label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
+        public const string labelUssClassName = ussClassName + "__label";
 
         /// <summary>
         /// The TabItem icon styling class.
         /// </summary>
-        public static readonly string iconUssClassName = ussClassName + "__icon";
+        public const string iconUssClassName = ussClassName + "__icon";
 
         readonly Icon m_Icon;
 

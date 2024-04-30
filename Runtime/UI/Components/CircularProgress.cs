@@ -29,7 +29,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The CircularProgress main styling class.
         /// </summary>
-        public new static readonly string ussClassName = "appui-circular-progress";
+        public new const string ussClassName = "appui-circular-progress";
 
         static readonly int k_InnerRadius = Shader.PropertyToID("_InnerRadius");
 

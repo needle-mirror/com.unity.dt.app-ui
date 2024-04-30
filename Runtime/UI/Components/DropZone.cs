@@ -64,27 +64,28 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The DropZone main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-dropzone";
+        public const string ussClassName = "appui-dropzone";
         
         /// <summary>
         /// The DropZone frame styling class.
         /// </summary>
-        public static readonly string frameUssClassName = ussClassName + "__frame";
+        public const string frameUssClassName = ussClassName + "__frame";
         
         /// <summary>
         /// The DropZone background styling class.
         /// </summary>
-        public static readonly string backgroundUssClassName = ussClassName + "__background";
+        public const string backgroundUssClassName = ussClassName + "__background";
         
         /// <summary>
         /// The DropZone state styling class.
         /// </summary>
-        public static readonly string stateUssClassName = ussClassName + "--";
+        [EnumName("GetDropZoneStateUssClassName", typeof(DropZoneState))]
+        public const string stateUssClassName = ussClassName + "--";
         
         /// <summary>
         /// The DropZone visible indicator styling class.
         /// </summary>
-        public static readonly string visibleIndicatorUssClassName = ussClassName + "--visible-indicator";
+        public const string visibleIndicatorUssClassName = ussClassName + "--visible-indicator";
         
         readonly ExVisualElement m_DropZoneFrame;
 
@@ -196,9 +197,9 @@ namespace Unity.AppUI.UI
             get => m_DropZoneState;
             set
             {
-                RemoveFromClassList(stateUssClassName + m_DropZoneState.ToString().ToLower());
+                RemoveFromClassList(GetDropZoneStateUssClassName(m_DropZoneState));
                 m_DropZoneState = value;
-                AddToClassList(stateUssClassName + m_DropZoneState.ToString().ToLower());
+                AddToClassList(GetDropZoneStateUssClassName(m_DropZoneState));
             }
         }
         

@@ -18,7 +18,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The SearchBar main styling class.
         /// </summary>
-        public new static readonly string ussClassName = "appui-searchbar";
+        public new const string ussClassName = "appui-searchbar";
 
         /// <summary>
         /// Default Constructor.

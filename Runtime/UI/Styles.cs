@@ -118,6 +118,11 @@ namespace Unity.AppUI.UI
         /// Used in popups to hide the arrow/tip.
         /// </summary>
         public const string noArrowUssClassName = "no-arrow";
+        
+        /// <summary>
+        /// The styling class prefix used to set a cursor.
+        /// </summary>
+        public const string cursorUsClassNamePrefix = "cursor--";
 
         /// <summary>
         /// The styling class used to set a "keyboard-focus" pseudo-state on a element.

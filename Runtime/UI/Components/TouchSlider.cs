@@ -36,27 +36,28 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The TouchSlider container styling class.
         /// </summary>
-        public static readonly string containerUssClassName = ussClassName + "__container";
+        public const string containerUssClassName = ussClassName + "__container";
 
         /// <summary>
         /// The TouchSlider progress styling class.
         /// </summary>
-        public static readonly string progressUssClassName = ussClassName + "__progress";
+        public const string progressUssClassName = ussClassName + "__progress";
 
         /// <summary>
         /// The TouchSlider label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
+        public const string labelUssClassName = ussClassName + "__label";
 
         /// <summary>
         /// The TouchSlider value label styling class.
         /// </summary>
-        public static readonly string valueUssClassName = ussClassName + "__valuelabel";
+        public const string valueUssClassName = ussClassName + "__valuelabel";
 
         /// <summary>
         /// The TouchSlider size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         readonly VisualElement m_ContainerElement;
 
@@ -149,9 +150,9 @@ namespace Unity.AppUI.UI
             get => m_Size;
             set
             {
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
             }
         }
 

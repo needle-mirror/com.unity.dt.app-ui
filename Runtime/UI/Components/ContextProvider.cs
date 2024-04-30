@@ -19,7 +19,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Main Uss Class Name.
         /// </summary>
-        public static readonly string ussClassName = "appui-context-provider";
+        public const string ussClassName = "appui-context-provider";
         
         /// <summary>
         /// Default constructor.

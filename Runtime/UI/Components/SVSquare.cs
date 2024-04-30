@@ -43,22 +43,22 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The SVSquare main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-svsquare";
+        public const string ussClassName = "appui-svsquare";
 
         /// <summary>
         /// The SVSquare image styling class.
         /// </summary>
-        public static readonly string imageUssClassName = ussClassName + "__image";
+        public const string imageUssClassName = ussClassName + "__image";
 
         /// <summary>
         /// The SVSquare thumb styling class.
         /// </summary>
-        public static readonly string thumbUssClassName = ussClassName + "__thumb";
+        public const string thumbUssClassName = ussClassName + "__thumb";
 
         /// <summary>
         /// The SVSquare thumb swatch styling class.
         /// </summary>
-        public static readonly string thumbSwatchUssClassName = ussClassName + "__thumbswatch";
+        public const string thumbSwatchUssClassName = ussClassName + "__thumbswatch";
 
         static readonly int k_Color = Shader.PropertyToID("_Color");
 

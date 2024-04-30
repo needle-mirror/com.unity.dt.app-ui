@@ -36,22 +36,23 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The main styling class of the PageView. This is the class that is used in the USS file.
         /// </summary>
-        public static readonly string ussClassName = "appui-pageview";
+        public const string ussClassName = "appui-pageview";
 
         /// <summary>
         /// The styling class applied to the SwipeView.
         /// </summary>
-        public static readonly string swipeViewUssClassName = ussClassName + "__swipeview";
+        public const string swipeViewUssClassName = ussClassName + "__swipeview";
 
         /// <summary>
         /// The styling class applied to the PageIndicator.
         /// </summary>
-        public static readonly string pageIndicatorUssClassName = ussClassName + "__page-indicator";
+        public const string pageIndicatorUssClassName = ussClassName + "__page-indicator";
 
         /// <summary>
         /// The styling class applied to the PageView depending on its direction.
         /// </summary>
-        public static readonly string variantUssClassName = ussClassName + "--";
+        [EnumName("GetDirectionUssClassName", typeof(Direction))]
+        public const string variantUssClassName = ussClassName + "--";
 
         readonly SwipeView m_SwipeView;
 
@@ -175,10 +176,10 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_SwipeView.direction != value;
-                RemoveFromClassList(variantUssClassName + m_SwipeView.direction.ToString().ToLower());
+                RemoveFromClassList(GetDirectionUssClassName(m_SwipeView.direction));
                 m_SwipeView.direction = value;
                 m_PageIndicator.direction = value;
-                AddToClassList(variantUssClassName + m_SwipeView.direction.ToString().ToLower());
+                AddToClassList(GetDirectionUssClassName(m_SwipeView.direction));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

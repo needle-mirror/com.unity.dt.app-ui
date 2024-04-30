@@ -1,3 +1,5 @@
+using System;
+
 namespace Unity.AppUI.Core
 {
     /// <summary>

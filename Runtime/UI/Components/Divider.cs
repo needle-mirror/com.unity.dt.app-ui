@@ -28,27 +28,30 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Divider main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-divider";
+        public const string ussClassName = "appui-divider";
 
         /// <summary>
         /// The Divider size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The Divider spacing styling class.
         /// </summary>
-        public static readonly string spacingUssClassName = ussClassName + "--spacing-";
+        [EnumName("GetSpacingUssClassName", typeof(Spacing))]
+        public const string spacingUssClassName = ussClassName + "--spacing-";
 
         /// <summary>
         /// The Divider vertical mode styling class.
         /// </summary>
-        public static readonly string verticalUssClassName = ussClassName + "--";
+        [EnumName("GetDirectionUssClassName", typeof(Direction))]
+        public const string verticalUssClassName = ussClassName + "--";
 
         /// <summary>
         /// The Divider content styling class.
         /// </summary>
-        public static readonly string contentUssClassName = ussClassName + "__content";
+        public const string contentUssClassName = ussClassName + "__content";
 
         /// <summary>
         /// The content container of the Divider. This is always null.
@@ -94,9 +97,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Direction != value;
-                RemoveFromClassList(verticalUssClassName + m_Direction.ToString().ToLower());
+                RemoveFromClassList(GetDirectionUssClassName(m_Direction));
                 m_Direction = value;
-                AddToClassList(verticalUssClassName + m_Direction.ToString().ToLower());
+                AddToClassList(GetDirectionUssClassName(m_Direction));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
@@ -120,9 +123,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Size != value;
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
@@ -146,9 +149,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Spacing != value;
-                RemoveFromClassList(spacingUssClassName + m_Spacing.ToString().ToLower());
+                RemoveFromClassList(GetSpacingUssClassName(m_Spacing));
                 m_Spacing = value;
-                AddToClassList(spacingUssClassName + m_Spacing.ToString().ToLower());
+                AddToClassList(GetSpacingUssClassName(m_Spacing));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

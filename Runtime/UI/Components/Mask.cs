@@ -35,7 +35,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Mask main styling class.
         /// </summary>
-        public new static readonly string ussClassName = "appui-mask";
+        public new const string ussClassName = "appui-mask";
 
         /// <summary>
         /// The content container of this element.

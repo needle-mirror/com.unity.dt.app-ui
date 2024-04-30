@@ -29,37 +29,37 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Toggle main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-toggle";
+        public const string ussClassName = "appui-toggle";
         
         /// <summary>
         /// The Toggle size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The Toggle box styling class.
         /// </summary>
-        public static readonly string boxUssClassName = ussClassName + "__box";
+        public const string boxUssClassName = ussClassName + "__box";
 
         /// <summary>
         /// The Toggle box padded styling class.
         /// </summary>
-        public static readonly string paddedBoxUssClassName = ussClassName + "__boxpadded";
+        public const string paddedBoxUssClassName = ussClassName + "__boxpadded";
 
         /// <summary>
         /// The Toggle checkmark container styling class.
         /// </summary>
-        public static readonly string checkmarkContainerUssClassName = ussClassName + "__checkmarkcontainer";
+        public const string checkmarkContainerUssClassName = ussClassName + "__checkmarkcontainer";
 
         /// <summary>
         /// The Toggle checkmark styling class.
         /// </summary>
-        public static readonly string checkmarkUssClassName = ussClassName + "__checkmark";
+        public const string checkmarkUssClassName = ussClassName + "__checkmark";
 
         /// <summary>
         /// The Toggle label styling class.
         /// </summary>
-        public static readonly string labelUssClassName = ussClassName + "__label";
+        public const string labelUssClassName = ussClassName + "__label";
 
         readonly LocalizedTextElement m_Label;
 

@@ -68,27 +68,31 @@ namespace Unity.AppUI.Editor
 
                     File.WriteAllText(manifest, content.text);
                 }
-                else
+
+                var doc = new XmlDocument();
+                doc.Load(manifest);
+
+                var nsManager = new XmlNamespaceManager(doc.NameTable);
+                nsManager.AddNamespace("android", androidNamespace);
+                var manifestNode = (XmlElement)doc.SelectSingleNode("/manifest");
+                var activity = (XmlElement)doc.SelectSingleNode("/manifest/application/activity");
+                
+#if UNITY_2023_2_OR_NEWER
+                var activityName = PlayerSettings.Android.applicationEntry.HasFlag(AndroidApplicationEntry.GameActivity) ? 
+                    "com.unity3d.player.appui.AppUIGameActivity" : "com.unity3d.player.appui.AppUIActivity";
+                activity!.SetAttribute("name", androidNamespace, activityName);
+#else
+                activity!.SetAttribute("name", androidNamespace, "com.unity3d.player.appui.AppUIActivity");
+#endif
+                
+                var vibratePermission = doc.SelectSingleNode("/manifest/uses-permission[@android:name='android.permission.VIBRATE']", nsManager) as XmlElement;
+                if (vibratePermission == null)
                 {
-                    var doc = new XmlDocument();
-                    doc.Load(manifest);
-
-                    var nsManager = new XmlNamespaceManager(doc.NameTable);
-                    nsManager.AddNamespace("android", androidNamespace);
-                    var manifestNode = (XmlElement)doc.SelectSingleNode("/manifest");
-                    var activity = (XmlElement)doc.SelectSingleNode("/manifest/application/activity");
-                    activity!.SetAttribute("name", androidNamespace, "com.unity3d.player.appui.AppUIActivity");
-
-
-                    var vibratePermission = doc.SelectSingleNode("/manifest/uses-permission[@android:name='android.permission.VIBRATE']", nsManager) as XmlElement;
-                    if (vibratePermission == null)
-                    {
-                        vibratePermission = doc.CreateElement("uses-permission");
-                        vibratePermission.SetAttribute("name", androidNamespace, "android.permission.VIBRATE");
-                        manifestNode.AppendChild(vibratePermission);
-                    }
-                    doc.Save(manifest);
+                    vibratePermission = doc.CreateElement("uses-permission");
+                    vibratePermission.SetAttribute("name", androidNamespace, "android.permission.VIBRATE");
+                    manifestNode.AppendChild(vibratePermission);
                 }
+                doc.Save(manifest);
             }
         }
 

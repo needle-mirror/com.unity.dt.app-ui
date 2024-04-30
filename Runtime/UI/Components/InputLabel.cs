@@ -54,52 +54,54 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The InputLabel main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-inputlabel";
+        public const string ussClassName = "appui-inputlabel";
 
         /// <summary>
         /// The InputLabel size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The InputLabel direction styling class.
         /// </summary>
-        public static readonly string orientationUssClassName = ussClassName + "--";
+        [EnumName("GetOrientationUssClassName", typeof(Direction))]
+        public const string orientationUssClassName = ussClassName + "--";
 
         /// <summary>
         /// The InputLabel input container styling class.
         /// </summary>
-        public static readonly string inputContainerUssClassName = ussClassName + "__input-container";
+        public const string inputContainerUssClassName = ussClassName + "__input-container";
         
         /// <summary>
         /// The InputLabel container styling class.
         /// </summary>
-        public static readonly string containerUssClassName = ussClassName + "__container";
+        public const string containerUssClassName = ussClassName + "__container";
         
         /// <summary>
         /// The InputLabel label container styling class.
         /// </summary>
-        public static readonly string labelContainerUssClassName = ussClassName + "__label-container";
+        public const string labelContainerUssClassName = ussClassName + "__label-container";
         
         /// <summary>
         /// The InputLabel field-label styling class.
         /// </summary>
-        public static readonly string fieldLabelUssClassName = ussClassName + "__field-label";
+        public const string fieldLabelUssClassName = ussClassName + "__field-label";
         
         /// <summary>
         /// The InputLabel help text styling class.
         /// </summary>
-        public static readonly string helpTextUssClassName = ussClassName + "__help-text";
+        public const string helpTextUssClassName = ussClassName + "__help-text";
 
         /// <summary>
         /// The InputLabel input alignment styling class.
         /// </summary>
-        public static readonly string inputAlignmentUssClassName = ussClassName + "--input-alignment-";
+        [EnumName("GetInputAlignmentUssClassName", typeof(Align))]
+        public const string inputAlignmentUssClassName = ussClassName + "--input-alignment-";
         
         /// <summary>
         /// The InputLabel with help text styling class.
         /// </summary>
-        public static readonly string withHelpTextUssClassName = ussClassName + "--with-help-text";
+        public const string withHelpTextUssClassName = ussClassName + "--with-help-text";
         
         readonly FieldLabel m_FieldLabel;
 
@@ -156,9 +158,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Direction != value;
-                RemoveFromClassList(orientationUssClassName + m_Direction.ToString().ToLower());
+                RemoveFromClassList(GetOrientationUssClassName(m_Direction));
                 m_Direction = value;
-                AddToClassList(orientationUssClassName + m_Direction.ToString().ToLower());
+                AddToClassList(GetOrientationUssClassName(m_Direction));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
@@ -206,9 +208,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_InputAlignment != value;
-                RemoveFromClassList(inputAlignmentUssClassName + m_InputAlignment.ToString().ToLower());
+                RemoveFromClassList(GetInputAlignmentUssClassName(m_InputAlignment));
                 m_InputAlignment = value;
-                AddToClassList(inputAlignmentUssClassName + m_InputAlignment.ToString().ToLower());
+                AddToClassList(GetInputAlignmentUssClassName(m_InputAlignment));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

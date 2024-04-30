@@ -112,13 +112,13 @@ namespace Unity.AppUI.UI
         /// </summary>
         class ModalVisualElement : VisualElement
         {
-            public static readonly string ussClassName = "appui-modal";
+            public const string ussClassName = "appui-modal";
 
-            public static readonly string fullScreenUssClassName = ussClassName + "--fullscreen";
+            public const string fullScreenUssClassName = ussClassName + "--fullscreen";
 
-            public static readonly string fullScreenTakeOverUssClassName = ussClassName + "--fullscreen-takeover";
+            public const string fullScreenTakeOverUssClassName = ussClassName + "--fullscreen-takeover";
 
-            public static readonly string contentContainerUssClassName = ussClassName + "__content";
+            public const string contentContainerUssClassName = ussClassName + "__content";
 
             readonly VisualElement m_ContentContainer;
 

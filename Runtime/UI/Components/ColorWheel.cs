@@ -52,22 +52,22 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The ColorWheel main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-colorwheel";
+        public const string ussClassName = "appui-colorwheel";
 
         /// <summary>
         /// The ColorWheel image styling class.
         /// </summary>
-        public static readonly string imageUssClassName = ussClassName + "__image";
+        public const string imageUssClassName = ussClassName + "__image";
 
         /// <summary>
         /// The ColorWheel thumb styling class.
         /// </summary>
-        public static readonly string thumbUssClassName = ussClassName + "__thumb";
+        public const string thumbUssClassName = ussClassName + "__thumb";
 
         /// <summary>
         /// The ColorWheel thumb swatch styling class.
         /// </summary>
-        public static readonly string thumbSwatchUssClassName = ussClassName + "__thumbswatch";
+        public const string thumbSwatchUssClassName = ussClassName + "__thumbswatch";
 
         static readonly CustomStyleProperty<Color> k_UssCheckerColor1 = new CustomStyleProperty<Color>("--checker-color-1");
 

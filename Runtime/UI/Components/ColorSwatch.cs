@@ -34,22 +34,23 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The ColorSwatch main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-colorswatch";
+        public const string ussClassName = "appui-colorswatch";
 
         /// <summary>
         /// The ColorSwatch image styling class.
         /// </summary>
-        public static readonly string imageUssClassName = ussClassName + "__image";
+        public const string imageUssClassName = ussClassName + "__image";
 
         /// <summary>
         /// The ColorSwatch size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(Size))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
         /// The ColorSwatch round styling class.
         /// </summary>
-        public static readonly string roundUssClassName = ussClassName + "--round";
+        public const string roundUssClassName = ussClassName + "--round";
 
         static readonly CustomStyleProperty<Color> k_UssCheckerColor1 = new CustomStyleProperty<Color>("--checker-color-1");
 
@@ -182,9 +183,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Size != value;
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

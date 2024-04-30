@@ -67,17 +67,18 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Heading main styling class.
         /// </summary>
-        public new static readonly string ussClassName = "appui-heading";
+        public new const string ussClassName = "appui-heading";
 
         /// <summary>
         /// The Heading primary variant styling class.
         /// </summary>
-        public static readonly string primaryUssClassName = ussClassName + "--primary";
+        public const string primaryUssClassName = ussClassName + "--primary";
 
         /// <summary>
         /// The Heading size styling class.
         /// </summary>
-        public static readonly string sizeUssClassName = ussClassName + "--size-";
+        [EnumName("GetSizeUssClassName", typeof(HeadingSize))]
+        public const string sizeUssClassName = ussClassName + "--size-";
 
         HeadingSize m_Size = HeadingSize.M;
 
@@ -142,9 +143,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Size != value;
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(GetSizeUssClassName(m_Size));
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

@@ -29,42 +29,42 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The AccordionItem main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-accordionitem";
+        public const string ussClassName = "appui-accordionitem";
         
         /// <summary>
         /// The AccordionItem content parent styling class.
         /// </summary>
-        public static readonly string contentParentUssClassName = ussClassName + "__content-parent";
+        public const string contentParentUssClassName = ussClassName + "__content-parent";
 
         /// <summary>
         /// The AccordionItem content styling class.
         /// </summary>
-        public static readonly string contentUssClassName = ussClassName + "__content";
+        public const string contentUssClassName = ussClassName + "__content";
 
         /// <summary>
         /// The AccordionItem header styling class.
         /// </summary>
-        public static readonly string headerUssClassName = ussClassName + "__header";
+        public const string headerUssClassName = ussClassName + "__header";
 
         /// <summary>
         /// The AccordionItem headertext styling class.
         /// </summary>
-        public static readonly string headerTextUssClassName = ussClassName + "__headertext";
+        public const string headerTextUssClassName = ussClassName + "__headertext";
         
         /// <summary>
         /// The AccordionItem trailing container styling class.
         /// </summary>
-        public static readonly string trailingContainerUssClassName = ussClassName + "__trailing-container";
+        public const string trailingContainerUssClassName = ussClassName + "__trailing-container";
 
         /// <summary>
         /// The AccordionItem indicator styling class.
         /// </summary>
-        public static readonly string indicatorUssClassName = ussClassName + "__indicator";
+        public const string indicatorUssClassName = ussClassName + "__indicator";
 
         /// <summary>
         /// The AccordionItem heading styling class.
         /// </summary>
-        public static readonly string headingUssClassName = ussClassName + "__heading";
+        public const string headingUssClassName = ussClassName + "__heading";
 
         readonly VisualElement m_ContentElement;
         
@@ -332,7 +332,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Accordion main styling class.
         /// </summary>
-        public static readonly string ussClassName = "appui-accordion";
+        public const string ussClassName = "appui-accordion";
         
         bool m_IsExclusive;
 

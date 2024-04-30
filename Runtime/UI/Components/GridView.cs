@@ -123,12 +123,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The first column USS class name for GridView elements.
         /// </summary>
-        static readonly string k_FirstColumnUssClassName = ussClassName + "__first-column";
+        const string k_FirstColumnUssClassName = ussClassName + "__first-column";
 
         /// <summary>
         /// The last column USS class name for GridView elements.
         /// </summary>
-        static readonly string k_LastColumnUssClassName = ussClassName + "__last-column";
+        const string k_LastColumnUssClassName = ussClassName + "__last-column";
 
         /// <summary>
         /// The USS class name of selected item elements in the GridView.

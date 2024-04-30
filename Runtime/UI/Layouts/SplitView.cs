@@ -17,7 +17,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The main styling class of the SplitView. This is the class that is used in the USS file.
         /// </summary>
-        public static readonly string ussClassName = "appui-splitview";
+        public const string ussClassName = "appui-splitview";
 
         /// <summary>
         /// Default constructor.
