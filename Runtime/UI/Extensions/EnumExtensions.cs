@@ -8,10 +8,11 @@ namespace Unity.AppUI.UI
     public static partial class EnumExtensions
     {
         /// <summary>
-        /// Converts a UnityEngine.UIElements.Align enum value to a string.
+        /// Converts the enum value to a string.
         /// </summary>
-        /// <param name="enumValue"> The enum value to convert. </param>
-        /// <returns> The string representation of the enum value. </returns>
+        /// <param name="enumValue"> The enum value to convert.</param>
+        /// <returns> The string representation of the enum value.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"> Thrown when the enum value is not recognized.</exception>
         internal static string ToLowerCase(this UnityEngine.UIElements.Align enumValue)
         {
             return enumValue switch

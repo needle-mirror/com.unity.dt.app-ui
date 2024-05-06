@@ -1,10 +1,28 @@
 using System;
 using System.Collections.Generic;
 using Unity.AppUI.Core;
+using Unity.AppUI.UI;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+#if UNITY_2022_1_OR_NEWER
+using IntegerField = UnityEngine.UIElements.IntegerField;
+using LongField = UnityEngine.UIElements.LongField;
+using FloatField = UnityEngine.UIElements.FloatField;
+using DoubleField = UnityEngine.UIElements.DoubleField;
+using EnumField = UnityEngine.UIElements.EnumField;
+using ColorField = UnityEditor.UIElements.ColorField;
+using RectField = UnityEngine.UIElements.RectField;
+#else 
+using IntegerField = UnityEditor.UIElements.IntegerField;
+using LongField = UnityEditor.UIElements.LongField;
+using FloatField = UnityEditor.UIElements.FloatField;
+using DoubleField = UnityEditor.UIElements.DoubleField;
+using EnumField = UnityEditor.UIElements.EnumField;
+using ColorField = UnityEditor.UIElements.ColorField;
+using RectField = UnityEditor.UIElements.RectField;
+#endif
 
 namespace Unity.AppUI.Editor
 {
@@ -211,8 +229,8 @@ namespace Unity.AppUI.Editor
     /// <summary>
     /// Draws the Inspector GUI for an optional preferred tooltip placement property
     /// </summary>
-    [CustomPropertyDrawer(typeof(OptionalEnum<UI.PopoverPlacement>))]
-    public class OptionalPreferredTooltipPlacementDrawer : OptionalEnumPropertyDrawer<UI.PopoverPlacement> { }
+    [CustomPropertyDrawer(typeof(OptionalEnum<PopoverPlacement>))]
+    public class OptionalPreferredTooltipPlacementDrawer : OptionalEnumPropertyDrawer<PopoverPlacement> { }
     
     /// <summary>
     /// Draws the Inspector GUI for an optional layout direction property
@@ -264,7 +282,7 @@ namespace Unity.AppUI.Editor
     /// Draws the Inspector GUI for an optional string property
     /// </summary>
     [CustomPropertyDrawer(typeof(Optional<string>))]
-    public class OptionalStringDrawer : OptionalPropertyDrawer<string, TextField>
+    public class OptionalStringDrawer : OptionalPropertyDrawer<string, UnityEngine.UIElements.TextField>
     {
         /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(string newValue) => m_Value.stringValue = newValue;
@@ -291,7 +309,7 @@ namespace Unity.AppUI.Editor
     }
 
     /// <summary>
-    /// Custom Field for <see cref="UI.Panel.scale"/> and <see cref="UI.BaseVisualElement.scaleOverride"/> property.
+    /// Custom Field for <see cref="Panel.scale"/> and <see cref="BaseVisualElement.scaleOverride"/> property.
     /// </summary>
     public class ScaleField : DropdownField 
     {
@@ -309,7 +327,7 @@ namespace Unity.AppUI.Editor
     }
     
     /// <summary>
-    /// Custom Field for <see cref="UI.Panel.theme"/> and <see cref="UI.BaseVisualElement.themeOverride"/> property.
+    /// Custom Field for <see cref="Panel.theme"/> and <see cref="BaseVisualElement.themeOverride"/> property.
     /// </summary>
     public class ThemeField : DropdownField
     {
@@ -329,7 +347,7 @@ namespace Unity.AppUI.Editor
     /// <summary>
     /// Draws the Inspector GUI for an optional scale property
     /// </summary>
-    [CustomPropertyDrawer(typeof(UI.OptionalScaleDrawerAttribute))]
+    [CustomPropertyDrawer(typeof(OptionalScaleDrawerAttribute))]
     public class OptionalScaleDrawer : OptionalPropertyDrawer<string, ScaleField>
     {
         /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
@@ -339,7 +357,7 @@ namespace Unity.AppUI.Editor
     /// <summary>
     /// Draws the Inspector GUI for a scale property
     /// </summary>
-    [CustomPropertyDrawer(typeof(UI.ScaleDrawerAttribute))]
+    [CustomPropertyDrawer(typeof(ScaleDrawerAttribute))]
     public class ScaleDrawer : PropertyDrawer
     {
         /// <inheritdoc cref="PropertyDrawer.CreatePropertyGUI" />
@@ -357,7 +375,7 @@ namespace Unity.AppUI.Editor
     /// <summary>
     /// Draws the Inspector GUI for an optional theme property
     /// </summary>
-    [CustomPropertyDrawer(typeof(UI.OptionalThemeDrawerAttribute))]
+    [CustomPropertyDrawer(typeof(OptionalThemeDrawerAttribute))]
     public class OptionalThemeDrawer : OptionalPropertyDrawer<string, ThemeField>
     {
         /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
@@ -367,7 +385,7 @@ namespace Unity.AppUI.Editor
     /// <summary>
     /// Draws the Inspector GUI for a theme property
     /// </summary>
-    [CustomPropertyDrawer(typeof(UI.ThemeDrawerAttribute))]
+    [CustomPropertyDrawer(typeof(ThemeDrawerAttribute))]
     public class ThemeDrawer : PropertyDrawer
     {
         /// <inheritdoc cref="PropertyDrawer.CreatePropertyGUI" />
@@ -385,7 +403,7 @@ namespace Unity.AppUI.Editor
     /// <summary>
     /// Draws the Inspector GUI for an optional dir property
     /// </summary>
-    [CustomPropertyDrawer(typeof(UI.DefaultPropertyDrawerAttribute))]
+    [CustomPropertyDrawer(typeof(DefaultPropertyDrawerAttribute))]
     public class DirDrawer : PropertyDrawer
     {
         /// <inheritdoc cref="PropertyDrawer.CreatePropertyGUI" />

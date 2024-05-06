@@ -81,7 +81,7 @@ namespace Unity.AppUI.UI
             fullscreenMode = mode;
             return this;
         }
-        
+
         /// <summary>
         /// Build a new Modal component.
         /// </summary>

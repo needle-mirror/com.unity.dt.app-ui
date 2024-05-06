@@ -151,6 +151,120 @@ namespace Unity.AppUI.UI
             var data = GetOrCreateValue(element);
             data.tooltipTemplate = template;
         }
+        
+        /// <summary>
+        /// Callback to populate the tooltip content.
+        /// </summary>
+        /// <param name="tooltip"> The tooltip element to populate.</param>
+        public delegate void TooltipContentCallback(VisualElement tooltip);
+
+        /// <summary>
+        /// Set the tooltip content for a <see cref="VisualElement"/>.
+        /// </summary>
+        /// <param name="element"> The target visual element.</param>
+        /// <param name="callback"> The callback to invoke to populate the tooltip.</param>
+        /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object and the callback can't be null.</exception>
+        /// <exception cref="InvalidOperationException"> You must call SetTooltipTemplate before setting the tooltip content.</exception>
+        /// <remarks>
+        /// You must call <see cref="SetTooltipTemplate"/> method first in order to have a valid tooltip template to populate.
+        /// </remarks>
+        public static void SetTooltipContent(this VisualElement element, TooltipContentCallback callback)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+            
+            if (GetTooltipTemplate(element) == null && callback != null)
+                throw new InvalidOperationException("You must call SetTooltipTemplate before setting the tooltip content.");
+            
+            var data = GetOrCreateValue(element);
+            data.tooltipContentCallback = callback;
+        }
+        
+        /// <summary>
+        /// Get the tooltip content for a <see cref="VisualElement"/>.
+        /// </summary>
+        /// <param name="element"> The target visual element.</param>
+        /// <returns> The tooltip content callback.</returns>
+        /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object can't be null.</exception>
+        public static TooltipContentCallback GetTooltipContent(this VisualElement element)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+            
+            return TryGetValue(element, out var data) ? data.tooltipContentCallback : null;
+        }
+        
+        /// <summary>
+        /// Register a callback to be invoked when the tooltip content changes.
+        /// </summary>
+        /// <param name="element"> The target visual element.</param>
+        /// <param name="callback"> The callback to invoke when the tooltip content changes.</param>
+        /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object and the callback can't be null.</exception>
+        internal static void RegisterTooltipContentChangedCallback(this VisualElement element, Action callback)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+            
+            if (callback == null)
+                throw new ArgumentNullException(nameof(callback));
+            
+            var data = GetOrCreateValue(element);
+            data.tooltipContentCallbackChanged += callback;
+        }
+        
+        /// <summary>
+        /// Unregister a callback to be invoked when the tooltip content changes.
+        /// </summary>
+        /// <param name="element"> The target visual element.</param>
+        /// <param name="callback"> The callback to invoke when the tooltip content changes.</param>
+        /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object and the callback can't be null.</exception>
+        internal static void UnregisterTooltipContentChangedCallback(this VisualElement element, Action callback)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+            
+            if (callback == null)
+                throw new ArgumentNullException(nameof(callback));
+            
+            var data = GetOrCreateValue(element);
+            data.tooltipContentCallbackChanged -= callback;
+        }
+        
+        /// <summary>
+        /// Register a callback to be invoked when the tooltip template changes.
+        /// </summary>
+        /// <param name="element"> The target visual element.</param>
+        /// <param name="callback"> The callback to invoke when the tooltip template changes.</param>
+        /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object and the callback can't be null.</exception>
+        internal static void RegisterTooltipTemplateChangedCallback(this VisualElement element, Action callback)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+            
+            if (callback == null)
+                throw new ArgumentNullException(nameof(callback));
+            
+            var data = GetOrCreateValue(element);
+            data.tooltipTemplateChanged += callback;
+        }
+        
+        /// <summary>
+        /// Unregister a callback to be invoked when the tooltip template changes.
+        /// </summary>
+        /// <param name="element"> The target visual element.</param>
+        /// <param name="callback"> The callback to invoke when the tooltip template changes.</param>
+        /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object and the callback can't be null.</exception>
+        internal static void UnregisterTooltipTemplateChangedCallback(this VisualElement element, Action callback)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+            
+            if (callback == null)
+                throw new ArgumentNullException(nameof(callback));
+            
+            var data = GetOrCreateValue(element);
+            data.tooltipTemplateChanged -= callback;
+        }
 
         /// <summary>
         /// Additional Data that should be stored on any <see cref="VisualElement"/> object.
@@ -189,11 +303,49 @@ namespace Unity.AppUI.UI
             /// The preferred placement for a tooltip.
             /// </summary>
             public OptionalEnum<PopoverPlacement> preferredTooltipPlacement { get; set; } = OptionalEnum<PopoverPlacement>.none;
+            
+            VisualElement m_TooltipTemplate;
 
             /// <summary>
             /// The tooltip template to use for this element.
             /// </summary>
-            public VisualElement tooltipTemplate { get; set; }
+            public VisualElement tooltipTemplate
+            {
+                get => m_TooltipTemplate;
+                set
+                {
+                    if (m_TooltipTemplate != value)
+                    {
+                        m_TooltipTemplate = value;
+                        tooltipTemplateChanged?.Invoke();
+                    }
+                }
+            }
+            
+            TooltipContentCallback m_TooltipContentCallback;
+
+            /// <summary>
+            /// The callback to populate the tooltip content.
+            /// </summary>
+            public TooltipContentCallback tooltipContentCallback
+            {
+                get => m_TooltipContentCallback;
+                set
+                {
+                    m_TooltipContentCallback = value;
+                    tooltipContentCallbackChanged?.Invoke();
+                }
+            }
+            
+            /// <summary>
+            /// Event to invoke when the tooltip template changes.
+            /// </summary>
+            public event Action tooltipContentCallbackChanged;
+            
+            /// <summary>
+            /// Event to invoke when the tooltip template changes.
+            /// </summary>
+            public event Action tooltipTemplateChanged;
         }
 
         /// <summary>

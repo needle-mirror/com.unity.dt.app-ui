@@ -63,12 +63,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Returns True if the bar is currently displayed on the screen, False otherwise.
         /// </summary>
-        public bool isShown => Core.AppUI.notificationManager.IsCurrent(m_ManagerCallback);
+        public bool isShown => global::Unity.AppUI.Core.AppUI.notificationManager.IsCurrent(m_ManagerCallback);
 
         /// <summary>
         /// Returns True if the bar is currently displayed or queued for display on the screen, False otherwise.
         /// </summary>
-        public bool isShownOrQueued => Core.AppUI.notificationManager.IsCurrentOrNext(m_ManagerCallback);
+        public bool isShownOrQueued => global::Unity.AppUI.Core.AppUI.notificationManager.IsCurrentOrNext(m_ManagerCallback);
 
         /// <summary>
         /// Returns the specified display duration of the bar.
@@ -151,27 +151,27 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="Popup{T}.InvokeShownEventHandlers"/>
         protected override void InvokeShownEventHandlers()
         {
-            Core.AppUI.notificationManager.OnShown(m_ManagerCallback);
+            global::Unity.AppUI.Core.AppUI.notificationManager.OnShown(m_ManagerCallback);
             base.InvokeShownEventHandlers(); // invoke callbacks if any
         }
 
         /// <inheritdoc cref="Popup{T}.InvokeDismissedEventHandlers"/>
         protected override void InvokeDismissedEventHandlers(DismissType reason)
         {
-            Core.AppUI.notificationManager.OnDismissed(m_ManagerCallback);
+            global::Unity.AppUI.Core.AppUI.notificationManager.OnDismissed(m_ManagerCallback);
             base.InvokeDismissedEventHandlers(reason); // invoke callbacks if any
         }
 
         /// <inheritdoc cref="Popup.Dismiss(DismissType)"/>
         public override void Dismiss(DismissType reason)
         {
-            Core.AppUI.notificationManager.Dismiss(m_ManagerCallback, reason);
+            global::Unity.AppUI.Core.AppUI.notificationManager.Dismiss(m_ManagerCallback, reason);
         }
 
         /// <inheritdoc cref="Popup.Show"/>
         public override void Show()
         {
-            Core.AppUI.notificationManager.Show(duration, m_ManagerCallback);
+            global::Unity.AppUI.Core.AppUI.notificationManager.Show(duration, m_ManagerCallback);
         }
 
         /// <inheritdoc cref="Popup.FindSuitableParent"/>

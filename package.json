@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "1.1.0",
+  "version": "2.0.0-pre.2",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,7 +25,7 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "83f816c370bb4f0a746c26cee6206b16b596c648"
+    "revision": "44bef71353b609c6a0eacad8d466dec2fb1f870a"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -82,10 +82,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- Reduced the amount of heap memory allocation for String values used in USS classes\n- Fixed the support of new Android entrypoints in Unity starting 2023.2\n\n### Removed\n\n- Removed the usage of self-provided fonts in App UI default themes.\n- Removed provided Fonts assets from the package.\n\n### Added\n\n- Added AppUIGameActivity for Android builds in Unity 2023.2+"
+    "changelog": "### Added\n\n- Added `PinchGestureRecognizer` implementation for the new Gesture Recognizer System.\n- Added an experimental method `Platform.GetSystemColor` to fetch color values defined by the Operating System for specific UI element types. This can be useful if you want to precisely follow the color palette of a high-contrast theme directed by the OS.\n- Added \"Icon Browser\", a new Editor tool that enables users to generate UI-Toolkit stylesheets with a specific list of icons.\n- Added a new experimental Gesture Recognizer System.\n- Added the ability to subscribe and check if the current operating system is in Reduce-Motion Accessibility Mode (Windows/Mac/Android/iOS).\n- Added the ability to subscribe and check if the current Text Scale Factor of the currently used window (Unity Player window or the Game view window in the Editor) (Windows/Mac/Android/iOS).\n- Added the ability to subscribe and check if the current operating system is in High-Contrast Mode (Windows/Mac/Android/iOS).\n- Added the ability to subscribe and check if the current operating system is in LeftToRight or RightToLeft layout direction (Windows/Mac/Android/iOS).\n- Added the ability to subscribe and check if the current Scale Factor of the currently used window (Unity Player window or the Game view window in the Editor) (Windows/Mac/Android/iOS).\n- Added the ability to subscribe and check if the current operating system is in Dark Mode (Windows/Mac/Android/iOS).\n\n### Changed\n\n- Refactored every native plugin provided by the package.\n- Changed the Trackpad sample project to work properly with the new events coming from the new Gesture Recognizer System.\n\n### Fixed\n\n- Fixed meta files for native plugins on Windows platform.\n- Fixed an early return in the PreProcessBuild callback of App UI when no persistent AppUISettings have been found."
   },
   "upmCi": {
-    "footprint": "81656628c6d48794b8f39c8765790169c524948f"
+    "footprint": "7e2232ebbfec9dbc80f7f465a7567835baeb33e8"
   },
-  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@1.1/manual/index.html"
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.0/manual/index.html"
 }

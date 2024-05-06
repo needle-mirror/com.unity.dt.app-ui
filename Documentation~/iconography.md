@@ -4,13 +4,19 @@ uid: iconography
 
 # Iconography
 
-The Iconography category includes more than 200 icons.
+The Iconography of App UI regroups more than 100 icons in total,
+but for the sake of optimization, we only provide a subset of them in the default [themes](xref:theming).
 The icons are provided as PNG files and are set up to be loaded via USS classes.
-The Icon UI component uses these USS classes to load the appropriate icon.
+
+If you are willing to expand the set of icons, you can add your own icons to the project and reference them in a USS file.
+We also provide an Editor tool called [Icon Browser](xref:custom-icons#icon-browser) to generate the USS classes for you.
+
+For more information about Icon customization, see [Custom Icons](xref:custom-icons).
 
 ## Usage
 
 The [Icon](xref:Unity.AppUI.UI.Icon) UI component is used to display an icon.
+The Icon UI component uses these USS classes to load the appropriate icon.
 
 ```xml
 <Icon name="icon-name" />

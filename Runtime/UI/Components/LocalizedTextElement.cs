@@ -87,8 +87,8 @@ namespace Unity.AppUI.UI
                 {
                     m_ReferenceText = value;
                     UpdateTextWithCurrentLocale();
-
 #if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
                     NotifyPropertyChanged(in textProperty);
 #endif
                 }

@@ -62,5 +62,77 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(overrideElement.GetSelfContext<ThemeContext>().theme, themeContext.theme);
             Assert.AreEqual(v.scale, scaleContext.scale);
         }
+        
+        [Test]
+        public void VisualElementExtensions_SetTooltipTemplate_ShouldSucceed()
+        {
+            var v = new VisualElement();
+            var changed = 0;
+            var tooltipTemplate = new VisualElement();
+            
+            void OnTooltipTemplateChanged()
+            {
+                changed++;
+            }
+            
+            Assert.Throws<ArgumentNullException>(() => v.RegisterTooltipTemplateChangedCallback(null));
+            Assert.Throws<ArgumentNullException>(() => VisualElementExtensions.RegisterTooltipTemplateChangedCallback(null, OnTooltipTemplateChanged));
+            v.RegisterTooltipTemplateChangedCallback(OnTooltipTemplateChanged);
+            
+            v.SetTooltipTemplate(tooltipTemplate);
+            Assert.AreEqual(tooltipTemplate, v.GetTooltipTemplate());
+            Assert.AreEqual(1, changed);
+            
+            Assert.Throws<ArgumentNullException>(() => VisualElementExtensions.SetTooltipTemplate(null, tooltipTemplate));
+            Assert.DoesNotThrow(() => VisualElementExtensions.SetTooltipTemplate(v, null));
+            Assert.AreEqual(null, v.GetTooltipTemplate());
+            Assert.AreEqual(2, changed);
+            
+            Assert.Throws<ArgumentNullException>(() => v.UnregisterTooltipTemplateChangedCallback(null));
+            Assert.Throws<ArgumentNullException>(() => VisualElementExtensions.UnregisterTooltipTemplateChangedCallback(null, OnTooltipTemplateChanged));
+            v.UnregisterTooltipTemplateChangedCallback(OnTooltipTemplateChanged);
+            v.SetTooltipTemplate(tooltipTemplate);
+            Assert.AreEqual(2, changed);
+        }
+        
+        [Test]
+        public void VisualElementExtensions_SetTooltipContent_ShouldSucceed()
+        {
+            var v = new VisualElement();
+            var template = new Text();
+            
+            var changed = 0;
+            
+            void OnTooltipContentChanged()
+            {
+                changed++;
+            }
+            
+            Assert.Throws<ArgumentNullException>(() => v.RegisterTooltipContentChangedCallback(null));
+            Assert.Throws<ArgumentNullException>(() => VisualElementExtensions.RegisterTooltipContentChangedCallback(null, OnTooltipContentChanged));
+            v.RegisterTooltipContentChangedCallback(OnTooltipContentChanged);
+
+            void TemplateContent(VisualElement t)
+            {
+                ((Text)t).text = "Tooltip";
+            }
+            
+            Assert.Throws<InvalidOperationException>(() => v.SetTooltipContent(TemplateContent));
+            v.SetTooltipTemplate(template);
+            v.SetTooltipContent(TemplateContent);
+            Assert.AreEqual((VisualElementExtensions.TooltipContentCallback)TemplateContent, v.GetTooltipContent());
+            Assert.AreEqual(1, changed);
+            
+            Assert.Throws<ArgumentNullException>(() => VisualElementExtensions.SetTooltipContent(null, TemplateContent));
+            Assert.DoesNotThrow(() => VisualElementExtensions.SetTooltipContent(v, null));
+            Assert.AreEqual(null, v.GetTooltipContent());
+            Assert.AreEqual(2, changed);
+            
+            Assert.Throws<ArgumentNullException>(() => v.UnregisterTooltipContentChangedCallback(null));
+            Assert.Throws<ArgumentNullException>(() => VisualElementExtensions.UnregisterTooltipContentChangedCallback(null, OnTooltipContentChanged));
+            v.UnregisterTooltipContentChangedCallback(OnTooltipContentChanged);
+            v.SetTooltipContent(TemplateContent);
+            Assert.AreEqual(2, changed);
+        }
     }
 }

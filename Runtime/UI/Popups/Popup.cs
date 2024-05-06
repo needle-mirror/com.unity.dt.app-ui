@@ -52,7 +52,7 @@ namespace Unity.AppUI.UI
             get
             {
                 if (m_Handler == null)
-                    m_Handler = new Handler(Core.AppUI.mainLooper, message =>
+                    m_Handler = new Handler(global::Unity.AppUI.Core.AppUI.mainLooper, message =>
                     {
                         switch (message.what)
                         {

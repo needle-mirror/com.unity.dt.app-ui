@@ -1,5 +1,6 @@
 using System;
 using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
 
@@ -64,6 +65,11 @@ namespace Unity.AppUI.UI
         /// The template to display inside the popup.
         /// </summary>
         public VisualElement template => tooltip.contentContainer.childCount > 0 ? tooltip.contentContainer[0] : null;
+        
+        /// <summary>
+        /// The content Visual Element of the tooltip (if any).
+        /// </summary>
+        public VisualElement content => tooltip.contentContainer.childCount > 0 ? tooltip.contentContainer[0] : null;
 
         /// <summary>
         /// Set the content of the tooltip.
@@ -75,6 +81,9 @@ namespace Unity.AppUI.UI
         /// <returns> The Tooltip. </returns>
         public Tooltip SetContent(VisualElement content)
         {
+            if (content?.parent == tooltip.contentContainer)
+                return this;
+            
             tooltip.contentContainer.Clear();
             tooltip.text = null;
             if (content != null)

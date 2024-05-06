@@ -5,7 +5,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A manipulator that makes the cursor of a <see cref="TextField"/> blink.
     /// </summary>
-    class BlinkingCursor : Manipulator
+    public class BlinkingCursor : Manipulator
     { 
         IVisualElementScheduledItem m_ScheduledBlink;
 

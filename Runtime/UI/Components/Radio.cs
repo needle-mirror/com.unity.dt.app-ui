@@ -87,7 +87,7 @@ namespace Unity.AppUI.UI
             pickingMode = PickingMode.Position;
             tabIndex = 0;
 
-            var radioIcon = new Icon { name = checkmarkUssClassName, iconName = "radio-bullet", pickingMode = PickingMode.Ignore };
+            var radioIcon = new VisualElement { name = checkmarkUssClassName, pickingMode = PickingMode.Ignore };
             radioIcon.AddToClassList(checkmarkUssClassName);
             m_Box = new ExVisualElement { name = boxUssClassName, pickingMode = PickingMode.Ignore, passMask = 0 };
             m_Box.AddToClassList(boxUssClassName);

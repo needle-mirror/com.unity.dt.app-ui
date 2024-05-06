@@ -118,6 +118,15 @@ namespace Unity.AppUI.Core
             s_Manager.Update();
         }
 
+        /// <summary>
+        /// Manage internal App UI features when the application has gained or lost focus.
+        /// </summary>
+        /// <param name="hasFocus"></param>
+        internal static void OnApplicationFocus(bool hasFocus)
+        {
+            s_Manager?.OnApplicationFocus(hasFocus);
+        }
+
 #if UNITY_EDITOR
         
         static uint s_UpdateFrame = 0;
@@ -175,6 +184,10 @@ namespace Unity.AppUI.Core
             EditorApplication.playModeStateChanged += OnPlayModeChange;
             EditorApplication.update -= EditorUpdate;
             EditorApplication.update += EditorUpdate;
+#if UNITY_2022_2_OR_NEWER
+            EditorApplication.focusChanged -= OnApplicationFocus;
+            EditorApplication.focusChanged += OnApplicationFocus;
+#endif
         }
 
         static void OnPlayModeChange(PlayModeStateChange change)

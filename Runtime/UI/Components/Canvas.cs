@@ -237,7 +237,7 @@ namespace Unity.AppUI.UI
         bool m_UseSpaceBar = k_DefaultUseSpaceBar;
 
         CanvasControlScheme m_ControlScheme = k_DefaultControlScheme;
-
+        
         /// <summary>
         /// The content container of the Canvas.
         /// </summary>
@@ -833,6 +833,14 @@ namespace Unity.AppUI.UI
         {
             if (panel == null || panel.GetCapturingElement(evt.pointerId) != null)
                 return;
+            
+            if (Application.isPlaying && Application.isMobilePlatform && m_PointerId >= 0 && evt.pointerId != m_PointerId)
+            {
+                evt.StopPropagation();
+                if (this.HasPointerCapture(m_PointerId))
+                    this.ReleasePointer(m_PointerId);
+                return;
+            }
 
             var hasModifierPressed = controlScheme switch
             {
@@ -842,10 +850,12 @@ namespace Unity.AppUI.UI
             } || primaryManipulator == CanvasManipulator.Pan;
 
             if (evt.button == (int)MouseButton.MiddleMouse || 
-                (evt.button == (int)MouseButton.LeftMouse && hasModifierPressed))
+                (evt.button == (int)MouseButton.LeftMouse && hasModifierPressed) ||
+                (evt.pointerId != PointerId.mousePointerId && evt.isPrimary))
             {
                 if (!this.HasPointerCapture(evt.pointerId))
                 {
+                    m_DampingEffect?.Pause();
                     this.CapturePointer(evt.pointerId);
 #if !UNITY_2023_1_OR_NEWER
                     if (evt.pointerId == PointerId.mousePointerId)
@@ -856,6 +866,7 @@ namespace Unity.AppUI.UI
                 evt.StopPropagation();
                 m_PointerId = evt.pointerId;
                 m_PointerPosition = evt.localPosition;
+                m_LastTimestamp = evt.timestamp;
                 grabMode = GrabMode.Grabbing;
             }
         }
@@ -883,18 +894,47 @@ namespace Unity.AppUI.UI
             if (evt.pointerId == m_PointerId)
             {
                 m_PointerId = -1;
+                m_LastTimestamp = 0;
                 grabMode = m_SpaceBarPressed || m_PrimaryManipulator == CanvasManipulator.Pan ? 
                     GrabMode.Grab : GrabMode.None;
+                
+                // damping the velocity
+                var durationMs = 750f;
+                var elapsed = 0f;
+                m_DampingEffect?.Pause();
+                m_DampingEffect = schedule.Execute(evt =>
+                {
+                    var newScrollOffset = scrollOffset;
+                    elapsed += evt.deltaTime;
+                    newScrollOffset += m_Velocity * (1.0f - (elapsed / durationMs));
+                    scrollOffset = newScrollOffset;
+                }).Every(16L).ForDuration((long)durationMs);
             }
         }
 
+        Vector2 m_Velocity;
+        long m_LastTimestamp;
+        IVisualElementScheduledItem m_DampingEffect;
+
         void OnPointerMove(PointerMoveEvent evt)
         {
+            if (Application.isPlaying && Application.isMobilePlatform && evt.pointerId != m_PointerId)
+                return;
+            
             if (this.HasPointerCapture(evt.pointerId))
             {
+                evt.SetIsHandledByDraggable(true);
                 grabMode = GrabMode.Grabbing;
-                scrollOffset += (Vector2)(evt.localPosition - m_PointerPosition) *
+                var oldScrollOffset = scrollOffset;
+                var newScrollOffset = scrollOffset;
+                newScrollOffset += (Vector2)(evt.localPosition - m_PointerPosition) *
                                 (scrollDirection == ScrollDirection.Natural ? -1f : 1f);
+                if (m_LastTimestamp == 0)
+                    m_LastTimestamp = evt.timestamp;
+                var deltaTime = evt.timestamp - m_LastTimestamp;
+                m_LastTimestamp = evt.timestamp;
+                m_Velocity = (newScrollOffset - oldScrollOffset) / deltaTime;
+                scrollOffset = newScrollOffset;
             }
             
             m_PointerPosition = evt.localPosition;
@@ -905,8 +945,13 @@ namespace Unity.AppUI.UI
             
             evt.StopImmediatePropagation();
 
+            if (m_PointerId >= 0 && this.HasPointerCapture(m_PointerId))
+                this.ReleasePointer(m_PointerId);
+
             // no support of touchpad App UI events in Alternate control scheme
-            if (controlScheme == CanvasControlScheme.Editor && evt.button == Core.AppUI.touchPadId)
+            if (!Application.isMobilePlatform && 
+                controlScheme == CanvasControlScheme.Editor && 
+                evt.button == Unity.AppUI.Core.AppUI.touchPadId)
                 return;
 
             var shouldZoom = controlScheme switch

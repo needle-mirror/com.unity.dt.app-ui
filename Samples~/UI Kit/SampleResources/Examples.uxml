@@ -567,8 +567,13 @@
                     </ui:VisualElement>
                     <appui:Text text="Accent" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Button title="Primary button" variant="Accent" />
-                        <appui:Button title="Primary button" variant="Accent" leading-icon="info" />
+                        <appui:Button title="Accent button" variant="Accent" />
+                        <appui:Button title="Accent button" variant="Accent" leading-icon="info" />
+                    </ui:VisualElement>
+                    <appui:Text text="Destructive" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Button title="Destructive button" variant="Destructive" />
+                        <appui:Button title="Destructive button" variant="Destructive" leading-icon="info" />
                     </ui:VisualElement>
                     <appui:Text text="Secondary" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
@@ -859,6 +864,42 @@
                             <appui:Button text="A Button example" />
                             <appui:Checkbox size="M" label="A checkbox example" />
                         </appui:ContextProvider>
+                    </ui:VisualElement>
+                    
+                    <!-- DateField -->
+                    <appui:Heading text="DATEFIELD" class="example-title" />
+                    <appui:Text text="Default" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:DateField />
+                    </ui:VisualElement>
+
+                    <!-- DatePicker -->
+                    <appui:Heading text="DATEPICKER" class="example-title" />
+                    <appui:Text text="Default" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:DatePicker />
+                    </ui:VisualElement>
+                    <appui:Text text="value=1998-07-12 / first-day-of-week=Monday" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:DatePicker value="1998-07-12" first-day-of-week="Monday" />
+                    </ui:VisualElement>
+                    
+                    <!-- DateRangeField -->
+                    <appui:Heading text="DATERANGEFIELD" class="example-title" />
+                    <appui:Text text="Default" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:DateRangeField />
+                    </ui:VisualElement>
+                    
+                    <!-- DateRangePicker -->
+                    <appui:Heading text="DATERANGEPICKER" class="example-title" />
+                    <appui:Text text="Default" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:DateRangePicker />
+                    </ui:VisualElement>
+                    <appui:Text text="value=1998-07-12 / first-day-of-week=Monday" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:DateRangePicker value="1998-07-12,1998-07-20" first-day-of-week="Monday" />
                     </ui:VisualElement>
 
                     <!-- Dialog -->
@@ -1264,6 +1305,13 @@
                     <appui:Text text="Default" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:GridView name="grid-view-default" style="height: 300px;" />
+                    </ui:VisualElement>
+                    
+                    <!-- Masonry Grid View -->
+                    <appui:Heading text="MASONRYGRIDVIEW" class="example-title" />
+                    <appui:Text text="Default" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:MasonryGridView name="masonry-grid-view-default" pack="true" style="height: 300px;" />
                     </ui:VisualElement>
 
                     <!-- Haptics -->
@@ -2050,7 +2098,7 @@
                     <appui:Heading text="TEXTAREA" class="example-title" />
                     <ui:VisualElement class="example-section">
                         <appui:Text text="Default" class="example-subtitle" />
-                        <appui:TextArea placeholder="Enter a text..." />
+                        <appui:TextArea name="ta1" placeholder="Enter a text..." />
                         <appui:Text text="Disabled" class="example-subtitle" />
                         <appui:TextArea placeholder="Enter a text..." enabled="false" />
                         <appui:Text text="Invalid" class="example-subtitle" />
@@ -2201,6 +2249,8 @@
                         <appui:ActionButton label="Hover me!" tooltip="Hello i am a tooltip" />
                         <appui:Text text="End" class="example-subtitle" />
                         <appui:ActionButton label="Hover me!" tooltip="Hello i am a tooltip" preferred-tooltip-placement="End" />
+                        <appui:Text text="Template And Dynamic Content" class="example-subtitle" />
+                        <appui:ActionButton name="dynamic-tooltip-action-button" label="Hover me!" />
                     </ui:VisualElement>
 
                     <!-- TouchSlider -->

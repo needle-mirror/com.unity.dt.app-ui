@@ -100,6 +100,11 @@ namespace Unity.AppUI.UI
         public const string elevationUssClassName = "appui-elevation-";
         
         /// <summary>
+        /// The styling class used to set a ":first-child" pseudo-state on a element.
+        /// </summary>
+        public const string firstChildUssClassName = "unity-first-child";
+        
+        /// <summary>
         /// The styling class used to set a ":last-child" pseudo-state on a element.
         /// </summary>
         public const string lastChildUssClassName = "unity-last-child";

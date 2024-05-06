@@ -83,10 +83,9 @@ namespace Unity.AppUI.UI
             tabIndex = 0;
             clickable = new Pressable(OnClick);
 
-            var checkmark = new Icon
+            var checkmark = new VisualElement
             {
                 name = checkmarkUssClassName,
-                iconName = "radio-bullet",
                 pickingMode = PickingMode.Ignore,
                 usageHints = UsageHints.DynamicTransform,
             };

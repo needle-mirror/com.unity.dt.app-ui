@@ -80,6 +80,9 @@ namespace Unity.AppUI.UI
             if (m_AnchorElement?.GetTooltipTemplate() is { } template)
             {
                 m_Tooltip.SetContent(template);
+                m_AnchorElement.RegisterTooltipTemplateChangedCallback(OnTooltipTemplateOrContentChanged);
+                m_AnchorElement.RegisterTooltipContentChangedCallback(OnTooltipTemplateOrContentChanged);
+                OnTooltipTemplateOrContentChanged();
                 hasTooltip = true;
             }
             else if (CanDisplayTooltipInCurrentContext(m_AnchorElement) && !string.IsNullOrEmpty(m_AnchorElement?.tooltip))
@@ -90,7 +93,17 @@ namespace Unity.AppUI.UI
 
             // 4 - If the tne new tooltip is not null, start delay
             if (hasTooltip)
-                ShowTooltip();
+                ShowTooltip(m_AnchorElement?.GetContext<TooltipDelayContext>()?.tooltipDelayMs ?? defaultDelayMs);
+        }
+
+        void OnTooltipTemplateOrContentChanged()
+        {
+            if (m_AnchorElement?.GetTooltipTemplate() is { } template)
+            {
+                m_Tooltip.SetContent(template);
+                var callback = m_AnchorElement.GetTooltipContent();
+                callback?.Invoke(template);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -99,10 +112,9 @@ namespace Unity.AppUI.UI
             return force || target.panel.contextType == ContextType.Player;
         }
 
-        void ShowTooltip()
+        void ShowTooltip(int delayMs)
         {
-            var delay = m_AnchorElement?.GetContext<TooltipDelayContext>()?.tooltipDelayMs ?? defaultDelayMs;
-            m_ScheduledItem?.ExecuteLater(delay);
+            m_ScheduledItem?.ExecuteLater(delayMs);
         }
 
         void StartFadeIn()
@@ -115,6 +127,8 @@ namespace Unity.AppUI.UI
         void HideTooltip()
         {
             m_ScheduledItem?.Pause();
+            m_AnchorElement?.UnregisterTooltipContentChangedCallback(OnTooltipTemplateOrContentChanged);
+            m_AnchorElement?.UnregisterTooltipTemplateChangedCallback(OnTooltipTemplateOrContentChanged);
             m_Tooltip?.Dismiss();
         }
 

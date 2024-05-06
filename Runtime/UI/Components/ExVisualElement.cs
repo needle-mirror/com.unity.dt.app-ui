@@ -171,7 +171,7 @@ namespace Unity.AppUI.UI
             get
             {
                 if (s_Handler == null)
-                    s_Handler = new Handler(AppUI.Core.AppUI.mainLooper, HandleMessage);
+                    s_Handler = new Handler(global::Unity.AppUI.Core.AppUI.mainLooper, HandleMessage);
                 
                 return s_Handler;
             }
@@ -598,7 +598,7 @@ namespace Unity.AppUI.UI
 
         internal static Vector2Int GetRenderTextureSize(Rect renderRect, int maxSize = 1024)
         {
-            var dpi = Mathf.Clamp(Platform.mainScreenScale, 1, 2);
+            var dpi = Mathf.Clamp(Platform.scaleFactor, 1, 2);
             int width, height;
 
             if (renderRect.height > renderRect.width)

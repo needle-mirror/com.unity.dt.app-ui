@@ -180,7 +180,7 @@ namespace Unity.AppUI.UI
             get
             {
                 if (s_Handler == null)
-                    s_Handler = new Handler(AppUI.Core.AppUI.mainLooper, HandleMessage);
+                    s_Handler = new Handler(global::Unity.AppUI.Core.AppUI.mainLooper, HandleMessage);
                 
                 return s_Handler;
             }

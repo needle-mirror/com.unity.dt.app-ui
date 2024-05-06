@@ -129,6 +129,38 @@ namespace Unity.AppUI.Editor
             return $"{rect.x},{rect.y},{rect.width},{rect.height}";
         }
     }
+
+    public class DateConverter : UxmlAttributeConverter<Date>
+    {
+        public override Date FromString(string value)
+        {
+            if (string.IsNullOrEmpty(value) || !DateTime.TryParse(value, out var v))
+                return default;
+
+            return new Date(v);
+        }
+        
+        public override string ToString(Date value)
+        {
+            return ((DateTime)value).ToString(CultureInfo.InvariantCulture);
+        }
+    }
+
+    public class DateRangeConverter : UxmlAttributeConverter<DateRange>
+    {
+        public override DateRange FromString(string value)
+        {
+            if (string.IsNullOrEmpty(value) || !DateRange.TryParse(value, out var v))
+                return default;
+
+            return v;
+        }
+        
+        public override string ToString(DateRange value)
+        {
+            return value.ToString();
+        }
+    }
     
 #if !UNITY_2023_3_OR_NEWER
     public class GradientConverter : UxmlAttributeConverter<Gradient>

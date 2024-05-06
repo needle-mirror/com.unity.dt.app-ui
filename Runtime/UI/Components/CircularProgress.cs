@@ -104,7 +104,7 @@ namespace Unity.AppUI.UI
             if (!rect.IsValid())
                 return;
 
-            var dpi = Mathf.Max(Platform.mainScreenScale, 1f);
+            var dpi = Mathf.Max(Platform.scaleFactor, 1f);
             var rectSize = rect.size * dpi;
 
             if (!rectSize.IsValidForTextureSize())

@@ -1,4 +1,4 @@
-@import url("../../Icons/Icons.uss");
+@import url("../../Icons/Icons - Minimal.uss");
 
 /* Icon */
 .appui-icon {

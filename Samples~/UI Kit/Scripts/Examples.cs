@@ -68,19 +68,19 @@ namespace Unity.AppUI.Samples
             var dirSwitcher = root.Q<RadioGroup>("dir-switcher");
             var panel = root.Q<Panel>("root-panel") ?? root.GetFirstAncestorOfType<Panel>();
 
-            void OnSystemThemeChanged(string systemTheme)
+            void OnSystemThemeChanged(bool darkMode)
             {
-                panel.theme = systemTheme;
+                panel.theme = darkMode ? "dark" : "light";
             }
 
             void SetTheme()
             {
-                Platform.systemThemeChanged -= OnSystemThemeChanged;
+                Platform.darkModeChanged -= OnSystemThemeChanged;
                 switch (themeSwitcher.value)
                 {
                     case 0:
-                        panel.theme = Platform.systemTheme;
-                        Platform.systemThemeChanged += OnSystemThemeChanged;
+                        panel.theme = Platform.darkMode ? "dark" : "light";
+                        Platform.darkModeChanged += OnSystemThemeChanged;
                         break;
                     case 1:
                         panel.theme = "dark";
@@ -162,6 +162,17 @@ namespace Unity.AppUI.Samples
             root.Query<LocalizedTextElement>("nameIs").ForEach(localizedTextElement =>
             {
                 localizedTextElement.variables = new object[] { localizationVariables };
+            });
+
+            var dynamicTooltipActionButton = root.Q<ActionButton>("dynamic-tooltip-action-button");
+            var tooltipTemplate = new Text();
+            dynamicTooltipActionButton.SetTooltipTemplate(tooltipTemplate);
+            dynamicTooltipActionButton.RegisterCallback<PointerMoveEvent>(evt =>
+            {
+                dynamicTooltipActionButton.SetTooltipContent((template) =>
+                {
+                    ((Text)template).text = evt.localPosition.ToString();
+                });
             });
 
             root.Q<Button>("default-slide-short-toast-button")
@@ -280,6 +291,20 @@ namespace Unity.AppUI.Samples
             gridViewDefault.selectionChanged += selection => Debug.Log($"Selection changed: {string.Join(", ", selection)}");
             gridViewDefault.itemsChosen += selection => Debug.Log($"Items chosen: {string.Join(", ", selection)}");
             gridViewDefault.doubleClicked += indexUnderMouse => Debug.Log($"Double clicked: {indexUnderMouse}");
+            
+            var masonryGridViewDefault = root.Q<MasonryGridView>("masonry-grid-view-default");
+            masonryGridViewDefault.columnCount = 3;
+
+            const string loremIpsum =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+            
+            masonryGridViewDefault.bindItem = (item, i) => ((Text)item).text = $"{i} - {loremIpsum.Substring(0, UnityEngine.Random.Range(20, 60))}";
+            masonryGridViewDefault.makeItem = () => new Text();
+            masonryGridViewDefault.itemsSource = Enumerable.Range(0, 100).ToList();
+            masonryGridViewDefault.selectionType = SelectionType.Multiple;
+            masonryGridViewDefault.selectionChanged += selection => Debug.Log($"Selection changed: {string.Join(", ", selection)}");
+            masonryGridViewDefault.itemsChosen += selection => Debug.Log($"Items chosen: {string.Join(", ", selection)}");
+            masonryGridViewDefault.doubleClicked += indexUnderMouse => Debug.Log($"Double clicked: {indexUnderMouse}");
 
             root.Q<Button>("haptics-light-btn").clicked += () => Platform.RunHapticFeedback(HapticFeedbackType.LIGHT);
             root.Q<Button>("haptics-medium-btn").clicked += () => Platform.RunHapticFeedback(HapticFeedbackType.MEDIUM);

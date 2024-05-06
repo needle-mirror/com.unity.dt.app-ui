@@ -20,12 +20,14 @@ namespace Unity.AppUI.UI
             /// Horizontal drag.
             /// </summary>
             Horizontal = 1 << 0,
+            
             /// <summary>
             /// Vertical drag.
             /// </summary>
             Vertical = 1 << 1,
+            
             /// <summary>
-            /// Free drag.
+            /// Free drag (both horizontal and vertical).
             /// </summary>
             Free = Horizontal | Vertical,
         }

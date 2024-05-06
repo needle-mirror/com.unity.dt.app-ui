@@ -475,7 +475,7 @@ namespace Unity.AppUI.UI
                 if (m_TooltipManipulator != null)
                     this.RemoveManipulator(m_TooltipManipulator);
                 UnregisterLocalizationCallback();
-                Core.AppUI.UnregisterPanel(this);
+                global::Unity.AppUI.Core.AppUI.UnregisterPanel(this);
             }
         }
 
@@ -490,7 +490,7 @@ namespace Unity.AppUI.UI
                 }
                 m_TooltipManipulator.force = forceUseTooltipSystem;
 
-                Core.AppUI.RegisterPanel(this);
+                global::Unity.AppUI.Core.AppUI.RegisterPanel(this);
                 lang = GetLang();
             }
         }

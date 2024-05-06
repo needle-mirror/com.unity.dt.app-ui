@@ -20,12 +20,19 @@ namespace Unity.AppUI.Core
                 AppUI.Update();
             }
         }
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-        void OnAndroidNativeMessageReceived(string message)
+        
+        void OnNativeMessageReceived(string message)
         {
-            Platform.HandleAndroidMessage(message);
+            Platform.HandleNativeMessage(message);
         }
-#endif
+
+        void OnApplicationFocus(bool hasFocus)
+        {
+            if (!Application.isEditor)
+            {
+                AppUI.EnsureInitialized();
+                AppUI.OnApplicationFocus(hasFocus);
+            }
+        }
     }
 }

@@ -13,14 +13,43 @@ namespace Unity.AppUI.Tests.UI
     [TestOf(typeof(GridView))]
     class GridViewTests : VisualElementTests<GridView>
     {
-        protected override string mainUssClassName => GridView.ussClassName;
+        protected override string mainUssClassName => BaseGridView.ussClassName;
 
         protected override bool uxmlConstructable => true;
+        
+        protected override IEnumerable<Story> stories
+        {
+            get
+            {
+                yield return new Story("Default", _ => new GridView
+                {
+                    style =
+                    {
+                        height = 400,
+                    },
+                    makeItem = () => new Text(),
+                    bindItem = (e, i) => ((Text)e).text = $"Item {i}",
+                    itemsSource = Enumerable.Range(0, 50).ToList(),
+                });
+                
+                yield return new Story("ThreeColumns", _ => new GridView
+                {
+                    style =
+                    {
+                        height = 400,
+                    },
+                    columnCount = 3,
+                    makeItem = () => new Text(),
+                    bindItem = (e, i) => ((Text)e).text = $"Item {i}",
+                    itemsSource = Enumerable.Range(0, 50).ToList(),
+                });
+            }
+        }
 
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:GridView />",
-            @"<appui:GridView item-height=""100"" show-border=""false"" selection-type=""Multiple"" allow-no-selection=""true"" prevent-scroll-with-modifiers=""true""  />",
+            @"<appui:GridView item-height=""100"" selection-type=""Multiple"" allow-no-selection=""true"" prevent-scroll-with-modifiers=""true""  />",
         };
         
         [UnityTest, Order(10)]
@@ -49,12 +78,11 @@ namespace Unity.AppUI.Tests.UI
                     bindItem = (e, i) => ((Text)e).text = i.ToString(),
                     itemHeight = 100,
                     columnCount = 5,
-                    showBorder = false,
                     selectionType = SelectionType.Multiple,
                     allowNoSelection = true,
                     preventScrollWithModifiers = true
                 };
-                gridView.selectionChanged += (s) => { };
+                gridView.selectionChanged += _ => { };
                 gridView.itemsSource = Enumerable.Range(1,1000).ToList();
 
             });

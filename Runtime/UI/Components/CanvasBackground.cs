@@ -482,7 +482,6 @@ namespace Unity.AppUI.UI
 	        GL.Clear(true, true, Color.clear);
 
 	        const float minSpacing = 2f;
-	        var dpiScaleFactor = Mathf.Clamp(Platform.mainScreenScale, 1f, 2f);
 	        var maxSpacing = m_Spacing;
 	        var newSpacing = m_Spacing;
 	        var targetSpacing = newSpacing * nextGridScaleFactor;

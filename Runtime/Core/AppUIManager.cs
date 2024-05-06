@@ -92,9 +92,10 @@ namespace Unity.AppUI.Core
             m_Settings = newSettings;
             m_MainLooper = new Looper();
             m_NotificationManager = new NotificationManager(this);
+            AppUIInput.Initialize();
 
             m_MainLooper.Loop();
-
+            
             ApplySettings();
             
 #if UNITY_INPUTSYSTEM_PRESENT && ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
@@ -138,7 +139,9 @@ namespace Unity.AppUI.Core
         /// </summary>
         internal void ApplySettings()
         {
-            //Empty for now because there is no settings to apply.
+            Platform.scaleFactorChanged -= OnScaleFactorChanged;
+            if (AppUI.settings.autoCorrectUiScale)
+                Platform.scaleFactorChanged += OnScaleFactorChanged;
         }
 
         /// <summary>
@@ -150,15 +153,56 @@ namespace Unity.AppUI.Core
             UnregisterAllPanels();
         }
 
+        void OnScaleFactorChanged(float _)
+        {
+            if (!m_Settings.autoCorrectUiScale)
+                return;
+            
+            var dpi = Platform.referenceDpi;
+            foreach (var panelSettings in m_PanelSettings.Keys)
+            {
+                if (panelSettings is null)
+                    continue;
+            
+                var previousDpi = panelSettings.referenceDpi;
+                var dpiChanged = !Mathf.Approximately(panelSettings.referenceDpi, dpi);
+                
+                if (dpiChanged)
+                    panelSettings.referenceDpi = dpi;
+            
+                foreach (var panel in m_PanelSettings[panelSettings])
+                {
+                    if (panel is not {panel: not null})
+                        continue;
+                        
+                    if (dpiChanged)
+                    {
+                        using var evt = DpiChangedEvent.GetPooled();
+                        evt.previousValue = previousDpi;
+                        evt.newValue = dpi;
+                        evt.target = panel;
+                        panel.SendEvent(evt);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called when the application focus changes.
+        /// </summary>
+        /// <param name="hasFocus"> Whether the application has focus or not. </param>
+        internal void OnApplicationFocus(bool hasFocus)
+        {
+            AppUIInput.Reset();
+        }
+
         /// <summary>
         /// Update method that should be called every frame.
         /// </summary>
         internal void Update()
         {
-            Platform.PollSystemTheme();
-            Platform.PollGestures();
-
-            var dpi = m_Settings.autoCorrectUiScale ? Platform.referenceDpi : Platform.baseDpi;
+            Platform.Update();
+            AppUIInput.PollEvents();
             
 #if ENABLE_LEGACY_INPUT_MANAGER
             var mousePosition = Input.mousePosition;
@@ -168,45 +212,20 @@ namespace Unity.AppUI.Core
             var mouseLeftButtonDown = m_PointerDown;
             m_PointerDown = false;
 #endif
-            mousePosition = new Vector2(mousePosition.x, Screen.height - mousePosition.y);
+            var height = Application.isPlaying ? Camera.main?.pixelHeight ?? 
+                UnityEngine.Device.Screen.height : UnityEngine.Device.Screen.height;
 
+            mousePosition = new Vector2(mousePosition.x, height - mousePosition.y);
+            
             if (m_Panels is {Count: > 0})
             {
-                foreach (var panelSettings in m_PanelSettings.Keys)
-                {
-                    if (panelSettings is null)
-                        continue;
-
-                    var previousDpi = panelSettings.referenceDpi;
-                    var dpiChanged = m_Settings.autoCorrectUiScale && !Mathf.Approximately(panelSettings.referenceDpi, dpi);
-                    
-                    if (dpiChanged)
-                        panelSettings.referenceDpi = dpi;
-
-                    foreach (var panel in m_PanelSettings[panelSettings])
-                    {
-                        if (panel is not {panel: not null})
-                            continue;
-                            
-                        if (dpiChanged)
-                        {
-                            using var evt = DpiChangedEvent.GetPooled();
-                            evt.previousValue = previousDpi;
-                            evt.newValue = dpi;
-                            evt.target = panel;
-                            panel.SendEvent(evt);
-                        }
-                    }
-                }
-
                 foreach (var panel in m_Panels)
                 {
                     if (panel is not {panel: { } iPanel})
                         continue;
                     
                     VisualElement pickedElement = null;
-                    var needToFindPickedElement = mouseLeftButtonDown || Platform.magnificationGestureChangedThisFrame ||
-                                                  Platform.panGestureChangedThisFrame;
+                    var needToFindPickedElement = mouseLeftButtonDown || AppUIInput.pinchGestureChangedThisFrame;
                     if (needToFindPickedElement && iPanel.contextType == ContextType.Player)
                     {
                         var coord = RuntimePanelUtils.ScreenToPanel(iPanel, mousePosition);
@@ -222,24 +241,13 @@ namespace Unity.AppUI.Core
                         UnityEditor.EditorWindow.focusedWindow.rootVisualElement?.panel == iPanel)
                         pickedElement ??= iPanel.focusController.focusedElement as VisualElement;
 #endif
-                    
-                    if (Platform.panGestureChangedThisFrame && pickedElement != null)
+                    if (AppUIInput.pinchGestureChangedThisFrame && pickedElement != null)
                     {
-                        using var evt = PanGestureEvent.GetPooled();
-                        evt.gesture = Platform.panGesture;
+                        using var evt = PinchGestureEvent.GetPooled();
+                        evt.gesture = AppUIInput.pinchGesture;
                         evt.target = pickedElement;
                         panel.SendEvent(evt);
                         
-                        // Unity already sends a scroll wheel event when panning, so we don't need to send one.
-                    }
-
-                    if (Platform.magnificationGestureChangedThisFrame && pickedElement != null)
-                    {
-                        using var evt = MagnificationGestureEvent.GetPooled();
-                        evt.gesture = Platform.magnificationGesture;
-                        evt.target = pickedElement;
-                        panel.SendEvent(evt);
-
                         var systemEvent = new Event()
                         {
                             type = EventType.ScrollWheel,
@@ -281,6 +289,8 @@ namespace Unity.AppUI.Core
                 setting.Add(element);
             else
                 m_PanelSettings.Add(panelSettings, new HashSet<Panel> { element });
+            
+            OnScaleFactorChanged(1.0f);
         }
 
         /// <summary>
