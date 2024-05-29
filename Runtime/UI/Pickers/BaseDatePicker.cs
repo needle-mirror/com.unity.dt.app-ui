@@ -90,7 +90,9 @@ namespace Unity.AppUI.UI
         
         internal CultureInfo cultureInfo;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Child elements are added to it, usually this is the same as the element itself.
+        /// </summary>
         public override VisualElement contentContainer => null;
 
         /// <summary>

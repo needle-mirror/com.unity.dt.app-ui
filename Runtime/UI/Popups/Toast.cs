@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.UI
@@ -37,9 +38,50 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
+    /// The definition of a Toast Action.
+    /// </summary>
+    struct ToastActionItem
+    {
+        /// <summary>
+        /// The action ID.
+        /// </summary>
+        public int key { get; }
+
+        /// <summary>
+        /// The display text for this action.
+        /// </summary>
+        public string text { get; }
+
+        /// <summary>
+        /// The callback which will be called when the UI Component bound to this action will be interacted with.
+        /// </summary>
+        public Action<Toast> callback { get; }
+        
+        /// <summary>
+        /// Whether the toast should be dismissed automatically after the action is triggered.
+        /// </summary>
+        public bool autoDismiss { get; }
+        
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="key"> The action ID. </param>
+        /// <param name="text"> The display text for this action. </param>
+        /// <param name="callback"> The callback which will be called when the UI Component bound to this action will be interacted with. </param>
+        /// <param name="autoDismiss"> Whether the toast should be dismissed automatically after the action is triggered. </param>
+        public ToastActionItem(int key, string text, Action<Toast> callback, bool autoDismiss = true)
+        {
+            this.key = key;
+            this.text = text;
+            this.callback = callback;
+            this.autoDismiss = autoDismiss;
+        }
+    }
+
+    /// <summary>
     /// A toast is a view containing a quick little message for the user.
     /// </summary>
-    public sealed class Toast : BottomNotification<Toast>
+    public sealed class Toast : PopupNotification<Toast>
     {
         /// <summary>
         /// Default constructor.
@@ -49,15 +91,15 @@ namespace Unity.AppUI.UI
         Toast(VisualElement parentView, ToastVisualElement contentView)
             : base(parentView, contentView)
         {
-            contentView.actionClicked += OnToastActionClicked;
+            contentView.actionTriggered += OnActionTriggered;
         }
 
-        /// <summary>
-        /// The Action ID of the triggered Action (if any) just before dismissing the element.
-        /// </summary>
-        public int triggeredActionId { get; private set; } = -1;
-
         ToastVisualElement toast => (ToastVisualElement)view;
+        
+        /// <summary>
+        /// The icon used inside the Toast as leading UI element.
+        /// </summary>
+        public string icon => toast.icon;
 
         /// <summary>
         /// Returns the styling used by the bar. See <see cref="NotificationStyle"/> for more information.
@@ -69,25 +111,19 @@ namespace Unity.AppUI.UI
         /// </summary>
         public string text => toast.text;
 
-        void OnToastActionClicked(int actionId)
-        {
-            triggeredActionId = actionId;
-            Dismiss(DismissType.Action);
-        }
-
         /// <summary>
-        /// Set an Action to display in the Toast bar.
+        /// Add an Action to display in the Toast bar.
         /// </summary>
-        /// <param name="actionId">The Action ID</param>
-        /// <param name="msg"> The raw message or Localization dictionary key for the message to be displayed.</param>
-        /// <param name="callback">The Action callback.</param>
-        /// <returns>The current toast.</returns>
-        public Toast SetAction(int actionId, string msg, Action callback)
+        /// <param name="actionId">The Action ID, which is a unique identifier for your action.</param>
+        /// <param name="message"> The raw message or Localization dictionary key for the action to be displayed.</param>
+        /// <param name="callback"> The callback which will be called when the action is triggered.</param>
+        /// <param name="autoDismiss"> Whether the toast should be dismissed automatically after the action is triggered.</param>
+        public Toast AddAction(int actionId, string message, Action<Toast> callback, bool autoDismiss = true)
         {
-            toast.SetAction(actionId, msg, callback);
+            toast.AddAction(actionId, new ToastActionItem(actionId, message, callback, autoDismiss));
             return this;
         }
-
+        
         /// <summary>
         /// Remove an already existing action.
         /// </summary>
@@ -105,7 +141,7 @@ namespace Unity.AppUI.UI
         /// The method will find the best suitable parent view which will contain the Toast element.
         /// </para>
         /// </summary>
-        /// <remarks>The snackbar is not displayed directly, you have to call <see cref="BottomNotification{TValueType}.Show"/>.</remarks>
+        /// <remarks>The snackbar is not displayed directly, you have to call <see cref="PopupNotification{T}.Show"/>.</remarks>
         /// <param name="referenceView">An arbitrary <see cref="VisualElement"/> which is currently present in the UI panel.</param>
         /// <param name="text">The raw message or Localization dictionary key for the message to be displayed inside
         /// the <see cref="Toast"/>.</param>
@@ -123,11 +159,6 @@ namespace Unity.AppUI.UI
             var bar = new Toast(parentView, new ToastVisualElement()).SetText(text).SetDuration(duration);
             return bar;
         }
-
-        /// <summary>
-        /// The icon used inside the Toast as leading UI element.
-        /// </summary>
-        public string icon => toast.icon;
 
         /// <summary>
         /// Set a new value for the <see cref="icon"/> property.
@@ -161,14 +192,25 @@ namespace Unity.AppUI.UI
             toast.text = txt;
             return this;
         }
+        
+        void OnActionTriggered(ToastActionItem actionItem)
+        {
+            actionItem.callback?.Invoke(this);
+            if (actionItem.autoDismiss)
+                Dismiss();
+        }
     }
     
     /// <summary>
     /// The Toast UI Element.
     /// </summary>
-    sealed partial class ToastVisualElement : ExVisualElement
+    sealed partial class ToastVisualElement : VisualElement
     {
+        public event Action<ToastActionItem> actionTriggered;
+        
         public const string ussClassName = "appui-toast";
+        
+        public const string containerUssClassName = ussClassName + "-container";
         
         [EnumName("GetNotificationStyleUssClassName", typeof(NotificationStyle))]
         public const string variantUssClassName = ussClassName + "--";
@@ -183,9 +225,13 @@ namespace Unity.AppUI.UI
 
         public const string actionUssClassName = ussClassName + "__action";
 
+        readonly ExVisualElement m_ToastElement;
+
         readonly VisualElement m_ActionContainer;
 
-        readonly Dictionary<int, ActionItem> m_Actions = new Dictionary<int, ActionItem>();
+        readonly Dictionary<int, ToastActionItem> m_Actions = new Dictionary<int, ToastActionItem>();
+        
+        readonly Dictionary<int, Pressable> m_ActionPressableManipulators = new Dictionary<int, Pressable>();
 
         readonly Divider m_Divider;
 
@@ -197,20 +243,26 @@ namespace Unity.AppUI.UI
 
         public ToastVisualElement()
         {
-            AddToClassList(ussClassName);
-
-            passMask = Passes.Clear | Passes.OutsetShadows;
-
-            style.position = Position.Absolute;
-            style.bottom = 0;
+            pickingMode = PickingMode.Ignore;
+            usageHints |= UsageHints.DynamicTransform;
+            AddToClassList(containerUssClassName);
+            
+            m_ToastElement = new ExVisualElement
+            {
+                name = ussClassName,
+                pickingMode = PickingMode.Position,
+                passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.OutsetShadows
+            };
+            m_ToastElement.AddToClassList(ussClassName);
+            hierarchy.Add(m_ToastElement);
 
             m_Icon = new Icon { name = iconUssClassName };
             m_Icon.AddToClassList(iconUssClassName);
-            hierarchy.Add(m_Icon);
+            m_ToastElement.hierarchy.Add(m_Icon);
 
             m_TextElement = new LocalizedTextElement { name = messageUssClassName };
             m_TextElement.AddToClassList(messageUssClassName);
-            hierarchy.Add(m_TextElement);
+            m_ToastElement.hierarchy.Add(m_TextElement);
 
             m_Divider = new Divider
             {
@@ -219,11 +271,11 @@ namespace Unity.AppUI.UI
                 direction = Direction.Vertical
             };
             m_Divider.AddToClassList(dividerUssClassName);
-            hierarchy.Add(m_Divider);
+            m_ToastElement.hierarchy.Add(m_Divider);
 
             m_ActionContainer = new VisualElement { name = actionContainerUssClassName };
             m_ActionContainer.AddToClassList(actionContainerUssClassName);
-            hierarchy.Add(m_ActionContainer);
+            m_ToastElement.hierarchy.Add(m_ActionContainer);
 
             notificationStyle = NotificationStyle.Default;
             text = "";
@@ -255,51 +307,55 @@ namespace Unity.AppUI.UI
 
             set
             {
-                RemoveFromClassList(GetNotificationStyleUssClassName(m_Style));
+                m_ToastElement.RemoveFromClassList(GetNotificationStyleUssClassName(m_Style));
                 m_Style = value;
-                AddToClassList(GetNotificationStyleUssClassName(m_Style));
+                m_ToastElement.AddToClassList(GetNotificationStyleUssClassName(m_Style));
             }
         }
 
-        public event Action<int> actionClicked;
+        void OnActionTriggered(EventBase evt)
+        {
+            if (evt.target is VisualElement {userData: ToastActionItem actionItem})
+                actionTriggered?.Invoke(actionItem);
+        }
 
         void RefreshActionContainer()
         {
             var noActions = m_Actions.Count == 0;
-            foreach (var child in m_ActionContainer.Children())
-            {
-                child.UnregisterCallback<ClickEvent>(ActionClicked);
-                child.userData = null;
-            }
 
+            foreach (var pressable in m_ActionPressableManipulators.Values)
+            {
+                pressable.clickedWithEventInfo -= OnActionTriggered;
+            }
+            
+            m_ActionPressableManipulators.Clear();
             m_ActionContainer.Clear();
-            foreach (var actionKvp in m_Actions) CreateActionItem(actionKvp.Value);
+
+            foreach (var actionItem in m_Actions.Values)
+            {
+                var actionButton = new LocalizedTextElement
+                {
+                    name = actionUssClassName,
+                    pickingMode = PickingMode.Position,
+                    focusable = true,
+                    userData = actionItem,
+                    text = actionItem.text
+                };
+                actionButton.AddToClassList(actionUssClassName);
+                var pressable = new Pressable();
+                pressable.clickedWithEventInfo += OnActionTriggered;
+                actionButton.AddManipulator(pressable);
+                m_ActionPressableManipulators[actionItem.key] = pressable;
+                m_ActionContainer.Add(actionButton);
+            }
+            
             m_Divider.EnableInClassList(Styles.hiddenUssClassName, noActions);
             m_ActionContainer.EnableInClassList(Styles.hiddenUssClassName, noActions);
         }
 
-        void CreateActionItem(ActionItem item)
+        public void AddAction(int key, ToastActionItem actionItem)
         {
-            //todo use ActionButton in order to use Clickable for events
-            var actionButton = new LocalizedTextElement { focusable = true, text = item.text };
-            actionButton.AddToClassList(actionUssClassName);
-            m_ActionContainer.Add(actionButton);
-            actionButton.userData = item;
-            actionButton.RegisterCallback<ClickEvent>(ActionClicked);
-        }
-
-        void ActionClicked(ClickEvent evt)
-        {
-            if (evt.target is VisualElement ve && ve.userData is ActionItem actionItem)
-            {
-                actionItem.callback?.Invoke();
-                actionClicked?.Invoke(actionItem.key);
-            }
-        }
-
-        public void SetAction(int key, string displayText, Action callback)
-        {
-            m_Actions[key] = new ActionItem { callback = callback, key = key, text = displayText };
+            m_Actions[key] = actionItem;
             RefreshActionContainer();
         }
 

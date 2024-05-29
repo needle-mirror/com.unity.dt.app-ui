@@ -288,9 +288,9 @@ namespace Unity.AppUI.Samples.Navigation
         public ThemeSettingScreen()
         {
             m_RadioGroup = new RadioGroup();
-            var darkThemeButton = new Radio {label = "dark"};
+            var darkThemeButton = new Radio {label = "Dark", key = "dark"};
             darkThemeButton.AddToClassList("dark-theme-button");
-            var lightThemeButton = new Radio {label = "light"};
+            var lightThemeButton = new Radio {label = "Light", key = "light"};
             lightThemeButton.AddToClassList("light-theme-button");
             m_RadioGroup.Add(darkThemeButton);
             m_RadioGroup.Add(lightThemeButton);
@@ -298,9 +298,9 @@ namespace Unity.AppUI.Samples.Navigation
             m_RadioGroup.RegisterValueChangedCallback(OnValueChanged);
         }
 
-        void OnValueChanged(ChangeEvent<int> evt)
+        void OnValueChanged(ChangeEvent<string> evt)
         {
-            var theme = evt.newValue == 0 ? "dark" : "light";
+            var theme = evt.newValue;
             var closestProvider = this.GetContextProvider<ThemeContext>();
             closestProvider.ProvideContext(new ThemeContext(theme));
         }
@@ -310,7 +310,7 @@ namespace Unity.AppUI.Samples.Navigation
             if (args is {Length: > 0})
             {
                 var currentTheme = args[0].value;
-                m_RadioGroup.SetValueWithoutNotify(currentTheme == "dark" ? 0 : 1);
+                m_RadioGroup.SetValueWithoutNotify(currentTheme);
             }
         }
     }

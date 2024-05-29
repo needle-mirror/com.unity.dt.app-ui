@@ -59,6 +59,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A vertical anchor.
     /// </summary>
+    [GenerateLowerCaseStrings]
     public enum VerticalAnchor
     {
         /// <summary>

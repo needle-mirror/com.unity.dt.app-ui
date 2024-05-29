@@ -56,7 +56,13 @@ namespace Unity.AppUI.Editor
         /// </summary>
         protected TU m_ValueField;
 
-        /// <inheritdoc cref="PropertyDrawer.CreatePropertyGUI" />
+        /// <summary>
+        ///   <para>Creates custom GUI with UI Toolkit for the property.</para>
+        /// </summary>
+        /// <param name="property">The SerializedProperty to make the custom GUI for.</param>
+        /// <returns>
+        ///   <para>The element containing the custom GUI.</para>
+        /// </returns>
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             m_HasValue = property.FindPropertyRelative("isSet");
@@ -160,7 +166,13 @@ namespace Unity.AppUI.Editor
         
         EnumField m_ValueField;
 
-        /// <inheritdoc cref="PropertyDrawer.CreatePropertyGUI" />
+        /// <summary>
+        ///   <para>Creates custom GUI with UI Toolkit for the property.</para>
+        /// </summary>
+        /// <param name="property">The SerializedProperty to make the custom GUI for.</param>
+        /// <returns>
+        ///   <para>The element containing the custom GUI.</para>
+        /// </returns>
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             m_HasValue = property.FindPropertyRelative("isSet");
@@ -360,7 +372,13 @@ namespace Unity.AppUI.Editor
     [CustomPropertyDrawer(typeof(ScaleDrawerAttribute))]
     public class ScaleDrawer : PropertyDrawer
     {
-        /// <inheritdoc cref="PropertyDrawer.CreatePropertyGUI" />
+        /// <summary>
+        ///   <para>Creates custom GUI with UI Toolkit for the property.</para>
+        /// </summary>
+        /// <param name="property">The SerializedProperty to make the custom GUI for.</param>
+        /// <returns>
+        ///   <para>The element containing the custom GUI.</para>
+        /// </returns>
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             var field = new ScaleField(property.displayName)
@@ -388,7 +406,13 @@ namespace Unity.AppUI.Editor
     [CustomPropertyDrawer(typeof(ThemeDrawerAttribute))]
     public class ThemeDrawer : PropertyDrawer
     {
-        /// <inheritdoc cref="PropertyDrawer.CreatePropertyGUI" />
+        /// <summary>
+        ///   <para>Creates custom GUI with UI Toolkit for the property.</para>
+        /// </summary>
+        /// <param name="property">The SerializedProperty to make the custom GUI for.</param>
+        /// <returns>
+        ///   <para>The element containing the custom GUI.</para>
+        /// </returns>
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             var field = new ThemeField(property.displayName)
@@ -406,7 +430,13 @@ namespace Unity.AppUI.Editor
     [CustomPropertyDrawer(typeof(DefaultPropertyDrawerAttribute))]
     public class DirDrawer : PropertyDrawer
     {
-        /// <inheritdoc cref="PropertyDrawer.CreatePropertyGUI" />
+        /// <summary>
+        ///   <para>Creates custom GUI with UI Toolkit for the property.</para>
+        /// </summary>
+        /// <param name="property">The SerializedProperty to make the custom GUI for.</param>
+        /// <returns>
+        ///   <para>The element containing the custom GUI.</para>
+        /// </returns>
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             var field = new PropertyField(property);

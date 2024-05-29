@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -14,13 +16,9 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public partial class RadioGroup : BaseVisualElement, IInputElement<int>
+    public partial class RadioGroup : BaseVisualElement, IInputElement<string>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
-        internal static readonly BindingId bindItemProperty = nameof(bindItem);
-        
-        internal static readonly BindingId sourceItemsProperty = nameof(sourceItems);
         
         internal static readonly BindingId valueProperty = nameof(value);
         
@@ -34,14 +32,12 @@ namespace Unity.AppUI.UI
         /// The RadioGroup main styling class.
         /// </summary>
         public const string ussClassName = "appui-radiogroup";
-
-        Action<Radio, int> m_BindItem;
-
-        IList m_Items;
-
-        int m_Value = -1;
         
-        Func<int, bool> m_ValidateValue;
+        string m_Value = null;
+        
+        Func<string, bool> m_ValidateValue;
+        
+        readonly Dictionary<string, Radio> m_RadioByKey = new Dictionary<string, Radio>();
 
         /// <summary>
         /// Default constructor.
@@ -53,65 +49,12 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// Construct a RadioGroup UI element using a provided collection of items.
-        /// </summary>
-        /// <param name="items">A collection of items that will be displayed as Radio component.</param>
-        /// <param name="bindItem">A function invoked to bind display data per item.</param>
-        public RadioGroup(IList items, Action<Radio, int> bindItem = null)
-            : this()
-        {
-            sourceItems = items;
-            this.bindItem = bindItem;
-        }
-
-        /// <summary>
-        /// The function invoked to bind display data per item.
-        /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
-        [CreateProperty]
-#endif
-        public Action<Radio, int> bindItem
-        {
-            get => m_BindItem;
-            set
-            {
-                m_BindItem = value;
-                if (sourceItems != null)
-                    Refresh();
-                
-#if ENABLE_RUNTIME_DATA_BINDINGS
-                NotifyPropertyChanged(in bindItemProperty);
-#endif
-            }
-        }
-
-        /// <summary>
         /// The RadioGroup content container.
         /// </summary>
         public override VisualElement contentContainer => this;
 
         /// <summary>
-        /// The collection of items that will be displayed as Radio component.
-        /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
-        [CreateProperty]
-#endif
-        public IList sourceItems
-        {
-            get => m_Items;
-            set
-            {
-                m_Items = value;
-                Refresh();
-                
-#if ENABLE_RUNTIME_DATA_BINDINGS
-                NotifyPropertyChanged(in sourceItemsProperty);
-#endif
-            }
-        }
-
-        /// <summary>
-        /// The selected item index.
+        /// The selected item key.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"> if the value is out of range.</exception>
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -120,16 +63,14 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
 #endif
-        public int value
+        public string value
         {
             get => m_Value;
             set
             {
                 if (value == m_Value)
                     return;
-                if (value < -1 || value >= childCount)
-                    throw new ArgumentOutOfRangeException(nameof(value));
-                using var evt = ChangeEvent<int>.GetPooled(m_Value, value);
+                using var evt = ChangeEvent<string>.GetPooled(m_Value, value);
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
@@ -170,7 +111,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
-        public Func<int, bool> validateValue
+        public Func<string, bool> validateValue
         {
             get => m_ValidateValue;
             set
@@ -189,12 +130,11 @@ namespace Unity.AppUI.UI
         /// Set the value without notifying the listeners.
         /// </summary>
         /// <param name="newValue"> The new value.</param>
-        public void SetValueWithoutNotify(int newValue)
+        public void SetValueWithoutNotify(string newValue)
         {
-            for (var i = 0; i < childCount; i++)
+            foreach (var radioByKey in m_RadioByKey)
             {
-                if (ElementAt(i) is Radio r)
-                    r.SetValueWithoutNotify(i == newValue);
+                radioByKey.Value.SetValueWithoutNotify(radioByKey.Key == newValue);
             }
 
             m_Value = newValue;
@@ -203,37 +143,34 @@ namespace Unity.AppUI.UI
                 invalid = !validateValue.Invoke(newValue);
         }
 
-        void Refresh()
-        {
-            Clear();
-            var newValue = -1;
-            if (m_Items is { Count: > 0 })
-            {
-                for (var i = 0; i < m_Items.Count; i++)
-                {
-                    var item = new Radio();
-                    if (bindItem != null)
-                        bindItem.Invoke(item, i);
-                    else
-                        item.label = m_Items[i].ToString();
-                    Add(item);
-                }
-
-                newValue = 0;
-            }
-
-            value = newValue;
-            // if the value is the same as before, there won't be any refresh so we call SetValueWithoutNotify explicitly
-            SetValueWithoutNotify(newValue);
-        }
-
         void OnItemChosen(ChangeEvent<bool> evt)
         {
-            if (evt.target is Radio radio && radio.parent == this && evt.newValue)
+            if (evt.target is Radio radio && m_RadioByKey.ContainsKey(radio.key))
             {
-                var newIndex = IndexOf(radio);
-                value = newIndex;
+                evt.StopPropagation();
+
+                if (evt.newValue)
+                    value = radio.key;
             }
+        }
+        
+        internal void AddRadio(Radio radio)
+        {
+            if (string.IsNullOrEmpty(radio.key))
+                return;
+            
+            m_RadioByKey[radio.key] = radio;
+            
+            value ??= radio.key;
+            
+            radio.SetValueWithoutNotify(radio.key == value);
+        }
+
+        internal void RemoveRadio(Radio radio)
+        {
+            m_RadioByKey.Remove(radio.key);
+            if (value == radio.key)
+                value = m_RadioByKey.Keys.FirstOrDefault();
         }
 
 #if ENABLE_UXML_TRAITS

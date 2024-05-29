@@ -6,7 +6,7 @@ namespace Unity.AppUI.Tests.UI
 {
     [TestFixture]
     [TestOf(typeof(Toast))]
-    class ToastTests : BottomNotificationTests<Toast>
+    class ToastTests : PopupNotificationTests<Toast>
     {
         protected override Toast CreatePopup()
         {

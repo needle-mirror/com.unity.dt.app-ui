@@ -51,4 +51,7 @@ By using the validation delegate method, you can ensure that your input-related 
 ## Formatting
 
 The formatting of value occurs when the value is being displayed in the UI component. 
-Like the validation delegate method, formatting can be set via the `formatString` property in the input-related UI components. Note that only certain UI components support formatting, such as [numeric fields](xref:Unity.AppUI.UI.NumericalField`1.formatString) and [sliders](xref:Unity.AppUI.UI.BaseSlider`1.formatString).
+Like the validation delegate method, formatting can be set via the `formatString` property in the input-related UI components. 
+Note that only certain UI components support formatting, such as 
+[numeric fields](xref:Unity.AppUI.UI.NumericalField`1.formatString) and 
+[sliders](xref:Unity.AppUI.UI.BaseSlider`2.formatString).

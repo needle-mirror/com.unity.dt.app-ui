@@ -76,77 +76,49 @@ namespace Unity.AppUI.Samples
             void SetTheme()
             {
                 Platform.darkModeChanged -= OnSystemThemeChanged;
-                switch (themeSwitcher.value)
+                if (themeSwitcher.value == "system")
                 {
-                    case 0:
-                        panel.theme = Platform.darkMode ? "dark" : "light";
-                        Platform.darkModeChanged += OnSystemThemeChanged;
-                        break;
-                    case 1:
-                        panel.theme = "dark";
-                        break;
-                    case 2:
-                        panel.theme = "light";
-                        break;
-                    case 3:
-                        panel.theme = "editor-dark";
-                        break;
-                    case 4:
-                        panel.theme = "editor-light";
-                        break;
+                    Platform.darkModeChanged += OnSystemThemeChanged;
+                    panel.theme = Platform.darkMode ? "dark" : "light";
                 }
-                PlayerPrefs.SetInt("theme", themeSwitcher.value);
+                else
+                {
+                    panel.theme = themeSwitcher.value;
+                }
+                PlayerPrefs.SetString("theme", themeSwitcher.value);
             }
 
             void SetScale()
             {
-                switch (scaleSwitcher.value)
-                {
-                    case 0:
-                        panel.scale = "small";
-                        break;
-                    case 1:
-                        panel.scale = "medium";
-                        break;
-                    case 2:
-                        panel.scale = "large";
-                        break;
-                }
-                PlayerPrefs.SetInt("scale", scaleSwitcher.value);
+                panel.scale = scaleSwitcher.value;
+                PlayerPrefs.SetString("scale", scaleSwitcher.value);
             }
             
             void SetDir()
             {
-                switch (dirSwitcher.value)
-                {
-                    case 0:
-                        panel.layoutDirection = Dir.Ltr;
-                        break;
-                    case 1:
-                        panel.layoutDirection = Dir.Rtl;
-                        break;
-                }
-                PlayerPrefs.SetInt("dir", dirSwitcher.value);
+                Enum.TryParse<Dir>(dirSwitcher.value, out var dir);
+                panel.layoutDirection = dir;
+                PlayerPrefs.SetString("dir", dirSwitcher.value);
             }
 
             if (themeSwitcher != null)
             {
                 themeSwitcher.RegisterValueChangedCallback(_ => SetTheme());
-                themeSwitcher.SetValueWithoutNotify(PlayerPrefs.GetInt("theme", 1));
+                themeSwitcher.SetValueWithoutNotify(PlayerPrefs.GetString("theme", "dark"));
                 SetTheme();
             }
 
             if (scaleSwitcher != null)
             {
                 scaleSwitcher.RegisterValueChangedCallback(_ => SetScale());
-                scaleSwitcher.SetValueWithoutNotify(PlayerPrefs.GetInt("scale", 1));
+                scaleSwitcher.SetValueWithoutNotify(PlayerPrefs.GetString("scale", "medium"));
                 SetScale();
             }
             
             if (dirSwitcher != null)
             {
                 dirSwitcher.RegisterValueChangedCallback(_ => SetDir());
-                dirSwitcher.SetValueWithoutNotify(PlayerPrefs.GetInt("dir", 0));
+                dirSwitcher.SetValueWithoutNotify(PlayerPrefs.GetString("dir", "Ltr"));
                 SetDir();
             }
 
@@ -175,54 +147,57 @@ namespace Unity.AppUI.Samples
                 });
             });
 
+            // slide-short
             root.Q<Button>("default-slide-short-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Default, NotificationDuration.Short, AnimationMode.Slide, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Default, NotificationDuration.Short, AnimationMode.Slide, PopupNotificationPlacement.Top, evt.target as VisualElement));
 
             root.Q<Button>("informative-slide-short-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Informative, NotificationDuration.Short, AnimationMode.Slide, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Informative, NotificationDuration.Short, AnimationMode.Slide, PopupNotificationPlacement.Bottom, evt.target as VisualElement));
 
             root.Q<Button>("positive-slide-short-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Positive, NotificationDuration.Short, AnimationMode.Slide, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Positive, NotificationDuration.Short, AnimationMode.Slide, PopupNotificationPlacement.TopLeft, evt.target as VisualElement));
 
             root.Q<Button>("warning-slide-short-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Warning, NotificationDuration.Short, AnimationMode.Slide, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Warning, NotificationDuration.Short, AnimationMode.Slide, PopupNotificationPlacement.TopRight, evt.target as VisualElement));
 
             root.Q<Button>("negative-slide-short-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Negative, NotificationDuration.Short, AnimationMode.Slide, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Negative, NotificationDuration.Short, AnimationMode.Slide, PopupNotificationPlacement.BottomRight, evt.target as VisualElement));
 
-
+            // fade-short
             root.Q<Button>("default-fade-short-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Default, NotificationDuration.Short, AnimationMode.Fade, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Default, NotificationDuration.Short, AnimationMode.Fade, PopupNotificationPlacement.Top, evt.target as VisualElement));
 
             root.Q<Button>("informative-fade-short-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Informative, NotificationDuration.Short, AnimationMode.Fade, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Informative, NotificationDuration.Short, AnimationMode.Fade, PopupNotificationPlacement.Bottom, evt.target as VisualElement));
 
             root.Q<Button>("positive-fade-short-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Positive, NotificationDuration.Short, AnimationMode.Fade, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Positive, NotificationDuration.Short, AnimationMode.Fade, PopupNotificationPlacement.TopLeft, evt.target as VisualElement));
 
             root.Q<Button>("warning-fade-short-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Warning, NotificationDuration.Short, AnimationMode.Fade, evt.target as VisualElement));
-
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Warning, NotificationDuration.Short, AnimationMode.Fade, PopupNotificationPlacement.TopRight, evt.target as VisualElement));
+            
             root.Q<Button>("negative-fade-short-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Negative, NotificationDuration.Short, AnimationMode.Fade, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Negative, NotificationDuration.Short, AnimationMode.Fade, PopupNotificationPlacement.BottomRight, evt.target as VisualElement));
 
+            // fade-long
             root.Q<Button>("default-fade-long-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Default, NotificationDuration.Long, AnimationMode.Fade, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Default, NotificationDuration.Long, AnimationMode.Fade, PopupNotificationPlacement.Bottom, evt.target as VisualElement));
 
+            // slide-indef
             root.Q<Button>("default-slide-indef-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Default, NotificationDuration.Indefinite, AnimationMode.Slide, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Default, NotificationDuration.Indefinite, AnimationMode.Slide, PopupNotificationPlacement.Top, evt.target as VisualElement));
 
             root.Q<Button>("informative-slide-indef-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Informative, NotificationDuration.Indefinite, AnimationMode.Slide, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Informative, NotificationDuration.Indefinite, AnimationMode.Slide, PopupNotificationPlacement.Bottom, evt.target as VisualElement));
 
             root.Q<Button>("positive-slide-indef-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Positive, NotificationDuration.Indefinite, AnimationMode.Slide, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Positive, NotificationDuration.Indefinite, AnimationMode.Slide, PopupNotificationPlacement.TopLeft, evt.target as VisualElement));
 
             root.Q<Button>("warning-slide-indef-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Warning, NotificationDuration.Indefinite, AnimationMode.Slide, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Warning, NotificationDuration.Indefinite, AnimationMode.Slide, PopupNotificationPlacement.TopRight, evt.target as VisualElement));
 
             root.Q<Button>("negative-slide-indef-toast-button")
-                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Negative, NotificationDuration.Indefinite, AnimationMode.Slide, evt.target as VisualElement));
+                .clickable.clickedWithEventInfo += (evt => OpenToast(NotificationStyle.Negative, NotificationDuration.Indefinite, AnimationMode.Slide, PopupNotificationPlacement.BottomRight, evt.target as VisualElement));
 
             var dropdownSrc = new List<string>();
 
@@ -330,19 +305,19 @@ namespace Unity.AppUI.Samples
             openSnapTempDrawerBtn.clicked += () => temporaryDrawer.isOpen = true;
             closeSnapTempDrawerBtn.clicked += () => temporaryDrawer.isOpen = false;
             temporaryDrawer.AddToClassList(Styles.hiddenUssClassName);
-            drawerVariantSwitcher.SetValueWithoutNotify(1);
+            drawerVariantSwitcher.SetValueWithoutNotify("permanent");
             drawerVariantSwitcher.RegisterValueChangedCallback(evt =>
             {
                 switch (evt.newValue)
                 {
-                    case 0:
+                    case "temporary":
                         permanentDrawer.AddToClassList(Styles.hiddenUssClassName);
                         temporaryDrawer.RemoveFromClassList(Styles.hiddenUssClassName);
                         openTempDrawerBtn.SetEnabled(true);
                         openSnapTempDrawerBtn.SetEnabled(true);
                         closeSnapTempDrawerBtn.SetEnabled(true);
                         break;
-                    case 1:
+                    case "permanent":
                         temporaryDrawer.AddToClassList(Styles.hiddenUssClassName);
                         permanentDrawer.RemoveFromClassList(Styles.hiddenUssClassName);
                         openTempDrawerBtn.SetEnabled(false);
@@ -360,21 +335,23 @@ namespace Unity.AppUI.Samples
             var hAnchorBadge = root.Q<RadioGroup>("h-anchor-badge");
             hAnchorBadge.RegisterValueChangedCallback(evt =>
             {
-                badge1.horizontalAnchor = (HorizontalAnchor)evt.newValue;
-                badge2.horizontalAnchor = (HorizontalAnchor)evt.newValue;
-                badge3.horizontalAnchor = (HorizontalAnchor)evt.newValue;
-                badge4.horizontalAnchor = (HorizontalAnchor)evt.newValue;
+                var anchor = Enum.TryParse<HorizontalAnchor>(evt.newValue, out var parsedAnchor) ? parsedAnchor : HorizontalAnchor.Right;
+                badge1.horizontalAnchor = anchor;
+                badge2.horizontalAnchor = anchor;
+                badge3.horizontalAnchor = anchor;
+                badge4.horizontalAnchor = anchor;
             });
-            hAnchorBadge.value = (int)HorizontalAnchor.Right;
+            hAnchorBadge.value = HorizontalAnchor.Right.ToString();
             var vAnchorBadge = root.Q<RadioGroup>("v-anchor-badge");
             vAnchorBadge.RegisterValueChangedCallback(evt =>
             {
-                badge1.verticalAnchor = (VerticalAnchor)evt.newValue;
-                badge2.verticalAnchor = (VerticalAnchor)evt.newValue;
-                badge3.verticalAnchor = (VerticalAnchor)evt.newValue;
-                badge4.verticalAnchor = (VerticalAnchor)evt.newValue;
+                var anchor = Enum.TryParse<VerticalAnchor>(evt.newValue, out var parsedAnchor) ? parsedAnchor : VerticalAnchor.Top;
+                badge1.verticalAnchor = anchor;
+                badge2.verticalAnchor = anchor;
+                badge3.verticalAnchor = anchor;
+                badge4.verticalAnchor = anchor;
             });
-            vAnchorBadge.value = (int)VerticalAnchor.Top;
+            vAnchorBadge.value = VerticalAnchor.Top.ToString();
 
             var swipeViewH = root.Q<SwipeView>("swipeview-horizontal");
             var swipePrevButtonH = root.Q<ActionButton>("swipeview-h-prev");
@@ -551,18 +528,25 @@ namespace Unity.AppUI.Samples
             });
         }
 
-        static void OpenToast(NotificationStyle style, NotificationDuration duration, AnimationMode animationMode, VisualElement ve)
+        static void OpenToast(
+            NotificationStyle style, 
+            NotificationDuration duration, 
+            AnimationMode animationMode, 
+            PopupNotificationPlacement position,
+            VisualElement ve)
         {
             var toast = Toast.Build(ve, "A Toast Message", duration)
                 .SetStyle(style)
+                .SetPosition(position)
                 .SetAnimationMode(animationMode);
 
             if (style == NotificationStyle.Informative)
                 toast.SetIcon("info");
 
             if (duration == NotificationDuration.Indefinite)
-                toast.SetAction(DISMISS_ACTION, "Dismiss", () => Debug.Log("Dismissed"));
+                toast.AddAction(DISMISS_ACTION, "Dismiss", (t) => t.Dismiss(), false);
 
+            toast.dismissed += (t, dismissType) => Debug.Log("Dismissed Toast");
             toast.Show();
         }
 

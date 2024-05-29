@@ -9,6 +9,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// The animation used by Notification to appear and disappear.
     /// </summary>
+    [GenerateLowerCaseStrings]
     public enum AnimationMode
     {
         /// <summary>
@@ -21,38 +22,102 @@ namespace Unity.AppUI.UI
         /// </summary>
         Fade
     }
+    
+    /// <summary>
+    /// The placement where the notification should be displayed.
+    /// </summary>
+    [GenerateLowerCaseStrings]
+    public enum PopupNotificationPlacement
+    {
+        /// <summary>
+        /// The notification is placed at the top of the screen.
+        /// </summary>
+        Top,
+        
+        /// <summary>
+        /// The notification is placed at the bottom of the screen.
+        /// </summary>
+        Bottom,
+        
+        /// <summary>
+        /// The notification is placed at the top left of the screen.
+        /// </summary>
+        TopLeft,
+        
+        /// <summary>
+        /// The notification is placed at the top right of the screen.
+        /// </summary>
+        TopRight,
+        
+        /// <summary>
+        /// The notification is placed at the bottom left of the screen.
+        /// </summary>
+        BottomLeft,
+        
+        /// <summary>
+        /// The notification is placed at the bottom right of the screen.
+        /// </summary>
+        BottomRight,
+        
+        /// <summary>
+        /// The notification is placed at the top start of the screen.
+        /// </summary>
+        TopStart,
+        
+        /// <summary>
+        /// The notification is placed at the top end of the screen.
+        /// </summary>
+        TopEnd,
+        
+        /// <summary>
+        /// The notification is placed at the bottom start of the screen.
+        /// </summary>
+        BottomStart,
+        
+        /// <summary>
+        /// The notification is placed at the bottom end of the screen.
+        /// </summary>
+        BottomEnd
+    }
 
     /// <summary>
-    /// A base class for notification displayed at the bottom of the screen.
+    /// A base class for notification displayed at a specific anchor of the screen.
     /// </summary>
     /// <typeparam name="T">The sealed Notification popup class type.</typeparam>
-    public abstract class BottomNotification<T> : Popup<T> where T : BottomNotification<T>
+    public abstract class PopupNotification<T> : Popup<T> where T : PopupNotification<T>
     {
-        const int k_AnimationDuration = 250;
+        const int k_AnimationDuration = 200;
 
         const int k_AnimationFadeInDuration = 150;
 
         const int k_AnimationFadeOutDuration = 75;
 
-        const float k_AnimationScaleFromValue = 0.8f;
+        const string k_USSClassName = "appui-popup-notification";
+        
+        const string k_VariantClassName = k_USSClassName + "--";
 
         readonly ManagerCallback m_ManagerCallback;
 
         AnimationMode m_AnimationMode = AnimationMode.Fade;
 
         NotificationDuration m_Duration = NotificationDuration.Short;
+        
+        PopupNotificationPlacement m_Placement = PopupNotificationPlacement.Bottom;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="parentView">The popup container.</param>
         /// <param name="view">The popup visual element itself.</param>
-        protected BottomNotification(VisualElement parentView, VisualElement view)
+        protected PopupNotification(VisualElement parentView, VisualElement view)
             : base(parentView, view)
         {
             m_ManagerCallback = new ManagerCallback(this);
             keyboardDismissEnabled = false;
             view.usageHints = UsageHints.DynamicTransform;
+            view.AddToClassList(k_USSClassName);
+            view.AddToClassList(MemoryUtils.Concatenate(k_VariantClassName, m_Placement.ToLowerCase()));
+            view.AddToClassList(MemoryUtils.Concatenate(k_VariantClassName, m_AnimationMode.ToLowerCase()));
         }
 
         /// <summary>
@@ -74,6 +139,11 @@ namespace Unity.AppUI.UI
         /// Returns the specified display duration of the bar.
         /// </summary>
         public NotificationDuration duration => m_Duration;
+        
+        /// <summary>
+        /// Returns the placement of the notification.
+        /// </summary>
+        public PopupNotificationPlacement position => m_Placement;
 
         /// <summary>
         /// Set a new value for the <see cref="animationMode"/> property.
@@ -82,7 +152,9 @@ namespace Unity.AppUI.UI
         /// <returns>The current object instance to continuously build the element.</returns>
         public T SetAnimationMode(AnimationMode animation)
         {
+            view.RemoveFromClassList(MemoryUtils.Concatenate(k_VariantClassName, m_AnimationMode.ToLowerCase()));
             m_AnimationMode = animation;
+            view.AddToClassList(MemoryUtils.Concatenate(k_VariantClassName, m_AnimationMode.ToLowerCase()));
             return (T)this;
         }
 
@@ -97,6 +169,19 @@ namespace Unity.AppUI.UI
                 m_Duration = durationValue;
             else
                 Debug.LogWarning("Unable to set a duration while the Bar is already shown or queued.");
+            return (T)this;
+        }
+        
+        /// <summary>
+        /// Set the position of the notification.
+        /// </summary>
+        /// <param name="positionValue"> The position of the notification.</param>
+        /// <returns> The current object instance to continuously build the element.</returns>
+        public virtual T SetPosition(PopupNotificationPlacement positionValue)
+        {
+            view.RemoveFromClassList(MemoryUtils.Concatenate(k_VariantClassName, m_Placement.ToLowerCase()));
+            m_Placement = positionValue;
+            view.AddToClassList(MemoryUtils.Concatenate(k_VariantClassName, m_Placement.ToLowerCase()));
             return (T)this;
         }
 
@@ -117,7 +202,8 @@ namespace Unity.AppUI.UI
             view.schedule.Execute(() =>
             {
                 if (view.parent != null) view.visible = true;
-
+                view.AddToClassList(Styles.openUssClassName);
+                
                 switch (animationMode)
                 {
                     case AnimationMode.Slide:
@@ -135,6 +221,7 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="Popup.AnimateViewOut"/>
         protected override void AnimateViewOut(DismissType reason)
         {
+            view.RemoveFromClassList(Styles.openUssClassName);
             switch (animationMode)
             {
                 case AnimationMode.Slide:
@@ -151,6 +238,7 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="Popup{T}.InvokeShownEventHandlers"/>
         protected override void InvokeShownEventHandlers()
         {
+            view.AddToClassList(Styles.openUssClassName);
             global::Unity.AppUI.Core.AppUI.notificationManager.OnShown(m_ManagerCallback);
             base.InvokeShownEventHandlers(); // invoke callbacks if any
         }
@@ -158,6 +246,7 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="Popup{T}.InvokeDismissedEventHandlers"/>
         protected override void InvokeDismissedEventHandlers(DismissType reason)
         {
+            view.RemoveFromClassList(Styles.openUssClassName);
             global::Unity.AppUI.Core.AppUI.notificationManager.OnDismissed(m_ManagerCallback);
             base.InvokeDismissedEventHandlers(reason); // invoke callbacks if any
         }
@@ -182,73 +271,43 @@ namespace Unity.AppUI.UI
 
         void StartFadeInAnimation()
         {
-            var opacityAnimation = view.experimental.animation.Start(0, 1, k_AnimationFadeInDuration, (element, f) =>
-            {
-                element.style.opacity = f;
-            }).OnCompleted(InvokeShownEventHandlers);
-
-            var scaleAnimation = view.experimental.animation.Start(k_AnimationScaleFromValue, 1, k_AnimationFadeInDuration, (element, f) =>
-            {
-                element.style.scale = new StyleScale(new Scale(new Vector3(f, f, 1.0f)));
-            });
-
-            opacityAnimation.Start();
-            scaleAnimation.Start();
+            view.schedule.Execute(InvokeShownEventHandlers).ExecuteLater(k_AnimationFadeInDuration);
         }
 
         void StartSlideInAnimation()
         {
-            var translationYBottom = GetTranslationYBottom();
-            var translationAnimation = view.experimental.animation.Start(translationYBottom, 0, k_AnimationDuration, (element, f) =>
-            {
-                element.style.bottom = f;
-            }).Ease(Easing.OutCubic).OnCompleted(InvokeShownEventHandlers);
-
-            translationAnimation.Start();
-        }
-
-        float GetTranslationYBottom()
-        {
-            var result = view.resolvedStyle.height + view.resolvedStyle.marginBottom;
-            return -result;
+            view.schedule.Execute(InvokeShownEventHandlers).ExecuteLater(k_AnimationDuration);
         }
 
         void StartFadeOutAnimation(DismissType reason)
         {
-            view.experimental.animation.Start(1, 0, k_AnimationFadeOutDuration, (element, f) =>
-            {
-                element.style.opacity = f;
-            }).OnCompleted(() => InvokeDismissedEventHandlers(reason)).Start();
+            view.schedule.Execute(() => InvokeDismissedEventHandlers(reason)).ExecuteLater(k_AnimationFadeOutDuration);
         }
 
         void StartSlideOutAnimation(DismissType reason)
         {
-            var translationYBottom = GetTranslationYBottom();
-            view.experimental.animation.Start(0, translationYBottom, k_AnimationDuration, (element, f) =>
-            {
-                element.style.bottom = f;
-            }).OnCompleted(() => InvokeDismissedEventHandlers(reason)).Start();
+            view.schedule.Execute(() => InvokeDismissedEventHandlers(reason)).ExecuteLater(k_AnimationDuration);
         }
 
         /// <summary>
-        /// Implementation of the Notification Manager callback interface for <see cref="BottomNotification{T}"/> objects.
+        /// Implementation of the Notification Manager callback interface for <see cref="PopupNotification{T}"/> objects.
         /// </summary>
         class ManagerCallback : NotificationManager.ICallback
         {
-            public ManagerCallback(BottomNotification<T> element)
+            public ManagerCallback(PopupNotification<T> element)
             {
                 obj = element;
             }
 
             public void Show()
             {
-                var handler = ((BottomNotification<T>)obj).handler;
+                var handler = ((PopupNotification<T>)obj).handler;
                 handler.SendMessage(handler.ObtainMessage(k_PopupShow, obj));
             }
 
             public void Dismiss(DismissType reason)
             {
-                var handler = ((BottomNotification<T>)obj).handler;
+                var handler = ((PopupNotification<T>)obj).handler;
                 handler.SendMessage(handler.ObtainMessage(k_PopupDismiss, (int)reason, obj));
             }
 

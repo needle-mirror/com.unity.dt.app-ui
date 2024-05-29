@@ -475,14 +475,14 @@
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item">
                                 <appui:RadioGroup name="h-anchor-badge">
-                                    <appui:Radio label="Left" emphasized="true" />
-                                    <appui:Radio label="Right" emphasized="true" />
+                                    <appui:Radio label="Left" key="Left" emphasized="true" />
+                                    <appui:Radio label="Right" key="Right" emphasized="true" />
                                 </appui:RadioGroup>
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <appui:RadioGroup name="v-anchor-badge">
-                                    <appui:Radio label="Top" emphasized="true" />
-                                    <appui:Radio label="Bottom" emphasized="true" />
+                                    <appui:Radio label="Top" key="Top" emphasized="true" />
+                                    <appui:Radio label="Bottom" key="Bottom" emphasized="true" />
                                 </appui:RadioGroup>
                             </ui:VisualElement>
                         </ui:VisualElement>
@@ -1082,8 +1082,8 @@
                                 <appui:Button name="open-temp-drawer-btn" title="Open Drawer" enabled="false" />
                                 <appui:Button name="open-snap-temp-drawer-btn" title="Open Snap Drawer" enabled="false" />
                                 <appui:RadioGroup name="drawer-variant-switcher">
-                                    <appui:Radio label="Temporary" emphasized="true" />
-                                    <appui:Radio label="Permanent" emphasized="true" />
+                                    <appui:Radio label="Temporary" key="temporary" emphasized="true" />
+                                    <appui:Radio label="Permanent" key="permanent" emphasized="true" />
                                 </appui:RadioGroup>
                             </ui:VisualElement>
                             <appui:Drawer name="temporary-drawer" anchor="Left" variant="Temporary" swipe-area-width="60" >
@@ -1708,23 +1708,23 @@
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item">
                                 <appui:RadioGroup>
-                                    <appui:Radio size="S" label="Choice 1" />
-                                    <appui:Radio size="S" label="Choice 2" value="true" />
-                                    <appui:Radio size="S" label="Choice 3" enabled="false" />
+                                    <appui:Radio size="S" label="Choice 1" key="0" />
+                                    <appui:Radio size="S" label="Choice 2" key="1" value="true" />
+                                    <appui:Radio size="S" label="Choice 3" key="2" enabled="false" />
                                 </appui:RadioGroup>
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <appui:RadioGroup>
-                                    <appui:Radio size="M" label="Choice 1" />
-                                    <appui:Radio size="M" label="Choice 2" value="true" />
-                                    <appui:Radio size="M" label="Choice 3" enabled="false" />
+                                    <appui:Radio size="M" label="Choice 1" key="0" />
+                                    <appui:Radio size="M" label="Choice 2" key="1" value="true" />
+                                    <appui:Radio size="M" label="Choice 3" key="2" enabled="false" />
                                 </appui:RadioGroup>
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <appui:RadioGroup>
-                                    <appui:Radio size="L" label="Choice 1" />
-                                    <appui:Radio size="L" label="Choice 2" value="true" />
-                                    <appui:Radio size="L" label="Choice 3" enabled="false" />
+                                    <appui:Radio size="L" label="Choice 1" key="0" />
+                                    <appui:Radio size="L" label="Choice 2" key="1" value="true" />
+                                    <appui:Radio size="L" label="Choice 3" key="2" enabled="false" />
                                 </appui:RadioGroup>
                             </ui:VisualElement>
                         </ui:VisualElement>
@@ -1732,17 +1732,17 @@
                     <appui:Text text="Emphasized" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:RadioGroup>
-                            <appui:Radio label="Choice 1" emphasized="true" />
-                            <appui:Radio label="Choice 2" value="true" emphasized="true" />
-                            <appui:Radio label="Choice 3" enabled="false" emphasized="true" />
+                            <appui:Radio label="Choice 1" key="0" emphasized="true" />
+                            <appui:Radio label="Choice 2" key="1" value="true" emphasized="true" />
+                            <appui:Radio label="Choice 3" key="2" enabled="false" emphasized="true" />
                         </appui:RadioGroup>
                     </ui:VisualElement>
                     <appui:Text text="Invalid" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:RadioGroup>
-                            <appui:Radio label="Choice 1" class="is-invalid"/>
-                            <appui:Radio label="Choice 2" value="true" class="is-invalid"/>
-                            <appui:Radio label="Choice 3" enabled="false" class="is-invalid" />
+                            <appui:Radio label="Choice 1" key="0" class="is-invalid"/>
+                            <appui:Radio label="Choice 2" key="1" value="true" class="is-invalid"/>
+                            <appui:Radio label="Choice 3" key="2" enabled="false" class="is-invalid" />
                         </appui:RadioGroup>
                     </ui:VisualElement>
 
@@ -2283,24 +2283,24 @@
 
                         <appui:Text text="&lt;b&gt;Theme&lt;/b&gt;" enable-rich-text="true" class="example-context-switcher-panel__title" />
                         <appui:RadioGroup name="theme-switcher" class="example-context-switcher-panel__switcher" >
-                            <appui:Radio label="System" emphasized="true" />
-                            <appui:Radio label="Dark" emphasized="true" value="true" />
-                            <appui:Radio label="Light" emphasized="true" />
-                            <appui:Radio label="Editor Dark" emphasized="true" />
-                            <appui:Radio label="Editor Light" emphasized="true" />
+                            <appui:Radio key="system" label="System" emphasized="true" />
+                            <appui:Radio key="dark" label="Dark" emphasized="true" value="true" />
+                            <appui:Radio key="light" label="Light" emphasized="true" />
+                            <appui:Radio key="editor-dark" label="Editor Dark" emphasized="true" />
+                            <appui:Radio key="editor-light" label="Editor Light" emphasized="true" />
                         </appui:RadioGroup>
 
                         <appui:Text text="&lt;b&gt;Scale&lt;/b&gt;" enable-rich-text="true" class="example-context-switcher-panel__title" />
                         <appui:RadioGroup name="scale-switcher" class="example-context-switcher-panel__switcher" >
-                            <appui:Radio label="Small" emphasized="true" />
-                            <appui:Radio label="Medium" value="true" emphasized="true" />
-                            <appui:Radio label="Large" emphasized="true" />
+                            <appui:Radio key="small" label="Small" emphasized="true" />
+                            <appui:Radio key="medium" label="Medium" value="true" emphasized="true" />
+                            <appui:Radio key="large" label="Large" emphasized="true" />
                         </appui:RadioGroup>
 
                         <appui:Text text="&lt;b&gt;Direction&lt;/b&gt;" enable-rich-text="true" class="example-context-switcher-panel__title" />
                         <appui:RadioGroup name="dir-switcher" class="example-context-switcher-panel__switcher" >
-                            <appui:Radio label="LTR" emphasized="true" value="true" />
-                            <appui:Radio label="RTL" emphasized="true" />
+                            <appui:Radio key="Ltr" label="LTR" emphasized="true" value="true" />
+                            <appui:Radio key="Rtl" label="RTL" emphasized="true" />
                         </appui:RadioGroup>
 
                     </ui:VisualElement>

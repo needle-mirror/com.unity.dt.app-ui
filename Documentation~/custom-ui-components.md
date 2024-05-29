@@ -93,10 +93,35 @@ public class MyCustomControl : VisualElement, IDismissInvocator
 }
 ```
 
+### BaseVisualElement and BaseTextElement
+
+The [BaseVisualElement](xref:Unity.AppUI.UI.BaseVisualElement) 
+and [BaseTextElement](xref:Unity.AppUI.UI.BaseTextElement)
+classes are the base classes for all App UI components.
+They provide a set of common optional properties to override the context of the visual tree
+(such as the theme, the style, the layout direction, etc.).
+
+We recommend that you derive your custom controls from these classes to benefit from the common properties
+or if you need to deal with context provisioning in general.
+
+```csharp
+// for non text-based controls
+public class MyCustomControl : BaseVisualElement 
+{
+   // ...    
+}
+
+// for text-based controls
+public class MyCustomTextControl : BaseTextElement 
+{
+   // ...
+}
+```
+
 ### ExVisualElement
 
 The [ExVisualElement](xref:Unity.AppUI.UI.ExVisualElement)
-class is derived from [VisualElement](xref:UnityEngine.UIElements.VisualElement)
+class is derived from [BaseVisualElement](xref:Unity.AppUI.UI.BaseVisualElement)
 and provides more styling options, such as the support of `box-shadow` and `outline`.
 
 ```csharp

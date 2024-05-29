@@ -30,6 +30,8 @@ namespace Unity.AppUI.UI
         
         internal static readonly BindingId valueProperty = nameof(value);
         
+        internal static readonly BindingId keyProperty = nameof(key);
+        
 #endif
         
         /// <summary>
@@ -75,6 +77,10 @@ namespace Unity.AppUI.UI
 
         Func<bool, bool> m_ValidateValue;
 
+        string m_Key;
+
+        RadioGroup m_Group;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -101,9 +107,13 @@ namespace Unity.AppUI.UI
             size = Size.M;
             emphasized = false;
             invalid = false;
+            key = null;
             SetValueWithoutNotify(false);
 
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));
+            
+            RegisterCallback<AttachToPanelEvent>(OnAttachToPanel);
+            RegisterCallback<DetachFromPanelEvent>(OnDetachFromPanel);
         }
 
         /// <summary>
@@ -120,6 +130,31 @@ namespace Unity.AppUI.UI
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
+            }
+        }
+        
+        /// <summary>
+        /// The Radio key.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public string key
+        {
+            get => m_Key;
+            set
+            {
+                var changed = m_Key != value;
+                m_Key = value;
+                TryAddToGroup();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in keyProperty);
+#endif
             }
         }
 
@@ -296,6 +331,27 @@ namespace Unity.AppUI.UI
             m_Box.passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.Outline;
         }
         
+        void OnAttachToPanel(AttachToPanelEvent evt)
+        {
+            TryAddToGroup();
+        }
+        
+        void TryAddToGroup()
+        {
+            m_Group?.RemoveRadio(this);
+            var group = GetFirstAncestorOfType<RadioGroup>();
+            if (group != null && m_Group != group)
+            {
+                m_Group = group;
+                m_Group.AddRadio(this);
+            }
+        }
+        
+        void OnDetachFromPanel(DetachFromPanelEvent evt)
+        {
+            m_Group?.RemoveRadio(this);
+        }
+        
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -331,6 +387,12 @@ namespace Unity.AppUI.UI
                 name = "value",
                 defaultValue = false
             };
+            
+            readonly UxmlStringAttributeDescription m_Key = new UxmlStringAttributeDescription
+            {
+                name = "key",
+                defaultValue = null
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -347,6 +409,7 @@ namespace Unity.AppUI.UI
                 element.emphasized = m_Emphasized.GetValueFromBag(bag, cc);
                 element.value = m_Value.GetValueFromBag(bag, cc);
                 element.label = m_Label.GetValueFromBag(bag, cc);
+                element.key = m_Key.GetValueFromBag(bag, cc);
             }
         }
         

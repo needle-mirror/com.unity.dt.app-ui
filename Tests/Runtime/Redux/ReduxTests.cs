@@ -1,7 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Unity.AppUI.Redux;
+using UnityEngine.TestTools;
 using Action = Unity.AppUI.Redux.Action;
 
 namespace Unity.AppUI.Tests.Redux
@@ -11,9 +14,13 @@ namespace Unity.AppUI.Tests.Redux
     {
         record DummyState {}
 
+        enum LoadingState { Idle, Pending, Fulfilled, Rejected }
+        
         record CounterState(int value)
         {
             public int value { get; set; } = value;
+            
+            public LoadingState loadingState { get; set; } = LoadingState.Idle;
         }
         
         CounterState Increment(CounterState state, Action action)
@@ -40,6 +47,21 @@ namespace Unity.AppUI.Tests.Redux
         {
             return state with { value = 0 };
         }
+        
+        CounterState OnPending(CounterState state, Action action)
+        {
+            return state with { loadingState = LoadingState.Pending };
+        }
+        
+        CounterState OnFulfilled(CounterState state, Action action)
+        {
+            return state with { loadingState = LoadingState.Fulfilled };
+        }
+        
+        CounterState OnRejected(CounterState state, Action action)
+        {
+            return state with { loadingState = LoadingState.Rejected };
+        }
 
         ActionCreator m_IncrementAction;
         
@@ -50,6 +72,8 @@ namespace Unity.AppUI.Tests.Redux
         ActionCreator<int> m_SetAction;
         
         ActionCreator m_ResetAction;
+        
+        AsyncThunkActionCreator<bool, int> m_LoadDataAction;
 
         Unsubscriber m_CounterSubscription;
         
@@ -96,6 +120,15 @@ namespace Unity.AppUI.Tests.Redux
             m_ResetAction = null;
             Assert.DoesNotThrow(() => m_ResetAction = Store.CreateAction("Reset"));
             Assert.IsNotNull(m_ResetAction);
+            
+            m_LoadDataAction = null;
+            Assert.DoesNotThrow(() => m_LoadDataAction = Store.CreateAsyncThunk<bool, int>(
+                "LoadData", async (id, thunkAPI, token) =>
+            {
+                await Task.Delay(250, token);
+                return true;
+            }));
+            Assert.IsNotNull(m_LoadDataAction);
         }
 
         [Test, Order(3)]
@@ -151,6 +184,36 @@ namespace Unity.AppUI.Tests.Redux
             Assert.AreEqual(2, slices.Count);
             Assert.IsTrue(slices.ContainsKey("dummy"));
             Assert.IsTrue(slices.ContainsKey("counter"));
+            
+            var incrementActionCreator = slice.actionCreators["counter/Increment"];
+            Assert.DoesNotThrow(() => slice = m_Store.CreateSlice("otherSlice", new CounterState(0), 
+                _ => {}, builder =>
+                {
+                    builder.AddCase(incrementActionCreator, Increment);
+                    builder.AddCase(m_LoadDataAction.pending, OnPending);
+                    builder.AddCase(m_LoadDataAction.fulfilled,OnFulfilled);
+                    builder.AddCase(m_LoadDataAction.rejected, OnRejected);
+                }));
+            
+            Assert.IsNotNull(slice);
+            Assert.AreEqual(0, slice.initialState.value);
+            Assert.AreEqual(0, slice.actionCreators.Count);
+            
+            Assert.DoesNotThrow(() =>
+            {
+                m_Store.Dispatch(incrementActionCreator.Invoke());
+            });
+            
+            Assert.AreEqual(1, m_Store.GetState<CounterState>("counter").value);
+            Assert.AreEqual(1, m_Store.GetState<CounterState>("otherSlice").value);
+            
+            Assert.DoesNotThrow(() =>
+            {
+                m_Store.Dispatch(m_ResetAction.Invoke());
+            });
+            
+            Assert.AreEqual(0, m_Store.GetState<CounterState>("counter").value);
+            Assert.AreEqual(1, m_Store.GetState<CounterState>("otherSlice").value);
         }
 
         [Test, Order(5)]
@@ -160,8 +223,8 @@ namespace Unity.AppUI.Tests.Redux
             Assert.IsNotNull(m_CounterSubscription);
         }
         
-        [Test, Order(6)]
-        public void ShouldDispatchActions()
+        [UnityTest, Order(6)]
+        public IEnumerator ShouldDispatchActions()
         {
             m_ExpectedCounterValue = 1;
             m_Called = false;
@@ -194,6 +257,18 @@ namespace Unity.AppUI.Tests.Redux
             m_Called = false;
             Assert.DoesNotThrow(() => m_Store.Dispatch(m_ResetAction.Invoke()));
             Assert.IsTrue(m_Called);
+
+            var asyncThunkAction = m_LoadDataAction.Invoke(0);
+            Assert.AreEqual("LoadData", asyncThunkAction.type);
+            Assert.DoesNotThrow(() => m_Store.DispatchAsyncThunk(asyncThunkAction));
+            Assert.AreEqual(LoadingState.Pending, m_Store.GetState<CounterState>("otherSlice").loadingState);
+            
+            yield return new WaitUntilOrTimeOut(
+                () => m_Store.GetState<CounterState>("otherSlice").loadingState == LoadingState.Fulfilled, 
+                false,
+                TimeSpan.FromSeconds(2));
+            
+            Assert.AreEqual(LoadingState.Fulfilled, m_Store.GetState<CounterState>("otherSlice").loadingState);
         }
         
         [Test, Order(7)]

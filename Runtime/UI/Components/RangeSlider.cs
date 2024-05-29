@@ -532,7 +532,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         /// <param name="minValue"> The minimum value of the range. </param>
         /// <param name="maxValue"> The maximum value of the range. </param>
-        /// <returns> A new range object of type <see cref="TRangeType"/>. </returns>
+        /// <returns> A new range value. </returns>
         protected abstract TRangeType MakeRangeValue(TValueType minValue, TValueType maxValue);
         
         /// <summary>

@@ -60,7 +60,8 @@ namespace Unity.AppUI.Core
                 }
                 else
                 {
-                    Debug.Assert(StartTrackingFinger(touch));
+                    var started = StartTrackingFinger(touch);
+                    Debug.Assert(started);
                             
                     if (touch.fingerId == m_FingerId1)
                         m_Position1 = touch.position;

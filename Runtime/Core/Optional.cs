@@ -70,19 +70,30 @@ namespace Unity.AppUI.Core
         /// </remarks>
         public static implicit operator Optional<T>(T value) => new (value);
 
-        /// <inheritdoc cref="IEquatable{T}.Equals(T)"/>
+        /// <summary>
+        /// Determines whether two <see cref="Optional{T}"/>s are equal.
+        /// </summary>
+        /// <param name="other"> The other <see cref="Optional{T}"/> to compare. </param>
+        /// <returns> Whether the two <see cref="Optional{T}"/>s are equal. </returns>
         public bool Equals(Optional<T> other)
         {
             return isSet == other.isSet && EqualityComparer<T>.Default.Equals(value, other.value);
         }
 
-        /// <inheritdoc cref="IEquatable{T}.Equals(object)"/>
+        /// <summary>
+        /// Determines whether two <see cref="Optional{T}"/>s are equal.
+        /// </summary>
+        /// <param name="obj"> The other object to compare. </param>
+        /// <returns> Whether the two <see cref="Optional{T}"/>s are equal. </returns>
         public override bool Equals(object obj)
         {
             return obj is Optional<T> other && Equals(other);
         }
 
-        /// <inheritdoc cref="object.GetHashCode"/>
+        /// <summary>
+        /// Gets the hash code of the <see cref="Optional{T}"/>.
+        /// </summary>
+        /// <returns> The hash code of the <see cref="Optional{T}"/>. </returns>
         public override int GetHashCode()
         {
             return HashCode.Combine(IsSet, Value);
@@ -177,19 +188,30 @@ namespace Unity.AppUI.Core
         /// </remarks>
         public static implicit operator OptionalEnum<T>(T value) => new (value);
 
-        /// <inheritdoc cref="IEquatable{T}.Equals(T)"/>
+        /// <summary>
+        /// Determines whether two <see cref="OptionalEnum{T}"/>s are equal.
+        /// </summary>
+        /// <param name="other"> The other <see cref="OptionalEnum{T}"/> to compare. </param>
+        /// <returns> Whether the two <see cref="OptionalEnum{T}"/>s are equal. </returns>
         public bool Equals(OptionalEnum<T> other)
         {
             return isSet == other.isSet && value.Equals(other.value);
         }
 
-        /// <inheritdoc cref="IEquatable{T}.Equals(object)"/>
+        /// <summary>
+        /// Determines whether two <see cref="OptionalEnum{T}"/>s are equal.
+        /// </summary>
+        /// <param name="obj"> The other object to compare. </param>
+        /// <returns> Whether the two <see cref="OptionalEnum{T}"/>s are equal. </returns>
         public override bool Equals(object obj)
         {
             return obj is OptionalEnum<T> other && Equals(other);
         }
 
-        /// <inheritdoc cref="object.GetHashCode"/>
+        /// <summary>
+        /// Gets the hash code of the <see cref="OptionalEnum{T}"/>.
+        /// </summary>
+        /// <returns> The hash code of the <see cref="OptionalEnum{T}"/>. </returns>
         public override int GetHashCode()
         {
             return HashCode.Combine(IsSet, Value);

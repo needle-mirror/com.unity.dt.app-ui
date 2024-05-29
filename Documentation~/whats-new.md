@@ -10,28 +10,30 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [2.0.0-pre.2] - 2024-05-07
+## [2.0.0-pre.3] - 2024-05-30
 
 ### Added
 
-- Added `PinchGestureRecognizer` implementation for the new Gesture Recognizer System.
-- Added an experimental method `Platform.GetSystemColor` to fetch color values defined by the Operating System for specific UI element types. This can be useful if you want to precisely follow the color palette of a high-contrast theme directed by the OS.
-- Added "Icon Browser", a new Editor tool that enables users to generate UI-Toolkit stylesheets with a specific list of icons.
-- Added a new experimental Gesture Recognizer System.
-- Added the ability to subscribe and check if the current operating system is in Reduce-Motion Accessibility Mode (Windows/Mac/Android/iOS).
-- Added the ability to subscribe and check if the current Text Scale Factor of the currently used window (Unity Player window or the Game view window in the Editor) (Windows/Mac/Android/iOS).
-- Added the ability to subscribe and check if the current operating system is in High-Contrast Mode (Windows/Mac/Android/iOS).
-- Added the ability to subscribe and check if the current operating system is in LeftToRight or RightToLeft layout direction (Windows/Mac/Android/iOS).
-- Added the ability to subscribe and check if the current Scale Factor of the currently used window (Unity Player window or the Game view window in the Editor) (Windows/Mac/Android/iOS).
-- Added the ability to subscribe and check if the current operating system is in Dark Mode (Windows/Mac/Android/iOS).
+- Added AsyncThunk support for Redux implementation.
+- Added Anchor Position support for Toast UI elements.
+- Added the `key` string property on `Radio` component to be used as unique identifier in their group.
+- Added unit tests for MemoryUtils utility class.
+
+### Removed
+
+- Removed programatic construction of RadioGroup with IList object. Since App UI offers the possibility to have Radio component as deep as you want in the visual tree compared to its RadioGroup ancestor, we wanted to limit conflicts between construction kinds.
 
 ### Changed
 
-- Refactored every native plugin provided by the package.
-- Changed the Trackpad sample project to work properly with the new events coming from the new Gesture Recognizer System.
+- Moved Toast animation logic from code to USS.
+- The `RadioGroup` component uses a `string` type for its `value` property. This string value is equal to the currently checked `Radio` component's `key` property.
+- The `Toast.AddAction` method will now ask for a callback that takes a `Toast` object as argument (instead of no argument at all). This will give you an easier way to dismiss the toast from the action callback.
+- You can now pass an `autoDismiss` argument to the `Toast.AddAction` method. This will automatically dismiss the toast when the action is triggered. This argument is optional and defaults to `true` for backward compatibility.
+- Changed MemoryUtils.Concatenate implementation to not use variadic parameters and avoid implicit allocations.
 
 ### Fixed
 
-- Fixed meta files for native plugins on Windows platform.
-- Fixed an early return in the PreProcessBuild callback of App UI when no persistent AppUISettings have been found.
+- Fixed Action Dispatch to every Slice Reducers
+- Every shared libraries of native plugins are now correctly signed with the correct Unity Technologies certificate (MacOS and Windows only)
+- Fixed support of Radio component that are deeper than the direct child of a RadioGroup.
 

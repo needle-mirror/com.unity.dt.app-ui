@@ -118,7 +118,12 @@ navHost.visualController = new MyVisualController();
 
 ### Handling Navigation Visual Components Per Navigation Screen
 
-You also have the possibility to implement [SetupAppBar](xref:Unity.AppUI.Navigation.NavigationScreen.SetupAppBar), [SetupBottomNavBar](xref:Unity.AppUI.Navigation.NavigationScreen.SetupBottomNavBar) and [SetupDrawer](xref:Unity.AppUI.Navigation.NavigationScreen.SetupDrawer) methods directly in your implementation of [NavigationScreen](xref:Unity.AppUI.Navigation.NavigationScreen).
+You also have the possibility to implement 
+[SetupAppBar](xref:Unity.AppUI.Navigation.NavigationScreen.SetupAppBar(Unity.AppUI.UI.AppBar)), 
+[SetupBottomNavBar](xref:Unity.AppUI.Navigation.NavigationScreen.SetupBottomNavBar(Unity.AppUI.UI.BottomNavBar)) and 
+[SetupDrawer](xref:Unity.AppUI.Navigation.NavigationScreen.SetupDrawer(Unity.AppUI.UI.Drawer)) 
+methods directly in your implementation of 
+[NavigationScreen](xref:Unity.AppUI.Navigation.NavigationScreen).
 
 ```cs
 class MyAppHomeScreen : NavigationScreen

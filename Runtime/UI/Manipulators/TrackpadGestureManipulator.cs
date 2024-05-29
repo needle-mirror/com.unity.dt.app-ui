@@ -25,7 +25,9 @@ namespace Unity.AppUI.UI
             this.onPinch = onPinch;
         }
 
-        /// <inheritdoc cref="Manipulator.RegisterCallbacksOnTarget"/>
+        /// <summary>
+        /// Called to register event callbacks on the target element.
+        /// </summary>
         protected override void RegisterCallbacksOnTarget()
         {
             target.RegisterCallback<PointerEnterEvent>(OnEnter);
@@ -33,7 +35,9 @@ namespace Unity.AppUI.UI
             target.RegisterCallback<PinchGestureEvent>(OnPinch);
         }
 
-        /// <inheritdoc cref="Manipulator.UnregisterCallbacksFromTarget"/>
+        /// <summary>
+        /// Called to unregister event callbacks from the target element.
+        /// </summary>
         protected override void UnregisterCallbacksFromTarget()
         {
             target.UnregisterCallback<PointerEnterEvent>(OnEnter);

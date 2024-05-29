@@ -107,7 +107,7 @@ Example when you are using App UI version 1.0.3:
 xattr -d com.apple.quarantine <project-path>/Library/PackageCache/com.unity.dt.app-ui@1.0.3/Runtime/Core/Platform/macOS/Plugins/AppUINativePlugin.bundle
 ```
 
-> ![WARNING]
+> [!WARNING]
 > Be careful when using the `xattr` command, as it can remove the quarantine attribute from any file.
 > Keep in mind that removing the quarantine attribute from a file can be a security risk, and the 
 > attribute will be removed only for your machine. This is proposed as a workaround and until

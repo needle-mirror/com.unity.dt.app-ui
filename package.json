@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "2.0.0-pre.2",
+  "version": "2.0.0-pre.3",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,7 +25,7 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "44bef71353b609c6a0eacad8d466dec2fb1f870a"
+    "revision": "ca85e6f8e91080585dca0cc63afd38ad36dea3cd"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -82,10 +82,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added `PinchGestureRecognizer` implementation for the new Gesture Recognizer System.\n- Added an experimental method `Platform.GetSystemColor` to fetch color values defined by the Operating System for specific UI element types. This can be useful if you want to precisely follow the color palette of a high-contrast theme directed by the OS.\n- Added \"Icon Browser\", a new Editor tool that enables users to generate UI-Toolkit stylesheets with a specific list of icons.\n- Added a new experimental Gesture Recognizer System.\n- Added the ability to subscribe and check if the current operating system is in Reduce-Motion Accessibility Mode (Windows/Mac/Android/iOS).\n- Added the ability to subscribe and check if the current Text Scale Factor of the currently used window (Unity Player window or the Game view window in the Editor) (Windows/Mac/Android/iOS).\n- Added the ability to subscribe and check if the current operating system is in High-Contrast Mode (Windows/Mac/Android/iOS).\n- Added the ability to subscribe and check if the current operating system is in LeftToRight or RightToLeft layout direction (Windows/Mac/Android/iOS).\n- Added the ability to subscribe and check if the current Scale Factor of the currently used window (Unity Player window or the Game view window in the Editor) (Windows/Mac/Android/iOS).\n- Added the ability to subscribe and check if the current operating system is in Dark Mode (Windows/Mac/Android/iOS).\n\n### Changed\n\n- Refactored every native plugin provided by the package.\n- Changed the Trackpad sample project to work properly with the new events coming from the new Gesture Recognizer System.\n\n### Fixed\n\n- Fixed meta files for native plugins on Windows platform.\n- Fixed an early return in the PreProcessBuild callback of App UI when no persistent AppUISettings have been found."
+    "changelog": "### Added\n\n- Added AsyncThunk support for Redux implementation.\n- Added Anchor Position support for Toast UI elements.\n- Added the `key` string property on `Radio` component to be used as unique identifier in their group.\n- Added unit tests for MemoryUtils utility class.\n\n### Removed\n\n- Removed programatic construction of RadioGroup with IList object. Since App UI offers the possibility to have Radio component as deep as you want in the visual tree compared to its RadioGroup ancestor, we wanted to limit conflicts between construction kinds.\n\n### Changed\n\n- Moved Toast animation logic from code to USS.\n- The `RadioGroup` component uses a `string` type for its `value` property. This string value is equal to the currently checked `Radio` component's `key` property.\n- The `Toast.AddAction` method will now ask for a callback that takes a `Toast` object as argument (instead of no argument at all). This will give you an easier way to dismiss the toast from the action callback.\n- You can now pass an `autoDismiss` argument to the `Toast.AddAction` method. This will automatically dismiss the toast when the action is triggered. This argument is optional and defaults to `true` for backward compatibility.\n- Changed MemoryUtils.Concatenate implementation to not use variadic parameters and avoid implicit allocations.\n\n### Fixed\n\n- Fixed Action Dispatch to every Slice Reducers\n- Every shared libraries of native plugins are now correctly signed with the correct Unity Technologies certificate (MacOS and Windows only)\n- Fixed support of Radio component that are deeper than the direct child of a RadioGroup."
   },
   "upmCi": {
-    "footprint": "7e2232ebbfec9dbc80f7f465a7567835baeb33e8"
+    "footprint": "c526f0538eddc7d8c1371cd8e74be9517724ca1a"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.0/manual/index.html"
 }

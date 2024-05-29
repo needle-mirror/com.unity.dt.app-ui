@@ -21,10 +21,10 @@ using Unity.AppUI.UI;
 
 var button = new Button();
 
-// Wrong way to handle the trigger of the button, as it can be triggered from multiple sources
+// ❌ Wrong way to handle the trigger of the button, as it can be triggered from multiple sources
 button.RegisterCallback<ClickEvent>(evt => Debug.Log("Button clicked"));
 
-// Correct way to handle the trigger of the button from any source
+// ✅ Correct way to handle the trigger of the button from any source
 button.clickable.clicked += () => Debug.Log("Button clicked");
 
 // You could also use the special constructor if available

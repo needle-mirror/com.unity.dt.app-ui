@@ -13,11 +13,11 @@ uid: overview
 
 ## Introduction
 
-Welcome to App UI, a powerful and flexible framework for building beautiful, high-performance user interfaces in Unity.
+App UI is a powerful and flexible framework for building beautiful, high-performance user interfaces in Unity.
 The App UI framework is designed to help you create great apps with ease, by providing a set of UI components and patterns that
 you can use to quickly build and customize your app's interface.
 
-With the App UI, you can build apps for a wide range of platforms, including Android, iOS, Windows, MacOS, and the web.
+With App UI, you can build apps for a wide range of platforms, including Android, iOS, Windows, MacOS, and the web.
 The framework is built on top of the Unity UI-Toolkit, which provides a powerful and flexible foundation for building UI elements that
 work seamlessly across all platforms.
 
@@ -30,6 +30,8 @@ how to use the various UI components and patterns, and how to customize your app
 You'll also find tips and best practices for working with the framework, as well as sample code and projects that demonstrate how to use the various features and patterns.
 
 We hope that you find App UI to be a powerful and valuable tool for building great user interfaces in Unity.
+
+
 Let's get started!
 
 

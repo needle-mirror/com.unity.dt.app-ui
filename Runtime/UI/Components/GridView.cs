@@ -112,8 +112,8 @@ namespace Unity.AppUI.UI
         float m_LastPadding;
 
         /// <summary>
-        /// Creates a <see cref="GridView"/> with all default properties. The <see cref="GridView.itemsSource"/>,
-        /// <see cref="GridView.itemHeight"/>, <see cref="GridView.makeItem"/> and <see cref="GridView.bindItem"/> properties
+        /// Creates a <see cref="GridView"/> with all default properties. The <see cref="BaseGridView.itemsSource"/>,
+        /// <see cref="GridView.itemHeight"/>, <see cref="BaseGridView.makeItem"/> and <see cref="BaseGridView.bindItem"/> properties
         /// must all be set for the GridView to function properly.
         /// </summary>
         public GridView()

@@ -1,7 +1,7 @@
 using System;
 using Unity.AppUI.UI;
 using UnityEngine;
-using Object = UnityEngine.Object;
+using UnityEngine.Assertions;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -32,6 +32,28 @@ namespace Unity.AppUI.Core
         static AppUISystemObject s_SystemObject;
 
         internal static AppUIManager s_Manager;
+
+        internal static AppUIManagerBehaviour gameObject
+        {
+            get
+            {
+                if (!AppUIManagerBehaviour.instance)
+                {
+                    if (Application.isPlaying)
+                    {
+                        AppUIManagerBehaviour.Create();
+                        Assert.IsNotNull(AppUIManagerBehaviour.instance);
+                    }
+                    else
+                    {
+                        Debug.LogError("Trying to access AppUIManagerBehaviour.instance in edit mode. " +
+                            "This instance is only available in play mode.");
+                    }
+                }
+                
+                return AppUIManagerBehaviour.instance;
+            }
+        }
 
         /// <summary>
         /// Initialize the App UI system.
@@ -257,8 +279,6 @@ namespace Unity.AppUI.Core
         }
 #else
 
-        static AppUIManagerBehaviour s_Updater;
-
         static void InitializeInPlayer()
         {
             var settings = Resources.FindObjectsOfTypeAll<AppUISettings>();
@@ -284,27 +304,6 @@ namespace Unity.AppUI.Core
 #if !UNITY_EDITOR
             if (s_Manager == null)
                 InitializeInPlayer();
-#endif
-        }
-
-        [RuntimeInitializeOnLoadMethod(loadType: RuntimeInitializeLoadType.AfterSceneLoad)]
-        static void AddUpdater()
-        {
-#if !UNITY_EDITOR
-            if (s_Updater == null)
-            {
-                var availableUpdaters = Resources.FindObjectsOfTypeAll<AppUIManagerBehaviour>();
-                if (availableUpdaters != null && availableUpdaters.Length > 0)
-                {
-                    for (var i = availableUpdaters.Length - 1; i >= 0; i--)
-                    {
-                        Object.Destroy(availableUpdaters[i].gameObject);
-                    }
-                }
-                s_Updater = new GameObject("AppUIUpdater").AddComponent<AppUIManagerBehaviour>();
-                s_Updater.hideFlags = HideFlags.HideAndDontSave;
-                Object.DontDestroyOnLoad(s_Updater);
-            }
 #endif
         }
 

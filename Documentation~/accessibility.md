@@ -103,3 +103,10 @@ void OnDirContextChanged(ContextChangedEvent<DirContext> evt)
    UpdateMyLogic(dir);
 }
 ```
+
+## Platform-specific features
+
+App UI provides a few properties that can help you adapt your UI to the user's preferences,
+based on the system settings. For more information, see the [Platform](xref:Unity.AppUI.Core.Platform) class 
+and the [Accessibility Features](xref:native-integration#accessibility-features) section from 
+the Native Integration documentation.

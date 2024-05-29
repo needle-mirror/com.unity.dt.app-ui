@@ -28,7 +28,9 @@ namespace Unity.AppUI.UI
             }
         }
         
-        /// <inheritdoc/>
+        /// <summary>
+        /// Called to register event callbacks on the target element.
+        /// </summary>
         protected override void RegisterCallbacksOnTarget()
         {
 #if UNITY_2022_1_OR_NEWER
@@ -41,7 +43,9 @@ namespace Unity.AppUI.UI
 #endif
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Called to unregister event callbacks from the target element.
+        /// </summary>
         protected override void UnregisterCallbacksFromTarget()
         {
 #if UNITY_2022_1_OR_NEWER
