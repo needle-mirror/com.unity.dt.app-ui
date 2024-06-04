@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "2.0.0-pre.3",
+  "version": "2.0.0-pre.4",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,7 +25,7 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "ca85e6f8e91080585dca0cc63afd38ad36dea3cd"
+    "revision": "a4577ee02f226d5132455e6f1830d6114de93867"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -82,10 +82,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added AsyncThunk support for Redux implementation.\n- Added Anchor Position support for Toast UI elements.\n- Added the `key` string property on `Radio` component to be used as unique identifier in their group.\n- Added unit tests for MemoryUtils utility class.\n\n### Removed\n\n- Removed programatic construction of RadioGroup with IList object. Since App UI offers the possibility to have Radio component as deep as you want in the visual tree compared to its RadioGroup ancestor, we wanted to limit conflicts between construction kinds.\n\n### Changed\n\n- Moved Toast animation logic from code to USS.\n- The `RadioGroup` component uses a `string` type for its `value` property. This string value is equal to the currently checked `Radio` component's `key` property.\n- The `Toast.AddAction` method will now ask for a callback that takes a `Toast` object as argument (instead of no argument at all). This will give you an easier way to dismiss the toast from the action callback.\n- You can now pass an `autoDismiss` argument to the `Toast.AddAction` method. This will automatically dismiss the toast when the action is triggered. This argument is optional and defaults to `true` for backward compatibility.\n- Changed MemoryUtils.Concatenate implementation to not use variadic parameters and avoid implicit allocations.\n\n### Fixed\n\n- Fixed Action Dispatch to every Slice Reducers\n- Every shared libraries of native plugins are now correctly signed with the correct Unity Technologies certificate (MacOS and Windows only)\n- Fixed support of Radio component that are deeper than the direct child of a RadioGroup."
+    "changelog": "### Fixed\n\n- Fixed MacOS native plugin memory leak when opening the Help menu in the Editor."
   },
   "upmCi": {
-    "footprint": "c526f0538eddc7d8c1371cd8e74be9517724ca1a"
+    "footprint": "66c30efa24a4730e79d0a225b8689ce205788fd2"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.0/manual/index.html"
 }

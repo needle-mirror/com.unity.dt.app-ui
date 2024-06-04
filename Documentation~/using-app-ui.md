@@ -5,7 +5,7 @@ uid: using-app-ui
 # Using App UI
 
 > [!WARNING]
-> **FOR INTERNAL UNITY USE ONLY. THIS FRAMEWORK IS NOT SUPPORTED AND IS USED AT YOUR OWN RISK.**
+> **THIS FRAMEWORK IS PROVIDED AS IS, WITH ABSOLUTELY NO WARRANTY EXPRESSED OR IMPLIED.  ANY USE IS AT YOUR OWN RISK.**
 
 Once you have installed App UI Unity Package, you can start using it in your Unity projects.
 
