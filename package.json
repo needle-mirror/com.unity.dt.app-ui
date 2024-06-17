@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "2.0.0-pre.4",
+  "version": "2.0.0-pre.5",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,7 +25,7 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "a4577ee02f226d5132455e6f1830d6114de93867"
+    "revision": "4c7331b9084e48dfbceeb425573dd62f03850c02"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -82,10 +82,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed MacOS native plugin memory leak when opening the Help menu in the Editor."
+    "changelog": "### Changed\n\n- Complete rewrite of the SplitView component. The SplitView is no more a derived from TwoPaneSplitView from UI-Toolkit, but a full custom component that supports any number of panes.\n\n### Fixed\n\n- Fixed reset of Dropdown value when changing its source items.\n- Fixed a visual bug where the checkmark symbol didn't appear on DropdownItem or MenuItem that have a `selected` state.\n\n### Added\n\n- Added `indicatorPosition` property in `AccordionItem` component, in order to swap the indicator position either at start or end of the heading row.\n- Added `check` regular icon as a required icon in App UI themes."
   },
   "upmCi": {
-    "footprint": "66c30efa24a4730e79d0a225b8689ce205788fd2"
+    "footprint": "b5bfd44d872d26e3c616c566b3de2e4098bbc68e"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.0/manual/index.html"
 }

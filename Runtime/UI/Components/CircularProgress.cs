@@ -67,7 +67,7 @@ namespace Unity.AppUI.UI
             get => m_InnerRadius;
             set
             {
-                var changed = m_InnerRadius != value;
+                var changed = !Mathf.Approximately(m_InnerRadius, value);
                 m_InnerRadius = value;
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS

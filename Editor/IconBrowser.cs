@@ -16,6 +16,12 @@ namespace Unity.AppUI.Editor
 {
     class IconBrowser : EditorWindow
     {
+        const string k_RegularVariant = "regular";
+        
+        const string k_FillVariant = "fill";
+        
+        const string k_BoldVariant = "bold";
+        
         [UnityEditor.MenuItem("Window/App UI/Icon Browser")]
         public static void ShowWindow()
         {
@@ -186,7 +192,7 @@ namespace Unity.AppUI.Editor
                         var iconVariant = folderName.ToLowerInvariant();
                         var variants = Enum.GetNames(typeof(IconVariant)).Select(iv => iv.ToLowerInvariant()).ToList();
                         if (!variants.Contains(iconVariant))
-                            iconVariant = "regular";
+                            iconVariant = k_RegularVariant;
                         if (additionalIcons.FindIndex(icn => icn.path == path) < 0)
                             additionalIcons.Add(new IconEntry
                             {
@@ -282,7 +288,7 @@ namespace Unity.AppUI.Editor
                 var iconVariant = folderName.ToLowerInvariant();
                 var variants = Enum.GetNames(typeof(IconVariant)).Select(iv => iv.ToLowerInvariant()).ToList();
                 if (!variants.Contains(iconVariant))
-                    iconVariant = "regular";
+                    iconVariant = k_RegularVariant;
                 
                 var additionalIcons = ParseStyleSheet(tempContent);
                 if (additionalIcons.FindIndex(icn => icn.path == path) < 0)
@@ -462,40 +468,42 @@ namespace Unity.AppUI.Editor
 
         static readonly IconEntry[] k_RequiredIcons = new[]
         {
-            new IconEntry { name = "calendar", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Calendar.png" },
+            new IconEntry { name = "calendar", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Calendar.png" },
 
-            new IconEntry { name = "caret-down", variant = "fill", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/CaretDown.png" },
-            new IconEntry { name = "caret-down", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDown.png" },
-            new IconEntry { name = "caret-left", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretLeft.png" },
-            new IconEntry { name = "caret-right", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretRight.png" },
-            new IconEntry { name = "caret-double-left", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDoubleLeft.png" },
-            new IconEntry { name = "caret-double-right", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDoubleRight.png" },
+            new IconEntry { name = "caret-down", variant = k_FillVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/CaretDown.png" },
+            new IconEntry { name = "caret-down", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDown.png" },
+            new IconEntry { name = "caret-left", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretLeft.png" },
+            new IconEntry { name = "caret-right", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretRight.png" },
+            new IconEntry { name = "caret-double-left", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDoubleLeft.png" },
+            new IconEntry { name = "caret-double-right", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDoubleRight.png" },
+            new IconEntry { name = "caret-up", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretUp.png" },
 
-            new IconEntry { name = "check", variant = "bold", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Check.png" },
-            new IconEntry { name = "color-picker", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ColorPicker.png" },
+            new IconEntry { name = "check", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Check.png" },
+            new IconEntry { name = "check", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Check.png" },
+            new IconEntry { name = "color-picker", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ColorPicker.png" },
 
-            new IconEntry { name = "dots-three", variant = "bold", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThree.png" },
-            new IconEntry { name = "dots-three-vertical", variant = "bold", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThreeVertical.png" },
+            new IconEntry { name = "dots-three", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThree.png" },
+            new IconEntry { name = "dots-three-vertical", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThreeVertical.png" },
             
-            new IconEntry { name = "info", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Info.png" },
+            new IconEntry { name = "info", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Info.png" },
             
-            new IconEntry { name = "list", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/List.png" },
-            new IconEntry { name = "magnifying-glass", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/MagnifyingGlass.png" },
-            new IconEntry { name = "menu", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Menu.png" },
-            new IconEntry { name = "minus", variant = "bold", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Minus.png" },
-            new IconEntry { name = "minus", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Minus.png" },
+            new IconEntry { name = "list", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/List.png" },
+            new IconEntry { name = "magnifying-glass", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/MagnifyingGlass.png" },
+            new IconEntry { name = "menu", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Menu.png" },
+            new IconEntry { name = "minus", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Minus.png" },
+            new IconEntry { name = "minus", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Minus.png" },
             
-            new IconEntry { name = "plus", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Plus.png" },
+            new IconEntry { name = "plus", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Plus.png" },
 
-            new IconEntry { name = "resize-handle", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ResizeHandle.png" },
+            new IconEntry { name = "resize-handle", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ResizeHandle.png" },
 
-            new IconEntry { name = "scene", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Scene.png" },
-            new IconEntry { name = "sub-menu-indicator", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/SubMenuIndicator.png" },
+            new IconEntry { name = "scene", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Scene.png" },
+            new IconEntry { name = "sub-menu-indicator", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/SubMenuIndicator.png" },
 
-            new IconEntry { name = "users", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Users.png" },
+            new IconEntry { name = "users", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Users.png" },
             
-            new IconEntry { name = "warning", variant = "fill", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/Warning.png" },
-            new IconEntry { name = "x", variant = "regular", path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/X.png" },
+            new IconEntry { name = "warning", variant = k_FillVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/Warning.png" },
+            new IconEntry { name = "x", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/X.png" },
         };
         
         struct IconEntry

@@ -305,7 +305,7 @@ namespace Unity.AppUI.UI
             get => m_ScrollSpeed;
             set
             {
-                var changed = m_ScrollSpeed != value;
+                var changed = !Mathf.Approximately(m_ScrollSpeed, value);
                 m_ScrollSpeed = value;
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -329,7 +329,7 @@ namespace Unity.AppUI.UI
             get => m_MinZoom;
             set
             {
-                var changed = m_MinZoom != value;
+                var changed = !Mathf.Approximately(m_MinZoom, value);
                 m_MinZoom = value;
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -353,7 +353,7 @@ namespace Unity.AppUI.UI
             get => m_MaxZoom;
             set
             {
-                var changed = m_MaxZoom != value;
+                var changed = !Mathf.Approximately(m_MaxZoom, value);
                 m_MaxZoom = value;
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -377,7 +377,7 @@ namespace Unity.AppUI.UI
             get => m_ZoomSpeed;
             set
             {
-                var changed = m_ZoomSpeed != value;
+                var changed = !Mathf.Approximately(m_ZoomSpeed, value);
                 m_ZoomSpeed = value;
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -401,7 +401,7 @@ namespace Unity.AppUI.UI
             get => m_ZoomMultiplier;
             set
             {
-                var changed = m_ZoomMultiplier != value;
+                var changed = !Mathf.Approximately(m_ZoomMultiplier, value);
                 m_ZoomMultiplier = value;
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -425,7 +425,7 @@ namespace Unity.AppUI.UI
             get => m_PanMultiplier;
             set
             {
-                var changed = m_PanMultiplier != value;
+                var changed = !Mathf.Approximately(m_PanMultiplier, value);
                 m_PanMultiplier = value;
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -502,7 +502,7 @@ namespace Unity.AppUI.UI
             get => m_FrameMargin;
             set
             {
-                var changed = m_FrameMargin != value;
+                var changed = !Mathf.Approximately(m_FrameMargin, value);
                 m_FrameMargin = value;
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS

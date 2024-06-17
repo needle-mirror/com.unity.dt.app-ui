@@ -10,7 +10,9 @@
     --appui-icon-caret-right-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretRight.png");
     --appui-icon-caret-double-left-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDoubleLeft.png");
     --appui-icon-caret-double-right-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDoubleRight.png");
+    --appui-icon-caret-up-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretUp.png");
     --appui-icon-check-bold: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Check.png");
+    --appui-icon-check-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Check.png");
     --appui-icon-color-picker-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ColorPicker.png");
     --appui-icon-dots-three-bold: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThree.png");
     --appui-icon-dots-three-vertical-bold: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThreeVertical.png");
@@ -58,8 +60,16 @@
     --unity-image: var(--appui-icon-caret-double-right-regular);
 }
 
+.appui-icon--caret-up--regular {
+    --unity-image: var(--appui-icon-caret-up-regular);
+}
+
 .appui-icon--check--bold {
     --unity-image: var(--appui-icon-check-bold);
+}
+
+.appui-icon--check--regular {
+    --unity-image: var(--appui-icon-check-regular);
 }
 
 .appui-icon--color-picker--regular {

@@ -298,7 +298,7 @@ namespace Unity.AppUI.UI
             get => m_BufferOpacity;
             set
             {
-                var changed = m_BufferOpacity != value;
+                var changed = !Mathf.Approximately(m_BufferOpacity, value);
                 m_BufferOpacity = value;
                 MarkContentDirtyRepaint();
                 

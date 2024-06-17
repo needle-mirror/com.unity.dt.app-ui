@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Unity.AppUI.UI;
+using UnityEngine.TestTools;
 
 namespace Unity.AppUI.Tests.UI
 {
@@ -64,6 +66,43 @@ namespace Unity.AppUI.Tests.UI
         public void AccordionItem_ClickEvent_ShouldBeHandled()
         {
             //todo simulate clickevent
+        }
+        
+        [UnityTest]
+        [Order(10)]
+        public IEnumerator AccordionItem_IndicatorPosition_ShouldBeSettable()
+        {
+            m_TestUI.rootVisualElement.Clear();
+            var panel = new Panel();
+            var accordion = new Accordion();
+            var accordionItem = new AccordionItem();
+            m_TestUI.rootVisualElement.Add(panel);
+            panel.Add(accordion);
+            accordion.Add(accordionItem);
+
+            yield return null;
+            
+            Assert.AreEqual(FlexPosition.End, accordionItem.indicatorPosition);
+            var headerElement = accordionItem.hierarchy.ElementAt(0).hierarchy.ElementAt(0);
+            Assert.NotNull(headerElement);
+            Assert.AreEqual(AccordionItem.headerUssClassName, headerElement.name);
+            var indicatorElement = headerElement.hierarchy.ElementAt(headerElement.hierarchy.childCount - 1);
+            Assert.NotNull(indicatorElement);
+            Assert.AreEqual(AccordionItem.indicatorUssClassName, indicatorElement.name);
+            
+            accordionItem.indicatorPosition = FlexPosition.Start;
+            
+            yield return null;
+            
+            Assert.AreEqual(FlexPosition.Start, accordionItem.indicatorPosition);
+            Assert.AreEqual(0, headerElement.hierarchy.IndexOf(indicatorElement));
+            
+            accordionItem.indicatorPosition = FlexPosition.Start;
+            
+            yield return null;
+            
+            Assert.AreEqual(FlexPosition.Start, accordionItem.indicatorPosition);
+            Assert.AreEqual(0, headerElement.hierarchy.IndexOf(indicatorElement));
         }
     }
 }

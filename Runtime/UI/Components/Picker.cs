@@ -377,6 +377,7 @@ namespace Unity.AppUI.UI
                     return;
 
                 m_SourceItems = value;
+                this.value = m_DefaultValue;
                 m_ValueSet = false;
                 RefreshUI();
                 
@@ -528,6 +529,9 @@ namespace Unity.AppUI.UI
         /// <param name="newValue"> The new value to set. </param>
         public void SetValueWithoutNotify(IEnumerable<int> newValue)
         {
+            if (sourceItems == null)
+                return;
+            
             var values = newValue != null ? new List<int>(newValue) : new List<int>();
             foreach (var nv in values)
             {

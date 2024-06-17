@@ -178,7 +178,7 @@ namespace Unity.AppUI.UI
             get => m_Radius;
             set
             {
-                var changed = m_Radius != value;
+                var changed = !Mathf.Approximately(m_Radius, value);
                 m_Radius = value;
                 GenerateTextures();
                 MarkDirtyRepaint();

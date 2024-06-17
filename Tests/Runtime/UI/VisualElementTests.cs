@@ -14,6 +14,7 @@ using Random = UnityEngine.Random;
 
 namespace Unity.AppUI.Tests.UI
 {
+    [TestFixture]
     class VisualElementTests<T>
         where T : VisualElement, new()
     {

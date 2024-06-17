@@ -13,6 +13,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Direction of a UI container.
     /// </summary>
+    [GenerateLowerCaseStrings]
     public enum Direction
     {
         /// <summary>

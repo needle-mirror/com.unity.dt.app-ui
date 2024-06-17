@@ -526,6 +526,10 @@ namespace Unity.AppUI.Samples
             {
                 Debug.Log($"SliderFloat Changing: {evt.newValue}");
             });
+
+            var collapsibleSplitView = root.Q<SplitView>("collapsible-split-view");
+            root.Q<Button>("sv-cs0b").clicked += () => collapsibleSplitView.CollapseSplitter(0, CollapseDirection.Backward);
+            root.Q<Button>("sv-cs1f").clicked += () => collapsibleSplitView.CollapseSplitter(1, CollapseDirection.Forward);
         }
 
         static void OpenToast(

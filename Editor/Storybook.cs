@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.AppUI.Core;
 using UnityEditor;
 using UnityEditor.Toolbars;
 using UnityEditor.UIElements;
@@ -216,10 +217,14 @@ namespace Unity.AppUI.Editor
         string m_CurrentTheme = "dark";
         
         string m_CurrentScale = "medium";
+        
+        Dir m_CurrentLayoutDirection = Dir.Ltr;
 
         EditorToolbarDropdown m_ThemeDropdown;
         
         EditorToolbarDropdown m_ScaleDropdown;
+        
+        EditorToolbarDropdown m_LayoutDirectionDropdown;
 
         /// <summary>
         /// Open the StoryBook window.
@@ -346,7 +351,12 @@ namespace Unity.AppUI.Editor
         {
             var detailPage = new VisualElement();
             var toolbar = new Toolbar();
-            var panel = new Panel { theme = m_CurrentTheme };
+            var panel = new Panel
+            {
+                theme = m_CurrentTheme, 
+                scale = m_CurrentScale,
+                layoutDirection = m_CurrentLayoutDirection
+            };
             panel.AddToClassList("unity-editor");
             m_ThemeDropdown = new EditorToolbarDropdown("Theme", () =>
             {
@@ -396,6 +406,23 @@ namespace Unity.AppUI.Editor
                 menu.DropDown(m_ScaleDropdown.worldBound);
             });
             toolbar.Add(m_ScaleDropdown);
+            
+            m_LayoutDirectionDropdown = new EditorToolbarDropdown("Layout Direction", () =>
+            {
+                var menu = new GenericMenu();
+                menu.AddItem(new GUIContent("Left To Right"), m_CurrentLayoutDirection == Dir.Ltr, () =>
+                {
+                    m_CurrentLayoutDirection = Dir.Ltr;
+                    panel.layoutDirection = m_CurrentLayoutDirection;
+                });
+                menu.AddItem(new GUIContent("Right To Left"), m_CurrentLayoutDirection == Dir.Rtl, () =>
+                {
+                    m_CurrentLayoutDirection = Dir.Rtl;
+                    panel.layoutDirection = m_CurrentLayoutDirection;
+                });
+                menu.DropDown(m_LayoutDirectionDropdown.worldBound);
+            });
+            toolbar.Add(m_LayoutDirectionDropdown);
             
             detailPage.Add(toolbar);
 

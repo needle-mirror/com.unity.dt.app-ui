@@ -79,6 +79,7 @@
 .example-section-fullwidth {
   align-self: stretch;
   align-items: center;
+  width: auto;
 }
 
 .example-section > .appui-button {
@@ -191,10 +192,6 @@
   border-width: 2px;
   border-color: var(--appui-accent-100);
   border-radius: 8px;
-}
-
-.appui-splitview {
-  background-color: var(--appui-backgrounds-300);
 }
 
 .example-elevation-card {
