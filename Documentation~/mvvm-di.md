@@ -124,7 +124,7 @@ public class MyAppBuilder : UIToolkitAppBuilder<MyApp>
 
 ## Use Dependencies
 
-For now App UI framework only supports constructor injection for dependencies.
+You have two ways to inject dependencies into your classes: constructor injection and property/field injection.
 
 ### Constructor Injection
 
@@ -140,5 +140,50 @@ public class MyViewModel : ObservableObject
         Model = model;
     }
     public MyModel Model { get; }
+}
+```
+
+### Property &amp; Field Injection
+
+Property and field injection is another way to use dependency injection. 
+This method is used when the dependency can be set after the class is created,
+and gives the opportunity to not have too many parameters in the constructor.
+
+Please remind that the target property or field **is still not 
+initialized** when the constructor of your class is called.
+
+For properties, it is also mandatory to have a **setter** 
+(although it can be private) to allow the framework to set the value.
+
+To mark injection your property or field for injection, 
+you need to use the [Service](xref:Unity.AppUI.MVVM.ServiceAttribute) attribute on it.
+
+```cs
+using Unity.AppUI.MVVM;
+
+public class MyViewModel : ObservableObject
+{
+    [Service]
+    public MyModel Model { get; set; }
+}
+```
+
+#### Listen to Dependency Changes
+
+When using property injection, you can listen to changes on the injected property by implementing the
+[IDependencyInjectionListener](xref:Unity.AppUI.MVVM.IDependencyInjectionListener) interface.
+
+```cs
+using Unity.AppUI.MVVM;
+
+public class MyViewModel : ObservableObject, IDependencyInjectionListener
+{
+    [Service]
+    public MyModel Model { get; private set; }
+
+    public void OnDependenciesInjected()
+    {
+        // Do something related to the injected dependencies...
+    }
 }
 ```

@@ -4,6 +4,29 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0-pre.6] - 2024-07-07
+
+### Added
+
+- Added support of Attributes on fields and properties in the Dependency Injection system.
+- Added support of UnityEditor ColorPicker in ColorField component.
+- Added support of Color without alpha information in ColorField and ColorPicker.
+- Added `rounded-progress-corners` boolean property in `CircularProgress` and `LinearProgress` to be able to disable rounded corners.
+- Added `trailing-icon` property in `ActionButton` component.
+- Added customization support for the size of the Color swatch inside the ColorField.
+- Added arrow-square-in icon.
+
+### Changed
+
+- Changed the Text element inside the ColorField to become a selectable text.
+
+### Fixed
+
+- Fixed styling issues in `ActionButton` component.
+- Fixed Menu's backdrop to block pointer events
+- Fixed ColorField styling issues.
+- Use correct color variables for Radio and Checkbox components
+
 ## [2.0.0-pre.5] - 2024-06-18
 
 ### Changed

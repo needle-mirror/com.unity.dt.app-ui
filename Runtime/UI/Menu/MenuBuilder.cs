@@ -73,9 +73,12 @@ namespace Unity.AppUI.UI
             if (shouldDismiss && (outsideClickStrategy & OutsideClickStrategy.Pick) != 0 && popover.panel is {} panel)
             {
                 var picked = panel.Pick(evt.position);
-                var commonAncestor = picked?.FindCommonAncestor(popover);
-                if (commonAncestor == popover) // if the picked element is a child of the popover, don't dismiss
-                    shouldDismiss = false;
+                if (picked != popover)
+                {
+                    var commonAncestor = picked?.FindCommonAncestor(popover);
+                    if (commonAncestor == popover) // if the picked element is a child of the popover, don't dismiss
+                        shouldDismiss = false;
+                }
             }
             
             if (!shouldDismiss)
@@ -324,6 +327,7 @@ namespace Unity.AppUI.UI
         internal static Popover.PopoverVisualElement CreateMenuPopoverVisualElement(Menu menu)
         {
             var popoverVisualElement = new Popover.PopoverVisualElement(menu);
+            popoverVisualElement.pickingMode = PickingMode.Position;
             popoverVisualElement.AddToClassList(k_MenuPopoverUssClassName);
             popoverVisualElement.AddToClassList(Styles.noArrowUssClassName);
             return popoverVisualElement;

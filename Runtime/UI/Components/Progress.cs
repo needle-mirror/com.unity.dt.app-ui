@@ -18,6 +18,8 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
+   
+        internal static readonly BindingId roundedProgressCornersProperty = new BindingId(nameof(roundedProgressCorners));
         
         internal static readonly BindingId bufferValueProperty = new BindingId(nameof(bufferValue));
         
@@ -73,6 +75,11 @@ namespace Unity.AppUI.UI
         /// The Progress container styling class.
         /// </summary>
         public const string containerUssClassName = ussClassName + "__container";
+        
+        /// <summary>
+        /// The Progress rounded corners styling class.
+        /// </summary>
+        public const string roundedProgressCornersUssClassName = ussClassName + "--rounded-corners";
 
         /// <summary>
         /// The Progress size styling class.
@@ -151,6 +158,7 @@ namespace Unity.AppUI.UI
             size = Size.M;
             value = 0;
             bufferValue = 0;
+            roundedProgressCorners = true;
 
             m_Image.generateVisualContent += OnGenerateVisualContent;
             RegisterCallback<AttachToPanelEvent>(OnAttachedToPanel);
@@ -230,6 +238,31 @@ namespace Unity.AppUI.UI
 
             mwd.SetAllVertices(k_Vertices);
             mwd.SetAllIndices(k_Indices);
+        }
+        
+        /// <summary>
+        /// Whether to use rounded corners for the progress.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool roundedProgressCorners
+        {
+            get => ClassListContains(roundedProgressCornersUssClassName);
+            set
+            {
+                var changed = roundedProgressCorners != value;
+                EnableInClassList(roundedProgressCornersUssClassName, value);
+                MarkContentDirtyRepaint();
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in roundedProgressCornersProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -455,6 +488,12 @@ namespace Unity.AppUI.UI
                 name = "variant",
                 defaultValue = Variant.Indeterminate,
             };
+            
+            readonly UxmlBoolAttributeDescription m_RoundedCorners = new UxmlBoolAttributeDescription()
+            {
+                name = "rounded-progress-corners",
+                defaultValue = true,
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -473,6 +512,7 @@ namespace Unity.AppUI.UI
                 element.value = m_Value.GetValueFromBag(bag, cc);
                 element.bufferValue = m_ValueBuffer.GetValueFromBag(bag, cc);
                 element.bufferOpacity = m_BufferOpacity.GetValueFromBag(bag, cc);
+                element.roundedProgressCorners = m_RoundedCorners.GetValueFromBag(bag, cc);
                 var color = Color.white;
                 if (m_Color.TryGetValueFromBag(bag, cc, ref color))
                     element.colorOverride = color;

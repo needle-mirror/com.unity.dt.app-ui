@@ -83,8 +83,8 @@
 }
 
 .appui-checkbox__box {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-400);
+    background-color: var(--appui-alias-field-background-color-default);
+    border-color: var(--appui-alias-field-border-color-default);
 }
 
 .appui-checkbox.is-hovered {
@@ -92,8 +92,8 @@
 }
 
 .appui-checkbox.is-hovered > .appui-checkbox__box {
-    background-color: var(--appui-base-200);
-    border-color: var(--appui-base-500);
+    background-color: var(--appui-alias-field-background-color-hover);
+    border-color: var(--appui-alias-field-border-color-hover);
 }
 
 .appui-checkbox.keyboard-focus > .appui-checkbox__box {
@@ -107,8 +107,8 @@
 }
 
 .appui-checkbox.is-active > .appui-checkbox__box {
-    background-color: var(--appui-base-50);
-    border-color: var(--appui-base-400);
+    background-color: var(--appui-alias-field-background-color-active);
+    border-color: var(--appui-alias-field-border-color-active);
     color: var(--appui-foregrounds-200);
 }
 
@@ -131,8 +131,8 @@
 }
 
 .appui-checkbox:disabled > .appui-checkbox__box /*.appui-checkbox.is-disabled > .appui-checkbox__box*/ {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-300);
+    background-color: var(--appui-alias-field-background-color-disabled);
+    border-color: var(--appui-alias-field-border-color-disabled);
 }
 
 .appui-checkbox.is-invalid > .appui-checkbox__box {
@@ -145,8 +145,8 @@
 }
 
 .appui-checkbox.is-invalid:disabled > .appui-checkbox__box {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-300);
+    background-color: var(--appui-alias-field-background-color-disabled);
+    border-color: var(--appui-alias-field-border-color-disabled);
 }
 
 .appui-checkbox:disabled  /*.appui-checkbox.is-disabled */{

@@ -22,8 +22,12 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId labelProperty = nameof(label);
         
         internal static readonly BindingId iconProperty = nameof(icon);
+
+        internal static readonly BindingId trailingIconProperty = nameof(trailingIcon);
         
         internal static readonly BindingId iconVariantProperty = nameof(iconVariant);
+
+        internal static readonly BindingId trailingIconVariantProperty = nameof(trailingIconVariant);
         
         internal static readonly BindingId quietProperty = nameof(quiet);
         
@@ -41,6 +45,11 @@ namespace Unity.AppUI.UI
         /// The ActionButton icon styling class.
         /// </summary>
         public const string iconUssClassName = ussClassName + "__icon";
+        
+        /// <summary>
+        /// The ActionButton trailing icon styling class.
+        /// </summary>
+        public const string trailingIconUssClassName = ussClassName + "__trailing-icon";
 
         /// <summary>
         /// The ActionButton label styling class.
@@ -51,6 +60,11 @@ namespace Unity.AppUI.UI
         /// The ActionButton icon and label variant styling class.
         /// </summary>
         public const string iconAndLabelUssClassName = ussClassName + "--icon-and-label";
+        
+        /// <summary>
+        /// The ActionButton with trailing icon variant styling class.
+        /// </summary>
+        public const string withTrailingIconUSsClassName = ussClassName + "--with-trailing-icon";
 
         /// <summary>
         /// The ActionButton icon only variant styling class.
@@ -76,6 +90,8 @@ namespace Unity.AppUI.UI
         readonly Icon m_IconElement;
 
         readonly LocalizedTextElement m_LabelElement;
+        
+        readonly Icon m_TrailingIconElement;
 
         Size m_Size;
 
@@ -103,17 +119,21 @@ namespace Unity.AppUI.UI
             m_IconElement.AddToClassList(iconUssClassName);
             m_LabelElement = new LocalizedTextElement { name = labelUssClassName, text = null, pickingMode = PickingMode.Ignore };
             m_LabelElement.AddToClassList(labelUssClassName);
+            m_TrailingIconElement = new Icon { name = trailingIconUssClassName, iconName = null, pickingMode = PickingMode.Ignore };
+            m_TrailingIconElement.AddToClassList(trailingIconUssClassName);
             
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocus, OnFocus));
 
             hierarchy.Add(m_IconElement);
             hierarchy.Add(m_LabelElement);
+            hierarchy.Add(m_TrailingIconElement);
 
             passMask = 0;
             size = Size.M;
             accent = false;
             quiet = false;
             iconVariant = IconVariant.Regular;
+            trailingIconVariant = IconVariant.Regular;
 
             Refresh();
         }
@@ -211,6 +231,30 @@ namespace Unity.AppUI.UI
         }
         
         /// <summary>
+        /// The ActionButton trailing icon.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public string trailingIcon
+        {
+            get => m_TrailingIconElement.iconName;
+            set
+            {
+                var changed = m_TrailingIconElement.iconName != value;
+                m_TrailingIconElement.iconName = value;
+                Refresh();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in trailingIconProperty);
+#endif
+            }
+        }
+        
+        /// <summary>
         /// The ActionButton icon variant.
         /// </summary>
         [Tooltip("The ActionButton icon variant.")]
@@ -230,6 +274,30 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in iconVariantProperty);
+#endif
+            }
+        }
+        
+        /// <summary>
+        /// The ActionButton trailing icon variant.
+        /// </summary>
+        [Tooltip("The ActionButton trailing icon variant.")]
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public IconVariant trailingIconVariant
+        {
+            get => m_TrailingIconElement.variant;
+            set
+            {
+                var changed = m_TrailingIconElement.variant != value;
+                m_TrailingIconElement.variant = value;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in trailingIconVariantProperty);
 #endif
             }
         }
@@ -349,9 +417,11 @@ namespace Unity.AppUI.UI
         void Refresh()
         {
             EnableInClassList(iconAndLabelUssClassName, !string.IsNullOrEmpty(icon) && !string.IsNullOrEmpty(label));
-            EnableInClassList(iconOnlyUssClassName, !string.IsNullOrEmpty(icon) && string.IsNullOrEmpty(label));
+            EnableInClassList(withTrailingIconUSsClassName, !string.IsNullOrEmpty(trailingIcon));
+            EnableInClassList(iconOnlyUssClassName, !string.IsNullOrEmpty(icon) && string.IsNullOrEmpty(label) && string.IsNullOrEmpty(trailingIcon));
             m_LabelElement.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(label));
             m_IconElement.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(icon));
+            m_TrailingIconElement.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(trailingIcon));
         }
 
         void OnClick()
@@ -375,6 +445,12 @@ namespace Unity.AppUI.UI
             readonly UxmlStringAttributeDescription m_Icon = new UxmlStringAttributeDescription
             {
                 name = "icon",
+                defaultValue = null
+            };
+            
+            readonly UxmlStringAttributeDescription m_TrailingIcon = new UxmlStringAttributeDescription
+            {
+                name = "trailing-icon",
                 defaultValue = null
             };
 
@@ -413,6 +489,12 @@ namespace Unity.AppUI.UI
                 name = "icon-variant",
                 defaultValue = IconVariant.Regular,
             };
+            
+            readonly UxmlEnumAttributeDescription<IconVariant> m_TrailingIconVariant = new UxmlEnumAttributeDescription<IconVariant>
+            {
+                name = "trailing-icon-variant",
+                defaultValue = IconVariant.Regular,
+            };
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -428,6 +510,8 @@ namespace Unity.AppUI.UI
                 el.label = m_Label.GetValueFromBag(bag, cc);
                 el.icon = m_Icon.GetValueFromBag(bag, cc);
                 el.iconVariant = m_IconVariant.GetValueFromBag(bag, cc);
+                el.trailingIcon = m_TrailingIcon.GetValueFromBag(bag, cc);
+                el.trailingIconVariant = m_TrailingIconVariant.GetValueFromBag(bag, cc);
                 el.size = m_Size.GetValueFromBag(bag, cc);
                 el.accent = m_Accent.GetValueFromBag(bag, cc);
                 el.selected = m_Selected.GetValueFromBag(bag, cc);

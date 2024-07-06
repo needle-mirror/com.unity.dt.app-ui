@@ -18,15 +18,19 @@ namespace Unity.AppUI.MVVM
 
         readonly ConcurrentDictionary<Type, object> m_Singletons;
 
-        bool m_Disposed;
+        /// <summary>
+        /// Whether the service provider has been disposed.
+        /// </summary>
+        internal bool disposed { get; private set; }
         
         /// <summary>
         /// Create a new ServiceProvider.
         /// </summary>
         /// <param name="serviceCollection"> The service collection to use. </param>
+        /// <exception cref="ArgumentNullException"> Thrown when the service collection is null. </exception>
         public ServiceProvider(IServiceCollection serviceCollection)
         {
-            m_Services = serviceCollection;
+            m_Services = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
             m_RealizedServices = new ConcurrentDictionary<Type, Func<object>>();
             m_Singletons = new ConcurrentDictionary<Type, object>();
         }
@@ -72,11 +76,34 @@ namespace Unity.AppUI.MVVM
                 if (desc.lifetime == ServiceLifetime.Singleton)
                 {
                     if (!m_Singletons.ContainsKey(serviceType))
-                        m_Singletons[serviceType] = bestConstructor.Invoke(GetConstructorParameters(bestConstructor));
+                        m_Singletons[serviceType] = ConstructAndInject(bestConstructor);
                     return m_Singletons[serviceType];
                 }
-                return bestConstructor.Invoke(GetConstructorParameters(bestConstructor));
+                return ConstructAndInject(bestConstructor);
             };
+        }
+
+        object ConstructAndInject(ConstructorInfo bestConstructor)
+        {
+            var service = bestConstructor.Invoke(GetConstructorParameters(bestConstructor));
+            var serviceType = service.GetType();
+            
+            foreach (var field in serviceType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                if (field.GetCustomAttribute<ServiceAttribute>() != null)
+                    field.SetValue(service, GetService(field.FieldType));
+            }
+            
+            foreach (var property in serviceType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                if (property.GetCustomAttribute<ServiceAttribute>() != null)
+                    property.SetValue(service, GetService(property.PropertyType));
+            }
+            
+            if (service is IDependencyInjectionListener listener)
+                listener.OnDependenciesInjected();
+            
+            return service;
         }
 
         object[] GetConstructorParameters(ConstructorInfo info)
@@ -123,8 +150,8 @@ namespace Unity.AppUI.MVVM
         /// <exception cref="InvalidOperationException"> Thrown when the requested service is not registered. </exception>
         public object GetService(Type serviceType)
         {
-            if (m_Disposed)
-                throw new InvalidOperationException($"The {nameof(ServiceProvider)} object has already been disposed.");
+            if (disposed)
+                throw new ObjectDisposedException($"The {nameof(ServiceProvider)} object has already been disposed.");
             
             ServiceDescriptor desc = null;
             foreach (var d in m_Services)
@@ -148,12 +175,12 @@ namespace Unity.AppUI.MVVM
         /// </summary>
         public void Dispose()
         {
-            if (m_Disposed)
+            if (disposed)
                 return;
             
             m_RealizedServices.Clear();
             m_Singletons.Clear();
-            m_Disposed = true;
+            disposed = true;
         }
     }
 }

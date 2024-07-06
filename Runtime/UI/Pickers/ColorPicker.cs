@@ -31,6 +31,8 @@ namespace Unity.AppUI.UI
         
         internal static readonly BindingId showHexProperty = new BindingId(nameof(showHex));
         
+        internal static readonly BindingId hdrProperty = new BindingId(nameof(hdr));
+        
 #endif
         
         /// <summary>
@@ -126,6 +128,11 @@ namespace Unity.AppUI.UI
         /// The hex field styling class.
         /// </summary>
         public const string hexFieldUssClassName = ussClassName + "__hex-field";
+        
+        /// <summary>
+        /// The HDR styling class.
+        /// </summary>
+        public const string hdrUssClassName = ussClassName + "--hdr";
 
         readonly ColorSlider m_AlphaSlider;
 
@@ -250,7 +257,25 @@ namespace Unity.AppUI.UI
                 if (changed)
                     NotifyPropertyChanged(in showAlphaProperty);
 #endif
+                
+                if (!showAlpha)
+                    TryNotifyValueChanged(this.value);
             }
+        }
+        
+        /// <summary>
+        /// Determines if the ColorPicker should display colors in HDR.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool hdr
+        {
+            get => ClassListContains(hdrUssClassName);
+            set => EnableInClassList(hdrUssClassName, value);
         }
 
         /// <summary>
@@ -986,6 +1011,7 @@ namespace Unity.AppUI.UI
 
         void TryNotifyValueChanged(Color current)
         {
+            current = !showAlpha ? new Color(current.r, current.g, current.b, 1) : current;
             if (current != m_Value)
             {
                 var prev = m_Value;

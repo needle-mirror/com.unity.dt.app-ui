@@ -1,4 +1,9 @@
 /* Progress */
+:root {
+    --appui-linear-progress-border-radius: var(--appui-sizing-60);
+    --appui-linear-progress-height: var(--appui-sizing-125);    
+}
+
 .appui-circular-progress {
     display: flex;
     width: var(--appui-sizing-650);
@@ -36,12 +41,16 @@
 
 .appui-linear-progress {
     display: flex;
-    height: var(--appui-sizing-125);
+    height: var(--appui-linear-progress-height);
     flex-shrink: 0;
     overflow: hidden;
-    border-radius: 4px;
     justify-content: center;
     align-items: stretch;
+    border-radius: 0;
 
     --progress-color: var(--appui-foregrounds-100);
+}
+
+.appui-progress--rounded-corners.appui-linear-progress {
+    border-radius: var(--appui-linear-progress-border-radius);
 }

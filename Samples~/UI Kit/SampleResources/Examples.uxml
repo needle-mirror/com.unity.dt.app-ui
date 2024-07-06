@@ -75,6 +75,10 @@
                     <ui:VisualElement class="example-section">
                         <appui:ActionButton label="Action 1" icon="info" />
                     </ui:VisualElement>
+                    <appui:Text text="With Trailing Icon &amp; Label" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ActionButton label="Action 1" trailing-icon="info" />
+                    </ui:VisualElement>
                     <appui:Text text="With Icon Only" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:ActionButton icon="info" />
@@ -746,24 +750,38 @@
                     <appui:Heading text="COLOR FIELD" class="example-title" />
                     <appui:Text text="Sizing" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
+                        <appui:Text text="S" class="example-subtitle" />
+                        <appui:ColorField size="S" />
+                        <appui:Text text="M" class="example-subtitle" />
+                        <appui:ColorField size="M" />
+                        <appui:Text text="L" class="example-subtitle" />
+                        <appui:ColorField size="L" />
+                    </ui:VisualElement>
+                    <appui:Text text="No Text" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
                         <ui:VisualElement class="example-row">
-                            <ui:VisualElement class="example-item" style="flex-basis: 33.33%;">
-                                <appui:Text text="S" class="example-subtitle" />
-                                <appui:ColorField size="S" />
-                            </ui:VisualElement>
-                            <ui:VisualElement class="example-item" style="flex-basis: 33.33%;">
-                                <appui:Text text="M" class="example-subtitle" />
-                                <appui:ColorField size="M" />
-                            </ui:VisualElement>
-                            <ui:VisualElement class="example-item" style="flex-basis: 33.33%;">
-                                <appui:Text text="L" class="example-subtitle" />
-                                <appui:ColorField size="L" />
-                            </ui:VisualElement>
+                            <appui:ColorField show-text="false" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <appui:Text text="Swatch Only" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:ColorField swatch-only="true" />
+                    </ui:VisualElement>
+                    <appui:Text text="Unity Editor ColorPicker" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ColorField color-picker-type="UnityEditor" />
+                    </ui:VisualElement>
+                    <appui:Text text="Default Picker - No Alpha" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ColorField color-picker-type="Default" show-alpha="false" />
+                    </ui:VisualElement>
+                    <appui:Text text="Editor Picker - No Alpha" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ColorField color-picker-type="UnityEditor" show-alpha="false" />
+                    </ui:VisualElement>
+                    <appui:Text text="Editor Picker - HDR" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ColorField color-picker-type="UnityEditor" hdr="true" />
                     </ui:VisualElement>
                     <appui:Text text="Inline Picker" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
@@ -1672,6 +1690,15 @@
                                 <appui:CircularProgress variant="Determinate" value="0.35" buffer-value="0.60" />
                             </ui:VisualElement>
                         </ui:VisualElement>
+                        <appui:Text text="No Rounded Corners" class="example-subtitle" />
+                        <ui:VisualElement class="example-row">
+                            <ui:VisualElement class="example-item">
+                                <appui:CircularProgress variant="Determinate" value="0.10" buffer-value="0.35" rounded-progress-corners="false" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="example-item">
+                                <appui:CircularProgress variant="Determinate" value="0.35" buffer-value="0.60" rounded-progress-corners="false" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
                     </ui:VisualElement>
                     <appui:Text text="Linear" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
@@ -1681,6 +1708,9 @@
                         <appui:LinearProgress color-override="#ce93d8" />
                         <appui:LinearProgress color-override="#66bb6a" />
                         <appui:LinearProgress color-override="#3545bf" />
+                        <appui:Text text="No rounded corners" class="example-subtitle" />
+                        <appui:LinearProgress variant="Determinate" value="0.25" rounded-progress-corners="false" />
+                        <appui:LinearProgress variant="Determinate" value="0.50" rounded-progress-corners="false" /> 
                         <appui:Text text="Determinate" class="example-subtitle" />
                         <appui:LinearProgress variant="Determinate" value="0.25"/>
                         <appui:LinearProgress variant="Determinate" value="0.50"/>

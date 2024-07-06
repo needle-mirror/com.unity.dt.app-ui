@@ -26,24 +26,31 @@
     padding: 0;
 }
 
-.appui-actionbutton.appui-actionbutton--icon-and-label > .appui-actionbutton__label {
-    margin-left: var(--appui-alias-control-gap-md); /*margin-inline-start: var(--appui-alias-control-gap-md);*/
-    margin-right: 0; /*margin-inline-end: 0;*/
-}
-
-.appui--rtl .appui-actionbutton.appui-actionbutton--icon-and-label > .appui-actionbutton__label {
-    margin-left: 0; /*margin-inline-start: 0;*/
-    margin-right: var(--appui-alias-control-gap-md); /*margin-inline-end: var(--appui-alias-control-gap-md);*/
-}
-
 .appui-actionbutton__label {
-    color: var(--appui-foregrounds-100);
+    color: var(--appui-alias-actions-foreground-color-default);
     -unity-font-definition: var(--appui-font-weights-200); /*font-weight: var(--appui-global-font-weight-semi-bold);*/
 }
 
-.appui-actionbutton__icon {
-    color: var(--appui-foregrounds-100);
-    --unity-image-tint-color: var(--appui-foregrounds-100);
+.appui--ltr .appui-actionbutton--icon-and-label > .appui-actionbutton__label {
+    margin-left: var(--appui-alias-control-gap-md); /*margin-inline-start: var(--appui-alias-control-gap-md);*/
+}
+
+.appui--rtl .appui-actionbutton--icon-and-label > .appui-actionbutton__label {
+    margin-right: var(--appui-alias-control-gap-md); /*margin-inline-end: var(--appui-alias-control-gap-md);*/
+}
+
+.appui--ltr .appui-actionbutton--with-trailing-icon > .appui-actionbutton__label {
+    margin-right: var(--appui-alias-control-gap-md); /*margin-inline-end: var(--appui-alias-control-gap-md);*/
+}
+
+.appui--rtl .appui-actionbutton--with-trailing-icon > .appui-actionbutton__label {
+    margin-left: var(--appui-alias-control-gap-md); /*margin-inline-start: var(--appui-alias-control-gap-md);*/
+}
+
+.appui-icon.appui-actionbutton__icon,
+.appui-icon.appui-actionbutton__trailing-icon {
+    color: var(--appui-alias-actions-foreground-color-default);
+    --unity-image-tint-color: var(--appui-alias-actions-foreground-color-default);
 }
 
 .appui-actionbutton.keyboard-focus {
@@ -59,12 +66,25 @@
 .appui-actionbutton.is-hovered {
     background-color: var(--appui-alias-actions-background-color-hover);
     border-color: var(--appui-alias-actions-border-color-hover);
-    color: var(--apui-foreground-color-200);
+}
+
+.appui-actionbutton.is-hovered,
+.appui-actionbutton.is-hovered > .appui-actionbutton__label,
+.appui-actionbutton.is-hovered > .appui-icon {
+    color: var(--appui-alias-actions-foreground-color-hover);
+    --unity-image-tint-color: var(--appui-alias-actions-foreground-color-hover);
 }
 
 .appui-actionbutton.is-active {
     background-color: var(--appui-alias-actions-background-color-active);
     border-color: var(--appui-alias-actions-border-color-active);
+}
+
+.appui-actionbutton.is-active,
+.appui-actionbutton.is-active > .appui-actionbutton__label,
+.appui-actionbutton.is-active > .appui-icon {
+    color: var(--appui-alias-actions-foreground-color-active);
+    --unity-image-tint-color: var(--appui-alias-actions-foreground-color-active);
 }
 
 .is-selected.appui-actionbutton {
@@ -77,19 +97,10 @@
     border-color: var(--appui-alias-actions-border-color-selected);
 }
 
-.is-selected.appui-actionbutton .appui-actionbutton__label {
-    color: var(--appui-alias-actions-accent-foreground-color-default);
-    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default);
-}
-
+.is-selected.appui-actionbutton .appui-actionbutton__label,
 .is-selected.appui-actionbutton .appui-icon {
-    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default);
     color: var(--appui-alias-actions-accent-foreground-color-default);
-}
-
-.appui-actionbutton .appui-icon {
-    --unity-image-tint-color: var(--appui-foregrounds-200); /*fill: var(--appui-foregrounds-200);*/
-    color: var(--appui-foregrounds-200);
+    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default);
 }
 
 .appui-actionbutton--size-s .appui-icon{
@@ -108,22 +119,12 @@
     border-color: var(--appui-alias-actions-border-color-disabled);
 }
 
-.appui-actionbutton:disabled .appui-actionbutton__label {
-    color: var(--appui-foregrounds-25);
-}
-
-.is-selected.appui-actionbutton:disabled .appui-actionbutton__label {
-    color: var(--appui-foregrounds-25);
-}
-
-.appui-actionbutton:disabled .appui-icon {
-    --unity-image-tint-color: var(--appui-foregrounds-25); /*fill: var(--appui-foregrounds-25);*/
-    color: var(--appui-foregrounds-25);
-}
-
-.is-selected.appui-actionbutton:disabled .appui-icon {
-    --unity-image-tint-color: var(--appui-foregrounds-25); /*fill: var(--appui-foregrounds-25);*/
-    color: var(--appui-foregrounds-15);
+.appui-actionbutton:disabled,
+.appui-actionbutton:disabled *,
+.is-selected.appui-actionbutton:disabled,
+.is-selected.appui-actionbutton:disabled * {
+    color: var(--appui-alias-actions-foreground-color-disabled);
+    --unity-image-tint-color: var(--appui-alias-actions-foreground-color-disabled);
 }
 
 .appui-actionbutton.is-hovered:disabled {

@@ -17,6 +17,7 @@
     --appui-icon-arrow-down-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ArrowDown.png");
     --appui-icon-arrow-left-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ArrowLeft.png");
     --appui-icon-arrow-right-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ArrowRight.png");
+    --appui-icon-arrow-square-in-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ArrowSquareIn.png");
     --appui-icon-arrow-square-out-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ArrowSquareOut.png");
     --appui-icon-arrow-u-down-left-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ArrowUDownLeft.png");
     --appui-icon-arrow-u-down-right-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ArrowUDownRight.png");
@@ -328,6 +329,10 @@
 
 .appui-icon--arrow-right--regular {
     --unity-image: var(--appui-icon-arrow-right-regular);
+}
+
+.appui-icon--arrow-square-in--regular {
+    --unity-image: var(--appui-icon-arrow-square-in-regular);
 }
 
 .appui-icon--arrow-square-out--regular {

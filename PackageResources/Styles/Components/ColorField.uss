@@ -10,7 +10,6 @@
     align-items: center;
     color: var(--appui-foregrounds-100);
     cursor: var(--appui-alias-control-cursor-pointer);
-    width: 100%;
     flex-shrink: 0;
 }
 
@@ -23,8 +22,8 @@
 }
 
 .appui-colorfield {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-400);
+    background-color: var(--appui-alias-field-background-color-default);
+    border-color: var(--appui-alias-field-border-color-default);
 }
 
 .appui-colorfield__color-swatch {
@@ -49,30 +48,48 @@
 
 .appui-colorfield__label {
     color: var(--appui-foregrounds-100);
-    flex-grow: 1;
+    flex: 1;
     text-overflow: ellipsis;
     white-space: nowrap;
     -unity-text-overflow-position: end;
     font-size: var(--appui-font-sizes-body-md);
     -unity-text-align: middle-left;
+    display: none;
+    margin-left: 0;
+    margin-right: var(--appui-alias-control-gap-md); /*margin-inline-end: var(--appui-alias-control-gap-md);*/
 }
 
 .appui--rtl .appui-colorfield__label {
     -unity-text-align: middle-right;
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-md); /*margin-inline-start: var(--appui-alias-control-gap-md);*/
+}
+
+.appui-colorfield--show-text .appui-colorfield__label {
+    display: flex;
 }
 
 .appui-colorfield--swatch-only .appui-colorfield__label {
     display: none;
 }
 
+.appui-colorfield__color-picker-icon {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.appui-colorfield--swatch-only .appui-colorfield__color-picker-icon {
+    display: none;
+}
+
 .appui-colorfield.is-hovered {
-    background-color: var(--appui-base-200);
-    border-color: var(--appui-base-500);
+    background-color: var(--appui-alias-field-background-color-hover);
+    border-color: var(--appui-alias-field-border-color-hover);
 }
 
 .appui-colorfield.is-focused {
-    background-color: var(--appui-base-50);
-    border-color: var(--appui-accent-100);
+    background-color: var(--appui-alias-field-background-color-focus);
+    border-color: var(--appui-alias-field-border-color-focus);
 }
 
 .appui-colorfield.keyboard-focus {
@@ -86,8 +103,8 @@
 }
 
 .appui-colorfield.is-active {
-    background-color: var(--appui-base-50);
-    border-color: var(--appui-base-500);
+    background-color: var(--appui-alias-field-background-color-active);
+    border-color: var(--appui-alias-field-border-color-active);
 }
 
 .appui-colorfield.is-invalid {
@@ -95,8 +112,8 @@
 }
 
 .appui-colorfield:disabled /*.appui-colorfield.is-disabled*/ {
-    background-color: var(--appui-base-100);
-    border-color: var(--appui-base-400);
+    background-color: var(--appui-alias-field-background-color-disabled);
+    border-color: var(--appui-alias-field-border-color-disabled);
     cursor: var(--appui-alias-control-cursor-disabled);
     color: var(--appui-foregrounds-25);
 }

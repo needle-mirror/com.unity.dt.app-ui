@@ -35,6 +35,9 @@
     --appui-avatar-size-sm: var(--appui-sizing-600);
     --appui-avatar-size-md: var(--appui-sizing-800);
     --appui-avatar-size-lg: var(--appui-sizing-1000);
+
+    --appui-linear-progress-border-height: var(--appui-sizing-150);
+    --appui-linear-progress-border-radius: var(--appui-sizing-75);
     
     --appui-spacing-1000: 40px;
     --appui-spacing-900: 56px;

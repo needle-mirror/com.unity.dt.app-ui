@@ -4,6 +4,7 @@ Shader "Hidden/App UI/CircularProgress"
     {
         _Color ("Color", Color) = (1,1,1,1)
         _InnerRadius ("Inner Radius", Float) = 0
+        _Rounded ("Rounded", Int) = 1
         _Start ("Start", Float) = 0
         _End ("End", Float) = 0
         _BufferStart ("Buffer Start", Float) = 0
@@ -49,6 +50,7 @@ Shader "Hidden/App UI/CircularProgress"
             }
 
             float _InnerRadius;
+            int _Rounded;
             float _Start;
             float _End;
             float _BufferStart;
@@ -113,8 +115,8 @@ Shader "Hidden/App UI/CircularProgress"
 
                 // Mask for the value progress
                 float valueMask = progress >= _Start && progress <= _End ? 1.0 : 0.0;
-                const float startCircle = circle(i.uv, getCirclePosition(_Start, interRadius), thickness * 0.5);
-                const float endCircle = circle(i.uv, getCirclePosition(_End, interRadius), thickness * 0.5);
+                const float startCircle = circle(i.uv, getCirclePosition(_Start, interRadius), thickness * 0.5) * _Rounded;
+                const float endCircle = circle(i.uv, getCirclePosition(_End, interRadius), thickness * 0.5) * _Rounded;
                 valueMask = max(valueMask, startCircle);
                 valueMask = max(valueMask, endCircle);
 
@@ -124,8 +126,8 @@ Shader "Hidden/App UI/CircularProgress"
                 #ifndef PROGRESS_INDETERMINATE
                 // Mask for the buffer progress
                 float bufferMask = progress >= _BufferStart && progress <= _BufferEnd ? 1.0 : 0.0;
-                const float startBufferCircle = circle(i.uv, getCirclePosition(_BufferStart, interRadius), thickness * 0.5);
-                const float endBufferCircle = circle(i.uv, getCirclePosition(_BufferEnd, interRadius), thickness * 0.5);
+                const float startBufferCircle = circle(i.uv, getCirclePosition(_BufferStart, interRadius), thickness * 0.5) * _Rounded;
+                const float endBufferCircle = circle(i.uv, getCirclePosition(_BufferEnd, interRadius), thickness * 0.5) * _Rounded;
                 bufferMask = max(bufferMask, startBufferCircle);
                 bufferMask = max(bufferMask, endBufferCircle);
 

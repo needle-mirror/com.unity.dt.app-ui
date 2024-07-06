@@ -45,19 +45,21 @@ namespace Unity.AppUI.UI
         /// Convert a ARGB hex color to RGBA hex color.
         /// </summary>
         /// <param name="argbHex">The ARGB hex color.</param>
+        /// <param name="alpha"> Whether to include the alpha channel.</param>
         /// <returns>The RGBA hex color if the string is a valid ARGB hex color, null otherwise.</returns>
-        public static string ArgbToRgbaHex(string argbHex)
+        public static string ArgbToRgbaHex(string argbHex, bool alpha = true)
         {
             if (!IsValidHex(argbHex))
                 return null;
 
             if (IsRgbHex(argbHex))
-                return argbHex;
+                return alpha ? argbHex.Insert(argbHex.Length, argbHex.Length == 3 ? "F" : "FF") : argbHex;
 
             var aLength = argbHex.Length == 4 ? 1 : 2;
             var aIndex = argbHex.Length == 4 ? 3 : 6;
             var a = argbHex.Substring(0, aLength);
-            return argbHex.Remove(0, aLength).Insert(aIndex, $"{a}");
+            var ret = argbHex.Remove(0, aLength);
+            return alpha ? ret.Insert(aIndex, $"{a}") : ret;
         }
 
         /// <summary>
@@ -83,15 +85,16 @@ namespace Unity.AppUI.UI
         /// Convert a <see cref="Color"/> to a RGBA hex color.
         /// </summary>
         /// <param name="color">The color to convert.</param>
+        /// <param name="alpha"> Whether to include the alpha channel.</param>
         /// <returns>The RGBA hex color.</returns>
-        public static string ColorToRgbaHex(Color color)
+        public static string ColorToRgbaHex(Color color, bool alpha = true)
         {
             var argb = System.Drawing.Color.FromArgb(
                 Mathf.RoundToInt(color.a * 255),
                 Mathf.RoundToInt(color.r * 255),
                 Mathf.RoundToInt(color.g * 255),
                 Mathf.RoundToInt(color.b * 255)).ToArgb();
-            return ArgbToRgbaHex(argb.ToString("X8"));
+            return ArgbToRgbaHex(argb.ToString("X8"), alpha);
         }
     }
 }

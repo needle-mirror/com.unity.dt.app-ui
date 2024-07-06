@@ -21,6 +21,8 @@ namespace Unity.AppUI.UI
         static readonly int k_Start = Shader.PropertyToID("_Start");
 
         static readonly int k_End = Shader.PropertyToID("_End");
+        
+        static readonly int k_Rounded = Shader.PropertyToID("_Rounded");
 
         static readonly int k_BufferStart = Shader.PropertyToID("_BufferStart");
 
@@ -93,6 +95,7 @@ namespace Unity.AppUI.UI
             }
 
             s_Material.SetColor(k_Color, colorOverride);
+            s_Material.SetInt(k_Rounded, roundedProgressCorners ? 1 : 0);
             s_Material.SetFloat(k_Start, 0);
             s_Material.SetFloat(k_End, value);
             s_Material.SetFloat(k_BufferStart, 0);
@@ -101,7 +104,7 @@ namespace Unity.AppUI.UI
             s_Material.SetFloat(k_AA, 2.0f / rectSize.x);
             s_Material.SetVector(k_Phase, TimeUtils.GetCurrentTimeVector());
             s_Material.SetFloat(k_Ratio, rectSize.x / rectSize.y);
-            s_Material.SetFloat(k_Padding, rect.height * 0.5f / rect.width);
+            s_Material.SetFloat(k_Padding, roundedProgressCorners ? rect.height * 0.5f / rect.width : 0);
             if (variant == Variant.Indeterminate)
                 s_Material.EnableKeyword("PROGRESS_INDETERMINATE");
             else

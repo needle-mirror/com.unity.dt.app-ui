@@ -32,6 +32,8 @@ namespace Unity.AppUI.UI
         public new const string ussClassName = "appui-circular-progress";
 
         static readonly int k_InnerRadius = Shader.PropertyToID("_InnerRadius");
+        
+        static readonly int k_Rounded = Shader.PropertyToID("_Rounded");
 
         static readonly int k_Start = Shader.PropertyToID("_Start");
 
@@ -128,6 +130,7 @@ namespace Unity.AppUI.UI
 
             s_Material.SetColor(k_Color, colorOverride);
             s_Material.SetFloat(k_InnerRadius, innerRadius);
+            s_Material.SetInt(k_Rounded, roundedProgressCorners ? 1 : 0);
             s_Material.SetFloat(k_Start, 0);
             s_Material.SetFloat(k_End, value);
             s_Material.SetFloat(k_BufferStart, 0);

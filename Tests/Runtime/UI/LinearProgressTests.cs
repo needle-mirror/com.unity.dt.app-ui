@@ -21,6 +21,13 @@ namespace Unity.AppUI.Tests.UI
                     bufferValue = 0.75f,
                     value = 0.5f,
                 });
+                yield return new Story("DeterminateNoRoundedCorners", ctx => new LinearProgress
+                {
+                    variant = Progress.Variant.Determinate,
+                    bufferValue = 0.75f,
+                    value = 0.5f,
+                    roundedProgressCorners = false,
+                });
             }
         }
         
@@ -28,6 +35,7 @@ namespace Unity.AppUI.Tests.UI
         {
             @"<appui:LinearProgress />",
             @"<appui:LinearProgress size=""M"" buffer-opacity=""0.5"" variant=""Determinate"" value=""0.5"" buffer-value=""0.75"" color-override=""#FF0000"" />",
+            @"<appui:LinearProgress size=""M"" buffer-opacity=""0.5"" variant=""Determinate"" value=""0.5"" buffer-value=""0.75"" color-override=""#FF0000"" rounded-progress-corners=""false"" />",
         };
     }
 }

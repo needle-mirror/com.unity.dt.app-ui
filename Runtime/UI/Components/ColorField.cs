@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.Bridge;
 using UnityEngine;
 using UnityEngine.UIElements;
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -7,6 +8,22 @@ using Unity.Properties;
 
 namespace Unity.AppUI.UI
 {
+    /// <summary>
+    /// The type of ColorPicker to open when the ColorField is clicked.
+    /// </summary>
+    public enum ColorPickerType
+    {
+        /// <summary>
+        /// The default ColorPicker from AppUI.
+        /// </summary>
+        Default,
+        
+        /// <summary>
+        /// The ColorPicker from Unity's Editor.
+        /// </summary>
+        UnityEditor
+    }
+    
     /// <summary>
     /// Color Field UI element.
     /// </summary>
@@ -18,8 +35,12 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId sizeProperty = nameof(size);
+
+        internal static readonly BindingId swatchSizeProperty = nameof(swatchSize);
         
         internal static readonly BindingId swatchOnlyProperty = nameof(swatchOnly);
+
+        internal static readonly BindingId showTextProperty = nameof(showText);
         
         internal static readonly BindingId inlinePickerProperty = nameof(inlinePicker);
         
@@ -28,6 +49,12 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId valueProperty = nameof(value);
         
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
+        
+        internal static readonly BindingId colorPickerTypeProperty = nameof(colorPickerType);
+        
+        internal static readonly BindingId showAlphaProperty = nameof(showAlpha);
+        
+        internal static readonly BindingId hdrProperty = nameof(hdr);
 
 #endif
         
@@ -45,6 +72,11 @@ namespace Unity.AppUI.UI
         /// The ColorField label styling class.
         /// </summary>
         public const string labelUssClassName = ussClassName + "__label";
+        
+        /// <summary>
+        /// The ColorField color picker icon styling class.
+        /// </summary>
+        public const string colorPickerIconUssClassName = ussClassName + "__color-picker-icon";
 
         /// <summary>
         /// The ColorField size styling class.
@@ -56,10 +88,17 @@ namespace Unity.AppUI.UI
         /// The ColorField swatch only styling class.
         /// </summary>
         public const string swatchOnlyUssClassName = ussClassName + "--swatch-only";
+        
+        /// <summary>
+        /// The ColorField showText styling class.
+        /// </summary>
+        public const string showTextUssClassName = ussClassName + "--show-text";
 
         readonly ColorSwatch m_SwatchElement;
 
-        readonly LocalizedTextElement m_LabelElement;
+        readonly UnityEngine.UIElements.TextField m_LabelElement;
+
+        readonly Icon m_ColorPickerIcon;
 
         Color m_Value;
 
@@ -76,6 +115,12 @@ namespace Unity.AppUI.UI
         bool m_InlinePicker;
 
         Func<Color, bool> m_ValidateValue;
+
+        ColorPickerType m_ColorPickerType;
+
+        bool m_ShowAlpha;
+        
+        bool m_Hdr;
 
         /// <summary>
         /// Default constructor.
@@ -98,22 +143,55 @@ namespace Unity.AppUI.UI
             };
             m_SwatchElement.AddToClassList(colorSwatchUssClassName);
 
-            m_LabelElement = new LocalizedTextElement
+            m_LabelElement = new UnityEngine.UIElements.TextField
             {
                 name = labelUssClassName,
-                pickingMode = PickingMode.Ignore
+                isReadOnly = true
             };
+            m_LabelElement.RegisterCallback<PointerDownEvent>(OnTextFieldPointerDown);
             m_LabelElement.AddToClassList(labelUssClassName);
+
+            m_ColorPickerIcon = new Icon
+            {
+                name = colorPickerIconUssClassName,
+                iconName = "color-picker",
+                pickingMode = PickingMode.Ignore,
+            };
+            m_ColorPickerIcon.AddToClassList(colorPickerIconUssClassName);
 
             hierarchy.Add(m_SwatchElement);
             hierarchy.Add(m_LabelElement);
+            hierarchy.Add(m_ColorPickerIcon);
 
             size = Size.M;
+            swatchSize = Size.S;
+            showText = true;
+            showAlpha = true;
+            hdr = false;
             SetValueWithoutNotify(Color.clear);
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));
         }
 
+        void OnTextFieldPointerDown(PointerDownEvent evt)
+        {
+            evt.StopPropagation();
+        }
+
         void OnClick()
+        {
+            if (Application.isEditor && colorPickerType == ColorPickerType.UnityEditor)
+                OpenUnityEditorPicker();
+            else 
+                OpenDefaultPicker();
+        }
+
+        void OpenUnityEditorPicker()
+        {
+            m_PreviousValue = value;
+            ColorPickerExtensionsBridge.Show(OnPickerValueChanged, m_PreviousValue, showAlpha, hdr);
+        }
+        
+        void OpenDefaultPicker()
         {
             var wasInline = m_Picker != null && m_Picker.parent == parent;
             m_Picker?.parent?.Remove(m_Picker);
@@ -130,11 +208,12 @@ namespace Unity.AppUI.UI
             }
 
             m_PreviousValue = value;
-            m_Picker = m_Picker ?? new ColorPicker
+            m_Picker ??= new ColorPicker
             {
-                showAlpha = true,
+                showAlpha = showAlpha,
                 showHex = true,
                 showToolbar = true,
+                hdr = hdr,
             };
             m_Picker.previousValue = m_PreviousValue;
             m_Picker.SetValueWithoutNotify(m_PreviousValue);
@@ -167,12 +246,17 @@ namespace Unity.AppUI.UI
 
         void OnPickerValueChanged(ChangeEvent<Color> e)
         {
-            if (e.newValue != value)
+            OnPickerValueChanged(e.newValue);
+        }
+        
+        void OnPickerValueChanged(Color color)
+        {
+            if (color != value)
             {
-                SetValueWithoutNotify(e.newValue);
+                SetValueWithoutNotify(color);
                 using var evt = ChangingEvent<Color>.GetPooled();
                 evt.previousValue = m_PreviousValue;
-                evt.newValue = e.newValue;
+                evt.newValue = color;
                 evt.target = this;
                 SendEvent(evt);
             }
@@ -211,6 +295,30 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// The ColorField color picker type.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public ColorPickerType colorPickerType
+        {
+            get => m_ColorPickerType;
+            set
+            {
+                var changed = m_ColorPickerType != value;
+                m_ColorPickerType = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in colorPickerTypeProperty);
+#endif
+            }
+        }
+
+        /// <summary>
         /// The ColorField size.
         /// </summary>
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -228,10 +336,35 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
+                m_ColorPickerIcon.size = m_Size.ToIconSize();
                 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
+#endif
+            }
+        }
+        
+        /// <summary>
+        /// The ColorField swatch size.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public Size swatchSize
+        {
+            get => m_SwatchElement.size;
+            set
+            {
+                var changed = m_SwatchElement.size != value;
+                m_SwatchElement.size = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in swatchSizeProperty);
 #endif
             }
         }
@@ -256,6 +389,30 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in swatchOnlyProperty);
+#endif
+            }
+        }
+        
+        /// <summary>
+        /// Whether to show the text label for the ColorField.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool showText
+        {
+            get => ClassListContains(showTextUssClassName);
+            set
+            { 
+                var changed = ClassListContains(showTextUssClassName) != value;
+                EnableInClassList(showTextUssClassName, value);
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in showTextProperty);
 #endif
             }
         }
@@ -337,7 +494,7 @@ namespace Unity.AppUI.UI
         public void SetValueWithoutNotify(Color newValue)
         {
             m_Value = newValue;
-            m_LabelElement.text = $"#{ColorExtensions.ColorToRgbaHex(m_Value)}";
+            m_LabelElement.SetValueWithoutNotify($"#{ColorExtensions.ColorToRgbaHex(m_Value, showAlpha)}");
             m_SwatchElement.color = m_Value;
             if (validateValue != null) invalid = !validateValue(m_Value);
         }
@@ -369,7 +526,59 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
+
+        /// <summary>
+        /// Whether to show the alpha channel in the ColorPicker.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool showAlpha
+        {
+            get => m_ShowAlpha;
+            set
+            {
+                var changed = m_ShowAlpha != value;
+                m_ShowAlpha = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in showAlphaProperty);
+#endif
+                
+                if (!m_ShowAlpha)
+                    this.value = new Color(m_Value.r, m_Value.g, m_Value.b, 1);
+            }
+        }
         
+        /// <summary>
+        /// Whether to show the HDR colors in the ColorPicker.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool hdr
+        {
+            get => m_Hdr;
+            set
+            {
+                var changed = m_Hdr != value;
+                m_Hdr = value;
+                
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in hdrProperty);
+#endif
+            }
+        }
+        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -394,6 +603,12 @@ namespace Unity.AppUI.UI
                 name = "swatch-only",
                 defaultValue = false
             };
+            
+            readonly UxmlBoolAttributeDescription m_ShowText = new UxmlBoolAttributeDescription
+            {
+                name = "show-text",
+                defaultValue = true
+            };
 
             readonly UxmlBoolAttributeDescription m_InlinePicker = new UxmlBoolAttributeDescription
             {
@@ -405,6 +620,30 @@ namespace Unity.AppUI.UI
             {
                 name = "size",
                 defaultValue = Size.M,
+            };
+            
+            readonly UxmlEnumAttributeDescription<Size> m_SwatchSize = new UxmlEnumAttributeDescription<Size>
+            {
+                name = "swatch-size",
+                defaultValue = Size.S,
+            };
+            
+            readonly UxmlEnumAttributeDescription<ColorPickerType> m_ColorPickerType = new UxmlEnumAttributeDescription<ColorPickerType>
+            {
+                name = "color-picker-type",
+                defaultValue = ColorPickerType.Default,
+            };
+            
+            readonly UxmlBoolAttributeDescription m_ShowAlpha = new UxmlBoolAttributeDescription
+            {
+                name = "show-alpha",
+                defaultValue = true
+            };
+            
+            readonly UxmlBoolAttributeDescription m_Hdr = new UxmlBoolAttributeDescription
+            {
+                name = "hdr",
+                defaultValue = false
             };
 
             /// <summary>
@@ -419,10 +658,14 @@ namespace Unity.AppUI.UI
 
                 var element = (ColorField)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
+                element.swatchSize = m_SwatchSize.GetValueFromBag(bag, cc);
                 element.invalid = m_Invalid.GetValueFromBag(bag, cc);
                 element.swatchOnly = m_SwatchOnly.GetValueFromBag(bag, cc);
+                element.showText = m_ShowText.GetValueFromBag(bag, cc);
                 element.inlinePicker = m_InlinePicker.GetValueFromBag(bag, cc);
-
+                element.colorPickerType = m_ColorPickerType.GetValueFromBag(bag, cc);
+                element.showAlpha = m_ShowAlpha.GetValueFromBag(bag, cc);
+                element.hdr = m_Hdr.GetValueFromBag(bag, cc);
             }
         }
 #endif

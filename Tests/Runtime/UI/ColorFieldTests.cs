@@ -14,6 +14,7 @@ namespace Unity.AppUI.Tests.UI
         {
             @"<appui:ColorField />",
             @"<appui:ColorField value=""#FF0000"" size=""M"" invalid=""false"" swatch-only=""false"" inline-picker=""false"" />",
+            @"<appui:ColorField value=""#FF0000"" swatch-size=""M"" color-picker-type=""UnityEditor"" hdr=""true"" show-alpha=""false"" />",
         };
     }
 }

@@ -4,6 +4,7 @@ Shader "Hidden/App UI/LinearProgress"
     {
         _Color ("Color", Color) = (1,1,1,1)
         _InnerRadius ("Inner Radius", Float) = 0
+        _Rounded ("Rounded", Int) = 1
         _Start ("Start", Float) = 0
         _End ("End", Float) = 0
         _BufferStart ("Buffer Start", Float) = 0
@@ -54,6 +55,7 @@ Shader "Hidden/App UI/LinearProgress"
             }
 
             float _InnerRadius;
+            int _Rounded;
             float _Start;
             float _End;
             float _BufferStart;
@@ -84,8 +86,8 @@ Shader "Hidden/App UI/LinearProgress"
                 // Mask for the value progress
                 const float radius = 1.0 / _Ratio * 0.5;
                 float valueMask = progress >= _Start && progress <= _End ? 1.0 : 0.0;
-                const float startCircle = circle(i.uv, float2(_Start, 0), radius);
-                const float endCircle = circle(i.uv, float2(_End, 0), radius);
+                const float startCircle = circle(i.uv, float2(_Start, 0), radius) * _Rounded;
+                const float endCircle = circle(i.uv, float2(_End, 0), radius) * _Rounded;
                 valueMask = max(valueMask, startCircle);
                 valueMask = max(valueMask, endCircle);
 
@@ -95,8 +97,8 @@ Shader "Hidden/App UI/LinearProgress"
                 #ifndef PROGRESS_INDETERMINATE
                 // Mask for the buffer progress
                 float bufferMask = progress >= _BufferStart && progress <= _BufferEnd ? 1.0 : 0.0;
-                const float startBufferCircle = circle(i.uv, float2(_BufferStart, 0), radius);
-                const float endBufferCircle = circle(i.uv, float2(_BufferEnd, 0), radius);
+                const float startBufferCircle = circle(i.uv, float2(_BufferStart, 0), radius) * _Rounded;
+                const float endBufferCircle = circle(i.uv, float2(_BufferEnd, 0), radius) * _Rounded;
                 bufferMask = max(bufferMask, startBufferCircle);
                 bufferMask = max(bufferMask, endBufferCircle);
 
