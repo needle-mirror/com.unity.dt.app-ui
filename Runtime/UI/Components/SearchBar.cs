@@ -29,7 +29,7 @@ namespace Unity.AppUI.UI
             leadingIconName = "magnifying-glass";
             placeholder = "Search...";
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("leading-icon-name")]
         [HideInInspector]
@@ -46,7 +46,7 @@ namespace Unity.AppUI.UI
         /// Factory class to instantiate a <see cref="SearchBar"/> using the data read from a UXML file.
         /// </summary>
         public new class UxmlFactory : UxmlFactory<SearchBar, UxmlTraits> { }
-        
+
 #endif
     }
 }

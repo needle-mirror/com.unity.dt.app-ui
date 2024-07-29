@@ -63,7 +63,7 @@
     background-color: var(--appui-accent-50);
 }
 
-.appui-fab.is-disabled, 
+.appui-fab.is-disabled,
 .appui-fab:disabled {
     background-color: var(--appui-base-100);
     color: var(--appui-foregrounds-25);

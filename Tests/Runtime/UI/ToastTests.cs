@@ -12,7 +12,7 @@ namespace Unity.AppUI.Tests.UI
         {
             return Toast.Build(GetReferenceElement(), "Hello", NotificationDuration.Indefinite);
         }
-        
+
         protected override bool shouldContainView => false;
     }
 }

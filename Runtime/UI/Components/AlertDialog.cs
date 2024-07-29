@@ -11,10 +11,8 @@ namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Semantic values used for <see cref="AlertDialog"/> variants.
-    /// <para>
-    /// See <see cref="AlertDialog.variant"/>.
-    /// </para>
     /// </summary>
+    /// <seealso cref="AlertDialog.variant"/>
     public enum AlertSemantic
     {
         /// <summary>
@@ -50,10 +48,10 @@ namespace Unity.AppUI.UI
 
     /// <summary>
     /// AlertDialog UI element.
+    /// </summary>
     /// <remarks>
     /// Use a <see cref="Modal"/> to display an <see cref="AlertDialog"/> object.
     /// </remarks>
-    /// </summary>
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
@@ -61,9 +59,9 @@ namespace Unity.AppUI.UI
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId variantProperty = nameof(variant);
-        
+
         internal static readonly BindingId isPrimaryActionDisabledProperty = nameof(isPrimaryActionDisabled);
-        
+
         internal static readonly BindingId isSecondaryActionDisabledProperty = nameof(isSecondaryActionDisabled);
 #endif
         /// <summary>
@@ -80,7 +78,7 @@ namespace Unity.AppUI.UI
         /// The AlertDialog cancel action styling class.
         /// </summary>
         public const string cancelActionUssClassName = ussClassName + "__cancel-action";
-        
+
         /// <summary>
         /// The AlertDialog icon styling class.
         /// </summary>
@@ -99,17 +97,17 @@ namespace Unity.AppUI.UI
         AlertSemantic m_Variant = AlertSemantic.Default;
 
         readonly Icon m_IconElement;
-        
+
         /// <summary>
         /// The AlertDialog primary action button.
         /// </summary>
         public Button primaryButton => m_PrimaryButton;
-        
+
         /// <summary>
         /// The AlertDialog secondary action button.
         /// </summary>
         public Button secondaryButton => m_SecondaryButton;
-        
+
         /// <summary>
         /// The AlertDialog cancel action button.
         /// </summary>
@@ -124,9 +122,9 @@ namespace Unity.AppUI.UI
             this.SetIsCompositeRoot(true);
             this.SetExcludeFromFocusRing(true);
             delegatesFocus = true;
-            
+
             RegisterCallback<FocusInEvent>(OnFocusIn);
-            
+
             m_PrimaryButton = new Button { name = primaryActionUssClassName, variant = ButtonVariant.Accent };
             m_PrimaryButton.AddToClassList(primaryActionUssClassName);
 
@@ -147,10 +145,10 @@ namespace Unity.AppUI.UI
             m_PrimaryButton.clicked += OnPrimaryActionClicked;
             m_SecondaryButton.clicked += OnSecondaryActionClicked;
             m_CancelButton.clicked += OnCancelActionClicked;
-            
+
             m_IconElement = new Icon
             {
-                name = iconUssClassName, 
+                name = iconUssClassName,
                 iconName = "warning",
                 variant = IconVariant.Fill,
                 pickingMode = PickingMode.Ignore
@@ -203,7 +201,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// Is the primary action button disabled.
         /// </summary>
@@ -226,7 +224,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// Is the secondary action button disabled.
         /// </summary>
@@ -328,13 +326,13 @@ namespace Unity.AppUI.UI
                 name = "variant",
                 defaultValue = AlertSemantic.Default,
             };
-            
+
             readonly UxmlBoolAttributeDescription m_IsPrimaryActionDisabled = new UxmlBoolAttributeDescription
             {
                 name = "is-primary-action-disabled",
                 defaultValue = false
             };
-            
+
             readonly UxmlBoolAttributeDescription m_IsSecondaryActionDisabled = new UxmlBoolAttributeDescription
             {
                 name = "is-secondary-action-disabled",

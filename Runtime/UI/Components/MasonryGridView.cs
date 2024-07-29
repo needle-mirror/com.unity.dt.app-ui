@@ -18,37 +18,37 @@ namespace Unity.AppUI.UI
     public partial class MasonryGridView : BaseGridView
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId packProperty = new BindingId(nameof(pack));
-        
+
 #endif
         /// <summary>
         /// The USS class name of a <see cref="MasonryGridView"/>.
         /// </summary>
         public static readonly string masonryGridViewUssClassName = ussClassName + "--masonry";
-        
+
         /// <summary>
         /// The column container USS class name of a <see cref="MasonryGridView"/>.
         /// </summary>
         public static readonly string columnContainerUssClassName = ussClassName + "__row";
-        
+
         /// <summary>
         /// The columns USS class name of a <see cref="MasonryGridView"/>.
         /// </summary>
         public static readonly string columnUssClassName = ussClassName + "__column";
-        
+
         readonly ObjectPool<VisualElement> m_ItemPool;
-        
+
         readonly VisualElement m_ColumnContainer;
 
         VisualElement[] m_Columns;
-        
+
         SortedDictionary<int, VisualElement>[] m_ItemsByColumn;
 
         IVisualElementScheduledItem m_PackTask;
-        
+
         IVisualElementScheduledItem m_PostPackTask;
-        
+
         IVisualElementScheduledItem m_PostRefreshTask;
 
         bool m_Pack;
@@ -72,7 +72,7 @@ namespace Unity.AppUI.UI
                 {
                     m_Pack = value;
                     Refresh();
-                    
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in packProperty);
 #endif
@@ -93,7 +93,7 @@ namespace Unity.AppUI.UI
             };
             m_ColumnContainer.AddToClassList(columnContainerUssClassName);
             scrollView.Add(m_ColumnContainer);
-            
+
             m_ItemPool = new ObjectPool<VisualElement>(CreatePooledItem, OnTakeFromPool,
                 OnReturnedToPool, OnDestroyPoolObject);
         }
@@ -102,7 +102,7 @@ namespace Unity.AppUI.UI
         public override void Refresh()
         {
             base.Refresh();
-            
+
             // clear everything
             m_PackTask?.Pause();
             m_PostPackTask?.Pause();
@@ -136,7 +136,7 @@ namespace Unity.AppUI.UI
             // if there is no way to bind data, exit
             if (!HasValidDataAndBindings())
                 return;
-            
+
             // allocate items
             scrollView.Add(m_ColumnContainer);
             for (var i = 0; i < itemsSource.Count; i++)
@@ -148,9 +148,9 @@ namespace Unity.AppUI.UI
                 m_ItemsByColumn[columnIndex].Add(i, item);
                 m_Columns[columnIndex].Add(item);
             }
-            
+
             ApplySelectedState();
-            
+
             m_PostRefreshTask = schedule.Execute(PostRefresh);
         }
 
@@ -183,7 +183,7 @@ namespace Unity.AppUI.UI
             {
                 dict.Clear();
             }
-            
+
             var columnHeights = new float[columnCount];
             for (var index = 0; index < itemsSource.Count; index++)
             {
@@ -203,7 +203,7 @@ namespace Unity.AppUI.UI
                 m_Columns[smallerColumnIndex].Add(item);
                 columnHeights[smallerColumnIndex] += item.layout.height;
             }
-            
+
             m_PostPackTask = schedule.Execute(PostPack);
         }
 
@@ -254,7 +254,7 @@ namespace Unity.AppUI.UI
             var index = BinarySearch(m_ItemsByColumn[columnIndex], localPosition.y);
             return index;
         }
-        
+
         static int BinarySearch(SortedDictionary<int, VisualElement> items, float y)
         {
             var keys = new List<int>(items.Keys);
@@ -334,13 +334,13 @@ namespace Unity.AppUI.UI
             item.AddToClassList(itemUssClassName);
             return item;
         }
-        
+
         void OnTakeFromPool(VisualElement item)
         {
             // Add the item in the visual tree but keep it hidden
             item.Add(makeItem.Invoke());
         }
-        
+
         void OnReturnedToPool(VisualElement item)
         {
             if (item.childCount > 0)
@@ -349,7 +349,7 @@ namespace Unity.AppUI.UI
             item.Clear();
             item.RemoveFromHierarchy();
         }
-        
+
         static void OnDestroyPoolObject(VisualElement item)
         {
             // Same behavior as returning to pool
@@ -357,7 +357,7 @@ namespace Unity.AppUI.UI
             item.Clear();
             item.RemoveFromHierarchy();
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
 
@@ -382,7 +382,7 @@ namespace Unity.AppUI.UI
                 name = "pack",
                 defaultValue = false
             };
-            
+
             /// <summary>
             /// Initializes <see cref="GridView"/> properties using values from the attribute bag.
             /// </summary>
@@ -392,12 +392,12 @@ namespace Unity.AppUI.UI
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                
+
                 var view = (MasonryGridView)ve;
                 view.pack = m_Pack.GetValueFromBag(bag, cc);
             }
         }
-        
+
 #endif
     }
 }

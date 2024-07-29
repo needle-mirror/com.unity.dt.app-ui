@@ -17,11 +17,11 @@ namespace Unity.AppUI.Editor
     class IconBrowser : EditorWindow
     {
         const string k_RegularVariant = "regular";
-        
+
         const string k_FillVariant = "fill";
-        
+
         const string k_BoldVariant = "bold";
-        
+
         [UnityEditor.MenuItem("Window/App UI/Icon Browser")]
         public static void ShowWindow()
         {
@@ -35,17 +35,17 @@ namespace Unity.AppUI.Editor
 
         [SerializeField]
         string tempContent;
-        
+
         void CreateGUI()
         {
             var root = rootVisualElement;
             root.AddToClassList("icon-browser");
             var panel = new Panel();
             panel.styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/com.unity.dt.app-ui/PackageResources/Styles/Themes/App UI.tss"));
-            root.styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/com.unity.dt.app-ui/Editor/IconBrowser.uss")); 
+            root.styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/com.unity.dt.app-ui/Editor/IconBrowser.uss"));
             panel.scale = "small";
             panel.theme = EditorGUIUtility.isProSkin ? "editor-dark" : "editor-light";
-            
+
             // create UI
             var header = new Label("Choose or create a new style sheet to browse its icons.\n" +
                 "Then you can add new icons by dragging and dropping them from the Project panel, or remove existing ones.");
@@ -82,11 +82,11 @@ namespace Unity.AppUI.Editor
             var msg = new Label { name = "message" };
             msg.AddToClassList("footer__message");
             footer.Add(msg);
-            
+
             var buttonsGroup = new VisualElement();
             buttonsGroup.AddToClassList("footer__buttons");
             footer.Add(buttonsGroup);
-            
+
             var addIconsButton = new Button(OnAddIconsClicked);
             addIconsButton.name = "add";
             addIconsButton.text = "Add icons...";
@@ -107,7 +107,7 @@ namespace Unity.AppUI.Editor
             gridView.RegisterCallback<GeometryChangedEvent>(OnGridViewGeometryChanged);
             gridView.RegisterCallback<KeyUpEvent>(OnGridViewKeyUp);
             gridView.RegisterCallback<PointerUpEvent>(OnContextClicked);
-            
+
             // refresh UI
             RefreshUI();
         }
@@ -122,7 +122,7 @@ namespace Unity.AppUI.Editor
                 var gridView = rootVisualElement.Q<GridView>();
                 var selectedIndices = gridView.selectedIndices.ToList();
                 var canDelete = selectedIndices.Count > 0;
-            
+
                 if (canDelete)
                     menu.AddItem(new GUIContent("Delete selected icons"), false, DeleteSelectedIcons);
                 else
@@ -130,15 +130,15 @@ namespace Unity.AppUI.Editor
                 menu.ShowAsContext();
             }
         }
-        
+
         void DeleteSelectedIcons()
         {
             var gridView = rootVisualElement.Q<GridView>();
             var selectedIndices = gridView.selectedIndices.ToList();
-            
+
             if (selectedIndices.Count > 0)
             {
-                if (EditorUtility.DisplayDialog("Delete selected icons", 
+                if (EditorUtility.DisplayDialog("Delete selected icons",
                         "Are you sure you want to delete the selected icons from the stylesheet?", "Yes", "No"))
                 {
                     var source = gridView.itemsSource.Cast<IconEntry>().ToList();
@@ -156,29 +156,29 @@ namespace Unity.AppUI.Editor
         {
             evt.StopPropagation();
         }
-        
+
         void OnDragLeave(DragLeaveEvent evt)
         {
             evt.StopPropagation();
         }
-        
+
         void OnDragUpdated(DragUpdatedEvent evt)
         {
             if (DragAndDrop.objectReferences.Length > 0 && DragAndDrop.objectReferences.Any(obj => obj is Texture2D))
                 DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-            else 
+            else
                 DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
-            
+
             evt.StopPropagation();
         }
-        
+
         void OnDragPerform(DragPerformEvent evt)
         {
             if (DragAndDrop.objectReferences.Length > 0 && DragAndDrop.objectReferences.Any(obj => obj is Texture2D))
                 DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-            else 
+            else
                 DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
-            
+
             if (DragAndDrop.objectReferences.Length > 0)
             {
                 var additionalIcons = ParseStyleSheet(tempContent);
@@ -206,7 +206,7 @@ namespace Unity.AppUI.Editor
                 tempContent = GetStyleSheetContent(additionalIcons);
                 RefreshUI();
             }
-            
+
             evt.StopPropagation();
         }
 
@@ -239,9 +239,9 @@ namespace Unity.AppUI.Editor
         {
             var hiddenType = typeof(UnityEditor.Editor).Assembly.GetType( "UnityEditor.ObjectSelector" );
             var piGet = hiddenType.GetProperty( "get", BindingFlags.Public | BindingFlags.Static );
-            var miShow = hiddenType.GetMethod("Show", 
-                BindingFlags.NonPublic | BindingFlags.Instance, 
-                null, 
+            var miShow = hiddenType.GetMethod("Show",
+                BindingFlags.NonPublic | BindingFlags.Instance,
+                null,
                 new Type[]
                 {
                     typeof(Texture2D),
@@ -258,7 +258,7 @@ namespace Unity.AppUI.Editor
 
             if (piGet == null || miShow == null)
                 return;
-            
+
             var objectSelector = piGet.GetValue(null);
             if (objectSelector == null)
                 return;
@@ -289,7 +289,7 @@ namespace Unity.AppUI.Editor
                 var variants = Enum.GetNames(typeof(IconVariant)).Select(iv => iv.ToLowerInvariant()).ToList();
                 if (!variants.Contains(iconVariant))
                     iconVariant = k_RegularVariant;
-                
+
                 var additionalIcons = ParseStyleSheet(tempContent);
                 if (additionalIcons.FindIndex(icn => icn.path == path) < 0)
                     additionalIcons.Add(new IconEntry
@@ -298,7 +298,7 @@ namespace Unity.AppUI.Editor
                         variant = iconVariant,
                         path = path
                     });
-                
+
                 tempContent = GetStyleSheetContent(additionalIcons);
                 RefreshUI();
             }
@@ -317,14 +317,14 @@ namespace Unity.AppUI.Editor
         {
             var endAction = CreateInstance<IconBrowserActions>();
             ProjectWindowUtil.StartNameEditingIfProjectWindowExists(
-                0, 
+                0,
                 endAction,
-                "AppUIIcons.uss", 
-                null, 
+                "AppUIIcons.uss",
+                null,
                 null);
         }
-        
-        void OnGenerateButtonClicked() 
+
+        void OnGenerateButtonClicked()
         {
             var outPath = EditorUtility.SaveFilePanel(
                 "Save App UI Icons style sheet", Application.dataPath, "AppUIIcons", "uss");
@@ -334,15 +334,15 @@ namespace Unity.AppUI.Editor
             var adbPath = ToAdbPath(outPath);
             if (string.IsNullOrEmpty(adbPath))
             {
-                EditorUtility.DisplayDialog("Invalid path", 
+                EditorUtility.DisplayDialog("Invalid path",
                     "The selected path must be inside the Assets or Packages folder", "OK");
                 return;
             }
-            
+
             System.IO.File.WriteAllText(outPath, GetStyleSheetContent(Array.Empty<IconEntry>()));
-            
+
             AssetDatabase.Refresh();
-            
+
             styleSheetAsset = AssetDatabase.LoadAssetAtPath<StyleSheet>(adbPath);
             tempContent = System.IO.File.ReadAllText(outPath);
             RefreshUI();
@@ -354,27 +354,27 @@ namespace Unity.AppUI.Editor
             tempContent = styleSheetAsset ? System.IO.File.ReadAllText(AssetDatabase.GetAssetPath(styleSheetAsset)) : string.Empty;
             RefreshUI();
         }
-        
+
         bool IsDirty => styleSheetAsset && tempContent != System.IO.File.ReadAllText(AssetDatabase.GetAssetPath(styleSheetAsset));
 
         void RefreshUI()
         {
             var objectField = rootVisualElement.Q<ObjectField>();
             objectField.SetValueWithoutNotify(styleSheetAsset);
-            
+
             rootVisualElement.Q<HelpBox>().style.display = styleSheetAsset == null ? DisplayStyle.Flex : DisplayStyle.None;
-            
+
             var additionalIcons = ParseStyleSheet(tempContent);
             var gridView = rootVisualElement.Q<GridView>();
             gridView.itemsSource = additionalIcons;
             gridView.SetEnabled(additionalIcons.Count > 0);
-            
+
             var footer = rootVisualElement.Q("footer");
             footer.SetEnabled(styleSheetAsset);
-            
+
             var saveButton = footer.Q<Button>("save");
             saveButton.SetEnabled(IsDirty);
-            
+
             var message = footer.Q<Label>("message");
             message.text = styleSheetAsset ? $"Total of {additionalIcons.Count + k_RequiredIcons.Length} icons " +
                 $"({additionalIcons.Count} additional and {k_RequiredIcons.Length} required)" : "";
@@ -384,7 +384,7 @@ namespace Unity.AppUI.Editor
         {
             if (IsDirty)
                 System.IO.File.WriteAllText(AssetDatabase.GetAssetPath(styleSheetAsset), tempContent);
-            
+
             var saveButton = rootVisualElement.Q<Button>("save");
             saveButton.SetEnabled(false);
         }
@@ -397,19 +397,19 @@ namespace Unity.AppUI.Editor
             sb.AppendLine("*/");
 
             sb.AppendLine(".appui {");
-            
+
             sb.AppendLine("/* Required icons */");
             foreach (var icon in k_RequiredIcons)
             {
                 sb.AppendLine($"    --appui-icon-{icon.name}-{icon.variant}: url(\"project:/{icon.path}\");");
             }
-            
+
             sb.AppendLine("/* Additional icons */");
             foreach (var icon in additionalIcons)
             {
                 sb.AppendLine($"    --appui-icon-{icon.name}-{icon.variant}: url(\"project:/{icon.path}\");");
             }
-            
+
             sb.AppendLine("}");
             sb.AppendLine("");
 
@@ -420,7 +420,7 @@ namespace Unity.AppUI.Editor
                 sb.AppendLine("}");
                 sb.AppendLine("");
             }
-            
+
             foreach (var icon in additionalIcons)
             {
                 sb.AppendLine($".appui-icon--{icon.name}--{icon.variant} {{");
@@ -428,7 +428,7 @@ namespace Unity.AppUI.Editor
                 sb.AppendLine("}");
                 sb.AppendLine("");
             }
-            
+
             return sb.ToString();
         }
 
@@ -438,9 +438,9 @@ namespace Unity.AppUI.Editor
 
             if (string.IsNullOrEmpty(content))
                 return list;
-            
+
             var lines = content.Split('\n');
-            
+
             foreach (var line in lines)
             {
                 if (line.Contains("url(\"project:/"))
@@ -452,7 +452,7 @@ namespace Unity.AppUI.Editor
                         var path = match.Groups[3].Value;
                         if (k_RequiredIcons.Any(icon => icon.path == path))
                             continue;
-                        
+
                         list.Add(new IconEntry
                         {
                             name = match.Groups[1].Value,
@@ -462,7 +462,7 @@ namespace Unity.AppUI.Editor
                     }
                 }
             }
-            
+
             return list;
         }
 
@@ -484,15 +484,15 @@ namespace Unity.AppUI.Editor
 
             new IconEntry { name = "dots-three", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThree.png" },
             new IconEntry { name = "dots-three-vertical", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThreeVertical.png" },
-            
+
             new IconEntry { name = "info", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Info.png" },
-            
+
             new IconEntry { name = "list", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/List.png" },
             new IconEntry { name = "magnifying-glass", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/MagnifyingGlass.png" },
             new IconEntry { name = "menu", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Menu.png" },
             new IconEntry { name = "minus", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Minus.png" },
             new IconEntry { name = "minus", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Minus.png" },
-            
+
             new IconEntry { name = "plus", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Plus.png" },
 
             new IconEntry { name = "resize-handle", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ResizeHandle.png" },
@@ -501,11 +501,11 @@ namespace Unity.AppUI.Editor
             new IconEntry { name = "sub-menu-indicator", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/SubMenuIndicator.png" },
 
             new IconEntry { name = "users", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Users.png" },
-            
+
             new IconEntry { name = "warning", variant = k_FillVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/Warning.png" },
             new IconEntry { name = "x", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/X.png" },
         };
-        
+
         struct IconEntry
         {
             public string name;
@@ -516,13 +516,13 @@ namespace Unity.AppUI.Editor
         class IconEntryElement : VisualElement
         {
             IconEntry m_Icon;
-            
+
             readonly Image m_Image;
 
             readonly VisualElement m_Element;
-            
+
             readonly Label m_Label;
-            
+
             public IconEntry icon
             {
                 get => m_Icon;
@@ -542,14 +542,14 @@ namespace Unity.AppUI.Editor
                 };
                 m_Element.AddToClassList("icon-entry__element");
                 hierarchy.Add(m_Element);
-                
+
                 m_Image = new Image
                 {
                     pickingMode = PickingMode.Ignore,
                 };
                 m_Image.AddToClassList("icon-entry__image");
                 m_Element.hierarchy.Add(m_Image);
-                
+
                 m_Label = new Label
                 {
                     pickingMode = PickingMode.Ignore,
@@ -557,7 +557,7 @@ namespace Unity.AppUI.Editor
                 m_Label.AddToClassList("icon-entry__label");
                 m_Element.hierarchy.Add(m_Label);
             }
-            
+
             void RefreshUI()
             {
                 m_Image.image = AssetDatabase.LoadAssetAtPath<Texture2D>(m_Icon.path);
@@ -592,17 +592,17 @@ namespace Unity.AppUI.Editor
                 Debug.LogError("Invalid path: " + adbPath);
                 return null;
             }
-            
+
             return adbPath;
         }
-        
+
         class IconBrowserActions : EndNameEditAction
         {
             public override void Action(int instanceId, string pathName, string resourceFile)
             {
                 System.IO.File.WriteAllText(pathName, GetStyleSheetContent(Array.Empty<IconEntry>()));
                 AssetDatabase.Refresh();
-                
+
                 var obj = AssetDatabase.LoadAssetAtPath<StyleSheet>(pathName);
                 Selection.activeObject = obj;
             }

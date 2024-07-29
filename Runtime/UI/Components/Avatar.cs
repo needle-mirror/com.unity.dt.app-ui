@@ -16,18 +16,18 @@ namespace Unity.AppUI.UI
         /// Display the Avatar component as a square.
         /// </summary>
         Square,
-        
+
         /// <summary>
         /// Display the Avatar component as a rounded square.
         /// </summary>
         Rounded,
-        
+
         /// <summary>
         /// Display the Avatar component as a circle.
         /// </summary>
-        Circular,      
+        Circular,
     }
-    
+
     /// <summary>
     /// Avatar UI element.
     /// </summary>
@@ -38,18 +38,18 @@ namespace Unity.AppUI.UI
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId backgroundColorProperty = nameof(backgroundColor);
-        
+
         internal static readonly BindingId outlineColorProperty = nameof(outlineColor);
-        
+
         internal static readonly BindingId outlineWidthProperty = nameof(outlineWidth);
-        
+
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
         internal static readonly BindingId srcProperty = nameof(src);
-        
+
         internal static readonly BindingId variantProperty = nameof(variant);
 #endif
-        
+
         /// <summary>
         /// The Avatar main styling class.
         /// </summary>
@@ -65,15 +65,15 @@ namespace Unity.AppUI.UI
         /// </summary>
         [EnumName("GetSizeUssClassName", typeof(Size))]
         public const string sizeUssClassName = ussClassName + "--size-";
-        
+
         /// <summary>
         /// The Avatar variant styling class.
         /// </summary>
         [EnumName("GetVariantUssClassName", typeof(AvatarVariant))]
         public const string variantUssClassName = ussClassName + "--";
-        
+
         const Size k_DefaultSize = Size.M;
-        
+
         const AvatarVariant k_DefaultVariant = AvatarVariant.Circular;
 
         Size m_Size = Size.M;
@@ -142,7 +142,7 @@ namespace Unity.AppUI.UI
             get => src.GetSelectedImage();
             set => src = BackgroundExtensions.FromObject(value);
         }
-        
+
         /// <summary>
         /// The Avatar source image.
         /// </summary>
@@ -178,7 +178,7 @@ namespace Unity.AppUI.UI
             set
             {
                 m_BackgroundColor = value;
-                m_Container.style.backgroundColor = m_BackgroundColor.IsSet ? 
+                m_Container.style.backgroundColor = m_BackgroundColor.IsSet ?
                     m_BackgroundColor.Value : new StyleColor(StyleKeyword.Null);
             }
         }
@@ -198,7 +198,7 @@ namespace Unity.AppUI.UI
             set
             {
                 m_OutlineWidth = value;
-                
+
                 var borderWidthStyle = m_OutlineWidth.IsSet ? m_OutlineWidth.Value : new StyleFloat(StyleKeyword.Null);
                 style.borderBottomWidth = borderWidthStyle;
                 style.borderLeftWidth = borderWidthStyle;
@@ -222,17 +222,17 @@ namespace Unity.AppUI.UI
             set
             {
                 m_OutlineColor = value;
-                
+
                 var colorStyle = m_OutlineColor.IsSet ? m_OutlineColor.Value : new StyleColor(StyleKeyword.Null);
                 style.borderBottomColor = colorStyle;
                 style.borderLeftColor = colorStyle;
                 style.borderRightColor = colorStyle;
                 style.borderTopColor = colorStyle;
-                
+
                 const float paddingValue = 1;
-                
+
                 var paddingStyle = m_OutlineColor.IsSet ? paddingValue : new StyleLength(StyleKeyword.Null);
-                
+
                 style.paddingBottom = paddingStyle;
                 style.paddingLeft = paddingStyle;
                 style.paddingRight = paddingStyle;
@@ -259,11 +259,11 @@ namespace Unity.AppUI.UI
             outlineColor = Optional<Color>.none;
             outlineWidth = 2;
             src = new Background();
-            
+
             this.RegisterContextChangedCallback<AvatarVariantContext>(OnVariantContextChanged);
             this.RegisterContextChangedCallback<SizeContext>(OnSizeContextChanged);
         }
-        
+
         void OnSizeContextChanged(ContextChangedEvent<SizeContext> evt)
         {
             if (evt.context != null)
@@ -275,7 +275,7 @@ namespace Unity.AppUI.UI
             if (evt.context != null)
                 variant = evt.context.variant;
         }
-        
+
 #if ENABLE_UXML_TRAITS
         /// <summary>
         /// Defines the UxmlFactory for the Avatar.
@@ -287,37 +287,37 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            
+
             readonly UxmlColorAttributeDescription m_BackgroundColor = new UxmlColorAttributeDescription
             {
                 name = "background-color",
                 defaultValue = Color.gray
             };
-            
+
             readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
             {
                 name = "size",
                 defaultValue = k_DefaultSize,
             };
-            
+
             readonly UxmlEnumAttributeDescription<AvatarVariant> m_Variant = new UxmlEnumAttributeDescription<AvatarVariant>
             {
                 name = "variant",
                 defaultValue = k_DefaultVariant,
             };
-            
+
             readonly UxmlStringAttributeDescription m_Src = new UxmlStringAttributeDescription
             {
                 name = "src",
                 defaultValue = null
             };
-            
+
             readonly UxmlColorAttributeDescription m_OutlineColor = new UxmlColorAttributeDescription
             {
                 name = "outline-color",
                 defaultValue = Color.gray
             };
-            
+
             readonly UxmlFloatAttributeDescription m_OutlineWidth = new UxmlFloatAttributeDescription
             {
                 name = "outline-width",

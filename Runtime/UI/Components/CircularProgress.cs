@@ -21,9 +21,9 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId innerRadiusProperty = nameof(innerRadius);
-        
+
 #endif
-        
+
         static Material s_Material;
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace Unity.AppUI.UI
         public new const string ussClassName = "appui-circular-progress";
 
         static readonly int k_InnerRadius = Shader.PropertyToID("_InnerRadius");
-        
+
         static readonly int k_Rounded = Shader.PropertyToID("_Rounded");
 
         static readonly int k_Start = Shader.PropertyToID("_Start");
@@ -71,7 +71,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = !Mathf.Approximately(m_InnerRadius, value);
                 m_InnerRadius = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in innerRadiusProperty);
@@ -85,7 +85,7 @@ namespace Unity.AppUI.UI
         public CircularProgress()
         {
             AddToClassList(ussClassName);
-            
+
             innerRadius = k_DefaultInnerRadius;
         }
 
@@ -100,7 +100,7 @@ namespace Unity.AppUI.UI
                 if (!s_Material)
                     return;
             }
-            
+
             var rect = contentRect;
 
             if (!rect.IsValid())

@@ -4,7 +4,7 @@ uid: custom-ui-components
 
 # Custom UI Components
 
-Every UI component provided by App UI use 
+Every UI component provided by App UI use
 UI Toolkit and USS to create their visual appearance.
 
 To create completely new UI components, you can use the same tools that App UI uses.
@@ -36,8 +36,8 @@ public class MyCustomControl : VisualElement
 
 ### Pressable
 
-The [Pressable](xref:Unity.AppUI.UI.Pressable) 
-class is used to manage the pressing of an [actionable](xref:actions) 
+The [Pressable](xref:Unity.AppUI.UI.Pressable)
+class is used to manage the pressing of an [actionable](xref:actions)
 element.
 
 You should also provide a way to access this manipulator outside of your control,
@@ -52,7 +52,7 @@ public class MyCustomControl : VisualElement
     {
         m_Pressable = new Pressable(OnPressedInternal);
     }
-    
+
     private void OnPressedInternal()
     {
         // Handle the press event here
@@ -66,11 +66,11 @@ The [IDismissInvocator](xref:Unity.AppUI.UI.IDismissInvocator)
 interface is used on [VisualElement](xref:UnityEngine.UIElements.VisualElement)
 that serves as content for a [Popup](xref:Unity.AppUI.UI.Popup).
 
-Implementing this interface allows you to dismiss the popup from the 
+Implementing this interface allows you to dismiss the popup from the
 content of the popup itself.
 
 > [!IMPORTANT]
-> The popup content itself must implement this interface. 
+> The popup content itself must implement this interface.
 > The content of the popup is the element you pass when building the popup.
 > ```csharp
 > Modal modalPopup = Modal.Build(myRootPanel, myContent);
@@ -83,7 +83,7 @@ public class MyCustomControl : VisualElement, IDismissInvocator
     public event Action<DismissType> dismissRequested;
 
     // ...
-    
+
     // Example with the handling of a "Cancel" button press
     public void OnCancelButtonPressed()
     {
@@ -95,7 +95,7 @@ public class MyCustomControl : VisualElement, IDismissInvocator
 
 ### BaseVisualElement and BaseTextElement
 
-The [BaseVisualElement](xref:Unity.AppUI.UI.BaseVisualElement) 
+The [BaseVisualElement](xref:Unity.AppUI.UI.BaseVisualElement)
 and [BaseTextElement](xref:Unity.AppUI.UI.BaseTextElement)
 classes are the base classes for all App UI components.
 They provide a set of common optional properties to override the context of the visual tree
@@ -106,13 +106,13 @@ or if you need to deal with context provisioning in general.
 
 ```csharp
 // for non text-based controls
-public class MyCustomControl : BaseVisualElement 
+public class MyCustomControl : BaseVisualElement
 {
-   // ...    
+   // ...
 }
 
 // for text-based controls
-public class MyCustomTextControl : BaseTextElement 
+public class MyCustomTextControl : BaseTextElement
 {
    // ...
 }
@@ -127,12 +127,12 @@ and provides more styling options, such as the support of `box-shadow` and `outl
 ```csharp
 public class MyCustomControl : ExVisualElement
 {
-    public MyCustomControl() 
+    public MyCustomControl()
     {
         // Set the pass mask to only render specific passes
-        passMask = Passes.Clear 
-            | Passes.Borders 
-            | Passes.BackgroundColor 
+        passMask = Passes.Clear
+            | Passes.Borders
+            | Passes.BackgroundColor
             | Passes.OutsetShadows;
         // Define a USS class to customize the styling
         AddToClassList("my-custom-control");
@@ -162,7 +162,7 @@ More information about localization can be found in the [Localization](xref:loca
 ```csharp
 public class MyCustomControl : VisualElement
 {
-    public MyCustomControl() 
+    public MyCustomControl()
     {
         // Create a new LocalizedTextElement
         var localizedText = new LocalizedTextElement("@tableName:entryKey");

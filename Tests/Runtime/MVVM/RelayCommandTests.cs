@@ -12,13 +12,13 @@ namespace Unity.AppUI.Tests.MVVM
         {
             var command = new RelayCommand(() => { }, () => true);
             Assert.IsTrue(command.CanExecute());
-            
+
             command = new RelayCommand(() => { });
             Assert.IsTrue(command.CanExecute());
 
             var canExecute = false;
             var executed = 0;
-            
+
             command = new RelayCommand(() =>
             {
                 executed++;
@@ -33,13 +33,13 @@ namespace Unity.AppUI.Tests.MVVM
             {
                 changed++;
             };
-            
+
             canExecute = true;
             command.NotifyCanExecuteChanged();
-            
+
             Assert.AreEqual(1, changed);
             Assert.IsTrue(command.CanExecute());
-            
+
             command.Execute();
             Assert.AreEqual(1, executed);
         }
@@ -49,12 +49,12 @@ namespace Unity.AppUI.Tests.MVVM
         {
             var command = new RelayCommand<int>(i => { }, i => true);
             Assert.IsTrue(command.CanExecute(1));
-            
+
             command = new RelayCommand<int>(i => { });
             Assert.IsTrue(command.CanExecute(1));
-            
+
             var canExecute = false;
-            
+
             var executed = 0;
             command = new RelayCommand<int>(i =>
             {
@@ -64,19 +64,19 @@ namespace Unity.AppUI.Tests.MVVM
             Assert.AreEqual(0, executed);
             command.Execute(1);
             Assert.AreEqual(0, executed);
-            
+
             var changed = 0;
             command.CanExecuteChanged += (sender, args) =>
             {
                 changed++;
             };
-            
+
             canExecute = true;
             command.NotifyCanExecuteChanged();
-            
+
             Assert.AreEqual(1, changed);
             Assert.IsTrue(command.CanExecute((object)1));
-            
+
             command.Execute((object)1);
             Assert.AreEqual(1, executed);
         }

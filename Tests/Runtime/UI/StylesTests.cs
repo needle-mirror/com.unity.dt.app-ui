@@ -15,13 +15,13 @@ namespace Unity.AppUI.Tests.UI
         {
             return size.ToIconSize();
         }
-        
+
         [Test]
         public void ToIconSize_InvalidSize_ThrowsException()
         {
             Assert.Throws<System.ArgumentOutOfRangeException>(() => ((Size) 100).ToIconSize());
         }
-        
+
         [Test]
         [TestCase(IconSize.S, ExpectedResult = Size.S)]
         [TestCase(IconSize.M, ExpectedResult = Size.M)]
@@ -30,7 +30,7 @@ namespace Unity.AppUI.Tests.UI
         {
             return size.ToSize();
         }
-        
+
         [Test]
         public void ToSize_InvalidIconSize_ThrowsException()
         {

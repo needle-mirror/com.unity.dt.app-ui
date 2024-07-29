@@ -4,6 +4,30 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0-pre.7] - 2024-07-30
+
+### Changed
+
+- Changed DialogTrigger.keyboardDismissDisabled to DialogTrigger.keyboardDismissEnabled for consistency.
+- Renamed Popup.parentView to Popup.containerView for more clarity.
+
+### Added
+
+- Added Modal.outsideClickDismissEnabled and Modal.outsideClickStrategy properties to support dismissing Modals by clicking outside of them.
+- Added Popup<T>.SetContainerView method to set a custom container which will be the parent of the popup's view.
+- Made `AnchorPopup.GetMovableElement` method public for easier access and increase customization possibilities.
+
+### Fixed
+
+- Fixed "Shape" icon.
+- Fixed border color variable for AccordionItem.
+- Fixed CultureInfo used during source code generation.
+
+### Removed
+
+- Removed intrusive Debug.Log calls from Platform class on Windows platform.
+- Removed warning message when using Single selection type in an overflown ActionGroup.
+
 ## [2.0.0-pre.6] - 2024-07-07
 
 ### Added
@@ -561,7 +585,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed the previous value sent in `ChangeEvent` of `NumericalField`, `VectorField` and `Picker` (Dropdown) components.
 - Improved the synchronization of the `AnchorPopup` components to refresh their position in the layout faster.
 
-### Changed 
+### Changed
 
 - Changed the USS selector for component-level aliases to use directly `:root` selector instead of `<component_main_uss_class>` selector.
 
@@ -579,11 +603,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed items selection persistence between refreshes in `GridView` component. 
+- Fixed items selection persistence between refreshes in `GridView` component.
 
 ## [0.6.2] - 2023-10-27
 
-### Added 
+### Added
 
 - Added `closeOnSelection` property to the `MenuTrigger` component.
 - Added `closeOnSelection` property to the `ActionGroup` component to close the popover menu (if any) when an item is selected.
@@ -601,7 +625,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added `allowNoSelection` property to the `GridView` component to enable or disable the selection of no items. 
+- Added `allowNoSelection` property to the `GridView` component to enable or disable the selection of no items.
 
 ### Fixed
 
@@ -629,13 +653,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The `InputLabel` component uses the `FieldLabel` and `HelpText` components to display the label and the help text.
 - The `Avatar` component now listens to `AvatarVarianContext` and `SizeContext` changes to update the variant and size of the avatar.
 
-### Removed 
+### Removed
 
 - Removed the `size` property from the `InputLabel` component.
 
 ## [0.5.5] - 2023-10-27
 
-### Added 
+### Added
 
 - [Backport] Added `closeOnSelection` property to the `MenuTrigger` component.
 - [Backport] Added `closeOnSelection` property to the `ActionGroup` component to close the popover menu (if any) when an item is selected.
@@ -652,7 +676,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added `allowNoSelection` property to the `GridView` component to enable or disable the selection of no items. 
+- Added `allowNoSelection` property to the `GridView` component to enable or disable the selection of no items.
 
 ### Fixed
 
@@ -730,7 +754,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The `Pressable` manipulator nows inherits from `PointerManipulator` instead of `Manipulator`.
 - Changed the `GridView.GetIndexByPosition` method to use a world-space position instead of a local-space position and renamed it to `GetIndexByWorldPosition`.
 - TouchSlider component will now loose focus when a slide interaction has ended.
-- When calling `GridView.Reset()` method, the selection won't be restored if no custom `GridView.getItemId` function has been provided. 
+- When calling `GridView.Reset()` method, the selection won't be restored if no custom `GridView.getItemId` function has been provided.
 - When using `--box-shadow-type: 1` (inset box-shadow), the `--box-shadow-spread` value was interpreted with the same direction as outset box-shadow. This has been fixed so you can use a positive spread value to go inside the element and a negative spread value to go outside the element.
 - The `Dropdown` component inherits from `Picker` component. Users will be able to create custom dropdown-like components by inheriting from `Picker` component.
 - The `Dropdown` component now has a selection mode property to choose between single and multiple selection modes.
@@ -777,7 +801,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.3.9] - 2023-08-17
 
-### Added 
+### Added
 
 - Added Context API which is accessible through any `VisualElement` instance.
 - Added `preventScrollWithModifiers` property to the `GridView` component.
@@ -794,7 +818,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `tooltip-delay-ms` property to the `ContextProvider` component to customize the tooltip delay.
 - Added more shortcuts to the `Canvas` component.
 
-### Fixed 
+### Fixed
 
 - Fixed Editor crash when updating packages from UPM window.
 
@@ -848,7 +872,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.3.3] - 2023-07-06
 
-### Added 
+### Added
 
 - Added Magic Trackpad gesture support for MacOS.
 - Added `PanGesture` and `MagnificationGesture` events for UITK dispatcher.
@@ -861,7 +885,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.3.2] - 2023-06-01
 
-### Fixed 
+### Fixed
 
 - Fixed NavAction being added twice in NavGraph when deleting a linked NavDestination.
 
@@ -953,7 +977,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.2.9] - 2023-05-04
 
-### Changed 
+### Changed
 
 - Removed `Replica` word from the documentation.
 

@@ -120,52 +120,52 @@ namespace Unity.AppUI.UI
         /// The Popover will be placed at the end-bottom of the target.
         /// </summary>
         EndBottom,
-        
+
         /// <summary>
         /// The Popover will be placed inside the target, at the top left.
         /// </summary>
         InsideTopStart,
-        
+
         /// <summary>
         /// The Popover will be placed inside the target, at the top left.
         /// </summary>
         InsideTopLeft,
-        
+
         /// <summary>
         /// The Popover will be placed inside the target, at the top center.
         /// </summary>
         InsideTop,
-        
+
         /// <summary>
         /// The Popover will be placed inside the target, at the top right.
         /// </summary>
         InsideTopEnd,
-        
+
         /// <summary>
         /// The Popover will be placed inside the target, at the bottom left.
         /// </summary>
         InsideBottomStart,
-        
+
         /// <summary>
         /// The Popover will be placed inside the target, at the bottom center.
         /// </summary>
         InsideBottom,
-        
+
         /// <summary>
         /// The Popover will be placed inside the target, at the bottom right.
         /// </summary>
         InsideBottomEnd,
-        
+
         /// <summary>
         /// The Popover will be placed inside the target, at the center left.
         /// </summary>
         InsideStart,
-        
+
         /// <summary>
         /// The Popover will be placed inside the target, at the center right.
         /// </summary>
         InsideEnd,
-        
+
         /// <summary>
         /// The Popover will be placed inside the target, at the center.
         /// </summary>
@@ -249,22 +249,22 @@ namespace Unity.AppUI.UI
         /// The preferred placement for the popover.
         /// </summary>
         public PopoverPlacement favoritePlacement { get; set; }
-        
+
         /// <summary>
         /// The offset from the anchor element.
         /// </summary>
         public int offset { get; set; }
-        
+
         /// <summary>
         /// The cross offset from the anchor element.
         /// </summary>
         public int crossOffset { get; set; }
-        
+
         /// <summary>
         /// Whether the popover should flip if it doesn't fit in the viewport.
         /// </summary>
         public bool shouldFlip { get; set; }
-        
+
         /// <summary>
         /// Whether the popover should snap not to go outside the viewport.
         /// </summary>
@@ -308,12 +308,17 @@ namespace Unity.AppUI.UI
         /// <returns>The <see cref="Popover"/> instance.</returns>
         public static Popover Build(VisualElement referenceView, VisualElement contentView)
         {
-            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
-            
-            if (panel == null)
+            if (referenceView == null)
+                throw new ArgumentNullException(nameof(referenceView));
+
+            if (referenceView.panel == null)
                 throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-            
-            var parentView = panel.popupContainer;
+
+            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>() ?? referenceView.panel?.visualTree;
+            if (panel == null)
+                throw new InvalidOperationException("Unable to find determine a valid container in the hierarchy.");
+
+            var parentView = (panel as Panel)?.popupContainer ?? panel;
             var popoverVisualElement = new PopoverVisualElement(contentView);
             var popoverElement = new Popover(parentView, popoverVisualElement, contentView)
                 .SetAnchor(referenceView)
@@ -325,7 +330,7 @@ namespace Unity.AppUI.UI
         {
             if (outsideScrollEnabled)
                 return;
-            
+
             var inside = GetMovableElement().worldBound.Contains((Vector2)evt.mousePosition);
             if (!inside)
                 evt.StopImmediatePropagation();
@@ -342,9 +347,7 @@ namespace Unity.AppUI.UI
 
             var shouldDismiss = true;
             if ((outsideClickStrategy & OutsideClickStrategy.Bounds) != 0)
-            {
                 shouldDismiss = !GetMovableElement().worldBound.Contains((Vector2)evt.position);
-            }
 
             if (shouldDismiss && (outsideClickStrategy & OutsideClickStrategy.Pick) != 0)
             {
@@ -356,13 +359,13 @@ namespace Unity.AppUI.UI
 
             if (!shouldDismiss)
                 return;
-            
+
             var insideAnchor = anchor?.worldBound.Contains((Vector2)evt.position) ?? false;
             var insideLastFocusedElement = (m_LastFocusedElement as VisualElement)?.worldBound.Contains((Vector2)evt.position) ?? false;
             if (insideAnchor || insideLastFocusedElement)
             {
                 // prevent reopening the same popover again...
-                
+
                 evt.StopImmediatePropagation();
             }
             Dismiss(DismissType.OutOfBounds);
@@ -392,7 +395,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <inheritdoc cref="AnchorPopup{T}.GetMovableElement"/>
-        protected override VisualElement GetMovableElement()
+        public override VisualElement GetMovableElement()
         {
             return popover.popoverElement;
         }
@@ -401,8 +404,8 @@ namespace Unity.AppUI.UI
         protected override void InvokeDismissedEventHandlers(DismissType reason)
         {
             base.InvokeDismissedEventHandlers(reason);
-            targetParent?.panel?.visualTree.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
-            targetParent?.panel?.visualTree.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
+            containerView?.panel?.visualTree.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            containerView?.panel?.visualTree.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
         }
 
         /// <summary>
@@ -557,7 +560,7 @@ namespace Unity.AppUI.UI
                     case PopoverPlacement.EndTop:
                     case PopoverPlacement.EndBottom:
                     case PopoverPlacement.InsideStart:
-                        left = true; 
+                        left = true;
                         break;
                     case PopoverPlacement.InsideCenter:
                         break;

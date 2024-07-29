@@ -54,7 +54,7 @@ namespace Unity.AppUI.Core
                 phase: ToUnityEngineTouchPhase(touch.phase.ReadValue())
             );
         }
-        
+
         /// <summary>
         /// Converts a UnityEngine.InputSystem.TouchPhase to a UnityEngine.TouchPhase.
         /// </summary>

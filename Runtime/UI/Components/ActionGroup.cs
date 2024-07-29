@@ -18,27 +18,23 @@ namespace Unity.AppUI.UI
 #endif
     public partial class ActionGroup : BaseVisualElement
     {
-        
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId quietProperty = nameof(quiet);
-        
+
         internal static readonly BindingId compactProperty = nameof(compact);
-        
+
         internal static readonly BindingId directionProperty = nameof(direction);
-        
+
         internal static readonly BindingId justifiedProperty = nameof(justified);
-        
+
         internal static readonly BindingId selectionTypeProperty = nameof(selectionType);
-        
+
         internal static readonly BindingId closeOnSelectionProperty = nameof(closeOnSelection);
-        
+
         internal static readonly BindingId allowNoSelectionProperty = nameof(allowNoSelection);
 #endif
-        
-        const string k_MultiSelectWithOverflowMsg =
-            "Having a single selection in an ActionGroup with overflow can lead to unexpected behavior.\n" +
-            "Consider using SelectionType.None or SelectionType.Multiple instead, or try to avoid overflow.";
-        
+
         /// <summary>
         /// The ActionGroup main styling class.
         /// </summary>
@@ -64,22 +60,22 @@ namespace Unity.AppUI.UI
         /// The ActionGroup justified mode styling class.
         /// </summary>
         public const string justifiedUssClassName = ussClassName + "--justified";
-        
+
         /// <summary>
         /// The ActionGroup selectable mode styling class.
         /// </summary>
         public const string selectableUssClassName = ussClassName + "--selectable";
-        
+
         /// <summary>
         /// The ActionGroup container styling class.
         /// </summary>
         public const string containerUssClassName = ussClassName + "__container";
-        
+
         /// <summary>
         /// The ActionGroup More Button styling class.
         /// </summary>
         public const string moreButtonUssClassName = ussClassName + "__more-button";
-        
+
         /// <summary>
         /// Event sent when the selection changes.
         /// </summary>
@@ -88,7 +84,7 @@ namespace Unity.AppUI.UI
         SelectionType m_SelectionType = k_DefaultSelectionType;
 
         readonly List<VisualElement> m_HandledChildren = new List<VisualElement>();
-        
+
         readonly List<int> m_SelectedIndices = new List<int>();
 
         readonly List<int> m_SelectedIds = new List<int>();
@@ -104,11 +100,11 @@ namespace Unity.AppUI.UI
         Rect m_LastContainerLayout;
 
         Rect m_LastLayout;
-        
+
         int m_LastChildCount = 0;
 
         Dir m_CurrentLayoutDirection;
-        
+
         Func<int, int> m_GetItemId;
 
         bool m_AllowNoSelection = true;
@@ -128,15 +124,15 @@ namespace Unity.AppUI.UI
 
             focusable = false;
             pickingMode = PickingMode.Ignore;
-            
+
             m_Container = new VisualElement { name = containerUssClassName, pickingMode = PickingMode.Ignore };
             m_Container.AddToClassList(containerUssClassName);
             hierarchy.Add(m_Container);
-            
+
             m_MoreButton = new ActionButton
             {
-                name = moreButtonUssClassName, 
-                icon = "dots-three", 
+                name = moreButtonUssClassName,
+                icon = "dots-three",
                 iconVariant = IconVariant.Bold,
                 usageHints = UsageHints.DynamicTransform
             };
@@ -344,12 +340,12 @@ namespace Unity.AppUI.UI
                 RefreshUI();
             }
         }
-        
+
         /// <summary>
         /// The selected items.
         /// </summary>
         public IEnumerable<int> selectedIndices => m_SelectedIndices;
-        
+
         /// <summary>
         /// The selected items.
         /// </summary>
@@ -380,7 +376,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// Deselects any selected items.
         /// </summary>
@@ -447,7 +443,7 @@ namespace Unity.AppUI.UI
 
             SetSelectionInternal(indices, false);
         }
-        
+
         void SetSelectionInternal(IEnumerable<int> indices, bool sendEvent)
         {
             indices ??= new int[] { };
@@ -466,7 +462,7 @@ namespace Unity.AppUI.UI
             if (sendEvent && hasChanged)
                 NotifyOfSelectionChange();
         }
-        
+
         void NotifyOfSelectionChange()
         {
             selectionChanged?.Invoke(m_SelectedIndices);
@@ -519,15 +515,15 @@ namespace Unity.AppUI.UI
         {
             return m_GetItemId?.Invoke(index) ?? index;
         }
-        
+
         void OnGeometryChanged(GeometryChangedEvent evt)
         {
             m_HandledChildren.Clear();
             m_HandledChildren.AddRange(Children());
-            
+
             RefreshUI();
         }
-        
+
         void OnMoreButtonGeometryChanged(GeometryChangedEvent evt)
         {
             RefreshUI();
@@ -540,30 +536,27 @@ namespace Unity.AppUI.UI
                 m_MenuBuilder?.Dismiss(DismissType.Action);
                 m_MenuBuilder = null;
             }
-            
+
             for (var i = 0; i < m_HandledChildren.Count; i++)
             {
                 var child = m_HandledChildren[i];
                 if (child is ISelectableElement selectableElement)
                     selectableElement.SetSelectedWithoutNotify(m_SelectedIndices.Contains(i));
             }
-            
-            if (selectionType == SelectionType.Single && m_FirstIndexOutOfBound >= 0)
-                Debug.LogWarning(k_MultiSelectWithOverflowMsg); 
         }
-        
+
         void RefreshUI()
         {
             var actionGroupLayout = layout;
             var containerLayout = m_Container.layout;
             var groupChildCount = m_HandledChildren.Count;
-            
+
             if (!actionGroupLayout.IsValid() || (
-                    containerLayout == m_LastContainerLayout 
+                    containerLayout == m_LastContainerLayout
                     && actionGroupLayout == m_LastLayout
                     && groupChildCount == m_LastChildCount))
                 return;
-            
+
             m_LastChildCount = groupChildCount;
             m_LastContainerLayout = containerLayout;
             m_LastLayout = actionGroupLayout;
@@ -573,7 +566,7 @@ namespace Unity.AppUI.UI
             float size;
             float containerSize;
             float moreButtonSize;
-            Func<VisualElement, float> getChildSize; 
+            Func<VisualElement, float> getChildSize;
 
             switch (m_Direction)
             {
@@ -594,7 +587,7 @@ namespace Unity.AppUI.UI
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
             var outOfBounds = size < containerSize;
             var spaceUsed = outOfBounds ? moreButtonSize : 0;
             m_FirstIndexOutOfBound = -1;
@@ -603,7 +596,7 @@ namespace Unity.AppUI.UI
                 var child = m_HandledChildren[i];
                 if (child == m_MoreButton)
                     continue;
-                
+
                 child.EnableInClassList("unity-first-child", i == 0);
                 child.EnableInClassList(ussClassName + "__inbetween-item", i != 0 && i != m_HandledChildren.Count - 1);
                 child.EnableInClassList("unity-last-child", i == m_HandledChildren.Count - 1);
@@ -659,7 +652,7 @@ namespace Unity.AppUI.UI
             var style = ve.resolvedStyle;
             return style.width + style.marginLeft + style.marginRight;
         }
-        
+
         static float GetElementFullHeight(VisualElement ve)
         {
             var style = ve.resolvedStyle;
@@ -696,15 +689,15 @@ namespace Unity.AppUI.UI
                         item.SetValueWithoutNotify(m_SelectedIndices.Contains(i));
                 }
             }
-            
+
             m_MenuBuilder.Show();
         }
 
         void OnMenuActionPressed(ClickEvent evt)
         {
             if (
-                evt.target is MenuItem {userData: int actionId and >= 0} && 
-                actionId < m_HandledChildren.Count && 
+                evt.target is MenuItem {userData: int actionId and >= 0} &&
+                actionId < m_HandledChildren.Count &&
                 m_HandledChildren[actionId] is ActionButton btn)
             {
                 btn.clickable?.InvokePressed(evt);
@@ -745,19 +738,19 @@ namespace Unity.AppUI.UI
                 name = "direction",
                 defaultValue = Direction.Horizontal
             };
-            
+
             readonly UxmlEnumAttributeDescription<SelectionType> m_SelectionType = new UxmlEnumAttributeDescription<SelectionType>
             {
                 name = "selection-type",
                 defaultValue = k_DefaultSelectionType
             };
-            
+
             readonly UxmlBoolAttributeDescription m_CloseOnSelection = new UxmlBoolAttributeDescription
             {
                 name = "close-on-selection",
                 defaultValue = true
             };
-            
+
             readonly UxmlBoolAttributeDescription m_AllowNoSelection = new UxmlBoolAttributeDescription
             {
                 name = "allow-no-selection",

@@ -28,7 +28,7 @@ namespace Unity.AppUI.Tests.UI
                 });
             }
         }
-        
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:DateRangePicker />",
@@ -49,7 +49,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(1, datePicker.value.end.month);
             Assert.AreEqual(2, datePicker.value.end.day);
         }
-        
+
         [UnityTest]
         public IEnumerator DatePicker_CanSetValueWithEvent()
         {
@@ -58,9 +58,9 @@ namespace Unity.AppUI.Tests.UI
             var datePicker = new DateRangePicker();
             m_TestUI.rootVisualElement.Add(panel);
             panel.Add(datePicker);
-            
+
             yield return null;
-            
+
             var called = 0;
             datePicker.RegisterValueChangedCallback(evt =>
             {
@@ -69,16 +69,16 @@ namespace Unity.AppUI.Tests.UI
                 Assert.AreEqual(new Date(2020, 1, 2), evt.newValue.end);
             });
             datePicker.value = new DateRange(new Date(2020, 1, 1), new Date(2020, 1, 2));
-            
+
             yield return null;
-            
+
             Assert.AreEqual(1, called);
             Assert.AreEqual(new DateRange(new Date(2020, 1, 1), new Date(2020, 1, 2)), datePicker.value);
-            
+
             datePicker.value = new DateRange(new Date(2020, 1, 1), new Date(2020, 1, 2));
-            
+
             yield return null;
-            
+
             Assert.AreEqual(1, called);
         }
     }

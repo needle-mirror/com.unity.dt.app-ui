@@ -10,12 +10,12 @@ namespace Unity.AppUI.UI
     public class TrackpadGestureManipulator : Manipulator
     {
         bool m_Inside;
-        
+
         /// <summary>
         /// The callback that will be invoked when a pinch gesture is recognized.
         /// </summary>
         public Action<PinchGesture> onPinch { get; set; }
-        
+
         /// <summary>
         /// Creates a new instance of <see cref="TrackpadGestureManipulator"/>.
         /// </summary>
@@ -59,7 +59,7 @@ namespace Unity.AppUI.UI
         {
             if (!m_Inside)
                 return;
-            
+
             onPinch?.Invoke(evt.gesture);
         }
     }

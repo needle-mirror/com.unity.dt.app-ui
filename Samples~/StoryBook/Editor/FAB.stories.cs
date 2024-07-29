@@ -36,7 +36,7 @@ namespace Unity.AppUI.Editor
 
         public FABComponent()
         {
-            
+
         }
     }
 }

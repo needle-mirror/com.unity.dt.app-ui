@@ -50,7 +50,7 @@ namespace Unity.AppUI.UI
             };
             m_ScrollView.AddToClassList(containerUssClassName);
             hierarchy.Add(m_ScrollView);
-            
+
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         }
 

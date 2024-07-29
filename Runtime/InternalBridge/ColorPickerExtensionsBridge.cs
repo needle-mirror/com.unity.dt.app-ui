@@ -6,7 +6,7 @@ namespace Unity.AppUI.Bridge
 {
     static class ColorPickerExtensionsBridge
     {
-        
+
 #if APPUI_USE_INTERNAL_API_BRIDGE
 
 
@@ -20,15 +20,15 @@ namespace Unity.AppUI.Bridge
             UnityEditor.ColorPicker.Show(null, colorChangedCallback, col, showAlpha, hdr);
 #endif
         }
-        
-        
+
+
 #else // REFLECTION
-        
-        
+
+
         static Type s_ColorPickerType;
-        
+
         static MethodInfo s_ShowMethod;
-        
+
         internal static void Show(
             Action<Color> colorChangedCallback,
             Color col,
@@ -49,13 +49,13 @@ namespace Unity.AppUI.Bridge
                     }
                 }
             }
-            
+
             s_ShowMethod?.Invoke(null, new object[] { null, colorChangedCallback, col, showAlpha, hdr });
 #endif
         }
-        
-        
+
+
 #endif
-        
+
     }
 }

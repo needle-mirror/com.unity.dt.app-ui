@@ -11,7 +11,7 @@ namespace Unity.AppUI.Tests.UI
         {
             return Tray.Build(GetReferenceElement(), GetContentElement());
         }
-        
+
         protected override bool shouldContainView => false;
     }
 }

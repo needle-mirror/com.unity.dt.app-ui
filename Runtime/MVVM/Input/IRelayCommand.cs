@@ -17,7 +17,7 @@ namespace Unity.AppUI.MVVM
         /// </summary>
         void NotifyCanExecuteChanged();
     }
-    
+
     /// <summary>
     /// A generic interface representing a more specific version of <see cref="IRelayCommand"/>.
     /// </summary>

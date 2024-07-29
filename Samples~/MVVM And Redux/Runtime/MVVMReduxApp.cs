@@ -9,5 +9,5 @@ namespace Unity.AppUI.Samples.MVVMRedux
         {
             this.mainPage = mainPage;
         }
-    } 
+    }
 }

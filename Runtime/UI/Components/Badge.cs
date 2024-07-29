@@ -33,13 +33,13 @@ namespace Unity.AppUI.UI
         /// The Badge overlap type is rectangular.
         /// </summary>
         Rectangular,
-        
+
         /// <summary>
         /// The Badge overlap type is circular.
         /// </summary>
         Circular
     }
-    
+
     /// <summary>
     /// A horizontal anchor.
     /// </summary>
@@ -49,13 +49,13 @@ namespace Unity.AppUI.UI
         /// The element is anchored at the left.
         /// </summary>
         Left,
-        
+
         /// <summary>
         /// The element is anchored at the right.
         /// </summary>
         Right
     }
-    
+
     /// <summary>
     /// A vertical anchor.
     /// </summary>
@@ -66,13 +66,13 @@ namespace Unity.AppUI.UI
         /// The element is anchored at the top.
         /// </summary>
         Top,
-        
+
         /// <summary>
         /// The element is anchored at the bottom.
         /// </summary>
         Bottom
     }
-    
+
     /// <summary>
     /// Badge UI element.
     /// </summary>
@@ -84,21 +84,21 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId backgroundColorProperty = nameof(backgroundColor);
-        
+
         internal static readonly BindingId colorProperty = nameof(color);
-        
+
         internal static readonly BindingId variantProperty = nameof(variant);
-        
+
         internal static readonly BindingId overlapTypeProperty = nameof(overlapType);
-        
+
         internal static readonly BindingId horizontalAnchorProperty = nameof(horizontalAnchor);
-        
+
         internal static readonly BindingId verticalAnchorProperty = nameof(verticalAnchor);
-        
+
         internal static readonly BindingId contentProperty = nameof(content);
-        
+
         internal static readonly BindingId maxProperty = nameof(max);
-        
+
         internal static readonly BindingId showZeroProperty = nameof(showZero);
 
 #endif
@@ -106,46 +106,46 @@ namespace Unity.AppUI.UI
         /// The Badge main styling class.
         /// </summary>
         public const string ussClassName = "appui-badge";
-        
+
         /// <summary>
         /// The Badge label styling class.
         /// </summary>
         public const string labelUssClassName = ussClassName + "__label";
-        
+
         /// <summary>
         /// The Badge badge styling class.
         /// </summary>
         public const string badgeUssClassName = ussClassName + "__badge";
-        
+
         /// <summary>
         /// The Badge Zero content styling class.
         /// </summary>
         public const string zeroUssClassName = ussClassName + "--zero";
-        
+
         /// <summary>
         /// The Badge variant styling class prefix.
         /// </summary>
         [EnumName("GetVariantUssClassName", typeof(BadgeVariant))]
         public const string variantClassName = ussClassName + "--";
-        
+
         /// <summary>
         /// The Badge overlap type styling class prefix.
         /// </summary>
         [EnumName("GetOverlapUssClassName", typeof(BadgeOverlapType))]
         public const string overlapUssClassName = ussClassName + "--overlap-";
-        
+
         /// <summary>
         /// The Badge horizontal anchor styling class prefix.
         /// </summary>
         [EnumName("GetHorizontalAnchorUssClassName", typeof(HorizontalAnchor))]
         public const string horizontalAnchorUssClassName = ussClassName + "--anchor-horizontal-";
-        
+
         /// <summary>
         /// The Badge vertical anchor styling class prefix.
         /// </summary>
         [EnumName("GetVerticalAnchorUssClassName", typeof(VerticalAnchor))]
         public const string verticalAnchorUssClassName = ussClassName + "--anchor-vertical-";
-        
+
         Optional<Color> m_BackgroundColor;
 
         BadgeVariant m_Variant;
@@ -190,7 +190,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_BackgroundColor != value;
                 m_BackgroundColor = value;
-                m_BadgeElement.style.backgroundColor = m_BackgroundColor.IsSet ? 
+                m_BadgeElement.style.backgroundColor = m_BackgroundColor.IsSet ?
                     m_BackgroundColor.Value : new StyleColor(StyleKeyword.Null);
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
@@ -198,7 +198,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// The content color of the Badge.
         /// </summary>
@@ -222,7 +222,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// The variant of the Badge.
         /// </summary>
@@ -247,7 +247,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// The overlap type of the Badge.
         /// </summary>
@@ -272,7 +272,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// The horizontal anchor of the Badge.
         /// </summary>
@@ -297,7 +297,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// The vertical anchor of the Badge.
         /// </summary>
@@ -445,49 +445,49 @@ namespace Unity.AppUI.UI
                 name = "background-color",
                 defaultValue = new Color(1, 0.3f, 0.3f)
             };
-            
+
             readonly UxmlEnumAttributeDescription<BadgeVariant> m_Variant = new UxmlEnumAttributeDescription<BadgeVariant>
             {
                 name = "variant",
                 defaultValue = BadgeVariant.Default
             };
-            
+
             readonly UxmlEnumAttributeDescription<BadgeOverlapType> m_OverlapType = new UxmlEnumAttributeDescription<BadgeOverlapType>
             {
                 name = "overlap-type",
                 defaultValue = BadgeOverlapType.Rectangular
             };
-            
+
             readonly UxmlEnumAttributeDescription<HorizontalAnchor> m_HorizontalAnchor = new UxmlEnumAttributeDescription<HorizontalAnchor>
             {
                 name = "horizontal-anchor",
                 defaultValue = HorizontalAnchor.Right
             };
-            
+
             readonly UxmlEnumAttributeDescription<VerticalAnchor> m_VerticalAnchor = new UxmlEnumAttributeDescription<VerticalAnchor>
             {
                 name = "vertical-anchor",
                 defaultValue = VerticalAnchor.Top
             };
-            
+
             readonly UxmlIntAttributeDescription m_Content = new UxmlIntAttributeDescription
             {
                 name = "content",
                 defaultValue = 0
             };
-            
+
             readonly UxmlIntAttributeDescription m_Max = new UxmlIntAttributeDescription
             {
                 name = "max",
                 defaultValue = int.MaxValue
             };
-            
+
             readonly UxmlBoolAttributeDescription m_ShowZero = new UxmlBoolAttributeDescription
             {
                 name = "show-zero",
                 defaultValue = false
             };
-            
+
             readonly UxmlColorAttributeDescription m_Color = new UxmlColorAttributeDescription
             {
                 name = "color",
@@ -505,14 +505,14 @@ namespace Unity.AppUI.UI
                 base.Init(ve, bag, cc);
 
                 var el = (Badge)ve;
-                
+
                 var color = Color.clear;
                 if (m_BackgroundColor.TryGetValueFromBag(bag, cc, ref color))
                     el.backgroundColor = color;
-                
+
                 if (m_Color.TryGetValueFromBag(bag, cc, ref color))
                     el.color = color;
-                
+
                 el.variant = m_Variant.GetValueFromBag(bag, cc);
                 el.overlapType = m_OverlapType.GetValueFromBag(bag, cc);
                 el.horizontalAnchor = m_HorizontalAnchor.GetValueFromBag(bag, cc);

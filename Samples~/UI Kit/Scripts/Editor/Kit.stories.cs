@@ -22,7 +22,7 @@ namespace Unity.AppUI.Editor
                 root.styleSheets.Add(
                     AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath("b763f743b4824058b4e329c1a2592529")));
                 Samples.Examples.SetupDataBinding(root);
-                root.Query(className: "example-context-switcher-panel").ForEach(visualElement => 
+                root.Query(className: "example-context-switcher-panel").ForEach(visualElement =>
                     visualElement.style.display = DisplayStyle.None);
                 return root;
             }));

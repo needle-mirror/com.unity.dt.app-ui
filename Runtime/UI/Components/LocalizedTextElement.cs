@@ -24,28 +24,28 @@ namespace Unity.AppUI.UI
     public partial class LocalizedTextElement : BaseTextElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId textProperty = new BindingId(nameof(text));
-        
+
         internal static readonly BindingId variablesProperty = new BindingId(nameof(variables));
-        
+
 #endif
-        
+
         /// <summary>
         /// The main USS class name of this element.
         /// </summary>
         public new const string ussClassName = "appui-localized-text";
-        
+
         static readonly CustomStyleProperty<int> k_FontWeightProperty = new ("--unity-font-weight");
 
         string m_ReferenceText;
 
         IList<object> m_Variables;
-        
+
 # if UNITY_LOCALIZATION_PRESENT
         AsyncOperationHandle<LocalizationSettings> m_LocalizationSettingsHandle;
 
-        static readonly Dictionary<string, AsyncOperationHandle<StringTable>> s_GetTableOps = 
+        static readonly Dictionary<string, AsyncOperationHandle<StringTable>> s_GetTableOps =
             new Dictionary<string, AsyncOperationHandle<StringTable>>();
 
         string m_Entry;
@@ -94,9 +94,9 @@ namespace Unity.AppUI.UI
                 }
             }
         }
-        
+
         internal string localizedText => base.text;
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("text")]
         string textOverride
@@ -120,14 +120,14 @@ namespace Unity.AppUI.UI
                 var changed = m_Variables != value;
                 m_Variables = value;
                 UpdateTextWithCurrentLocale();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variablesProperty);
 #endif
             }
         }
-        
+
         void OnLangContextChanged(ContextChangedEvent<LangContext> evt)
         {
             UpdateTextWithCurrentLocale();
@@ -171,7 +171,7 @@ namespace Unity.AppUI.UI
         void UpdateTextWithCurrentLocale()
         {
 #if UNITY_LOCALIZATION_PRESENT
-            
+
             if (panel == null)
                 return;
 
@@ -213,8 +213,8 @@ namespace Unity.AppUI.UI
         }
 
 #if UNITY_LOCALIZATION_PRESENT
-        
-        void OnTableFound(AsyncOperationHandle<StringTable> op) 
+
+        void OnTableFound(AsyncOperationHandle<StringTable> op)
         {
             if (op.IsValid() && op.Status == AsyncOperationStatus.Succeeded)
             {
@@ -239,12 +239,12 @@ namespace Unity.AppUI.UI
                 base.text = m_ReferenceText;
             }
         }
-        
+
         void UpdateTextWithLocale(Locale obj)
         {
             UpdateTextWithCurrentLocale();
         }
-        
+
         void OnLocalizationConfigCompleted(AsyncOperationHandle<LocalizationSettings> obj)
         {
             if (m_LocalizationSettingsHandle.IsValid())
@@ -303,7 +303,7 @@ namespace Unity.AppUI.UI
                 element.text = ((TextElement)ve).text;
             }
         }
-        
+
 #endif
     }
 }

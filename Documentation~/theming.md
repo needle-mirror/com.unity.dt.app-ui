@@ -4,15 +4,15 @@ uid: theming
 
 # Theming
 
-The App UI theming system is based on USS variables and provides developers 
-the flexibility to customize the look and feel of their applications. 
-This system allows you to change colors, font sizes, font families, 
-and many other aspects of the user interface without having to modify 
+The App UI theming system is based on USS variables and provides developers
+the flexibility to customize the look and feel of their applications.
+This system allows you to change colors, font sizes, font families,
+and many other aspects of the user interface without having to modify
 the application's source code.
 
 ## Theme files
 
-A theme file is a set of USS variables that defines the colors and styles 
+A theme file is a set of USS variables that defines the colors and styles
 used by the UI elements. These files are usually located in the `PackageResources/Styles/Themes`
 directory and have the `.tss` extension. App UI provides a default theme file
 called `App UI.tss`
@@ -20,7 +20,7 @@ which can be used as a starting point for customizing the theme.
 
 ## Using a theme
 
-To apply the custom theme to your application, 
+To apply the custom theme to your application,
 you need to reference this Theme file inside the [PanelSettings](xref:UnityEngine.UIElements.PanelSettings)
 used on your [UIDocument](xref:UnityEngine.UIElements.UIDocument) component.
 

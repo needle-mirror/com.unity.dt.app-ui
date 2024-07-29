@@ -18,33 +18,33 @@ namespace Unity.AppUI.UI
     public partial class ColorWheel : BaseVisualElement, IInputElement<float>, INotifyValueChanging<float>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
- 
+
         internal static readonly BindingId valuePropertyKey = new BindingId(nameof(value));
-        
+
         internal static readonly BindingId incrementFactorProperty = new BindingId(nameof(incrementFactor));
-        
+
         internal static readonly BindingId opacityPropertyKey = new BindingId(nameof(opacity));
-        
+
         internal static readonly BindingId brightnessPropertyKey = new BindingId(nameof(brightness));
-        
+
         internal static readonly BindingId saturationPropertyKey = new BindingId(nameof(saturation));
-        
+
         internal static readonly BindingId innerRadiusPropertyKey = new BindingId(nameof(innerRadius));
-        
+
         internal static readonly BindingId checkerSizePropertyKey = new BindingId(nameof(checkerSize));
-        
+
         internal static readonly BindingId checkerColor1PropertyKey = new BindingId(nameof(checkerColor1));
-        
+
         internal static readonly BindingId checkerColor2PropertyKey = new BindingId(nameof(checkerColor2));
-        
+
         internal static readonly BindingId selectedColorPropertyKey = new BindingId(nameof(selectedColor));
-        
+
         internal static readonly BindingId invalidProperty = new BindingId(nameof(invalid));
-        
+
         internal static readonly BindingId validateValueProperty = new BindingId(nameof(validateValue));
-        
+
 #endif
-        
+
         const float k_InvTwoPI = 0.15915494309f;
 
         const float k_TwoPI = 6.28318530718f;
@@ -110,11 +110,11 @@ namespace Unity.AppUI.UI
         Optional<Color> m_CheckerColor1FromCode;
 
         Color m_CheckerColor2FromStyle;
-        
+
         Optional<Color> m_CheckerColor2FromCode;
 
         int m_CheckerSizeFromStyle = k_DefaultCheckerSize;
-        
+
         Optional<int> m_CheckerSizeFromCode;
 
         RenderTexture m_RT;
@@ -126,7 +126,7 @@ namespace Unity.AppUI.UI
         static Material s_Material;
 
         float m_OpacityFromStyle = k_DefaultOpacity;
-        
+
         Optional<float> m_OpacityFromCode;
 
         float m_BrightnessFromStyle = k_DefaultBrightness;
@@ -152,17 +152,17 @@ namespace Unity.AppUI.UI
         float m_IncrementFactor = k_DefaultIncrementFactor;
 
         const float k_DefaultIncrementFactor = 0.01f;
-        
+
         const float k_DefaultInnerRadius = 0.4f;
-        
+
         const int k_DefaultCheckerSize = 4;
-        
+
         const float k_DefaultOpacity = 1f;
-        
+
         const float k_DefaultBrightness = 1f;
-        
+
         const float k_DefaultSaturation = 1f;
-        
+
         Func<float, bool> m_ValidateValue;
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(validValue);
                 evt.target = this;
                 SendEvent(evt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valuePropertyKey);
                 NotifyPropertyChanged(in selectedColorPropertyKey);
@@ -212,10 +212,10 @@ namespace Unity.AppUI.UI
                 var validatedValue = Mathf.Clamp01(value);
                 var changed = !Mathf.Approximately(validatedValue, opacity);
                 m_OpacityFromCode = validatedValue;
-                
+
                 if (changed)
                     GenerateTextures();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in opacityPropertyKey);
@@ -241,10 +241,10 @@ namespace Unity.AppUI.UI
                 var validatedValue = Mathf.Clamp01(value);
                 var changed = !Mathf.Approximately(validatedValue, brightness);
                 m_BrightnessFromCode = validatedValue;
-                
+
                 if (changed)
                     GenerateTextures();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
@@ -273,10 +273,10 @@ namespace Unity.AppUI.UI
                 var validatedValue = Mathf.Clamp01(value);
                 var changed = !Mathf.Approximately(validatedValue, saturation);
                 m_SaturationFromCode = validatedValue;
-                
+
                 if (changed)
                     GenerateTextures();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
@@ -305,10 +305,10 @@ namespace Unity.AppUI.UI
                 var validatedValue = Mathf.Clamp(value, 0, 0.5f - Mathf.Epsilon);
                 var changed = !Mathf.Approximately(validatedValue, innerRadius);
                 m_InnerRadiusFromCode = value;
-                
+
                 if (changed)
                     GenerateTextures();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in innerRadiusPropertyKey);
@@ -333,10 +333,10 @@ namespace Unity.AppUI.UI
             {
                 var changed = checkerSize != value;
                 m_CheckerSizeFromCode = value;
-                
+
                 if (changed)
                     GenerateTextures();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in checkerSizePropertyKey);
@@ -360,10 +360,10 @@ namespace Unity.AppUI.UI
             {
                 var changed = checkerColor1 != value;
                 m_CheckerColor1FromCode = value;
-                
+
                 if (changed)
                     GenerateTextures();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in checkerColor1PropertyKey);
@@ -387,10 +387,10 @@ namespace Unity.AppUI.UI
             {
                 var changed = checkerColor2 != value;
                 m_CheckerColor2FromCode = value;
-                
+
                 if (changed)
                     GenerateTextures();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in checkerColor2PropertyKey);
@@ -423,15 +423,15 @@ namespace Unity.AppUI.UI
             {
                 if (Mathf.Approximately(m_IncrementFactor, value))
                     return;
-                
+
                 m_IncrementFactor = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in incrementFactorProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The ColorWheel invalid state.
         /// </summary>
@@ -448,14 +448,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = invalid != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The ColorWheel validation function.
         /// </summary>
@@ -469,7 +469,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
@@ -500,7 +500,7 @@ namespace Unity.AppUI.UI
             };
             m_Thumb.AddToClassList(thumbUssClassName);
             hierarchy.Add(m_Thumb);
-            
+
             m_ThumbSwatch = new VisualElement
             {
                 name = thumbSwatchUssClassName,
@@ -519,7 +519,7 @@ namespace Unity.AppUI.UI
             RegisterCallback<KeyDownEvent>(OnKeyDown);
 
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));
-            
+
             incrementFactor = k_DefaultIncrementFactor;
 
             SetValueWithoutNotify(0);
@@ -555,7 +555,7 @@ namespace Unity.AppUI.UI
 
             if (handled)
             {
-                
+
                 evt.StopPropagation();
 
                 val = Mathf.Repeat(val, 1f);
@@ -715,7 +715,7 @@ namespace Unity.AppUI.UI
             m_Thumb.style.top = y - selectorSize * 0.5f;
             m_Thumb.style.left = x - selectorSize * 0.5f;
             m_ThumbSwatch.style.backgroundColor = selectedColor;
-            
+
             if (m_ValidateValue != null)
                 invalid = !m_ValidateValue(newValue);
         }
@@ -728,7 +728,7 @@ namespace Unity.AppUI.UI
                 if (!s_Material)
                     return;
             }
-            
+
             var rect = m_Image.contentRect;
 
             if (!rect.IsValid())
@@ -782,7 +782,7 @@ namespace Unity.AppUI.UI
             // var refPoint = new Vector2(1, 0); // angle = 0 = red = position(1,0) in wheel
             return (/*Mathf.Atan2(refPoint.y, refPoint.x)*/ -Mathf.Atan2(direction.y, direction.x)) * k_InvTwoPI;
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -800,7 +800,7 @@ namespace Unity.AppUI.UI
                 name = "value",
                 defaultValue = 0
             };
-            
+
             readonly UxmlFloatAttributeDescription m_IncrementFactor = new UxmlFloatAttributeDescription
             {
                 name = "increment-factor",
@@ -819,11 +819,11 @@ namespace Unity.AppUI.UI
 
                 var el = (ColorWheel)ve;
                 el.SetValueWithoutNotify(m_Value.GetValueFromBag(bag, cc));
-                
+
                 var incrementFactor = k_DefaultIncrementFactor;
                 if (m_IncrementFactor.TryGetValueFromBag(bag, cc, ref incrementFactor))
                     el.incrementFactor = incrementFactor;
-                
+
             }
         }
 #endif

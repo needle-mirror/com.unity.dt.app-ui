@@ -32,7 +32,7 @@ Shader "Hidden/App UI/Box"
     SubShader
     {
         ZTest Always Cull Off ZWrite Off
-        
+
         CGINCLUDE
 
         #include "UnityCG.cginc"
@@ -297,9 +297,9 @@ Shader "Hidden/App UI/Box"
                     const float dotSize = 0.25;
                     borderAlpha *= smoothstep(dotSize - (_AA / band), dotSize, abs(dotLength));
                 }
-                
+
                 return fixed4(_BorderColor.rgb, _BorderColor.a * borderAlpha);
-                
+
                 #else
                 return fixed4(0,0,0,0);
                 #endif

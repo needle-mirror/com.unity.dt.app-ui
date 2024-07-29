@@ -36,7 +36,7 @@ var otherButton = new Button(() => Debug.Log("Button clicked"));
 > [!NOTE]
 > The following components are following the **App UI Design** guidelines.
 
-Here are some of the main Action components available in App UI. 
+Here are some of the main Action components available in App UI.
 To determine all the available properties for each component, see the [API Reference](xref:Unity.AppUI.UI).
 
 ### Button
@@ -48,7 +48,7 @@ opening a dialog, canceling an action, or performing a delete operation.
   <img src="images/button.png" alt="Button">
 </p>
 
-```xml 
+```xml
 <appui:Button title="Button" />
 ```
 

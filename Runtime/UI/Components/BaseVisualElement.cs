@@ -20,33 +20,33 @@ namespace Unity.AppUI.UI
         /// Note that this is only a hint and the tooltip may be placed differently if there is not enough space.
         /// </remarks>
         OptionalEnum<PopoverPlacement> preferredTooltipPlacementOverride { get; set; }
-        
+
         /// <summary>
         /// Delay in milliseconds before showing a tooltip.
         /// </summary>
         Optional<int> tooltipDelayMsOverride { get; set; }
-        
+
         /// <summary>
         /// The scale to use in this part of the UI.
         /// </summary>
         Optional<string> scaleOverride { get; set; }
-        
+
         /// <summary>
         /// The theme to use in this part of the UI.
         /// </summary>
         Optional<string> themeOverride { get; set; }
-        
+
         /// <summary>
         /// The language to use in this part of the UI.
         /// </summary>
         Optional<string> langOverride { get; set; }
-        
+
         /// <summary>
         /// The layout direction to use in this part of the UI.
         /// </summary>
         OptionalEnum<Dir> layoutDirectionOverride { get; set; }
     }
-    
+
     /// <summary>
     /// Base class for all non textual App UI components.
     /// </summary>
@@ -57,15 +57,15 @@ namespace Unity.AppUI.UI
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId preferredTooltipPlacementOverrideProperty = nameof(preferredTooltipPlacementOverride);
-        
+
         internal static readonly BindingId tooltipDelayMsOverrideProperty = nameof(tooltipDelayMsOverride);
-        
+
         internal static readonly BindingId scaleOverrideProperty = nameof(scaleOverride);
-        
+
         internal static readonly BindingId themeOverrideProperty = nameof(themeOverride);
-        
+
         internal static readonly BindingId langOverrideProperty = nameof(langOverride);
-        
+
         internal static readonly BindingId layoutDirectionOverrideProperty = nameof(layoutDirectionOverride);
 #endif
 
@@ -74,9 +74,9 @@ namespace Unity.AppUI.UI
         /// </summary>
         [EnumName("GetLayoutDirectionUssClassName", typeof(Dir))]
         public const string contextPrefix = Panel.contextPrefix;
-        
+
         internal VisualElementExtensions.AdditionalData additionalData;
-        
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -89,7 +89,7 @@ namespace Unity.AppUI.UI
             langOverride = Optional<string>.none;
             layoutDirectionOverride = OptionalEnum<Dir>.none;
         }
-        
+
         /// <summary>
         /// The scale to use in this part of the UI.
         /// </summary>
@@ -103,16 +103,16 @@ namespace Unity.AppUI.UI
 #endif
         public Optional<string> scaleOverride
         {
-            get => this.GetSelfContext<ScaleContext>() is {} ctx ? 
+            get => this.GetSelfContext<ScaleContext>() is {} ctx ?
                 ctx.scale : Optional<string>.none;
             set
             {
                 var previous = this.GetSelfContext<ScaleContext>();
                 var newCtx = value.IsSet ? new ScaleContext(value.Value) : null;
-                
+
                 if (previous == newCtx)
                     return;
-                
+
                 if (!string.IsNullOrEmpty(previous?.scale))
                     RemoveFromClassList(MemoryUtils.Concatenate(Panel.contextPrefix, previous.scale));
                 if (!string.IsNullOrEmpty(newCtx?.scale))
@@ -123,7 +123,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// The theme to use in this part of the UI.
         /// </summary>
@@ -137,13 +137,13 @@ namespace Unity.AppUI.UI
 #endif
         public Optional<string> themeOverride
         {
-            get => this.GetSelfContext<ThemeContext>() is {} ctx ? 
+            get => this.GetSelfContext<ThemeContext>() is {} ctx ?
                 ctx.theme : Optional<string>.none;
             set
             {
                 var previous = this.GetSelfContext<ThemeContext>();
                 var newCtx = value.IsSet ? new ThemeContext(value.Value) : null;
-                
+
                 if (previous == newCtx)
                     return;
 
@@ -157,7 +157,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// The language to use in this part of the UI.
         /// </summary>
@@ -170,13 +170,13 @@ namespace Unity.AppUI.UI
 #endif
         public Optional<string> langOverride
         {
-            get => this.GetSelfContext<LangContext>() is {} ctx ? 
+            get => this.GetSelfContext<LangContext>() is {} ctx ?
                 ctx.lang : Optional<string>.none;
             set
             {
                 var previous = this.GetSelfContext<LangContext>();
                 var newCtx = value.IsSet ? new LangContext(value.Value) : null;
-                
+
                 if (previous == newCtx)
                     return;
 
@@ -190,7 +190,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// The layout direction to use in this part of the UI.
         /// </summary>
@@ -203,13 +203,13 @@ namespace Unity.AppUI.UI
 #endif
         public OptionalEnum<Dir> layoutDirectionOverride
         {
-            get => this.GetSelfContext<DirContext>() is {} ctx ? 
+            get => this.GetSelfContext<DirContext>() is {} ctx ?
                 ctx.dir : OptionalEnum<Dir>.none;
             set
             {
                 var previous = this.GetSelfContext<DirContext>();
                 var newCtx = value.IsSet ? new DirContext(value.Value) : null;
-                
+
                 if (previous == newCtx)
                     return;
 
@@ -223,7 +223,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// Preferred placement for tooltips.
         /// </summary>
@@ -237,13 +237,13 @@ namespace Unity.AppUI.UI
 #endif
         public OptionalEnum<PopoverPlacement> preferredTooltipPlacementOverride
         {
-            get => this.GetSelfContext<TooltipPlacementContext>() is {} ctx ? 
+            get => this.GetSelfContext<TooltipPlacementContext>() is {} ctx ?
                 ctx.placement : OptionalEnum<PopoverPlacement>.none;
             set
             {
                 var previous = this.GetSelfContext<TooltipPlacementContext>();
                 var newCtx = value.IsSet ? new TooltipPlacementContext(value.Value) : null;
-                
+
                 if (previous == newCtx)
                     return;
 
@@ -253,7 +253,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// Delay in milliseconds before showing a tooltip.
         /// </summary>
@@ -266,13 +266,13 @@ namespace Unity.AppUI.UI
 #endif
         public Optional<int> tooltipDelayMsOverride
         {
-            get => this.GetSelfContext<TooltipDelayContext>() is {} ctx ? 
+            get => this.GetSelfContext<TooltipDelayContext>() is {} ctx ?
                 ctx.tooltipDelayMs : Optional<int>.none;
             set
             {
                 var previous = this.GetSelfContext<TooltipDelayContext>();
                 var newCtx = value.IsSet ? new TooltipDelayContext(value.Value) : null;
-                
+
                 if (previous == newCtx)
                     return;
 
@@ -282,7 +282,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
 #if ENABLE_ENABLED_UXML_PROPERTY
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("enabled")]
@@ -290,7 +290,7 @@ namespace Unity.AppUI.UI
         bool enabledOverride
         {
             get => enabledSelf;
-            set => SetEnabled(value); 
+            set => SetEnabled(value);
         }
 #endif
 
@@ -306,14 +306,14 @@ namespace Unity.AppUI.UI
                     defaultValue = Tooltip.defaultPlacement,
                     name = "preferred-tooltip-placement"
                 };
-            
+
             readonly UxmlIntAttributeDescription m_TooltipDelayMs =
                 new UxmlIntAttributeDescription
                 {
                     defaultValue = TooltipManipulator.defaultDelayMs,
                     name = "tooltip-delay-ms"
                 };
-            
+
             readonly UxmlStringAttributeDescription m_Scale =
                 new UxmlStringAttributeDescription
                 {
@@ -324,8 +324,8 @@ namespace Unity.AppUI.UI
                         values = new[] {"small", "medium", "large"}
                     }
                 };
-            
-            readonly UxmlStringAttributeDescription m_Theme = 
+
+            readonly UxmlStringAttributeDescription m_Theme =
                 new UxmlStringAttributeDescription
                 {
                     defaultValue = null,
@@ -335,21 +335,21 @@ namespace Unity.AppUI.UI
                         values = new []{ "dark", "light", "editor-dark", "editor-light" }
                     }
                 };
-            
+
             readonly UxmlStringAttributeDescription m_Lang =
                 new UxmlStringAttributeDescription
                 {
                     defaultValue = null,
                     name = "lang",
                 };
-            
+
             readonly UxmlEnumAttributeDescription<Dir> m_Dir =
                 new UxmlEnumAttributeDescription<Dir>
                 {
                     defaultValue = Dir.Ltr,
                     name = "dir"
                 };
-            
+
 #if ENABLE_ENABLED_UXML_PROPERTY
             readonly UxmlBoolAttributeDescription m_EnabledOverride =
                 new UxmlBoolAttributeDescription
@@ -358,7 +358,7 @@ namespace Unity.AppUI.UI
                     name = "enabled"
                 };
 #endif
-        
+
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
             /// </summary>
@@ -369,37 +369,37 @@ namespace Unity.AppUI.UI
             {
                 var isFocusable = ve.focusable;
                 base.Init(ve, bag, cc);
-                
+
                 var element = (BaseVisualElement)ve;
-            
+
                 // small hack because UITK override the currently focusable state when building the element from UXML
                 if (isFocusable)
                     ve.focusable = true;
-            
+
                 var preferredTooltipPlacement = Tooltip.defaultPlacement;
                 if (m_PreferredTooltipPlacement.TryGetValueFromBag(bag, cc, ref preferredTooltipPlacement))
                     ve.SetPreferredTooltipPlacement(preferredTooltipPlacement);
-                
+
                 var tooltipDelayMs = TooltipManipulator.defaultDelayMs;
                 if (m_TooltipDelayMs.TryGetValueFromBag(bag, cc, ref tooltipDelayMs))
                     element.tooltipDelayMsOverride = tooltipDelayMs;
-                
+
                 var scale = string.Empty;
                 if (m_Scale.TryGetValueFromBag(bag, cc, ref scale) && !string.IsNullOrEmpty(scale))
                     element.scaleOverride = scale;
-                
+
                 var theme = string.Empty;
                 if (m_Theme.TryGetValueFromBag(bag, cc, ref theme) && !string.IsNullOrEmpty(theme))
                     element.themeOverride = theme;
-                
+
                 var lang = string.Empty;
                 if (m_Lang.TryGetValueFromBag(bag, cc, ref lang) && !string.IsNullOrEmpty(lang))
                     element.langOverride = lang;
-                
+
                 var dir = Dir.Ltr;
                 if (m_Dir.TryGetValueFromBag(bag, cc, ref dir))
                     element.layoutDirectionOverride = dir;
-                
+
 #if ENABLE_ENABLED_UXML_PROPERTY
                 var enabled = true;
                 if (m_EnabledOverride.TryGetValueFromBag(bag, cc, ref enabled))

@@ -15,7 +15,7 @@ namespace Unity.AppUI.Sample.Editor
 
         public DragAndDropPage()
         {
-            m_Stories.Add(new StoryBookStory("Main", MainStory)); 
+            m_Stories.Add(new StoryBookStory("Main", MainStory));
         }
 
         static VisualElement MainStory()

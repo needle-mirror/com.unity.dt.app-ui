@@ -28,7 +28,7 @@ namespace Unity.AppUI.UI
         /// The direction of the scroll.
         /// </summary>
         public ScrollViewMode direction { get; set; } = ScrollViewMode.Vertical;
-        
+
         /// <summary>
         /// Construct a Scrollable manipulator.
         /// </summary>
@@ -37,9 +37,9 @@ namespace Unity.AppUI.UI
         /// <param name="downHandler">A callback invoked when a <see cref="PointerDownEvent"/> has been received.</param>
         /// <param name="cancelHandler">A callback invoked when a <see cref="PointerCancelEvent"/> has been received.</param>
         public Scrollable(
-            Action<Scrollable> dragHandler, 
-            Action<Scrollable> upHandler, 
-            Action<Scrollable> downHandler = null, 
+            Action<Scrollable> dragHandler,
+            Action<Scrollable> upHandler,
+            Action<Scrollable> downHandler = null,
             Action<Scrollable> cancelHandler = null)
         {
             m_DragHandler = dragHandler;
@@ -119,7 +119,7 @@ namespace Unity.AppUI.UI
         {
             if (!m_IsDown)
                 return;
-            
+
             if (m_PointerId != evt.pointerId && HasMovedEnoughInRightDirection(evt.position))
             {
                 m_PointerId = evt.pointerId;
@@ -194,7 +194,7 @@ namespace Unity.AppUI.UI
             position = Vector2.zero;
             localPosition = Vector2.zero;
         }
-        
+
         bool HasMovedEnoughInRightDirection(Vector2 pos)
         {
             switch (direction)

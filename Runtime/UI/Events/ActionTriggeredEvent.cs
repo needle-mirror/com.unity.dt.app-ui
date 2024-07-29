@@ -21,7 +21,7 @@ namespace Unity.AppUI.UI
 
         void LocalInit()
         {
-            this.SetPropagation(EventPropagation.Bubbles | EventPropagation.TricklesDown 
+            this.SetPropagation(EventPropagation.Bubbles | EventPropagation.TricklesDown
 #if !UNITY_2023_2_OR_NEWER
                 | EventPropagation.Cancellable
 #endif

@@ -6,7 +6,7 @@ namespace Unity.AppUI.Samples.MVVM
     public class MainViewModel : ObservableObject
     {
         int m_Counter;
-        
+
         public int counter
         {
             get => m_Counter;

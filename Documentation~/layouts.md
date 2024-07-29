@@ -4,7 +4,7 @@ uid: layouts
 
 # Layouts
 
-App UI provides a variety of layout components 
+App UI provides a variety of layout components
 to help you create the UI of your Unity project.
 
 ## Layout Components
@@ -21,9 +21,9 @@ They are used to group elements together and to apply a layout to them.
 
 #### StackView
 
-The [StackView](xref:Unity.AppUI.UI.StackView) component is 
+The [StackView](xref:Unity.AppUI.UI.StackView) component is
 a container that arranges its children one over the other,
-in a Z-axis stack. You can push and pop elements from the stack at runtime, 
+in a Z-axis stack. You can push and pop elements from the stack at runtime,
 and you can also animate the transition between the elements.
 
 <p align="center">
@@ -50,7 +50,7 @@ and it can also be used to create a *carousel* effect by using the wrap mode.
 #### PageView
 
 The [PageView](xref:Unity.AppUI.UI.PageView) component is
-a the composition of a [SwipeView](xref:Unity.AppUI.UI.SwipeView) and a 
+a the composition of a [SwipeView](xref:Unity.AppUI.UI.SwipeView) and a
 [PageIndicator](xref:Unity.AppUI.UI.PageIndicator) components.
 It allows the user to swipe between pages, and to see the current page index.
 
@@ -60,7 +60,7 @@ Dialogs are layout components that are used to display a message to the user.
 
 #### Dialog
 
-The [Dialog](xref:Unity.AppUI.UI.Dialog) component is 
+The [Dialog](xref:Unity.AppUI.UI.Dialog) component is
 a layout component composed of a heading, a body, and a footer.
 
 #### Alert

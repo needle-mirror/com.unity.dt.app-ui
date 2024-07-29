@@ -27,14 +27,14 @@ namespace Unity.AppUI.Navigation
         /// </summary>
         [SerializeField]
         public string key;
-        
+
         /// <summary>
         /// The value of the argument.
         /// </summary>
         [SerializeField]
         public NavArgument value;
     }
-    
+
     /// <summary>
     /// Argument stores information about a navigation argument.
     /// </summary>
@@ -46,16 +46,16 @@ namespace Unity.AppUI.Navigation
         [Tooltip("The name of the navigation argument.")]
         [SerializeField]
         string m_Name = name;
-        
+
         [Tooltip("The value of the navigation argument.")]
         [SerializeField]
         string m_Value = value;
-        
+
         /// <summary>
         /// The name of the navigation argument.
         /// </summary>
         public string name => m_Name;
-        
+
         /// <summary>
         /// The value of the navigation argument.
         /// </summary>

@@ -14,7 +14,7 @@ namespace Unity.AppUI.UI
         /// The text will be truncated with an ellipsis.
         /// </summary>
         Ellipsis,
-        
+
         /// <summary>
         /// The text won't be truncated.
         /// </summary>
@@ -30,27 +30,27 @@ namespace Unity.AppUI.UI
     public partial class InputLabel : BaseVisualElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId labelProperty = new BindingId(nameof(label));
-        
+
         internal static readonly BindingId directionProperty = new BindingId(nameof(direction));
-        
+
         internal static readonly BindingId labelOverflowProperty = new BindingId(nameof(labelOverflow));
-        
+
         internal static readonly BindingId inputAlignmentProperty = new BindingId(nameof(inputAlignment));
-        
+
         internal static readonly BindingId requiredProperty = new BindingId(nameof(required));
-        
+
         internal static readonly BindingId indicatorTypeProperty = new BindingId(nameof(indicatorType));
-        
+
         internal static readonly BindingId requiredTextProperty = new BindingId(nameof(requiredText));
-        
+
         internal static readonly BindingId helpMessageProperty = new BindingId(nameof(helpMessage));
-        
+
         internal static readonly BindingId helpVariantProperty = new BindingId(nameof(helpVariant));
-        
+
 #endif
-        
+
         /// <summary>
         /// The InputLabel main styling class.
         /// </summary>
@@ -71,22 +71,22 @@ namespace Unity.AppUI.UI
         /// The InputLabel input container styling class.
         /// </summary>
         public const string inputContainerUssClassName = ussClassName + "__input-container";
-        
+
         /// <summary>
         /// The InputLabel container styling class.
         /// </summary>
         public const string containerUssClassName = ussClassName + "__container";
-        
+
         /// <summary>
         /// The InputLabel label container styling class.
         /// </summary>
         public const string labelContainerUssClassName = ussClassName + "__label-container";
-        
+
         /// <summary>
         /// The InputLabel field-label styling class.
         /// </summary>
         public const string fieldLabelUssClassName = ussClassName + "__field-label";
-        
+
         /// <summary>
         /// The InputLabel help text styling class.
         /// </summary>
@@ -97,22 +97,22 @@ namespace Unity.AppUI.UI
         /// </summary>
         [EnumName("GetInputAlignmentUssClassName", typeof(Align))]
         public const string inputAlignmentUssClassName = ussClassName + "--input-alignment-";
-        
+
         /// <summary>
         /// The InputLabel with help text styling class.
         /// </summary>
         public const string withHelpTextUssClassName = ussClassName + "--with-help-text";
-        
+
         readonly FieldLabel m_FieldLabel;
 
         readonly VisualElement m_Container;
-        
+
         readonly HelpText m_HelpText;
-        
+
         Direction m_Direction = Direction.Horizontal;
-        
+
         Align m_InputAlignment = Align.Stretch;
-        
+
         /// <summary>
         /// The content container.
         /// </summary>
@@ -135,7 +135,7 @@ namespace Unity.AppUI.UI
                 var changed = m_FieldLabel.label != value;
                 m_FieldLabel.label = value;
                 m_FieldLabel.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
@@ -161,7 +161,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetOrientationUssClassName(m_Direction));
                 m_Direction = value;
                 AddToClassList(GetOrientationUssClassName(m_Direction));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
@@ -185,7 +185,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_FieldLabel.labelOverflow != value;
                 m_FieldLabel.labelOverflow = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelOverflowProperty);
@@ -211,7 +211,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetInputAlignmentUssClassName(m_InputAlignment));
                 m_InputAlignment = value;
                 AddToClassList(GetInputAlignmentUssClassName(m_InputAlignment));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in inputAlignmentProperty);
@@ -236,7 +236,7 @@ namespace Unity.AppUI.UI
                 var changed = m_FieldLabel.required != value;
                 m_FieldLabel.required = value;
                 EnableInClassList(Styles.requiredUssClassName,  m_FieldLabel.required);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in requiredProperty);
@@ -260,7 +260,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_FieldLabel.indicatorType != value;
                 m_FieldLabel.indicatorType = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in indicatorTypeProperty);
@@ -284,7 +284,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_FieldLabel.requiredText != value;
                 m_FieldLabel.requiredText = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in requiredTextProperty);
@@ -309,14 +309,14 @@ namespace Unity.AppUI.UI
                 var changed = m_HelpText.text != value;
                 m_HelpText.text = value;
                 EnableInClassList(withHelpTextUssClassName, !string.IsNullOrEmpty(value));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in helpMessageProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The variant of the <see cref="HelpText"/>.
         /// </summary>
@@ -333,7 +333,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_HelpText.variant != value;
                 m_HelpText.variant = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in helpVariantProperty);
@@ -358,7 +358,7 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
             pickingMode = PickingMode.Position;
-            
+
             var labelContainer = new VisualElement { name = labelContainerUssClassName, pickingMode = PickingMode.Ignore };
             labelContainer.AddToClassList(labelContainerUssClassName);
             hierarchy.Add(labelContainer);
@@ -366,22 +366,22 @@ namespace Unity.AppUI.UI
             m_FieldLabel = new FieldLabel(label) { name = fieldLabelUssClassName, pickingMode = PickingMode.Ignore };
             m_FieldLabel.AddToClassList(fieldLabelUssClassName);
             labelContainer.hierarchy.Add(m_FieldLabel);
-            
+
             var cell = new HelpText { pickingMode = PickingMode.Ignore };
             cell.AddToClassList(helpTextUssClassName);
             labelContainer.hierarchy.Add(cell);
-            
+
             var inputContainer = new VisualElement { name = inputContainerUssClassName, pickingMode = PickingMode.Ignore };
             inputContainer.AddToClassList(inputContainerUssClassName);
             hierarchy.Add(inputContainer);
-            
+
             m_Container = new VisualElement { name = containerUssClassName, pickingMode = PickingMode.Ignore };
             m_Container.AddToClassList(containerUssClassName);
             inputContainer.hierarchy.Add(m_Container);
-            
+
             m_HelpText = new HelpText
             {
-                name = helpTextUssClassName, 
+                name = helpTextUssClassName,
                 pickingMode = PickingMode.Ignore
             };
             m_HelpText.AddToClassList(helpTextUssClassName);
@@ -397,7 +397,7 @@ namespace Unity.AppUI.UI
             helpMessage = null;
             helpVariant = HelpTextVariant.Destructive;
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -410,7 +410,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            
+
             readonly UxmlEnumAttributeDescription<TextSize> m_Size = new UxmlEnumAttributeDescription<TextSize>
             {
                 name = "size",
@@ -440,25 +440,25 @@ namespace Unity.AppUI.UI
                 name = "input-alignment",
                 defaultValue = Align.Stretch,
             };
-            
+
             readonly UxmlBoolAttributeDescription m_Required = new UxmlBoolAttributeDescription
             {
                 name = "required",
                 defaultValue = false,
             };
-            
+
             readonly UxmlStringAttributeDescription m_HelpMessage = new UxmlStringAttributeDescription
             {
                 name = "help-message",
                 defaultValue = null,
             };
-            
+
             readonly UxmlEnumAttributeDescription<HelpTextVariant> m_HelpVariant = new UxmlEnumAttributeDescription<HelpTextVariant>
             {
                 name = "help-variant",
                 defaultValue = HelpTextVariant.Destructive,
             };
-            
+
             readonly UxmlStringAttributeDescription m_RequiredText = new UxmlStringAttributeDescription
             {
                 name = "required-text",
@@ -476,41 +476,41 @@ namespace Unity.AppUI.UI
                 base.Init(ve, bag, cc);
 
                 var element = (InputLabel)ve;
-                
+
                 var direction = Direction.Horizontal;
                 if (m_Orientation.TryGetValueFromBag(bag, cc, ref direction))
                     element.direction = direction;
-                
+
                 var inputAlignment = Align.Stretch;
                 if (m_InputAlignment.TryGetValueFromBag(bag, cc, ref inputAlignment))
                     element.inputAlignment = inputAlignment;
-                
+
                 var labelOverflow = TextOverflow.Ellipsis;
                 if (m_LabelOverflow.TryGetValueFromBag(bag, cc, ref labelOverflow))
                     element.labelOverflow = labelOverflow;
-                
+
                 var label = string.Empty;
                 if (m_Label.TryGetValueFromBag(bag, cc, ref label))
                     element.label = label;
-                
+
                 var required = false;
                 if (m_Required.TryGetValueFromBag(bag, cc, ref required))
                     element.required = required;
-                
+
                 var helpMessage = string.Empty;
                 if (m_HelpMessage.TryGetValueFromBag(bag, cc, ref helpMessage))
                     element.helpMessage = helpMessage;
-                
+
                 var helpVariant = HelpTextVariant.Destructive;
                 if (m_HelpVariant.TryGetValueFromBag(bag, cc, ref helpVariant))
                     element.helpVariant = helpVariant;
-                
+
                 var requiredText = string.Empty;
                 if (m_RequiredText.TryGetValueFromBag(bag, cc, ref requiredText))
                     element.requiredText = requiredText;
             }
         }
-        
+
 #endif
     }
 }

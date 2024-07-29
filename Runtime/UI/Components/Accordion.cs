@@ -23,7 +23,7 @@ namespace Unity.AppUI.UI
         /// For a column, this is the top side.
         /// </remarks>
         Start,
-        
+
         /// <summary>
         /// The element is at the end of the container.
         /// </summary>
@@ -34,7 +34,7 @@ namespace Unity.AppUI.UI
         /// </remarks>
         End
     }
-    
+
     /// <summary>
     /// Item used inside an <see cref="Accordion"/> element.
     /// </summary>
@@ -47,19 +47,19 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId titleProperty = nameof(title);
 
         internal static readonly BindingId indicatorPositionProperty = nameof(indicatorPosition);
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId trailingContentTemplateProperty = nameof(trailingContentTemplate);
 #endif
-        
+
         const string k_IndicatorIconName = "caret-down";
-        
+
         /// <summary>
         /// The AccordionItem main styling class.
         /// </summary>
         public const string ussClassName = "appui-accordionitem";
-        
+
         /// <summary>
         /// The AccordionItem content parent styling class.
         /// </summary>
@@ -79,7 +79,7 @@ namespace Unity.AppUI.UI
         /// The AccordionItem headertext styling class.
         /// </summary>
         public const string headerTextUssClassName = ussClassName + "__headertext";
-        
+
         /// <summary>
         /// The AccordionItem trailing container styling class.
         /// </summary>
@@ -94,7 +94,7 @@ namespace Unity.AppUI.UI
         /// The AccordionItem heading styling class.
         /// </summary>
         public const string headingUssClassName = ussClassName + "__heading";
-        
+
         /// <summary>
         /// The AccordionItem indicator position styling class.
         /// </summary>
@@ -102,7 +102,7 @@ namespace Unity.AppUI.UI
         public const string indicatorPosUssClassName = ussClassName + "--indicator-";
 
         readonly VisualElement m_ContentElement;
-        
+
         readonly VisualElement m_ContentParentElement;
 
         readonly LocalizedTextElement m_HeaderTextElement;
@@ -127,7 +127,7 @@ namespace Unity.AppUI.UI
 
             m_HeaderTextElement = new LocalizedTextElement { name = headerTextUssClassName, pickingMode = PickingMode.Ignore };
             m_HeaderTextElement.AddToClassList(headerTextUssClassName);
-            
+
             trailingContainer = new VisualElement { name = trailingContainerUssClassName, pickingMode = PickingMode.Ignore };
             trailingContainer.AddToClassList(trailingContainerUssClassName);
 
@@ -136,8 +136,8 @@ namespace Unity.AppUI.UI
 
             m_HeaderElement = new ExVisualElement
             {
-                name = headerUssClassName, 
-                pickingMode = PickingMode.Position, 
+                name = headerUssClassName,
+                pickingMode = PickingMode.Position,
                 focusable = true,
                 passMask = 0,
             };
@@ -152,7 +152,7 @@ namespace Unity.AppUI.UI
             var headingElement = new VisualElement { pickingMode = PickingMode.Ignore };
             headingElement.AddToClassList(headingUssClassName);
             headingElement.hierarchy.Add(m_HeaderElement);
-            
+
             m_ContentParentElement = new VisualElement
             {
                 name = contentParentUssClassName,
@@ -171,11 +171,11 @@ namespace Unity.AppUI.UI
 
             hierarchy.Add(headingElement);
             hierarchy.Add(m_ContentParentElement);
-            
+
             AddToClassList(GetIndicatorPosUssClassName(FlexPosition.End));
             SetValueWithoutNotify(false);
         }
-        
+
         void OnContentGeometryChanged(GeometryChangedEvent evt)
         {
             if (value)
@@ -200,7 +200,7 @@ namespace Unity.AppUI.UI
         /// The content container of the AccordionItem.
         /// </summary>
         public override VisualElement contentContainer => m_ContentElement;
-        
+
         /// <summary>
         /// The header's trailing container of the AccordionItem.
         /// </summary>
@@ -232,7 +232,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// The position of the indicator.
         /// </summary>
@@ -251,7 +251,7 @@ namespace Unity.AppUI.UI
                 var previousValue = indicatorPosition;
                 if (previousValue == value)
                     return;
-                
+
                 m_HeaderIndicatorElement.RemoveFromHierarchy();
                 if (value == FlexPosition.Start)
                     m_HeaderElement.hierarchy.Insert(0, m_HeaderIndicatorElement);
@@ -259,7 +259,7 @@ namespace Unity.AppUI.UI
                     m_HeaderElement.hierarchy.Add(m_HeaderIndicatorElement);
                 RemoveFromClassList(GetIndicatorPosUssClassName(previousValue));
                 AddToClassList(GetIndicatorPosUssClassName(value));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(indicatorPositionProperty);
 #endif
@@ -282,9 +282,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var previousValue = m_HeaderTextElement.text;
-                
+
                 m_HeaderTextElement.text = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (previousValue != value)
                     NotifyPropertyChanged(titleProperty);
@@ -317,7 +317,7 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
                 SendEvent(itemEvt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(valueProperty);
 #endif
@@ -362,13 +362,13 @@ namespace Unity.AppUI.UI
                 name = "title",
                 defaultValue = "Header",
             };
-            
+
             readonly UxmlEnumAttributeDescription<FlexPosition> m_IndicatorPosition = new UxmlEnumAttributeDescription<FlexPosition>
             {
                 name = "indicator-position",
                 defaultValue = FlexPosition.End,
             };
-            
+
             readonly UxmlBoolAttributeDescription m_Value = new UxmlBoolAttributeDescription
             {
                 name = "value",
@@ -406,20 +406,20 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId isExclusiveProperty = nameof(isExclusive);
 #endif
-        
+
         /// <summary>
         /// The Accordion main styling class.
         /// </summary>
         public const string ussClassName = "appui-accordion";
-        
+
         bool m_IsExclusive;
 
         /// <summary>
         /// The behavior of the Accordion when multiple items are open.
-        /// <para>
-        /// If true, a maximum of one item can be open at a time.
-        /// </para>
         /// </summary>
+        /// <remarks>
+        /// If true, a maximum of one item can be open at a time.
+        /// </remarks>
         [Tooltip("If true, a maximum of one item can be open at a time.")]
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
@@ -435,7 +435,7 @@ namespace Unity.AppUI.UI
             {
                 var previousValue = m_IsExclusive;
                 m_IsExclusive = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (previousValue != value)
                     NotifyPropertyChanged(isExclusiveProperty);
@@ -453,7 +453,7 @@ namespace Unity.AppUI.UI
             RegisterCallback<AccordionItemValueChangedEvent>(OnAccordionItemValueChanged);
 
             pickingMode = PickingMode.Ignore;
-            
+
             isExclusive = false;
         }
 

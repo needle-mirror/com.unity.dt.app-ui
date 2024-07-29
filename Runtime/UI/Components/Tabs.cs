@@ -36,25 +36,25 @@ namespace Unity.AppUI.UI
     public partial class Tabs : BaseVisualElement, INotifyValueChanged<int>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
         internal static readonly BindingId directionProperty = nameof(direction);
-        
+
         internal static readonly BindingId emphasizedProperty = nameof(emphasized);
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId itemsProperty = nameof(items);
-        
+
         internal static readonly BindingId sourceItemsProperty = nameof(sourceItems);
-        
+
         internal static readonly BindingId bindItemProperty = nameof(bindItem);
-        
+
         internal static readonly BindingId unbindItemProperty = nameof(unbindItem);
-        
+
 #endif
-        
+
         /// <summary>
         /// The Tabs main styling class.
         /// </summary>
@@ -81,7 +81,7 @@ namespace Unity.AppUI.UI
         /// The Tabs container styling class.
         /// </summary>
         public const string containerUssClassName = ussClassName + "__container";
-        
+
         /// <summary>
         /// The Tabs ScrollView styling class.
         /// </summary>
@@ -103,7 +103,7 @@ namespace Unity.AppUI.UI
         readonly VisualElement m_Container;
 
         Action<TabItem, int> m_BindItem;
-        
+
         Action<TabItem, int> m_UnbindItem;
 
         int m_DefaultValue;
@@ -115,7 +115,7 @@ namespace Unity.AppUI.UI
         IList m_SourceItems;
 
         int m_Value;
-        
+
         IVisualElementScheduledItem m_ScheduledRefreshIndicator;
 
         IVisualElementScheduledItem m_PollHierarchyItem;
@@ -142,7 +142,7 @@ namespace Unity.AppUI.UI
                 verticalScrollerVisibility = ScrollerVisibility.Hidden,
             };
             m_ScrollView.AddToClassList(scrollViewUssClassName);
-            
+
             m_Container = new VisualElement
             {
                 name = containerUssClassName,
@@ -150,7 +150,7 @@ namespace Unity.AppUI.UI
             };
             m_Container.AddToClassList(containerUssClassName);
             m_ScrollView.Add(m_Container);
-            
+
             m_Indicator = new VisualElement
             {
                 name = indicatorUssClassName,
@@ -158,7 +158,7 @@ namespace Unity.AppUI.UI
                 usageHints = UsageHints.DynamicTransform,
             };
             m_Indicator.AddToClassList(indicatorUssClassName);
-            
+
             m_LambdaContainer = new VisualElement
             {
                 name = "lambda-container",
@@ -205,7 +205,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -236,14 +236,14 @@ namespace Unity.AppUI.UI
                     Direction.Vertical => ScrollViewMode.Vertical,
                     _ => ScrollViewMode.Horizontal
                 };
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The current list of items used to populate the Tabs.
         /// </summary>
@@ -268,7 +268,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = emphasized != value;
                 EnableInClassList(emphasizedUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in emphasizedProperty);
@@ -291,7 +291,7 @@ namespace Unity.AppUI.UI
                 var changed = m_BindItem != value;
                 m_BindItem = value;
                 RefreshItems();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in bindItemProperty);
@@ -313,7 +313,7 @@ namespace Unity.AppUI.UI
                 var changed = m_UnbindItem != value;
                 m_UnbindItem = value;
                 RefreshItems();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in unbindItemProperty);
@@ -336,11 +336,11 @@ namespace Unity.AppUI.UI
                     return;
 
                 m_SourceItems = value;
-                
+
                 m_PollHierarchyItem?.Pause();
                 m_PollHierarchyItem = null;
                 RefreshItems();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in sourceItemsProperty);
                 NotifyPropertyChanged(in itemsProperty);
@@ -352,7 +352,7 @@ namespace Unity.AppUI.UI
         /// The virtual content container of the Tabs.
         /// </summary>
         public override VisualElement contentContainer => m_LambdaContainer;
-        
+
         /// <summary>
         /// The item container of the Tabs.
         /// </summary>
@@ -383,7 +383,7 @@ namespace Unity.AppUI.UI
         {
             if (panel == null || !paddingRect.IsValid())
                 return;
-            
+
             if (m_Value >= 0 && m_Value < m_Items.Count)
             {
                 m_Items[m_Value].selected = true;
@@ -469,7 +469,7 @@ namespace Unity.AppUI.UI
                     evt.target = this;
                     SendEvent(evt);
                 }
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
 #endif
@@ -495,7 +495,7 @@ namespace Unity.AppUI.UI
 
             if (handled)
             {
-                
+
                 evt.StopPropagation();
             }
         }
@@ -551,11 +551,11 @@ namespace Unity.AppUI.UI
                 {
                     m_StaticItems.Add((TabItem)c);
                 }
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in itemsProperty);
 #endif
-                
+
                 RefreshItems();
             }
         }
@@ -593,7 +593,7 @@ namespace Unity.AppUI.UI
                     m_Items.Add(item);
                 }
             }
-            
+
             if (itemContainer.childCount > 0)
                 SetValueWithoutNotify(Mathf.Clamp(m_Value, 0, itemContainer.childCount - 1));
             else
@@ -614,7 +614,7 @@ namespace Unity.AppUI.UI
                 evt.StopPropagation();
             }
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -677,7 +677,7 @@ namespace Unity.AppUI.UI
                 el.value = m_DefaultValue.GetValueFromBag(bag, cc);
             }
         }
-        
+
 #endif
     }
 }

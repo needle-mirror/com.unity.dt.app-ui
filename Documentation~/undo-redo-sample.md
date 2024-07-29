@@ -28,11 +28,11 @@ The sample contains one Unity scene with the following UI:
 - A label to display the result
 - A ListView which contains the history of the changes that can be undone/redone
 
-You can play with the TextField and ColorField components to change the result text and color. You 
+You can play with the TextField and ColorField components to change the result text and color. You
 will notice that realtime changes in the ColorPicker are not added directly to the history. Instead,
 the changes are added to the history when the the color picker is closed.
 
-Same thing for the TextField component. The changes are added to the history when the text field 
+Same thing for the TextField component. The changes are added to the history when the text field
 loses focus.
 
 The Undo and Redo buttons are disabled when there are no changes to undo or redo.

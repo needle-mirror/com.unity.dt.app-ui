@@ -19,14 +19,14 @@ namespace Unity.AppUI.Editor
         public override void Setup(VisualElement element)
         {
             element.parent.style.alignItems = Align.Stretch;
-            
+
             element.Add(new BottomNavBarItem("info", "Info", () => { Debug.Log("Info"); } ));
             element.Add(new BottomNavBarItem("settings", "Settings", () => { Debug.Log("Settings"); }) { isSelected = true } );
         }
 
         public BottomNavBarComponent()
         {
-            
+
         }
     }
 }

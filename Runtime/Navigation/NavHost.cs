@@ -10,7 +10,7 @@ namespace Unity.AppUI.Navigation
     /// The NavHost is the UI element that manages the navigation stack.
     /// It will manage the display of <see cref="NavigationScreen"/> objects through its <see cref="NavController"/>.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA 
+#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
     public partial class NavHost : VisualElement
@@ -19,12 +19,12 @@ namespace Unity.AppUI.Navigation
         /// The NavHost main styling class.
         /// </summary>
         public const string ussClassName = "appui-navhost";
-        
+
         /// <summary>
         /// The NavHost container styling class.
         /// </summary>
         public const string containerUssClassName = ussClassName + "__container";
-        
+
         /// <summary>
         /// The NavHost item styling class.
         /// </summary>
@@ -41,11 +41,11 @@ namespace Unity.AppUI.Navigation
         public INavVisualController visualController { get; set; }
 
         readonly VisualElement m_Container;
-        
+
         ValueAnimation<float> m_RemoveAnim;
-        
+
         ValueAnimation<float> m_AddAnim;
-        
+
         /// <summary>
         /// The container that will hold the current <see cref="NavigationScreen"/>.
         /// </summary>
@@ -57,7 +57,7 @@ namespace Unity.AppUI.Navigation
         public NavHost()
         {
             AddToClassList(ussClassName);
-            
+
             focusable = true;
             pickingMode = PickingMode.Position;
             navController = new NavController(this);
@@ -65,7 +65,7 @@ namespace Unity.AppUI.Navigation
             m_Container.AddToClassList(containerUssClassName);
             m_Container.StretchToParentSize();
             hierarchy.Add(m_Container);
-            
+
             RegisterCallback<NavigationCancelEvent>(OnCancelNavigation);
         }
 
@@ -88,10 +88,10 @@ namespace Unity.AppUI.Navigation
         /// <param name="isPop"> Whether the navigation is a pop operation. </param>
         /// <param name="callback"> A callback that will be called when the navigation is complete. </param>
         internal void SwitchTo(
-            NavDestination destination, 
-            NavigationAnimation exitAnim, 
-            NavigationAnimation enterAnim, 
-            Argument[] args, 
+            NavDestination destination,
+            NavigationAnimation exitAnim,
+            NavigationAnimation enterAnim,
+            Argument[] args,
             bool isPop,
             Action<bool> callback = null)
         {
@@ -114,8 +114,8 @@ namespace Unity.AppUI.Navigation
                         exitAnimationFunc.durationMs = enterAnimationFunc.durationMs;
                     var previousItem = m_Container[0];
                     (previousItem.ElementAt(0) as NavigationScreen)!.InvokeOnExit(navController, destination, args);
-                    m_RemoveAnim = previousItem.experimental.animation.Start(0, 1, 
-                            exitAnimationFunc.durationMs, 
+                    m_RemoveAnim = previousItem.experimental.animation.Start(0, 1,
+                            exitAnimationFunc.durationMs,
                             exitAnimationFunc.callback)
                         .Ease(exitAnimationFunc.easing)
                         .OnCompleted(() => m_Container.Remove(previousItem))
@@ -124,8 +124,8 @@ namespace Unity.AppUI.Navigation
                         m_Container.Insert(0, item);
                     else
                         m_Container.Add(item);
-                    m_AddAnim = item.experimental.animation.Start(0, 1, 
-                            enterAnimationFunc.durationMs, 
+                    m_AddAnim = item.experimental.animation.Start(0, 1,
+                            enterAnimationFunc.durationMs,
                             enterAnimationFunc.callback)
                         .Ease(enterAnimationFunc.easing)
                         .KeepAlive();
@@ -147,9 +147,9 @@ namespace Unity.AppUI.Navigation
             var item = new VisualElement { name = itemUssClassName, pickingMode = PickingMode.Ignore };
             item.AddToClassList(itemUssClassName);
 
-            var screenType = (string.IsNullOrEmpty(template) || Type.GetType(template) is not {} t) ? 
+            var screenType = (string.IsNullOrEmpty(template) || Type.GetType(template) is not {} t) ?
                 typeof(NavigationScreen) : t;
-            
+
             var screen = (NavigationScreen) Activator.CreateInstance(screenType!);
             item.Add(screen);
 
@@ -160,7 +160,7 @@ namespace Unity.AppUI.Navigation
                 visualController?.SetupBottomNavBar(bottomNavBar, destination, navController);
                 screen.SetupBottomNavBar(bottomNavBar);
             }
-            
+
             AppBar appBar = null;
             if (destination.showAppBar)
             {
@@ -198,14 +198,14 @@ namespace Unity.AppUI.Navigation
                 item.Add(drawer);
                 visualController?.SetupDrawer(drawer, destination, navController);
                 screen.SetupDrawer(drawer);
-                
+
                 if (destination.showAppBar && !navController.canGoBack)
                 {
                     appBar.showDrawerButton = true;
                     appBar.drawerButtonTriggered += () => drawer.Toggle();
                 }
             }
-            
+
             return item;
         }
 
@@ -218,7 +218,7 @@ namespace Unity.AppUI.Navigation
             durationMs = 0,
             callback = null
         };
-        
+
         /// <summary>
         /// Scale down and fade in animation.
         /// </summary>
@@ -234,7 +234,7 @@ namespace Unity.AppUI.Navigation
                 v.style.opacity = f;
             }
         };
-        
+
         /// <summary>
         /// Scale up and fade out animation.
         /// </summary>
@@ -250,7 +250,7 @@ namespace Unity.AppUI.Navigation
                 v.style.opacity = 1.0f - f;
             }
         };
-        
+
         /// <summary>
         /// Fade in animation.
         /// </summary>
@@ -264,7 +264,7 @@ namespace Unity.AppUI.Navigation
                 v.style.opacity = f;
             }
         };
-        
+
         /// <summary>
         /// Fade out animation.
         /// </summary>
@@ -312,7 +312,7 @@ namespace Unity.AppUI.Navigation
         /// </summary>
         public new class UxmlTraits : VisualElement.UxmlTraits
         {
-            
+
         }
 #endif
     }

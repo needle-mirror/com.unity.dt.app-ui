@@ -23,10 +23,10 @@ namespace Unity.AppUI.MVVM
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
-            
+
             return serviceCollection.AddSingleton(typeof(T));
         }
-        
+
         /// <summary>
         /// Adds a singleton service of the type specified in <typeparamref name="TService"/> with an
         /// implementation type specified in <typeparamref name="TImplementation"/> to the specified
@@ -43,10 +43,10 @@ namespace Unity.AppUI.MVVM
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
-            
+
             return serviceCollection.AddSingleton(typeof(TService), typeof(TImplementation));
         }
-        
+
         /// <summary>
         /// Adds a singleton service of the type specified in <paramref name="serviceType"/> to the specified
         /// <see cref="IServiceCollection"/>.
@@ -59,13 +59,13 @@ namespace Unity.AppUI.MVVM
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
-            
+
             if (serviceType == null)
                 throw new ArgumentNullException(nameof(serviceType));
-            
+
             return serviceCollection.AddSingleton(serviceType, serviceType);
         }
-        
+
         /// <summary>
         /// Adds a singleton service of the type specified in <paramref name="serviceType"/> with an
         /// implementation type specified in <paramref name="implementationType"/> to the specified
@@ -80,16 +80,16 @@ namespace Unity.AppUI.MVVM
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
-            
+
             if (serviceType == null)
                 throw new ArgumentNullException(nameof(serviceType));
-            
+
             if (implementationType == null)
                 throw new ArgumentNullException(nameof(implementationType));
-            
+
             return Add(serviceCollection, serviceType, implementationType, ServiceLifetime.Singleton);
         }
-        
+
         /// <summary>
         /// Adds a transient service of the type specified in <typeparamref name="TService"/> to the specified
         /// <see cref="IServiceCollection"/>.
@@ -102,7 +102,7 @@ namespace Unity.AppUI.MVVM
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
-            
+
             TryAddSingleton(serviceCollection, typeof(TService), typeof(TService));
         }
 
@@ -121,21 +121,21 @@ namespace Unity.AppUI.MVVM
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
-            
+
             TryAddSingleton(serviceCollection, typeof(TService), typeof(TImplementation));
         }
-        
+
         static void TryAddSingleton(IServiceCollection serviceCollection, Type serviceType, Type implementationType)
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
-            
+
             if (serviceType == null)
                 throw new ArgumentNullException(nameof(serviceType));
-            
+
             if (implementationType == null)
                 throw new ArgumentNullException(nameof(implementationType));
-            
+
             var descriptor = ServiceDescriptor.Singleton(serviceType, implementationType);
             TryAdd(serviceCollection, descriptor);
         }
@@ -152,10 +152,10 @@ namespace Unity.AppUI.MVVM
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
-            
+
             return serviceCollection.AddTransient(typeof(T));
         }
-        
+
         /// <summary>
         /// Adds a transient service of the type specified in <typeparamref name="TService"/> with an
         /// implementation type specified in <typeparamref name="TImplementation"/> to the specified
@@ -172,10 +172,10 @@ namespace Unity.AppUI.MVVM
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
-            
+
             return serviceCollection.AddTransient(typeof(TService), typeof(TImplementation));
         }
-        
+
         /// <summary>
         /// Adds a transient service of the type specified in <paramref name="serviceType"/> to the specified
         /// <see cref="IServiceCollection"/>.
@@ -188,13 +188,13 @@ namespace Unity.AppUI.MVVM
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
-            
+
             if (serviceType == null)
                 throw new ArgumentNullException(nameof(serviceType));
-            
+
             return serviceCollection.AddTransient(serviceType, serviceType);
         }
-        
+
         /// <summary>
         /// Adds a transient service of the type specified in <paramref name="serviceType"/> with an
         /// implementation type specified in <paramref name="implementationType"/> to the specified
@@ -209,13 +209,13 @@ namespace Unity.AppUI.MVVM
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
-            
+
             if (serviceType == null)
                 throw new ArgumentNullException(nameof(serviceType));
-            
+
             if (implementationType == null)
                 throw new ArgumentNullException(nameof(implementationType));
-            
+
             return Add(serviceCollection, serviceType, implementationType, ServiceLifetime.Transient);
         }
 
@@ -229,7 +229,7 @@ namespace Unity.AppUI.MVVM
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
-            
+
             return new ServiceProvider(serviceCollection);
         }
 
@@ -237,10 +237,10 @@ namespace Unity.AppUI.MVVM
         {
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
-            
+
             if (descriptor == null)
                 throw new ArgumentNullException(nameof(descriptor));
-            
+
             var count = serviceCollection.Count;
             for (var i = 0; i < count; i++)
             {

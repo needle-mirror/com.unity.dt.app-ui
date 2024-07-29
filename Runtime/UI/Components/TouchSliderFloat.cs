@@ -19,15 +19,15 @@ namespace Unity.AppUI.UI
     public partial class TouchSliderFloat : TouchSlider<float>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId incrementFactorProperty = nameof(incrementFactor);
 
 #endif
-        
+
         const float k_DefaultIncrement = 0.1f;
-        
+
         float m_IncrementFactor = k_DefaultIncrement;
-        
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -35,7 +35,7 @@ namespace Unity.AppUI.UI
         {
             formatString = UINumericFieldsUtils.k_FloatFieldFormatString;
             incrementFactor = k_DefaultIncrement;
-            
+
             lowValue = 0f;
             highValue = 1f;
             value = 0;
@@ -58,14 +58,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = !Mathf.Approximately(m_IncrementFactor, value);
                 m_IncrementFactor = Mathf.Max(0.0001f, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in incrementFactorProperty);
 #endif
             }
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("low-value")]
         float lowValueOverride
@@ -73,21 +73,21 @@ namespace Unity.AppUI.UI
             get => lowValue;
             set => lowValue = value;
         }
-        
+
         [UxmlAttribute("high-value")]
         float highValueOverride
         {
             get => highValue;
             set => highValue = value;
         }
-        
+
         [UxmlAttribute("value")]
         float valueOverride
         {
             get => value;
             set => this.value = value;
         }
-        
+
         [UxmlAttribute("format-string")]
         string formatStringOverride
         {
@@ -110,7 +110,7 @@ namespace Unity.AppUI.UI
         {
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
         }
-        
+
         /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.ParseRawValueToString"/>
         protected override string ParseRawValueToString(float val)
         {
@@ -180,7 +180,7 @@ namespace Unity.AppUI.UI
                 elem.SetValueWithoutNotify(val);
             }
         }
-        
+
 #endif
     }
 }

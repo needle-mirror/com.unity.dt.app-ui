@@ -10,7 +10,7 @@ namespace Unity.AppUI.Core
     class OSXPlatformImpl : PlatformImpl
     {
         static OSXPlatformImpl s_Instance;
-        
+
         delegate void DebugLogDelegate(IntPtr messagePtr, uint len);
         delegate void LayoutDirectionChangedDelegate(byte layoutDirection);
         delegate void HighContrastChangedDelegate(bool highContrastEnabled);
@@ -21,7 +21,7 @@ namespace Unity.AppUI.Core
         delegate void MagnifyGestureEventDelegate(float magnification, TouchPhase phase);
         delegate void RotateGestureEventDelegate(float rotation, TouchPhase phase);
         delegate void SmartMagnifyEventDelegate();
-        
+
         [StructLayout(LayoutKind.Sequential)]
         struct NativeTouch
         {
@@ -33,7 +33,7 @@ namespace Unity.AppUI.Core
             public double timestamp;
             public TouchPhase phase;
         }
-        
+
         [StructLayout(LayoutKind.Sequential)]
         struct PluginConfigData
         {
@@ -66,7 +66,7 @@ namespace Unity.AppUI.Core
             var messageStr = Marshal.PtrToStringAnsi(message, (int)len);
             Debug.Log(messageStr);
         }
-        
+
         [MonoPInvokeCallback(typeof(LayoutDirectionChangedDelegate))]
         static void InvokeLayoutDirectionChangedProxy(byte layoutDirection) =>
             s_Instance?.InvokeLayoutDirectionChanged(layoutDirection);
@@ -74,19 +74,19 @@ namespace Unity.AppUI.Core
         [MonoPInvokeCallback(typeof(HighContrastChangedDelegate))]
         static void InvokeHighContrastChangedProxy(bool highContrastEnabled) =>
             s_Instance?.InvokeHighContrastChanged(highContrastEnabled);
-        
+
         [MonoPInvokeCallback(typeof(ReduceMotionChangedDelegate))]
         static void InvokeReduceMotionChangedProxy(bool reduceMotionEnabled) =>
             s_Instance?.InvokeReduceMotionChanged(reduceMotionEnabled);
-        
+
         [MonoPInvokeCallback(typeof(ThemeChangedDelegate))]
         static void InvokeThemeChangedProxy(bool darkModeEnabled) =>
             s_Instance?.InvokeThemeChanged(darkModeEnabled);
-        
+
         [MonoPInvokeCallback(typeof(TextScaleFactorChangedDelegate))]
         static void InvokeTextScaleFactorChangedProxy(float textScaleFactor) =>
             s_Instance?.InvokeTextScaleFactorChanged(textScaleFactor);
-        
+
         [MonoPInvokeCallback(typeof(ScaleFactorChangedDelegate))]
         static void InvokeScaleFactorChangedProxy(float scaleFactor) =>
             s_Instance?.InvokeScaleFactorChanged(scaleFactor);
@@ -99,43 +99,43 @@ namespace Unity.AppUI.Core
 
         [MonoPInvokeCallback(typeof(SmartMagnifyEventDelegate))]
         static void InvokeSmartMagnifyEventProxy() { }
-        
+
         [DllImport("AppUINativePlugin")]
         static extern bool NativeAppUI_Initialize(ref PluginConfigData configData);
-        
+
         [DllImport("AppUINativePlugin")]
         static extern void NativeAppUI_Uninitialize();
-        
+
         [DllImport("AppUINativePlugin")]
         static extern bool NativeAppUI_ReadTouch(ref NativeTouch touch);
-        
+
         [DllImport("AppUINativePlugin")]
         static extern float NativeAppUI_ScaleFactor();
-        
+
         [DllImport("AppUINativePlugin")]
         static extern bool NativeAppUI_DarkMode();
-        
+
         [DllImport("AppUINativePlugin")]
         static extern bool NativeAppUI_HighContrast();
-        
+
         [DllImport("AppUINativePlugin")]
         static extern bool NativeAppUI_ReduceMotion();
-        
+
         [DllImport("AppUINativePlugin")]
         static extern float NativeAppUI_TextScaleFactor();
-        
+
         [DllImport("AppUINativePlugin")]
         static extern int NativeAppUI_LayoutDirection();
-        
+
         [DllImport("AppUINativePlugin")]
         static extern Color NativeAppUI_GetSystemColor(SystemColorType colorType);
 
         float m_PollEventTime;
-       
+
         readonly List<AppUITouch> k_FrameTouches = new List<AppUITouch>();
-        
+
         readonly Dictionary<int, AppUITouch> k_PrevTouches = new Dictionary<int, AppUITouch>();
-        
+
         AppUITouch[] m_AppUITouches = Array.Empty<AppUITouch>();
 
         int m_LastUpdateFrame;
@@ -145,7 +145,7 @@ namespace Unity.AppUI.Core
         void Setup()
         {
             CleanUp();
-                
+
             var configData = new PluginConfigData
             {
                 isEditor = Application.isEditor,
@@ -163,9 +163,9 @@ namespace Unity.AppUI.Core
             NativeAppUI_Initialize(ref configData);
             s_Instance = this;
         }
-        
+
         ~OSXPlatformImpl() => CleanUp();
-        
+
         void CleanUp()
         {
             NativeAppUI_Uninitialize();
@@ -175,11 +175,11 @@ namespace Unity.AppUI.Core
         public override float referenceDpi => Screen.dpi / scaleFactor;
 
         public override float scaleFactor => NativeAppUI_ScaleFactor();
-        
+
         public override bool darkMode => NativeAppUI_DarkMode();
 
         public override bool highContrast => NativeAppUI_HighContrast();
-        
+
         public override bool reduceMotion => NativeAppUI_ReduceMotion();
 
         public override float textScaleFactor => NativeAppUI_TextScaleFactor();
@@ -199,7 +199,7 @@ namespace Unity.AppUI.Core
             if ((Application.isPlaying && m_LastUpdateFrame != Time.frameCount) || !Application.isPlaying)
             {
                 m_LastUpdateFrame = Time.frameCount;
-                
+
                 k_PrevTouches.Clear();
                 foreach (var touch in k_FrameTouches)
                 {
@@ -216,7 +216,7 @@ namespace Unity.AppUI.Core
                 nativeTouch.deviceHeight = 0;
                 nativeTouch.timestamp = 0;
                 nativeTouch.phase = 0;
-                
+
                 while (NativeAppUI_ReadTouch(ref nativeTouch))
                 {
                     var touch = new AppUITouch
@@ -235,12 +235,12 @@ namespace Unity.AppUI.Core
 
                     k_FrameTouches.Add(touch);
                 }
-                
+
                 m_AppUITouches = k_FrameTouches.ToArray();
                 m_PollEventTime = Time.unscaledTime;
             }
         }
-        
+
         public override AppUITouch[] touches => m_AppUITouches;
 
         protected override void LowFrequencyUpdate()

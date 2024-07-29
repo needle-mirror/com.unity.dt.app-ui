@@ -16,7 +16,7 @@ namespace Unity.AppUI.Core
         {
             if (string.IsNullOrEmpty(arg))
                 return arg;
-            
+
             return arg[0].ToString().ToUpper() + arg[1..];
         }
     }

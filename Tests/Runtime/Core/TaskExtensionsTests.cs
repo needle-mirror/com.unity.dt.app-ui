@@ -18,7 +18,7 @@ namespace Unity.AppUI.Tests.Core
             var coroutine = task.AsCoroutine();
             Assert.IsFalse(coroutine.MoveNext());
         }
-        
+
         [Test]
         public void AsCoroutine_WhenTaskIsCompleted_ReturnsEmptyCoroutine()
         {
@@ -26,7 +26,7 @@ namespace Unity.AppUI.Tests.Core
             var coroutine = task.AsCoroutine();
             Assert.IsFalse(coroutine.MoveNext());
         }
-        
+
         [Test]
         public void AsCoroutine_WhenTaskIsNotCompleted_ReturnsNonEmptyCoroutine()
         {
@@ -34,7 +34,7 @@ namespace Unity.AppUI.Tests.Core
             var coroutine = task.AsCoroutine();
             Assert.IsTrue(coroutine.MoveNext());
         }
-        
+
         bool m_AsCoroutineTestFinished;
 
         async Task AsCoroutineTask()
@@ -42,16 +42,16 @@ namespace Unity.AppUI.Tests.Core
             await Task.Delay(10);
             m_AsCoroutineTestFinished = true;
         }
-        
+
         [UnityTest]
         public IEnumerator AsCoroutine_CanBeUsedInUnityTest()
         {
             m_AsCoroutineTestFinished = false;
             Assert.IsFalse(m_AsCoroutineTestFinished);
-            
+
             var task = AsCoroutineTask();
             yield return task.AsCoroutine();
-            
+
             Assert.IsTrue(task.IsCompleted);
             Assert.IsTrue(m_AsCoroutineTestFinished);
         }

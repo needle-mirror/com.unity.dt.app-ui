@@ -27,7 +27,7 @@ namespace Unity.AppUI.Editor
                     alignItems = Align.Stretch,
                 }
             };
-            
+
             var tabs = new Tabs();
             tabs.sourceItems = new string[] { "Tab 1", "Tab 2" };
             tabs.bindItem = (tab, i) =>
@@ -35,14 +35,14 @@ namespace Unity.AppUI.Editor
                 tab.label = (string)tabs.sourceItems[i];
             };
             root.Add(tabs);
-            
+
             // Populate source list
             var srcItems = new List<string>();
             for (var i = 0; i < 10; ++i)
             {
                 srcItems.Add($"Item {i}");
             }
-            
+
             var grid1 = new GridView
             {
                 columnCount = 1,
@@ -61,7 +61,7 @@ namespace Unity.AppUI.Editor
 
             var item1 = new SwipeViewItem();
             item1.Add(grid1);
-            
+
             var grid2 = new GridView
             {
                 columnCount = 1,
@@ -77,15 +77,15 @@ namespace Unity.AppUI.Editor
                 }
             };
             grid2.dragger.acceptStartDrag = pos => false;
-            
+
             var item2 = new SwipeViewItem();
             item2.Add(grid2);
-            
+
             var swipeView = new SwipeView();
             swipeView.snapAnimationSpeed = 2f;
             swipeView.Add(item1);
             swipeView.Add(item2);
-            
+
             swipeView.style.flexGrow = 1;
             swipeView.RegisterValueChangedCallback(evt =>
             {
@@ -95,9 +95,9 @@ namespace Unity.AppUI.Editor
             {
                 swipeView.SetValueWithoutNotify(evt.newValue);
             });
-            
+
             root.Add(swipeView);
-            
+
             return root;
         }
 

@@ -7,7 +7,6 @@ namespace Unity.AppUI.Redux
 {
     /// <summary>
     /// An interface to interact with the thunk during the execution.
-    /// <para />
     /// You can use this interface to abort the thunk, reject the thunk with a value, or fulfill the thunk with a value.
     /// You also have access to the store to dispatch new actions.
     /// </summary>
@@ -22,17 +21,17 @@ namespace Unity.AppUI.Redux
             RejectedWithValue,
             Fulfilled
         }
-        
+
         ThunkStatus m_Status = ThunkStatus.Initial;
-        
+
         object m_AbortReason;
-        
+
         TPayload m_RejectedValue;
-        
+
         TPayload m_FulfilledValue;
 
         readonly WeakReference<CancellationTokenSource> m_CancellationTokenSource = new (null);
-        
+
         /// <summary>
         /// The request ID of the thunk.
         /// </summary>
@@ -43,17 +42,17 @@ namespace Unity.AppUI.Redux
         /// </summary>
         public bool isCancellationRequested =>
             m_CancellationTokenSource.TryGetTarget(out var tgt) && tgt.IsCancellationRequested;
-        
+
         /// <summary>
         /// The store to dispatch new actions or access the state.
         /// </summary>
         public Store store { get; }
-        
+
         internal ThunkAPI(Store store)
         {
             this.store = store ?? throw new ArgumentNullException(nameof(store));
         }
-        
+
         /// <summary>
         /// Aborts the thunk.
         /// </summary>
@@ -83,7 +82,7 @@ namespace Unity.AppUI.Redux
         /// <summary>
         /// Fulfills the thunk with a value.
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value"> The value to fulfill the thunk with. </param>
         public void FulFillWithValue(TPayload value)
         {
             var tokenSourceExists = m_CancellationTokenSource.TryGetTarget(out var cancellationTokenSource);
@@ -99,22 +98,22 @@ namespace Unity.AppUI.Redux
         {
             if (asyncThunkAction == null)
                 throw new ArgumentNullException(nameof(asyncThunkAction));
-            
+
             m_AbortReason = null;
             m_RejectedValue = default;
             m_FulfilledValue = default;
             m_Status = ThunkStatus.Initial;
-            
+
             using var cts = CancellationTokenSource.CreateLinkedTokenSource(cToken);
             m_CancellationTokenSource.SetTarget(cts);
-            
+
             var thunkArg = asyncThunkAction.payload;
             var actionCreator = asyncThunkAction.creator;
-            
+
             var conditionMet = actionCreator.options.conditionAsync != null
                 ? await actionCreator.options.conditionAsync.Invoke(thunkArg, store)
                 : actionCreator.options.condition?.Invoke(thunkArg, store) ?? true;
-            
+
             if (!conditionMet)
             {
                 if (actionCreator.options.dispatchConditionRejection)
@@ -129,7 +128,7 @@ namespace Unity.AppUI.Redux
                 }
                 return;
             }
-            
+
             if (cToken.IsCancellationRequested)
             {
                 store.Dispatch(actionCreator.rejected.Invoke(new RejectedMeta<TThunkArg>
@@ -140,15 +139,15 @@ namespace Unity.AppUI.Redux
                 }));
                 return;
             }
-            
+
             requestId = actionCreator.options.idGenerator?.Invoke(thunkArg) ?? Guid.NewGuid().ToString();
-            
+
             store.Dispatch(actionCreator.pending.Invoke(new PendingMeta<TThunkArg>
             {
                 requestId = requestId,
                 arg = thunkArg
             }));
-            
+
             TPayload result;
             try
             {
@@ -177,7 +176,7 @@ namespace Unity.AppUI.Redux
                             arg = thunkArg,
                         }));
                         return;
-                    case ThunkStatus.Aborted: 
+                    case ThunkStatus.Aborted:
                         store.Dispatch(actionCreator.rejected.Invoke(new RejectedMeta<TThunkArg>
                         {
                             requestId = requestId,
@@ -209,7 +208,7 @@ namespace Unity.AppUI.Redux
                 }));
                 return;
             }
-            
+
             if (cToken.IsCancellationRequested)
             {
                 store.Dispatch(actionCreator.rejected.Invoke(new RejectedMeta<TThunkArg>
@@ -220,7 +219,7 @@ namespace Unity.AppUI.Redux
                 }));
                 return;
             }
-            
+
             store.Dispatch(actionCreator.fulfilled.Invoke(result, new FulfilledMeta<TThunkArg>
             {
                 requestId = requestId,

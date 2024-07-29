@@ -14,18 +14,18 @@ namespace Unity.AppUI.UI
         /// No indicator.
         /// </summary>
         None,
-        
+
         /// <summary>
         /// An asterisk.
         /// </summary>
         Asterisk,
-        
+
         /// <summary>
         /// A localized "Required" text.
         /// </summary>
         Text,
     }
-    
+
     /// <summary>
     /// A label for a field.
     /// </summary>
@@ -35,53 +35,53 @@ namespace Unity.AppUI.UI
     public partial class FieldLabel : BaseVisualElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId labelProperty = new BindingId(nameof(label));
-        
+
         internal static readonly BindingId requiredProperty = new BindingId(nameof(required));
-        
+
         internal static readonly BindingId indicatorTypeProperty = new BindingId(nameof(indicatorType));
-        
+
         internal static readonly BindingId requiredTextProperty = new BindingId(nameof(requiredText));
-        
+
         internal static readonly BindingId labelOverflowProperty = new BindingId(nameof(labelOverflow));
-        
+
 #endif
-        
+
         /// <summary>
         /// The FieldLabel main styling class.
         /// </summary>
         public const string ussClassName = "appui-field-label";
-        
+
         /// <summary>
         /// The FieldLabel variant styling class.
         /// </summary>
         [EnumName("GetIndicatorTypeUssClassName", typeof(IndicatorType))]
         public const string variantUssClassName = ussClassName + "--";
-        
+
         /// <summary>
         /// The FieldLabel required variant styling class.
         /// </summary>
         public const string requiredUssClassName = ussClassName + "--required";
-        
+
         /// <summary>
         /// The FieldLabel label styling class.
         /// </summary>
         public const string labelUssClassName = ussClassName + "__label";
-        
+
         /// <summary>
         /// The FieldLabel required label styling class.
         /// </summary>
         public const string requiredLabelUssClassName = ussClassName + "__required-label";
-        
+
         /// <summary>
         /// The FieldLabel label overflow variant styling class.
         /// </summary>
         [EnumName("GetLabelOverflowUssClassName", typeof(TextOverflow))]
         public const string labelOverflowUssClassName = ussClassName + "--label-overflow-";
-        
+
         readonly LocalizedTextElement m_LabelElement;
-        
+
         readonly LocalizedTextElement m_RequiredLabelElement;
 
         IndicatorType m_IndicatorType = IndicatorType.Asterisk;
@@ -112,7 +112,7 @@ namespace Unity.AppUI.UI
                     IndicatorType.Text => m_RequiredText,
                     _ => null
                 };
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in requiredProperty);
@@ -138,7 +138,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetIndicatorTypeUssClassName(m_IndicatorType));
                 m_IndicatorType = value;
                 AddToClassList(GetIndicatorTypeUssClassName(m_IndicatorType));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in indicatorTypeProperty);
@@ -164,7 +164,7 @@ namespace Unity.AppUI.UI
                 m_RequiredText = value;
                 if (m_IndicatorType == IndicatorType.Text)
                     m_RequiredLabelElement.text = m_RequiredText;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in requiredTextProperty);
@@ -188,14 +188,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_LabelElement.text != value;
                 m_LabelElement.text = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The text overflow mode.
         /// </summary>
@@ -214,7 +214,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetLabelOverflowUssClassName(m_LabelOverflow));
                 m_LabelOverflow = value;
                 AddToClassList(GetLabelOverflowUssClassName(m_LabelOverflow));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelOverflowProperty);
@@ -225,7 +225,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public FieldLabel() 
+        public FieldLabel()
             : this(null) { }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace Unity.AppUI.UI
             };
             m_LabelElement.AddToClassList(labelUssClassName);
             hierarchy.Add(m_LabelElement);
-            
+
             m_RequiredLabelElement = new LocalizedTextElement
             {
                 name = requiredLabelUssClassName,
@@ -252,16 +252,16 @@ namespace Unity.AppUI.UI
             };
             m_RequiredLabelElement.AddToClassList(requiredLabelUssClassName);
             hierarchy.Add(m_RequiredLabelElement);
-            
+
             label = text;
             required = false;
             indicatorType = IndicatorType.Asterisk;
             requiredText = "(Required)";
             labelOverflow = TextOverflow.Ellipsis;
         }
-        
+
 #if ENABLE_UXML_TRAITS
-        
+
         /// <summary>
         /// Factory class to instantiate a <see cref="FieldLabel"/> using the data read from a UXML file.
         /// </summary>
@@ -277,56 +277,56 @@ namespace Unity.AppUI.UI
                 name = "required",
                 defaultValue = false
             };
-            
+
             readonly UxmlEnumAttributeDescription<IndicatorType> m_IndicatorType = new UxmlEnumAttributeDescription<IndicatorType>
             {
                 name = "indicator-type",
                 defaultValue = IndicatorType.None
             };
-            
+
             readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
             {
                 name = "label",
                 defaultValue = string.Empty
             };
-            
-            
-            
-            
+
+
+
+
             readonly UxmlStringAttributeDescription m_RequiredText = new UxmlStringAttributeDescription
             {
                 name = "required-text",
                 defaultValue = "(Required)"
             };
-            
+
             readonly UxmlEnumAttributeDescription<TextOverflow> m_LabelOverflow = new UxmlEnumAttributeDescription<TextOverflow>
             {
                 name = "label-overflow",
                 defaultValue = TextOverflow.Ellipsis
             };
-            
+
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                
+
                 var fieldLabel = (FieldLabel)ve;
 
                 var required = false;
                 if (m_Required.TryGetValueFromBag(bag, cc, ref required))
                     fieldLabel.required = required;
-                
+
                 var indicatorType = IndicatorType.None;
                 if (m_IndicatorType.TryGetValueFromBag(bag, cc, ref indicatorType))
                     fieldLabel.indicatorType = indicatorType;
-                
+
                 var label = string.Empty;
                 if (m_Label.TryGetValueFromBag(bag, cc, ref label))
                     fieldLabel.label = label;
-                
+
                 var requiredText = string.Empty;
                 if (m_RequiredText.TryGetValueFromBag(bag, cc, ref requiredText))
                     fieldLabel.requiredText = requiredText;
-                
+
                 var labelOverflow = TextOverflow.Ellipsis;
                 if (m_LabelOverflow.TryGetValueFromBag(bag, cc, ref labelOverflow))
                     fieldLabel.labelOverflow = labelOverflow;

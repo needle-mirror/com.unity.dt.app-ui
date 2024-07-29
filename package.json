@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "2.0.0-pre.6",
+  "version": "2.0.0-pre.7",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -25,7 +25,7 @@
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "decd3fe2dd3b76145cd799b535b75c57c8908ff7"
+    "revision": "90916f9e0f8a51362f29b1f754077d511d0056a2"
   },
   "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
   "dependencies": {
@@ -82,10 +82,10 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added support of Attributes on fields and properties in the Dependency Injection system.\n- Added support of UnityEditor ColorPicker in ColorField component.\n- Added support of Color without alpha information in ColorField and ColorPicker.\n- Added `rounded-progress-corners` boolean property in `CircularProgress` and `LinearProgress` to be able to disable rounded corners.\n- Added `trailing-icon` property in `ActionButton` component.\n- Added customization support for the size of the Color swatch inside the ColorField.\n- Added arrow-square-in icon.\n\n### Changed\n\n- Changed the Text element inside the ColorField to become a selectable text.\n\n### Fixed\n\n- Fixed styling issues in `ActionButton` component.\n- Fixed Menu's backdrop to block pointer events\n- Fixed ColorField styling issues.\n- Use correct color variables for Radio and Checkbox components"
+    "changelog": "### Changed\n\n- Changed DialogTrigger.keyboardDismissDisabled to DialogTrigger.keyboardDismissEnabled for consistency.\n- Renamed Popup.parentView to Popup.containerView for more clarity.\n\n### Added\n\n- Added Modal.outsideClickDismissEnabled and Modal.outsideClickStrategy properties to support dismissing Modals by clicking outside of them.\n- Added Popup<T>.SetContainerView method to set a custom container which will be the parent of the popup's view.\n- Made `AnchorPopup.GetMovableElement` method public for easier access and increase customization possibilities.\n\n### Fixed\n\n- Fixed \"Shape\" icon.\n- Fixed border color variable for AccordionItem.\n- Fixed CultureInfo used during source code generation.\n\n### Removed\n\n- Removed intrusive Debug.Log calls from Platform class on Windows platform.\n- Removed warning message when using Single selection type in an overflown ActionGroup."
   },
   "upmCi": {
-    "footprint": "503b94ac247171dde62aeb15f24b286c84e7241f"
+    "footprint": "001e173651747a6f2036201afeeb8777f166d8f3"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.0/manual/index.html"
 }

@@ -32,7 +32,7 @@ It is highly suggested to **disable** this feature. You can find it inside the *
 ### App UI Settings file
 
 The App UI package comes with a settings file that you can use to configure the default values for the UI elements.
-To generate this file, go to **Edit > Project Settings > App UI**. 
+To generate this file, go to **Edit > Project Settings > App UI**.
 If there's no settings file, you can generate one by clicking on the **Generate Settings File** button.
 
 <p align="center">
@@ -43,12 +43,12 @@ If there's no settings file, you can generate one by clicking on the **Generate 
 > The settings file is generated inside the `Assets` folder.
 
 > [!NOTE]
-> There's no need to generate a settings file if you are not willing 
+> There's no need to generate a settings file if you are not willing
 > to change the default values.
 
 > [!WARNING]
-> If your project contains multiple settings files, 
-> you will need to choose the right one from the dropdown 
+> If your project contains multiple settings files,
+> you will need to choose the right one from the dropdown
 > menu inside the **App UI** settings window.
 
 Here are the available settings:

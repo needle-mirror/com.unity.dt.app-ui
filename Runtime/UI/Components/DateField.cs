@@ -20,17 +20,17 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
         internal static readonly BindingId invalidProperty = nameof(invalid);
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
-        
+
         internal static readonly BindingId formatStringProperty = nameof(formatString);
 
 #endif
-        
+
         /// <summary>
         /// The DateField main styling class.
         /// </summary>
@@ -40,7 +40,7 @@ namespace Unity.AppUI.UI
         /// The DateField input styling class.
         /// </summary>
         public static readonly string inputUssClassName = ussClassName + "__input";
-        
+
         /// <summary>
         /// The DateField picker button styling class.
         /// </summary>
@@ -50,19 +50,19 @@ namespace Unity.AppUI.UI
         /// The DateField size styling class.
         /// </summary>
         public static readonly string sizeUssClassName = ussClassName + "--size-";
-        
+
         readonly UnityEngine.UIElements.TextField m_InputElement;
-        
+
         readonly VisualElement m_PickerButton;
 
         Date m_Value;
 
         Size m_Size;
-        
+
         Date m_PreviousValue;
 
         DatePicker m_Picker;
-        
+
         Func<Date, bool> m_ValidateValue;
 
         Popover m_Popover;
@@ -110,7 +110,7 @@ namespace Unity.AppUI.UI
             formatString = "yyyy-MM-dd";
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));
         }
-        
+
         void OnInputKeyDown(KeyDownEvent evt)
         {
             var delta = evt.keyCode switch
@@ -119,7 +119,7 @@ namespace Unity.AppUI.UI
                 KeyCode.DownArrow => -1,
                 _ => 0
             };
-            
+
             if (delta == 0)
                 return;
 
@@ -130,11 +130,11 @@ namespace Unity.AppUI.UI
                 value = new Date(newStartDate);
             }
         }
-        
+
         void OnInputValueChanged(ChangeEvent<string> e)
         {
-            var newValue = !string.IsNullOrEmpty(e.newValue) && DateTime.TryParse(e.newValue, out var date) 
-                ? new Date(date) 
+            var newValue = !string.IsNullOrEmpty(e.newValue) && DateTime.TryParse(e.newValue, out var date)
+                ? new Date(date)
                 : m_PreviousValue;
             value = newValue;
             SetFormattedString();
@@ -161,7 +161,7 @@ namespace Unity.AppUI.UI
             m_Popover.Show();
             AddToClassList(Styles.focusedUssClassName);
         }
-        
+
         void OnPopoverDismissed(Popover popover, DismissType reason)
         {
             popover.dismissed -= OnPopoverDismissed;
@@ -227,7 +227,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -251,7 +251,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(Styles.invalidUssClassName) != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
@@ -272,7 +272,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
@@ -293,7 +293,7 @@ namespace Unity.AppUI.UI
 
         void SetFormattedString()
         {
-            var formattedValue = string.IsNullOrEmpty(m_FormatString) 
+            var formattedValue = string.IsNullOrEmpty(m_FormatString)
                 ? ((DateTime)m_Value).ToString(CultureInfo.InvariantCulture)
                 : ((DateTime)m_Value).ToString(m_FormatString, CultureInfo.InvariantCulture);
             m_InputElement.SetValueWithoutNotify(formattedValue);
@@ -315,12 +315,12 @@ namespace Unity.AppUI.UI
             {
                 if (m_Value == value)
                     return;
-                
+
                 using var evt = ChangeEvent<Date>.GetPooled(m_Value, value);
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
 #endif
@@ -344,14 +344,14 @@ namespace Unity.AppUI.UI
                 var changed = m_FormatString != value;
                 m_FormatString = value;
                 SetFormattedString();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
 #endif
             }
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -375,13 +375,13 @@ namespace Unity.AppUI.UI
                 name = "size",
                 defaultValue = Size.M,
             };
-            
+
             readonly UxmlStringAttributeDescription m_FormatString = new UxmlStringAttributeDescription
             {
                 name = "format-string",
                 defaultValue = "yyyy-MM-dd"
             };
-            
+
             readonly UxmlStringAttributeDescription m_Value = new UxmlStringAttributeDescription
             {
                 name = "value",

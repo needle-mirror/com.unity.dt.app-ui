@@ -8,10 +8,10 @@ namespace Unity.AppUI.Samples.MVVMRedux
     {
         [SerializeField]
         public string id;
-        
+
         [SerializeField]
         public string text;
-        
+
         [SerializeField]
         public bool completed;
     }

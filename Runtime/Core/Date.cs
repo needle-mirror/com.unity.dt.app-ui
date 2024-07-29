@@ -14,31 +14,31 @@ namespace Unity.AppUI.Core
         /// The current date.
         /// </summary>
         public static Date now => new Date(DateTime.Now);
-        
+
         [SerializeField]
         int m_Year;
-        
+
         /// <summary>
         /// The date year.
         /// </summary>
-        public int year => m_Year; 
-        
+        public int year => m_Year;
+
         [SerializeField]
         int m_Month;
-        
+
         /// <summary>
         /// The date month.
         /// </summary>
         public int month => m_Month;
-        
+
         [SerializeField]
         int m_Day;
-        
+
         /// <summary>
         /// The date day.
         /// </summary>
         public int day => m_Day;
-        
+
         /// <summary>
         /// Constructs a <see cref="Date"/> from a <see cref="DateTime"/>.
         /// </summary>
@@ -49,7 +49,7 @@ namespace Unity.AppUI.Core
             m_Month = dateTime.Month;
             m_Day = dateTime.Day;
         }
-        
+
         /// <summary>
         /// Constructs a <see cref="Date"/> from a year, month and day.
         /// </summary>
@@ -61,19 +61,19 @@ namespace Unity.AppUI.Core
         public Date(int year, int month, int day)
         {
             m_Year = year;
-            
+
             if (month < 1 || month > 12)
                 throw new ArgumentOutOfRangeException(nameof(month), month, "Month must be between 1 and 12.");
-            
+
             m_Month = month;
-            
+
             var daysInMonth = DateTime.DaysInMonth(year, month);
             if (day < 1 || day > daysInMonth)
                 throw new ArgumentOutOfRangeException(nameof(day), day, $"Day must be between 1 and {daysInMonth}.");
-            
+
             m_Day = day;
         }
-        
+
         /// <summary>
         /// Converts a <see cref="Date"/> to a <see cref="DateTime"/>.
         /// </summary>
@@ -112,7 +112,7 @@ namespace Unity.AppUI.Core
         {
             return HashCode.Combine(year, month, day);
         }
-        
+
         /// <summary>
         /// Determines whether two <see cref="Date"/>s are equal.
         /// </summary>
@@ -123,7 +123,7 @@ namespace Unity.AppUI.Core
         {
             return left.Equals(right);
         }
-        
+
         /// <summary>
         /// Determines whether two <see cref="Date"/>s are not equal.
         /// </summary>
@@ -134,7 +134,7 @@ namespace Unity.AppUI.Core
         {
             return !left.Equals(right);
         }
-        
+
         /// <summary>
         /// Determines whether the left <see cref="Date"/> is less than the right <see cref="Date"/>.
         /// </summary>
@@ -145,7 +145,7 @@ namespace Unity.AppUI.Core
         {
             return DateTime.Compare(left, right) < 0;
         }
-        
+
         /// <summary>
         /// Determines whether the left <see cref="Date"/> is greater than the right <see cref="Date"/>.
         /// </summary>
@@ -156,7 +156,7 @@ namespace Unity.AppUI.Core
         {
             return DateTime.Compare(left, right) > 0;
         }
-        
+
         /// <summary>
         /// Determines whether the left <see cref="Date"/> is less than or equal to the right <see cref="Date"/>.
         /// </summary>
@@ -167,7 +167,7 @@ namespace Unity.AppUI.Core
         {
             return DateTime.Compare(left, right) <= 0;
         }
-        
+
         /// <summary>
         /// Determines whether the left <see cref="Date"/> is greater than or equal to the right <see cref="Date"/>.
         /// </summary>
@@ -188,7 +188,7 @@ namespace Unity.AppUI.Core
             return $"{year}-{month:D2}-{day:D2}";
         }
     }
-    
+
     /// <summary>
     /// Data structure that represents a range of dates.
     /// </summary>
@@ -198,21 +198,21 @@ namespace Unity.AppUI.Core
         [SerializeField]
         [Tooltip("The start date of the range.")]
         Date m_Start;
-        
+
         [SerializeField]
         [Tooltip("The end date of the range.")]
         Date m_End;
-        
+
         /// <summary>
         /// The start date of the range.
         /// </summary>
         public Date start => m_Start;
-        
+
         /// <summary>
         /// The end date of the range.
         /// </summary>
         public Date end => m_End;
-        
+
         /// <summary>
         /// Constructs a <see cref="DateRange"/> from a start and end date.
         /// </summary>
@@ -223,7 +223,7 @@ namespace Unity.AppUI.Core
         {
             if (start > end)
                 throw new ArgumentOutOfRangeException(nameof(start), start, "Start date must be less than or equal to the end date.");
-            
+
             m_Start = start;
             m_End = end;
         }
@@ -236,7 +236,7 @@ namespace Unity.AppUI.Core
         public DateRange(DateTime start, DateTime end)
             : this(new Date(start), new Date(end))
         { }
-        
+
         /// <summary>
         /// Determines whether the range contains a date.
         /// </summary>
@@ -272,12 +272,12 @@ namespace Unity.AppUI.Core
         /// <summary>
         /// Serves as the default hash function.
         /// </summary>
-        /// <returns></returns>
+        /// <returns> A hash code for the current object. </returns>
         public override int GetHashCode()
         {
             return HashCode.Combine(start, end);
         }
-        
+
         /// <summary>
         /// Determines whether two <see cref="DateRange"/>s are equal.
         /// </summary>
@@ -288,7 +288,7 @@ namespace Unity.AppUI.Core
         {
             return left.Equals(right);
         }
-        
+
         /// <summary>
         /// Determines whether two <see cref="DateRange"/>s are not equal.
         /// </summary>
@@ -309,24 +309,24 @@ namespace Unity.AppUI.Core
         public static bool TryParse(string value, out DateRange dateRange)
         {
             dateRange = default;
-            
+
             if (string.IsNullOrEmpty(value))
                 return false;
-            
+
             var parts = value.Split(',');
             if (parts.Length != 2)
                 return false;
-            
+
             if (!DateTime.TryParse(parts[0], out var start) || !DateTime.TryParse(parts[1], out var end))
                 return false;
-            
+
             if (start > end)
                 return false;
-            
+
             dateRange = new DateRange(new Date(start), new Date(end));
             return true;
         }
-        
+
         /// <summary>
         /// Returns a string that represents the current <see cref="DateRange"/>.
         /// </summary>

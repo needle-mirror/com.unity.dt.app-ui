@@ -32,7 +32,7 @@ namespace Unity.AppUI.UI
         /// A click is considered outside if the cursor position is outside of the popup's bounds.
         /// </summary>
         Bounds = 1,
-        
+
         /// <summary>
         /// A click is considered outside if the picked element at the cursor position is not a child of the popup.
         /// </summary>
@@ -46,7 +46,7 @@ namespace Unity.AppUI.UI
     public abstract class AnchorPopup<T> : Popup<T> where T : AnchorPopup<T>
     {
         const long k_AnchorUpdateInterval = 8L;
-        
+
         const int k_AnchorPopUpFadeInDurationMs = 150;
 
         VisualElement m_Anchor;
@@ -66,7 +66,7 @@ namespace Unity.AppUI.UI
         bool m_ShouldFlip = true;
 
         Rect m_ContentBounds;
-        
+
         Panel panel { get; }
 
         /// <summary>
@@ -78,24 +78,24 @@ namespace Unity.AppUI.UI
         protected AnchorPopup(VisualElement parentView, VisualElement view, VisualElement contentView = null)
             : base(parentView, view, contentView)
         {
-            panel = parentView.GetFirstAncestorOfType<Panel>();
+            panel = parentView.panel.visualTree.Q<Panel>();
         }
 
         /// <summary>
         /// The desired placement.
+        /// </summary>
         /// <remarks>
         /// You can set the desired placement using <see cref="SetPlacement"/>.
         /// </remarks>
-        /// </summary>
         public PopoverPlacement placement => m_Placement;
 
         /// <summary>
         /// The current placement.
+        /// </summary>
         /// <remarks>
         /// The current placement can be different from the placement set with <see cref="SetPlacement"/>, based
         /// on the current position of the anchor on the screen and the ability to flip placement.
         /// </remarks>
-        /// </summary>
         public PopoverPlacement currentPlacement => m_CurrentPlacement;
 
         /// <summary>
@@ -125,17 +125,17 @@ namespace Unity.AppUI.UI
         public bool arrowVisible { get; private set; } = true;
 
         /// <summary>
-        /// `True` if the the popup can be dismissed by clicking outside of it, `False` otherwise.
+        /// `True` if the popup can be dismissed by clicking outside of it, `False` otherwise.
         /// </summary>
         public bool outsideClickDismissEnabled { get; protected set; } = true;
-        
+
         /// <summary>
-        /// `True` if the the popup let the user to be able to scroll outside of it, `False` otherwise.
+        /// `True` if the popup let the user scroll outside of it, `False` otherwise.
         /// </summary>
         public bool outsideScrollEnabled { get; protected set; } = false;
-        
+
         /// <summary>
-        /// The strategy used to determine if the click is outside of the popup.
+        /// The strategy used to determine if the click is outside the popup.
         /// </summary>
         public OutsideClickStrategy outsideClickStrategy { get; protected set; } = OutsideClickStrategy.Bounds;
 
@@ -146,8 +146,8 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Set the preferred <see cref="placement"/> value.
-        /// <remarks>This will trigger a refresh of the current popup position automatically.</remarks>
         /// </summary>
+        /// <remarks>This will trigger a refresh of the current popup position automatically.</remarks>
         /// <param name="popoverPlacement">The new value.</param>
         /// <returns>The popup.</returns>
         public T SetPlacement(PopoverPlacement popoverPlacement)
@@ -181,8 +181,8 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Set a new value for the <see cref="containerPadding"/> property.
-        /// <remarks>This will trigger a refresh of the current popup position automatically.</remarks>
         /// </summary>
+        /// <remarks>This will trigger a refresh of the current popup position automatically.</remarks>
         /// <param name="value">The new value.</param>
         /// <returns>The popup.</returns>
         public T SetContainerPadding(int value)
@@ -198,8 +198,8 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Set a new value for the <see cref="shouldFlip"/> property.
-        /// <remarks>This will trigger a refresh of the current popup position automatically.</remarks>
         /// </summary>
+        /// <remarks>This will trigger a refresh of the current popup position automatically.</remarks>
         /// <param name="value">The new value.</param>
         /// <returns>The popup.</returns>
         public T SetShouldFlip(bool value)
@@ -211,8 +211,8 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Set a new value for the <see cref="arrowVisible"/> property.
-        /// <remarks>This will trigger a refresh of the current popup position automatically.</remarks>
         /// </summary>
+        /// <remarks>This will trigger a refresh of the current popup position automatically.</remarks>
         /// <param name="visible">The new value.</param>
         /// <returns>The popup.</returns>
         public T SetArrowVisible(bool visible)
@@ -225,8 +225,8 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Set a new value for the <see cref="anchor"/> property.
-        /// <remarks>This will trigger a refresh of the current popup position automatically.</remarks>
         /// </summary>
+        /// <remarks>This will trigger a refresh of the current popup position automatically.</remarks>
         /// <param name="value">The new value.</param>
         /// <returns>The popup.</returns>
         public T SetAnchor(VisualElement value)
@@ -238,7 +238,7 @@ namespace Unity.AppUI.UI
             RefreshPosition();
             return (T)this;
         }
-        
+
         /// <summary>
         /// Activate the possibility to dismiss the popup by clicking outside of it.
         /// </summary>
@@ -249,7 +249,7 @@ namespace Unity.AppUI.UI
             outsideClickDismissEnabled = dismissEnabled;
             return (T)this;
         }
-        
+
         /// <summary>
         /// Activate the possibility to scroll outside of the popup.
         /// </summary>
@@ -260,7 +260,7 @@ namespace Unity.AppUI.UI
             outsideScrollEnabled = scrollEnabled;
             return (T)this;
         }
-        
+
         /// <summary>
         /// Set the strategy used to determine if the click is outside of the popup.
         /// </summary>
@@ -274,10 +274,10 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Called when the popup's <see cref="Handler"/> has received a <see cref="Popup.k_PopupShow"/> message.
+        /// </summary>
         /// <remarks>
         /// In this method the view should become visible at some point (directly or via an animation).
         /// </remarks>
-        /// </summary>
         protected override void ShowView()
         {
             base.ShowView();
@@ -350,13 +350,13 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Start the hide animation for this popup.
         /// </summary>
-        /// <param name="reason"></param>
+        /// <param name="reason"> The reason for the dismissal.</param>
         protected override void AnimateViewOut(DismissType reason)
         {
             view.visible = false;
             InvokeDismissedEventHandlers(reason);
         }
-        
+
         void OnContentGeometryChanged(GeometryChangedEvent evt)
         {
             if (!Mathf.Approximately(evt.newRect.width, evt.oldRect.width) || !Mathf.Approximately(evt.newRect.height, evt.oldRect.height))
@@ -417,7 +417,7 @@ namespace Unity.AppUI.UI
         /// Method which must return the visual element that needs to be moved, based on the anchor position and size.
         /// </summary>
         /// <returns>The visual element which will be moved. The default value is <see cref="Popup.view"/>.</returns>
-        protected virtual VisualElement GetMovableElement()
+        public virtual VisualElement GetMovableElement()
         {
             return view;
         }

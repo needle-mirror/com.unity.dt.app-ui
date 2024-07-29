@@ -87,7 +87,7 @@ The `componentType` property is used to display the properties of the UI Compone
 You must implement the `componentType` property by creating a new class that inherits from [StoryBookComponent](xref:Unity.AppUI.Editor.StoryBookComponent).
 
 > [!NOTE]
-> If you don't provide a valid `componentType` property, the Storybook property editor 
+> If you don't provide a valid `componentType` property, the Storybook property editor
 > and the **Canvas** story will not be displayed.
 
 To add a story, use the `m_Stories.Add()` method.

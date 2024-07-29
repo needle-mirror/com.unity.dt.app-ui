@@ -15,7 +15,7 @@ using UnityEngine.UIElements;
 namespace Unity.AppUI.Editor
 {
     // Generic Converters
-    
+
     public abstract class OptionalConverter<T> : UxmlAttributeConverter<Optional<T>>
     {
         protected virtual bool TryParse(string value, out T v)
@@ -23,7 +23,7 @@ namespace Unity.AppUI.Editor
             v = default;
             return false;
         }
-        
+
         public override Optional<T> FromString(string value)
         {
             if (string.IsNullOrEmpty(value) || !TryParse(value, out var v))
@@ -31,7 +31,7 @@ namespace Unity.AppUI.Editor
 
             return v;
         }
-        
+
         public override string ToString(Optional<T> value)
         {
             return value.IsSet ? value.Value.ToString() : string.Empty;
@@ -40,7 +40,7 @@ namespace Unity.AppUI.Editor
 
     public class OptionalValueConverter<T> : OptionalConverter<T>
         where T : IComparable, IComparable<T>, IFormattable { }
-    
+
     public abstract class OptionalEnumConverter<T> : UxmlAttributeConverter<OptionalEnum<T>>
         where T : struct, Enum
     {
@@ -51,19 +51,19 @@ namespace Unity.AppUI.Editor
 
             return v;
         }
-        
+
         public override string ToString(OptionalEnum<T> value)
         {
             return value.IsSet ? value.Value.ToString() : string.Empty;
         }
     }
-    
+
     // Specific Converters
-    
+
     public class OptionalPopoverPlacementConverter : OptionalEnumConverter<PopoverPlacement> { }
-    
+
     public class OptionalDirConverter : OptionalEnumConverter<Dir> { }
-    
+
     public class OptionalIntConverter : OptionalValueConverter<int>
     {
         protected override bool TryParse(string value, out int v)
@@ -71,7 +71,7 @@ namespace Unity.AppUI.Editor
             return int.TryParse(value, out v);
         }
     }
-    
+
     public class OptionalLongConverter : OptionalValueConverter<long>
     {
         protected override bool TryParse(string value, out long v)
@@ -79,7 +79,7 @@ namespace Unity.AppUI.Editor
             return long.TryParse(value, out v);
         }
     }
-    
+
     public class OptionalFloatConverter : OptionalValueConverter<float>
     {
         protected override bool TryParse(string value, out float v)
@@ -87,7 +87,7 @@ namespace Unity.AppUI.Editor
             return float.TryParse(value, out v);
         }
     }
-    
+
     public class OptionalDoubleConverter : OptionalValueConverter<double>
     {
         protected override bool TryParse(string value, out double v)
@@ -104,7 +104,7 @@ namespace Unity.AppUI.Editor
             return !string.IsNullOrEmpty(value);
         }
     }
-    
+
     public class OptionalColorConverter : OptionalConverter<Color>
     {
         protected override bool TryParse(string value, out Color v)
@@ -112,7 +112,7 @@ namespace Unity.AppUI.Editor
             return ColorUtility.TryParseHtmlString(value, out v);
         }
     }
-    
+
     public class OptionalRectConverter : OptionalConverter<Rect>
     {
         protected override bool TryParse(string value, out Rect v)
@@ -124,7 +124,7 @@ namespace Unity.AppUI.Editor
         {
             if (!value.IsSet)
                 return string.Empty;
-            
+
             var rect = value.Value;
             return $"{rect.x},{rect.y},{rect.width},{rect.height}";
         }
@@ -139,7 +139,7 @@ namespace Unity.AppUI.Editor
 
             return new Date(v);
         }
-        
+
         public override string ToString(Date value)
         {
             return ((DateTime)value).ToString(CultureInfo.InvariantCulture);
@@ -155,13 +155,13 @@ namespace Unity.AppUI.Editor
 
             return v;
         }
-        
+
         public override string ToString(DateRange value)
         {
             return value.ToString();
         }
     }
-    
+
 #if !UNITY_2023_3_OR_NEWER
     public class GradientConverter : UxmlAttributeConverter<Gradient>
     {
@@ -169,7 +169,7 @@ namespace Unity.AppUI.Editor
         {
             if (GradientExtensions.TryParse(value, out var v))
                 return v;
-            
+
             throw new InvalidOperationException($"Cannot parse {value} to a Gradient.");
         }
 

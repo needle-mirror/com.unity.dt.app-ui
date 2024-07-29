@@ -20,21 +20,21 @@ namespace Unity.AppUI.UI
     public partial class ColorPicker : VisualElement, INotifyValueChanged<Color>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
-        
+
         internal static readonly BindingId previousValueProperty = new BindingId(nameof(previousValue));
-        
+
         internal static readonly BindingId showAlphaProperty = new BindingId(nameof(showAlpha));
-        
+
         internal static readonly BindingId showToolbarProperty = new BindingId(nameof(showToolbar));
-        
+
         internal static readonly BindingId showHexProperty = new BindingId(nameof(showHex));
-        
+
         internal static readonly BindingId hdrProperty = new BindingId(nameof(hdr));
-        
+
 #endif
-        
+
         /// <summary>
         /// The type of channels sliders to display in the ColorPicker.
         /// </summary>
@@ -128,7 +128,7 @@ namespace Unity.AppUI.UI
         /// The hex field styling class.
         /// </summary>
         public const string hexFieldUssClassName = ussClassName + "__hex-field";
-        
+
         /// <summary>
         /// The HDR styling class.
         /// </summary>
@@ -204,7 +204,7 @@ namespace Unity.AppUI.UI
 
                 if (changed)
                     SendEvent(evt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in valueProperty);
@@ -225,10 +225,10 @@ namespace Unity.AppUI.UI
         {
             get => m_Toolbar.previousColor;
             set
-            { 
+            {
                 var changed = m_Toolbar.previousColor != value;
                 m_Toolbar.previousColor = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in previousValueProperty);
@@ -252,17 +252,17 @@ namespace Unity.AppUI.UI
             {
                 var changed = showAlpha != value;
                 m_AlphaSlider.EnableInClassList(Styles.hiddenUssClassName, !value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in showAlphaProperty);
 #endif
-                
+
                 if (!showAlpha)
                     TryNotifyValueChanged(this.value);
             }
         }
-        
+
         /// <summary>
         /// Determines if the ColorPicker should display colors in HDR.
         /// </summary>
@@ -294,7 +294,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = showToolbar != value;
                 m_Toolbar.EnableInClassList(Styles.hiddenUssClassName, !value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in showToolbarProperty);
@@ -518,14 +518,14 @@ namespace Unity.AppUI.UI
         void OnHexValueChanged(ChangeEvent<string> evt)
         {
             var hexStrValue = evt.newValue ?? "#000000";
-            
+
             var strBuilder = new StringBuilder();
             foreach (var hexChar in hexStrValue)
             {
                 if (Uri.IsHexDigit(hexChar))
                     strBuilder.Append(hexChar);
             }
-            
+
             var str = strBuilder.ToString();
 
             if (!ColorExtensions.IsValidHex(str))
@@ -653,7 +653,7 @@ namespace Unity.AppUI.UI
             m_SvSquare.referenceHue = evt.newValue;
             var c = m_SvSquare.selectedColor;
             c.a = m_AlphaSlider.value;
-            
+
             m_AlphaSlider.colorRange.SetKeys(new[]
             {
                 new GradientColorKey(new Color(c.r, c.g, c.b, 0), 0),
@@ -1070,7 +1070,7 @@ namespace Unity.AppUI.UI
                 el.showHex = m_ShowHex.GetValueFromBag(bag, cc);
             }
         }
-        
+
 #endif
     }
 }

@@ -12,7 +12,7 @@ namespace Unity.AppUI.MVVM
     public class ServiceCollection : IServiceCollection
     {
         readonly List<ServiceDescriptor> m_Descriptors = new List<ServiceDescriptor>();
-        
+
         /// <summary>
         /// Get an enumerator for the services.
         /// </summary>

@@ -13,7 +13,7 @@ namespace Unity.AppUI.Tests.UI
     class DateRangeFieldTests : VisualElementTests<DateRangeField>
     {
         protected override string mainUssClassName => DateRangeField.ussClassName;
-        
+
         protected override IEnumerable<Story> stories
         {
             get
@@ -28,7 +28,7 @@ namespace Unity.AppUI.Tests.UI
                 });
             }
         }
-        
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:DateRangeField />",

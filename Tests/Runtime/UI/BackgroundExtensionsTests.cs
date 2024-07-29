@@ -17,7 +17,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.That(bg.texture, Is.EqualTo(tex));
             Object.DestroyImmediate(tex);
         }
-        
+
         [Test]
         public void FromObject_WhenSprite_ReturnsBackgroundFromSprite()
         {
@@ -28,7 +28,7 @@ namespace Unity.AppUI.Tests.UI
             Object.DestroyImmediate(sprite);
             Object.DestroyImmediate(tex);
         }
-        
+
         [Test]
         public void FromObject_WhenRenderTexture_ReturnsBackgroundFromRenderTexture()
         {
@@ -37,7 +37,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.That(bg.renderTexture, Is.EqualTo(rt));
             Object.DestroyImmediate(rt);
         }
-        
+
         [Test]
         public void FromObject_WhenVectorImage_ReturnsBackgroundFromVectorImage()
         {
@@ -46,7 +46,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.That(bg.vectorImage, Is.EqualTo(vi));
             Object.DestroyImmediate(vi);
         }
-        
+
         [Test]
         public void FromObject_WhenNull_ReturnsDefaultBackground()
         {
@@ -56,7 +56,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.That(bg.renderTexture, Is.Null);
             Assert.That(bg.vectorImage, Is.Null);
         }
-        
+
         [Test]
         public void GetSelectedImage_WhenTexture2D_ReturnsTexture2D()
         {
@@ -65,7 +65,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.That(bg.GetSelectedImage(), Is.EqualTo(tex));
             Object.DestroyImmediate(tex);
         }
-        
+
         [Test]
         public void GetSelectedImage_WhenSprite_ReturnsSprite()
         {
@@ -76,7 +76,7 @@ namespace Unity.AppUI.Tests.UI
             Object.DestroyImmediate(sprite);
             Object.DestroyImmediate(tex);
         }
-        
+
         [Test]
         public void GetSelectedImage_WhenRenderTexture_ReturnsRenderTexture()
         {
@@ -85,7 +85,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.That(bg.GetSelectedImage(), Is.EqualTo(rt));
             Object.DestroyImmediate(rt);
         }
-        
+
         [Test]
         public void GetSelectedImage_WhenVectorImage_ReturnsVectorImage()
         {
@@ -94,7 +94,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.That(bg.GetSelectedImage(), Is.EqualTo(vi));
             Object.DestroyImmediate(vi);
         }
-        
+
         [Test]
         public void GetSelectedImage_WhenNull_ReturnsNull()
         {

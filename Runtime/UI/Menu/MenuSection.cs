@@ -15,11 +15,11 @@ namespace Unity.AppUI.UI
     public partial class MenuSection : BaseVisualElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId titleProperty = new BindingId(nameof(title));
-        
+
 #endif
-        
+
         /// <summary>
         /// The MenuSection main styling class.
         /// </summary>
@@ -82,7 +82,7 @@ namespace Unity.AppUI.UI
                 var changed = m_Title.text != value;
                 m_Title.text = value;
                 m_Title.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in titleProperty);
@@ -123,7 +123,7 @@ namespace Unity.AppUI.UI
                 element.title = m_Title.GetValueFromBag(bag, cc);
             }
         }
-        
+
 #endif
     }
 }

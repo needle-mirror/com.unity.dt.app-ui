@@ -7,15 +7,15 @@ namespace Unity.AppUI.UI
     sealed class MonthPicker : BaseDatePickerPane
     {
         public static readonly string previousYearButtonUssClassName = ussClassName + "__previous-year-button";
-        
+
         public static readonly string nextYearButtonUssClassName = ussClassName + "__next-year-button";
-        
+
         public static readonly string yearLabelUssClassName = ussClassName + "__year-header-button";
-        
+
         public static readonly string monthsContainerUssClassName = ussClassName + "__months-container";
-        
+
         public static readonly string monthButtonUssClassName = ussClassName + "__month-button";
-        
+
         readonly Text[] m_MonthsElementsPool = new Text[12];
 
         IconButton m_PreviousYearButton;
@@ -25,7 +25,7 @@ namespace Unity.AppUI.UI
         IconButton m_NextYearButton;
 
         VisualElement m_MonthsContainer;
-        
+
         public MonthPicker(BaseDatePicker datePicker)
             : base(datePicker)
         { }
@@ -40,7 +40,7 @@ namespace Unity.AppUI.UI
             m_PreviousYearButton.AddToClassList(previousYearButtonUssClassName);
             m_LeftButtonGroup.hierarchy.Add(m_PreviousYearButton);
         }
-        
+
         protected override void ConstructHeaderContentUI()
         {
             m_YearHeaderButton = new Button(OnYearPressed)
@@ -72,7 +72,7 @@ namespace Unity.AppUI.UI
             };
             m_MonthsContainer.AddToClassList(monthsContainerUssClassName);
             m_BodyElement.hierarchy.Add(m_MonthsContainer);
-            
+
             ConstructMonthsUI();
         }
 
@@ -104,17 +104,17 @@ namespace Unity.AppUI.UI
             var year = m_DatePicker.currentYear;
             m_YearHeaderButton.title = year.ToString();
         }
-        
+
         void OnPreviousYearButtonClick()
         {
             m_DatePicker.GoToPreviousYear();
         }
-        
+
         void OnNextYearButtonClick()
         {
             m_DatePicker.GoToNextYear();
         }
-        
+
         void OnYearPressed()
         {
             m_DatePicker.displayMode = DatePicker.DisplayMode.Years;

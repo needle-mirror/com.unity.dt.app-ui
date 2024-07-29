@@ -14,17 +14,17 @@ namespace Unity.AppUI.MVVM
         /// Gets the implementation type of the service.
         /// </summary>
         public Type implementationType { get; private set; }
-        
+
         /// <summary>
         /// Gets the lifetime of the service.
         /// </summary>
         public ServiceLifetime lifetime { get; private set; }
-        
+
         /// <summary>
         /// Gets the service type.
         /// </summary>
         public Type serviceType { get; private set; }
-        
+
         ServiceDescriptor(Type serviceType, ServiceLifetime lifetime)
         {
             this.lifetime = lifetime;
@@ -43,7 +43,7 @@ namespace Unity.AppUI.MVVM
         {
             if (serviceType == null)
                 throw new ArgumentNullException(nameof(serviceType));
-            
+
             if (implementationType == null)
                 throw new ArgumentNullException(nameof(implementationType));
 

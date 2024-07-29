@@ -4,7 +4,7 @@ uid: native-integration
 
 # Native Integration
 
-App UI supports communication with the operating system through [native plugins](xref:NativePlugins). 
+App UI supports communication with the operating system through [native plugins](xref:NativePlugins).
 For now plugins have been developed for the following platforms:
 - [Android](xref:AndroidNativePlugins)
 - [iOS](xref:PluginsForIOS)
@@ -14,7 +14,7 @@ For now plugins have been developed for the following platforms:
 ## Screen Scale Factor
 
 Thanks to the [Screen](xref:UnityEngine.Screen) class from Unity, you can get information about the screen size and orientation.
-However we found that the relationship between the [dpi](xref:UnityEngine.Screen.dpi) and 
+However we found that the relationship between the [dpi](xref:UnityEngine.Screen.dpi) and
 the [UI Toolkit PanelSettings](xref:UnityEngine.UIElements.PanelSettings) is different from a platform to another.
 
 We provide a [scaleFactor](xref:Unity.AppUI.Core.Platform.scaleFactor) property which gives an accurate scale factor
@@ -24,7 +24,7 @@ When you enable the [Auto Scale Mode](xref:setup#app-ui-settings-file) on the UI
 the UI elements will be scaled according to the [referenceDpi](xref:Unity.AppUI.Core.Platform.referenceDpi) value which is calculated
 using the [scaleFactor](xref:Unity.AppUI.Core.Platform.scaleFactor) property.
 
-Here is a small example of how you can use the [scaleFactor](xref:Unity.AppUI.Core.Platform.scaleFactor) 
+Here is a small example of how you can use the [scaleFactor](xref:Unity.AppUI.Core.Platform.scaleFactor)
 property when generating custom UI elements content:
 
 ```csharp
@@ -35,10 +35,10 @@ using UnityEngine;
 class MyCustomElement : VisualElement
 {
     RenderTexture m_RT;
-    
+
     static readonly Vertex[] k_Vertices = new Vertex[4];
     static readonly ushort[] k_Indices = { 0, 1, 2, 2, 3, 0 };
-    
+
     static MyCustomElement()
     {
         k_Vertices[0].tint = Color.white;
@@ -46,12 +46,12 @@ class MyCustomElement : VisualElement
         k_Vertices[2].tint = Color.white;
         k_Vertices[3].tint = Color.white;
     }
-    
+
     public MyCustomElement()
     {
         generateVisualContent += OnGenerateVisualContent;
     }
-    
+
     void OnGenerateVisualContent(MeshGenerationContext ctx)
     {
         var rect = contentRect;
@@ -61,7 +61,7 @@ class MyCustomElement : VisualElement
         // check the current scale factor to apply on the RenderTexture
         var dpi = Mathf.Max(Platform.scaleFactor, 1f);
         var rectSize = rect.size * dpi;
-        
+
         // create or re-create the RenderTexture if the size has changed
         if (m_RT && (Mathf.Abs(m_RT.width - rectSize.x) > 1 || Mathf.Abs(m_RT.height - rectSize.y) > 1))
         {
@@ -78,10 +78,10 @@ class MyCustomElement : VisualElement
             };
             m_RT.Create();
         }
-        
+
         // TODO: draw the content on the RenderTexture here...
-        
-        // Place the RenderTexture in the MeshGenerationContext        
+
+        // Place the RenderTexture in the MeshGenerationContext
         var left = paddingRect.xMin;
         var right = paddingRect.xMax;
         var top = paddingRect.yMin;
@@ -91,7 +91,7 @@ class MyCustomElement : VisualElement
         k_Vertices[1].position = new Vector3(left, top, Vertex.nearZ);
         k_Vertices[2].position = new Vector3(right, top, Vertex.nearZ);
         k_Vertices[3].position = new Vector3(right, bottom, Vertex.nearZ);
-        
+
         var mwd = mgc.Allocate(k_Vertices.Length, k_Indices.Length, m_RT);
 
 #if !UNITY_2023_1_OR_NEWER
@@ -174,7 +174,7 @@ void SetTheme()
         Platform.systemThemeChanged += OnDarkModeChanged;
         provider.theme = Platform.darkMode ? "dark" : "light";
     }
-    else 
+    else
     {
         provider.theme = themeSwitcher.value;
     }

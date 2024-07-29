@@ -14,7 +14,7 @@ using DoubleField = UnityEngine.UIElements.DoubleField;
 using EnumField = UnityEngine.UIElements.EnumField;
 using ColorField = UnityEditor.UIElements.ColorField;
 using RectField = UnityEngine.UIElements.RectField;
-#else 
+#else
 using IntegerField = UnityEditor.UIElements.IntegerField;
 using LongField = UnityEditor.UIElements.LongField;
 using FloatField = UnityEditor.UIElements.FloatField;
@@ -27,7 +27,7 @@ using RectField = UnityEditor.UIElements.RectField;
 namespace Unity.AppUI.Editor
 {
     // Generic Property Drawers
-    
+
     /// <summary>
     /// Draws the Inspector GUI for an optional property
     /// </summary>
@@ -45,12 +45,12 @@ namespace Unity.AppUI.Editor
         /// The value of the optional property
         /// </summary>
         protected SerializedProperty m_Value;
-        
+
         /// <summary>
         /// The toggle component used to edit the hasValue property
         /// </summary>
         protected UnityEngine.UIElements.Toggle m_HasValueField;
-        
+
         /// <summary>
         /// The field component used to edit the value property
         /// </summary>
@@ -81,7 +81,7 @@ namespace Unity.AppUI.Editor
                 label = null,
                 bindingPath = m_HasValue.propertyPath
             };
-            
+
             m_ValueField = new TU
             {
                 style =
@@ -96,7 +96,7 @@ namespace Unity.AppUI.Editor
                 SetValue(e.newValue);
                 property.serializedObject.ApplyModifiedProperties();
             });
-            
+
             m_HasValueField.RegisterCallback<ChangeEvent<bool>>(e =>
             {
                 m_ValueField.SetEnabled(e.newValue);
@@ -105,7 +105,7 @@ namespace Unity.AppUI.Editor
             });
             m_HasValueField.SetValueWithoutNotify(m_HasValue.boolValue);
             m_ValueField.SetEnabled(m_HasValue.boolValue);
-            
+
             var input = new VisualElement
             {
                 style =
@@ -116,11 +116,11 @@ namespace Unity.AppUI.Editor
             };
             input.Add(m_HasValueField);
             input.Add(m_ValueField);
-            
+
             var field = new OptionalField<T>(property.displayName, input);
             field.AddToClassList(OptionalField<T>.alignedFieldUssClassName);
             field.Bind(property.serializedObject);
-            
+
             return field;
         }
 
@@ -130,9 +130,9 @@ namespace Unity.AppUI.Editor
         /// <param name="newValue"> The new value of the property </param>
         protected virtual void SetValue(T newValue)
         {
-            
+
         }
-        
+
         internal void SetValueInternal(T newValue)
         {
             SetValue(newValue);
@@ -148,9 +148,9 @@ namespace Unity.AppUI.Editor
         where T : struct, IComparable, IComparable<T>, IFormattable
         where TU : BindableElement, INotifyValueChanged<T>, new()
     {
-        
+
     }
-    
+
     /// <summary>
     /// Draws the Inspector GUI for an optional enum property
     /// </summary>
@@ -161,9 +161,9 @@ namespace Unity.AppUI.Editor
         SerializedProperty m_HasValue;
 
         SerializedProperty m_Value;
-        
+
         UnityEngine.UIElements.Toggle m_HasValueField;
-        
+
         EnumField m_ValueField;
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace Unity.AppUI.Editor
                 label = null,
                 bindingPath = m_HasValue.propertyPath
             };
-            
+
             m_ValueField = new EnumField
             {
                 style =
@@ -207,7 +207,7 @@ namespace Unity.AppUI.Editor
                 m_Value.enumValueIndex = Convert.ToInt32(e.newValue);
                 property.serializedObject.ApplyModifiedProperties();
             });
-            
+
             m_HasValueField.RegisterCallback<ChangeEvent<bool>>(e =>
             {
                 m_ValueField.SetEnabled(e.newValue);
@@ -216,7 +216,7 @@ namespace Unity.AppUI.Editor
             });
             m_HasValueField.SetValueWithoutNotify(m_HasValue.boolValue);
             m_ValueField.SetEnabled(m_HasValue.boolValue);
-            
+
             var input = new VisualElement
             {
                 style =
@@ -227,23 +227,23 @@ namespace Unity.AppUI.Editor
             };
             input.Add(m_HasValueField);
             input.Add(m_ValueField);
-            
+
             var field = new OptionalEnumField<T>(property.displayName, input);
             field.AddToClassList(OptionalEnumField<T>.alignedFieldUssClassName);
             field.Bind(property.serializedObject);
-            
+
             return field;
         }
     }
-    
+
     // Specific Property Drawers
-    
+
     /// <summary>
     /// Draws the Inspector GUI for an optional preferred tooltip placement property
     /// </summary>
     [CustomPropertyDrawer(typeof(OptionalEnum<PopoverPlacement>))]
     public class OptionalPreferredTooltipPlacementDrawer : OptionalEnumPropertyDrawer<PopoverPlacement> { }
-    
+
     /// <summary>
     /// Draws the Inspector GUI for an optional layout direction property
     /// </summary>
@@ -259,7 +259,7 @@ namespace Unity.AppUI.Editor
         /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(int newValue) => m_Value.intValue = newValue;
     }
-    
+
     /// <summary>
     /// Draws the Inspector GUI for an optional long property
     /// </summary>
@@ -269,7 +269,7 @@ namespace Unity.AppUI.Editor
         /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(long newValue) => m_Value.longValue = newValue;
     }
-    
+
     /// <summary>
     /// Draws the Inspector GUI for an optional float property
     /// </summary>
@@ -279,7 +279,7 @@ namespace Unity.AppUI.Editor
         /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(float newValue) => m_Value.floatValue = newValue;
     }
-    
+
     /// <summary>
     /// Draws the Inspector GUI for an optional double property
     /// </summary>
@@ -289,7 +289,7 @@ namespace Unity.AppUI.Editor
         /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(double newValue) => m_Value.doubleValue = newValue;
     }
-    
+
     /// <summary>
     /// Draws the Inspector GUI for an optional string property
     /// </summary>
@@ -299,7 +299,7 @@ namespace Unity.AppUI.Editor
         /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(string newValue) => m_Value.stringValue = newValue;
     }
-    
+
     /// <summary>
     /// Draws the Inspector GUI for an optional color property
     /// </summary>
@@ -309,7 +309,7 @@ namespace Unity.AppUI.Editor
         /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(Color newValue) => m_Value.colorValue = newValue;
     }
-    
+
     /// <summary>
     /// Draws the Inspector GUI for an optional rect property
     /// </summary>
@@ -323,33 +323,33 @@ namespace Unity.AppUI.Editor
     /// <summary>
     /// Custom Field for <see cref="Panel.scale"/> and <see cref="BaseVisualElement.scaleOverride"/> property.
     /// </summary>
-    public class ScaleField : DropdownField 
+    public class ScaleField : DropdownField
     {
         static readonly List<string> k_ScaleOptions = new List<string> { "small", "medium", "large" };
-        
+
         /// <inheritdoc cref="DropdownField" />
         public ScaleField() : this(null) { }
-        
+
         /// <inheritdoc cref="DropdownField" />
-        public ScaleField(string label) 
+        public ScaleField(string label)
             : base(label, k_ScaleOptions, 1, Core.StringExtensions.Capitalize, Core.StringExtensions.Capitalize)
         {
             AddToClassList(alignedFieldUssClassName);
         }
     }
-    
+
     /// <summary>
     /// Custom Field for <see cref="Panel.theme"/> and <see cref="BaseVisualElement.themeOverride"/> property.
     /// </summary>
     public class ThemeField : DropdownField
     {
         static readonly List<string> k_ScaleOptions = new List<string> { "dark", "light", "editor-dark", "editor-light" };
-        
+
         /// <inheritdoc cref="DropdownField" />
         public ThemeField() : this(null) { }
-        
+
         /// <inheritdoc cref="DropdownField" />
-        public ThemeField(string label) 
+        public ThemeField(string label)
             : base(label, k_ScaleOptions, 1, Core.StringExtensions.Capitalize, Core.StringExtensions.Capitalize)
         {
             AddToClassList(alignedFieldUssClassName);
@@ -365,7 +365,7 @@ namespace Unity.AppUI.Editor
         /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(string newValue) => m_Value.stringValue = newValue;
     }
-    
+
     /// <summary>
     /// Draws the Inspector GUI for a scale property
     /// </summary>
@@ -389,7 +389,7 @@ namespace Unity.AppUI.Editor
             return field;
         }
     }
-    
+
     /// <summary>
     /// Draws the Inspector GUI for an optional theme property
     /// </summary>
@@ -399,7 +399,7 @@ namespace Unity.AppUI.Editor
         /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(string newValue) => m_Value.stringValue = newValue;
     }
-    
+
     /// <summary>
     /// Draws the Inspector GUI for a theme property
     /// </summary>
@@ -423,7 +423,7 @@ namespace Unity.AppUI.Editor
             return field;
         }
     }
-    
+
     /// <summary>
     /// Draws the Inspector GUI for an optional dir property
     /// </summary>

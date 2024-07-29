@@ -18,7 +18,7 @@ namespace Unity.AppUI.UI
         readonly EventCallback<FocusInEvent> m_OtherFocusInEventCallback;
 
         readonly EventCallback<FocusOutEvent> m_FocusedOutCallback;
-        
+
         /// <summary>
         /// Construct a KeyboardFocusController.
         /// </summary>

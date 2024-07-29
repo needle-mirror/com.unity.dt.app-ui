@@ -21,11 +21,11 @@ tags:
 
 # State Management
 
-App UI provides an additional assembly called `Unity.AppUI.Redux` that contains a set of classes that implement 
-the [Redux](https://redux.js.org/) pattern. 
+App UI provides an additional assembly called `Unity.AppUI.Redux` that contains a set of classes that implement
+the [Redux](https://redux.js.org/) pattern.
 
-The Redux pattern is a way to manage the state of your application. 
-It is a pattern that is used in many different frameworks and libraries, especially in the JavaScript ecosystem. 
+The Redux pattern is a way to manage the state of your application.
+It is a pattern that is used in many different frameworks and libraries, especially in the JavaScript ecosystem.
 
 The Redux pattern is based on the following principles:
 
@@ -39,14 +39,14 @@ The Redux pattern is based on the following principles:
 
 For more extensibility, App UI includes the concept of **Slice**. A slice is a part of the state tree that is managed by a
 specific reducer. A slice can be used to manage a specific part of the application state, such as the state of a specific
-screen. It is also useful to monitor changes on a specific part of the state tree. This approach is similar to what 
+screen. It is also useful to monitor changes on a specific part of the state tree. This approach is similar to what
 offers [Redux Toolkit](https://redux-toolkit.js.org/).
 
 ## Components
 
 ### Store
 
-The [Store](xref:Unity.AppUI.Redux.Store) class is the main entry point for the Redux pattern. 
+The [Store](xref:Unity.AppUI.Redux.Store) class is the main entry point for the Redux pattern.
 It is responsible for creating the `store` and dispatching actions to it.
 
 ### Reducer
@@ -73,8 +73,8 @@ You can then dispatch the action to the store using the [Dispatch](xref:Unity.Ap
 ### Async Thunk
 
 An async thunk is a function that can be dispatched to the store. It is used to perform asynchronous operations, such as
-fetching data from a server. The async thunk function can be created using the 
-[CreateAsyncThunk](xref:Unity.AppUI.Redux.Store.CreateAsyncThunk``2(System.String,Unity.AppUI.Redux.AsyncThunkActionCreator{``0,``1}.PayloadCreator,Unity.AppUI.Redux.AsyncThunkOptions{``1})) 
+fetching data from a server. The async thunk function can be created using the
+[CreateAsyncThunk](xref:Unity.AppUI.Redux.Store.CreateAsyncThunk``2(System.String,Unity.AppUI.Redux.AsyncThunkActionCreator{``0,``1}.PayloadCreator,Unity.AppUI.Redux.AsyncThunkOptions{``1}))
 utility method.
 
 ```cs
@@ -85,14 +85,14 @@ record MyState
     public string status { get; set; } = "idle";
 }
 
-// An example of a long operation that will return the same string value as 
+// An example of a long operation that will return the same string value as
 // the one passed as argument, but with 250ms of delay.
 async Task<string> MyLongOperation(string arg, ThunkAPI<string,string> api, CancellationToken token)
 {
   await Task.Delay(250, token);
   return arg;
 }
-        
+
 // Configure the Redux Store.
 var store = new Store();
 var asyncThunk = Store.CreateAsyncThunk("myAsyncThunk", MyLongOperation);
@@ -149,8 +149,8 @@ public static CounterState IncrementReducer(CounterState state, Increment action
 }
 ```
 
-Now, create an action creator method that will be used to create the `Increment` action. The action creator method can be created 
-using [CreateAction](xref:Unity.AppUI.Redux.Store.CreateAction(System.String)) utility method. 
+Now, create an action creator method that will be used to create the `Increment` action. The action creator method can be created
+using [CreateAction](xref:Unity.AppUI.Redux.Store.CreateAction(System.String)) utility method.
 The action creator method will be used to create the `Increment` action that will be dispatched to the store.
 
 ```cs
@@ -163,9 +163,9 @@ public static readonly ActionCreator Increment = Store.CreateAction(Actions.Incr
 ```
 
 Finally, create the store and subscribe to the state changes. The store is created by passing the reducer method to the
-[Store](xref:Unity.AppUI.Redux.Store.CreateSlice``1(System.String,``0,System.Action{Unity.AppUI.Redux.SliceReducerSwitchBuilder{``0}},System.Action{Unity.AppUI.Redux.ReducerSwitchBuilder{``0}})) method. 
-The store is responsible for calling the reducer method when an action is dispatched to it. The store also provides a 
-`Subscribe` method that accepts a callback that is called every time the state changes. 
+[Store](xref:Unity.AppUI.Redux.Store.CreateSlice``1(System.String,``0,System.Action{Unity.AppUI.Redux.SliceReducerSwitchBuilder{``0}},System.Action{Unity.AppUI.Redux.ReducerSwitchBuilder{``0}})) method.
+The store is responsible for calling the reducer method when an action is dispatched to it. The store also provides a
+`Subscribe` method that accepts a callback that is called every time the state changes.
 The callback is called with the new state as a parameter.
 
 ```cs
@@ -185,7 +185,7 @@ Now, you can dispatch the `Increment` action to the store. The store will call t
 store.Dispatch(Increment.Invoke());
 ```
 
-To unsubscribe from the state changes, call the `unsubscriber` method that was returned by the 
+To unsubscribe from the state changes, call the `unsubscriber` method that was returned by the
 [Subscribe](xref:Unity.AppUI.Redux.Store.Subscribe``1(System.String,System.Action{``0})) method.
 
 ```cs
@@ -209,7 +209,7 @@ public interface IStoreService
     Store Store { get; }
 }
 
-public class StoreService 
+public class StoreService
 {
     public Store Store { get; }
 
@@ -220,7 +220,7 @@ public class StoreService
 }
 ```
 
-Then, register the service inside your custom [UIToolkitAppBuilder](xref:Unity.AppUI.MVVM.UIToolkitAppBuilder`1) 
+Then, register the service inside your custom [UIToolkitAppBuilder](xref:Unity.AppUI.MVVM.UIToolkitAppBuilder`1)
 implementation.
 
 ```cs
@@ -229,9 +229,9 @@ public class MyAppBuilder : UIToolkitAppBuilder<MyApp>
     protected override void OnConfiguringApp(AppBuilder builder)
     {
         base.OnConfiguringApp(builder);
-        
+
         builder.services.AddSingleton<IStoreService, StoreService>();
-        
+
         // Add others services/viewmodels/views here...
     }
 }
@@ -247,7 +247,7 @@ public class MyViewModel : ObservableObject
     public MyViewModel(IStoreService storeService)
     {
         m_StoreService = storeService;
-        
+
         // Subscribe to the state changes etc...
     }
 }
@@ -271,12 +271,12 @@ public class MyViewModel : ObservableObject
     public MyViewModel(IStoreService storeService)
     {
         m_StoreService = storeService;
-        
+
         // Subscribe to the state changes etc...
     }
 
     public ICommand IncrementCommand => new AsyncRelayCommand(Increment);
- 
+
     async Task Increment(CancellationToken token)
     {
         m_StoreService.Store.Dispatch(IncrementPendingAction.Invoke());
@@ -293,14 +293,14 @@ public class MyView : VisualElement
     {
         var button = new Button();
         button.clicked += viewModel.IncrementCommand.Execute;
-        viewModel.IncrementCommand.CanExecuteChanged += 
+        viewModel.IncrementCommand.CanExecuteChanged +=
             (sender, e) => button.SetEnabled(((AsyncRelayCommand)sender).CanExecute());
         Add(button);
     }
 }
 ```
 
-If you want to perform asynchronous operations without the Command pattern, you can use the 
+If you want to perform asynchronous operations without the Command pattern, you can use the
 [CreateAsyncThunk](xref:Unity.AppUI.Redux.Store.CreateAsyncThunk``2(System.String,Unity.AppUI.Redux.AsyncThunkActionCreator{``0,``1}.PayloadCreator,Unity.AppUI.Redux.AsyncThunkOptions{``1}))
 method to create an async thunk that can be dispatched to the store.
 
@@ -317,16 +317,16 @@ public class MyViewModel : ObservableObject
     public MyViewModel(IStoreService storeService)
     {
         m_StoreService = storeService;
-        
+
         // Subscribe to the state changes etc...
         m_StoreService.Store.Subscribe<MyState>("mySlice", state => {
             CanIncrement = state.CanIncrement;
         });
     }
-    
+
     private bool m_CanIncrement;
-    
-    public bool CanIncrement 
+
+    public bool CanIncrement
     {
         get => m_CanIncrement;
         set => SetProperty(ref m_CanIncrement, value);
@@ -343,16 +343,16 @@ public class MyViewModel : ObservableObject
 public class MyView : VisualElement
 {
     readonly Button m_Button;
-    
+
     public MyView(MyViewModel viewModel)
     {
         m_Button = new Button();
         m_Button.clicked += () => viewModel.IncrementAsync();
         Add(m_Button);
-        
+
         viewModel.PropertyChanged += OnViewModelPropertyChanged;
     }
-    
+
     private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         var viewModel = (MyViewModel)sender;

@@ -41,12 +41,12 @@ namespace Unity.AppUI.UI
             parentView.panel.visualTree.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
             parentView.panel.visualTree.RegisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
         }
-        
+
         void OnWheel(WheelEvent evt)
         {
             if (outsideScrollEnabled)
                 return;
-            
+
             var inside = GetMovableElement().worldBound.Contains((Vector2)evt.mousePosition);
             if (!inside)
                 evt.StopImmediatePropagation();
@@ -69,7 +69,7 @@ namespace Unity.AppUI.UI
                     }
                 }
             }
-            
+
             if (shouldDismiss && (outsideClickStrategy & OutsideClickStrategy.Pick) != 0 && popover.panel is {} panel)
             {
                 var picked = panel.Pick(evt.position);
@@ -80,7 +80,7 @@ namespace Unity.AppUI.UI
                         shouldDismiss = false;
                 }
             }
-            
+
             if (!shouldDismiss)
                 return;
 
@@ -89,13 +89,13 @@ namespace Unity.AppUI.UI
             if (insideAnchor || insideLastFocusedElement)
             {
                 // prevent reopening the same popover again...
-                
+
                 evt.StopImmediatePropagation();
             }
 
             Dismiss(DismissType.OutOfBounds);
         }
-        
+
         /// <summary>
         /// Add an Action menu item to the current menu.
         /// </summary>
@@ -139,7 +139,7 @@ namespace Unity.AppUI.UI
             currentMenu.Add(item);
             return this;
         }
-        
+
         /// <summary>
         /// Add an Action menu item to the current menu.
         /// </summary>
@@ -156,7 +156,7 @@ namespace Unity.AppUI.UI
             bindItemFunc?.Invoke(item);
             return this;
         }
-        
+
         /// <summary>
         /// Add a Menu Divider to the current menu.
         /// </summary>
@@ -194,7 +194,7 @@ namespace Unity.AppUI.UI
         {
             return PushSubMenu(actionId, labelStr, iconName, null);
         }
-        
+
         /// <summary>
         /// Create an action menu item, add a sub-menu to the current menu, and make it the current menu.
         /// </summary>
@@ -247,7 +247,7 @@ namespace Unity.AppUI.UI
             m_MenuStack.Pop();
             return this;
         }
-        
+
         /// <summary>
         /// Close the menu automatically when an item is selected.
         /// </summary>
@@ -277,7 +277,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <inheritdoc cref="AnchorPopup{T}.GetMovableElement"/>
-        protected override VisualElement GetMovableElement()
+        public override VisualElement GetMovableElement()
         {
             return popover.popoverElement;
         }
@@ -286,8 +286,8 @@ namespace Unity.AppUI.UI
         protected override void InvokeDismissedEventHandlers(DismissType reason)
         {
             base.InvokeDismissedEventHandlers(reason);
-            targetParent?.panel?.visualTree.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
-            targetParent?.panel?.visualTree.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
+            containerView?.panel?.visualTree.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            containerView?.panel?.visualTree.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
         }
 
         /// <summary>
@@ -298,12 +298,17 @@ namespace Unity.AppUI.UI
         /// <returns> The MenuBuilder instance. </returns>
         public static MenuBuilder Build(VisualElement referenceView, Menu menu = null)
         {
-            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
-            
-            if (panel == null)
+            if (referenceView == null)
+                throw new ArgumentNullException(nameof(referenceView));
+
+            if (referenceView.panel == null)
                 throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-            
-            var parentView = panel.popupContainer;
+
+            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>() ?? referenceView.panel?.visualTree;
+            if (panel == null)
+                throw new InvalidOperationException("Unable to find determine a valid container in the hierarchy.");
+
+            var parentView = (panel as Panel)?.popupContainer ?? panel;
             var dir = referenceView.GetContext<DirContext>()?.dir ?? Dir.Ltr;
             menu ??= new Menu();
             var popoverVisualElement = CreateMenuPopoverVisualElement(menu);

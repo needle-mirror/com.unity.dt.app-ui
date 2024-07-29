@@ -24,11 +24,11 @@ namespace Unity.AppUI.UI
     public abstract partial class BaseGridView : BindableElement, ISerializationCallbackReceiver
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId selectionTypeProperty = new BindingId(nameof(selectionType));
-        
+
         internal static readonly BindingId allowNoSelectionProperty = new BindingId(nameof(allowNoSelection));
-        
+
 #endif
 
         /// <summary>
@@ -48,12 +48,12 @@ namespace Unity.AppUI.UI
         /// this class affects every item element located beside, or below the stylesheet in the visual tree.
         /// </remarks>
         public static readonly string itemUssClassName = ussClassName + "__item";
-        
+
         /// <summary>
         /// The first column USS class name for GridView elements.
         /// </summary>
         public static readonly string firstColumnUssClassName = ussClassName + "__first-column";
-        
+
         /// <summary>
         /// The last column USS class name for GridView elements.
         /// </summary>
@@ -73,9 +73,9 @@ namespace Unity.AppUI.UI
         readonly List<object> m_SelectedItems = new List<object>();
 
         readonly List<int> m_PreviouslySelectedIndices = new List<int>();
-        
+
         readonly List<int> m_OriginalSelection = new List<int>();
-        
+
         float m_OriginalScrollOffset;
 
         int m_SoftSelectIndex = -1;
@@ -103,7 +103,7 @@ namespace Unity.AppUI.UI
         NavigationCancelEvent m_NavigationCancelAdapter;
 
         bool m_HasPointerMoved;
-        
+
         bool m_SoftSelectIndexWasPreviouslySelected;
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Unity.AppUI.UI
             scrollView.StretchToParentSize();
             scrollView.contentContainer.SetDisableClipping(false);
             scrollView.verticalScroller.valueChanged += OnScroll;
-            
+
             dragger = new Dragger(OnDraggerStarted, OnDraggerMoved, OnDraggerEnded, OnDraggerCanceled);
             dragger.activators.Add(new ManipulatorActivationFilter { button = MouseButton.LeftMouse });
 
@@ -131,9 +131,9 @@ namespace Unity.AppUI.UI
 
             RegisterCallback<AttachToPanelEvent>(OnAttachToPanel);
             RegisterCallback<DetachFromPanelEvent>(OnDetachFromPanel);
-            
+
             hierarchy.Add(scrollView);
-            
+
             focusable = true;
             dragger.acceptStartDrag = DefaultAcceptStartDrag;
         }
@@ -160,7 +160,7 @@ namespace Unity.AppUI.UI
         {
             if ((operation & operationMask) == 0)
                 return false;
-            
+
             void HandleSelectionAndScroll(int index)
             {
                 if (selectionType == SelectionType.Multiple && shiftKey && m_SelectedIndices.Count != 0)
@@ -258,24 +258,24 @@ namespace Unity.AppUI.UI
         {
             dragStarted?.Invoke(evt);
         }
-        
+
         void OnDraggerMoved(PointerMoveEvent evt)
         {
             dragUpdated?.Invoke(evt);
         }
-        
+
         void OnDraggerEnded(PointerUpEvent evt)
         {
             dragFinished?.Invoke(evt);
             CancelSoftSelect();
         }
-        
+
         void OnDraggerCanceled()
         {
             dragCanceled?.Invoke();
             CancelSoftSelect();
         }
-        
+
         /// <summary>
         /// Cancel drag operation.
         /// </summary>
@@ -283,7 +283,7 @@ namespace Unity.AppUI.UI
         {
             dragger?.Cancel();
         }
-        
+
         void OnKeyDown(KeyDownEvent evt)
         {
             var operation = evt.keyCode switch
@@ -301,7 +301,7 @@ namespace Unity.AppUI.UI
 
             Apply(operation, evt);
         }
-        
+
         void OnKeyUp(KeyUpEvent evt)
         {
             var operation = evt.keyCode switch
@@ -316,13 +316,13 @@ namespace Unity.AppUI.UI
         void OnNavigationMove(NavigationMoveEvent evt)
         {
             evt.StopPropagation();
-            
+
         }
 
         void OnNavigationCancel(NavigationCancelEvent evt)
         {
             evt.StopPropagation();
-            
+
         }
 
         /// <summary>
@@ -408,7 +408,7 @@ namespace Unity.AppUI.UI
                 {
                     newCollection.CollectionChanged += OnItemsSourceCollectionChanged;
                 }
-                
+
                 Refresh();
             }
         }
@@ -486,7 +486,7 @@ namespace Unity.AppUI.UI
         /// The number of selected Items.
         /// </summary>
         public int selectionCount => m_SelectedIndices.Count;
-        
+
         /// <summary>
         /// Check if the item with the given id is selected.
         /// </summary>
@@ -537,10 +537,10 @@ namespace Unity.AppUI.UI
                         ClearSelectionWithoutValidation();
                     }
                 }
-                
+
                 m_RangeSelectionOrigin = -1;
                 PostSelection(updatePreviousSelection: true, sendNotification: true);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in selectionTypeProperty);
@@ -568,7 +568,7 @@ namespace Unity.AppUI.UI
                 m_AllowNoSelection = value;
                 if (HasValidDataAndBindings() && !m_AllowNoSelection && m_SelectedIndices.Count == 0 && m_ItemsSource.Count > 0)
                     SetSelectionInternal(new []{ 0 }, true, true);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in allowNoSelectionProperty);
@@ -595,7 +595,7 @@ namespace Unity.AppUI.UI
         /// </remarks>
         public Action<VisualElement, int> unbindItem
         {
-            get; 
+            get;
             // ReSharper disable once UnusedAutoPropertyAccessor.Global
             set;
         }
@@ -620,16 +620,18 @@ namespace Unity.AppUI.UI
         {
             if (!HasValidDataAndBindings())
                 return false;
-            
+
             var idx = GetIndexByWorldPosition(worldPosition);
             return idx >= 0 && idx < itemsSource.Count;
         }
-        
+
+        /// <inheritdoc cref="ISerializationCallbackReceiver.OnAfterDeserialize"/>
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
             Refresh();
         }
 
+        /// <inheritdoc cref="ISerializationCallbackReceiver.OnBeforeSerialize"/>
         void ISerializationCallbackReceiver.OnBeforeSerialize() {}
 
         /// <summary>
@@ -673,12 +675,12 @@ namespace Unity.AppUI.UI
         /// Callback triggered when drag has started.
         /// </summary>
         public event Action<PointerMoveEvent> dragStarted;
-        
+
         /// <summary>
         /// Callback triggered when items are dragged.
         /// </summary>
         public event Action<PointerMoveEvent> dragUpdated;
-        
+
         /// <summary>
         /// Callback triggered when drag has finished.
         /// </summary>
@@ -697,7 +699,7 @@ namespace Unity.AppUI.UI
         {
             AddToSelection(new[] { index }, true, true);
         }
-        
+
         internal void AddToSelection(int index, bool updatePrevious, bool notify)
         {
             AddToSelection(new[] { index }, updatePrevious, notify);
@@ -740,7 +742,7 @@ namespace Unity.AppUI.UI
             m_SoftSelectIndexWasPreviouslySelected = false;
             m_PreviouslySelectedIndices.Clear();
             m_OriginalSelection.Clear();
-            
+
             var newSelectedIds = new List<int>();
 
             if (m_SelectedIds.Count > 0 && itemsSource != null)
@@ -749,7 +751,7 @@ namespace Unity.AppUI.UI
                 for (var index = 0; index < itemsSource.Count; ++index)
                 {
                     var id = GetIdFromIndex(index);
-                    if (!m_SelectedIds.Contains(id)) 
+                    if (!m_SelectedIds.Contains(id))
                         continue;
 
                     m_SelectedIndices.Add(index);
@@ -757,7 +759,7 @@ namespace Unity.AppUI.UI
                     newSelectedIds.Add(id);
                 }
             }
-            
+
             m_SelectedIds.Clear();
             m_SelectedIds.AddRange(newSelectedIds);
         }
@@ -770,12 +772,12 @@ namespace Unity.AppUI.UI
         {
             RemoveFromSelectionInternal(index, true, true);
         }
-        
+
         internal void RemoveFromSelectionInternal(int index, bool updatePrevious, bool notify)
         {
             if (!HasValidDataAndBindings())
                 return;
-            
+
             if (m_SelectedIndices.Count == 1 && m_SelectedIndices[0] == index && !allowNoSelection)
                 return;
 
@@ -879,7 +881,7 @@ namespace Unity.AppUI.UI
                     m_SelectedItems.Add(item);
                 }
             }
-            
+
             ApplySelectedState();
 
             PostSelection(true, true);
@@ -891,9 +893,9 @@ namespace Unity.AppUI.UI
         {
             if (!HasValidDataAndBindings() || indices == null)
                 return;
-            
+
             var indicesList = new List<int>(indices);
-            
+
             if (!allowNoSelection && indicesList.Count == 0)
                 return;
 
@@ -904,7 +906,7 @@ namespace Unity.AppUI.UI
             }
 
             PostSelection(updatePrevious, sendNotification);
-            
+
             //SaveViewData();
         }
 
@@ -915,11 +917,11 @@ namespace Unity.AppUI.UI
 
             var id = GetIdFromIndex(index);
             var item = m_ItemsSource[index];
-            
+
             m_SelectedIds.Add(id);
             m_SelectedIndices.Add(index);
             m_SelectedItems.Add(item);
-            
+
             ApplySelectedState();
         }
 
@@ -951,7 +953,7 @@ namespace Unity.AppUI.UI
             m_SelectedIds.Clear();
             m_SelectedIndices.Clear();
             m_SelectedItems.Clear();
-            
+
             ApplySelectedState();
         }
 
@@ -1042,7 +1044,7 @@ namespace Unity.AppUI.UI
                     }
                 }
             }
-            
+
             ScrollToItem(clickedIndex);
         }
 
@@ -1079,13 +1081,13 @@ namespace Unity.AppUI.UI
 
             if (m_PreviouslySelectedIndices.SequenceEqual(m_SelectedIndices))
                 return;
-            
+
             if (updatePreviousSelection)
             {
                 m_PreviouslySelectedIndices.Clear();
                 m_PreviouslySelectedIndices.AddRange(m_SelectedIndices);
             }
-            
+
             if (sendNotification)
             {
                 selectionChanged?.Invoke(m_SelectedItems);
@@ -1097,7 +1099,7 @@ namespace Unity.AppUI.UI
         {
             if (evt.destinationPanel == null)
                 return;
-            
+
             if (!UnityEngine.Device.Application.isMobilePlatform)
                 scrollView.AddManipulator(dragger);
 
@@ -1122,7 +1124,7 @@ namespace Unity.AppUI.UI
         {
             if (evt.originPanel == null)
                 return;
-            
+
             scrollView.RemoveManipulator(dragger);
 
             scrollView.UnregisterCallback<ClickEvent>(OnClick);
@@ -1173,10 +1175,10 @@ namespace Unity.AppUI.UI
                 return;
 
             var capturingElement = panel?.GetCapturingElement(evt.pointerId);
-            
+
             // if the pointer is captured by a child of the scroll view, abort any selection
-            if (capturingElement is VisualElement ve && 
-                ve != scrollView && 
+            if (capturingElement is VisualElement ve &&
+                ve != scrollView &&
                 ve.FindCommonAncestor(scrollView) != null)
                 return;
 
@@ -1184,12 +1186,12 @@ namespace Unity.AppUI.UI
             m_OriginalSelection.AddRange(m_SelectedIndices);
             m_OriginalScrollOffset = scrollView.verticalScroller.value;
             m_SoftSelectIndex = -1;
-            
+
             var clickCount = m_HasPointerMoved ? 1 : evt.clickCount;
             m_HasPointerMoved = false;
 
             DoSoftSelect(evt, clickCount);
-            
+
             if (evt.button == (int)MouseButton.RightMouse)
                 DoContextClickAfterSelect(evt);
         }
@@ -1214,14 +1216,14 @@ namespace Unity.AppUI.UI
             var index = m_SoftSelectIndex;
             m_SoftSelectIndex = -1;
 
-            if (m_SoftSelectIndexWasPreviouslySelected && 
+            if (m_SoftSelectIndexWasPreviouslySelected &&
                 evt.button == (int)MouseButton.LeftMouse &&
                 evt.modifiers == EventModifiers.None)
             {
                 ProcessSingleClick(index);
                 return;
             }
-            
+
             PostSelection(true, true);
         }
 
@@ -1250,7 +1252,7 @@ namespace Unity.AppUI.UI
         {
             Refresh();
         }
-        
+
         /// <summary>
         /// Callback called when the scroll value changes.
         /// </summary>
@@ -1289,7 +1291,7 @@ namespace Unity.AppUI.UI
             m_SelectedIds.Remove(id);
             m_SelectedIndices.Remove(index);
             m_SelectedItems.Remove(item);
-            
+
             ApplySelectedState();
         }
 
@@ -1298,7 +1300,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         /// <param name="height"> The new height of the container. </param>
         protected abstract void OnContainerHeightChanged(float height);
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -1311,7 +1313,7 @@ namespace Unity.AppUI.UI
         {
             readonly UxmlEnumAttributeDescription<SelectionType> m_SelectionType = new UxmlEnumAttributeDescription<SelectionType>
             {
-                name = "selection-type", 
+                name = "selection-type",
                 defaultValue = SelectionType.Single
             };
 
@@ -1320,7 +1322,7 @@ namespace Unity.AppUI.UI
                 name = "prevent-scroll-with-modifiers",
                 defaultValue = k_DefaultPreventScrollWithModifiers
             };
-            
+
             readonly UxmlBoolAttributeDescription m_AllowNoSelection = new UxmlBoolAttributeDescription
             {
                 name = "allow-no-selection",
@@ -1345,7 +1347,7 @@ namespace Unity.AppUI.UI
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                
+
                 var view = (BaseGridView)ve;
 
                 view.preventScrollWithModifiers = m_PreventScrollWithModifiers.GetValueFromBag(bag, cc);

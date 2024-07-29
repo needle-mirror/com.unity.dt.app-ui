@@ -34,7 +34,7 @@ namespace Unity.AppUI.UI
             }
             return k_AdditionalDataCache.TryGetValue(key, out val);
         }
-        
+
         static AdditionalData GetOrCreateValue(VisualElement key)
         {
             if (key is BaseVisualElement bve)
@@ -122,7 +122,7 @@ namespace Unity.AppUI.UI
                 data.preferredTooltipPlacement = placement;
             }
         }
-        
+
         /// <summary>
         /// Get the tooltip template for a <see cref="VisualElement"/>.
         /// </summary>
@@ -136,7 +136,7 @@ namespace Unity.AppUI.UI
 
             return TryGetValue(element, out var data) ? data.tooltipTemplate : null;
         }
-        
+
         /// <summary>
         /// Set the tooltip template for a <see cref="VisualElement"/>.
         /// </summary>
@@ -147,11 +147,11 @@ namespace Unity.AppUI.UI
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             var data = GetOrCreateValue(element);
             data.tooltipTemplate = template;
         }
-        
+
         /// <summary>
         /// Callback to populate the tooltip content.
         /// </summary>
@@ -172,14 +172,14 @@ namespace Unity.AppUI.UI
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             if (GetTooltipTemplate(element) == null && callback != null)
                 throw new InvalidOperationException("You must call SetTooltipTemplate before setting the tooltip content.");
-            
+
             var data = GetOrCreateValue(element);
             data.tooltipContentCallback = callback;
         }
-        
+
         /// <summary>
         /// Get the tooltip content for a <see cref="VisualElement"/>.
         /// </summary>
@@ -190,10 +190,10 @@ namespace Unity.AppUI.UI
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             return TryGetValue(element, out var data) ? data.tooltipContentCallback : null;
         }
-        
+
         /// <summary>
         /// Register a callback to be invoked when the tooltip content changes.
         /// </summary>
@@ -204,14 +204,14 @@ namespace Unity.AppUI.UI
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             if (callback == null)
                 throw new ArgumentNullException(nameof(callback));
-            
+
             var data = GetOrCreateValue(element);
             data.tooltipContentCallbackChanged += callback;
         }
-        
+
         /// <summary>
         /// Unregister a callback to be invoked when the tooltip content changes.
         /// </summary>
@@ -222,14 +222,14 @@ namespace Unity.AppUI.UI
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             if (callback == null)
                 throw new ArgumentNullException(nameof(callback));
-            
+
             var data = GetOrCreateValue(element);
             data.tooltipContentCallbackChanged -= callback;
         }
-        
+
         /// <summary>
         /// Register a callback to be invoked when the tooltip template changes.
         /// </summary>
@@ -240,14 +240,14 @@ namespace Unity.AppUI.UI
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             if (callback == null)
                 throw new ArgumentNullException(nameof(callback));
-            
+
             var data = GetOrCreateValue(element);
             data.tooltipTemplateChanged += callback;
         }
-        
+
         /// <summary>
         /// Unregister a callback to be invoked when the tooltip template changes.
         /// </summary>
@@ -258,10 +258,10 @@ namespace Unity.AppUI.UI
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             if (callback == null)
                 throw new ArgumentNullException(nameof(callback));
-            
+
             var data = GetOrCreateValue(element);
             data.tooltipTemplateChanged -= callback;
         }
@@ -277,23 +277,23 @@ namespace Unity.AppUI.UI
             /// </summary>
             internal Dictionary<Type, EventCallback<AttachToPanelEvent>>
                 sendContextChangedOnAttachedToPanelCallbacksPerType { get; }  = new();
-            
+
             /// <summary>
             /// Callbacks to invoke when the context changes.
             /// </summary>
             internal Dictionary<Type, List<object>> contextChangedCallbacksPerType { get; } = new ();
-            
+
             /// <summary>
             /// Callbacks to invoke when the element is attached to a panel to change the context.
             /// </summary>
-            internal Dictionary<Type, List<EventCallback<AttachToPanelEvent>>> 
+            internal Dictionary<Type, List<EventCallback<AttachToPanelEvent>>>
                 contextChangedOnAttachedToPanelCallbacksPerType { get; } = new ();
 
             /// <summary>
             /// The Contexts collection.
             /// </summary>
             internal Dictionary<Type, IContext> contexts { get; } = new ();
-            
+
             /// <summary>
             /// The previous Contexts collection.
             /// </summary>
@@ -303,7 +303,7 @@ namespace Unity.AppUI.UI
             /// The preferred placement for a tooltip.
             /// </summary>
             public OptionalEnum<PopoverPlacement> preferredTooltipPlacement { get; set; } = OptionalEnum<PopoverPlacement>.none;
-            
+
             VisualElement m_TooltipTemplate;
 
             /// <summary>
@@ -321,7 +321,7 @@ namespace Unity.AppUI.UI
                     }
                 }
             }
-            
+
             TooltipContentCallback m_TooltipContentCallback;
 
             /// <summary>
@@ -336,12 +336,12 @@ namespace Unity.AppUI.UI
                     tooltipContentCallbackChanged?.Invoke();
                 }
             }
-            
+
             /// <summary>
             /// Event to invoke when the tooltip template changes.
             /// </summary>
             public event Action tooltipContentCallbackChanged;
-            
+
             /// <summary>
             /// Event to invoke when the tooltip template changes.
             /// </summary>
@@ -360,17 +360,17 @@ namespace Unity.AppUI.UI
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             var el = element;
-            
+
             while (el != null)
             {
-                if (TryGetValue(el, out var data) && data.contexts.ContainsKey(typeof(T))) 
+                if (TryGetValue(el, out var data) && data.contexts.ContainsKey(typeof(T)))
                     return el;
 
                 el = el.parent;
             }
-            
+
             return null;
         }
 
@@ -385,7 +385,7 @@ namespace Unity.AppUI.UI
         /// <typeparam name="T"> The type of the context.</typeparam>
         /// <returns> The context.</returns>
         /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object can't be null.</exception>
-        public static T GetContext<T>(this VisualElement element) 
+        public static T GetContext<T>(this VisualElement element)
             where T : IContext
         {
             if (element == null)
@@ -411,13 +411,13 @@ namespace Unity.AppUI.UI
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             if (TryGetValue(element, out var data) && data.contexts.ContainsKey(typeof(T)))
                 return (T)data.contexts[typeof(T)];
-            
+
             return default;
         }
-        
+
         /// <summary>
         /// Make the element provide a context of a given type in a <see cref="VisualElement"/>.
         /// </summary>
@@ -425,14 +425,14 @@ namespace Unity.AppUI.UI
         /// <param name="context"> The context.</param>
         /// <typeparam name="T"> The type of the context.</typeparam>
         /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object can't be null.</exception>
-        public static void ProvideContext<T>(this VisualElement element, T context) 
+        public static void ProvideContext<T>(this VisualElement element, T context)
             where T : IContext
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
             var data = GetOrCreateValue(element);
-            
+
             void OnAttached(AttachToPanelEvent evt)
             {
                 if (evt.destinationPanel != null)
@@ -464,7 +464,7 @@ namespace Unity.AppUI.UI
                 element.SendContextChangedEvent<T>();
             }
         }
-        
+
         /// <summary>
         /// Check if a <see cref="VisualElement"/> provides a context of a given type.
         /// </summary>
@@ -472,7 +472,7 @@ namespace Unity.AppUI.UI
         /// <typeparam name="T"> The type of the context.</typeparam>
         /// <returns> True if the element provides the context, false otherwise.</returns>
         /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object can't be null.</exception>
-        public static bool IsContextProvider<T>(this VisualElement element) 
+        public static bool IsContextProvider<T>(this VisualElement element)
             where T : IContext
         {
             if (element == null)
@@ -488,26 +488,26 @@ namespace Unity.AppUI.UI
         /// <param name="callback"> The callback.</param>
         /// <typeparam name="T"> The type of the context.</typeparam>
         /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object and the callback can't be null.</exception>
-        public static void RegisterContextChangedCallback<T>(this VisualElement element, EventCallback<ContextChangedEvent<T>> callback) 
+        public static void RegisterContextChangedCallback<T>(this VisualElement element, EventCallback<ContextChangedEvent<T>> callback)
             where T : IContext
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             if (callback == null)
                 throw new ArgumentNullException(nameof(callback));
-            
+
             void SendContextChangedEventLocal()
             {
                 var context = element.GetContext<T>();
-                
+
                 if (TryGetValue(element, out var data) && data.previousContexts.ContainsKey(typeof(T)))
                 {
                     var previousContext = data.previousContexts[typeof(T)];
                     if (previousContext != null && previousContext.Equals(context))
                         return;
                 }
-                
+
                 using var evt = ContextChangedEvent<T>.GetPooled(context);
                 evt.target = element;
                 callback(evt);
@@ -518,7 +518,7 @@ namespace Unity.AppUI.UI
                 if (attachToPanelEvent.destinationPanel != null)
                     SendContextChangedEventLocal();
             }
-            
+
             var data = GetOrCreateValue(element);
             if (data.contextChangedCallbacksPerType.TryGetValue(typeof(T), out var callbacks))
             {
@@ -543,7 +543,7 @@ namespace Unity.AppUI.UI
                     SendContextChangedEventLocal();
             }
         }
-        
+
         /// <summary>
         /// Unregister a callback to be invoked when the context of a given type changes in a <see cref="VisualElement"/>.
         /// </summary>
@@ -551,20 +551,20 @@ namespace Unity.AppUI.UI
         /// <param name="callback"> The callback.</param>
         /// <typeparam name="T"> The type of the context.</typeparam>
         /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object and the callback can't be null.</exception>
-        public static void UnregisterContextChangedCallback<T>(this VisualElement element, EventCallback<ContextChangedEvent<T>> callback) 
+        public static void UnregisterContextChangedCallback<T>(this VisualElement element, EventCallback<ContextChangedEvent<T>> callback)
             where T : IContext
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             if (callback == null)
                 throw new ArgumentNullException(nameof(callback));
-            
-            if (TryGetValue(element, out var data) && 
+
+            if (TryGetValue(element, out var data) &&
                 data.contextChangedCallbacksPerType.TryGetValue(typeof(T), out var callbacks))
             {
                 var index = callbacks.IndexOf(callback);
-                
+
                 if (index >= 0)
                 {
                     callbacks.RemoveAt(index);
@@ -574,15 +574,15 @@ namespace Unity.AppUI.UI
                 }
             }
         }
-        
-        internal static void SendContextChangedEvent<T>(this VisualElement element) 
+
+        internal static void SendContextChangedEvent<T>(this VisualElement element)
             where T : IContext
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             var context = element.GetContext<T>();
-            
+
             using var evt = ContextChangedEvent<T>.GetPooled(context);
             evt.target = element;
 
@@ -596,9 +596,9 @@ namespace Unity.AppUI.UI
                         if (previousContext != null && previousContext.Equals(evt.context))
                             return;
                     }
-                    
+
                     data.previousContexts[typeof(T)] = evt.context;
-                    
+
                     if (data.contextChangedCallbacksPerType.TryGetValue(typeof(T), out var callbacks))
                     {
                         foreach (var cb in callbacks)
@@ -608,14 +608,14 @@ namespace Unity.AppUI.UI
                     }
                 }
             }
-            
+
             void SendContextChangedEventToChildren(VisualElement parent, ContextChangedEvent<T> evt)
             {
                 if (parent.IsContextProvider<T>())
                     return;
 
                 CallCallbacks(parent, evt);
-                
+
                 foreach (var c in parent.Children())
                 {
                     SendContextChangedEventToChildren(c, evt);

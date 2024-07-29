@@ -6,21 +6,21 @@ namespace Unity.AppUI.UI
     sealed class YearPicker : BaseDatePickerPane
     {
         public static readonly string previousDecadeButtonUssClassName = ussClassName + "__previous-decade-button";
-        
+
         public static readonly string nextDecadeButtonUssClassName = ussClassName + "__next-decade-button";
-        
+
         public static readonly string yearLabelUssClassName = ussClassName + "__year-header-label";
-        
+
         public static readonly string yearsContainerUssClassName = ussClassName + "__years-container";
-        
+
         public static readonly string yearButtonUssClassName = ussClassName + "__year-button";
-        
+
         readonly Text[] m_YearsElementsPool = new Text[10];
 
         IconButton m_PreviousDecadeButton;
-        
+
         Text m_YearLabel;
-        
+
         IconButton m_NextDecadeButton;
 
         VisualElement m_YearsContainer;
@@ -40,7 +40,7 @@ namespace Unity.AppUI.UI
             m_PreviousDecadeButton.AddToClassList(previousDecadeButtonUssClassName);
             m_LeftButtonGroup.hierarchy.Add(m_PreviousDecadeButton);
         }
-        
+
         protected override void ConstructHeaderContentUI()
         {
             m_YearLabel = new Text
@@ -51,7 +51,7 @@ namespace Unity.AppUI.UI
             m_YearLabel.AddToClassList(yearLabelUssClassName);
             m_HeaderContentElement.hierarchy.Add(m_YearLabel);
         }
-        
+
         protected override void ConstructRightButtonGroupUI()
         {
             m_NextDecadeButton = new IconButton("caret-double-right", OnNextDecadeButtonClick)
@@ -72,7 +72,7 @@ namespace Unity.AppUI.UI
             };
             m_YearsContainer.AddToClassList(yearsContainerUssClassName);
             m_BodyElement.hierarchy.Add(m_YearsContainer);
-            
+
             ConstructYearsUI();
         }
 
@@ -84,7 +84,7 @@ namespace Unity.AppUI.UI
                 {
                     name = yearButtonUssClassName,
                     focusable = true,
-                    pickingMode = PickingMode.Position, 
+                    pickingMode = PickingMode.Position,
                     primary = true,
                 };
                 yearElement.AddToClassList(yearButtonUssClassName);
@@ -113,12 +113,12 @@ namespace Unity.AppUI.UI
                 }
             }
         }
-        
+
         void OnPreviousDecadeButtonClick()
         {
             m_DatePicker.GoTo(new Date(m_DatePicker.currentYear - 10, m_DatePicker.currentMonth, 1));
         }
-        
+
         void OnNextDecadeButtonClick()
         {
             m_DatePicker.GoTo(new Date(m_DatePicker.currentYear + 10, m_DatePicker.currentMonth, 1));

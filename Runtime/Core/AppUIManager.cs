@@ -26,11 +26,11 @@ namespace Unity.AppUI.Core
         Looper m_MainLooper;
 
         readonly Dictionary<PanelSettings, HashSet<Panel>> m_PanelSettings = new Dictionary<PanelSettings, HashSet<Panel>>();
-        
-        readonly HashSet<Panel> m_Panels = new HashSet<Panel>(); 
+
+        readonly HashSet<Panel> m_Panels = new HashSet<Panel>();
 
         NotificationManager m_NotificationManager;
-        
+
         internal AppUISettings defaultSettings { get; private set; }
 
         /// <summary>
@@ -44,10 +44,10 @@ namespace Unity.AppUI.Core
             {
                 if (m_Settings)
                     return m_Settings;
-                
+
                 if (!defaultSettings)
                     defaultSettings = ScriptableObject.CreateInstance<AppUISettings>();
-                
+
                 return defaultSettings;
             }
             set
@@ -95,15 +95,15 @@ namespace Unity.AppUI.Core
             AppUIInput.Initialize();
 
             m_MainLooper.Loop();
-            
+
             ApplySettings();
-            
+
 #if UNITY_INPUTSYSTEM_PRESENT && ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
             InputSystem.onActionChange -= OnActionChange;
             InputSystem.onActionChange += OnActionChange;
 #endif
         }
-        
+
 #if ENABLE_INPUT_SYSTEM
 #pragma warning disable 414
         Vector2 m_PointerPosition = Vector2.zero;
@@ -112,7 +112,7 @@ namespace Unity.AppUI.Core
 #endif
 
 #if UNITY_INPUTSYSTEM_PRESENT && ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
-        
+
         void OnActionChange(object arg1, InputActionChange arg2)
         {
             var module = EventSystem.current ? EventSystem.current.currentInputModule as InputSystemUIInputModule : null;
@@ -157,24 +157,24 @@ namespace Unity.AppUI.Core
         {
             if (!m_Settings.autoCorrectUiScale)
                 return;
-            
+
             var dpi = Platform.referenceDpi;
             foreach (var panelSettings in m_PanelSettings.Keys)
             {
                 if (panelSettings is null)
                     continue;
-            
+
                 var previousDpi = panelSettings.referenceDpi;
                 var dpiChanged = !Mathf.Approximately(panelSettings.referenceDpi, dpi);
-                
+
                 if (dpiChanged)
                     panelSettings.referenceDpi = dpi;
-            
+
                 foreach (var panel in m_PanelSettings[panelSettings])
                 {
                     if (panel is not {panel: not null})
                         continue;
-                        
+
                     if (dpiChanged)
                     {
                         using var evt = DpiChangedEvent.GetPooled();
@@ -203,7 +203,7 @@ namespace Unity.AppUI.Core
         {
             Platform.Update();
             AppUIInput.PollEvents();
-            
+
 #if ENABLE_LEGACY_INPUT_MANAGER
             var mousePosition = Input.mousePosition;
             var mouseLeftButtonDown = Input.GetMouseButtonDown(0);
@@ -212,18 +212,18 @@ namespace Unity.AppUI.Core
             var mouseLeftButtonDown = m_PointerDown;
             m_PointerDown = false;
 #endif
-            var height = Application.isPlaying ? Camera.main?.pixelHeight ?? 
+            var height = Application.isPlaying ? Camera.main?.pixelHeight ??
                 UnityEngine.Device.Screen.height : UnityEngine.Device.Screen.height;
 
             mousePosition = new Vector2(mousePosition.x, height - mousePosition.y);
-            
+
             if (m_Panels is {Count: > 0})
             {
                 foreach (var panel in m_Panels)
                 {
                     if (panel is not {panel: { } iPanel})
                         continue;
-                    
+
                     VisualElement pickedElement = null;
                     var needToFindPickedElement = mouseLeftButtonDown || AppUIInput.pinchGestureChangedThisFrame;
                     if (needToFindPickedElement && iPanel.contextType == ContextType.Player)
@@ -231,13 +231,13 @@ namespace Unity.AppUI.Core
                         var coord = RuntimePanelUtils.ScreenToPanel(iPanel, mousePosition);
                         pickedElement = iPanel.Pick(coord);
                     }
-                        
+
                     if (mouseLeftButtonDown && pickedElement == null)
                         panel.DismissAnyPopups(DismissType.OutOfBounds);
-  
+
 #if UNITY_EDITOR
-                    if (needToFindPickedElement && iPanel.contextType == ContextType.Editor && 
-                        UnityEditor.EditorWindow.focusedWindow && 
+                    if (needToFindPickedElement && iPanel.contextType == ContextType.Editor &&
+                        UnityEditor.EditorWindow.focusedWindow &&
                         UnityEditor.EditorWindow.focusedWindow.rootVisualElement?.panel == iPanel)
                         pickedElement ??= iPanel.focusController.focusedElement as VisualElement;
 #endif
@@ -247,7 +247,7 @@ namespace Unity.AppUI.Core
                         evt.gesture = AppUIInput.pinchGesture;
                         evt.target = pickedElement;
                         panel.SendEvent(evt);
-                        
+
                         var systemEvent = new Event()
                         {
                             type = EventType.ScrollWheel,
@@ -277,7 +277,7 @@ namespace Unity.AppUI.Core
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             m_Panels.Add(element);
 
             var panelSettings = element.panel?.GetPanelSettings();
@@ -289,7 +289,7 @@ namespace Unity.AppUI.Core
                 setting.Add(element);
             else
                 m_PanelSettings.Add(panelSettings, new HashSet<Panel> { element });
-            
+
             OnScaleFactorChanged(1.0f);
         }
 
@@ -302,7 +302,7 @@ namespace Unity.AppUI.Core
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            
+
             m_Panels.Remove(element);
 
             var panelSettings = element.panel?.GetPanelSettings();

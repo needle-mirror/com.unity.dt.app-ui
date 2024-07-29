@@ -293,7 +293,7 @@
 
 
 
- 
+
 .appui--ltr .appui-toast__actioncontainer > .appui-toast__action {
     margin-left: var(--appui-alias-control-gap-sm); /*margin-inline-start: var(--appui-control-gap);*/
 }

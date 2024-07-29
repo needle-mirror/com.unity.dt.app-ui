@@ -14,7 +14,7 @@ namespace Unity.AppUI.UI
         /// The average duration of a frame in milliseconds. Used to delay position calculations.
         /// </summary>
         protected const int k_NextFrameDurationMs = 16;
-        
+
         /// <summary>
         /// The message id used to show the popup.
         /// </summary>
@@ -37,7 +37,7 @@ namespace Unity.AppUI.UI
         protected Popup(VisualElement parentView, VisualElement view, VisualElement contentView = null)
         {
             this.contentView = contentView;
-            targetParent = parentView ?? throw new ArgumentException("The parent view can't be null.");
+            containerView = parentView ?? throw new ArgumentException("The parent view can't be null.");
             this.view = view ?? throw new ArgumentException("The view can't be null.");
 
             if (contentView is IDismissInvocator invocator)
@@ -72,7 +72,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// `True` if the the popup can be dismissed by pressing the escape key or the return button on mobile, `False` otherwise.
+        /// <para>`True` if the the popup can be dismissed by pressing the escape key or the return button on mobile, `False` otherwise.</para>
         /// <para>
         /// The default value is `True`.
         /// </para>
@@ -87,8 +87,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The parent of the <see cref="view"/> when the popup will be displayed.
         /// </summary>
-        public VisualElement targetParent { get; }
-        
+        public VisualElement containerView { get; protected set; }
+
         /// <summary>
         /// The content of the popup.
         /// </summary>
@@ -135,16 +135,16 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Called when the popup's <see cref="Handler"/> has received a <see cref="k_PopupShow"/> message.
+        /// </summary>
         /// <remarks>
         /// In this method the view should become visible at some point (directly or via an animation).
         /// </remarks>
-        /// </summary>
         protected virtual void ShowView()
         {
-            if (view.parent == null)
+            if (view.panel == null)
             {
                 // not added into the visual tree yet
-                targetParent.Add(view);
+                containerView.Add(view);
 
                 // set invisible in order to calculate layout before displaying the element (avoid flickering)
                 view.visible = false;
@@ -166,7 +166,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// Returns the element that will be focused when the view will become visible.
+        /// <para>Returns the element that will be focused when the view will become visible.</para>
         /// <para>
         /// The default value is `null`.
         /// </para>
@@ -206,7 +206,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// Called when the popup has received a <see cref="KeyDownEvent"/>.
+        /// <para>Called when the popup has received a <see cref="KeyDownEvent"/>.</para>
         /// <para>
         /// By default this method handles the dismiss of the popup via the Escape key or a Return button.
         /// </para>
@@ -217,7 +217,7 @@ namespace Unity.AppUI.UI
             var focusableElement = GetFocusableElement();
             if (keyboardDismissEnabled && focusableElement != null && evt.keyCode == KeyCode.Escape)
             {
-                
+
                 evt.StopPropagation();
                 Dismiss(DismissType.Cancel);
             }
@@ -281,12 +281,12 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Find the parent <see cref="VisualElement"/> where the popup will be added.
-        /// <remarks>
-        /// This is usually one of the layers from the <see cref="Panel"/> root UI element.
-        /// </remarks>
         /// </summary>
         /// <param name="element">An arbitrary UI element inside the panel.</param>
         /// <returns>The popup container <see cref="VisualElement"/> in the current panel.</returns>
+        /// <remarks>
+        /// This is usually one of the layers from the <see cref="Panel"/> root UI element.
+        /// </remarks>
         protected virtual VisualElement FindSuitableParent(VisualElement element)
         {
             return Panel.FindPopupLayer(element);
@@ -324,6 +324,28 @@ namespace Unity.AppUI.UI
         public event Action<T, DismissType> dismissed;
 
         /// <summary>
+        /// Set the container view where the popup will be displayed.
+        /// </summary>
+        /// <param name="element"> The container view.</param>
+        /// <returns> The popup of type <typeparamref name="T"/>.</returns>
+        /// <remarks>
+        /// By default, the popup will be added to popup container of the first <see cref="Panel"/>
+        /// ancestor of the given reference view during construction.
+        /// </remarks>
+        public T SetContainerView(VisualElement element)
+        {
+            var needChanges = view.panel != null;
+            containerView = element;
+            if (needChanges)
+            {
+                Debug.LogWarning("Changing the container view of a popup that is already " +
+                    "part of the visual tree can lead to unexpected behavior.");
+                containerView.Add(view);
+            }
+            return (T)this;
+        }
+
+        /// <summary>
         /// Activate the possibility to dismiss the popup via Escape key or Return button.
         /// </summary>
         /// <param name="dismissEnabled">`True` to activate the feature, `False` otherwise.</param>
@@ -359,14 +381,14 @@ namespace Unity.AppUI.UI
         /// Called when the popup has been dismissed.
         /// This method will invoke any handlers attached to the <see cref="dismissed"/> event.
         /// </summary>
-        /// <param name="reason"></param>
+        /// <param name="reason">The reason for the dismissal.</param>
         protected override void InvokeDismissedEventHandlers(DismissType reason)
         {
             base.InvokeDismissedEventHandlers(reason);
             dismissed?.Invoke((T)this, reason);
 
             // we can safely remove the notification element from the visual tree now.
-            if (view.parent == targetParent) targetParent.Remove(view);
+            if (view.parent == containerView) containerView.Remove(view);
 
             // focus last focused element (if any)
             if (reason != DismissType.OutOfBounds)

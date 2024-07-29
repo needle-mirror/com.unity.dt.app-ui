@@ -66,7 +66,7 @@ namespace Unity.AppUI.Core
             }
 
             m_InLoop = true;
-            
+
             // scheduler is only used in testing environment
             m_LoopItem = m_Scheduler?.Execute(LoopOnce).Every(16L);
         }
@@ -100,8 +100,8 @@ namespace Unity.AppUI.Core
 
         /// <summary>
         /// Promptly stop the loop execution and clear the remaining message without handling them.
-        /// <remarks>If you want to safely stop the execution of the loop and handle remaining messages in the queue, use <see cref="SafelyQuit"/>.</remarks>
         /// </summary>
+        /// <remarks>If you want to safely stop the execution of the loop and handle remaining messages in the queue, use <see cref="SafelyQuit"/>.</remarks>
         public void Quit()
         {
             m_LoopItem?.Pause();

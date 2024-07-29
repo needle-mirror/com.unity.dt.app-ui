@@ -38,7 +38,7 @@
   --appui-color-dark-gray-300: #1d1d1d;
   --appui-color-dark-gray-200: #131313;
   --appui-color-dark-gray-100: #0a0a0a;
-  --appui-color-light-gray-1500: #fdfdfd; 
+  --appui-color-light-gray-1500: #fdfdfd;
   --appui-color-light-gray-1400: #f3f3f3;
   --appui-color-light-gray-1300: #e8e8e8;
   --appui-color-light-gray-1200: #dedede;

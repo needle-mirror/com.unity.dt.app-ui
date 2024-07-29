@@ -1,7 +1,7 @@
 /* Progress */
 :root {
     --appui-linear-progress-border-radius: var(--appui-sizing-60);
-    --appui-linear-progress-height: var(--appui-sizing-125);    
+    --appui-linear-progress-height: var(--appui-sizing-125);
 }
 
 .appui-circular-progress {

@@ -35,27 +35,27 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public abstract partial class SliderBase<TValueType> : BaseSlider<TValueType, TValueType> 
+    public abstract partial class SliderBase<TValueType> : BaseSlider<TValueType, TValueType>
         where TValueType : struct, IEquatable<TValueType>, IComparable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId filledProperty = new BindingId(nameof(filled));
-        
+
         internal static readonly BindingId fillOffsetProperty = new BindingId(nameof(fillOffset));
-        
+
         internal static readonly BindingId inlineValueProperty = new BindingId(nameof(inlineValue));
-        
+
         internal static readonly BindingId labelProperty = new BindingId(nameof(label));
-        
+
         internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
-        
+
         internal static readonly BindingId tickCountProperty = new BindingId(nameof(tickCount));
-        
+
         internal static readonly BindingId tickLabelProperty = new BindingId(nameof(tickLabel));
-        
+
 #endif
-        
+
         /// <summary>
         /// The Slider main styling class.
         /// </summary>
@@ -102,12 +102,12 @@ namespace Unity.AppUI.UI
         /// The Slider track styling class.
         /// </summary>
         public const string trackUssClassName = ussClassName + "__track";
-        
+
         /// <summary>
         /// The Slider padded container styling class.
         /// </summary>
         public const string paddedContainerUssClassName = ussClassName + "__padded-container";
-        
+
         /// <summary>
         /// The Slider progress container styling class.
         /// </summary>
@@ -232,12 +232,12 @@ namespace Unity.AppUI.UI
 
             m_Ticks = new VisualElement
             {
-                name = ticksUssClassName, 
+                name = ticksUssClassName,
                 pickingMode = PickingMode.Ignore
             };
             m_Ticks.AddToClassList(ticksUssClassName);
             m_Controls.hierarchy.Add(m_Ticks);
-            
+
             m_Progress = new VisualElement
             {
                 name = progressUssClassName,
@@ -254,7 +254,7 @@ namespace Unity.AppUI.UI
             };
             m_PaddedContainer.AddToClassList(paddedContainerUssClassName);
             m_Controls.hierarchy.Add(m_PaddedContainer);
-            
+
             m_InteractiveArea = new VisualElement
             {
                 name = interactiveAreaUssClassName,
@@ -329,7 +329,7 @@ namespace Unity.AppUI.UI
                 if (handled)
                 {
                     evt.StopPropagation();
-                    
+
 
                     SetValueWithoutNotify(newValue);
 
@@ -359,7 +359,7 @@ namespace Unity.AppUI.UI
                 var changed = !m_Progress.ClassListContains(Styles.hiddenUssClassName) != value;
                 m_Progress.EnableInClassList(Styles.hiddenUssClassName, !value);
                 RefreshUI();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in filledProperty);
@@ -386,7 +386,7 @@ namespace Unity.AppUI.UI
                 m_InlineValue = value;
                 if (m_InlineValue != InlineValue.None)
                     AddToClassList(GetInlineValueUssClassName(m_InlineValue));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in inlineValueProperty);
@@ -411,7 +411,7 @@ namespace Unity.AppUI.UI
                 var changed = !Mathf.Approximately(m_FillOffset, value);
                 m_FillOffset = value;
                 RefreshUI();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in fillOffsetProperty);
@@ -436,7 +436,7 @@ namespace Unity.AppUI.UI
                 var changed = m_LabelStr != value;
                 m_LabelStr = value;
                 RefreshLabel();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
@@ -470,7 +470,7 @@ namespace Unity.AppUI.UI
                 }
 
                 RefreshTickLabels();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in tickCountProperty);
@@ -495,7 +495,7 @@ namespace Unity.AppUI.UI
                 var changed = m_TickLabel != value;
                 m_TickLabel = value;
                 RefreshTickLabels();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in tickLabelProperty);
@@ -521,7 +521,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -574,7 +574,7 @@ namespace Unity.AppUI.UI
             // progress bar
             var val = Mathf.Clamp01(SliderNormalizeValue(m_Value, lowValue, highValue));
             var trackWidth = GetSliderRect().width;
-            
+
             var width = trackWidth * Mathf.Abs(val - fillOffset);
             m_Progress.style.width = trackWidth * Mathf.Abs(val - fillOffset);
             m_Progress.style.left = m_CurrentDirection == Dir.Ltr
@@ -582,7 +582,7 @@ namespace Unity.AppUI.UI
                 : trackWidth - width - Mathf.Min(fillOffset, val) * trackWidth;
 
             // handle
-            m_HandleContainer.style.left = m_CurrentDirection == Dir.Ltr ? 
+            m_HandleContainer.style.left = m_CurrentDirection == Dir.Ltr ?
                 trackWidth * val : trackWidth - trackWidth * val;
 
             MarkDirtyRepaint();
@@ -610,7 +610,7 @@ namespace Unity.AppUI.UI
                 }
             }
         }
-        
+
         /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Clamp"/>
         protected override TValueType Clamp(TValueType v, TValueType lowBound, TValueType highBound)
         {
@@ -621,7 +621,7 @@ namespace Unity.AppUI.UI
                 result = highBound;
             return result;
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -701,8 +701,8 @@ namespace Unity.AppUI.UI
                     el.formatString = formatStr;
             }
         }
-        
+
 #endif
     }
-    
+
 }

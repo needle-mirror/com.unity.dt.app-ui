@@ -12,7 +12,7 @@ namespace Unity.AppUI.UI
     /// of the application needs to be overriden.
     /// </summary>
 #if ENABLE_UXML_SERIALIZED_DATA
-    [UxmlElement] 
+    [UxmlElement]
 #endif
     public partial class ContextProvider : BaseVisualElement
     {
@@ -20,7 +20,7 @@ namespace Unity.AppUI.UI
         /// Main Uss Class Name.
         /// </summary>
         public const string ussClassName = "appui-context-provider";
-        
+
         /// <summary>
         /// Default constructor.
         /// </summary>

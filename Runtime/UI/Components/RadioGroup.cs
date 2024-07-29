@@ -19,24 +19,24 @@ namespace Unity.AppUI.UI
     public partial class RadioGroup : BaseVisualElement, IInputElement<string>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId invalidProperty = nameof(invalid);
-        
+
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
-        
+
 #endif
-        
+
         /// <summary>
         /// The RadioGroup main styling class.
         /// </summary>
         public const string ussClassName = "appui-radiogroup";
-        
+
         string m_Value = null;
-        
+
         Func<string, bool> m_ValidateValue;
-        
+
         readonly Dictionary<string, Radio> m_RadioByKey = new Dictionary<string, Radio>();
 
         /// <summary>
@@ -74,13 +74,13 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The RadioGroup invalid state.
         /// </summary>
@@ -97,14 +97,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = invalid != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The RadioGroup validation function.
         /// </summary>
@@ -118,7 +118,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
@@ -138,7 +138,7 @@ namespace Unity.AppUI.UI
             }
 
             m_Value = newValue;
-            
+
             if (validateValue != null)
                 invalid = !validateValue.Invoke(newValue);
         }
@@ -153,16 +153,16 @@ namespace Unity.AppUI.UI
                     value = radio.key;
             }
         }
-        
+
         internal void AddRadio(Radio radio)
         {
             if (string.IsNullOrEmpty(radio.key))
                 return;
-            
+
             m_RadioByKey[radio.key] = radio;
-            
+
             value ??= radio.key;
-            
+
             radio.SetValueWithoutNotify(radio.key == value);
         }
 
@@ -179,7 +179,7 @@ namespace Unity.AppUI.UI
         /// Factory class to instantiate a <see cref="RadioGroup"/> using the data read from a UXML file.
         /// </summary>
         public new class UxmlFactory : UxmlFactory<RadioGroup, UxmlTraits> { }
-        
+
 #endif
     }
 }

@@ -22,7 +22,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         Fade
     }
-    
+
     /// <summary>
     /// The placement where the notification should be displayed.
     /// </summary>
@@ -33,47 +33,47 @@ namespace Unity.AppUI.UI
         /// The notification is placed at the top of the screen.
         /// </summary>
         Top,
-        
+
         /// <summary>
         /// The notification is placed at the bottom of the screen.
         /// </summary>
         Bottom,
-        
+
         /// <summary>
         /// The notification is placed at the top left of the screen.
         /// </summary>
         TopLeft,
-        
+
         /// <summary>
         /// The notification is placed at the top right of the screen.
         /// </summary>
         TopRight,
-        
+
         /// <summary>
         /// The notification is placed at the bottom left of the screen.
         /// </summary>
         BottomLeft,
-        
+
         /// <summary>
         /// The notification is placed at the bottom right of the screen.
         /// </summary>
         BottomRight,
-        
+
         /// <summary>
         /// The notification is placed at the top start of the screen.
         /// </summary>
         TopStart,
-        
+
         /// <summary>
         /// The notification is placed at the top end of the screen.
         /// </summary>
         TopEnd,
-        
+
         /// <summary>
         /// The notification is placed at the bottom start of the screen.
         /// </summary>
         BottomStart,
-        
+
         /// <summary>
         /// The notification is placed at the bottom end of the screen.
         /// </summary>
@@ -93,7 +93,7 @@ namespace Unity.AppUI.UI
         const int k_AnimationFadeOutDuration = 75;
 
         const string k_USSClassName = "appui-popup-notification";
-        
+
         const string k_VariantClassName = k_USSClassName + "--";
 
         readonly ManagerCallback m_ManagerCallback;
@@ -101,7 +101,7 @@ namespace Unity.AppUI.UI
         AnimationMode m_AnimationMode = AnimationMode.Fade;
 
         NotificationDuration m_Duration = NotificationDuration.Short;
-        
+
         PopupNotificationPlacement m_Placement = PopupNotificationPlacement.Bottom;
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Unity.AppUI.UI
         /// Returns the specified display duration of the bar.
         /// </summary>
         public NotificationDuration duration => m_Duration;
-        
+
         /// <summary>
         /// Returns the placement of the notification.
         /// </summary>
@@ -171,7 +171,7 @@ namespace Unity.AppUI.UI
                 Debug.LogWarning("Unable to set a duration while the Bar is already shown or queued.");
             return (T)this;
         }
-        
+
         /// <summary>
         /// Set the position of the notification.
         /// </summary>
@@ -203,7 +203,7 @@ namespace Unity.AppUI.UI
             {
                 if (view.parent != null) view.visible = true;
                 view.AddToClassList(Styles.openUssClassName);
-                
+
                 switch (animationMode)
                 {
                     case AnimationMode.Slide:

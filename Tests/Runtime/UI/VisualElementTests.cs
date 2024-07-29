@@ -19,13 +19,13 @@ namespace Unity.AppUI.Tests.UI
         where T : VisualElement, new()
     {
         VisualElement m_VisualElement;
-        
+
         protected virtual string componentName => typeof(T).Name;
 
         protected virtual string mainUssClassName => null;
 
         protected virtual bool uxmlConstructable => true;
-        
+
         protected virtual IEnumerable<string> uxmlTestCases
         {
             get
@@ -35,13 +35,13 @@ namespace Unity.AppUI.Tests.UI
         }
 
         protected virtual string uxmlNamespaceName => "appui";
-        
+
         protected record StoryContext(UIDocument document, Panel panel)
         {
             public UIDocument document { get; } = document;
             public Panel panel { get; } = panel;
         }
-        
+
         protected record Story(string name, Func<StoryContext, VisualElement> setup)
         {
             public string name { get; } = name;
@@ -50,8 +50,8 @@ namespace Unity.AppUI.Tests.UI
 
         protected virtual IEnumerable<Story> stories
         {
-            get 
-            { 
+            get
+            {
                 yield return new Story("Default", (ctx) => new T());
             }
         }
@@ -120,7 +120,7 @@ namespace Unity.AppUI.Tests.UI
             }
 
             var cases = uxmlTestCases;
-            
+
             if (cases == null)
             {
                 Assert.Ignore("No UXML test cases defined");
@@ -135,21 +135,21 @@ namespace Unity.AppUI.Tests.UI
                     var asset = Utils.LoadUxmlTemplateFromString(content);
                     m_TestUI.visualTreeAsset = asset;
                 });
-                
+
                 yield return null;
             }
         }
-        
+
         [UnityTest]
         [Order(3)]
         public IEnumerator CreateSnapshot()
         {
             if (string.IsNullOrEmpty(Utils.snapshotsOutputDir) || Application.isEditor)
                 Assert.Ignore("Snapshots are generated only in Standalone Player and when SNAPSHOTS_OUTPUT_DIR is set");
-                
+
             if (typeof(Panel).IsAssignableFrom(typeof(T)))
                 Assert.Ignore("Panel are not supported in snapshots");
-                                
+
             foreach (var story in stories)
             {
                 foreach (var theme in Utils.themes)
@@ -168,9 +168,9 @@ namespace Unity.AppUI.Tests.UI
         IEnumerator CreateSnapshotInternal(Story story, string theme, string scale, Dir dir)
         {
             var outputFilePath = Path.GetFullPath(
-                Path.Combine(Utils.snapshotsOutputDir ?? Application.dataPath, 
+                Path.Combine(Utils.snapshotsOutputDir ?? Application.dataPath,
                     $"{componentName}.{story.name}.{theme}.{dir.ToString().ToLower()}.{scale}.png"));
-            
+
             Screen.SetResolution(1200, 600, FullScreenMode.Windowed);
             var panel = new Panel
             {
@@ -205,8 +205,8 @@ namespace Unity.AppUI.Tests.UI
             ScreenCapture.CaptureScreenshot(outputFilePath);
             yield return null;
             yield return new WaitUntilOrTimeOut(
-                () => Utils.FileAvailable(outputFilePath), 
-                false, 
+                () => Utils.FileAvailable(outputFilePath),
+                false,
                 TimeSpan.FromSeconds(3));
             Assert.IsTrue(Utils.FileAvailable(outputFilePath));
         }

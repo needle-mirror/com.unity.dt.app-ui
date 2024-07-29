@@ -82,7 +82,7 @@ Shader "Hidden/App UI/ColorSwatch"
             };
 
             #define COLORSWATCH_MAX_ITEMS 16
-            
+
             uniform int _ColorCount;
             uniform int _AlphaCount;
             uniform int _IsFixed;
@@ -127,13 +127,13 @@ Shader "Hidden/App UI/ColorSwatch"
 
                 const int second_color_index = min(first_color_index + 1, color_count - 1);
                 const int second_alpha_index = min(first_alpha_index + 1, alpha_count - 1);
-                
+
                 const float colorDelta = (current_position - _Colors[first_color_index].w) / max(0.00001, _Colors[second_color_index].w - _Colors[first_color_index].w);
                 const float alphaDelta = (current_position - _Alphas[first_alpha_index].y) / max(0.00001, _Alphas[second_alpha_index].y - _Alphas[first_alpha_index].y);
 
                 const float smoothColorDelta = lerp(smoothstep(0.0, 1.0, colorDelta), step(0.0, colorDelta), _IsFixed);
                 const float smoothAlphaDelta = lerp(smoothstep(0.0, 1.0, alphaDelta), step(0.0, alphaDelta), _IsFixed);
-                
+
                 const fixed3 first_color = _Colors[first_color_index].rgb;
                 const fixed3 second_color = _Colors[second_color_index].rgb;
 
@@ -144,7 +144,7 @@ Shader "Hidden/App UI/ColorSwatch"
                 const float lerped_alpha = lerp(first_alpha, second_alpha, smoothAlphaDelta);
 
                 fixed4 color = fixed4(lerped_color, lerped_alpha);
-                
+
                 #ifdef UNITY_COLORSPACE_GAMMA
                 return color;
                 #endif

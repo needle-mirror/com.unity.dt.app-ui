@@ -71,7 +71,7 @@ namespace Unity.AppUI.Tests
                 yield return "medium";
             }
         }
-        
+
         internal static IEnumerable<string> themes
         {
             get
@@ -81,19 +81,19 @@ namespace Unity.AppUI.Tests
             }
         }
 
-        internal static bool FileAvailable(string path) 
+        internal static bool FileAvailable(string path)
         {
-            if (!File.Exists(path)) 
+            if (!File.Exists(path))
                 return false;
 
             var file = new FileInfo(path);
             FileStream stream = null;
 
-            try 
+            try
             {
                 stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
             }
-            catch (IOException) 
+            catch (IOException)
             {
                 // Can be either:
                 // - file is processed by another thread
@@ -108,9 +108,9 @@ namespace Unity.AppUI.Tests
 
             return true;
         }
-        
-        static PanelSettings s_PanelSettingsInstance;    
-    
+
+        static PanelSettings s_PanelSettingsInstance;
+
         internal static PanelSettings panelSettingsInstance
         {
             get
@@ -126,13 +126,13 @@ namespace Unity.AppUI.Tests
                     s_PanelSettingsInstance.themeStyleSheet = Resources.Load<ThemeStyleSheet>("Themes/App UI");
 #endif
                 }
-                
+
                 return s_PanelSettingsInstance;
             }
         }
-        
+
         static NavGraphViewAsset s_NavGraphTestAsset;
-        
+
         internal static NavGraphViewAsset navGraphTestAsset
         {
             get

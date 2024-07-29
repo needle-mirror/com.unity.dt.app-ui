@@ -11,36 +11,36 @@ ShaderVariantCollection:
   - first: {fileID: 4800000, guid: 77a2ee155fd74b5ea2fb0140071ef94d, type: 3}
     second:
       variants:
-      - keywords: 
+      - keywords:
         passType: 0
       - keywords: PROGRESS_INDETERMINATE
         passType: 0
   - first: {fileID: 4800000, guid: b9a6f3142dc447b4b5773eda9f7ff076, type: 3}
     second:
       variants:
-      - keywords: 
+      - keywords:
         passType: 0
       - keywords: PROGRESS_INDETERMINATE
         passType: 0
   - first: {fileID: 4800000, guid: 9886c75bfc7245119ad0697fc4cfd071, type: 3}
     second:
       variants:
-      - keywords: 
+      - keywords:
         passType: 0
   - first: {fileID: 4800000, guid: c509b07e9e75460ab2d2089fe237c988, type: 3}
     second:
       variants:
-      - keywords: 
+      - keywords:
         passType: 0
   - first: {fileID: 4800000, guid: adf6421d97e94e07ac4487285e5586f9, type: 3}
     second:
       variants:
-      - keywords: 
+      - keywords:
         passType: 0
   - first: {fileID: 4800000, guid: dfe0840987bd04d99b2cefa38c1e27f4, type: 3}
     second:
       variants:
-      - keywords: 
+      - keywords:
         passType: 0
       - keywords: ENABLE_BORDER
         passType: 0
@@ -51,12 +51,12 @@ ShaderVariantCollection:
   - first: {fileID: 4800000, guid: ffa286a4ef944f879424a54df9d54271, type: 3}
     second:
       variants:
-      - keywords: 
+      - keywords:
         passType: 0
   - first: {fileID: 4800000, guid: 0af910563c584febabca3f5810be2f28, type: 3}
     second:
       variants:
-      - keywords: 
+      - keywords:
         passType: 0
       - keywords: DRAW_POINTS_ON
         passType: 0

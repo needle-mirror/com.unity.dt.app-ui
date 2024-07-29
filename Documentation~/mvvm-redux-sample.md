@@ -5,11 +5,11 @@ uid: mvvm-redux-sample
 # MVVM & Redux Sample
 
 The MVVM & Redux Sample shows how to adopt a MVVM architecture but also Redux-like state management with the App UI Unity package.
-If you are not familiar with MVVM or Redux, we suggest you to read the [MVVM](xref:mvvm-intro) and the 
+If you are not familiar with MVVM or Redux, we suggest you to read the [MVVM](xref:mvvm-intro) and the
 [State management](xref:state-management) documentations.
 
 > [!NOTE]
-> This sample is quite advanced in terms of architecture. If you are looking for a simpler MVVM sample, 
+> This sample is quite advanced in terms of architecture. If you are looking for a simpler MVVM sample,
 > you can check the [MVVM Sample](xref:mvvm-sample) section.
 
 ## Getting Started

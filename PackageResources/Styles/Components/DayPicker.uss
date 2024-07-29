@@ -77,7 +77,7 @@
 
 .appui-date-picker-pane__days-container {
     display: flex;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
 }
 
 .appui--ltr .appui-date-picker-pane__days-container {

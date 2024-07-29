@@ -17,12 +17,12 @@ namespace Unity.AppUI.MVVM
         /// Occurs when a property value is changing.
         /// </summary>
         public event System.ComponentModel.PropertyChangingEventHandler? PropertyChanging;
-        
+
         /// <summary>
         /// Occurs when a property value has changed.
         /// </summary>
         public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
-        
+
         /// <summary>
         /// Raises the <see cref="PropertyChanging"/> event.
         /// </summary>
@@ -32,10 +32,10 @@ namespace Unity.AppUI.MVVM
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
-            
+
             PropertyChanging?.Invoke(this, e);
         }
-        
+
         /// <summary>
         /// Raises the <see cref="PropertyChanging"/> event.
         /// </summary>
@@ -44,7 +44,7 @@ namespace Unity.AppUI.MVVM
         {
             OnPropertyChanging(new System.ComponentModel.PropertyChangingEventArgs(propertyName));
         }
-        
+
         /// <summary>
         /// Raises the <see cref="PropertyChanged"/> event.
         /// </summary>
@@ -54,10 +54,10 @@ namespace Unity.AppUI.MVVM
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
-            
+
             PropertyChanged?.Invoke(this, e);
         }
-        
+
         /// <summary>
         /// Raises the <see cref="PropertyChanged"/> event.
         /// </summary>
@@ -77,14 +77,14 @@ namespace Unity.AppUI.MVVM
         /// <returns> <see langword="true"/> if the property has changed, <see langword="false"/> otherwise. </returns>
         protected bool SetProperty<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)
         {
-            if (EqualityComparer<T>.Default.Equals(field, newValue)) 
+            if (EqualityComparer<T>.Default.Equals(field, newValue))
                 return false;
             OnPropertyChanging(propertyName);
             field = newValue;
             OnPropertyChanged(propertyName);
             return true;
         }
-        
+
         /// <summary>
         /// Sets the property and raises the <see cref="PropertyChanging"/> and <see cref="PropertyChanged"/> events.
         /// </summary>
@@ -99,15 +99,15 @@ namespace Unity.AppUI.MVVM
         {
             if (comparer == null)
                 throw new ArgumentNullException(nameof(comparer));
-            
-            if (comparer.Equals(field, newValue)) 
+
+            if (comparer.Equals(field, newValue))
                 return false;
             OnPropertyChanging(propertyName);
             field = newValue;
             OnPropertyChanged(propertyName);
             return true;
         }
-        
+
         /// <summary>
         /// Sets the property and raises the <see cref="PropertyChanging"/> and <see cref="PropertyChanged"/> events.
         /// </summary>
@@ -122,15 +122,15 @@ namespace Unity.AppUI.MVVM
         {
             if (callback == null)
                 throw new ArgumentNullException(nameof(callback));
-            
-            if (EqualityComparer<T>.Default.Equals(oldValue, newValue)) 
+
+            if (EqualityComparer<T>.Default.Equals(oldValue, newValue))
                 return false;
             OnPropertyChanging(propertyName);
             callback(newValue);
             OnPropertyChanged(propertyName);
             return true;
         }
-        
+
         /// <summary>
         /// Sets the property and raises the <see cref="PropertyChanging"/> and <see cref="PropertyChanged"/> events.
         /// </summary>
@@ -148,8 +148,8 @@ namespace Unity.AppUI.MVVM
                 throw new ArgumentNullException(nameof(callback));
             if (comparer == null)
                 throw new ArgumentNullException(nameof(comparer));
-            
-            if (comparer.Equals(oldValue, newValue)) 
+
+            if (comparer.Equals(oldValue, newValue))
                 return false;
             OnPropertyChanging(propertyName);
             callback(newValue);
@@ -175,8 +175,8 @@ namespace Unity.AppUI.MVVM
                 throw new ArgumentNullException(nameof(callback));
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
-            
-            if (EqualityComparer<T>.Default.Equals(oldValue, newValue)) 
+
+            if (EqualityComparer<T>.Default.Equals(oldValue, newValue))
                 return false;
             OnPropertyChanging(propertyName);
             callback(model, newValue);

@@ -16,7 +16,7 @@ namespace Unity.AppUI.Editor.Tests
             [SerializeField]
             public Dir value;
         }
-        
+
         [Test]
         public void DirDrawer_CreatesPropertyGUI_ShouldNotThrow()
         {
@@ -26,7 +26,7 @@ namespace Unity.AppUI.Editor.Tests
             Assert.DoesNotThrow(() => drawer.CreatePropertyGUI(serializedObject.FindProperty("value")));
         }
     }
-    
+
     [TestFixture]
     [TestOf(typeof(ThemeDrawer))]
     class ThemeDrawerTests
@@ -37,7 +37,7 @@ namespace Unity.AppUI.Editor.Tests
             [SerializeField]
             public string value;
         }
-        
+
         [Test]
         public void ThemeDrawer_CreatesPropertyGUI_ShouldNotThrow()
         {
@@ -47,7 +47,7 @@ namespace Unity.AppUI.Editor.Tests
             Assert.DoesNotThrow(() => drawer.CreatePropertyGUI(serializedObject.FindProperty("value")));
         }
     }
-    
+
     [TestFixture]
     [TestOf(typeof(ScaleDrawer))]
     class ScaleDrawerTests
@@ -58,7 +58,7 @@ namespace Unity.AppUI.Editor.Tests
             [SerializeField]
             public string value;
         }
-        
+
         [Test]
         public void ScaleDrawer_CreatesPropertyGUI_ShouldNotThrow()
         {

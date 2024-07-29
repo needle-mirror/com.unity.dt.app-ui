@@ -62,7 +62,7 @@ namespace Unity.AppUI.UI
         /// The border color.
         /// </summary>
         public Color borderColor;
-        
+
         /// <summary>
         /// The border style.
         /// </summary>
@@ -93,17 +93,17 @@ namespace Unity.AppUI.UI
         /// No border.
         /// </summary>
         None,
-        
+
         /// <summary>
         /// A solid border.
         /// </summary>
         Solid,
-        
+
         /// <summary>
         /// A dotted border.
         /// </summary>
         Dotted,
-        
+
         /// <summary>
         /// A dashed border.
         /// </summary>
@@ -119,15 +119,15 @@ namespace Unity.AppUI.UI
     public partial class ExVisualElement : BaseVisualElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId backgroundColorProperty = new BindingId(nameof(backgroundColor));
-        
+
         internal static readonly BindingId outlineColorProperty = new BindingId(nameof(outlineColor));
-        
+
         internal static readonly BindingId passMaskProperty = new BindingId(nameof(passMask));
-        
+
 #endif
-        
+
         /// <summary>
         /// Rendering passes that will be executed. This is used to optimize and fine-tune the rendering.
         /// </summary>
@@ -163,7 +163,7 @@ namespace Unity.AppUI.UI
             /// </summary>
             Outline = 0b01000000,
         }
-        
+
         const int k_BlitTextureMessageId = 520;
 
         static Handler handler
@@ -172,11 +172,11 @@ namespace Unity.AppUI.UI
             {
                 if (s_Handler == null)
                     s_Handler = new Handler(global::Unity.AppUI.Core.AppUI.mainLooper, HandleMessage);
-                
+
                 return s_Handler;
             }
         }
-        
+
         static bool HandleMessage(Message msg)
         {
             if (msg.what == k_BlitTextureMessageId)
@@ -212,7 +212,7 @@ namespace Unity.AppUI.UI
                     ve.m_RT = new RenderTexture(rtSize.x, rtSize.y, 24);
                     ve.m_RT.Create();
                 }
-                
+
                 var prevRt = RenderTexture.active;
                 if (ve.passMask == (Passes)0xFF)
                 {
@@ -236,10 +236,10 @@ namespace Unity.AppUI.UI
                         Graphics.Blit(null, ve.m_RT, s_Material, 6);
                 }
                 RenderTexture.active = prevRt;
-            
+
                 return true;
             }
-            
+
             return false;
         }
 
@@ -264,7 +264,7 @@ namespace Unity.AppUI.UI
         static readonly int k_OutlineOffset = Shader.PropertyToID("_OutlineOffset");
 
         static readonly int k_AASoftness = Shader.PropertyToID("_AA");
-        
+
         static readonly int k_Phase = Shader.PropertyToID("_Phase");
 
         static readonly int k_ShadowOffset = Shader.PropertyToID("_ShadowOffset");
@@ -278,11 +278,11 @@ namespace Unity.AppUI.UI
         static readonly CustomStyleProperty<float> k_UssBorderWidth = new CustomStyleProperty<float>("--border-width");
 
         static readonly CustomStyleProperty<Color> k_UssBorderColor = new CustomStyleProperty<Color>("--border-color");
-        
+
         static readonly CustomStyleProperty<int> k_UssBorderStyle = new CustomStyleProperty<int>("--border-style");
-        
+
         static readonly CustomStyleProperty<int> k_UssBorderDotFactor = new CustomStyleProperty<int>("--border-dot-factor");
-        
+
         static readonly CustomStyleProperty<float> k_UssBorderSpeed = new CustomStyleProperty<float>("--border-speed");
 
         static readonly CustomStyleProperty<Color> k_UssBackgroundColor = new CustomStyleProperty<Color>("--background-color");
@@ -310,11 +310,11 @@ namespace Unity.AppUI.UI
         static readonly int k_BorderThickness = Shader.PropertyToID("_BorderThickness");
 
         static readonly int k_BorderColor = Shader.PropertyToID("_BorderColor");
-        
+
         static readonly int k_BorderStyle = Shader.PropertyToID("_BorderStyle");
-        
+
         static readonly int k_BorderDotFactor = Shader.PropertyToID("_BorderDotFactor");
-        
+
         static readonly int k_BorderSpeed = Shader.PropertyToID("_BorderSpeed");
 
         static readonly int k_ShadowColor = Shader.PropertyToID("_ShadowColor");
@@ -359,7 +359,7 @@ namespace Unity.AppUI.UI
                 var changed = outlineColor != value;
                 m_OutlineColorByCode = value;
                 MarkDirtyRepaint();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in outlineColorProperty);
@@ -378,7 +378,7 @@ namespace Unity.AppUI.UI
                 var changed = backgroundColor != value;
                 m_BackgroundColorByCode = value;
                 MarkDirtyRepaint();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in backgroundColorProperty);
@@ -401,7 +401,7 @@ namespace Unity.AppUI.UI
                     return;
                 m_PassMask = value;
                 MarkDirtyRepaint();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in passMaskProperty);
 #endif
@@ -457,7 +457,7 @@ namespace Unity.AppUI.UI
                 m_Style.borderColor = ussBorderColor;
             else
                 m_Style.borderColor = Color.clear;
-            
+
             if (evt.customStyle.TryGetValue(k_UssBorderStyle, out var ussBorderStyle))
                 m_Style.borderStyle = (BorderStyle)ussBorderStyle;
             else
@@ -467,7 +467,7 @@ namespace Unity.AppUI.UI
                 m_Style.borderDotFactor = Mathf.Max(2, ussBorderDotFactor);
             else
                 m_Style.borderDotFactor = 2;
-            
+
             if (evt.customStyle.TryGetValue(k_UssBorderSpeed, out var ussBorderSpeed))
                 m_Style.borderSpeed = ussBorderSpeed;
             else
@@ -541,7 +541,7 @@ namespace Unity.AppUI.UI
             }
 
             var renderRect = ComputeContentRect(paddingRect, m_Style);
-            
+
             var rtSize = GetRenderTextureSize(renderRect);
 
             if (rtSize.x < 1 || rtSize.y < 1)
@@ -567,7 +567,7 @@ namespace Unity.AppUI.UI
             var msg = Message.Obtain(null, k_BlitTextureMessageId, this);
             HandleMessage(msg);
             msg.Recycle();
-            
+
             var left = renderRect.xMin;
             var right = renderRect.xMax;
             var top = renderRect.yMin;
@@ -611,7 +611,7 @@ namespace Unity.AppUI.UI
                 width = (int)Mathf.Clamp(renderRect.width * dpi, 16, maxSize);
                 height = (int)(width * (renderRect.height / renderRect.width));
             }
-            
+
             return new Vector2Int(width, height);
         }
 
@@ -619,7 +619,7 @@ namespace Unity.AppUI.UI
         {
             // shrink the rect by 1 pixel to avoid bleeding
             rect = new Rect(rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2);
-            
+
             // calculate the area that the outline will be drawn in
             var outlineRadius = new Vector2(ads.outlineOffset + ads.outlineWidth + 2f, ads.outlineOffset + ads.outlineWidth + 2f);
             var outlineRect = new Rect(-outlineRadius,
@@ -665,7 +665,7 @@ namespace Unity.AppUI.UI
             s_Material.SetColor(k_OutlineColor, ads.outlineColor);
             s_Material.SetFloat(k_OutlineOffset, (ads.outlineOffset + ads.outlineWidth) / width);
             s_Material.SetFloat(k_AASoftness, 1f / width);
-            
+
             var time = Application.isEditor ?
 #if UNITY_EDITOR
                 (float)UnityEditor.EditorApplication.timeSinceStartup
@@ -673,7 +673,7 @@ namespace Unity.AppUI.UI
                 Time.time
 #endif
                 : Time.time;
-            
+
             s_Material.SetVector(k_Phase, new Vector4(time / 20, time, time * 2, time * 3));
             s_Material.SetFloat(k_Ratio, height / width);
 
@@ -721,11 +721,11 @@ namespace Unity.AppUI.UI
             }
 
             s_Material.SetColor(k_BorderColor, ads.borderColor);
-            
+
             s_Material.SetInt(k_BorderStyle, (int)ads.borderStyle);
-            
+
             s_Material.SetInt(k_BorderDotFactor, ads.borderDotFactor);
-            
+
             s_Material.SetFloat(k_BorderSpeed, ads.borderSpeed);
 
             return biggestRect;

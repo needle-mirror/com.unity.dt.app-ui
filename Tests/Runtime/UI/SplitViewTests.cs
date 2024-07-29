@@ -20,13 +20,13 @@ namespace Unity.AppUI.Tests.UI
     class SplitViewTests : VisualElementTests<SplitView>
     {
         const float k_TotalSize = 300;
-        
+
         readonly Direction m_Direction;
-        
+
         readonly Dir m_LayoutDirection;
 
         const float k_DefaultPaneMinSize = 15;
-        
+
         protected override string mainUssClassName => SplitView.ussClassName;
 
         protected override bool uxmlConstructable => true;
@@ -43,7 +43,7 @@ namespace Unity.AppUI.Tests.UI
                 <appui:Pane style=""width: 50px; min-width: 50px;"" />
               </appui:SplitView>",
         };
-        
+
         public SplitViewTests(Direction direction, Dir layoutDirection)
         {
             m_Direction = direction;
@@ -65,7 +65,7 @@ namespace Unity.AppUI.Tests.UI
         {
             return m_Direction == Direction.Horizontal ? pane.resolvedStyle.minWidth.value : pane.resolvedStyle.minHeight.value;
         }
-        
+
         float GetMax(Rect rect)
         {
             return m_Direction switch
@@ -76,7 +76,7 @@ namespace Unity.AppUI.Tests.UI
                 _ => throw new System.ArgumentOutOfRangeException()
             };
         }
-        
+
         float GetPos(IResolvedStyle style)
         {
             return m_Direction == Direction.Horizontal ? style.left : style.top;
@@ -86,7 +86,7 @@ namespace Unity.AppUI.Tests.UI
         {
             return m_Direction == Direction.Horizontal ? new Vector2(position, 0) : new Vector2(0, position);
         }
-        
+
         void SetPaneSize(VisualElement element, Length width)
         {
             if (m_Direction == Direction.Horizontal)
@@ -94,7 +94,7 @@ namespace Unity.AppUI.Tests.UI
             else
                 element.style.height = width;
         }
-        
+
         void SetPaneMinSize(VisualElement element, Length width)
         {
             if (m_Direction == Direction.Horizontal)
@@ -102,7 +102,7 @@ namespace Unity.AppUI.Tests.UI
             else
                 element.style.minHeight = width;
         }
-        
+
         [UnityTest]
         [Order(10)]
         public IEnumerator SplitView_CanBeConstructed_WhenEmpty()
@@ -127,10 +127,10 @@ namespace Unity.AppUI.Tests.UI
             panel.Add(splitView);
 
             yield return null; // should have no exceptions with an empty SplitView
-            
+
             Assert.AreEqual(0, splitView.paneCount);
             Assert.AreEqual(0, splitView.splitterCount);
-            
+
             Assert.Throws<System.ArgumentOutOfRangeException>(() => splitView.PaneAt(99));
         }
 
@@ -139,24 +139,24 @@ namespace Unity.AppUI.Tests.UI
         public IEnumerator SplitView_CanBePopulatedWithOnePane_WhenEmpty()
         {
             yield return SplitView_CanBeConstructed_WhenEmpty();
-            
+
             var splitView = m_TestUI.rootVisualElement.Q<SplitView>();
             var pane = new Pane();
             SetPaneSize(pane, new Length(50, LengthUnit.Percent));
             splitView.AddPane(pane);
 
             yield return null;
-            
+
             Assert.AreEqual(0, splitView.splitterCount);
             Assert.AreEqual(1, splitView.paneCount);
         }
-        
+
         [UnityTest]
         [Order(12)]
         public IEnumerator SplitView_CanBePopulatedWithSecondPane()
         {
             yield return SplitView_CanBePopulatedWithOnePane_WhenEmpty();
-            
+
             var splitView = m_TestUI.rootVisualElement.Q<SplitView>();
             splitView.AddPane(new Pane
             {
@@ -164,7 +164,7 @@ namespace Unity.AppUI.Tests.UI
             });
 
             yield return null;
-            
+
             Assert.AreEqual(1, splitView.splitterCount);
             Assert.AreEqual(2, splitView.paneCount);
         }
@@ -174,40 +174,40 @@ namespace Unity.AppUI.Tests.UI
         public IEnumerator SplitView_CanRemoveAndInsertPane()
         {
             yield return SplitView_CanBePopulatedWithSecondPane();
-            
+
             var splitView = m_TestUI.rootVisualElement.Q<SplitView>();
             var pane = splitView.PaneAt(0);
             splitView.RemovePane(pane);
-            
+
             yield return null;
-            
+
             Assert.AreEqual(0, splitView.splitterCount);
             Assert.AreEqual(1, splitView.paneCount);
-            
+
             var newPane = new Pane();
             SetPaneSize(newPane, new Length(25, LengthUnit.Percent));
             SetPaneMinSize(newPane, new Length(50, LengthUnit.Pixel));
             splitView.InsertPane(0, newPane);
-            
+
             yield return null;
-            
+
             Assert.AreEqual(1, splitView.splitterCount);
             Assert.AreEqual(2, splitView.paneCount);
-            
+
             Assert.AreSame(newPane, splitView.PaneAt(0));
             Assert.Throws<System.ArgumentOutOfRangeException>(() => splitView.PaneAt(2));
-            
+
             newPane = new Pane();
             SetPaneSize(newPane, new Length(25, LengthUnit.Percent));
             SetPaneMinSize(newPane, new Length(50, LengthUnit.Pixel));
             Assert.Throws<System.ArgumentOutOfRangeException>(() => splitView.InsertPane(999, newPane));
             splitView.InsertPane(2, newPane);
-            
+
             yield return null;
-            
+
             Assert.AreEqual(2, splitView.splitterCount);
             Assert.AreEqual(3, splitView.paneCount);
-            
+
             Assert.AreSame(newPane, splitView.PaneAt(2));
             Assert.AreEqual(2, splitView.IndexOfPane(newPane));
             Assert.Throws<System.ArgumentOutOfRangeException>(() => splitView.PaneAt(3));
@@ -219,12 +219,12 @@ namespace Unity.AppUI.Tests.UI
             public Func<Direction, Dir, float> expectedMin;
             public Func<Direction, Dir, float> expectedMax;
         }
-        
+
         static IEnumerable SplitView_CanGetSplitterRange_TestCases()
         {
             yield return new SplitView_CanGetSplitterRange_TestCase
             {
-                index = 0, 
+                index = 0,
                 expectedMin = (direction, layoutDirection) => direction switch
                 {
                     Direction.Horizontal when layoutDirection == Dir.Ltr => 50f,
@@ -240,7 +240,7 @@ namespace Unity.AppUI.Tests.UI
             };
             yield return new SplitView_CanGetSplitterRange_TestCase
             {
-                index = 1, 
+                index = 1,
                 expectedMin = (direction, layoutDirection) => direction switch
                 {
                     Direction.Horizontal when layoutDirection == Dir.Ltr => k_TotalSize * 0.25f + k_DefaultPaneMinSize,
@@ -262,27 +262,27 @@ namespace Unity.AppUI.Tests.UI
             [ValueSource(nameof(SplitView_CanGetSplitterRange_TestCases))] SplitView_CanGetSplitterRange_TestCase testCase)
         {
             yield return SplitView_CanRemoveAndInsertPane();
-            
+
             var splitView = m_TestUI.rootVisualElement.Q<SplitView>();
             splitView.GetRange(testCase.index, out var min, out var max);
-            
+
             Assert.AreEqual(testCase.expectedMin(m_Direction, m_LayoutDirection), min);
             Assert.AreEqual(testCase.expectedMax(m_Direction, m_LayoutDirection), max);
         }
-        
+
         public struct SplitView_CanGetLegalSplitterPosition_TestCase
         {
             public int index;
             public float desiredPosition;
             public Func<Direction, Dir, float> expectedResult;
         }
-        
+
         static IEnumerable SplitView_CanGetLegalSplitterPosition_TestCases()
         {
             yield return new SplitView_CanGetLegalSplitterPosition_TestCase
             {
-                index = 0, 
-                desiredPosition = 50, 
+                index = 0,
+                desiredPosition = 50,
                 expectedResult = (direction, layoutDir) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => 50,
@@ -292,8 +292,8 @@ namespace Unity.AppUI.Tests.UI
             };
             yield return new SplitView_CanGetLegalSplitterPosition_TestCase
             {
-                index = 0, 
-                desiredPosition = 0, 
+                index = 0,
+                desiredPosition = 0,
                 expectedResult = (direction, layoutDir) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => 50,
@@ -303,8 +303,8 @@ namespace Unity.AppUI.Tests.UI
             };
             yield return new SplitView_CanGetLegalSplitterPosition_TestCase
             {
-                index = 0, 
-                desiredPosition = 60, 
+                index = 0,
+                desiredPosition = 60,
                 expectedResult = (direction, layoutDir) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => 50,
@@ -314,8 +314,8 @@ namespace Unity.AppUI.Tests.UI
             };
             yield return new SplitView_CanGetLegalSplitterPosition_TestCase
             {
-                index = 0, 
-                desiredPosition = 100, 
+                index = 0,
+                desiredPosition = 100,
                 expectedResult = (direction, layoutDir) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => 100,
@@ -323,11 +323,11 @@ namespace Unity.AppUI.Tests.UI
                     Direction.Vertical => 100,
                 }
             };
-            
+
             yield return new SplitView_CanGetLegalSplitterPosition_TestCase
             {
-                index = 1, 
-                desiredPosition = k_TotalSize, 
+                index = 1,
+                desiredPosition = k_TotalSize,
                 expectedResult = (direction, layoutDir) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => k_TotalSize - 50,
@@ -337,8 +337,8 @@ namespace Unity.AppUI.Tests.UI
             };
             yield return new SplitView_CanGetLegalSplitterPosition_TestCase
             {
-                index = 1, 
-                desiredPosition = 250, 
+                index = 1,
+                desiredPosition = 250,
                 expectedResult = (direction, layoutDir) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => 250,
@@ -348,8 +348,8 @@ namespace Unity.AppUI.Tests.UI
             };
             yield return new SplitView_CanGetLegalSplitterPosition_TestCase
             {
-                index = 1, 
-                desiredPosition = 240, 
+                index = 1,
+                desiredPosition = 240,
                 expectedResult = (direction, layoutDir) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => 250,
@@ -359,8 +359,8 @@ namespace Unity.AppUI.Tests.UI
             };
             yield return new SplitView_CanGetLegalSplitterPosition_TestCase
             {
-                index = 1, 
-                desiredPosition = 200, 
+                index = 1,
+                desiredPosition = 200,
                 expectedResult = (direction, layoutDir) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => 200,
@@ -369,29 +369,29 @@ namespace Unity.AppUI.Tests.UI
                 }
             };
         }
-        
+
         [UnityTest]
         [Order(15)]
         public IEnumerator SplitView_CanGetLegalSplitterPosition(
             [ValueSource(nameof(SplitView_CanGetLegalSplitterPosition_TestCases))] SplitView_CanGetLegalSplitterPosition_TestCase testCase)
         {
             yield return SplitView_CanRemoveAndInsertPane();
-            
+
             var splitView = m_TestUI.rootVisualElement.Q<SplitView>();
             var res = splitView.GetLegalSplitterPosition(testCase.index, testCase.desiredPosition);
-            
+
             Assert.AreEqual(testCase.expectedResult(m_Direction, m_LayoutDirection), res);
         }
-        
+
         [UnityTest]
         [Order(16)]
         public IEnumerator SplitView_CanSaveAndRestoreState()
         {
-            yield return SplitView_CanRemoveAndInsertPane(); 
-            
+            yield return SplitView_CanRemoveAndInsertPane();
+
             var splitView = m_TestUI.rootVisualElement.Q<SplitView>();
             var state = splitView.SaveState();
-            
+
             Assert.IsNotNull(state);
             Assert.AreEqual(m_Direction, state.direction);
             Assert.IsTrue(state.collapsedPanes.All(cp => !cp));
@@ -399,7 +399,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(k_TotalSize * 0.25f, state.paneSizes[0]);
             Assert.AreEqual(-1f, state.paneSizes[1], "Panes with 'auto' size should be saved as -1f");
             Assert.AreEqual(k_TotalSize * 0.25f, state.paneSizes[2]);
-            
+
             Assert.DoesNotThrow(() => splitView.RestoreState(state));
         }
 
@@ -407,54 +407,54 @@ namespace Unity.AppUI.Tests.UI
         [Order(17)]
         public IEnumerator SplitView_CanMoveSplitters()
         {
-            yield return SplitView_CanRemoveAndInsertPane(); 
-            
+            yield return SplitView_CanRemoveAndInsertPane();
+
             var splitView = m_TestUI.rootVisualElement.Q<SplitView>();
             Assert.DoesNotThrow(() =>
             {
                 splitView.OnSplitterDragged(99, GetWorldPos(149));
             }, "Giving an invalid splitter index should not throw an exception");
-            
+
             splitView.OnSplitterDragged(0, GetWorldPos(149));
 
             yield return null;
-            
+
             Assert.AreEqual(GetExpectedPosition(149), GetMax(splitView.PaneAt(0).layout));
-            
+
             splitView.OnSplitterDragged(0, GetWorldPos(50 + splitView.PaneAt(0).compactThreshold - 1));
-            
+
             yield return null;
-            
+
             Assert.AreEqual(GetExpectedPosition(50), GetMax(splitView.PaneAt(0).layout));
             Assert.IsTrue(splitView.PaneAt(0).compact);
-            
+
             splitView.OnSplitterDragged(1, GetWorldPos(50));
-            
+
             yield return null;
-            
+
             Assert.AreEqual(GetExpectedPosition(50 + Pane.defaultCompactThreshold), GetMax(splitView.PaneAt(1).layout));
-            
+
             splitView.OnSplitterDragged(1, GetWorldPos(290));
-            
+
             yield return null;
-            
+
             splitView.OnSplitterUp(1, GetWorldPos(290));
             splitView.OnSplitterUp(1, GetWorldPos(290)); // should not change anything
-            
+
             yield return null;
-            
+
             Assert.AreEqual(GetExpectedPosition(250), GetMax(splitView.PaneAt(1).layout));
-            
+
             yield break;
 
             // --------------------------------------------------------------------------------------------
-            
+
             Vector2 GetWorldPos(float val)
             {
                 val = GetExpectedPosition(val);
                 return splitView.LocalToWorld(GetVec2Position(val));
             }
-            
+
             float GetExpectedPosition(float val)
             {
                 return m_Direction == Direction.Horizontal && m_LayoutDirection == Dir.Rtl ? k_TotalSize - val : val;
@@ -465,23 +465,23 @@ namespace Unity.AppUI.Tests.UI
         [Order(18)]
         public IEnumerator SplitView_CanMoveSplitters_WithoutRealtimeResize()
         {
-            yield return SplitView_CanRemoveAndInsertPane(); 
-            
+            yield return SplitView_CanRemoveAndInsertPane();
+
             var splitView = m_TestUI.rootVisualElement.Q<SplitView>();
             splitView.realtimeResize = false;
-            
+
             splitView.OnSplitterDragged(0, splitView.LocalToWorld(GetVec2Position(149)));
-            
+
             yield return null;
-            
+
             Assert.DoesNotThrow(
-                () => splitView.OnSplitterUp(99, splitView.LocalToWorld(GetVec2Position(149))), 
+                () => splitView.OnSplitterUp(99, splitView.LocalToWorld(GetVec2Position(149))),
                 "Giving an invalid splitter index should not throw an exception");
-            
+
             splitView.OnSplitterUp(0, splitView.LocalToWorld(GetVec2Position(149)));
-            
+
             yield return null;
-            
+
             Assert.AreEqual(149, GetMax(splitView.PaneAt(0).layout));
         }
 
@@ -489,56 +489,56 @@ namespace Unity.AppUI.Tests.UI
         [Order(19)]
         public IEnumerator SplitView_CanCollapseAndExpandSplitters()
         {
-            yield return SplitView_CanRemoveAndInsertPane(); 
-            
+            yield return SplitView_CanRemoveAndInsertPane();
+
             var splitView = m_TestUI.rootVisualElement.Q<SplitView>();
-            
+
             Assert.Throws<System.ArgumentOutOfRangeException>(() => splitView.CollapseSplitter(-1, CollapseDirection.Backward));
-            
+
             splitView.CollapseSplitter(0, CollapseDirection.Backward);
-            
+
             yield return null;
-            
+
             Assert.AreEqual(0, GetMax(splitView.PaneAt(0).layout));
             Assert.IsTrue(splitView.IsSplitterCollapsed(0));
             Assert.AreEqual(DisplayStyle.None, splitView.PaneAt(0).resolvedStyle.display);
             Assert.AreEqual(DisplayStyle.Flex, splitView.PaneAt(1).resolvedStyle.display);
             Assert.AreEqual(DisplayStyle.Flex, splitView.PaneAt(2).resolvedStyle.display);
             Assert.AreEqual(0, GetPos(splitView.splitters[0].resolvedStyle));
-            
+
             splitView.CollapseSplitter(0, CollapseDirection.Forward); // should do nothing, already collapsed
-            
+
             yield return null;
-            
+
             Assert.AreEqual(0, GetMax(splitView.PaneAt(0).layout));
             Assert.IsTrue(splitView.IsSplitterCollapsed(0));
             Assert.AreEqual(DisplayStyle.None, splitView.PaneAt(0).resolvedStyle.display);
             Assert.AreEqual(DisplayStyle.Flex, splitView.PaneAt(1).resolvedStyle.display);
             Assert.AreEqual(DisplayStyle.Flex, splitView.PaneAt(2).resolvedStyle.display);
             Assert.AreEqual(0, GetPos(splitView.splitters[0].resolvedStyle));
-            
+
             splitView.CollapseSplitter(1, CollapseDirection.Forward);
-            
+
             yield return null;
-            
+
             Assert.AreEqual(GetExpectedPosition(k_TotalSize), GetMax(splitView.PaneAt(1).layout));
             Assert.IsTrue(splitView.IsSplitterCollapsed(1));
             Assert.AreEqual(DisplayStyle.None, splitView.PaneAt(0).resolvedStyle.display);
             Assert.AreEqual(DisplayStyle.Flex, splitView.PaneAt(1).resolvedStyle.display);
             Assert.AreEqual(DisplayStyle.None, splitView.PaneAt(2).resolvedStyle.display);
             Assert.AreEqual(GetExpectedPosition(k_TotalSize), GetPos(splitView.splitters[1].resolvedStyle));
-            
+
             Assert.AreEqual(GetExpectedPosition(0), GetMin(splitView.PaneAt(1).layout));
             Assert.AreEqual(GetExpectedPosition(k_TotalSize), GetMax(splitView.PaneAt(1).layout));
-            
+
             Assert.Throws<System.ArgumentOutOfRangeException>(() => splitView.ExpandSplitter(-1));
-            
+
             splitView.ExpandSplitter(0);
-            
+
             // wait 2 frames for splitter to be correctly positioned
             yield return null;
             yield return null;
-            
+
             Assert.AreEqual(GetExpectedPosition(GetMin(splitView.PaneAt(0))), GetMax(splitView.PaneAt(0).layout), "Splitter 0 should expand the pane with its minimum size");
             Assert.IsFalse(splitView.IsSplitterCollapsed(0));
             Assert.IsTrue(splitView.IsSplitterCollapsed(1));
@@ -547,13 +547,13 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(DisplayStyle.None, splitView.PaneAt(2).resolvedStyle.display);
             Assert.AreEqual(GetExpectedPosition(GetMin(splitView.PaneAt(0))), GetPos(splitView.splitters[0].resolvedStyle));
             Assert.AreEqual(GetExpectedPosition(k_TotalSize), GetPos(splitView.splitters[1].resolvedStyle));
-            
+
             splitView.ExpandSplitter(1);
-            
+
             // wait 2 frames for splitter to be correctly positioned
             yield return null;
             yield return null;
-            
+
             Assert.AreEqual(GetExpectedPosition(k_TotalSize - GetMin(splitView.PaneAt(2))), GetMax(splitView.PaneAt(1).layout), "Splitter 1 should expand the pane with its minimum size");
             Assert.IsFalse(splitView.IsSplitterCollapsed(0));
             Assert.IsFalse(splitView.IsSplitterCollapsed(1));
@@ -562,13 +562,13 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(DisplayStyle.Flex, splitView.PaneAt(2).resolvedStyle.display);
             Assert.AreEqual(GetExpectedPosition(GetMin(splitView.PaneAt(0))), GetPos(splitView.splitters[0].resolvedStyle));
             Assert.AreEqual(GetExpectedPosition(k_TotalSize - GetMin(splitView.PaneAt(2))), GetPos(splitView.splitters[1].resolvedStyle));
-            
+
             Assert.Throws<System.ArgumentOutOfRangeException>(() => splitView.IsSplitterCollapsed(-1));
 
             yield break;
-            
+
             // --------------------------------------------------------------------------------------------
-            
+
             float GetExpectedPosition(float val)
             {
                 return m_Direction == Direction.Horizontal && m_LayoutDirection == Dir.Rtl ? k_TotalSize - val : val;

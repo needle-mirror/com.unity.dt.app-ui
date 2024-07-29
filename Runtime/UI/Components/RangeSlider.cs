@@ -17,26 +17,26 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public abstract partial class RangeSliderBase<TRangeType, TValueType> : BaseSlider<TRangeType, TValueType> 
+    public abstract partial class RangeSliderBase<TRangeType, TValueType> : BaseSlider<TRangeType, TValueType>
         where TRangeType : IEquatable<TRangeType>
         where TValueType : struct, IComparable, IEquatable<TValueType>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId filledProperty = new BindingId(nameof(filled));
-        
+
         internal static readonly BindingId inlineValueProperty = new BindingId(nameof(inlineValue));
-        
+
         internal static readonly BindingId labelProperty = new BindingId(nameof(label));
-        
+
         internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
-        
+
         internal static readonly BindingId tickCountProperty = new BindingId(nameof(tickCount));
-        
+
         internal static readonly BindingId tickLabelProperty = new BindingId(nameof(tickLabel));
-        
+
 #endif
-        
+
         /// <summary>
         /// The Slider main styling class.
         /// </summary>
@@ -83,12 +83,12 @@ namespace Unity.AppUI.UI
         /// The Slider track styling class.
         /// </summary>
         public const string trackUssClassName = SliderBase<TValueType>.trackUssClassName;
-        
+
         /// <summary>
         /// The Slider padded container styling class.
         /// </summary>
         public const string paddedContainerUssClassName = SliderBase<TValueType>.paddedContainerUssClassName;
-        
+
         /// <summary>
         /// The Slider progress container styling class.
         /// </summary>
@@ -138,11 +138,11 @@ namespace Unity.AppUI.UI
         /// The Slider control container styling class.
         /// </summary>
         public const string controlContainerUssClassName = SliderBase<TValueType>.controlContainerUssClassName;
-        
+
         float m_FillOffset;
 
         readonly ExVisualElement m_MinHandle;
-        
+
         readonly ExVisualElement m_MaxHandle;
 
         readonly LocalizedTextElement m_Label;
@@ -160,7 +160,7 @@ namespace Unity.AppUI.UI
         readonly LocalizedTextElement m_ValueLabel;
 
         readonly VisualElement m_MinHandleContainer;
-        
+
         readonly VisualElement m_MaxHandleContainer;
 
         InlineValue m_InlineValue;
@@ -219,7 +219,7 @@ namespace Unity.AppUI.UI
             m_Ticks = new VisualElement { name = ticksUssClassName, pickingMode = PickingMode.Ignore };
             m_Ticks.AddToClassList(ticksUssClassName);
             m_Controls.hierarchy.Add(m_Ticks);
-            
+
             m_PaddedContainer = new VisualElement
             {
                 name = paddedContainerUssClassName,
@@ -227,7 +227,7 @@ namespace Unity.AppUI.UI
             };
             m_PaddedContainer.AddToClassList(paddedContainerUssClassName);
             m_Controls.hierarchy.Add(m_PaddedContainer);
-            
+
             m_ProgressContainer = new VisualElement
             {
                 name = progressContainerUssClassName,
@@ -262,7 +262,7 @@ namespace Unity.AppUI.UI
             };
             m_MinHandle.AddToClassList(handleUssClassName);
             m_MinHandleContainer.hierarchy.Add(m_MinHandle);
-            
+
             m_MaxHandleContainer = new VisualElement
             {
                 name = handleContainerUssClassName,
@@ -315,9 +315,9 @@ namespace Unity.AppUI.UI
                 var handled = false;
                 var previousValue = value;
                 var newValue = previousValue;
-                
+
                 var focusedHandleValue = m_MinHandle.tabIndex == 0 ? minValue : maxValue;
-                
+
                 if (evt.keyCode == KeyCode.LeftArrow)
                 {
                     var decrement = Decrement(focusedHandleValue);
@@ -334,10 +334,10 @@ namespace Unity.AppUI.UI
                 if (handled)
                 {
                     newValue = MakeRangeValue(
-                        m_MinHandle.tabIndex == 0 ? focusedHandleValue : minValue, 
+                        m_MinHandle.tabIndex == 0 ? focusedHandleValue : minValue,
                         m_MinHandle.tabIndex == 0 ? maxValue : focusedHandleValue);
                     evt.StopPropagation();
-                    
+
 
                     SetValueWithoutNotify(newValue);
 
@@ -366,7 +366,7 @@ namespace Unity.AppUI.UI
             {
                 m_Progress.EnableInClassList(Styles.hiddenUssClassName, !value);
                 RefreshUI();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in filledProperty);
 #endif
@@ -391,7 +391,7 @@ namespace Unity.AppUI.UI
                 m_InlineValue = value;
                 if (m_InlineValue != InlineValue.None)
                     AddToClassList(GetInlineValueUssClassName(m_InlineValue));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in inlineValueProperty);
 #endif
@@ -414,7 +414,7 @@ namespace Unity.AppUI.UI
             {
                 m_LabelStr = value;
                 RefreshLabel();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in labelProperty);
 #endif
@@ -446,7 +446,7 @@ namespace Unity.AppUI.UI
                 }
 
                 RefreshTickLabels();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in tickCountProperty);
 #endif
@@ -469,7 +469,7 @@ namespace Unity.AppUI.UI
             {
                 m_TickLabel = value;
                 RefreshTickLabels();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in tickLabelProperty);
 #endif
@@ -493,13 +493,13 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in sizeProperty);
 #endif
             }
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("format-string")]
         string formatStringOverride
@@ -508,7 +508,7 @@ namespace Unity.AppUI.UI
             set => formatString = value;
         }
 #endif
-        
+
         /// <summary>
         /// The value of the left handle.
         /// </summary>
@@ -517,7 +517,7 @@ namespace Unity.AppUI.UI
         /// which is the minimum value of the slider.
         /// </remarks>
         public abstract TValueType minValue { get; set; }
-        
+
         /// <summary>
         /// The value of the right handle.
         /// </summary>
@@ -526,7 +526,7 @@ namespace Unity.AppUI.UI
         /// which is the maximum value of the slider.
         /// </remarks>
         public abstract TValueType maxValue { get; set; }
-        
+
         /// <summary>
         /// Create a range value from the min and max values.
         /// </summary>
@@ -534,21 +534,21 @@ namespace Unity.AppUI.UI
         /// <param name="maxValue"> The maximum value of the range. </param>
         /// <returns> A new range value. </returns>
         protected abstract TRangeType MakeRangeValue(TValueType minValue, TValueType maxValue);
-        
+
         /// <summary>
         /// Get the minimum value from the range value.
         /// </summary>
         /// <param name="rangeValue"> The range value. </param>
         /// <returns> The minimum value of the range. </returns>
         protected abstract TValueType GetMinValue(TRangeType rangeValue);
-        
+
         /// <summary>
         /// Get the maximum value from the range value.
         /// </summary>
         /// <param name="rangeValue"> The range value. </param>
         /// <returns> The maximum value of the range. </returns>
         protected abstract TValueType GetMaxValue(TRangeType rangeValue);
-        
+
         /// <summary>
         /// Get the clamped value.
         /// </summary>
@@ -557,7 +557,7 @@ namespace Unity.AppUI.UI
         /// <param name="higherValue"> The higher bound. </param>
         /// <returns> The clamped value. </returns>
         protected abstract TValueType GetClampedValue(TValueType value, TValueType lowerValue, TValueType higherValue);
-        
+
         /// <summary>
         /// Lerp between two values.
         /// </summary>
@@ -610,7 +610,7 @@ namespace Unity.AppUI.UI
         {
             var min = GetMinValue(v);
             var max = GetMaxValue(v);
-            
+
             return MakeRangeValue(
                 GetClampedValue(min, lowBound, highBound),
                 GetClampedValue(max, lowBound, highBound));
@@ -621,11 +621,11 @@ namespace Unity.AppUI.UI
         {
             if (sliderLength < Mathf.Epsilon)
                 return m_Value;
-            
+
             var finalPos = m_CurrentDirection == Dir.Ltr ? dragElementPos : sliderLength - dragElementPos;
             var normalizedValue = Mathf.Clamp01(finalPos / sliderLength);
             var newVal = LerpUnclamped(lowValue, highValue, normalizedValue);
-            
+
             return ClosestHandleIndex(dragElementPos) == 0 ? MakeRangeValue(newVal, maxValue) : MakeRangeValue(minValue, newVal);
         }
 
@@ -642,19 +642,19 @@ namespace Unity.AppUI.UI
 
             // set the label
             RefreshLabel();
-            
+
             var trackWidth = GetSliderRect().width;
 
             // min handle
             var minVal = Mathf.Clamp01(SliderNormalizeValue(minValue, lowValue, highValue));
             m_MinHandleContainer.style.left = m_CurrentDirection == Dir.Ltr ?
                 trackWidth * minVal : trackWidth - trackWidth * minVal;
-            
+
             // max handle
             var maxVal = Mathf.Clamp01(SliderNormalizeValue(maxValue, lowValue, highValue));
             m_MaxHandleContainer.style.left = m_CurrentDirection == Dir.Ltr ?
                 trackWidth * maxVal : trackWidth - trackWidth * maxVal;
-            
+
             // progress bar
             m_Progress.style.width = trackWidth * Mathf.Abs(maxVal - minVal);
             m_Progress.style.left = m_CurrentDirection == Dir.Ltr ?
@@ -685,7 +685,7 @@ namespace Unity.AppUI.UI
                 }
             }
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -758,7 +758,7 @@ namespace Unity.AppUI.UI
                     el.formatString = formatStr;
             }
         }
-        
+
 #endif
     }
 }

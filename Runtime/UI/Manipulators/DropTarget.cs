@@ -13,21 +13,21 @@ namespace Unity.AppUI.UI
     public class DropTarget<T> : Manipulator
     {
         bool m_Entered;
-        
+
         readonly List<T> m_Objects = new List<T>();
-        
+
         static readonly Dictionary<string, T> k_CacheForPath = new Dictionary<string, T>();
-        
+
         /// <summary>
         /// Event fired when the user starts dragging droppable object(s) over the target.
         /// </summary>
         public event Action dragStarted;
-        
+
         /// <summary>
         /// Event fired when the user stops dragging droppable object(s) over the target.
         /// </summary>
         public event Action dragEnded;
-        
+
         /// <summary>
         /// Event fired when the user drops droppable object(s) on the target.
         /// </summary>
@@ -37,7 +37,7 @@ namespace Unity.AppUI.UI
         /// True if the user is currently dragging droppable object(s) over the target, false otherwise.
         /// </summary>
         public bool isDragging => m_Objects.Count > 0;
-        
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -79,7 +79,7 @@ namespace Unity.AppUI.UI
             target.UnregisterCallback<DragExitedEvent>(OnDragExit);
 #endif
         }
-        
+
         /// <summary>
         /// This method is called when the user drops a Unity object on the target.
         /// </summary>
@@ -89,16 +89,16 @@ namespace Unity.AppUI.UI
         protected virtual bool GetDroppableObjectsForUnityObjects(Object[] objects, out List<T> objs)
         {
             objs = new List<T>();
-            
+
             foreach (var obj in objects)
             {
                 if (obj is T droppable)
                     objs.Add(droppable);
             }
-            
+
             return objs.Count > 0;
         }
-        
+
         /// <summary>
         /// This method is called when the user drops a file on the target.
         /// </summary>
@@ -113,7 +113,7 @@ namespace Unity.AppUI.UI
             obj = default;
             return false;
         }
-        
+
         /// <summary>
         /// This method is called to get the objects that can be dropped on the target.
         /// </summary>
@@ -121,11 +121,11 @@ namespace Unity.AppUI.UI
         protected virtual List<T> GetDroppableObjects()
         {
             var res = new List<T>();
-            
+
 #if UNITY_EDITOR
             if (GetDroppableObjectsForUnityObjects(UnityEditor.DragAndDrop.objectReferences, out var unityObjs))
                 return unityObjs;
-            
+
             foreach (var path in UnityEditor.DragAndDrop.paths)
             {
                 if (k_CacheForPath.TryGetValue(path, out var cached))
@@ -143,7 +143,7 @@ namespace Unity.AppUI.UI
 #endif
             return res;
         }
-        
+
         /// <summary>
         /// Reset the DropTarget.
         /// </summary>
@@ -156,7 +156,7 @@ namespace Unity.AppUI.UI
             UnityEditor.DragAndDrop.visualMode = UnityEditor.DragAndDropVisualMode.None;
 #endif
         }
-        
+
         void OnPointerEnter(PointerEnterEvent evt) => OnEnter();
         void OnPointerLeave(PointerLeaveEvent evt) => OnExit();
         void OnPointerCancel(PointerCancelEvent evt) => OnExit();
@@ -198,14 +198,14 @@ namespace Unity.AppUI.UI
         {
             if (m_Entered)
                 return;
-            
+
             m_Entered = true;
             var objects = GetDroppableObjects();
             if (objects.Count > 0)
             {
                 m_Objects.Clear();
                 m_Objects.AddRange(objects);
-                
+
                 dragStarted?.Invoke();
 #if UNITY_EDITOR
                 UnityEditor.DragAndDrop.visualMode = UnityEditor.DragAndDropVisualMode.Generic;
@@ -224,10 +224,10 @@ namespace Unity.AppUI.UI
         {
             if (!m_Entered)
                 return;
-            
+
             var wasDragging = isDragging;
             Reset();
-            
+
             if (!wasDragging)
                 return;
 
@@ -249,7 +249,7 @@ namespace Unity.AppUI.UI
 #endif
                 dropped?.Invoke(m_Objects);
             }
-            
+
             OnExit();
         }
     }

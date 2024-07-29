@@ -15,28 +15,28 @@ namespace Unity.AppUI.UI
         /// The Toolbar is floating.
         /// </summary>
         Floating = 0,
-        
+
         /// <summary>
         /// The Toolbar is docked to the top.
         /// </summary>
         Top,
-        
+
         /// <summary>
         /// The Toolbar is docked to the bottom.
         /// </summary>
         Bottom,
-        
+
         /// <summary>
         /// The Toolbar is docked to the left.
         /// </summary>
         Left,
-        
+
         /// <summary>
         /// The Toolbar is docked to the right.
         /// </summary>
         Right
     }
-    
+
     /// <summary>
     /// Accordion visual element.
     /// </summary>
@@ -46,43 +46,43 @@ namespace Unity.AppUI.UI
     public partial class Toolbar : BaseVisualElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId dockModeProperty = new BindingId(nameof(dockMode));
-        
+
         internal static readonly BindingId draggableProperty = new BindingId(nameof(draggable));
-        
+
         internal static readonly BindingId directionProperty = new BindingId(nameof(direction));
-        
+
 #endif
-        
-        
+
+
         /// <summary>
         /// The Toolbar's USS class name.
         /// </summary>
         public const string ussClassName = "appui-toolbar";
-        
+
         /// <summary>
         /// The Toolbar's drag bar USS class name.
         /// </summary>
         public const string dragBarUssClassName = ussClassName + "__drag-bar";
-        
+
         /// <summary>
         /// The Toolbar's drag bar indicator USS class name.
         /// </summary>
         public const string dragBarIndicatorUssClassName = dragBarUssClassName + "-indicator";
-        
+
         /// <summary>
         /// The Toolbar's container USS class name.
         /// </summary>
         public const string containerUssClassName = ussClassName + "__container";
-        
+
         /// <summary>
         /// The Toolbar's variant USS class name.
         /// </summary>
         [EnumName("GetDockModeUssClassName", typeof(ToolbarDockMode))]
         [EnumName("GetDirectionUssClassName", typeof(Direction))]
         public const string variantUssClassName = ussClassName + "--";
-        
+
         /// <summary>
         /// The Toolbar's draggable USS class name.
         /// </summary>
@@ -91,9 +91,9 @@ namespace Unity.AppUI.UI
         readonly VisualElement m_Container;
 
         readonly VisualElement m_DragBar;
-        
+
         readonly VisualElement m_DragBarIndicator;
-        
+
         readonly Draggable m_DragBarPressable;
 
         ToolbarDockMode m_DockMode;
@@ -123,7 +123,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetDockModeUssClassName(m_DockMode));
                 m_DockMode = value;
                 AddToClassList(GetDockModeUssClassName(m_DockMode));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in dockModeProperty);
@@ -147,14 +147,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(draggableUssClassName) != value;
                 EnableInClassList(draggableUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in draggableProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The direction of the Toolbar.
         /// </summary>
@@ -173,7 +173,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetDirectionUssClassName(m_Direction));
                 m_Direction = value;
                 AddToClassList(GetDirectionUssClassName(m_Direction));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
@@ -187,7 +187,7 @@ namespace Unity.AppUI.UI
         public Toolbar()
         {
             AddToClassList(ussClassName);
-            
+
             m_DragBar = new VisualElement
             {
                 name = dragBarUssClassName,
@@ -198,7 +198,7 @@ namespace Unity.AppUI.UI
 
             m_DragBarPressable = new Draggable(null, null, null);
             m_DragBar.AddManipulator(m_DragBarPressable);
-            
+
             m_DragBarIndicator = new VisualElement
             {
                 name = dragBarIndicatorUssClassName,
@@ -226,7 +226,7 @@ namespace Unity.AppUI.UI
         /// UXML Factory for Toolbar.
         /// </summary>
         public new class UxmlFactory : UxmlFactory<Toolbar, UxmlTraits> { }
-        
+
         /// <summary>
         /// UXML Traits for Toolbar.
         /// </summary>
@@ -235,21 +235,21 @@ namespace Unity.AppUI.UI
             readonly UxmlEnumAttributeDescription<ToolbarDockMode> m_DockMode = new UxmlEnumAttributeDescription<ToolbarDockMode> { name = "dock-mode", defaultValue = ToolbarDockMode.Floating };
 
             readonly UxmlBoolAttributeDescription m_Draggable = new UxmlBoolAttributeDescription { name = "draggable", defaultValue = false };
-            
+
             readonly UxmlEnumAttributeDescription<Direction> m_Direction = new UxmlEnumAttributeDescription<Direction> { name = "direction", defaultValue = Direction.Horizontal };
-            
+
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                
+
                 var toolbar = (Toolbar)ve;
-                
+
                 toolbar.dockMode = m_DockMode.GetValueFromBag(bag, cc);
                 toolbar.draggable = m_Draggable.GetValueFromBag(bag, cc);
                 toolbar.direction = m_Direction.GetValueFromBag(bag, cc);
             }
         }
-        
+
 #endif
     }
 }

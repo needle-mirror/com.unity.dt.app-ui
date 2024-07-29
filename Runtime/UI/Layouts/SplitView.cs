@@ -19,13 +19,13 @@ namespace Unity.AppUI.UI
         /// The splitter will move towards the next splitter in the current layout direction.
         /// </summary>
         Forward = 1,
-        
+
         /// <summary>
         /// The splitter will move towards the previous splitter in the current layout direction.
         /// </summary>
         Backward = 2
     }
-    
+
     /// <summary>
     /// A SplitView is a visual element that can be used to split its children into panes.
     /// A SplitView can be either horizontal or vertical, and it will have splitters between the panes.
@@ -40,14 +40,14 @@ namespace Unity.AppUI.UI
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId directionProperty = nameof(direction);
-        
+
         internal static readonly BindingId realtimeResizeProperty = nameof(realtimeResize);
-        
+
         internal static readonly BindingId paneCountProperty = nameof(paneCount);
-        
+
         internal static readonly BindingId splitterCountProperty = nameof(splitterCount);
 #endif
-        
+
         Direction m_Direction = Direction.Horizontal;
 
         bool m_RealtimeResize = true;
@@ -55,11 +55,11 @@ namespace Unity.AppUI.UI
         readonly VisualElement m_PaneContainer;
 
         readonly VisualElement m_SplitterContainer;
-        
+
         internal readonly List<Splitter> splitters = new List<Splitter>();
-        
+
         static readonly EventCallback<GeometryChangedEvent> k_OnGeometryChanged = OnGeometryChanged;
-        
+
         Rect m_PreviousRect;
 
         IVisualElementScheduledItem m_ScheduledRedrawSplitters;
@@ -70,38 +70,38 @@ namespace Unity.AppUI.UI
         /// The USS class name of the SplitView.
         /// </summary>
         public const string ussClassName = "appui-splitview";
-        
+
         /// <summary>
         /// The USS class name of the SplitView with a specific direction.
         /// </summary>
         [EnumName("GetOrientationUssClassName", typeof(Direction))]
         public const string directionUssClassName = ussClassName + "--direction-";
-        
+
         /// <summary>
         /// The USS class name of the pane container.
         /// </summary>
         public const string paneContainerUssClassName = ussClassName + "__pane-container";
-        
+
         /// <summary>
         /// The USS class name of the splitter container.
         /// </summary>
         public const string splitterContainerUssClassName = ussClassName + "__splitter-container";
-        
+
         /// <summary>
         /// The USS class name of a child element of the SplitView.
         /// </summary>
         public const string itemUssClassName = ussClassName + "__item";
-        
+
         /// <summary>
         /// The USS class name of the first child element of the SplitView.
         /// </summary>
         public const string firstItemUssClassName = itemUssClassName + "--first";
-        
+
         /// <summary>
         /// The USS class name of the last child element of the SplitView.
         /// </summary>
         public const string lastItemUssClassName = itemUssClassName + "--last";
-        
+
         /// <summary>
         /// Child elements are added to it, usually this is the same as the element itself.
         /// </summary>
@@ -129,19 +129,20 @@ namespace Unity.AppUI.UI
                 m_Direction = value;
                 AddToClassList(GetOrientationUssClassName(m_Direction));
                 RedrawSplitters();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
 #endif
             }
         }
-        
+
         /// <summary>
-        /// Whether the SplitView should resize in real-time or not.
-        /// <para />
+        /// <para>Whether the SplitView should resize in real-time or not.</para>
+        /// <para>
         /// When set to true, the SplitView will resize the panes as the user drags the splitter.
         /// When set to false, the SplitView will only resize the panes when the user releases the dragged splitter.
+        /// </para>
         /// </summary>
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
@@ -158,19 +159,19 @@ namespace Unity.AppUI.UI
                 var changed = m_RealtimeResize != value;
 #endif
                 m_RealtimeResize = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in realtimeResizeProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The number of panes in the SplitView.
         /// </summary>
         public int paneCount => childCount;
-        
+
         /// <summary>
         /// The number of splitters in the SplitView.
         /// </summary>
@@ -182,9 +183,9 @@ namespace Unity.AppUI.UI
         public SplitView()
             : this(Direction.Horizontal)
         {
-            
+
         }
-        
+
         /// <summary>
         /// Construct a SplitView with the given direction.
         /// </summary>
@@ -193,7 +194,7 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
             pickingMode = PickingMode.Ignore;
-            
+
             m_PaneContainer = new VisualElement
             {
                 name = paneContainerUssClassName,
@@ -201,7 +202,7 @@ namespace Unity.AppUI.UI
             };
             m_PaneContainer.AddToClassList(paneContainerUssClassName);
             hierarchy.Add(m_PaneContainer);
-            
+
             m_SplitterContainer = new VisualElement
             {
                 name = splitterContainerUssClassName,
@@ -209,10 +210,10 @@ namespace Unity.AppUI.UI
             };
             m_SplitterContainer.AddToClassList(splitterContainerUssClassName);
             hierarchy.Add(m_SplitterContainer);
-            
+
             this.direction = direction;
             realtimeResize = true;
-            
+
             RegisterCallback(k_OnGeometryChanged);
             this.RegisterContextChangedCallback<DirContext>(OnLayoutDirectionChanged);
         }
@@ -259,7 +260,7 @@ namespace Unity.AppUI.UI
             Add(pane);
             DeferRedrawSplitters();
         }
-        
+
         /// <summary>
         /// Insert a pane at the given index.
         /// </summary>
@@ -271,13 +272,13 @@ namespace Unity.AppUI.UI
             Insert(index, pane);
             DeferRedrawSplitters();
         }
-        
+
         void DeferRedrawSplitters()
         {
             m_ScheduledRedrawSplitters?.Pause();
             m_ScheduledRedrawSplitters = schedule.Execute(RedrawSplitters);
         }
-        
+
         /// <summary>
         /// Get the pane at the given index.
         /// </summary>
@@ -288,7 +289,7 @@ namespace Unity.AppUI.UI
         {
             return (Pane)ElementAt(index);
         }
-        
+
         /// <summary>
         /// Get the index of the given pane.
         /// </summary>
@@ -298,7 +299,7 @@ namespace Unity.AppUI.UI
         {
             return IndexOf(pane);
         }
-        
+
         /// <summary>
         /// Redraw the splitters.
         /// </summary>
@@ -319,7 +320,7 @@ namespace Unity.AppUI.UI
                     Direction.Vertical => child.layout.yMax
                 };
                 var splitter = splitters[i];
-                
+
                 if (m_Direction == Direction.Horizontal)
                 {
                     splitter.style.left = position;
@@ -346,7 +347,7 @@ namespace Unity.AppUI.UI
             var paneLayout = pane.layout;
 
             var splitter = splitters[index];
-            
+
             if (m_Direction == Direction.Horizontal)
             {
                 var position = m_LayoutDirection == Dir.Rtl ? paneLayout.xMin : paneLayout.xMax;
@@ -373,20 +374,20 @@ namespace Unity.AppUI.UI
             var localPosition = this.WorldToLocal(worldPosition);
             GetRange(index, out var min, out var max);
             var newPosition = GetLegalSplitterPositionFromRange(
-                index, 
+                index,
                 m_Direction == Direction.Horizontal ? localPosition.x : localPosition.y,
                 min,
                 max);
-                
+
             var pane = (Pane)ElementAt(index);
             var nextPane = (Pane)ElementAt(index + 1);
-                
+
             var paneLayout = pane.layout;
             var nextPaneLayout = nextPane.layout;
-                
+
             var horizontalPosition = m_LayoutDirection == Dir.Rtl ? paneLayout.xMin : paneLayout.xMax;
             var delta = newPosition - (m_Direction == Direction.Horizontal ? horizontalPosition : paneLayout.yMax);
-                
+
             if (Mathf.Approximately(delta, 0))
                 return;
 
@@ -405,7 +406,7 @@ namespace Unity.AppUI.UI
                 if (!nextPane.stretch)
                     nextPane.style.height = nextPaneLayout.height - delta;
             }
-            
+
             var paneCompact = Mathf.Approximately(newPosition, m_LayoutDirection == Dir.Ltr ? min : max);
             var nextPaneCompact = Mathf.Approximately(newPosition, m_LayoutDirection == Dir.Ltr ? max : min);
             if (paneCompact != pane.compact)
@@ -423,30 +424,30 @@ namespace Unity.AppUI.UI
         {
             if (index < 0 || index >= splitterCount)
                 return;
-            
+
             var localPosition = this.WorldToLocal(worldPosition);
             GetRange(index, out var min, out var max);
             var newPosition = GetLegalSplitterPositionFromRange(
-                index, 
-                m_Direction == Direction.Horizontal ? localPosition.x : localPosition.y, 
-                min, 
+                index,
+                m_Direction == Direction.Horizontal ? localPosition.x : localPosition.y,
+                min,
                 max);
             var currentPosition = m_Direction == Direction.Horizontal
                 ? splitters[index].resolvedStyle.left
                 : splitters[index].resolvedStyle.top;
             var delta = newPosition - currentPosition;
-            
+
             if (Mathf.Approximately(delta, 0))
                 return;
-            
+
             if (realtimeResize)
             {
                 var pane = (Pane)ElementAt(index);
                 var nextPane = (Pane)ElementAt(index + 1);
-            
+
                 var paneLayout = pane.layout;
                 var nextPaneLayout = nextPane.layout;
-                
+
                 if (m_Direction == Direction.Horizontal)
                 {
                     var sign = m_LayoutDirection == Dir.Ltr ? 1f : -1f;
@@ -462,7 +463,7 @@ namespace Unity.AppUI.UI
                     if (!nextPane.stretch)
                         nextPane.style.height = nextPaneLayout.height - delta;
                 }
-                
+
                 var minPaneSize = m_Direction == Direction.Horizontal && m_LayoutDirection == Dir.Rtl ? max : min;
                 var minNextPaneSize = m_Direction == Direction.Horizontal && m_LayoutDirection == Dir.Rtl ? min : max;
                 var paneCompact = Mathf.Approximately(newPosition, minPaneSize);
@@ -476,7 +477,7 @@ namespace Unity.AppUI.UI
             {
                 // instead of resizing the panes directly, we should try to move the splitter while taking in account
                 // the min/max sizes of the panes and if they are resizable or not
-                
+
                 if (m_Direction == Direction.Horizontal)
                 {
                     splitters[index].style.left = newPosition;
@@ -488,7 +489,7 @@ namespace Unity.AppUI.UI
                     splitters[index].style.top = newPosition;
                 }
             }
-            
+
         }
 
         /// <summary>
@@ -502,7 +503,7 @@ namespace Unity.AppUI.UI
             // Clamp the desired position to the range of the splitter
             GetRange(index, out var min, out var max);
             desiredPosition = Mathf.Clamp(desiredPosition, min, max);
-            
+
             return GetLegalSplitterPositionFromRange(index, desiredPosition, min, max);
         }
 
@@ -516,10 +517,10 @@ namespace Unity.AppUI.UI
 
             if (desiredPosition < min + paneThreshold)
                 desiredPosition = min;
-                
+
             if (desiredPosition > max - nextPaneThreshold)
                 desiredPosition = max;
-            
+
             return desiredPosition;
         }
 
@@ -536,7 +537,7 @@ namespace Unity.AppUI.UI
         {
             min = 0;
             max = m_Direction == Direction.Horizontal ? layout.width : layout.height;
-            
+
             if (index > 0)
             {
                 var previousPane = ElementAt(index - 1);
@@ -544,7 +545,7 @@ namespace Unity.AppUI.UI
                 {
                     if (m_LayoutDirection == Dir.Ltr)
                         min = previousPane.layout.xMax;
-                    else 
+                    else
                         max = previousPane.layout.xMin;
                 }
                 else
@@ -552,22 +553,22 @@ namespace Unity.AppUI.UI
                     min = previousPane.layout.yMax;
                 }
             }
-            
+
             var currentPane = ElementAt(index);
             var currentPaneMinSize = m_Direction == Direction.Horizontal ? currentPane.resolvedStyle.minWidth : currentPane.resolvedStyle.minHeight;
-            
+
             if (m_Direction == Direction.Horizontal)
             {
                 if (m_LayoutDirection == Dir.Ltr)
                     min += currentPaneMinSize.value;
-                else 
+                else
                     max -= currentPaneMinSize.value;
             }
             else
             {
                 min += currentPaneMinSize.value;
             }
-            
+
             if (index < childCount - 1)
             {
                 var nextPane = ElementAt(index + 1);
@@ -575,21 +576,21 @@ namespace Unity.AppUI.UI
                 {
                     if (m_LayoutDirection == Dir.Ltr)
                         max = nextPane.layout.xMax;
-                    else 
+                    else
                         min = nextPane.layout.xMin;
                 }
                 else
                 {
                     max = nextPane.layout.yMax;
                 }
-                
+
                 var nextPaneMinSize = m_Direction == Direction.Horizontal ? nextPane.resolvedStyle.minWidth : nextPane.resolvedStyle.minHeight;
 
                 if (m_Direction == Direction.Horizontal)
                 {
                     if (m_LayoutDirection == Dir.Ltr)
                         max -= nextPaneMinSize.value;
-                    else 
+                    else
                         min += nextPaneMinSize.value;
                 }
                 else
@@ -602,13 +603,13 @@ namespace Unity.AppUI.UI
         void RepopulateSplitters()
         {
             var targetSplitterCount = Mathf.Max(0, paneCount - 1);
-            
+
             for (var i = splitterCount - 1; i >= targetSplitterCount; i--)
             {
                 splitters[i].RemoveFromHierarchy();
                 splitters.RemoveAt(i);
             }
-            
+
             for (var i = splitterCount; i < targetSplitterCount; i++)
             {
                 var splitter = new Splitter(this, i);
@@ -631,26 +632,27 @@ namespace Unity.AppUI.UI
         /// <param name="index"> The index of the splitter. </param>
         /// <param name="collapseDirection"> Whether to collapse the splitter forward or not.</param>
         /// <remarks>
-        /// Collapsing forward means that the splitter will move towards the next splitter in the current layout direction 
+        /// <para>
+        /// Collapsing forward means that the splitter will move towards the next splitter in the current layout direction
         /// (in Left-to-Right or Top-to-Bottom layout, forward means right or down, respectively).
-        /// <para/>
-        /// If the splitter is already collapsed, this method does nothing.
+        /// </para>
+        /// <para>If the splitter is already collapsed, this method does nothing.</para>
         /// </remarks>
         /// <exception cref="ArgumentOutOfRangeException"> Thrown if the index is out of range. </exception>
         public void CollapseSplitter(int index, CollapseDirection collapseDirection)
         {
             if (index < 0 || index >= splitterCount)
                 throw new ArgumentOutOfRangeException(nameof(index));
-            
+
             if (IsSplitterCollapsed(index))
                 return;
-            
+
             var pane = PaneAt(index);
             var nextPane = PaneAt(index + 1);
-            
+
             var paneLayout = pane.layout;
             var nextPaneLayout = nextPane.layout;
-            
+
             if (m_Direction == Direction.Horizontal)
             {
                 if (collapseDirection == CollapseDirection.Forward)
@@ -710,16 +712,16 @@ namespace Unity.AppUI.UI
         {
             var calculatedTotalSize = GetTotalPaneSize();
             var containerSize = m_Direction == Direction.Horizontal ? layout.width : layout.height;
-            
+
             for (var i = index; i >= 0 && i < paneCount; i += dir)
             {
                 if (calculatedTotalSize + spaceToAllocate <= containerSize)
                     break;
-                    
+
                 var p = PaneAt(i);
                 if (p.resolvedStyle.display == DisplayStyle.None)
                     continue;
-                
+
                 var pSize = m_Direction == Direction.Horizontal ? p.layout.width : p.layout.height;
                 var pMinSize = m_Direction == Direction.Horizontal ? p.resolvedStyle.minWidth.value : p.resolvedStyle.minHeight.value;
                 var delta = pSize - pMinSize;
@@ -733,13 +735,13 @@ namespace Unity.AppUI.UI
                     else
                         p.style.height = pSize - delta;
                 }
-                
+
                 calculatedTotalSize -= delta;
             }
-            
+
             return calculatedTotalSize;
         }
-        
+
         /// <summary>
         /// Expand the splitter at the given index (if it is collapsed).
         /// </summary>
@@ -751,20 +753,20 @@ namespace Unity.AppUI.UI
         public void ExpandSplitter(int index)
         {
             const float minimumSize = 16f;
-            
+
             if (index < 0 || index >= splitterCount)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             if (!IsSplitterCollapsed(index))
                 return;
-            
+
             var splitter = splitters[index];
             var paneToExpand = splitter.collapsedState == Splitter.CollapsedState.Forward ? PaneAt(index + 1) : PaneAt(index);
             var paneMinSize = m_Direction == Direction.Horizontal ? paneToExpand.resolvedStyle.minWidth.value : paneToExpand.resolvedStyle.minHeight.value;
             var spaceToAllocate = Mathf.Max(minimumSize, paneMinSize);
             var dir = splitter.collapsedState == Splitter.CollapsedState.Forward ? -1 : 1;
             var containerSize = m_Direction == Direction.Horizontal ? layout.width : layout.height;
-            
+
             // simulate shrinking the others panes to see if there is enough space to expand the splitter
             var simulatedTotalSize = ShrinkPanes(index, dir, spaceToAllocate, true);
             if (simulatedTotalSize + spaceToAllocate > containerSize)
@@ -772,21 +774,21 @@ namespace Unity.AppUI.UI
                 Debug.LogWarning("Not enough space to expand the splitter. Aborting.");
                 return;
             }
-            
+
             // shrink the others panes for real this time (if needed)
             ShrinkPanes(index, dir, spaceToAllocate);
-            
+
             // expand the splitter and the pane
             paneToExpand.style.display = DisplayStyle.Flex;
             splitter.collapsedState = Splitter.CollapsedState.None;
             DeferRedrawSplitters();
-            
+
             if (m_Direction == Direction.Horizontal)
                 paneToExpand.style.width = spaceToAllocate;
             else
                 paneToExpand.style.height = spaceToAllocate;
         }
-        
+
         /// <summary>
         /// Whether the splitter at the given index is collapsed or not.
         /// </summary>
@@ -797,7 +799,7 @@ namespace Unity.AppUI.UI
         {
             if (index < 0 || index >= splitterCount)
                 throw new ArgumentOutOfRangeException(nameof(index));
-            
+
             return splitters[index].collapsed;
         }
 
@@ -809,7 +811,7 @@ namespace Unity.AppUI.UI
         {
             var paneSize = new List<float>();
             var collapsedPanes = new List<bool>();
-            
+
             for (var i = 0; i < childCount; i++)
             {
                 var pane = ElementAt(i);
@@ -822,7 +824,7 @@ namespace Unity.AppUI.UI
                 paneSize.Add(size);
                 collapsedPanes.Add(pane is Pane {compact: true});
             }
-            
+
             return new State
             {
                 direction = direction,
@@ -840,14 +842,14 @@ namespace Unity.AppUI.UI
         {
             direction = state.direction;
             realtimeResize = state.realtimeResize;
-            
+
             if (state.paneSizes != null)
             {
                 for (var i = 0; i < state.paneSizes.Count; i++)
                 {
                     if (i >= childCount)
                         break;
-                    
+
                     var pane = ElementAt(i);
                     var size = state.paneSizes[i];
                     if (size < 0)
@@ -859,7 +861,7 @@ namespace Unity.AppUI.UI
                         else
                             pane.style.height = size;
                     }
-                    
+
                     if (pane is Pane p)
                         p.compact = state.collapsedPanes[i];
                 }
@@ -876,23 +878,23 @@ namespace Unity.AppUI.UI
             /// The direction of the SplitView.
             /// </summary>
             public Direction direction;
-            
+
             /// <summary>
             /// Whether the SplitView should resize in real-time or not.
             /// </summary>
             public bool realtimeResize;
-            
+
             /// <summary>
             /// The sizes of the panes.
             /// </summary>
             public List<float> paneSizes;
-            
+
             /// <summary>
             /// Whether the panes are collapsed or not.
             /// </summary>
             public List<bool> collapsedPanes;
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -943,7 +945,7 @@ namespace Unity.AppUI.UI
         }
 #endif
     }
-    
+
     /// <summary>
     /// The splitter between the panes.
     /// </summary>
@@ -955,11 +957,22 @@ namespace Unity.AppUI.UI
         [GenerateLowerCaseStrings]
         public enum CollapsedState
         {
+            /// <summary>
+            /// The splitter is not collapsed.
+            /// </summary>
             None = 0,
+
+            /// <summary>
+            /// The splitter is collapsed forward.
+            /// </summary>
             Forward = CollapseDirection.Forward,
+
+            /// <summary>
+            /// The splitter is collapsed backward.
+            /// </summary>
             Backward = CollapseDirection.Backward
         }
-        
+
         readonly SplitView m_SplitView;
 
         readonly int m_Index;
@@ -969,40 +982,40 @@ namespace Unity.AppUI.UI
         readonly Draggable m_Draggable;
 
         readonly VisualElement m_ExpandButton;
-        
+
         readonly Pressable m_ExpandButtonPressable;
 
         readonly Image m_ExpandIcon;
-        
+
         CollapsedState m_CollapsedState;
-        
+
         /// <summary>
         /// The USS class name of the Splitter.
         /// </summary>
         // ReSharper disable once MemberHidesStaticFromOuterClass
         public const string ussClassName = "appui-splitter";
-        
+
         /// <summary>
         /// The USS class name of the anchor of the Splitter.
         /// </summary>
         public const string anchorUssClassName = ussClassName + "__anchor";
-        
+
         /// <summary>
         /// The USS class name of the expand button of the Splitter.
         /// </summary>
         public const string expandButtonUssClassName = ussClassName + "__expand-button";
-        
+
         /// <summary>
         /// The USS class name of the expand icon of the Splitter.
         /// </summary>
         public const string expandIconUsClassName = ussClassName + "__expand-icon";
-        
+
         /// <summary>
         /// The USS class name of the Splitter for its collapsed state.
         /// </summary>
         [EnumName("GenerateCollapsedUssClassName", typeof(CollapsedState))]
         public const string collapsedStateUssClassName = ussClassName + "--collapsed-";
-        
+
         /// <summary>
         /// The USS class name of the Splitter when it is collapsed.
         /// </summary>
@@ -1040,10 +1053,10 @@ namespace Unity.AppUI.UI
             AddToClassList(ussClassName);
             pickingMode = PickingMode.Position;
             usageHints |= UsageHints.DynamicTransform;
-            
+
             m_SplitView = splitView;
             m_Index = index;
-            
+
             m_Anchor = new VisualElement
             {
                 pickingMode = PickingMode.Ignore,
@@ -1051,7 +1064,7 @@ namespace Unity.AppUI.UI
             };
             m_Anchor.AddToClassList(anchorUssClassName);
             hierarchy.Add(m_Anchor);
-            
+
             m_ExpandButton = new VisualElement
             {
                 pickingMode = PickingMode.Position,
@@ -1071,10 +1084,10 @@ namespace Unity.AppUI.UI
             m_Draggable = new Draggable(k_OnClick, k_OnDrag, k_OnPointerUp);
             m_Draggable.acceptDrag = k_AcceptDrag;
             this.AddManipulator(m_Draggable);
-            
+
             m_ExpandButtonPressable = new Pressable(OnExpandButtonClicked);
             m_ExpandButton.AddManipulator(m_ExpandButtonPressable);
-            
+
             collapsedState = CollapsedState.None;
         }
 
@@ -1082,7 +1095,7 @@ namespace Unity.AppUI.UI
         {
             m_SplitView.ExpandSplitter(m_Index);
         }
-        
+
         static readonly Action k_OnClick = OnClick;
         static readonly Action<Draggable> k_OnDrag = OnDrag;
         static readonly Action<Draggable> k_OnPointerUp = OnPointerUp;
@@ -1100,7 +1113,7 @@ namespace Unity.AppUI.UI
                 splitter.m_SplitView.OnSplitterDragged(splitter.m_Index, draggable.position);
             }
         }
-        
+
         static void OnPointerUp(Draggable draggable)
         {
             if (draggable.target is Splitter splitter)
@@ -1108,7 +1121,7 @@ namespace Unity.AppUI.UI
                 splitter.m_SplitView.OnSplitterUp(splitter.m_Index, draggable.position);
             }
         }
-        
+
         static bool AcceptDrag(Draggable draggable)
         {
             return draggable.target is Splitter { collapsed: false };

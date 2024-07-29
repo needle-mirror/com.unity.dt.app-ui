@@ -65,7 +65,7 @@ namespace Unity.AppUI.Core
         {
             return HashCode.Combine(deltaMagnification, (int) state);
         }
-        
+
         /// <summary>
         /// Determines whether two specified PinchGesture objects are equal.
         /// </summary>
@@ -76,7 +76,7 @@ namespace Unity.AppUI.Core
         {
             return left.Equals(right);
         }
-        
+
         /// <summary>
         /// Determines whether two specified PinchGesture objects are not equal.
         /// </summary>

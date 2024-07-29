@@ -18,17 +18,17 @@ namespace Unity.AppUI.UI
         /// The Preloader's USS class name.
         /// </summary>
         public const string ussClassName = "appui-preloader";
-        
+
         /// <summary>
         /// The Preloader's circular progress USS class name.
         /// </summary>
         public const string circularProgressUssClassName = ussClassName + "__circular-progress";
-        
+
         /// <summary>
         /// The Preloader's logo USS class name.
         /// </summary>
         public const string logoUssClassName = ussClassName + "__logo";
-        
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -44,7 +44,7 @@ namespace Unity.AppUI.UI
                 pickingMode = PickingMode.Ignore
             };
             progress.AddToClassList(circularProgressUssClassName);
-            
+
             hierarchy.Add(progress);
 
             var logo = new Image
@@ -55,7 +55,7 @@ namespace Unity.AppUI.UI
 
             progress.Add(logo);
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -68,9 +68,9 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            
+
         }
-        
+
 #endif
     }
 }

@@ -21,7 +21,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public AvatarVariant variant { get; } = variant;
     }
-    
+
     /// <summary>
     /// The component size context.
     /// </summary>
@@ -43,23 +43,23 @@ namespace Unity.AppUI.UI
         /// Small spacing.
         /// </summary>
         S,
-        
+
         /// <summary>
         /// Medium spacing.
         /// </summary>
         M,
-        
+
         /// <summary>
         /// Large spacing.
         /// </summary>
         L,
-        
+
         /// <summary>
         /// No overlap between avatars.
         /// </summary>
         NoOverlap,
     }
-    
+
     /// <summary>
     /// AvatarGroup UI element.
     /// </summary>
@@ -70,17 +70,17 @@ namespace Unity.AppUI.UI
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId maxProperty = nameof(max);
-        
+
         internal static readonly BindingId spacingProperty = nameof(spacing);
-        
+
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
         internal static readonly BindingId variantProperty = nameof(variant);
-        
+
         internal static readonly BindingId totalProperty = nameof(total);
-        
+
         internal static readonly BindingId sourceItemsProperty = nameof(sourceItems);
-        
+
         internal static readonly BindingId bindItemProperty = nameof(bindItem);
 #endif
         /// <summary>
@@ -89,17 +89,17 @@ namespace Unity.AppUI.UI
         /// <param name="surplusCount">The number of surplus avatars.</param>
         /// <returns>The VisualElement to render.</returns>
         public delegate VisualElement RenderSurplusDelegate(int surplusCount);
-        
+
         /// <summary>
         /// The AvatarGroup main styling class.
         /// </summary>
         public const string ussClassName = "appui-avatar-group";
-        
+
         /// <summary>
         /// The AvatarGroup surplus styling class.
         /// </summary>
         public const string surplusUssClassName = ussClassName + "__surplus";
-        
+
         /// <summary>
         /// The AvatarGroup spacing styling class.
         /// </summary>
@@ -107,25 +107,25 @@ namespace Unity.AppUI.UI
         public const string spacingUssClassName = ussClassName + "--spacing-";
 
         const int k_DefaultMax = 5;
-        
+
         const AvatarGroupSpacing k_DefaultSpacing = AvatarGroupSpacing.M;
-        
+
         const Size k_DefaultSize = Size.M;
-        
+
         const AvatarVariant k_DefaultVariant = AvatarVariant.Circular;
-        
+
         int? m_Total;
 
         AvatarVariant m_Variant;
-        
+
         IList m_SourceItems;
-        
+
         Action<Avatar, int> m_BindItem;
 
         Size m_Size;
 
         AvatarGroupSpacing m_Spacing;
-        
+
         int m_Max = k_DefaultMax;
 
         /// <summary>
@@ -306,7 +306,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// Defines the AvatarGroup constructor.
         /// </summary>
@@ -328,10 +328,10 @@ namespace Unity.AppUI.UI
         {
             var currentTotal = total;
             Clear();
-            
+
             if (m_SourceItems == null || currentTotal == 0)
                 return;
-            
+
             if (currentTotal > max)
             {
                 var surplusCount = currentTotal - max;
@@ -343,12 +343,12 @@ namespace Unity.AppUI.UI
                     Add(surplus);
                 }
             }
-            
+
             for (var i = Mathf.Min(currentTotal, max) - 1; i >= 0; i--)
             {
                 var avatar = new Avatar();
                 bindItem?.Invoke(avatar, i);
-                
+
                 Add(avatar);
             }
         }
@@ -368,7 +368,7 @@ namespace Unity.AppUI.UI
 
             return avatar;
         }
-        
+
 #if ENABLE_UXML_TRAITS
         /// <summary>
         /// Defines the UxmlFactory for the AvatarGroup.
@@ -391,35 +391,35 @@ namespace Unity.AppUI.UI
         {
             readonly UxmlIntAttributeDescription m_Max = new UxmlIntAttributeDescription
             {
-                name = "max", 
+                name = "max",
                 defaultValue = k_DefaultMax
             };
-            
+
             readonly UxmlEnumAttributeDescription<AvatarGroupSpacing> m_Spacing = new UxmlEnumAttributeDescription<AvatarGroupSpacing>
             {
                 name = "spacing",
                 defaultValue = k_DefaultSpacing
             };
-            
+
             readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
             {
                 name = "size",
                 defaultValue = k_DefaultSize
             };
-            
+
             readonly UxmlIntAttributeDescription m_CustomTotal = new UxmlIntAttributeDescription
             {
                 name = "total",
                 defaultValue = -1
             };
-            
+
             readonly UxmlEnumAttributeDescription<AvatarVariant> m_Variant = new UxmlEnumAttributeDescription<AvatarVariant>
             {
                 name = "variant",
                 defaultValue = k_DefaultVariant,
             };
-            
-                        
+
+
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
             /// </summary>
@@ -429,9 +429,9 @@ namespace Unity.AppUI.UI
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                
+
                 var element = (AvatarGroup)ve;
-                
+
                 element.max = m_Max.GetValueFromBag(bag, cc);
                 element.spacing = m_Spacing.GetValueFromBag(bag, cc);
                 element.size = m_Size.GetValueFromBag(bag, cc);
@@ -440,7 +440,7 @@ namespace Unity.AppUI.UI
                 var total = -1;
                 if (m_CustomTotal.TryGetValueFromBag(bag, cc, ref total))
                     element.SetCustomTotal(total);
-                
+
 
             }
         }

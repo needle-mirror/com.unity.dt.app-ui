@@ -11,13 +11,13 @@ namespace Unity.AppUI.Redux
         /// The name of the slice.
         /// </summary>
         public string name { get; protected set; }
-        
+
         /// <summary>
         /// The action creators for this slice.
         /// </summary>
         public Dictionary<string, ActionCreator> actionCreators { get; protected set; }
     }
-    
+
     /// <summary>
     /// A Slice is a collection of reducers and actions for a specific domain.
     /// It is a convenient way to bundle them together for use in a Redux store.

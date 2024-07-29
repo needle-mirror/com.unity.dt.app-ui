@@ -1,5 +1,5 @@
 /* ActionGroup */
-.appui-actiongroup {    
+.appui-actiongroup {
     display: flex;
     flex-direction: row;
     flex-shrink: 1;
@@ -59,7 +59,7 @@
     border-bottom-right-radius: 0; /*border-end-end-radius: 0;*/
     border-bottom-left-radius: 0; /*border-end-start-radius: 0;*/
     border-top-left-radius: 0; /*border-start-start-radius: 0;*/
-    
+
     border-top-width: var(--appui-alias-control-border-width); /*border-block-start-width: var(--appui-alias-control-border-width);*/
     border-bottom-width: var(--appui-alias-control-border-width); /*border-block-end-width: var(--appui-alias-control-border-width);*/
 }

@@ -17,7 +17,7 @@ namespace Unity.AppUI.Tests.UI
                 yield return new Story("Default", (ctx) => new BoundsIntField());
             }
         }
-        
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:BoundsIntField />",

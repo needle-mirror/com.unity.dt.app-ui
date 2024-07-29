@@ -87,7 +87,7 @@ namespace Unity.AppUI.Editor
                 EditorGUILayout.LabelField("Editor", EditorStyles.boldLabel);
 
                 EditorGUI.indentLevel++;
-                
+
                 EditorGUILayout.PropertyField(m_UseCustomEditorUpdateFrequency, m_UseCustomEditorUpdateFrequencyContent);
 
                 using (new EditorGUI.DisabledScope(!m_UseCustomEditorUpdateFrequency.boolValue))
@@ -112,19 +112,19 @@ namespace Unity.AppUI.Editor
                 EditorGUI.indentLevel--;
 
                 EditorGUILayout.Space();
-                
+
                 EditorGUILayout.LabelField("MacOS", EditorStyles.boldLabel);
-                
+
                 EditorGUI.indentLevel++;
-                
+
                 EditorGUILayout.PropertyField(m_EnableMacOSGestureRecognition, m_EnableMacOSGestureRecognitionContent);
-                
+
                 EditorGUILayout.HelpBox("Some gestures are synthesized as mouse events on MacOS and can't be avoided, " +
                     "such as the Pan gesture.",
                     MessageType.Info);
-                
+
                 EditorGUI.indentLevel--;
-                
+
                 EditorGUILayout.Space();
 
                 if (EditorGUI.EndChangeCheck())
@@ -235,7 +235,7 @@ namespace Unity.AppUI.Editor
             m_AutoScaleUI = m_SettingsObject.FindProperty("m_AutoCorrectUiScale");
             m_AutoScaleUIContent = new GUIContent("Auto Scale UI",
                 "Enable this options to correct the scale of UIDocuments, depending on the target platform and screen dpi.");
-            
+
             m_UseCustomEditorUpdateFrequency = m_SettingsObject.FindProperty("m_UseCustomEditorUpdateFrequency");
             m_UseCustomEditorUpdateFrequencyContent = new GUIContent("Use Custom Loop Frequency",
                 "Enable this option to override the default update loop frequency (the default frequency is the one used by the Editor loop).");
@@ -246,7 +246,7 @@ namespace Unity.AppUI.Editor
 
             m_AutoOverrideAndroidManifest = m_SettingsObject.FindProperty("m_AutoOverrideAndroidManifest");
             m_AutoOverrideAndroidManifestContent = new GUIContent("Auto Override Android Manifest", "");
-            
+
             m_EnableMacOSGestureRecognition = m_SettingsObject.FindProperty("m_EnableMacOSGestureRecognition");
             m_EnableMacOSGestureRecognitionContent = new GUIContent("Enable Gesture Recognition", "");
         }
@@ -268,7 +268,7 @@ namespace Unity.AppUI.Editor
         static IEnumerable<string> FindInputSettingsInProject()
         {
             var guids = AssetDatabase.FindAssets("t:AppUISettings");
-            
+
             var paths = new List<string>();
 
             foreach (var guid in guids)

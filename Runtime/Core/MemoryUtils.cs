@@ -9,11 +9,11 @@ namespace Unity.AppUI.Core
     public static class MemoryUtils
     {
         internal const int bufferSize = 8 * 1024;
-        
+
         static readonly char[] k_Buffer = new char[bufferSize];
-        
+
         static int s_BufferOffset = 0;
-        
+
         /// <summary>
         /// Concatenates the strings into a single string.
         /// </summary>
@@ -30,7 +30,7 @@ namespace Unity.AppUI.Core
         {
             return Concatenate(str1, str2, null, null, null);
         }
-        
+
         /// <summary>
         /// Concatenates the strings into a single string.
         /// </summary>
@@ -48,7 +48,7 @@ namespace Unity.AppUI.Core
         {
             return Concatenate(str1, str2, str3, null, null);
         }
-        
+
         /// <summary>
         /// Concatenates the strings into a single string.
         /// </summary>
@@ -67,7 +67,7 @@ namespace Unity.AppUI.Core
         {
             return Concatenate(str1, str2, str3, str4, null);
         }
-        
+
         /// <summary>
         /// Concatenates the strings into a single string.
         /// </summary>
@@ -85,7 +85,7 @@ namespace Unity.AppUI.Core
         internal static string Concatenate(string str1, string str2, string str3, string str4, string str5)
         {
             s_BufferOffset = 0;
-            
+
             AppendStringToBuffer(str1);
             AppendStringToBuffer(str2);
             AppendStringToBuffer(str3);
@@ -94,7 +94,7 @@ namespace Unity.AppUI.Core
 
             return new string(k_Buffer, 0, s_BufferOffset);
         }
-        
+
         static void AppendStringToBuffer(string str)
         {
             if (!string.IsNullOrEmpty(str))

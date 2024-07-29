@@ -21,7 +21,7 @@ namespace Unity.AppUI.UI
         static readonly int k_Start = Shader.PropertyToID("_Start");
 
         static readonly int k_End = Shader.PropertyToID("_End");
-        
+
         static readonly int k_Rounded = Shader.PropertyToID("_Rounded");
 
         static readonly int k_BufferStart = Shader.PropertyToID("_BufferStart");
@@ -66,7 +66,7 @@ namespace Unity.AppUI.UI
                 if (!s_Material)
                     return;
             }
-            
+
             var rect = contentRect;
 
             if (!rect.IsValid())
@@ -126,7 +126,7 @@ namespace Unity.AppUI.UI
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="LinearProgress"/>.
         /// </summary>
         public new class UxmlTraits : Progress.UxmlTraits { }
-        
+
 #endif
     }
 }

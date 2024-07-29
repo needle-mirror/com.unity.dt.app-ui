@@ -19,16 +19,16 @@ namespace Unity.AppUI.UI
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId messageProperty = nameof(message);
-        
+
         internal static readonly BindingId collectionViewProperty = nameof(collectionView);
 #endif
-        
+
 #if UNITY_LOCALIZATION_PRESENT
         const string k_DefaultMessage = "@AppUI:selectedItemsMessage";
 #else
         const string k_DefaultMessage = "{0} Selected item(s)";
 #endif
-        
+
         /// <summary>
         /// The ActionBar main styling class.
         /// </summary>
@@ -43,7 +43,7 @@ namespace Unity.AppUI.UI
         /// The ActionBar checkbox styling class.
         /// </summary>
         public const string checkboxUssClassName = ussClassName + "__checkbox";
-        
+
         /// <summary>
         /// The ActionBar label styling class.
         /// </summary>
@@ -75,8 +75,8 @@ namespace Unity.AppUI.UI
 
             m_Label = new Text
             {
-                name = labelUssClassName, 
-                text = k_DefaultMessage, 
+                name = labelUssClassName,
+                text = k_DefaultMessage,
                 pickingMode = PickingMode.Ignore
             };
             m_Label.AddToClassList(labelUssClassName);
@@ -140,9 +140,11 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Text used for item selection message.
-        /// <remarks>We recommend to use a SmartString text in order to adjust the
-        /// text based on the number of selected items.</remarks>
         /// </summary>
+        /// <remarks>
+        /// We recommend to use a SmartString text in order to adjust the
+        /// text based on the number of selected items.
+        /// </remarks>
         /// <example>
         /// <code>
         /// {itemCount:plural:Nothing selected|One selected item|{} selected items}
@@ -236,14 +238,14 @@ namespace Unity.AppUI.UI
                 }
             };
             m_Label.text = m_Message;
-#else 
+#else
             if (string.IsNullOrEmpty(m_Message))
                 m_Label.text = string.Format(k_DefaultMessage, selectionCount);
             else
                 m_Label.text = string.Format(m_Message, selectionCount);
 #endif
         }
-        
+
 #if ENABLE_UXML_TRAITS
         /// <summary>
         /// The UXML factory for the <see cref="ActionBar"/>.

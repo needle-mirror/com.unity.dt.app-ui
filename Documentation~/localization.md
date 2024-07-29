@@ -6,7 +6,7 @@ uid: localization
 
 ## Introduction
 
-App UI provides localization features through the [**Localization**](https://docs.unity3d.com/Packages/com.unity.localization@1.4/manual/index.html) 
+App UI provides localization features through the [**Localization**](https://docs.unity3d.com/Packages/com.unity.localization@1.4/manual/index.html)
 Unity package from UPM.
 
 ## Language Context

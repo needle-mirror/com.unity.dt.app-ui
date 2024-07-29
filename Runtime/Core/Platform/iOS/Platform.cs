@@ -10,7 +10,7 @@ namespace Unity.AppUI.Core
     class IOSPlatformImpl : PlatformImpl
     {
         static IOSPlatformImpl s_Instance;
-        
+
         delegate void DebugLogDelegate(IntPtr messagePtr, uint len);
         delegate void LayoutDirectionChangedDelegate(byte layoutDirection);
         delegate void HighContrastChangedDelegate(bool highContrastEnabled);
@@ -21,7 +21,7 @@ namespace Unity.AppUI.Core
         delegate void MagnifyGestureEventDelegate(float magnification, TouchPhase phase);
         delegate void RotateGestureEventDelegate(float rotation, TouchPhase phase);
         delegate void SmartMagnifyEventDelegate();
-        
+
         [StructLayout(LayoutKind.Sequential)]
         struct PluginConfigData
         {
@@ -54,7 +54,7 @@ namespace Unity.AppUI.Core
             var messageStr = Marshal.PtrToStringAnsi(message, (int)len);
             Debug.Log(messageStr);
         }
-        
+
         [MonoPInvokeCallback(typeof(LayoutDirectionChangedDelegate))]
         static void InvokeLayoutDirectionChangedProxy(byte layoutDirection) =>
             s_Instance?.InvokeLayoutDirectionChanged(layoutDirection);
@@ -66,15 +66,15 @@ namespace Unity.AppUI.Core
         [MonoPInvokeCallback(typeof(ReduceMotionChangedDelegate))]
         static void InvokeReduceMotionChangedProxy(bool reduceMotionEnabled) =>
             s_Instance?.InvokeReduceMotionChanged(reduceMotionEnabled);
-        
+
         [MonoPInvokeCallback(typeof(ThemeChangedDelegate))]
         static void InvokeThemeChangedProxy(bool darkModeEnabled) =>
             s_Instance?.InvokeThemeChanged(darkModeEnabled);
-        
+
         [MonoPInvokeCallback(typeof(TextScaleFactorChangedDelegate))]
         static void InvokeTextScaleFactorChangedProxy(float textScaleFactor) =>
             s_Instance?.InvokeTextScaleFactorChanged(textScaleFactor);
-        
+
         [MonoPInvokeCallback(typeof(ScaleFactorChangedDelegate))]
         static void InvokeScaleFactorChangedProxy(float scaleFactor) =>
             s_Instance?.InvokeScaleFactorChanged(scaleFactor);
@@ -87,34 +87,34 @@ namespace Unity.AppUI.Core
 
         [MonoPInvokeCallback(typeof(SmartMagnifyEventDelegate))]
         static void InvokeSmartMagnifyEventProxy() { }
-        
+
         [DllImport("__Internal")]
         static extern bool NativeAppUI_Initialize(ref PluginConfigData configData);
-        
+
         [DllImport("__Internal")]
         static extern void NativeAppUI_Uninitialize();
-        
+
         [DllImport("__Internal")]
         static extern void NativeAppUI_Update();
-        
+
         [DllImport("__Internal")]
         static extern float NativeAppUI_ScaleFactor();
-        
+
         [DllImport("__Internal")]
         static extern bool NativeAppUI_DarkMode();
-        
+
         [DllImport("__Internal")]
         static extern bool NativeAppUI_HighContrast();
 
         [DllImport("__Internal")]
         static extern bool NativeAppUI_ReduceMotion();
-        
+
         [DllImport("__Internal")]
         static extern float NativeAppUI_TextScaleFactor();
-        
+
         [DllImport("__Internal")]
         static extern int NativeAppUI_LayoutDirection();
-        
+
         [DllImport("__Internal")]
         static extern void NativeAppUI_RunHapticFeedback(HapticFeedbackType feedbackType);
 
@@ -126,7 +126,7 @@ namespace Unity.AppUI.Core
         void Setup()
         {
             CleanUp();
-                
+
             var configData = new PluginConfigData
             {
                 isEditor = Application.isEditor,
@@ -144,9 +144,9 @@ namespace Unity.AppUI.Core
             NativeAppUI_Initialize(ref configData);
             s_Instance = this;
         }
-        
+
         ~IOSPlatformImpl() => CleanUp();
-        
+
         void CleanUp()
         {
             NativeAppUI_Uninitialize();
@@ -156,7 +156,7 @@ namespace Unity.AppUI.Core
         public override float referenceDpi => Screen.dpi / scaleFactor;
 
         public override float scaleFactor => NativeAppUI_ScaleFactor();
-        
+
         public override bool darkMode => NativeAppUI_DarkMode();
 
         public override bool highContrast => NativeAppUI_HighContrast();
@@ -173,7 +173,7 @@ namespace Unity.AppUI.Core
         {
             NativeAppUI_Update();
         }
-        
+
         public override AppUITouch[] touches => AppUIInput.GetCurrentInputSystemTouches();
 
         public override void RunNativeHapticFeedback(HapticFeedbackType feedbackType)

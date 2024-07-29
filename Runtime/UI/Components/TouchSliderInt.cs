@@ -19,13 +19,13 @@ namespace Unity.AppUI.UI
     public partial class TouchSliderInt : TouchSlider<int>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId incrementFactorProperty = nameof(incrementFactor);
-        
+
 #endif
-        
+
         const int k_DefaultIncrementFactor = 1;
-        
+
         int m_IncrementFactor = k_DefaultIncrementFactor;
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Unity.AppUI.UI
         {
             formatString = UINumericFieldsUtils.k_IntFieldFormatString;
             incrementFactor = k_DefaultIncrementFactor;
-            
+
             lowValue = 0;
             highValue = 1;
             value = 0;
@@ -65,7 +65,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("low-value")]
         int lowValueOverride
@@ -73,21 +73,21 @@ namespace Unity.AppUI.UI
             get => lowValue;
             set => lowValue = value;
         }
-        
+
         [UxmlAttribute("high-value")]
         int highValueOverride
         {
             get => highValue;
             set => highValue = value;
         }
-        
+
         [UxmlAttribute("value")]
         int valueOverride
         {
             get => value;
             set => this.value = value;
         }
-        
+
         [UxmlAttribute("format-string")]
         string formatStringOverride
         {
@@ -109,7 +109,7 @@ namespace Unity.AppUI.UI
         {
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
         }
-        
+
         /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.ParseRawValueToString"/>
         protected override string ParseRawValueToString(int val)
         {
@@ -179,8 +179,8 @@ namespace Unity.AppUI.UI
                 elem.SetValueWithoutNotify(val);
             }
         }
-        
+
 #endif
     }
-    
+
 }

@@ -8,7 +8,7 @@ namespace Unity.AppUI.Core
         static class AndroidAppUI
         {
             static AndroidJavaObject s_AppUiActivity;
-            
+
             static bool s_IsCustomAppUiActivity;
 
             static AndroidAppUI()
@@ -18,14 +18,14 @@ namespace Unity.AppUI.Core
 
                 using var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
                 s_AppUiActivity = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity");
-                
+
                 // check if the app is running with our custom AppUIActivity
                 s_IsCustomAppUiActivity = true;
-                try 
+                try
                 {
                     s_AppUiActivity.Call<float>("ScaledDensity");
-                } 
-                catch (System.Exception e) 
+                }
+                catch (System.Exception e)
                 {
                     s_IsCustomAppUiActivity = false;
                     Debug.LogWarning("This Android app is not running with our custom AppUIActivity. " +
@@ -47,18 +47,18 @@ namespace Unity.AppUI.Core
             internal static bool isNightModeEnabled { get; private set; } = false;
 
             internal static bool isNightModeDefined { get; private set; } = false;
-            
+
             internal static bool highContrast { get; private set; } = false;
-            
+
             internal static bool reduceMotion { get; private set; } = false;
-            
+
             internal static int layoutDirection { get; private set; } = 0;
 
             internal static void RunHapticFeedback(HapticFeedbackType feedbackType)
             {
                 if (!s_IsCustomAppUiActivity)
                     return;
-                
+
                 s_AppUiActivity.Call("RunHapticFeedback", (int)feedbackType);
             }
 
@@ -66,7 +66,7 @@ namespace Unity.AppUI.Core
             {
                 if (!s_IsCustomAppUiActivity)
                     return;
-                
+
                 scaledDensity = s_AppUiActivity.Call<float>("ScaledDensity");
                 density = s_AppUiActivity.Call<float>("Density");
                 densityDPI = s_AppUiActivity.Call<int>("DensityDpi");
@@ -78,11 +78,11 @@ namespace Unity.AppUI.Core
                 layoutDirection = s_AppUiActivity.Call<int>("LayoutDirection");
             }
         }
-        
+
         public override float referenceDpi => Screen.dpi / scaleFactor;
-        
+
         public override float scaleFactor => AndroidAppUI.scaledDensity;
-        
+
         public override bool darkMode => AndroidAppUI.isNightModeDefined && AndroidAppUI.isNightModeEnabled;
 
         public override int layoutDirection => AndroidAppUI.layoutDirection;

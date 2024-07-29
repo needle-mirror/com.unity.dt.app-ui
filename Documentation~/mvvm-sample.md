@@ -33,7 +33,7 @@ If you go in Play mode, you will see a simple UI with a button that increments a
 The scene contains one special component attached to the **[UIDocument](xref:UnityEngine.UIElements.UIDocument)** game object.
 This component is called **MyAppBuilder** and is an implementation of the [UIToolkitAppBuilder](xref:Unity.AppUI.MVVM.UIToolkitAppBuilder`1) class.
 
-With this **MyAppBuilder** class, you can define which [App](xref:Unity.AppUI.MVVM.App) implementation to use for your runtime app and 
+With this **MyAppBuilder** class, you can define which [App](xref:Unity.AppUI.MVVM.App) implementation to use for your runtime app and
 hook some events about the app lifecycle.
 
 ```cs
@@ -76,7 +76,7 @@ public class MyApp : App
 }
 ```
 
-The **MainPage** class is a [VisualElement](xref:UnityEngine.UIElements.VisualElement) 
+The **MainPage** class is a [VisualElement](xref:UnityEngine.UIElements.VisualElement)
 that will be constructed by the Dependency Injection system. It is defined as a **View** in the MVVM pattern.
 
 ```cs
@@ -89,7 +89,7 @@ public class MainPage : VisualElement
 }
 ```
 
-The **MainViewModel** class is a [ObservableObject](xref:Unity.AppUI.MVVM.ObservableObject) that will also be 
+The **MainViewModel** class is a [ObservableObject](xref:Unity.AppUI.MVVM.ObservableObject) that will also be
 constructed by the Dependency Injection system. It is defined as a **ViewModel** in the MVVM pattern.
 
 ```cs
@@ -99,7 +99,7 @@ public class MainViewModel : ObservableObject
     {
         // Construct the view model
     }
-    
+
     // Define properties and commands
 }
 ```

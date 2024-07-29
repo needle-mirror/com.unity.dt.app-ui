@@ -21,18 +21,18 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId directionProperty = new BindingId(nameof(direction));
-        
+
         internal static readonly BindingId animationSpeedProperty = new BindingId(nameof(snapAnimationSpeed));
-        
+
         internal static readonly BindingId skipAnimationThresholdProperty = new BindingId(nameof(skipAnimationThreshold));
-        
+
         internal static readonly BindingId wrapProperty = new BindingId(nameof(wrap));
-        
+
         internal static readonly BindingId visibilityCountProperty = new BindingId(nameof(visibilityCount));
-        
+
         internal static readonly BindingId autoPlayDurationProperty = new BindingId(nameof(autoPlayDuration));
 #endif
-        
+
         /// <summary>
         /// The main styling class of the PageView. This is the class that is used in the USS file.
         /// </summary>
@@ -81,7 +81,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = !Mathf.Approximately(m_SwipeView.snapAnimationSpeed, value);
                 m_SwipeView.snapAnimationSpeed = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in animationSpeedProperty);
@@ -105,7 +105,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_SwipeView.skipAnimationThreshold != value;
                 m_SwipeView.skipAnimationThreshold = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in skipAnimationThresholdProperty);
@@ -129,7 +129,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_SwipeView.wrap != value;
                 m_SwipeView.wrap = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in wrapProperty);
@@ -153,7 +153,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_SwipeView.autoPlayDuration != value;
                 m_SwipeView.autoPlayDuration = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in autoPlayDurationProperty);
@@ -180,7 +180,7 @@ namespace Unity.AppUI.UI
                 m_SwipeView.direction = value;
                 m_PageIndicator.direction = value;
                 AddToClassList(GetDirectionUssClassName(m_SwipeView.direction));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
@@ -204,7 +204,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_SwipeView.visibleItemCount != value;
                 m_SwipeView.visibleItemCount = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in visibilityCountProperty);
@@ -238,7 +238,7 @@ namespace Unity.AppUI.UI
             wrap = false;
             visibilityCount = 1;
             autoPlayDuration = SwipeView.noAutoPlayDuration;
-            
+
             this.RegisterContextChangedCallback<DirContext>(OnDirContextChanged);
         }
 
@@ -309,7 +309,7 @@ namespace Unity.AppUI.UI
                 name = "visibility-count",
                 defaultValue = 1,
             };
-            
+
             readonly UxmlIntAttributeDescription m_AutoPlayDuration = new UxmlIntAttributeDescription()
             {
                 name = "auto-play-duration",
@@ -344,7 +344,7 @@ namespace Unity.AppUI.UI
                 el.autoPlayDuration = m_AutoPlayDuration.GetValueFromBag(bag, cc);
             }
         }
-        
+
 #endif
     }
 }

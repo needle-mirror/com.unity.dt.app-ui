@@ -1,6 +1,7 @@
 using System;
 using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.UI
@@ -55,12 +56,16 @@ namespace Unity.AppUI.UI
         Modal(VisualElement parentView, ModalVisualElement modalView, VisualElement content)
             : base(parentView, modalView, content)
         {
+            panel = parentView.panel.visualTree.Q<Panel>();
+            parentView.panel.visualTree.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
         }
 
         ModalVisualElement modal => (ModalVisualElement)view;
 
+        Panel panel { get; }
+
         /// <summary>
-        /// Set the fullscreen mode for this <see cref="Modal"/>.
+        /// <para>Set the fullscreen mode for this <see cref="Modal"/>.</para>
         /// <para>
         /// See <see cref="ModalFullScreenMode"/> values for more info.
         /// </para>
@@ -70,6 +75,16 @@ namespace Unity.AppUI.UI
             get => modal.fullScreenMode;
             set => modal.fullScreenMode = value;
         }
+
+        /// <summary>
+        /// `True` if the Modal can be dismissed by clicking outside of it, `False` otherwise.
+        /// </summary>
+        public bool outsideClickDismissEnabled { get; set; }
+
+        /// <summary>
+        /// The strategy used to determine if the click is outside the Modal.
+        /// </summary>
+        public OutsideClickStrategy outsideClickStrategy { get; set; } = OutsideClickStrategy.Bounds;
 
         /// <summary>
         /// Set a new value for <see cref="fullscreenMode"/> property.
@@ -83,6 +98,82 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// Activate the possibility to dismiss the Modal by clicking outside of it.
+        /// </summary>
+        /// <param name="dismissEnabled"> `True` to activate the feature, `False` otherwise.</param>
+        /// <returns> The modal </returns>
+        public Modal SetOutsideClickDismiss(bool dismissEnabled)
+        {
+            outsideClickDismissEnabled = dismissEnabled;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the strategy used to determine if the click is outside the Modal.
+        /// </summary>
+        /// <param name="strategy"> The strategy to use.</param>
+        /// <returns> The modal </returns>
+        public Modal SetOutsideClickStrategy(OutsideClickStrategy strategy)
+        {
+            outsideClickStrategy = strategy;
+            return this;
+        }
+
+        void OnTreeDown(PointerDownEvent evt)
+        {
+            if (!outsideClickDismissEnabled || outsideClickStrategy == 0)
+                return;
+
+            var index = view.parent.IndexOf(view);
+            if (index != view.parent.childCount - 1)
+                return;
+
+            var shouldDismiss = true;
+            if ((outsideClickStrategy & OutsideClickStrategy.Bounds) != 0)
+                shouldDismiss = !modal.contentContainer.worldBound.Contains((Vector2)evt.position);
+
+            if (shouldDismiss && (outsideClickStrategy & OutsideClickStrategy.Pick) != 0)
+            {
+                var picked = view.panel.Pick(evt.position);
+                var commonAncestor = picked?.FindCommonAncestor(view);
+                if (commonAncestor == view) // if the picked element is a child of the popover, don't dismiss
+                    shouldDismiss = false;
+            }
+
+            if (!shouldDismiss)
+                return;
+
+            // prevent reopening the same modal again...
+            evt.StopImmediatePropagation();
+            Dismiss(DismissType.OutOfBounds);
+        }
+
+        /// <inheritdoc cref="Popup.ShouldDismiss"/>
+        protected override bool ShouldDismiss(DismissType reason) => true;
+
+        /// <inheritdoc cref="Popup.InvokeDismissedEventHandlers"/>
+        protected override void InvokeDismissedEventHandlers(DismissType reason)
+        {
+            base.InvokeDismissedEventHandlers(reason);
+            containerView?.panel?.visualTree?.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+        }
+
+        /// <inheritdoc cref="Popup.ShowView"/>
+        protected override void ShowView()
+        {
+            base.ShowView();
+            if (outsideClickDismissEnabled)
+                panel?.RegisterPopup(this);
+        }
+
+        /// <inheritdoc cref="Popup.HideView"/>
+        protected override void HideView(DismissType reason)
+        {
+            panel?.UnregisterPopup(this);
+            base.HideView(reason);
+        }
+
+        /// <summary>
         /// Build a new Modal component.
         /// </summary>
         /// <param name="referenceView">An arbitrary UI element inside the UI panel.</param>
@@ -90,12 +181,17 @@ namespace Unity.AppUI.UI
         /// <returns>The <see cref="Modal"/> instance.</returns>
         public static Modal Build(VisualElement referenceView, VisualElement content)
         {
-            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
-            
-            if (panel == null)
+            if (referenceView == null)
+                throw new ArgumentNullException(nameof(referenceView));
+
+            if (referenceView.panel == null)
                 throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-            
-            var parentView = panel.popupContainer;
+
+            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>() ?? referenceView?.panel.visualTree;
+            if (panel == null)
+                throw new InvalidOperationException("Unable to find determine a valid container in the hierarchy.");
+
+            var parentView = (panel as Panel)?.popupContainer ?? panel;
             var popup = new Modal(parentView, new ModalVisualElement(content), content)
                 .SetLastFocusedElement(referenceView);
             return popup;
@@ -145,7 +241,7 @@ namespace Unity.AppUI.UI
                 m_ContentContainer.SetIsCompositeRoot(true);
                 m_ContentContainer.SetExcludeFromFocusRing(true);
                 m_ContentContainer.delegatesFocus = true;
-                
+
                 m_ContentContainer.AddToClassList(contentContainerUssClassName);
 
                 hierarchy.Add(m_ContentContainer);

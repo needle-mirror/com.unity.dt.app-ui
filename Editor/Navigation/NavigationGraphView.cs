@@ -18,7 +18,7 @@ namespace Unity.AppUI.Navigation.Editor
         /// Event fired when a new graph has been loaded.
         /// </summary>
         public event Action<NavGraph> graphChanged;
-        
+
         /// <summary>
         /// The graph asset currently used by the graph view.
         /// </summary>
@@ -28,31 +28,31 @@ namespace Unity.AppUI.Navigation.Editor
         /// The current graph displayed in the graph view.
         /// </summary>
         public NavGraph currentGraph { get; private set; }
-        
+
         /// <summary>
         /// Whether or not the graph view should follow the navigation in Play mode.
         /// </summary>
         public bool followNavigation { get; set; } = true;
-        
+
         NavDestination m_CurrentDestination;
-        
+
         /// <summary>
         /// Constructor.
         /// </summary>
         public NavigationGraphView()
         {
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
-            
+
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
-            
+
             var grid = new GridBackground();
             Insert(0, grid);
             grid.StretchToParentSize();
-            
+
             NavController.destinationChanged += OnDestinationChanged;
-            
+
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
         }
 
@@ -80,7 +80,7 @@ namespace Unity.AppUI.Navigation.Editor
         {
             if (asset == null)
                 return;
-            
+
             graphAsset = asset;
             viewDataKey = asset.name;
             SetGraph(graphAsset.rootGraph);
@@ -94,27 +94,27 @@ namespace Unity.AppUI.Navigation.Editor
         {
             SetGraphInternal(graph, false);
         }
-        
+
         void SetGraphInternal(NavGraph graph, bool keepFollowing)
         {
             graphViewChanged -= OnGraphViewChanged;
             ClearGraph();
-            
+
             currentGraph = graph;
 
             if (graph == null)
                 return;
-            
+
             var destinations = graphAsset
                 .nodes
                 .Where(c => c is NavDestination d && d.parent == graph)
                 .Cast<NavDestination>();
-            
+
             var subGraphs = graphAsset
                 .nodes
                 .Where(c => c is NavGraph g && g.parent == graph)
                 .Cast<NavGraph>();
-            
+
             foreach (var destination in destinations)
             {
                 AddElement(GenerateNavigationDestinationNode(destination));
@@ -124,12 +124,12 @@ namespace Unity.AppUI.Navigation.Editor
                     AddElement(GenerateActionNode(destinationAction));
                 }
             }
-            
+
             foreach (var subGraph in subGraphs)
             {
                 AddElement(GenerateNavigationSubGraphNode(subGraph));
             }
-            
+
             foreach (var globalAction in graph.actions)
             {
                 AddElement(GenerateActionNode(globalAction));
@@ -157,14 +157,14 @@ namespace Unity.AppUI.Navigation.Editor
                     }
                 }
             }
-            
+
             RefreshStartDestination();
             RefreshGlobalActions();
             RefreshCurrentDestination(keepFollowing);
-                
+
             if (!keepFollowing)
                 schedule.Execute(() => FrameAll()).ExecuteLater(2L);
-            
+
             graphViewChanged += OnGraphViewChanged;
             graphChanged?.Invoke(graph);
         }
@@ -173,7 +173,7 @@ namespace Unity.AppUI.Navigation.Editor
         {
             DeleteElements(graphElements.ToList());
         }
-        
+
         Node GenerateActionNode(NavAction action)
         {
             var serializedObject = new SerializedObject(action);
@@ -186,7 +186,7 @@ namespace Unity.AppUI.Navigation.Editor
             node.titleContainer.Q<Label>("title-label").bindingPath = "m_Name";
             node.extensionContainer.Add(GenerateActionInspector(serializedObject));
             node.topContainer.parent.Insert(0, GenerateDescription("Action"));
-            
+
             var refPort = node.InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(string));
             refPort.portName = "";
             node.inputContainer.Add(refPort);
@@ -199,7 +199,7 @@ namespace Unity.AppUI.Navigation.Editor
             node.RefreshPorts();
 
             node.SetPosition(new Rect(action.position, Vector2.zero));
-            
+
             node.Bind(serializedObject);
 
             return node;
@@ -209,16 +209,16 @@ namespace Unity.AppUI.Navigation.Editor
         {
             var container = new VisualElement();
             container.AddToClassList("inspector-container");
-            
+
             var nameField = new PropertyField(obj.FindProperty("m_Name"));
             container.Add(nameField);
-            
+
             var options = new PropertyField(obj.FindProperty("m_Options"));
             container.Add(options);
-            
+
             var args = new PropertyField(obj.FindProperty("m_DefaultArguments"));
             container.Add(args);
-            
+
             return container;
         }
 
@@ -239,7 +239,7 @@ namespace Unity.AppUI.Navigation.Editor
             var previousPort = node.InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(int));
             previousPort.portName = "";
             node.inputContainer.Add(previousPort);
-            
+
             var nextPort = node.InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(string));
             nextPort.portName = "Actions";
             node.outputContainer.Add(nextPort);
@@ -248,33 +248,33 @@ namespace Unity.AppUI.Navigation.Editor
             node.RefreshPorts();
 
             node.SetPosition(new Rect(destination.position, Vector2.zero));
-            
+
             node.Bind(serializedObject);
 
             return node;
         }
-        
+
         static readonly Dictionary<string, string> k_Templates = TypeCache
             .GetTypesDerivedFrom<NavigationScreen>()
             .ToDictionary(t => t.AssemblyQualifiedName, t => t.Name + " (" + t.Namespace + ")");
-        
+
         internal static VisualElement GenerateDestinationInspector(SerializedObject obj)
         {
             var container = new VisualElement();
             container.AddToClassList("inspector-container");
-            
+
             var nameField = new TextField("Name Identifier");
             container.Add(nameField);
             nameField.bindingPath = "m_Name";
-            
+
             var labelField = new TextField("Label");
             container.Add(labelField);
             labelField.bindingPath = "m_Label";
-            
+
             var templateField = new PopupField<string>(
-                "Template", 
-                k_Templates.Keys.ToList(), 
-                0, 
+                "Template",
+                k_Templates.Keys.ToList(),
+                0,
                 s => string.IsNullOrEmpty(s) ? "None" : k_Templates[s],
                 s => k_Templates[s]);
             container.Add(templateField);
@@ -287,15 +287,15 @@ namespace Unity.AppUI.Navigation.Editor
             var showAppBar = new Toggle("Show App Bar");
             container.Add(showAppBar);
             showAppBar.bindingPath = "m_ShowAppBar";
-            
+
             var showBackButton = new Toggle("Show Back Button");
             container.Add(showBackButton);
             showBackButton.bindingPath = "m_ShowBackButton";
-            
+
             var showDrawer = new Toggle("Show Drawer");
             container.Add(showDrawer);
             showDrawer.bindingPath = "m_ShowDrawer";
-            
+
             var showNavigationRail = new Toggle("Show Navigation Rail");
             container.Add(showNavigationRail);
             showNavigationRail.bindingPath = "m_ShowNavigationRail";
@@ -312,19 +312,19 @@ namespace Unity.AppUI.Navigation.Editor
             container.Add(label);
             return container;
         }
-        
+
         static VisualElement GenerateGraphInspector(SerializedObject obj)
         {
             var container = new VisualElement();
             container.AddToClassList("inspector-container");
-            
+
             var nameField = new TextField("Name Identifier");
             container.Add(nameField);
             nameField.bindingPath = "m_Name";
 
             return container;
         }
-        
+
         Node GenerateNavigationSubGraphNode(NavGraph subGraph)
         {
             var serializedObject = new SerializedObject(subGraph);
@@ -339,7 +339,7 @@ namespace Unity.AppUI.Navigation.Editor
             node.extensionContainer.Add(GenerateGraphInspector(serializedObject));
             node.topContainer.parent.Insert(0, GenerateDescription("Nested Graph"));
             node.RegisterCallback<MouseDownEvent>(OnSubGraphClicked);
-            
+
             var previousPort = node.InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(int));
             previousPort.portName = "";
             node.inputContainer.Add(previousPort);
@@ -348,7 +348,7 @@ namespace Unity.AppUI.Navigation.Editor
             node.RefreshPorts();
 
             node.SetPosition(new Rect(subGraph.position, Vector2.zero));
-            
+
             node.Bind(serializedObject);
 
             return node;
@@ -411,7 +411,7 @@ namespace Unity.AppUI.Navigation.Editor
                     RemoveElement(edgeToRemove);
                 }
             }
-                
+
             var component = node.userData;
             if (component is NavDestination destination && currentGraph.startDestination == destination)
             {
@@ -494,7 +494,7 @@ namespace Unity.AppUI.Navigation.Editor
                    OnRemoveElement(element);
                 }
             }
-            
+
             if (graphViewChange.edgesToCreate != null)
             {
                 foreach (var edge in graphViewChange.edgesToCreate)
@@ -502,7 +502,7 @@ namespace Unity.AppUI.Navigation.Editor
                     OnCreateEdge(edge);
                 }
             }
-            
+
             if (graphViewChange.movedElements != null)
             {
                 foreach (var element in graphViewChange.movedElements)
@@ -520,10 +520,10 @@ namespace Unity.AppUI.Navigation.Editor
                     EditorUtility.SetDirty(currentGraph);
                 }
             }
-            
+
             RefreshStartDestination();
             RefreshGlobalActions();
-            
+
             AssetDatabase.SaveAssets();
 
             return graphViewChange;
@@ -561,7 +561,7 @@ namespace Unity.AppUI.Navigation.Editor
                     return ports.Where(port =>
                         port.direction == Direction.Output && port.node is Node {userData: NavAction}).ToList();
             }
-            
+
             return new List<Port>();
         }
 
@@ -572,31 +572,31 @@ namespace Unity.AppUI.Navigation.Editor
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             base.BuildContextualMenu(evt);
-            
+
             if (graphAsset == null)
                 return;
-            
-            evt.menu.AppendAction("Create Destination", 
+
+            evt.menu.AppendAction("Create Destination",
                 CreateDestination, DropdownMenuAction.AlwaysEnabled);
-            
+
             evt.menu.AppendAction("Create Sub Graph",
                 CreateSubGraph, DropdownMenuAction.AlwaysEnabled);
-            
-            evt.menu.AppendAction("Create Action", 
+
+            evt.menu.AppendAction("Create Action",
                 CreateAction, DropdownMenuAction.AlwaysEnabled);
-            
+
             evt.menu.AppendSeparator();
-            
+
             var isDestinationSelected = selection.Count == 1 && selection[0] is Node {userData: NavDestination};
 
             if (isDestinationSelected)
             {
                 var dest = (NavDestination) ((Node)selection[0]).userData;
-                evt.menu.AppendAction("Set as Start Destination", 
+                evt.menu.AppendAction("Set as Start Destination",
                     SetAsStartDestination, dest.parent.startDestination == dest ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal);
                 evt.menu.AppendSeparator();
             }
-            
+
             var isSubGraphSelected  = selection.Count == 1 && selection[0] is Node {userData: NavGraph};
 
             if (isSubGraphSelected)
@@ -607,9 +607,9 @@ namespace Unity.AppUI.Navigation.Editor
             }
 
             var isRootGraph = currentGraph.parent == null;
-            
+
             evt.menu.AppendAction("Go Back",
-                (a) => GoBack(), 
+                (a) => GoBack(),
                 isRootGraph ? DropdownMenuAction.Status.Disabled : DropdownMenuAction.Status.Normal);
         }
 
@@ -652,7 +652,7 @@ namespace Unity.AppUI.Navigation.Editor
         {
             if (!graphAsset)
                 return;
-            
+
             Node node = null;
             if (m_CurrentDestination)
             {
@@ -664,9 +664,9 @@ namespace Unity.AppUI.Navigation.Editor
                     {
                         p = p.parent;
                     }
-                    
+
                     node = p ? GetNodeByGuid(p.guid) : null;
-                
+
                     if (node is {userData: NavGraph graph} && keepFollowing)
                     {
                         SetGraphInternal(graph, true);
@@ -685,7 +685,7 @@ namespace Unity.AppUI.Navigation.Editor
             {
                 if (node == null)
                     continue;
-                
+
                 var isCurrent = node == n;
                 n.EnableInClassList("current-destination", isCurrent);
                 if (isCurrent && followNavigation)
@@ -717,10 +717,10 @@ namespace Unity.AppUI.Navigation.Editor
         {
             var node = (Node)selection[0];
             var subGraph = node.userData as NavGraph;
-            
+
             SetGraph(subGraph);
         }
-        
+
         Vector2 MouseToContent(Vector2 position)
         {
             position.x = (position.x - contentViewContainer.worldBound.x) / scale;
@@ -742,10 +742,10 @@ namespace Unity.AppUI.Navigation.Editor
             startDestination.position = position;
             startDestination.guid = GUID.Generate().ToString();
             graph.startDestination = startDestination;
-            
+
             graphAsset.AddNode(graph);
             graphAsset.AddNode(startDestination);
-            
+
             var node = GenerateNavigationSubGraphNode(graph);
             AddElement(node);
             node.SetPosition(new Rect(position, Vector2.zero));
@@ -759,9 +759,9 @@ namespace Unity.AppUI.Navigation.Editor
             destination.parent = currentGraph;
             destination.position = position;
             destination.guid = GUID.Generate().ToString();
-            
+
             graphAsset.AddNode(destination);
-            
+
             var node = GenerateNavigationDestinationNode(destination);
             AddElement(node);
             node.SetPosition(new Rect(position, Vector2.zero));

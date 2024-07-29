@@ -27,12 +27,12 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(Panel.defaultTheme, panel.theme);
             Assert.AreEqual(Panel.defaultScale, panel.scale);
             Assert.AreEqual(Panel.defaultDir, panel.layoutDirection);
-            
+
             Assert.AreEqual(Panel.defaultLang, panel.GetContext<LangContext>().lang);
             Assert.AreEqual(Panel.defaultTheme, panel.GetContext<ThemeContext>().theme);
             Assert.AreEqual(Panel.defaultScale, panel.GetContext<ScaleContext>().scale);
             Assert.AreEqual(Panel.defaultDir, panel.GetContext<DirContext>().dir);
-            
+
             Assert.IsTrue(panel.ClassListContains(Panel.contextPrefix + Panel.defaultLang));
             Assert.IsTrue(panel.ClassListContains(Panel.contextPrefix + Panel.defaultTheme));
             Assert.IsTrue(panel.ClassListContains(Panel.contextPrefix + Panel.defaultScale));
@@ -57,12 +57,12 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(theme, panel.theme);
             Assert.AreEqual(scale, panel.scale);
             Assert.AreEqual(dir, panel.layoutDirection);
-            
+
             Assert.AreEqual(lang, panel.GetContext<LangContext>().lang);
             Assert.AreEqual(theme, panel.GetContext<ThemeContext>().theme);
             Assert.AreEqual(scale, panel.GetContext<ScaleContext>().scale);
             Assert.AreEqual(dir, panel.GetContext<DirContext>().dir);
-            
+
             Assert.IsTrue(panel.ClassListContains(Panel.contextPrefix + lang));
             Assert.IsTrue(panel.ClassListContains(Panel.contextPrefix + theme));
             Assert.IsTrue(panel.ClassListContains(Panel.contextPrefix + scale));

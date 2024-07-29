@@ -14,13 +14,13 @@ namespace Unity.AppUI.Tests.MVVM
         {
             var command = new AsyncRelayCommand(async () => { }, () => true);
             Assert.IsTrue(command.CanExecute());
-            
+
             command = new AsyncRelayCommand(async () => { });
             Assert.IsTrue(command.CanExecute());
 
             var canExecute = false;
             var executed = 0;
-            
+
             command = new AsyncRelayCommand(async () =>
             {
                 executed++;
@@ -35,13 +35,13 @@ namespace Unity.AppUI.Tests.MVVM
             {
                 changed++;
             };
-            
+
             canExecute = true;
             command.NotifyCanExecuteChanged();
-            
+
             Assert.AreEqual(1, changed);
             Assert.IsTrue(command.CanExecute());
-            
+
             command.Execute();
             Assert.AreEqual(1, executed);
         }
@@ -51,12 +51,12 @@ namespace Unity.AppUI.Tests.MVVM
         {
             var command = new AsyncRelayCommand<int>(async i => { }, i => true);
             Assert.IsTrue(command.CanExecute(1));
-            
+
             command = new AsyncRelayCommand<int>(async i => { });
             Assert.IsTrue(command.CanExecute(1));
-            
+
             var canExecute = false;
-            
+
             var executed = 0;
             command = new AsyncRelayCommand<int>(async i =>
             {
@@ -66,19 +66,19 @@ namespace Unity.AppUI.Tests.MVVM
             Assert.AreEqual(0, executed);
             command.Execute(1);
             Assert.AreEqual(0, executed);
-            
+
             var changed = 0;
             command.CanExecuteChanged += (sender, args) =>
             {
                 changed++;
             };
-            
+
             canExecute = true;
             command.NotifyCanExecuteChanged();
-            
+
             Assert.AreEqual(1, changed);
             Assert.IsTrue(command.CanExecute((object)1));
-            
+
             command.Execute((object)1);
             Assert.AreEqual(1, executed);
         }

@@ -18,7 +18,7 @@ namespace Unity.AppUI.Editor
         public override void Setup(VisualElement element)
         {
             element.parent.style.alignItems = Align.Stretch;
-            
+
             ((DrawerHeader)element).title = "Title";
         }
 
@@ -28,7 +28,7 @@ namespace Unity.AppUI.Editor
                 nameof(DrawerHeader.title),
                 (item) => ((DrawerHeader)item).title,
                 (item, val) => ((DrawerHeader)item).title = val));
-            
+
         }
     }
 }

@@ -12,17 +12,17 @@ namespace Unity.AppUI.Navigation
     {
         const int k_ActionNavigate = 1234;
         const int k_ActionPopBack = 12345;
-        
+
         /// <summary>
         /// Event that is invoked when an action is triggered.
         /// </summary>
         public static event Action<NavController, NavAction> actionTriggered;
-        
+
         /// <summary>
         /// Event that is invoked when the current destination changes.
         /// </summary>
         public static event Action<NavController, NavDestination> destinationChanged;
-        
+
         NavGraphViewAsset m_GraphAsset;
 
         /// <summary>
@@ -74,9 +74,9 @@ namespace Unity.AppUI.Navigation
         Handler m_Handler;
 
         NavDestination m_CurrentDestination;
-        
+
         NavigationAnimation m_CurrentPopExitAnimation = NavigationAnimation.None;
-        
+
         NavigationAnimation m_CurrentPopEnterAnimation = NavigationAnimation.None;
 
         readonly Dictionary<string, Stack<NavBackStackEntry>> m_SavedStates = new Dictionary<string, Stack<NavBackStackEntry>>();
@@ -176,23 +176,23 @@ namespace Unity.AppUI.Navigation
         /// <param name="route"> The route to the destination. </param>
         /// <param name="options"> The options to use for the navigation. </param>
         /// <param name="arguments"> The arguments to pass to the destination. </param>
-        /// <returns></returns>
+        /// <returns> True if the navigation was successful. </returns>
         public bool Navigate(string route, NavOptions options, params Argument[] arguments)
         {
             options ??= new NavOptions();
-            
+
             var destination = m_GraphAsset.FindDestinationByRoute(route);
 
             if (destination == null)
                 return false;
-            
+
             if (!m_GraphAsset.CanNavigate(currentDestination, destination, route))
                 return false;
-            
+
             if (currentDestination != null)
             {
-                var canPush = !options.launchSingleTop || 
-                    currentBackStackEntry == null || 
+                var canPush = !options.launchSingleTop ||
+                    currentBackStackEntry == null ||
                     currentBackStackEntry.destination.name != currentDestination.name;
                 if (canPush)
                     m_BackStack.Push(new NavBackStackEntry(currentDestination, options, m_CurrentArgs));
@@ -200,26 +200,26 @@ namespace Unity.AppUI.Navigation
 
             if (options.popUpToStrategy == PopupToStrategy.CurrentStartDestination)
                 options.popUpToRoute = graph.FindStartDestination();
-            
+
             if (options.popUpToStrategy != PopupToStrategy.None && options.popUpToRoute)
                 PopUpTo(options.popUpToRoute.name, options.popUpToInclusive, options.popUpToSaveState);
-            
+
             if (options.restoreState)
                 RestoreState(route);
-            
+
             if (destination.name == currentBackStackEntry?.destination.name && options.launchSingleTop)
                 m_BackStack.Pop();
-            
+
             NavigateInternal(destination, options, arguments);
             return true;
         }
-        
+
         /// <summary>
         /// Navigate to the destination with the given DeepLink.
         /// </summary>
         /// <param name="deepLink"> The DeepLink to navigate to. </param>
         /// <param name="options"> The options to use for the navigation. </param>
-        /// <returns></returns>
+        /// <returns> True if the navigation was successful. </returns>
         public bool Navigate(Uri deepLink, NavOptions options = null)
         {
             // clear current back stack
@@ -231,7 +231,7 @@ namespace Unity.AppUI.Navigation
                 NavigateInternal(m_GraphAsset.rootGraph.FindStartDestination(), options, ParseDeepLinkQuery(deepLink.Query));
                 return true;
             }
-            
+
             // simulate navigation through each segment but not the last one
             for (var i = 1; i < deepLink.Segments.Length - 1; i++)
             {
@@ -262,12 +262,12 @@ namespace Unity.AppUI.Navigation
             NavigateInternal(lastDestination, options, ParseDeepLinkQuery(deepLink.Query));
             return true;
         }
-        
+
         void NavigateInternal(NavDestination destination, NavOptions options, Argument[] arguments)
         {
             if (destination == null)
                 return;
-            
+
             options = options ?? new NavOptions();
             arguments = arguments ?? new Argument[] {};
             handler.SendMessage(Message.Obtain(handler, k_ActionNavigate, new NavBackStackEntry(destination, options, arguments)));
@@ -277,7 +277,7 @@ namespace Unity.AppUI.Navigation
         {
             var args = query.TrimStart('?').Split('&');
             var result = new Argument[args.Length];
-            
+
             for (var i = 0; i < args.Length; i++)
             {
                 var arg = args[i];
@@ -291,7 +291,7 @@ namespace Unity.AppUI.Navigation
                     result[i] = new Argument(split[0], "1");
                 }
             }
-            
+
             return result;
         }
 
@@ -350,7 +350,7 @@ namespace Unity.AppUI.Navigation
                 handler.SendMessage(Message.Obtain(handler, k_ActionPopBack, entry));
                 return true;
             }
-            
+
             return false;
         }
 

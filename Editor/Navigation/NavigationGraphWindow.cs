@@ -17,7 +17,7 @@ namespace Unity.AppUI.Navigation.Editor
         VisualElement m_GraphViewPane;
 
         NavGraphViewAsset m_LastGraphAsset;
-        
+
         bool m_FollowNavigation = false;
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Unity.AppUI.Navigation.Editor
             m_GraphViewPane = new VisualElement();
             m_GraphViewPane.AddToClassList("graph-view-pane");
             root.Add(m_GraphViewPane);
-            
+
             var graphView = new NavigationGraphView();
             graphView.StretchToParentSize();
             m_GraphViewPane.Add(graphView);
@@ -52,7 +52,7 @@ namespace Unity.AppUI.Navigation.Editor
             var breadcrumbs = new VisualElement();
             breadcrumbs.AddToClassList("breadcrumbs");
             m_GraphViewPane.Add(breadcrumbs);
-            
+
             var generateCodeButton = new Button(OnGenerateCodeClicked)
             {
                 text = "Generate Code"
@@ -69,7 +69,7 @@ namespace Unity.AppUI.Navigation.Editor
             });
             followNavigationToggle.value = m_FollowNavigation;
             m_GraphViewPane.Add(followNavigationToggle);
-            
+
             graphView.graphChanged += (graph) =>
             {
                 breadcrumbs.Clear();
@@ -93,7 +93,7 @@ namespace Unity.AppUI.Navigation.Editor
                             graphView.SetGraph(((Label)evt.target).userData as NavGraph);
                         });
                     }
-                    
+
                     breadcrumbs.Insert(0, label);
                     currentGraph = currentGraph.parent;
                     breadcrumbs.Insert(0, new Label(" > "));
@@ -101,9 +101,9 @@ namespace Unity.AppUI.Navigation.Editor
                 }
                 breadcrumbs.Insert(0, new Label(" ⌂ "));
             };
-            
+
             m_GraphViewPane.SetEnabled(false);
-            
+
             // load last graph
             if (m_LastGraphAsset)
             {

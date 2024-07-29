@@ -9,7 +9,7 @@ namespace Unity.AppUI.Tests.UI
     class LinearProgressTests : VisualElementTests<LinearProgress>
     {
         protected override string mainUssClassName => LinearProgress.ussClassName;
-        
+
         protected override IEnumerable<Story> stories
         {
             get
@@ -30,7 +30,7 @@ namespace Unity.AppUI.Tests.UI
                 });
             }
         }
-        
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:LinearProgress />",

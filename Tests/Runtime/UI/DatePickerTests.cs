@@ -13,7 +13,7 @@ namespace Unity.AppUI.Tests.UI
     class DatePickerTests : VisualElementTests<DatePicker>
     {
         protected override string mainUssClassName => DatePicker.ussClassName;
-        
+
         protected override IEnumerable<Story> stories
         {
             get
@@ -24,7 +24,7 @@ namespace Unity.AppUI.Tests.UI
                 });
             }
         }
-        
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:DatePicker />",
@@ -39,7 +39,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(2020, datePicker.currentYear);
             Assert.AreEqual(1, datePicker.currentMonth);
         }
-        
+
         [Test]
         public void DatePicker_CanGoToPreviousYear()
         {
@@ -49,7 +49,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(2019, datePicker.currentYear);
             Assert.AreEqual(1, datePicker.currentMonth);
         }
-        
+
         [Test]
         public void DatePicker_CanGoToNextYear()
         {
@@ -69,7 +69,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(2019, datePicker.currentYear);
             Assert.AreEqual(2, datePicker.currentMonth);
         }
-        
+
         [Test]
         public void DatePicker_CanGoToPreviousMonth()
         {
@@ -79,7 +79,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(2019, datePicker.currentYear);
             Assert.AreEqual(12, datePicker.currentMonth);
         }
-        
+
         [Test]
         public void DatePicker_CanGoToNextMonth()
         {
@@ -89,7 +89,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(2020, datePicker.currentYear);
             Assert.AreEqual(2, datePicker.currentMonth);
         }
-        
+
         [Test]
         public void DatePicker_CanGoToMonth()
         {
@@ -98,10 +98,10 @@ namespace Unity.AppUI.Tests.UI
             datePicker.GoToMonth(2);
             Assert.AreEqual(2020, datePicker.currentYear);
             Assert.AreEqual(2, datePicker.currentMonth);
-            
+
             Assert.Throws<System.ArgumentOutOfRangeException>(() => datePicker.GoToMonth(13));
         }
-        
+
         [Test]
         public void DatePicker_CanSetValue()
         {
@@ -110,7 +110,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(2020, datePicker.currentYear);
             Assert.AreEqual(1, datePicker.currentMonth);
         }
-        
+
         [UnityTest]
         public IEnumerator DatePicker_CanSetValueWithEvent()
         {
@@ -119,9 +119,9 @@ namespace Unity.AppUI.Tests.UI
             var datePicker = new DatePicker();
             m_TestUI.rootVisualElement.Add(panel);
             panel.Add(datePicker);
-            
+
             yield return null;
-            
+
             var called = 0;
             datePicker.RegisterValueChangedCallback(evt =>
             {
@@ -129,16 +129,16 @@ namespace Unity.AppUI.Tests.UI
                 Assert.AreEqual(new Date(2020, 1, 1), evt.newValue);
             });
             datePicker.value = new Date(2020, 1, 1);
-            
+
             yield return null;
-            
+
             Assert.AreEqual(1, called);
             Assert.AreEqual(new Date(2020, 1, 1), datePicker.value);
-            
+
             datePicker.value = new Date(2020, 1, 1);
-            
+
             yield return null;
-            
+
             Assert.AreEqual(1, called);
         }
     }

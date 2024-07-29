@@ -14,24 +14,24 @@ namespace Unity.AppUI.UI
     public partial class Link : LocalizedTextElement, IPressable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
         internal static readonly BindingId urlProperty = nameof(url);
-        
+
 #endif
-        
+
         /// <summary>
         /// The Link's USS class name.
         /// </summary>
         public new const string ussClassName = "appui-link";
-        
+
         /// <summary>
         /// The Link's size USS class name.
         /// </summary>
         [EnumName("GetSizeUssClassName", typeof(TextSize))]
         public const string sizeUssClassName = ussClassName + "--size-";
-        
+
         Pressable m_Clickable;
 
         TextSize m_Size;
@@ -73,7 +73,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -104,20 +104,20 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// Default constructor.
         /// </summary>
         public Link() : this(null)
         {}
-        
+
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="text"> The text of the link. </param>
         public Link(string text) : this(text, null)
         {}
-        
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -131,13 +131,13 @@ namespace Unity.AppUI.UI
             pickingMode = PickingMode.Position;
             focusable = true;
             tabIndex = 0;
-            
+
             this.url = url;
             size = TextSize.M;
-            
+
             this.AddManipulator(new KeyboardFocusController());
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -150,13 +150,13 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new class UxmlTraits : LocalizedTextElement.UxmlTraits
         {
-            
+
             readonly UxmlEnumAttributeDescription<TextSize> m_Size = new UxmlEnumAttributeDescription<TextSize>
             {
                 name = "size",
                 defaultValue = TextSize.M,
             };
-            
+
             readonly UxmlStringAttributeDescription m_Url = new UxmlStringAttributeDescription
             {
                 name = "url",
@@ -180,7 +180,7 @@ namespace Unity.AppUI.UI
                     element.url = url;
             }
         }
-        
+
 #endif
     }
 }

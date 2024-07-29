@@ -16,17 +16,17 @@ namespace Unity.AppUI.UI
     public partial class MenuTrigger : BaseVisualElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId triggerProperty = new BindingId(nameof(trigger));
-        
+
         internal static readonly BindingId anchorProperty = new BindingId(nameof(anchor));
-        
+
         internal static readonly BindingId menuProperty = new BindingId(nameof(menu));
-        
+
         internal static readonly BindingId closeOnSelectionProperty = new BindingId(nameof(closeOnSelection));
-        
+
 #endif
-        
+
         string m_AnchorName;
 
         /// <summary>
@@ -35,13 +35,13 @@ namespace Unity.AppUI.UI
         public MenuTrigger()
         {
             pickingMode = PickingMode.Ignore;
-            
+
             anchor = null;
             closeOnSelection = true;
-            
+
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         }
-        
+
         VisualElement m_Trigger;
 
         /// <summary>
@@ -57,14 +57,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_Trigger != value;
                 m_Trigger = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in triggerProperty);
 #endif
             }
         }
-        
+
         VisualElement m_Anchor;
 
         /// <summary>
@@ -80,14 +80,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_Anchor != value;
                 m_Anchor = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in anchorProperty);
 #endif
             }
         }
-        
+
         Menu m_Menu;
 
         /// <summary>
@@ -103,14 +103,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_Menu != value;
                 m_Menu = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in menuProperty);
 #endif
             }
         }
-        
+
         bool m_CloseOnSelection = true;
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace Unity.AppUI.UI
                 name = "anchor",
                 defaultValue = null
             };
-            
+
             readonly UxmlBoolAttributeDescription m_CloseOnSelection = new UxmlBoolAttributeDescription
             {
                 name = "close-on-selection",
@@ -228,7 +228,7 @@ namespace Unity.AppUI.UI
                 el.closeOnSelection = m_CloseOnSelection.GetValueFromBag(bag, cc);
             }
         }
-        
+
 #endif
     }
 }

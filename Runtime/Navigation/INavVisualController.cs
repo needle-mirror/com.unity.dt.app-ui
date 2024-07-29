@@ -16,7 +16,7 @@ namespace Unity.AppUI.Navigation
         /// <param name="destination"> The destination to setup the bottom navigation bar for. </param>
         /// <param name="navController"> The navigation controller. </param>
         void SetupBottomNavBar(BottomNavBar bottomNavBar, NavDestination destination, NavController navController);
-        
+
         /// <summary>
         /// Setup the app bar.
         /// </summary>
@@ -24,7 +24,7 @@ namespace Unity.AppUI.Navigation
         /// <param name="destination"> The destination to setup the app bar for. </param>
         /// <param name="navController"> The navigation controller. </param>
         void SetupAppBar(AppBar appBar, NavDestination destination, NavController navController);
-        
+
         /// <summary>
         /// Setup the drawer.
         /// </summary>

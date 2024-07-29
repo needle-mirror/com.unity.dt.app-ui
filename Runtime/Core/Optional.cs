@@ -8,7 +8,7 @@ namespace Unity.AppUI.Core
     /// <summary>
     /// A struct that can be used to represent an optional value.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T"> The type of the optional value </typeparam>
     [Serializable]
     public struct Optional<T> : IEquatable<Optional<T>>
     {
@@ -17,7 +17,7 @@ namespace Unity.AppUI.Core
         /// </summary>
         [SerializeField]
         bool isSet;
-        
+
         /// <summary>
         /// The current value.
         /// </summary>
@@ -27,7 +27,7 @@ namespace Unity.AppUI.Core
         /// </remarks>
         [SerializeField]
         T value;
-        
+
         /// <summary>
         /// Whether the value is set.
         /// </summary>
@@ -54,12 +54,12 @@ namespace Unity.AppUI.Core
             this.value = value;
             isSet = true;
         }
-        
+
         /// <summary>
         /// An <see cref="Optional{T}"/> with no value set.
         /// </summary>
         public static Optional<T> none => default;
-        
+
         /// <summary>
         /// Automatically converts a value to an <see cref="Optional{T}"/>.
         /// </summary>
@@ -98,7 +98,7 @@ namespace Unity.AppUI.Core
         {
             return HashCode.Combine(IsSet, Value);
         }
-        
+
         /// <summary>
         /// Determines whether two <see cref="Optional{T}"/>s are equal.
         /// </summary>
@@ -121,7 +121,7 @@ namespace Unity.AppUI.Core
             return !left.Equals(right);
         }
     }
-    
+
     /// <summary>
     /// A struct that can be used to represent an optional enum value.
     /// </summary>
@@ -135,7 +135,7 @@ namespace Unity.AppUI.Core
         /// </summary>
         [SerializeField]
         bool isSet;
-        
+
         /// <summary>
         /// The current value.
         /// </summary>
@@ -145,7 +145,7 @@ namespace Unity.AppUI.Core
         /// </remarks>
         [SerializeField]
         T value;
-        
+
         /// <summary>
         /// Whether the value is set.
         /// </summary>
@@ -172,12 +172,12 @@ namespace Unity.AppUI.Core
             this.value = value;
             isSet = true;
         }
-        
+
         /// <summary>
         /// An <see cref="OptionalEnum{T}"/> with no value set.
         /// </summary>
         public static OptionalEnum<T> none => default;
-        
+
         /// <summary>
         /// Automatically converts a value to an <see cref="OptionalEnum{T}"/>.
         /// </summary>
@@ -216,7 +216,7 @@ namespace Unity.AppUI.Core
         {
             return HashCode.Combine(IsSet, Value);
         }
-        
+
         /// <summary>
         /// Determines whether two <see cref="OptionalEnum{T}"/>s are equal.
         /// </summary>
@@ -239,7 +239,7 @@ namespace Unity.AppUI.Core
             return !left.Equals(right);
         }
     }
-    
+
     /// <summary>
     /// A UI-Toolkit field that can be used to edit an <see cref="Optional{T}"/>.
     /// </summary>

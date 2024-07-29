@@ -23,7 +23,7 @@ namespace Unity.AppUI.Editor
         /// </summary>
         public string name { get; protected set; }
     }
-    
+
     /// <summary>
     /// This class defines a Enum property for a StoryBookComponent.
     /// </summary>
@@ -120,7 +120,7 @@ namespace Unity.AppUI.Editor
         /// The type of the UI element.
         /// </summary>
         public virtual Type uiElementType { get; }
-        
+
         /// <summary>
         /// Setup the component.
         /// </summary>
@@ -213,17 +213,17 @@ namespace Unity.AppUI.Editor
         ScrollView m_Inspector;
 
         TwoPaneSplitView m_VerticalPane;
-        
+
         string m_CurrentTheme = "dark";
-        
+
         string m_CurrentScale = "medium";
-        
+
         Dir m_CurrentLayoutDirection = Dir.Ltr;
 
         EditorToolbarDropdown m_ThemeDropdown;
-        
+
         EditorToolbarDropdown m_ScaleDropdown;
-        
+
         EditorToolbarDropdown m_LayoutDirectionDropdown;
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace Unity.AppUI.Editor
                     }
                 }
             }
-            
+
             return stories;
         }
 
@@ -353,7 +353,7 @@ namespace Unity.AppUI.Editor
             var toolbar = new Toolbar();
             var panel = new Panel
             {
-                theme = m_CurrentTheme, 
+                theme = m_CurrentTheme,
                 scale = m_CurrentScale,
                 layoutDirection = m_CurrentLayoutDirection
             };
@@ -384,7 +384,7 @@ namespace Unity.AppUI.Editor
                 menu.DropDown(m_ThemeDropdown.worldBound);
             });
             toolbar.Add(m_ThemeDropdown);
-            
+
             m_ScaleDropdown = new EditorToolbarDropdown("Scale", () =>
             {
                 var menu = new GenericMenu();
@@ -406,7 +406,7 @@ namespace Unity.AppUI.Editor
                 menu.DropDown(m_ScaleDropdown.worldBound);
             });
             toolbar.Add(m_ScaleDropdown);
-            
+
             m_LayoutDirectionDropdown = new EditorToolbarDropdown("Layout Direction", () =>
             {
                 var menu = new GenericMenu();
@@ -423,7 +423,7 @@ namespace Unity.AppUI.Editor
                 menu.DropDown(m_LayoutDirectionDropdown.worldBound);
             });
             toolbar.Add(m_LayoutDirectionDropdown);
-            
+
             detailPage.Add(toolbar);
 
             m_VerticalPane = new TwoPaneSplitView(1, 150, TwoPaneSplitViewOrientation.Vertical);
@@ -455,7 +455,7 @@ namespace Unity.AppUI.Editor
             var inspectorContainer = new VisualElement { name = "inspector-container" };
             m_Inspector.Add(inspectorContainer);
             m_VerticalPane.Add(m_Inspector);
-            
+
             detailPage.Add(m_VerticalPane);
 
             return detailPage;

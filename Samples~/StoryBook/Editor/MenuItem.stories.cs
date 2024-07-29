@@ -18,7 +18,7 @@ namespace Unity.AppUI.Editor
         public override void Setup(VisualElement element)
         {
             element.parent.style.alignItems = Align.Stretch;
-            
+
             ((MenuItem)element).label = "Information";
             ((MenuItem)element).icon = "info";
         }
@@ -29,12 +29,12 @@ namespace Unity.AppUI.Editor
                 nameof(MenuItem.label),
                 (item) => ((MenuItem)item).label,
                 (item, val) => ((MenuItem)item).label = val));
-            
+
             m_Properties.Add(new StoryBookStringProperty(
                 nameof(MenuItem.icon),
                 (item) => ((MenuItem)item).icon,
                 (item, val) => ((MenuItem)item).icon = val));
-            
+
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Unity.AppUI.Bridge
         {
             if (panel is RuntimePanel runtimePanel)
                 return runtimePanel.panelSettings;
-            
+
             return null;
         }
 
@@ -18,12 +18,12 @@ namespace Unity.AppUI.Bridge
 
         internal static PanelSettings GetPanelSettings(this IPanel panel)
         {
-            var prop = panel.GetType().GetProperty("panelSettings", 
+            var prop = panel.GetType().GetProperty("panelSettings",
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
-            
+
             return prop?.GetValue(panel) as PanelSettings;
         }
-        
+
 #endif
     }
 }

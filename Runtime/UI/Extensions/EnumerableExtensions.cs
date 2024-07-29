@@ -18,10 +18,10 @@ namespace Unity.AppUI.UI
         {
             if (first == null && second == null)
                 return true;
-            
+
             if (first == null || second == null)
                 return false;
-            
+
             using var enumerator = first.GetEnumerator();
             using var otherEnumerator = second.GetEnumerator();
 
@@ -30,7 +30,7 @@ namespace Unity.AppUI.UI
                 if (!otherEnumerator.MoveNext())
                     return false;
 
-                if ((enumerator.Current == null && otherEnumerator.Current != null) || 
+                if ((enumerator.Current == null && otherEnumerator.Current != null) ||
                     (enumerator.Current != null && !enumerator.Current.Equals(otherEnumerator.Current)))
                     return false;
             }
@@ -51,11 +51,11 @@ namespace Unity.AppUI.UI
         {
             if (enumerable == null)
                 return default;
-            
+
             using var enumerator = enumerable.GetEnumerator();
             return enumerator.MoveNext() ? enumerator.Current : default;
         }
-        
+
         /// <summary>
         /// Get the first integer in an enumerable.
         /// </summary>
@@ -65,7 +65,7 @@ namespace Unity.AppUI.UI
         {
             if (enumerable == null)
                 return -1;
-            
+
             using var enumerator = enumerable.GetEnumerator();
             return enumerator.MoveNext() ? enumerator.Current : -1;
         }

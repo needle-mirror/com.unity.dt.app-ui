@@ -60,12 +60,12 @@ namespace Unity.AppUI.UI
             tooltip.text = value;
             return this;
         }
-        
+
         /// <summary>
         /// The template to display inside the popup.
         /// </summary>
         public VisualElement template => tooltip.contentContainer.childCount > 0 ? tooltip.contentContainer[0] : null;
-        
+
         /// <summary>
         /// The content Visual Element of the tooltip (if any).
         /// </summary>
@@ -83,7 +83,7 @@ namespace Unity.AppUI.UI
         {
             if (content?.parent == tooltip.contentContainer)
                 return this;
-            
+
             tooltip.contentContainer.Clear();
             tooltip.text = null;
             if (content != null)
@@ -143,22 +143,27 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Build a new Tooltip.
-        /// <remarks>
-        /// In the Application element, only one Tooltip is create and moved at the right place when hovering others UI
-        /// elements. The Tooltip is handled by the <see cref="TooltipManipulator"/>.
-        /// </remarks>
         /// </summary>
         /// <param name="referenceView">An arbitrary UI element used as reference for the application
         /// context to attach to the popup.</param>
         /// <returns>A Tooltip instance.</returns>
+        /// <remarks>
+        /// In the Application element, only one Tooltip is create and moved at the right place when hovering others UI
+        /// elements. The Tooltip is handled by the <see cref="TooltipManipulator"/>.
+        /// </remarks>
         public static Tooltip Build(VisualElement referenceView)
         {
-            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
-            
-            if (panel == null)
+            if (referenceView == null)
+                throw new ArgumentNullException(nameof(referenceView));
+
+            if (referenceView.panel == null)
                 throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-            
-            var parentView = panel.tooltipContainer;
+
+            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>() ?? referenceView.panel?.visualTree;
+            if (panel == null)
+                throw new InvalidOperationException("Unable to find determine a valid container in the hierarchy.");
+
+            var parentView = (panel as Panel)?.tooltipContainer ?? panel;
             var tooltipElement = new Tooltip(parentView, new TooltipVisualElement())
                 .SetPlacement(defaultPlacement);
 

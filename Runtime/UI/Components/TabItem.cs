@@ -19,16 +19,16 @@ namespace Unity.AppUI.UI
     public partial class TabItem : BaseVisualElement, ISelectableElement, IPressable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId selectedProperty = nameof(selected);
-        
+
         internal static readonly BindingId labelProperty = nameof(label);
-        
+
         internal static readonly BindingId iconProperty = nameof(icon);
-        
+
 #endif
-        
-        
+
+
         /// <summary>
         /// The TabItem main styling class.
         /// </summary>
@@ -98,7 +98,7 @@ namespace Unity.AppUI.UI
                 var changed = m_Label.text != value;
                 m_Label.text = value;
                 m_Label.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Label.text));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
@@ -123,7 +123,7 @@ namespace Unity.AppUI.UI
                 var changed = m_Icon.iconName != value;
                 m_Icon.iconName = value;
                 m_Icon.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Icon.iconName));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in iconProperty);
@@ -161,7 +161,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = selected != value;
                 SetSelectedWithoutNotify(value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in selectedProperty);
@@ -177,7 +177,7 @@ namespace Unity.AppUI.UI
         {
             EnableInClassList(Styles.selectedUssClassName, newValue);
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            
+
             readonly UxmlStringAttributeDescription m_Icon = new UxmlStringAttributeDescription
             {
                 name = "icon",
@@ -217,10 +217,10 @@ namespace Unity.AppUI.UI
                 el.icon = m_Icon.GetValueFromBag(bag, cc);
                 el.label = m_Label.GetValueFromBag(bag, cc);
 
-                
+
             }
         }
-        
+
 #endif
     }
 }

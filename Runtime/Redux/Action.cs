@@ -4,7 +4,7 @@ namespace Unity.AppUI.Redux
     /// An action creator.
     /// </summary>
     public class ActionCreator
-    { 
+    {
         /// <summary>
         /// The type of the action.
         /// This is used to determine which reducer to call.
@@ -19,7 +19,7 @@ namespace Unity.AppUI.Redux
         {
             this.type = type;
         }
-        
+
         /// <summary>
         /// Create the action to dispatch.
         /// </summary>
@@ -28,7 +28,7 @@ namespace Unity.AppUI.Redux
         {
             return new Action(type);
         }
-        
+
         /// <summary>
         /// Check if the action matches the action creator.
         /// </summary>
@@ -39,7 +39,7 @@ namespace Unity.AppUI.Redux
             return action.type == type;
         }
     }
-    
+
     /// <summary>
     /// An action creator with a payload.
     /// </summary>
@@ -53,7 +53,7 @@ namespace Unity.AppUI.Redux
         public ActionCreator(string type) : base(type)
         {
         }
-        
+
         /// <summary>
         /// Create the action to dispatch.
         /// </summary>
@@ -64,7 +64,7 @@ namespace Unity.AppUI.Redux
             return new Action<TPayload>(type, payload);
         }
     }
-    
+
     /// <summary>
     /// An action without a payload.
     /// </summary>
@@ -76,7 +76,7 @@ namespace Unity.AppUI.Redux
         /// </summary>
         public string type { get; } = type;
     }
-    
+
     /// <summary>
     /// An action with a payload.
     /// </summary>

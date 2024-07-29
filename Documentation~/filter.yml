@@ -1,19 +1,19 @@
 apiRules:
   - exclude:
-      uidRegex: Unity\.AppUI\.Tests\..*
+      uidRegex: ^Unity\.AppUI\.Tests\..*
       type: Namespace
   - exclude:
-      uidRegex: Unity\.AppUI\..*\.UxmlFactory
+      uidRegex: ^Unity\.AppUI\..*\.UxmlFactory$
       type: Class
   - exclude:
-      uidRegex: Unity\.AppUI\..*\.UxmlTraits
+      uidRegex: ^Unity\.AppUI\..*\.UxmlTraits$
       type: Class
   - exclude:
-      uidRegex: Unity\.AppUI\..*\.UxmlSerializedData
+      uidRegex: ^Unity\.AppUI\..*\.UxmlSerializedData$
       type: Class
   - exclude:
-      uidRegex: Unity\.AppUI\..*UxmlSerializedData
+      uidRegex: ^Unity\.AppUI\..*UxmlSerializedData$
       type: Class
   - exclude:
-      uidRegex: Unity\.AppUI\.Samples\..*
+      uidRegex: ^Unity\.AppUI\.Samples\..*
       type: Namespace

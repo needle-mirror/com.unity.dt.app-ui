@@ -18,27 +18,27 @@ namespace Unity.AppUI.Tests.MVVM
 
             var serviceDescriptor =
                 new ServiceDescriptor(
-                    typeof(IServiceTest), 
-                    typeof(ServiceTest), 
+                    typeof(IServiceTest),
+                    typeof(ServiceTest),
                     ServiceLifetime.Singleton);
-            
+
             var serviceDescriptor2 =
                 new ServiceDescriptor(
-                    typeof(IServiceTest), 
-                    typeof(ServiceTest), 
+                    typeof(IServiceTest),
+                    typeof(ServiceTest),
                     ServiceLifetime.Transient);
-            
+
             services.Add(serviceDescriptor2);
             services.Insert(0, serviceDescriptor);
 
             Assert.AreEqual(2, services.Count);
-            
+
             Assert.AreEqual(serviceDescriptor, services[0]);
             Assert.AreEqual(serviceDescriptor2, services[1]);
-            
+
             Assert.AreEqual(0, services.IndexOf(serviceDescriptor));
             Assert.AreEqual(1, services.IndexOf(serviceDescriptor2));
-            
+
             Assert.IsFalse(services.IsReadOnly);
 
             var array = new ServiceDescriptor[2];
@@ -48,13 +48,13 @@ namespace Unity.AppUI.Tests.MVVM
             {
                 Assert.IsTrue(array.Contains(desc));
             }
-            
+
             services.Remove(serviceDescriptor);
             Assert.AreEqual(1, services.Count);
-            
+
             services.RemoveAt(0);
             Assert.AreEqual(0, services.Count);
-            
+
             services.Clear();
             Assert.AreEqual(0, services.Count);
         }

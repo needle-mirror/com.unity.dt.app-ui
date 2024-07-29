@@ -10,26 +10,27 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [2.0.0-pre.6] - 2024-07-07
-
-### Added
-
-- Added support of Attributes on fields and properties in the Dependency Injection system.
-- Added support of UnityEditor ColorPicker in ColorField component.
-- Added support of Color without alpha information in ColorField and ColorPicker.
-- Added `rounded-progress-corners` boolean property in `CircularProgress` and `LinearProgress` to be able to disable rounded corners.
-- Added `trailing-icon` property in `ActionButton` component.
-- Added customization support for the size of the Color swatch inside the ColorField.
-- Added arrow-square-in icon.
+## [2.0.0-pre.7] - 2024-07-30
 
 ### Changed
 
-- Changed the Text element inside the ColorField to become a selectable text.
+- Changed DialogTrigger.keyboardDismissDisabled to DialogTrigger.keyboardDismissEnabled for consistency.
+- Renamed Popup.parentView to Popup.containerView for more clarity.
+
+### Added
+
+- Added Modal.outsideClickDismissEnabled and Modal.outsideClickStrategy properties to support dismissing Modals by clicking outside of them.
+- Added Popup<T>.SetContainerView method to set a custom container which will be the parent of the popup's view.
+- Made `AnchorPopup.GetMovableElement` method public for easier access and increase customization possibilities.
 
 ### Fixed
 
-- Fixed styling issues in `ActionButton` component.
-- Fixed Menu's backdrop to block pointer events
-- Fixed ColorField styling issues.
-- Use correct color variables for Radio and Checkbox components
+- Fixed "Shape" icon.
+- Fixed border color variable for AccordionItem.
+- Fixed CultureInfo used during source code generation.
+
+### Removed
+
+- Removed intrusive Debug.Log calls from Platform class on Windows platform.
+- Removed warning message when using Single selection type in an overflown ActionGroup.
 

@@ -889,7 +889,7 @@
                             <appui:Checkbox size="M" label="A checkbox example" />
                         </appui:ContextProvider>
                     </ui:VisualElement>
-                    
+
                     <!-- DateField -->
                     <appui:Heading text="DATEFIELD" class="example-title" />
                     <appui:Text text="Default" class="example-subtitle" />
@@ -907,14 +907,14 @@
                     <ui:VisualElement class="example-section">
                         <appui:DatePicker value="1998-07-12" first-day-of-week="Monday" />
                     </ui:VisualElement>
-                    
+
                     <!-- DateRangeField -->
                     <appui:Heading text="DATERANGEFIELD" class="example-title" />
                     <appui:Text text="Default" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:DateRangeField />
                     </ui:VisualElement>
-                    
+
                     <!-- DateRangePicker -->
                     <appui:Heading text="DATERANGEPICKER" class="example-title" />
                     <appui:Text text="Default" class="example-subtitle" />
@@ -934,7 +934,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Modal - Dismissable Button" class="example-subtitle" />
                     <ui:VisualElement class="example-section example-section-fullwidth">
-                        <appui:DialogTrigger type="Modal">
+                        <appui:DialogTrigger type="Modal" outside-click-dismiss-enabled="false">
                             <appui:ActionButton label="Click here!" />
                             <appui:Dialog title="Hello" dismissable="true">
                                 <appui:Text text="Lorem ipsum..." />
@@ -943,7 +943,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Modal - FullScreen" class="example-subtitle" />
                     <ui:VisualElement class="example-section example-section-fullwidth">
-                        <appui:DialogTrigger type="FullScreen">
+                        <appui:DialogTrigger type="FullScreen" outside-click-dismiss-enabled="false">
                             <appui:ActionButton label="Click here!" />
                             <appui:Dialog title="Hello" dismissable="true">
                                 <appui:Text text="Lorem ipsum..." />
@@ -1330,7 +1330,7 @@
                     <ui:VisualElement class="example-section">
                         <appui:GridView name="grid-view-default" style="height: 300px;" />
                     </ui:VisualElement>
-                    
+
                     <!-- Masonry Grid View -->
                     <appui:Heading text="MASONRYGRIDVIEW" class="example-title" />
                     <appui:Text text="Default" class="example-subtitle" />
@@ -1710,7 +1710,7 @@
                         <appui:LinearProgress color-override="#3545bf" />
                         <appui:Text text="No rounded corners" class="example-subtitle" />
                         <appui:LinearProgress variant="Determinate" value="0.25" rounded-progress-corners="false" />
-                        <appui:LinearProgress variant="Determinate" value="0.50" rounded-progress-corners="false" /> 
+                        <appui:LinearProgress variant="Determinate" value="0.50" rounded-progress-corners="false" />
                         <appui:Text text="Determinate" class="example-subtitle" />
                         <appui:LinearProgress variant="Determinate" value="0.25"/>
                         <appui:LinearProgress variant="Determinate" value="0.50"/>
@@ -1864,7 +1864,7 @@
                             </appui:Pane>
                             <appui:Pane style="justify-content: center; align-items: center; width: 50%; min-width: 50px;">
                                 <appui:Text text="Pane 2" />
-                            </appui:Pane> 
+                            </appui:Pane>
                         </appui:SplitView>
                     </ui:VisualElement>
                     <appui:Text text="Collapsible" class="example-subtitle" />
@@ -1875,7 +1875,7 @@
                             </appui:Pane>
                             <appui:Pane style="justify-content: center; align-items: center; min-width: 128px;" stretch-factor="1">
                                 <appui:Text text="Pane 2 - Stretch" />
-                            </appui:Pane> 
+                            </appui:Pane>
                             <appui:Pane style="justify-content: center; align-items: center; width: 20%; min-width: 60px;">
                                 <appui:Text text="Pane 3" />
                             </appui:Pane>

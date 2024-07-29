@@ -17,40 +17,40 @@ namespace Unity.AppUI.UI
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId compactThresholdProperty = nameof(compactThreshold);
-        
+
         internal static readonly BindingId compactProperty = nameof(compact);
-        
+
         internal static readonly BindingId stretchFactorProperty = nameof(stretchFactor);
-        
+
         internal static readonly BindingId stretchProperty = nameof(stretch);
 #endif
-        
+
         static readonly EventCallback<GeometryChangedEvent> k_OnGeometryChanged = OnGeometryChanged;
-        
+
         /// <summary>
         /// Event that is triggered when the pane is toggled between compact and expanded mode.
         /// </summary>
         public event Action<Pane> compactChanged;
-        
+
         /// <summary>
         /// The default threshold used to snap to compact mode when the pane is resized.
         /// </summary>
         internal const float defaultCompactThreshold = 16f;
-        
+
         /// <summary>
         /// The USS class name of a <see cref="Pane"/>.
         /// </summary>
         public const string ussClassName = "appui-pane";
-        
+
         /// <summary>
         /// The USS class name of a <see cref="Pane"/> in compact mode.
         /// </summary>
         public const string compactUssClassName = ussClassName + "--compact";
-        
+
         bool m_Compact;
 
         float m_CompactThreshold = defaultCompactThreshold;
-        
+
         /// <summary>
         /// A threshold used to snap to compact mode when the pane is resized.
         /// </summary>
@@ -69,14 +69,14 @@ namespace Unity.AppUI.UI
                 var changed = Mathf.Approximately(m_CompactThreshold, value);
 #endif
                 m_CompactThreshold = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in compactThresholdProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// Whether the pane is in compact mode or not.
         /// </summary>
@@ -100,7 +100,7 @@ namespace Unity.AppUI.UI
                 }
             }
         }
-        
+
         /// <summary>
         /// The stretch factor of the pane.
         /// </summary>
@@ -119,7 +119,7 @@ namespace Unity.AppUI.UI
                 var changed = Mathf.Approximately(resolvedStyle.flexGrow, value);
                 var stretchChanged = stretch != (value > 0);
 #endif
-                
+
                 style.flexGrow = value;
                 style.flexShrink = value > 0 ? 1 : 0;
 
@@ -151,11 +151,11 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
             pickingMode = PickingMode.Ignore;
-            
+
             compactThreshold = defaultCompactThreshold;
             SetCompact(false);
             stretchFactor = 0;
-            
+
             RegisterCallback(k_OnGeometryChanged);
         }
 
@@ -164,7 +164,7 @@ namespace Unity.AppUI.UI
             if (evt.target is Pane { parent: SplitView splitView } pane)
                 splitView.RefreshSplitterPosition(splitView.IndexOf(pane));
         }
-        
+
         /// <summary>
         /// Toggles the pane between compact and expanded mode.
         /// </summary>
@@ -172,7 +172,7 @@ namespace Unity.AppUI.UI
         {
             compact = !compact;
         }
-        
+
         void SetCompact(bool value)
         {
             m_Compact = value;
@@ -191,7 +191,7 @@ namespace Unity.AppUI.UI
                 compactThreshold = compactThreshold
             };
         }
-        
+
         /// <summary>
         /// Restores the state of the <see cref="Pane"/>.
         /// </summary>
@@ -212,13 +212,13 @@ namespace Unity.AppUI.UI
             /// Whether the pane is in compact mode or not.
             /// </summary>
             public bool compact;
-            
+
             /// <summary>
             /// A threshold used to snap to compact mode when the pane is resized.
             /// </summary>
             public float compactThreshold;
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -236,13 +236,13 @@ namespace Unity.AppUI.UI
                 name = "compact-threshold",
                 defaultValue = defaultCompactThreshold
             };
-            
+
             readonly UxmlFloatAttributeDescription m_StretchFactor = new UxmlFloatAttributeDescription
             {
                 name = "stretch-factor",
                 defaultValue = 0
             };
-            
+
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
             /// </summary>
@@ -254,7 +254,7 @@ namespace Unity.AppUI.UI
                 m_PickingMode.defaultValue = PickingMode.Ignore;
                 base.Init(ve, bag, cc);
                 var el = (Pane)ve;
-                
+
                 el.compactThreshold = m_CompactThreshold.GetValueFromBag(bag, cc);
                 el.stretchFactor = m_StretchFactor.GetValueFromBag(bag, cc);
             }

@@ -28,7 +28,7 @@ namespace Unity.AppUI.Core
         /// The id of the touchpad button in synthesized mouse events.
         /// </summary>
         public const int touchPadId = 3;
-        
+
         static AppUISystemObject s_SystemObject;
 
         internal static AppUIManager s_Manager;
@@ -50,7 +50,7 @@ namespace Unity.AppUI.Core
                             "This instance is only available in play mode.");
                     }
                 }
-                
+
                 return AppUIManagerBehaviour.instance;
             }
         }
@@ -150,9 +150,9 @@ namespace Unity.AppUI.Core
         }
 
 #if UNITY_EDITOR
-        
+
         static uint s_UpdateFrame = 0;
-        
+
         const uint k_EditorUpdateDelay = 20;
 
         /// <summary>
@@ -252,7 +252,7 @@ namespace Unity.AppUI.Core
         {
             if (s_UpdateFrame < k_EditorUpdateDelay)
                 s_UpdateFrame++;
-            
+
             if (s_UpdateFrame < k_EditorUpdateDelay && s_Manager == null)
                 return;
 

@@ -11,11 +11,11 @@ namespace Unity.AppUI.Tests.UI
         {
             return Popover.Build(GetReferenceElement(), GetContentElement());
         }
-        
+
         protected override void OnCanBuildPopupTested()
         {
             base.OnCanBuildPopupTested();
-            
+
             var popover = (Popover)popup;
 
             Assert.IsNotNull(popover);
@@ -27,15 +27,15 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(PopoverPlacement.Bottom, popover.currentPlacement);
             Assert.IsTrue(popover.shouldFlip);
             Assert.IsTrue(popover.outsideClickDismissEnabled);
-            
+
             Assert.IsFalse(popover.modalBackdrop);
             popover.SetModalBackdrop(true);
             Assert.IsTrue(popover.modalBackdrop);
-            
+
             Assert.IsNotNull(popover.view.contentContainer);
-            
+
             Assert.AreEqual(PopoverPlacement.Bottom, popover.placement);
-            Assert.AreEqual(((IPlaceableElement)popover.view).placement, popover.placement); 
+            Assert.AreEqual(((IPlaceableElement)popover.view).placement, popover.placement);
             popover.SetPlacement(PopoverPlacement.Left);
             Assert.AreEqual(PopoverPlacement.Left, popover.placement);
             popover.SetPlacement(PopoverPlacement.Right);

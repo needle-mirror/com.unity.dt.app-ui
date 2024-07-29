@@ -49,7 +49,7 @@ namespace Unity.AppUI.MVVM
         public void Initialize(IServiceProvider serviceProvider, IHost host)
         {
             var uitkHost = host as IUIToolkitHost;
-            
+
             if (current != null)
                 throw new InvalidOperationException($"An {nameof(App)} has been already initialized.");
 
@@ -58,15 +58,15 @@ namespace Unity.AppUI.MVVM
 
             if (host == null)
                 throw new ArgumentNullException(nameof(host));
-            
+
             if (serviceProvider == null)
                 throw new ArgumentNullException(nameof(serviceProvider));
-            
+
             if (uitkHost == null)
                 throw new ArgumentException($"The host must implement {nameof(IUIToolkitHost)}.", nameof(host));
 
             SetCurrentApp(this);
-            
+
             m_Hosts.Add(uitkHost);
             uitkHost.HostApplication(this, serviceProvider);
         }
@@ -106,7 +106,7 @@ namespace Unity.AppUI.MVVM
                 }
                 m_Hosts.Clear();
             }
-            
+
             mainPage = null;
             SetCurrentApp(null);
             m_Disposed = true;

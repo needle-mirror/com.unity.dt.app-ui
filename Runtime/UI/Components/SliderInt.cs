@@ -18,13 +18,13 @@ namespace Unity.AppUI.UI
     public partial class SliderInt : SliderBase<int>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId incrementFactorProperty = new BindingId(nameof(incrementFactor));
-        
+
 #endif
-        
+
         const int k_DefaultIncrement = 1;
-        
+
         int m_IncrementFactor = k_DefaultIncrement;
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -63,7 +63,7 @@ namespace Unity.AppUI.UI
             highValueOverride = 100;
             valueOverride = 0;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("low-value")]
 #endif
@@ -72,7 +72,7 @@ namespace Unity.AppUI.UI
             get => lowValue;
             set => lowValue = value;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("high-value")]
 #endif
@@ -81,7 +81,7 @@ namespace Unity.AppUI.UI
             get => highValue;
             set => highValue = value;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("value")]
 #endif
@@ -90,7 +90,7 @@ namespace Unity.AppUI.UI
             get => value;
             set => this.value = value;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("format-string")]
 #endif
@@ -114,7 +114,7 @@ namespace Unity.AppUI.UI
             if (UINumericFieldsUtils.IsPercentFormatString(formatString))
                 Debug.LogWarning("Percent format string is not supported for integer values.\n" +
                     "Please use a SliderFloat instead.");
-            
+
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
         }
 
@@ -188,7 +188,7 @@ namespace Unity.AppUI.UI
                 el.value = m_Value.GetValueFromBag(bag, cc);
             }
         }
-        
+
 #endif
     }
 }

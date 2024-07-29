@@ -13,7 +13,7 @@ namespace Unity.AppUI.MVVM
         /// The main page of the application.
         /// </summary>
         VisualElement mainPage { get; set; }
-        
+
         /// <summary>
         /// The hosts of the application.
         /// </summary>

@@ -26,18 +26,18 @@ namespace Unity.AppUI.Undo
     public class UndoStack
     {
         readonly List<UndoCommand> m_Commands = new List<UndoCommand>();
-        
+
         readonly Stack<MacroCommand> m_MacroStack = new Stack<MacroCommand>();
 
         int m_CleanState = -1;
 
         int m_Index = -1;
-        
+
         /// <summary>
         /// Emitted the current Command index changes.
         /// </summary>
         public event Action<int> indexChanged;
-        
+
         /// <summary>
         /// Emitted when the clean state changes.
         /// </summary>
@@ -47,24 +47,24 @@ namespace Unity.AppUI.Undo
         /// Weather the redo stack is empty.
         /// </summary>
         public bool canRedo => m_Index < m_Commands.Count - 1 && m_MacroStack.Count == 0;
-        
+
         /// <summary>
         /// Weather the undo stack is empty.
         /// </summary>
         public bool canUndo => m_Index >= 0 && m_MacroStack.Count == 0;
-        
+
         /// <summary>
         /// The number of commands in the stack.
         /// Macros are counted as a single command.
         /// </summary>
         public int count => m_Commands.Count;
-        
+
         /// <summary>
         /// Weather the undo stack is in a clean state.
         /// The clean state is useful when the application supports saving and restoring the state of an object.
         /// </summary>
         public bool isClean => (m_Commands.Count == 0 && m_CleanState == -1) || m_CleanState == m_Index;
-        
+
         /// <summary>
         /// The index of the clean state. -1 if there is no clean state.
         /// </summary>
@@ -83,7 +83,7 @@ namespace Unity.AppUI.Undo
         /// The maximum number of memory units that can be stored in the undo stack.
         /// </summary>
         public ulong undoLimit { get; set; } = 1000000;
-        
+
         /// <summary>
         /// The total memory size of the undo stack.
         /// </summary>
@@ -115,17 +115,17 @@ namespace Unity.AppUI.Undo
         /// </summary>
         public UndoStack()
         {
-            
+
         }
-        
+
         void SetIndexInternal(int value)
         {
             if (m_MacroStack.Count > 0)
                 throw new InvalidOperationException("Cannot set index while in a macro composition.");
-            
+
             if (index == value)
                 return;
-            
+
             if (value < 0 || value > count)
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Index out of range.");
 
@@ -140,11 +140,11 @@ namespace Unity.AppUI.Undo
                 while (index < value)
                     RedoWithoutNotify();
             }
-            
+
             if (prev != index)
                 indexChanged?.Invoke(index);
         }
-        
+
         /// <summary>
         /// Pushes the given command on the undo stack.
         /// </summary>
@@ -156,13 +156,13 @@ namespace Unity.AppUI.Undo
         {
             if (command.memorySize > undoLimit)
                 throw new InvalidOperationException("The pushed command is too big to fit in the undo stack.");
-            
+
             if (m_MacroStack.TryPeek(out var macro))
             {
                 macro.Add(command);
                 return;
             }
-            
+
             if (m_Index < m_Commands.Count - 1)
             {
                 for (var i = m_Commands.Count - 1; i > m_Index; i--)
@@ -187,7 +187,7 @@ namespace Unity.AppUI.Undo
 
             m_Commands.Add(command);
             m_Index++;
-            
+
             indexChanged?.Invoke(index);
         }
 
@@ -206,12 +206,12 @@ namespace Unity.AppUI.Undo
         {
             if (m_Commands.Count == 0 || m_MacroStack.Count > 0 || m_Index < 0)
                 return;
-            
+
             var command = m_Commands[m_Index];
             command.Undo();
             m_Index--;
         }
-        
+
         /// <summary>
         /// Calls <see cref="UndoCommand.Redo"/> on the last command in the redo stack.
         /// </summary>
@@ -227,19 +227,19 @@ namespace Unity.AppUI.Undo
         {
             if (m_Commands.Count == 0 || m_MacroStack.Count > 0 || m_Index >= m_Commands.Count - 1)
                 return;
-            
+
             var command = m_Commands[m_Index + 1];
             command.Redo();
             m_Index++;
         }
-        
+
         /// <summary>
         /// Clears the undo and redo stacks.
         /// </summary>
         public void Clear()
         {
             m_MacroStack.Clear();
-            
+
             var wasClean = isClean;
             if (m_Commands.Count != 0)
             {
@@ -251,13 +251,13 @@ namespace Unity.AppUI.Undo
                 m_Index = -1;
                 indexChanged?.Invoke(index);
             }
-            
+
             m_CleanState = -1;
-            
+
             if (!wasClean)
                 cleanStateChanged?.Invoke();
         }
-        
+
         /// <summary>
         /// Sets the clean state to the last command in the undo stack.
         /// </summary>
@@ -265,12 +265,12 @@ namespace Unity.AppUI.Undo
         {
             if (isClean)
                 return;
-            
+
             m_CleanState = m_Index;
-            
+
             cleanStateChanged?.Invoke();
         }
-        
+
         /// <summary>
         /// Sets the clean state to -1.
         /// </summary>
@@ -278,21 +278,23 @@ namespace Unity.AppUI.Undo
         {
             if (m_CleanState == -1)
                 return;
-            
+
             m_CleanState = -1;
-            
+
             cleanStateChanged?.Invoke();
         }
-        
+
         /// <summary>
         /// Gets the command at the given index.
         /// </summary>
         /// <param name="idx"> The index of the command. </param>
-        /// <returns> The command at the given index, or null if the index is out of range. </returns>
+        /// <value> The command at the given index, or null if the index is out of range. </value>
         public UndoCommand this[int idx] => idx >= 0 && idx < m_Commands.Count ? m_Commands[idx] : null;
 
         /// <summary>
+        /// <para>
         /// Begins composition of a macro command with the given text description.
+        /// </para>
         /// <para>
         /// An empty command described by the specified text is pushed on the stack.
         /// Any subsequent commands pushed on the stack will be appended to the macro command's children until
@@ -307,19 +309,19 @@ namespace Unity.AppUI.Undo
         /// </para>
         /// <para>
         /// Here is an example of how to use macros:
-        /// <code>
+        /// <c>
         /// undoStack.BeginMacro("Insert Red Text");
         /// undoStack.Push(new InsertText(...));
         /// undoStack.Push(new SetRedText(...));
         /// undoStack.EndMacro();
-        /// </code>
+        /// </c>
         /// This code is equivalent to:
-        /// <code>
+        /// <c>
         /// var insertRedText = new UndoCommand("Insert Text");
         /// new InsertText(..., insertRedText);
         /// new SetRedText(..., insertRedText);
         /// undoStack.Push(insertRedText);
-        /// </code>
+        /// </c>
         /// </para>
         /// </summary>
         /// <remarks>
@@ -333,7 +335,7 @@ namespace Unity.AppUI.Undo
             var macro = new MacroCommand(name);
             m_MacroStack.Push(macro);
         }
-        
+
         /// <summary>
         /// Ends composition of a macro command.<br/> If this is the outermost macro in a set nested macros,
         /// this function emits <see cref="indexChanged"/> once for the entire macro command.

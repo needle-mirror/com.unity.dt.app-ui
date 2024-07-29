@@ -59,15 +59,15 @@ public class AppUIGameActivity extends UnityPlayerGameActivity /*implements High
     public int DensityDpi() {
         return m_CurrentDensityDpi;
     }
-    
+
     public boolean HighContrast() {
         return m_CurrentHighContrast;
     }
-    
+
     public boolean ReduceMotion() {
         return m_CurrentReduceMotion;
     }
-    
+
     public int LayoutDirection() {
         return m_CurrentLayoutDirection;
     }
@@ -96,9 +96,9 @@ public class AppUIGameActivity extends UnityPlayerGameActivity /*implements High
     void Vibrate(long timing) {
         Vibrate(timing, -1);
     }
-    
+
     static boolean IsHighContrastEnabled(Context context) {
-      AccessibilityManager accessibilityManager = 
+      AccessibilityManager accessibilityManager =
           (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
       Method highContrastMethod = null;
       if (accessibilityManager != null) {
@@ -107,7 +107,7 @@ public class AppUIGameActivity extends UnityPlayerGameActivity /*implements High
         }
         catch(NoSuchMethodException ignored) {}
       }
-      
+
       Object highContrast = null;
       if (highContrastMethod != null) {
         try {
@@ -115,11 +115,11 @@ public class AppUIGameActivity extends UnityPlayerGameActivity /*implements High
         }
         catch(IllegalAccessException | InvocationTargetException ignored) {}
       }
-      
+
       if (highContrast instanceof Boolean) {
         return (boolean) highContrast;
       }
-      
+
       return false;
     }
 
@@ -130,14 +130,14 @@ public class AppUIGameActivity extends UnityPlayerGameActivity /*implements High
       if (accessibilityManager != null) {
         try {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            addHighTextContrastStateChangeListenerMethod = 
+            addHighTextContrastStateChangeListenerMethod =
                           accessibilityManager.getClass().getMethod(
                                   "addHighTextContrastStateChangeListener",
                                   HighTextContrastChangeListener.class,
                                   Handler.class);
           }
           else {
-            addHighTextContrastStateChangeListenerMethod = 
+            addHighTextContrastStateChangeListenerMethod =
                           accessibilityManager.getClass().getMethod(
                                   "addHighTextContrastStateChangeListener",
                                   HighTextContrastChangeListener.class);
@@ -145,7 +145,7 @@ public class AppUIGameActivity extends UnityPlayerGameActivity /*implements High
         }
         catch(NoSuchMethodException ignored) {}
       }
-      
+
       if (addHighTextContrastStateChangeListenerMethod != null) {
         try {
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -159,14 +159,14 @@ public class AppUIGameActivity extends UnityPlayerGameActivity /*implements High
       }
     }
     */
-    
+
     static boolean IsRemoveAnimationEnabled(Context context) {
       return Settings.Global.getFloat(context.getContentResolver(), Settings.Global.WINDOW_ANIMATION_SCALE, 1.0f) == 0.0f
         && Settings.Global.getFloat(context.getContentResolver(), Settings.Global.TRANSITION_ANIMATION_SCALE, 1.0f) == 0.0f
         && Settings.Global.getFloat(context.getContentResolver(), Settings.Global.ANIMATOR_DURATION_SCALE, 1.0f) == 0.0f;
     }
-    
-    void AddReduceMotionChangeListener() 
+
+    void AddReduceMotionChangeListener()
     {
       ContentObserver observer = new ContentObserver(new Handler()) {
          @Override
@@ -189,7 +189,7 @@ public class AppUIGameActivity extends UnityPlayerGameActivity /*implements High
                 false,
                 observer);
     }
-    
+
     static int GetLayoutDirection(Configuration configuration) {
       Locale currentLocale = null;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -199,7 +199,7 @@ public class AppUIGameActivity extends UnityPlayerGameActivity /*implements High
       }
       return TextUtils.getLayoutDirectionFromLocale(currentLocale);
     }
-   
+
     public void RunHapticFeedback(int hapticFeedbackType) {
 
         switch (hapticFeedbackType) {
@@ -259,7 +259,7 @@ public class AppUIGameActivity extends UnityPlayerGameActivity /*implements High
         m_CurrentScaledDensity = displayMetrics.scaledDensity;
         m_CurrentDensity = displayMetrics.density;
         m_CurrentDensityDpi = displayMetrics.densityDpi;
-        
+
         m_CurrentHighContrast = IsHighContrastEnabled(this);
         // AddHighContrastChangeListener();
         m_CurrentReduceMotion = IsRemoveAnimationEnabled(this);
@@ -336,7 +336,7 @@ public class AppUIGameActivity extends UnityPlayerGameActivity /*implements High
             configurationChanged = true;
             Log.d("APP UI", "Changed Density DPI : " + m_CurrentDensityDpi);
         }
-        
+
         int currentLayoutDirection = GetLayoutDirection(newConfig);
         if (currentLayoutDirection != m_CurrentLayoutDirection) {
             m_CurrentLayoutDirection = currentLayoutDirection;

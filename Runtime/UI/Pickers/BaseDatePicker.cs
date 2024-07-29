@@ -19,13 +19,13 @@ namespace Unity.AppUI.UI
     public partial class BaseDatePicker : VisualElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId displayModeProperty = new BindingId(nameof(displayMode));
-        
+
         internal static readonly BindingId currentYearProperty = new BindingId(nameof(currentYear));
-        
+
         internal static readonly BindingId currentMonthProperty = new BindingId(nameof(currentMonth));
-        
+
         internal static readonly BindingId firstDayOfWeekProperty = new BindingId(nameof(firstDayOfWeek));
 
 #endif
@@ -50,27 +50,27 @@ namespace Unity.AppUI.UI
             /// </summary>
             Days
         }
-        
+
         /// <summary>
         /// Main USS class name of elements of this type.
         /// </summary>
         public const string ussClassName = "appui-date-picker";
-        
+
         /// <summary>
         /// The display mode USS class name.
         /// </summary>
         public static readonly string displayModeUssClassName = ussClassName + "--display-mode-";
-        
+
         /// <summary>
         /// The years pane USS class name.
         /// </summary>
         public static readonly string yearPickerUssClassName = ussClassName + "__year-picker";
-        
+
         /// <summary>
         /// The months pane USS class name.
         /// </summary>
         public static readonly string monthsPaneUssClassName = ussClassName + "__month-picker";
-        
+
         /// <summary>
         /// The days pane USS class name.
         /// </summary>
@@ -87,7 +87,7 @@ namespace Unity.AppUI.UI
         readonly DayPicker m_DayPicker;
 
         DayOfWeek m_FirstDayOfWeek;
-        
+
         internal CultureInfo cultureInfo;
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Unity.AppUI.UI
         {
             pickingMode = PickingMode.Ignore;
             AddToClassList(ussClassName);
-            
+
             m_YearPicker = new YearPicker(this) {name = yearPickerUssClassName, pickingMode = PickingMode.Ignore};
             m_YearPicker.AddToClassList(yearPickerUssClassName);
             hierarchy.Add(m_YearPicker);
@@ -112,13 +112,13 @@ namespace Unity.AppUI.UI
             m_DayPicker = new DayPicker(this) {name = dayPickerUssClassName, pickingMode = PickingMode.Ignore};
             m_DayPicker.AddToClassList(dayPickerUssClassName);
             hierarchy.Add(m_DayPicker);
-            
+
             displayMode = DisplayMode.Days;
             firstDayOfWeek = DayOfWeek.Sunday;
-            
+
             this.RegisterContextChangedCallback<LangContext>(OnLangContextChanged);
         }
-        
+
         void OnLangContextChanged(ContextChangedEvent<LangContext> evt)
         {
             var lang = evt.context?.lang;
@@ -139,7 +139,7 @@ namespace Unity.AppUI.UI
         [UxmlAttribute]
 #endif
         public DisplayMode displayMode
-        { 
+        {
             get => m_DisplayMode;
             set
             {
@@ -173,9 +173,9 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_FirstDayOfWeek != value;
                 m_FirstDayOfWeek = value;
-                
+
                 RefreshUI();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in firstDayOfWeekProperty);
@@ -233,7 +233,7 @@ namespace Unity.AppUI.UI
         {
             if (month is < 1 or > 12)
                 throw new ArgumentOutOfRangeException(nameof(month), month, "Month must be between 1 and 12.");
-            
+
             GoTo(new DateTime(currentYear, month, 1));
         }
 
@@ -256,7 +256,7 @@ namespace Unity.AppUI.UI
             var previous = new DateTime(currentYear, currentMonth, 1).AddMonths(-1);
             GoTo(previous);
         }
-        
+
         /// <summary>
         /// Show the specified date in the date picker.
         /// </summary>
@@ -270,7 +270,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Show the specified date in the date picker.
         /// </summary>
-        /// <param name="date"></param>
+        /// <param name="date"> The date to show. </param>
         public void GoTo(DateTime date)
         {
             m_DisplayedYearAndMonth = new Vector2Int(date.Year, date.Month);
@@ -283,30 +283,30 @@ namespace Unity.AppUI.UI
         }
 
         internal virtual void OnDaySelected(EventBase evt) { }
-        
+
         internal virtual bool IsSelectedDate(Date date) => false;
-        
+
         internal virtual bool IsStartDate(Date date) => false;
-        
+
         internal virtual bool IsEndDate(Date date) => false;
-        
+
         internal virtual bool IsInRange(Date date) => false;
-        
+
         internal void OnMonthSelected(EventBase evt)
         {
             if (evt.target is not VisualElement { userData: int month })
                 return;
-            
+
             evt.StopPropagation();
             m_DisplayedYearAndMonth = new Vector2Int(currentYear, month);
             displayMode = DisplayMode.Days;
         }
-        
+
         internal void OnYearSelected(EventBase evt)
         {
             if (evt.target is not VisualElement { userData: int year })
                 return;
-            
+
             evt.StopPropagation();
             m_DisplayedYearAndMonth = new Vector2Int(year, currentMonth);
             displayMode = DisplayMode.Months;
@@ -331,26 +331,26 @@ namespace Unity.AppUI.UI
         {
             readonly UxmlEnumAttributeDescription<DisplayMode> m_DisplayMode = new UxmlEnumAttributeDescription<DisplayMode>
             {
-                name = "display-mode", 
+                name = "display-mode",
                 defaultValue = DisplayMode.Days
             };
 
             readonly UxmlEnumAttributeDescription<DayOfWeek> m_FirstDayOfWeek = new UxmlEnumAttributeDescription<DayOfWeek>
             {
-                name = "first-day-of-week", 
+                name = "first-day-of-week",
                 defaultValue = DayOfWeek.Sunday
             };
 
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                
+
                 var datePicker = (BaseDatePicker)ve;
-                
+
                 var displayMode = m_DisplayMode.GetValueFromBag(bag, cc);
                 if (m_DisplayMode.TryGetValueFromBag(bag, cc, ref displayMode))
                     datePicker.displayMode = displayMode;
-                
+
                 var firstDayOfWeek = m_FirstDayOfWeek.GetValueFromBag(bag, cc);
                 if (m_FirstDayOfWeek.TryGetValueFromBag(bag, cc, ref firstDayOfWeek))
                     datePicker.firstDayOfWeek = firstDayOfWeek;

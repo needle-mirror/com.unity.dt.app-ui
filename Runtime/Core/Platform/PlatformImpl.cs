@@ -9,7 +9,7 @@ namespace Unity.AppUI.Core
     class PlatformImpl : IPlatformImpl
     {
         public PlatformImpl() {}
-        
+
         public float lowFrequencyUpdateInterval { get; set; } = 2.0f;
 
         event Action<bool> darkModeChangedInternal;
@@ -47,7 +47,7 @@ namespace Unity.AppUI.Core
                     m_HighContrastPollingEnabled = false;
             }
         }
-        
+
         protected event Action<bool> reduceMotionChangedInternal;
 
         bool m_ReduceMotionPollingEnabled;
@@ -67,7 +67,7 @@ namespace Unity.AppUI.Core
                     m_ReduceMotionPollingEnabled = false;
             }
         }
-        
+
         event Action<Dir> layoutDirectionChangedInternal;
 
         public event Action<Dir> layoutDirectionChanged
@@ -85,11 +85,11 @@ namespace Unity.AppUI.Core
                     m_LayoutDirectionPollingEnabled = false;
             }
         }
-        
+
         event Action<float> scaleFactorChangedInternal;
 
         bool m_ScaleFactorPollingEnabled;
-        
+
         public event Action<float> scaleFactorChanged
         {
             add
@@ -105,11 +105,11 @@ namespace Unity.AppUI.Core
                     m_ScaleFactorPollingEnabled = false;
             }
         }
-        
+
         event Action<float> textScaleFactorChangedInternal;
 
         bool m_TextScaleFactorPollingEnabled;
-        
+
         public event Action<float> textScaleFactorChanged
         {
             add
@@ -157,25 +157,25 @@ namespace Unity.AppUI.Core
         public virtual bool darkMode => m_LastDarkMode;
 
         public virtual bool highContrast => m_LastHighContrast;
-        
+
         public virtual bool reduceMotion => m_LastReduceMotion;
-        
+
         public virtual bool isHapticFeedbackSupported => false;
-        
+
         bool m_DarkModePollingEnabled;
-        
+
         bool m_HighContrastPollingEnabled;
-        
+
         bool m_LayoutDirectionPollingEnabled;
-        
+
         double m_LastLowFrequencyUpdateTime = 0;
-        
+
         bool m_LastDarkMode = false;
 
         bool m_LastHighContrast = false;
-        
+
         bool m_LastReduceMotion = false;
-        
+
         int m_LastLayoutDirection = 0;
 
         float m_LastScaleFactor = 1f;
@@ -190,10 +190,10 @@ namespace Unity.AppUI.Core
         {
             HighFrequencyUpdate();
             var currentTime = Time.unscaledTime;
-            
+
             if (currentTime <= lowFrequencyUpdateInterval)
                 return;
-            
+
             if (currentTime - m_LastLowFrequencyUpdateTime > lowFrequencyUpdateInterval)
             {
                 m_LastLowFrequencyUpdateTime = currentTime;
@@ -203,7 +203,7 @@ namespace Unity.AppUI.Core
 
         protected virtual void HighFrequencyUpdate()
         {
-            
+
         }
 
         protected virtual void LowFrequencyUpdate()
@@ -221,7 +221,7 @@ namespace Unity.AppUI.Core
         {
             if (!m_DarkModePollingEnabled)
                 return;
-            
+
             var newDarkMode = darkMode;
             if (m_LastDarkMode != newDarkMode)
             {
@@ -234,7 +234,7 @@ namespace Unity.AppUI.Core
         {
             if (!m_HighContrastPollingEnabled)
                 return;
-            
+
             var newHighContrast = highContrast;
             if (m_LastHighContrast != newHighContrast)
             {
@@ -242,12 +242,12 @@ namespace Unity.AppUI.Core
                 highContrastChangedInternal?.Invoke(newHighContrast);
             }
         }
-        
+
         protected virtual void PollReduceMotion()
         {
             if (!m_ReduceMotionPollingEnabled)
                 return;
-            
+
             var newReduceMotion = reduceMotion;
             if (m_LastReduceMotion != newReduceMotion)
             {
@@ -255,12 +255,12 @@ namespace Unity.AppUI.Core
                 reduceMotionChangedInternal?.Invoke(newReduceMotion);
             }
         }
-        
+
         protected virtual void PollLayoutDirection()
         {
             if (!m_LayoutDirectionPollingEnabled)
                 return;
-            
+
             var newLayoutDirection = layoutDirection;
             if (m_LastLayoutDirection != newLayoutDirection)
             {
@@ -273,7 +273,7 @@ namespace Unity.AppUI.Core
         {
             if (!m_ScaleFactorPollingEnabled)
                 return;
-           
+
             var newScaleFactor = scaleFactor;
             if (!Mathf.Approximately(newScaleFactor, m_LastScaleFactor))
             {
@@ -286,7 +286,7 @@ namespace Unity.AppUI.Core
         {
             if (!m_TextScaleFactorPollingEnabled)
                 return;
-            
+
             var newTextScaleFactor = textScaleFactor;
             if (!Mathf.Approximately(newTextScaleFactor, m_LastTextScaleFactor))
             {
@@ -299,10 +299,10 @@ namespace Unity.AppUI.Core
         {
             if (!m_SystemColorPollingEnabled)
                 return;
-            
+
             // do nothing by default
         }
-        
+
         /// <summary>
         /// The current touches on the trackpad.
         /// </summary>
@@ -314,46 +314,46 @@ namespace Unity.AppUI.Core
                 ? "Haptic Feedbacks are not supported in the Editor."
                 : "Haptic Feedbacks are not supported on the current platform.");
         }
-        
+
         public virtual void HandleNativeMessage(string message) {}
 
         public virtual void OnEnteredPlayMode() { }
-        
+
         public virtual Color GetSystemColor(SystemColorType colorType) => Color.clear;
 
         public virtual int layoutDirection => m_LastLayoutDirection;
-        
+
         protected void InvokeLayoutDirectionChanged(int layoutDirection)
         {
             layoutDirectionChangedInternal?.Invoke(layoutDirection == 1 ? Dir.Rtl : Dir.Ltr);
         }
-        
+
         protected void InvokeHighContrastChanged(bool highContrastEnabled)
         {
             highContrastChangedInternal?.Invoke(highContrastEnabled);
         }
-        
+
         protected void InvokeReduceMotionChanged(bool reduceMotion)
         {
             reduceMotionChangedInternal?.Invoke(reduceMotion);
         }
-        
+
         protected void InvokeThemeChanged(bool darkModeEnabled)
         {
             darkModeChangedInternal?.Invoke(darkModeEnabled);
         }
-        
+
         protected void InvokeTextScaleFactorChanged(float textScaleFactor)
         {
             textScaleFactorChangedInternal?.Invoke(textScaleFactor);
         }
-        
+
         protected void InvokeScaleFactorChanged(float scaleFactor)
         {
             scaleFactorChangedInternal?.Invoke(scaleFactor);
         }
 
-        protected void InvokeSystemColorChanged() 
+        protected void InvokeSystemColorChanged()
         {
             systemColorChangedInternal?.Invoke();
         }

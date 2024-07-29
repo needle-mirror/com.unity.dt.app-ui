@@ -116,7 +116,7 @@ float4 paBox( in float2 p, in float2 b, const in float r, const in float s)
     float2 q = abs(p) - b;
 
     const float l = b.x + b.y + UNITY_HALF_PI * r;
-    
+
     float k1 = min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
     const float k2 = q.x > 0.0 ? atan2(q.x, q.y) : UNITY_HALF_PI;
     const float k3 = 3.0 + 2.0 * msign(min(p.x, -p.y)) - msign(p.x);

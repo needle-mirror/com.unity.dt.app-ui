@@ -14,7 +14,7 @@ namespace Unity.AppUI.MVVM
         /// <param name="app"> The app to host. </param>
         /// <param name="serviceProvider"> The service provider to use. </param>
         public void HostApplication(IUIToolkitApp app, IServiceProvider serviceProvider);
-        
+
         /// <summary>
         /// Tries to find an element of the given type in the visual tree of the app.
         /// </summary>

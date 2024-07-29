@@ -28,60 +28,60 @@ namespace Unity.AppUI.UI
             /// No operation.
             /// </summary>
             None = 0,
-            
+
             /// <summary>
-            /// Select all items. 
+            /// Select all items.
             /// </summary>
             SelectAll = 1 << 0,
-            
+
             /// <summary>
             /// Cancel selection.
             /// </summary>
             Cancel = 1 << 1,
-            
+
             /// <summary>
             /// Move selection cursor left.
             /// </summary>
             Left = 1 << 2,
-            
+
             /// <summary>
             /// Move selection cursor right.
             /// </summary>
             Right = 1 << 3,
-            
+
             /// <summary>
             /// Move selection cursor up.
             /// </summary>
             Up = 1 << 4,
-            
+
             /// <summary>
             /// Move selection cursor down.
             /// </summary>
             Down = 1 << 5,
-            
+
             /// <summary>
             /// Move selection cursor to the beginning of the list.
             /// </summary>
             Begin = 1 << 6,
-            
+
             /// <summary>
             /// Move selection cursor to the end of the list.
             /// </summary>
             End = 1 << 7,
-            
+
             /// <summary>
             /// Choose selected items.
             /// </summary>
             Choose = 1 << 8,
         }
-        
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId itemHeightProperty = new BindingId(nameof(itemHeight));
-        
+
 #endif
         const float k_PageSizeFactor = 0.25f;
-        
+
         const int k_ExtraVisibleRows = 2;
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Unity.AppUI.UI
         float m_ScrollOffset;
 
         int m_VisibleRowCount;
-        
+
         int m_FirstVisibleIndex;
 
         float m_LastPadding;
@@ -166,7 +166,7 @@ namespace Unity.AppUI.UI
                     m_ItemHeight = value;
                     scrollView.verticalPageSize = m_ItemHeight * k_PageSizeFactor;
                     Refresh();
-                    
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in itemHeightProperty);
 #endif
@@ -201,7 +201,7 @@ namespace Unity.AppUI.UI
         public override void Refresh()
         {
             base.Refresh();
-            
+
             foreach (var recycledRow in rowPool)
             {
                 recycledRow.Clear();
@@ -221,7 +221,7 @@ namespace Unity.AppUI.UI
 
             m_FirstVisibleIndex = Math.Min((int)(m_ScrollOffset / resolvedItemHeight) * columnCount, itemsSource.Count - 1);
             OnContainerHeightChanged(m_LastHeight);
-            
+
             if (!allowNoSelection && selectionCount == 0)
             {
                 if (itemsSource.Count > 0)
@@ -271,7 +271,7 @@ namespace Unity.AppUI.UI
                 scrollView.scrollOffset = Vector2.up * Mathf.Min(maxOffset, targetOffset);
             }
             // else do nothing because the item is already entirely visible
-            
+
             schedule.Execute(() => OnContainerHeightChanged(m_LastHeight)).ExecuteLater(2L);
         }
 
@@ -319,14 +319,14 @@ namespace Unity.AppUI.UI
             var posX = dir == Dir.Ltr ? localPosition.x : totalWidth - localPosition.x;
             return Mathf.FloorToInt(localPosition.y / resolvedItemHeight) * columnCount + Mathf.FloorToInt(posX / resolvedItemWidth);
         }
-        
+
         VisualElement CreateDummyItemElement()
         {
             var item = new VisualElement();
             SetupItemElement(item);
             return item;
         }
-        
+
         /// <inheritdoc cref="BaseGridView.OnScroll"/>
         protected override void OnScroll(float offset)
         {
@@ -394,7 +394,7 @@ namespace Unity.AppUI.UI
                         for (var colIndex = 0; colIndex < columnCount; colIndex++)
                         {
                             var index = rowIndex * columnCount + colIndex + m_FirstVisibleIndex;
-                            
+
                             var isFirstColumn = colIndex == 0;
                             var isLastColumn = colIndex == columnCount - 1;
 
@@ -436,7 +436,7 @@ namespace Unity.AppUI.UI
                 }
             }
         }
-        
+
         /// <inheritdoc cref="BaseGridView.OnContainerHeightChanged"/>
         protected override void OnContainerHeightChanged(float height)
         {
@@ -568,7 +568,7 @@ namespace Unity.AppUI.UI
             item.style.flexGrow = 1f;
             item.style.flexShrink = 1f;
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
 
@@ -590,8 +590,8 @@ namespace Unity.AppUI.UI
         {
             readonly UxmlIntAttributeDescription m_ItemHeight = new UxmlIntAttributeDescription
             {
-                name = "item-height", 
-                obsoleteNames = new[] { "itemHeight" }, 
+                name = "item-height",
+                obsoleteNames = new[] { "itemHeight" },
                 defaultValue = k_DefaultItemHeight
             };
 
@@ -604,7 +604,7 @@ namespace Unity.AppUI.UI
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                
+
                 var view = (GridView)ve;
 
                 // Avoid setting itemHeight unless it's explicitly defined.
@@ -614,7 +614,7 @@ namespace Unity.AppUI.UI
                     view.itemHeight = itemHeight;
             }
         }
-        
+
 #endif
 
         internal class RecycledRow : BaseVisualElement

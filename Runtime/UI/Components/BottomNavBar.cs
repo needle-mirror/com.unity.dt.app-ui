@@ -31,11 +31,11 @@ namespace Unity.AppUI.UI
         public BottomNavBar()
         {
             AddToClassList(ussClassName);
-            
+
             pickingMode = PickingMode.Ignore;
         }
     }
-    
+
     /// <summary>
     /// A bottom navigation bar item visual element.
     /// </summary>
@@ -46,32 +46,32 @@ namespace Unity.AppUI.UI
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId iconProperty = nameof(icon);
-        
+
         internal static readonly BindingId labelProperty = nameof(label);
-        
+
         internal static readonly BindingId isSelectedProperty = nameof(isSelected);
-        
+
         internal static readonly BindingId iconVariantProperty = nameof(iconVariant);
-        
+
         internal static readonly BindingId selectedIconVariantProperty = nameof(selectedIconVariant);
 #endif
         /// <summary>
         /// The BottomNavBarItem's USS class name.
         /// </summary>
         public const string ussClassName = "appui-bottom-navbar-item";
-        
+
         /// <summary>
         /// The BottomNavBarItem's icon USS class name.
         /// </summary>
         public const string iconUssClassName = ussClassName + "__icon";
-        
+
         /// <summary>
         /// The BottomNavBarItem's label USS class name.
         /// </summary>
         public const string labelUssClassName = ussClassName + "__label";
 
         Icon m_Icon;
-        
+
         LocalizedTextElement m_Label;
 
         Pressable m_Clickable;
@@ -104,7 +104,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// The BottomNavBarItem's label.
         /// </summary>
@@ -117,7 +117,7 @@ namespace Unity.AppUI.UI
         public string label
         {
             get => m_Label.text;
-            set 
+            set
             {
                 var changed = m_Label.text != value;
                 m_Label.text = value;
@@ -152,7 +152,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// The BottomNavBarItem's icon variant.
         /// </summary>
@@ -169,17 +169,17 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_IconVariant != value;
                 m_IconVariant = value;
-                
+
                 if (!isSelected)
                     m_Icon.variant = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in iconVariantProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The BottomNavBarItem's selected icon variant.
         /// </summary>
@@ -196,17 +196,17 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_SelectedIconVariant != value;
                 m_SelectedIconVariant = value;
-                
+
                 if (isSelected)
                     m_Icon.variant = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in selectedIconVariantProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// Clickable Manipulator for this BottomNavBarItem.
         /// </summary>
@@ -223,7 +223,7 @@ namespace Unity.AppUI.UI
                 this.AddManipulator(m_Clickable);
             }
         }
-        
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -231,7 +231,7 @@ namespace Unity.AppUI.UI
             : this(null, null, null)
         {
         }
-        
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -241,20 +241,20 @@ namespace Unity.AppUI.UI
         public BottomNavBarItem(string icon, string label, Action clickHandler)
         {
             AddToClassList(ussClassName);
-            
+
             pickingMode = PickingMode.Position;
             focusable = true;
             tabIndex = 0;
             clickable = new Pressable(clickHandler);
-            
+
             m_Icon = new Icon { iconName = icon, variant = IconVariant.Regular, pickingMode = PickingMode.Ignore };
             m_Icon.AddToClassList(iconUssClassName);
             hierarchy.Add(m_Icon);
-            
+
             m_Label = new LocalizedTextElement(label) { pickingMode = PickingMode.Ignore };
             m_Label.AddToClassList(labelUssClassName);
             hierarchy.Add(m_Label);
-            
+
             this.label = label;
             this.icon = icon;
         }

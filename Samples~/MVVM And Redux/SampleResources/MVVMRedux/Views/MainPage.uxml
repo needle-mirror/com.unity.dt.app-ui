@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI" xsi="http://www.w3.org/2001/XMLSchema-instance" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
 
         <appui:Panel class="mvvm-redux-main">
-                
+
                 <ui:VisualElement class="mvvm-redux-main-content">
 
                         <appui:SearchBar name="searchBar" class="mvvm-redux-searchbar" />
@@ -15,15 +15,15 @@
                                 <appui:Text name="nothingFound" class="mvvm-redux-nothingfound" text="Nothing found." />
 
                         </ui:VisualElement>
-                        
+
                         <ui:VisualElement class="mvvm-redux-footer">
-                                
+
                                 <appui:Button name="addButton" title="Add Todo" primary="true" class="mvvm-redux-addbutton" />
-                                
+
                         </ui:VisualElement>
-                        
+
                 </ui:VisualElement>
-                
+
         </appui:Panel>
-        
+
 </ui:UXML>

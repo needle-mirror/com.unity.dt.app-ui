@@ -19,7 +19,7 @@ A navigation action is a component that can be used to navigate to a navigation 
 
 Inside the navigation action, you can define the way the navigation is performed, such as an animation or a transition, or the way the back stack is managed.
 
-A Navigation action can be Local or Global. A local navigation action can be used to perform a navigation from a specific previous navigation destination. 
+A Navigation action can be Local or Global. A local navigation action can be used to perform a navigation from a specific previous navigation destination.
 A global navigation action can be used to perform a navigation from any navigation destination in the navigation graph.
 
 With nested navigation graphs, you can use global navigation actions to navigate between navigation graphs.
@@ -63,7 +63,7 @@ A navigation controller is always attached to a single navigation host. It is cr
 
 A navigation visual controller is a component that can be used to control the content of the navigation components. A navigation visual controller is defined by a [INavVisualController](xref:Unity.AppUI.Navigation.INavVisualController) interface.
 
-You can implement this interface to control the content of the navigation components. 
+You can implement this interface to control the content of the navigation components.
 
 For example, you can use this interface to display the title of the page in the AppBar component, or to display a list of links to other pages in the Drawer component.
 
@@ -76,35 +76,35 @@ class MyVisualController : INavVisualController
     {
         if (!destination.showBottomNavBar)
             return;
-        
+
         var homeButton = new BottomNavBarItem("info", "Home", () => navController.Navigate(Actions.navigateToHome))
         {
             isSelected = destination.name == Screens.home
         };
         bottomNavBar.Add(homeButton);
-        
+
         // etc ...
     }
     public void SetupAppBar(AppBar appBar, NavDestination destination, NavController navController)
     {
         if (!destination.showAppBar)
             return;
-        
+
         appBar.title = destination.label;
     }
     public void SetupDrawer(Drawer drawer, NavDestination destination, NavController navController)
     {
         if (!destination.showDrawer)
             return;
-        
+
         drawer.Add(new DrawerHeader());
         drawer.Add(new Divider { vertical = false });
         var homeButton = new MenuItem {icon = "info", label = "Home", selectable = true};
         homeButton.SetValueWithoutNotify(destination.name == Screens.home);
         homeButton.clickable.clicked += () => navController.Navigate(Actions.navigateToHome);
         drawer.Add(homeButton);
-        
-        // etc ...        
+
+        // etc ...
     }
 }
 ```
@@ -118,11 +118,11 @@ navHost.visualController = new MyVisualController();
 
 ### Handling Navigation Visual Components Per Navigation Screen
 
-You also have the possibility to implement 
-[SetupAppBar](xref:Unity.AppUI.Navigation.NavigationScreen.SetupAppBar(Unity.AppUI.UI.AppBar)), 
-[SetupBottomNavBar](xref:Unity.AppUI.Navigation.NavigationScreen.SetupBottomNavBar(Unity.AppUI.UI.BottomNavBar)) and 
-[SetupDrawer](xref:Unity.AppUI.Navigation.NavigationScreen.SetupDrawer(Unity.AppUI.UI.Drawer)) 
-methods directly in your implementation of 
+You also have the possibility to implement
+[SetupAppBar](xref:Unity.AppUI.Navigation.NavigationScreen.SetupAppBar(Unity.AppUI.UI.AppBar)),
+[SetupBottomNavBar](xref:Unity.AppUI.Navigation.NavigationScreen.SetupBottomNavBar(Unity.AppUI.UI.BottomNavBar)) and
+[SetupDrawer](xref:Unity.AppUI.Navigation.NavigationScreen.SetupDrawer(Unity.AppUI.UI.Drawer))
+methods directly in your implementation of
 [NavigationScreen](xref:Unity.AppUI.Navigation.NavigationScreen).
 
 ```cs
@@ -137,7 +137,7 @@ class MyAppHomeScreen : NavigationScreen
 
 ## Components
 
-App UI provides a set of navigation components that can be used to create a navigation menu for your application. 
+App UI provides a set of navigation components that can be used to create a navigation menu for your application.
 
 ### AppBar Navigation Component
 
@@ -179,7 +179,7 @@ To open the Navigation Graph Editor, double click on the navigation graph asset 
 
 #### Destination Node
 
-A destination node represents a page in the navigation graph. 
+A destination node represents a page in the navigation graph.
 A destination node is defined by a [NavDestination](xref:Unity.AppUI.Navigation.NavDestination) component.
 A destination node can be connected to other destination nodes using [actions](#action-node).
 
@@ -194,7 +194,7 @@ When a Destination node is used as the start destination of the navigation graph
 </p>
 
 > [!NOTE]
-> A navigation graph can have only one start destination. By default when a single destination node is present in the 
+> A navigation graph can have only one start destination. By default when a single destination node is present in the
 > navigation graph, it will be used as the start destination.
 
 #### Action Node
@@ -206,7 +206,7 @@ When navigating from a destination to another one, the navigation controller wil
 action node that links the two destination nodes.
 
 By default, when creating a new Action Node, the action will be defined as a **Global Action**. That means
-that the action will be available from any destination in the current navigation graph and nested ones. 
+that the action will be available from any destination in the current navigation graph and nested ones.
 
 <p align="center">
   <img src="images/global-action-node.png" alt="Global Action Node">
@@ -224,21 +224,21 @@ with the action node that links the start destination to another destination.
 
 #### Nested Graph Node
 
-A nested graph node represents a nested navigation graph in the navigation graph. 
+A nested graph node represents a nested navigation graph in the navigation graph.
 A nested graph node is defined by a [NavGraph](xref:Unity.AppUI.Navigation.NavGraph) component.
 
 <p align="center">
   <img src="images/nested-graph-node.png" alt="Nested Graph Node">
 </p>
 
-To browse a nested navigation graph, you can double click on the nested graph node. 
-This will open the nested navigation graph in place of the current navigation graph. You can go back to the parent 
+To browse a nested navigation graph, you can double click on the nested graph node.
+This will open the nested navigation graph in place of the current navigation graph. You can go back to the parent
 navigation graph by choosing **Go Back** option in the context menu of the navigation graph editor, or by clicking one of
 the items in the breadcrumb bar.
 
 ### Code Generator
 
-The Navigation Graph Editor can generate C# code that can be used in your application to navigate between pages. 
+The Navigation Graph Editor can generate C# code that can be used in your application to navigate between pages.
 While it is not required to use the generated code, it can be useful to avoid typos when navigating between pages.
 
 The generated code follow this template:
@@ -251,13 +251,13 @@ namespace namespace Unity.AppUI.Navigation.Generated
         public const string <actionName> = "<actionName>";
         [...]
     }
-    
+
     public partial class Destinations
     {
         public const string <destinationName> = "<destinationName>";
         [...]
     }
-    
+
     public partial class Graphs
     {
         public const string <graphName> = "<graphName>";
@@ -267,5 +267,5 @@ namespace namespace Unity.AppUI.Navigation.Generated
 ```
 
 To generate the code, click on the **Generate Code** button in bottom-right corner of the navigation graph editor.
-This will prompt you to select a folder where the code will be generated. The generated code will be named after the 
+This will prompt you to select a folder where the code will be generated. The generated code will be named after the
 navigation graph asset.

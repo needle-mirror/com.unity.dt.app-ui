@@ -22,14 +22,14 @@ namespace Unity.AppUI.Tests.UI
         ActionButton m_Trigger;
 
         protected T popup => m_Popup as T;
-        
+
         protected virtual bool shouldContainView => true;
 
         protected VisualElement GetReferenceElement()
         {
             return m_Trigger;
         }
-        
+
         protected VisualElement GetContentElement()
         {
             var element = new VisualElement();
@@ -37,7 +37,7 @@ namespace Unity.AppUI.Tests.UI
             element.Add(text);
             return element;
         }
-        
+
         protected virtual T CreatePopup() => null;
 
         [UnitySetUp]
@@ -60,7 +60,7 @@ namespace Unity.AppUI.Tests.UI
             m_Panel.DismissAnyPopups(DismissType.Manual);
             m_SetupDone = true;
         }
-        
+
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
@@ -76,7 +76,7 @@ namespace Unity.AppUI.Tests.UI
 
         protected virtual void OnCanBuildPopupTested()
         {
-            
+
         }
 
         [Test, Order(1)]
@@ -84,16 +84,16 @@ namespace Unity.AppUI.Tests.UI
         {
             m_Popup = CreatePopup();
             Assert.IsNotNull(m_Popup);
-            
+
             Assert.IsNotNull(m_Popup.view);
 
             if (shouldContainView)
                 Assert.IsNotNull(m_Popup.contentView);
             else
                 Assert.IsNull(m_Popup.contentView);
-            
-            Assert.IsNotNull(m_Popup.targetParent);
-            
+
+            Assert.IsNotNull(m_Popup.containerView);
+
             OnCanBuildPopupTested();
         }
     }

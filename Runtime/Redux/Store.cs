@@ -9,42 +9,57 @@ namespace Unity.AppUI.Redux
     /// A function that takes the current state and an action, and returns a new state.
     /// </summary>
     /// <typeparam name="TState"> The type of the state. </typeparam>
+    /// <param name="state"> The current state. </param>
+    /// <param name="action"> The Action to handle. </param>
+    /// <returns> The new state. </returns>
     public delegate TState CaseReducer<TState>(TState state, Action action);
-    
+
     /// <summary>
     /// A function that takes the current state and an action, and returns a new state.
     /// </summary>
     /// <typeparam name="T"> The type of the action payload. </typeparam>
     /// <typeparam name="TState"> The type of the state. </typeparam>
+    /// <param name="state"> The current state. </param>
+    /// <param name="action"> The Action to handle. </param>
+    /// <returns> The new state. </returns>
     public delegate TState CaseReducer<T, TState>(TState state, Action<T> action);
-    
+
     /// <summary>
     /// A function that takes the current state and an action, and returns a new state.
     /// </summary>
+    /// <param name="state"> The current state. </param>
+    /// <param name="action"> The Action to handle. </param>
+    /// <returns> The new state. </returns>
     public delegate object Reducer(object state, Action action);
 
     /// <summary>
     /// A predicate function that takes an action and returns true if the action should be handled by the reducer.
     /// </summary>
+    /// <param name="action"> The Action to handle. </param>
+    /// <returns> True if there's a match, false otherwise. </returns>
     public delegate bool ActionMatcher(Action action);
-    
+
     /// <summary>
     /// A function obtained from <see cref="Store.Subscribe{TState}"/> that can be called to unsubscribe the listener.
     /// </summary>
+    /// <returns> True if the listener was removed, false otherwise. </returns>
     public delegate bool Unsubscriber();
-    
+
     /// <summary>
+    /// <para>
     /// A store holds the whole state tree of your application. The only way to change the state inside it is to dispatch an action on it.
     /// Your application should only have a single store in a Redux app. As your app grows, instead of adding stores,
     /// you split the root reducer into smaller reducers independently operating on the different parts of the state tree.
-    /// <para/>
+    /// </para>
+    /// <para>
     /// The store has the following responsibilities:<br/>
     ///  - Holds application state <br/>
     ///  - Allows access to state via <see cref="GetState{TState}"/><br/>
     ///  - Allows state to be updated via <see cref="Dispatch(Action)"/><br/>
     ///  - Registers listeners via <see cref="Subscribe{TState}"/><br/>
     ///  - Handles unregistering of listeners via the function returned by <see cref="Subscribe{TState}"/><br/>
-    /// <para/>
+    /// </para>
+    /// <para>
     /// Here are some important principles you should understand about Reducers:<br/>
     ///  - Reducers are the only way to update the state.<br/>
     ///  - Reducers are pure functions that take the previous state and an action, and return the next state.<br/>
@@ -54,15 +69,16 @@ namespace Unity.AppUI.Redux
     ///  - Reducers must not call <see cref="Subscribe{TState}"/>.<br/>
     ///  - Reducers must not call <see cref="GetState{TState}"/><br/>
     ///  - Reducers must not call <see cref="Dispatch(Action)"/><br/>
+    /// </para>
     /// </summary>
     public class Store
     {
         readonly Dictionary<string, object> m_State;
 
         readonly Dictionary<string, Reducer> m_Reducers = new Dictionary<string, Reducer>();
-        
+
         readonly Dictionary<string, List<System.Action<object>>> m_ListenerWrappers = new Dictionary<string, List<System.Action<object>>>();
-        
+
         /// <summary>
         /// Creates a Redux store that holds the complete state tree of your app.
         /// </summary>
@@ -70,7 +86,7 @@ namespace Unity.AppUI.Redux
         {
             m_State = new Dictionary<string, object>();
         }
-        
+
         /// <summary>
         /// Returns the current state tree of your application for a specific slice.
         /// It is equal to the last value returned by the store's reducer.
@@ -88,7 +104,7 @@ namespace Unity.AppUI.Redux
 
             return (TState)m_State[name];
         }
-        
+
         /// <summary>
         /// Returns the current state tree of your application. It is equal to the last value returned by the store's reducer.
         /// </summary>
@@ -171,7 +187,7 @@ namespace Unity.AppUI.Redux
 
             return () => Unsubscribe(name, wrapper);
         }
-        
+
         /// <summary>
         /// Removes a change listener.
         /// </summary>
@@ -201,9 +217,9 @@ namespace Unity.AppUI.Redux
         /// <returns> A slice object that can be used to access the state slice. </returns>
         /// <exception cref="ArgumentException"> Thrown if the state slice already exists. </exception>
         public Slice<TState> CreateSlice<TState>(
-            string name, 
-            TState initialState, 
-            System.Action<SliceReducerSwitchBuilder<TState>> reducers, 
+            string name,
+            TState initialState,
+            System.Action<SliceReducerSwitchBuilder<TState>> reducers,
             System.Action<ReducerSwitchBuilder<TState>> extraReducers = null)
         {
             if (m_State.ContainsKey(name))
@@ -227,14 +243,14 @@ namespace Unity.AppUI.Redux
             {
                 m_Reducers[name] = reducer;
             }
-            
+
             // add the initial state
             m_State[name] = initialState;
-            
+
             // return the slice
             return new Slice<TState>(name, actionCreators, initialState);
         }
-        
+
         /// <summary>
         /// Create a new Action. See <see cref="Action"/> for more information.
         /// </summary>
@@ -257,7 +273,7 @@ namespace Unity.AppUI.Redux
         {
             return new ActionCreator<TPayload>(type);
         }
-        
+
         /// <summary>
         /// Create a new Action. See <see cref="Action{T}"/> for more information.
         /// </summary>
@@ -269,17 +285,19 @@ namespace Unity.AppUI.Redux
         {
             return (ActionCreator)Activator.CreateInstance(actionType, type);
         }
-        
+
         /// <summary>
         /// Create a new Async Thunk Action. See <see cref="AsyncThunkActionCreator{T,U}"/> for more information.
         /// </summary>
+        /// <typeparam name="TPayload"> The type of the payload. </typeparam>
+        /// <typeparam name="TThunkArg"> The type of the argument to pass to the thunk. </typeparam>
         /// <param name="type"> The type of the action. </param>
         /// <param name="payloadCreator"> The payload creator. </param>
         /// <param name="options"> The options for the async thunk. </param>
         /// <returns> A new Async Thunk Action. </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static AsyncThunkActionCreator<TPayload,TThunkArg> CreateAsyncThunk<TPayload,TThunkArg>(
-            string type, 
+            string type,
             AsyncThunkActionCreator<TPayload,TThunkArg>.PayloadCreator payloadCreator,
             AsyncThunkOptions<TThunkArg> options = null)
         {
@@ -294,30 +312,30 @@ namespace Unity.AppUI.Redux
         /// <typeparam name="TState"> The type of the state. </typeparam>
         /// <returns> A reducer record that can be used to create a state slice. </returns>
         public static Reducer CreateReducer<TState>(
-            TState initialState, 
+            TState initialState,
             System.Action<ReducerSwitchBuilder<TState>> builderCallback)
         {
             var builder = new ReducerSwitchBuilder<TState>();
             builderCallback(builder);
-            return builder.BuildReducer(initialState); 
+            return builder.BuildReducer(initialState);
         }
-        
+
         /// <summary>
         /// Create a reducer that combines multiple reducers into one.
         /// </summary>
         /// <param name="reducers"> The reducers to combine. </param>
-        /// <returns> A reducer that combines the given reducers. </returns> 
+        /// <returns> A reducer that combines the given reducers. </returns>
         public static Reducer CombineReducers(params Reducer[] reducers)
         {
             return (state, action) =>
             {
                 var newState = state;
-                
+
                 foreach (var reducer in reducers)
                 {
                     newState = reducer(newState, action);
                 }
-                
+
                 return newState;
             };
         }

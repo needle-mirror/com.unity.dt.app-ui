@@ -87,15 +87,15 @@ namespace Unity.AppUI.Editor
             nsManager.AddNamespace("android", androidNamespace);
             var manifestNode = (XmlElement)doc.SelectSingleNode("/manifest");
             var activity = (XmlElement)doc.SelectSingleNode("/manifest/application/activity");
-            
+
 #if UNITY_2023_2_OR_NEWER
-            var activityName = PlayerSettings.Android.applicationEntry.HasFlag(AndroidApplicationEntry.GameActivity) ? 
+            var activityName = PlayerSettings.Android.applicationEntry.HasFlag(AndroidApplicationEntry.GameActivity) ?
                 "com.unity3d.player.appui.AppUIGameActivity" : "com.unity3d.player.appui.AppUIActivity";
             activity!.SetAttribute("name", androidNamespace, activityName);
 #else
             activity!.SetAttribute("name", androidNamespace, "com.unity3d.player.appui.AppUIActivity");
 #endif
-            
+
             var vibratePermission = doc.SelectSingleNode("/manifest/uses-permission[@android:name='android.permission.VIBRATE']", nsManager) as XmlElement;
             if (vibratePermission == null)
             {

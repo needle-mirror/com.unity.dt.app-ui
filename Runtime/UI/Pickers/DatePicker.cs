@@ -20,7 +20,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
-        
+
 #endif
         Date m_Value;
 
@@ -31,7 +31,7 @@ namespace Unity.AppUI.UI
         {
             value = Date.now;
         }
-        
+
         /// <summary>
         /// Set the value of the date picker without sending a change event.
         /// </summary>
@@ -76,16 +76,16 @@ namespace Unity.AppUI.UI
         {
             if (evt.target is not VisualElement { userData: Date date })
                 return;
-            
+
             evt.StopPropagation();
             value = date;
         }
-        
+
         internal override bool IsSelectedDate(Date date)
         {
             return date == value;
         }
-        
+
 #if ENABLE_UXML_TRAITS
         /// <summary>
         /// Class used to create instances of <see cref="DatePicker"/> from UXML.
@@ -99,16 +99,16 @@ namespace Unity.AppUI.UI
         {
             readonly UxmlStringAttributeDescription m_Value = new UxmlStringAttributeDescription
             {
-                name = "value", 
+                name = "value",
                 defaultValue = Date.now.ToString()
             };
 
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                
+
                 var datePicker = (DatePicker)ve;
-                
+
                 var value = m_Value.GetValueFromBag(bag, cc);
                 if (m_Value.TryGetValueFromBag(bag, cc, ref value) && DateTime.TryParse(value, out var date))
                     datePicker.value = new Date(date);

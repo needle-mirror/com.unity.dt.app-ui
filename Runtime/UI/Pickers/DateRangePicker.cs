@@ -20,10 +20,10 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
-        
+
 #endif
         DateRange m_Value;
-        
+
         Date m_TempStartDate;
 
         bool m_IsTemporarilySelected;
@@ -35,7 +35,7 @@ namespace Unity.AppUI.UI
         {
             value = new DateRange(DateTime.Now, DateTime.Now.AddDays(1));
         }
-        
+
         /// <summary>
         /// Set the value of the date picker without sending a change event.
         /// </summary>
@@ -80,7 +80,7 @@ namespace Unity.AppUI.UI
         {
             if (evt.target is not VisualElement { userData: Date date })
                 return;
-            
+
             evt.StopPropagation();
             if (!m_IsTemporarilySelected)
             {
@@ -101,22 +101,22 @@ namespace Unity.AppUI.UI
                 value = new DateRange(startDate, endDate);
             }
         }
-        
+
         internal override bool IsStartDate(Date date)
         {
             return m_IsTemporarilySelected ? date == m_TempStartDate : date == m_Value.start;
         }
-        
+
         internal override bool IsEndDate(Date date)
         {
             return !m_IsTemporarilySelected && date == m_Value.end;
         }
-        
+
         internal override bool IsInRange(Date date)
         {
             return !m_IsTemporarilySelected && m_Value.Contains(date, includeStartAndEnd: false);
         }
-        
+
 #if ENABLE_UXML_TRAITS
         /// <summary>
         /// Class used to create instances of <see cref="DateRangePicker"/> from UXML.
@@ -130,16 +130,16 @@ namespace Unity.AppUI.UI
         {
             readonly UxmlStringAttributeDescription m_Value = new UxmlStringAttributeDescription
             {
-                name = "value", 
+                name = "value",
                 defaultValue = new DateRange(DateTime.Now, DateTime.Now.AddDays(1)).ToString()
             };
 
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                
+
                 var datePicker = (DateRangePicker)ve;
-                
+
                 var value = m_Value.GetValueFromBag(bag, cc);
                 if (m_Value.TryGetValueFromBag(bag, cc, ref value) && DateRange.TryParse(value, out var dateRange))
                     datePicker.value = dateRange;

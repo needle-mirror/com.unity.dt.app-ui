@@ -17,7 +17,7 @@ namespace Unity.AppUI.Tests.Core
             var result = MemoryUtils.Concatenate(str1, str2);
             return result;
         }
-        
+
         [Test]
         [TestCase("Hello", "World", "A", ExpectedResult = "HelloWorldA")]
         [TestCase("Hello", "", "A", ExpectedResult = "HelloA")]
@@ -27,7 +27,7 @@ namespace Unity.AppUI.Tests.Core
             var result = MemoryUtils.Concatenate(str1, str2, str3);
             return result;
         }
-        
+
         [Test]
         [TestCase("Hello", "World", "A", "B", ExpectedResult = "HelloWorldAB")]
         [TestCase("Hello", "", "A", "B", ExpectedResult = "HelloAB")]
@@ -37,7 +37,7 @@ namespace Unity.AppUI.Tests.Core
             var result = MemoryUtils.Concatenate(str1, str2, str3, str4);
             return result;
         }
-        
+
         [Test]
         [TestCase("Hello", "World", "A", "B", "C", ExpectedResult = "HelloWorldABC")]
         [TestCase("Hello", "", "A", "B", "C", ExpectedResult = "HelloABC")]
@@ -47,7 +47,7 @@ namespace Unity.AppUI.Tests.Core
             var result = MemoryUtils.Concatenate(str1, str2, str3, str4, str5);
             return result;
         }
-        
+
         [Test]
         [TestCase(null, false)]
         [TestCase("", false)]
@@ -60,18 +60,18 @@ namespace Unity.AppUI.Tests.Core
                 // 2
                 Assert.Throws<ArgumentException>(() => MemoryUtils.Concatenate(str, secondString));
                 Assert.Throws<ArgumentException>(() => MemoryUtils.Concatenate(secondString, str));
-                
+
                 // 3
                 Assert.Throws<ArgumentException>(() => MemoryUtils.Concatenate(str, secondString, secondString));
                 Assert.Throws<ArgumentException>(() => MemoryUtils.Concatenate(secondString, str, secondString));
                 Assert.Throws<ArgumentException>(() => MemoryUtils.Concatenate(secondString, secondString, str));
-                
+
                 // 4
                 Assert.Throws<ArgumentException>(() => MemoryUtils.Concatenate(str, secondString, secondString, secondString));
                 Assert.Throws<ArgumentException>(() => MemoryUtils.Concatenate(secondString, str, secondString, secondString));
                 Assert.Throws<ArgumentException>(() => MemoryUtils.Concatenate(secondString, secondString, str, secondString));
                 Assert.Throws<ArgumentException>(() => MemoryUtils.Concatenate(secondString, secondString, secondString, str));
-                
+
                 // 5
                 Assert.Throws<ArgumentException>(() => MemoryUtils.Concatenate(str, secondString, secondString, secondString, secondString));
                 Assert.Throws<ArgumentException>(() => MemoryUtils.Concatenate(secondString, str, secondString, secondString, secondString));
@@ -84,18 +84,18 @@ namespace Unity.AppUI.Tests.Core
                 // 2
                 Assert.DoesNotThrow(() => MemoryUtils.Concatenate(str, secondString));
                 Assert.DoesNotThrow(() => MemoryUtils.Concatenate(secondString, str));
-                
+
                 // 3
                 Assert.DoesNotThrow(() => MemoryUtils.Concatenate(str, secondString, secondString));
                 Assert.DoesNotThrow(() => MemoryUtils.Concatenate(secondString, str, secondString));
                 Assert.DoesNotThrow(() => MemoryUtils.Concatenate(secondString, secondString, str));
-                
+
                 // 4
                 Assert.DoesNotThrow(() => MemoryUtils.Concatenate(str, secondString, secondString, secondString));
                 Assert.DoesNotThrow(() => MemoryUtils.Concatenate(secondString, str, secondString, secondString));
                 Assert.DoesNotThrow(() => MemoryUtils.Concatenate(secondString, secondString, str, secondString));
                 Assert.DoesNotThrow(() => MemoryUtils.Concatenate(secondString, secondString, secondString, str));
-                
+
                 // 5
                 Assert.DoesNotThrow(() => MemoryUtils.Concatenate(str, secondString, secondString, secondString, secondString));
                 Assert.DoesNotThrow(() => MemoryUtils.Concatenate(secondString, str, secondString, secondString, secondString));

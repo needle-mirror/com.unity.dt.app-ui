@@ -52,7 +52,7 @@ You can also specify the theme stylesheet inside you UXML file directly.
 
 ### I see an error message "Exception: Attempting to use an invalid operation handle" when I go in Play Mode
 
-This error message is caused by an invalid load of Addressables content. 
+This error message is caused by an invalid load of Addressables content.
 App UI uses Addressables via the Localization Unity Package only for the localization of text elements.
 To avoid this message, you have 2 options:
 - Go to **Edit > Project Settings > Localization** and check the **Initialize Synchronously** option.
@@ -86,15 +86,15 @@ For more information about UI Toolkit support for the New Input System, see thei
 
 ### Why does the Editor maximize docked windows when I try to zoom into an App UI [Canvas](xref:Unity.AppUI.UI.Canvas) component using an Apple trackpad?
 
-This is a known issue with the Unity Editor on macOS. 
-To avoid this issue temporarily, you can disable the **Zoom gesture** in the **Trackpad** settings of your Mac. By 
-disabling the gesture, you will still be able to zoom in and out in the Canvas component, but the Editor will not 
+This is a known issue with the Unity Editor on macOS.
+To avoid this issue temporarily, you can disable the **Zoom gesture** in the **Trackpad** settings of your Mac. By
+disabling the gesture, you will still be able to zoom in and out in the Canvas component, but the Editor will not
 handle them anymore.
 
 ### I got a message "AppUINativePlugin.bundle is damaged and can't be opened" when I try to run my project on macOS, what should I do?
 
 It is possible that the native plugins used by App UI are not correctly signed for the current macOS version you are using.
-To fix this issue, you can try to upgrade the App UI package if possible, or you can use the `xattr` command to remove 
+To fix this issue, you can try to upgrade the App UI package if possible, or you can use the `xattr` command to remove
 the quarantine attribute from the `AppUINativePlugin.bundle` file.
 
 ```sh
@@ -109,7 +109,7 @@ xattr -d com.apple.quarantine <project-path>/Library/PackageCache/com.unity.dt.a
 
 > [!WARNING]
 > Be careful when using the `xattr` command, as it can remove the quarantine attribute from any file.
-> Keep in mind that removing the quarantine attribute from a file can be a security risk, and the 
+> Keep in mind that removing the quarantine attribute from a file can be a security risk, and the
 > attribute will be removed only for your machine. This is proposed as a workaround and until
 > the issue is fixed in the App UI package in next releases.
 

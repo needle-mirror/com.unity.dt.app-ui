@@ -10,33 +10,33 @@ namespace Unity.AppUI.UI
     sealed class DayPicker : BaseDatePickerPane
     {
         public static readonly string previousYearButtonUssClassName = ussClassName + "__previous-year-button";
-        
+
         public static readonly string previousMonthButtonUssClassName = ussClassName + "__previous-month-button";
-        
+
         public static readonly string monthButtonUssClassName = ussClassName + "__month-header-button";
-        
+
         public static readonly string yearButtonUssClassName = ussClassName + "__year-header-button";
-        
+
         public static readonly string nextMonthButtonUssClassName = ussClassName + "__next-month-button";
-        
+
         public static readonly string nextYearButtonUssClassName = ussClassName + "__next-year-button";
-        
+
         public static readonly string weekDaysContainerUssClassName = ussClassName + "__week-days-container";
-        
+
         public static readonly string dayOfWeekLabelUssClassName = ussClassName + "__day-of-week-label";
-        
+
         public static readonly string daysContainerUssClassName = ussClassName + "__days-container";
-        
+
         public static readonly string dayButtonUssClassName = ussClassName + "__day-button";
-        
+
         public static readonly string extraDayUssClassName = dayButtonUssClassName + "--extra";
-        
+
         public static readonly string startDateUssClassName = dayButtonUssClassName + "--start";
-        
+
         public static readonly string endDateUssClassName = dayButtonUssClassName + "--end";
-        
+
         public static readonly string inRangeUssClassName = dayButtonUssClassName + "--in-range";
-        
+
         static readonly Dictionary<DayOfWeek, DayOfWeek[]> k_WeekDaysSequences = new Dictionary<DayOfWeek, DayOfWeek[]>
         {
             { DayOfWeek.Sunday, new[] { DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday } },
@@ -47,11 +47,11 @@ namespace Unity.AppUI.UI
             { DayOfWeek.Friday, new[] { DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday } },
             { DayOfWeek.Saturday, new[] { DayOfWeek.Saturday, DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday } }
         };
-        
+
         readonly Text[] m_DaysElementsPool = new Text[42]; // maximum of 6 weeks visible
 
         readonly Text[] m_WeekDaysElementsPool = new Text[7];
-        
+
         IconButton m_PreviousYearButton;
 
         IconButton m_PreviousMonthButton;
@@ -63,11 +63,11 @@ namespace Unity.AppUI.UI
         IconButton m_NextMonthButton;
 
         IconButton m_NextYearButton;
-        
+
         VisualElement m_WeekDaysContainer;
 
         VisualElement m_DaysContainer;
-        
+
         public DayPicker(BaseDatePicker datePicker)
             : base(datePicker)
         { }
@@ -81,7 +81,7 @@ namespace Unity.AppUI.UI
             };
             m_PreviousYearButton.AddToClassList(previousYearButtonUssClassName);
             m_LeftButtonGroup.hierarchy.Add(m_PreviousYearButton);
-            
+
             m_PreviousMonthButton = new IconButton("caret-left", m_DatePicker.GoToPreviousMonth)
             {
                 name = previousMonthButtonUssClassName,
@@ -119,7 +119,7 @@ namespace Unity.AppUI.UI
             };
             m_NextMonthButton.AddToClassList(nextMonthButtonUssClassName);
             m_RightButtonGroup.hierarchy.Add(m_NextMonthButton);
-            
+
             m_NextYearButton = new IconButton("caret-double-right", m_DatePicker.GoToNextYear)
             {
                 name = nextYearButtonUssClassName,
@@ -133,20 +133,20 @@ namespace Unity.AppUI.UI
         {
             m_WeekDaysContainer = new VisualElement
             {
-                name = weekDaysContainerUssClassName, 
+                name = weekDaysContainerUssClassName,
                 pickingMode = PickingMode.Ignore
             };
             m_WeekDaysContainer.AddToClassList(weekDaysContainerUssClassName);
             m_BodyElement.hierarchy.Add(m_WeekDaysContainer);
-            
+
             m_DaysContainer = new VisualElement
             {
-                name = daysContainerUssClassName, 
+                name = daysContainerUssClassName,
                 pickingMode = PickingMode.Ignore
             };
             m_DaysContainer.AddToClassList(daysContainerUssClassName);
             m_BodyElement.hierarchy.Add(m_DaysContainer);
-            
+
             ConstructWeekDaysContainerUI();
             ConstructDaysContainerUI();
         }
@@ -158,7 +158,7 @@ namespace Unity.AppUI.UI
                 var dow = new Text
                 {
                     name = dayOfWeekLabelUssClassName,
-                    pickingMode = PickingMode.Ignore, 
+                    pickingMode = PickingMode.Ignore,
                     primary = false
                 };
                 dow.AddToClassList(dayOfWeekLabelUssClassName);
@@ -166,7 +166,7 @@ namespace Unity.AppUI.UI
                 m_WeekDaysContainer.hierarchy.Add(dow);
             }
         }
-        
+
         void ConstructDaysContainerUI()
         {
             for (var i = 0; i < m_DaysElementsPool.Length; i++)
@@ -174,7 +174,7 @@ namespace Unity.AppUI.UI
                 var day = new Text
                 {
                     name = dayButtonUssClassName,
-                    pickingMode = PickingMode.Position, 
+                    pickingMode = PickingMode.Position,
                     focusable = true,
                     primary = true,
                 };
@@ -190,19 +190,19 @@ namespace Unity.AppUI.UI
 
         protected override void ConstructFooterUI()
         {
-            
+
         }
-        
+
         void OnMonthButtonPressed()
         {
             m_DatePicker.displayMode = DatePicker.DisplayMode.Months;
         }
-        
+
         void OnYearButtonPressed()
         {
             m_DatePicker.displayMode = DatePicker.DisplayMode.Years;
         }
-        
+
         internal override void RefreshUI()
         {
             var weekDaysSequence = k_WeekDaysSequences[m_DatePicker.firstDayOfWeek];
@@ -240,7 +240,7 @@ namespace Unity.AppUI.UI
             {
                 var date = (Date)day.userData;
                 day.text = date.day.ToString();
-                
+
                 var isSelectedDate = m_DatePicker.IsSelectedDate(date);
                 var isStartDate = m_DatePicker.IsStartDate(date);
                 var isEndDate = m_DatePicker.IsEndDate(date);
@@ -262,13 +262,13 @@ namespace Unity.AppUI.UI
             m_MonthButton.title = GetMonthText(m_DatePicker.currentMonth, false, m_DatePicker.cultureInfo);
             m_MonthButton.userData = m_DatePicker.currentMonth;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static string GetMonthText(int monthNumber, bool shortVersion = true, CultureInfo cultureInfo = null)
         {
             var dateTimeFormatInfo = cultureInfo?.DateTimeFormat ?? CultureInfo.InvariantCulture.DateTimeFormat;
-            return shortVersion 
-                ? dateTimeFormatInfo.GetAbbreviatedMonthName(monthNumber) 
+            return shortVersion
+                ? dateTimeFormatInfo.GetAbbreviatedMonthName(monthNumber)
                 : dateTimeFormatInfo.GetMonthName(monthNumber);
         }
 
@@ -276,8 +276,8 @@ namespace Unity.AppUI.UI
         static string GetWeekDayText(DayOfWeek dow, bool shortVersion = true, CultureInfo cultureInfo = null)
         {
             var dateTimeFormatInfo = cultureInfo?.DateTimeFormat ?? CultureInfo.InvariantCulture.DateTimeFormat;
-            return shortVersion 
-                ? dateTimeFormatInfo.GetAbbreviatedDayName(dow) 
+            return shortVersion
+                ? dateTimeFormatInfo.GetAbbreviatedDayName(dow)
                 : dateTimeFormatInfo.GetDayName(dow);
         }
     }

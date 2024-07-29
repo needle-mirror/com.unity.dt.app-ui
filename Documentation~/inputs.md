@@ -4,7 +4,7 @@ uid: inputs
 
 # Inputs
 
-Inputs components are used to get input from the user through UI controls. 
+Inputs components are used to get input from the user through UI controls.
 App UI provides a wide range of Input components that can be easily integrated into your Unity projects.
 
 ## Input Label
@@ -31,29 +31,29 @@ myField.RegisterValueChangedCallback(evt =>
 
 ## Boolean Inputs
 
-Boolean inputs are used to get a boolean value from the user, typically through a checkbox or a toggle. 
+Boolean inputs are used to get a boolean value from the user, typically through a checkbox or a toggle.
 
 <p align="center">
   <img src="images/toggle.png" alt="Toggle">
 </p>
 
-In App UI, you can use the [Checkbox](xref:Unity.AppUI.UI.Checkbox) element to create a checkbox, 
+In App UI, you can use the [Checkbox](xref:Unity.AppUI.UI.Checkbox) element to create a checkbox,
 and the [Toggle](xref:Unity.AppUI.UI.Toggle) element to create a toggle.
 
 ## Selection Inputs
 
-Selection inputs are used to get a value from a list of pre-defined values. 
+Selection inputs are used to get a value from a list of pre-defined values.
 
 <p align="center">
   <img src="images/dropdown.png" alt="Dropdown">
 </p>
 
-In App UI, you can use the [Dropdown](xref:Unity.AppUI.UI.Dropdown) element to create a dropdown list, 
+In App UI, you can use the [Dropdown](xref:Unity.AppUI.UI.Dropdown) element to create a dropdown list,
 and the [RadioGroup](xref:Unity.AppUI.UI.RadioGroup) element to create a radio button group.
 
 ## Color Inputs
 
-Color inputs are used for selecting colors. 
+Color inputs are used for selecting colors.
 
 <p align="center">
   <img src="images/color-picker.png" alt="Color Picker">
@@ -77,7 +77,7 @@ Although there are multiple data structure that implies numerical values.
 Also, the precision of the value can vary from one data structure to another.
 We aim to provide different version of our component in order to fit the needs of the user.
 
-### Sliders 
+### Sliders
 
 Slider inputs are used for selecting a value from a range of values.
 

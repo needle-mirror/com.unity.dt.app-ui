@@ -67,7 +67,7 @@ namespace Unity.AppUI.Tests.UI
         {
             //todo simulate clickevent
         }
-        
+
         [UnityTest]
         [Order(10)]
         public IEnumerator AccordionItem_IndicatorPosition_ShouldBeSettable()
@@ -81,7 +81,7 @@ namespace Unity.AppUI.Tests.UI
             accordion.Add(accordionItem);
 
             yield return null;
-            
+
             Assert.AreEqual(FlexPosition.End, accordionItem.indicatorPosition);
             var headerElement = accordionItem.hierarchy.ElementAt(0).hierarchy.ElementAt(0);
             Assert.NotNull(headerElement);
@@ -89,18 +89,18 @@ namespace Unity.AppUI.Tests.UI
             var indicatorElement = headerElement.hierarchy.ElementAt(headerElement.hierarchy.childCount - 1);
             Assert.NotNull(indicatorElement);
             Assert.AreEqual(AccordionItem.indicatorUssClassName, indicatorElement.name);
-            
+
             accordionItem.indicatorPosition = FlexPosition.Start;
-            
+
             yield return null;
-            
+
             Assert.AreEqual(FlexPosition.Start, accordionItem.indicatorPosition);
             Assert.AreEqual(0, headerElement.hierarchy.IndexOf(indicatorElement));
-            
+
             accordionItem.indicatorPosition = FlexPosition.Start;
-            
+
             yield return null;
-            
+
             Assert.AreEqual(FlexPosition.Start, accordionItem.indicatorPosition);
             Assert.AreEqual(0, headerElement.hierarchy.IndexOf(indicatorElement));
         }

@@ -30,7 +30,7 @@ namespace Unity.AppUI.UI
                 value = double.NaN;
             else
                 return ExpressionEvaluator.Evaluate(str, out value);
-            
+
             return true;
         }
 
@@ -71,7 +71,7 @@ namespace Unity.AppUI.UI
 
             return (float)value;
         }
-        
+
         /// <summary>
         /// Check if the string formatting code is a percent format.
         /// </summary>
@@ -81,7 +81,7 @@ namespace Unity.AppUI.UI
         {
             if (formatString.ToUpperInvariant().StartsWith("P"))
                 return !formatString.Contains(".");
-            
+
             var pCount = 0;
             var dCount = 0;
             foreach (var c in formatString)
@@ -96,7 +96,7 @@ namespace Unity.AppUI.UI
                         break;
                 }
             }
-            
+
             return pCount == 1 && dCount > 0 && (formatString.StartsWith("%") || formatString.EndsWith("%"));
         }
     }

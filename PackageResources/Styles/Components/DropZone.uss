@@ -20,7 +20,7 @@
     justify-content: center;
     align-items: center;
     opacity: 0;
-    
+
     --border-style: 3; /* dashed */
     --border-dot-factor: 8; /* 8 times bigger than --border-width */
     --border-width: 3;

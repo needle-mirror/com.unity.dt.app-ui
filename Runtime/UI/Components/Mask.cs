@@ -17,21 +17,21 @@ namespace Unity.AppUI.UI
     public partial class Mask : Image
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId innerMaskColorProperty = nameof(innerMaskColor);
-        
+
         internal static readonly BindingId outerMaskColorProperty = nameof(outerMaskColor);
-        
+
         internal static readonly BindingId maskRectProperty = nameof(maskRect);
-        
+
         internal static readonly BindingId radiusProperty = nameof(radius);
-        
+
         internal static readonly BindingId blurProperty = nameof(blur);
-        
+
         internal static readonly BindingId useNormalizedMaskRectProperty = nameof(useNormalizedMaskRect);
-        
+
 #endif
-        
+
         /// <summary>
         /// The Mask main styling class.
         /// </summary>
@@ -73,17 +73,17 @@ namespace Unity.AppUI.UI
         float m_Blur = 0;
 
         bool m_UseNormalizedMaskRect;
-        
+
         static readonly Color k_DefaultInnerMaskColor = Color.white;
-        
+
         static readonly Color k_DefaultOuterMaskColor = Color.black;
-        
+
         static readonly Rect k_DefaultMaskRect = new Rect(20f, 20f, 20f, 20f);
-        
+
         const float k_DefaultRadius = 0f;
-        
+
         const float k_DefaultBlur = 0f;
-        
+
         const bool k_DefaultUseNormalizedMaskRect = false;
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Unity.AppUI.UI
                 m_InnerMaskColor = value;
                 GenerateTextures();
                 MarkDirtyRepaint();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in innerMaskColorProperty);
@@ -130,7 +130,7 @@ namespace Unity.AppUI.UI
                 m_OuterMaskColor = value;
                 GenerateTextures();
                 MarkDirtyRepaint();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in outerMaskColorProperty);
@@ -156,7 +156,7 @@ namespace Unity.AppUI.UI
                 m_MaskRect = value;
                 GenerateTextures();
                 MarkDirtyRepaint();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in maskRectProperty);
@@ -182,7 +182,7 @@ namespace Unity.AppUI.UI
                 m_Radius = value;
                 GenerateTextures();
                 MarkDirtyRepaint();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in radiusProperty);
@@ -208,7 +208,7 @@ namespace Unity.AppUI.UI
                 m_Blur = value;
                 GenerateTextures();
                 MarkDirtyRepaint();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in blurProperty);
@@ -234,7 +234,7 @@ namespace Unity.AppUI.UI
                 m_UseNormalizedMaskRect = value;
                 GenerateTextures();
                 MarkDirtyRepaint();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in useNormalizedMaskRectProperty);
@@ -296,7 +296,7 @@ namespace Unity.AppUI.UI
                 if (!s_Material)
                     return;
             }
-            
+
             var rect = paddingRect;
 
             if (!rect.IsValid())
@@ -426,7 +426,7 @@ namespace Unity.AppUI.UI
                 mask.maskRect = new Rect(m_MaskRectX.GetValueFromBag(bag, cc), m_MaskRectY.GetValueFromBag(bag, cc), m_MaskRectWidth.GetValueFromBag(bag, cc), m_MaskRectHeight.GetValueFromBag(bag, cc));
             }
         }
-        
+
 #endif
     }
 }

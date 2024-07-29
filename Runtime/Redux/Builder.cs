@@ -18,7 +18,7 @@ namespace Unity.AppUI.Redux
         /// The name of the slice.
         /// </summary>
         public string name { get; }
-        
+
         /// <summary>
         /// Creates a new Slice Reducer Switch Builder.
         /// </summary>
@@ -37,7 +37,7 @@ namespace Unity.AppUI.Redux
         {
             if (reducer.Method.Name.StartsWith("<"))
                 throw new ArgumentException("Lambda expressions are not supported. Please use a named method instead.");
-            
+
             m_Reducers.Add(reducer);
             m_ReducerNames[reducer] = reducer.Method.Name;
             return this;
@@ -56,7 +56,7 @@ namespace Unity.AppUI.Redux
             m_ReducerNames[reducer] = actionCatAndName[^1];
             return this;
         }
-        
+
         /// <summary>
         /// Adds a case to the reducer switch statement.
         /// </summary>
@@ -67,12 +67,12 @@ namespace Unity.AppUI.Redux
         {
             if (reducer.Method.Name.StartsWith("<"))
                 throw new ArgumentException("Lambda expressions are not supported. Please use a named method instead.");
-            
+
             m_Reducers.Add(reducer);
             m_ReducerNames[reducer] = reducer.Method.Name;
             return this;
         }
-        
+
         /// <summary>
         /// Adds a case to the reducer switch statement.
         /// </summary>
@@ -99,7 +99,7 @@ namespace Unity.AppUI.Redux
             {
                 var reducerType = reducer.GetType();
                 var actionTypeName = $"{name}/{m_ReducerNames[reducer]}";
-                
+
                 var genericArguments = reducerType.GetGenericArguments();
                 if (genericArguments.Length == 1) // only TState is a generic argument
                 {
@@ -111,7 +111,7 @@ namespace Unity.AppUI.Redux
                     result[actionTypeName] = Store.CreateAction(actionTypeName, actionType);
                 }
             }
-            
+
             return result;
         }
 
@@ -181,7 +181,7 @@ namespace Unity.AppUI.Redux
             m_CaseReducers.Add(new KeyValuePair<object, object>(action, reducer));
             return this;
         }
-        
+
         /// <summary>
         /// Adds a case to the reducer switch statement.
         /// </summary>
@@ -207,7 +207,7 @@ namespace Unity.AppUI.Redux
             m_CaseReducers.Add(new KeyValuePair<object, object>(actionMatcher, reducer));
             return this;
         }
-        
+
         /// <summary>
         /// Adds a matcher case to the reducer switch statement.
         /// A matcher case is a case that will be executed if the action type matches the predicate.
@@ -233,7 +233,7 @@ namespace Unity.AppUI.Redux
             m_CaseReducers.Add(new KeyValuePair<object, object>(null, reducer));
             return this;
         }
-        
+
         /// <summary>
         /// Adds a default case to the reducer switch statement.
         /// A default case is a case that will be executed if no other cases match.
@@ -257,7 +257,7 @@ namespace Unity.AppUI.Redux
             return (state, action) =>
             {
                 state ??= initialState;
-                
+
                 // find cases that match the action
                 var matchingCases = new List<KeyValuePair<object, object>>();
 
@@ -281,9 +281,9 @@ namespace Unity.AppUI.Redux
                             matchingCases.Add(caseReducer);
                     }
                 }
-                
+
                 // execute the matching cases
-                
+
                 var newState = state;
 
                 foreach (var x in matchingCases)
@@ -293,9 +293,9 @@ namespace Unity.AppUI.Redux
                         newState = simpleReducer((TState) newState, action);
                         continue;
                     }
-                    
+
                     var actionType = action.GetType();
-                    var caseReducerGenericType = 
+                    var caseReducerGenericType =
                         typeof(CaseReducer<,>).MakeGenericType(actionType.GetGenericArguments()[0], typeof(TState));
                     newState = (TState) caseReducerGenericType.GetMethod("Invoke")?.Invoke(x.Value, new object[] {newState, action});
                 }

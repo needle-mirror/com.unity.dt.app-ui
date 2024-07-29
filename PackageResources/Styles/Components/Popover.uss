@@ -27,7 +27,7 @@
     bottom: 12px;
     left: 12px;
     right: 12px;
-    
+
     border-radius: var(--appui-alias-control-border-radius);
     background-color: var(--appui-backgrounds-200);
 

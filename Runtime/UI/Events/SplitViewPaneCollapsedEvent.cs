@@ -10,17 +10,16 @@ namespace Unity.AppUI.UI
     public class SplitViewPaneCollapsedEvent : EventBase<SplitViewPaneCollapsedEvent>
     {
         /// <summary>
-        /// Whether the pane is collapsed or expanded.
-        /// <para />
-        /// True if the pane is collapsed, false if it is expanded.
+        /// <para>Whether the pane is collapsed or expanded.</para>
+        /// <para>True if the pane is collapsed, false if it is expanded.</para>
         /// </summary>
         public bool collapsed { get; internal set; }
-        
+
         /// <summary>
         /// The index of the pane that was collapsed or expanded.
         /// </summary>
         public int index { get; internal set; }
-        
+
         /// <summary>
         /// Resets all event members to their initial values.
         /// </summary>

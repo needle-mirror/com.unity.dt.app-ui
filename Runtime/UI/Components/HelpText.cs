@@ -14,18 +14,18 @@ namespace Unity.AppUI.UI
         /// The default variant.
         /// </summary>
         Default,
-        
+
         /// <summary>
         /// The warning variant.
         /// </summary>
         Warning,
-        
+
         /// <summary>
         /// The destructive variant.
         /// </summary>
         Destructive,
     }
-    
+
     /// <summary>
     /// A help text.
     /// </summary>
@@ -35,16 +35,16 @@ namespace Unity.AppUI.UI
     public partial class HelpText : LocalizedTextElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId variantProperty = new BindingId(nameof(variant));
-        
+
 #endif
-        
+
         /// <summary>
         /// The HelpText main styling class.
         /// </summary>
         public new const string ussClassName = "appui-help-text";
-        
+
         /// <summary>
         /// The HelpText variant styling class.
         /// </summary>
@@ -71,14 +71,14 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetVariantUssClassName(m_Variant));
                 m_Variant = value;
                 AddToClassList(GetVariantUssClassName(m_Variant));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -93,11 +93,11 @@ namespace Unity.AppUI.UI
         {
             pickingMode = PickingMode.Ignore;
             AddToClassList(ussClassName);
-            
+
             this.text = text;
             variant = HelpTextVariant.Default;
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -115,12 +115,12 @@ namespace Unity.AppUI.UI
                 name = "variant",
                 defaultValue = HelpTextVariant.Default,
             };
-            
-                        
+
+
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                
+
                 var helpText = (HelpText)ve;
 
                 var variant = HelpTextVariant.Default;
@@ -128,7 +128,7 @@ namespace Unity.AppUI.UI
                     helpText.variant = variant;
             }
         }
-        
+
 #endif
     }
 }

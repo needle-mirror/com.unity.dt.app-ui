@@ -20,18 +20,18 @@ namespace Unity.AppUI.UI
             /// Horizontal drag.
             /// </summary>
             Horizontal = 1 << 0,
-            
+
             /// <summary>
             /// Vertical drag.
             /// </summary>
             Vertical = 1 << 1,
-            
+
             /// <summary>
             /// Free drag (both horizontal and vertical).
             /// </summary>
             Free = Horizontal | Vertical,
         }
-        
+
         readonly Action<Draggable> m_DownHandler;
 
         readonly Action<Draggable> m_DragHandler;
@@ -41,7 +41,7 @@ namespace Unity.AppUI.UI
         bool m_IsDown;
 
         Vector2 m_LastPos = Vector2.zero;
-        
+
         /// <summary>
         /// Construct a Draggable manipulator.
         /// </summary>
@@ -55,11 +55,11 @@ namespace Unity.AppUI.UI
             m_DragHandler = dragHandler;
             m_UpHandler = upHandler;
             m_DownHandler = downHandler;
-            
+
             longPressDuration = -1;
             keepEventPropagation = false;
         }
-        
+
         /// <summary>
         /// The direction of the drag.
         /// </summary>
@@ -69,7 +69,7 @@ namespace Unity.AppUI.UI
         /// The delta position between the last frame and the current one.
         /// </summary>
         public Vector2 deltaPos { get; internal set; } = Vector2.zero;
-        
+
         /// <summary>
         /// The delta position between the start of the drag and the current frame.
         /// </summary>
@@ -84,7 +84,7 @@ namespace Unity.AppUI.UI
         /// The world position received from the imGui native event.
         /// </summary>
         public Vector2 position { get; internal set; }
-        
+
         /// <summary>
         /// The start position of the drag, based on the world position received from the imGui native event.
         /// </summary>
@@ -94,7 +94,7 @@ namespace Unity.AppUI.UI
         /// Has the pointer moved since the last <see cref="PointerDownEvent"/>.
         /// </summary>
         public bool hasMoved { get; internal set; }
-        
+
         /// <summary>
         /// The threshold in pixels to start the drag operation.
         /// </summary>
@@ -108,7 +108,7 @@ namespace Unity.AppUI.UI
             if (active)
                 target?.Blur();
         }
-        
+
         /// <summary>
         /// Accept the drag operation.
         /// </summary>
@@ -125,7 +125,7 @@ namespace Unity.AppUI.UI
             var canDrag = acceptDrag?.Invoke(this) ?? true;
             if (!canDrag)
                 return;
-            
+
             deltaPos = Vector2.zero;
             deltaStartPos = Vector2.zero;
             this.localPosition = localPosition;
@@ -171,11 +171,11 @@ namespace Unity.AppUI.UI
                 deltaPos = position - m_LastPos;
                 deltaStartPos = position - startPosition;
                 m_LastPos = position;
-                
-                var canDrag = 
-                    hasMoved || 
-                    (evt is PointerMoveEvent pme && pme.pointerId == PointerId.mousePointerId) || 
-                    evt is MouseMoveEvent || 
+
+                var canDrag =
+                    hasMoved ||
+                    (evt is PointerMoveEvent pme && pme.pointerId == PointerId.mousePointerId) ||
+                    evt is MouseMoveEvent ||
                     IsDraggingInDirection();
 
                 if (canDrag || !hasMoved)
@@ -215,12 +215,12 @@ namespace Unity.AppUI.UI
                     DragDirection.Vertical => Mathf.Abs(deltaStartPos.x) >= threshold,
                     _ => false
                 };
-                
+
                 // if we are dragging in a cross direction, we cancel the drag
                 if (isCrossDirection)
                     m_IsDown = false;
             }
-            
+
             return r;
         }
     }

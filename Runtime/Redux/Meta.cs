@@ -13,18 +13,18 @@ namespace Unity.AppUI.Redux
         /// The request ID of the thunk.
         /// </summary>
         public string requestId { get; internal set; }
-            
+
         /// <summary>
         /// The argument passed to the thunk.
         /// </summary>
         public TThunkArg arg { get; internal set; }
-            
+
         /// <summary>
         /// The status of the thunk.
         /// </summary>
         public ThunkStatus thunkStatus { get; } = thunkStatus;
     }
-    
+
     /// <summary>
     /// The metadata of the thunk when it is pending.
     /// </summary>
@@ -47,22 +47,22 @@ namespace Unity.AppUI.Redux
         /// Whether the thunk has been aborted.
         /// </summary>
         public bool aborted { get; internal set; }
-        
+
         /// <summary>
         /// The reason for aborting the thunk.
         /// </summary>
         public object reason { get; internal set; }
-        
+
         /// <summary>
         /// Whether the thunk has been rejected because of the condition set in the options.
         /// </summary>
         public bool condition { get; internal set; }
-        
+
         /// <summary>
         /// Whether the thunk has been rejected with a value.
         /// </summary>
         public bool rejectedWithValue { get; internal set; }
-        
+
         /// <summary>
         /// The exception thrown by the thunk.
         /// </summary>

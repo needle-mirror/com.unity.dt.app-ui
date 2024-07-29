@@ -4,10 +4,11 @@ using UnityEngine;
 namespace Unity.AppUI.Navigation
 {
     /// <summary>
-    /// NavGraph is a collection of <see cref="NavDestination"/> nodes fetchable by ID.
-    /// <para/>
+    /// <para>NavGraph is a collection of <see cref="NavDestination"/> nodes fetchable by ID.</para>
+    /// <para>
     /// A <see cref="NavGraph"/> serves as a 'virtual' destination: while the NavGraph itself will not appear on the back stack,
     /// navigating to the NavGraph will cause the <see cref="startDestination"/> to be added to the back stack.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// A NavGraph is not valid until you add a destination and set the <see cref="startDestination"/>.

@@ -18,17 +18,17 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId deleteIconProperty = nameof(deleteIcon);
-        
+
         internal static readonly BindingId ornamentProperty = nameof(ornament);
-        
+
         internal static readonly BindingId labelProperty = nameof(label);
-        
+
         internal static readonly BindingId variantProperty = nameof(variant);
-        
+
         internal static readonly BindingId deletableProperty = nameof(deletable);
-        
+
 #endif
-        
+
         /// <summary>
         /// The possible variants for a <see cref="Chip"/>.
         /// </summary>
@@ -66,7 +66,7 @@ namespace Unity.AppUI.UI
         /// The Chip Deletable variant styling class.
         /// </summary>
         public const string deletableUssClassName = ussClassName + "--deletable";
-        
+
         /// <summary>
         /// The Chip with ornament variant styling class.
         /// </summary>
@@ -137,7 +137,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_DeleteIcon.iconName != value;
                 m_DeleteIcon.iconName = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in deleteIconProperty);
@@ -163,7 +163,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetVariantUssClassName(m_Variant));
                 m_Variant = value;
                 AddToClassList(GetVariantUssClassName(m_Variant));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
@@ -189,7 +189,7 @@ namespace Unity.AppUI.UI
                 if (m_Ornament != null)
                     m_OrnamentContainer.Add(m_Ornament);
                 EnableInClassList(withOrnamentUssClassName, m_Ornament != null);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in ornamentProperty);
@@ -213,7 +213,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_Label.text != value;
                 m_Label.text = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
@@ -237,7 +237,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(deletableUssClassName) != value;
                 EnableInClassList(deletableUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in deletableProperty);
@@ -312,10 +312,10 @@ namespace Unity.AppUI.UI
             deleteIcon = k_DefaultDeleteIconName;
             variant = Variant.Filled;
             ornament = null;
-            
+
             AddToClassList(clickableUssClassName);
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -328,8 +328,8 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            
-            
+
+
 
             readonly UxmlEnumAttributeDescription<Variant> m_Variant = new UxmlEnumAttributeDescription<Variant>
             {

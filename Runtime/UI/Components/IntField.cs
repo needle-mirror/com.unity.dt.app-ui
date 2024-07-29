@@ -37,7 +37,7 @@ namespace Unity.AppUI.UI
         {
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
         }
-        
+
         /// <inheritdoc cref="NumericalField{T}.ParseRawValueToString"/>
         protected override string ParseRawValueToString(int val)
         {
@@ -85,7 +85,7 @@ namespace Unity.AppUI.UI
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="IntField"/>.
         /// </summary>
         public new class UxmlTraits : NumericalField<int>.UxmlTraits { }
-        
+
 #endif
     }
 }

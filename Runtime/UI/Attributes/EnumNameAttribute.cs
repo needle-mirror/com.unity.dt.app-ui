@@ -14,12 +14,12 @@ namespace Unity.AppUI.UI
         /// The type of the enum you will be able to use as argument in the generated method.
         /// </summary>
         public Type enumType { get; }
-        
+
         /// <summary>
         /// The name of the generated method.
         /// </summary>
         public string Name { get; set; }
-        
+
         /// <summary>
         /// Place this attribute on a constant string field to generate a method to return a string representation of the enum value.
         /// <para/>

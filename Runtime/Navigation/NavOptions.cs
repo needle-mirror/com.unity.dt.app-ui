@@ -12,22 +12,22 @@ namespace Unity.AppUI.Navigation
         /// No animation.
         /// </summary>
         None,
-        
+
         /// <summary>
         /// The destination will scale up from the center of the screen.
         /// </summary>
         ScaleUpFadeOut,
-        
+
         /// <summary>
         /// The destination will scale down to the center of the screen.
         /// </summary>
         ScaleDownFadeIn,
-        
+
         /// <summary>
         /// The destination will fade in.
         /// </summary>
         FadeIn,
-        
+
         /// <summary>
         /// The destination will fade out.
         /// </summary>
@@ -43,18 +43,18 @@ namespace Unity.AppUI.Navigation
         /// The back stack will not be popped.
         /// </summary>
         None,
-        
+
         /// <summary>
         /// The back stack will be popped up to the destination with the given ID.
         /// </summary>
         SpecificRoute,
-        
+
         /// <summary>
         /// The back stack will be popped up to the current graph's start destination.
         /// </summary>
         CurrentStartDestination,
     }
-    
+
     /// <summary>
     /// NavOptions stores special options for navigate actions
     /// </summary>
@@ -63,10 +63,10 @@ namespace Unity.AppUI.Navigation
     {
         [SerializeField]
         PopupToStrategy m_PopUpToStrategy;
-        
+
         [SerializeField]
         NavDestination m_PopUpToRoute;
-        
+
         [SerializeField]
         bool m_PopUpToInclusive;
 
@@ -75,7 +75,7 @@ namespace Unity.AppUI.Navigation
 
         [SerializeField]
         NavigationAnimation m_ExitAnim;
-        
+
         [SerializeField]
         NavigationAnimation m_PopEnterAnim;
 
@@ -90,7 +90,7 @@ namespace Unity.AppUI.Navigation
 
         [SerializeField]
         bool m_LaunchSingleTop;
-        
+
         /// <summary>
         /// Strategy for popping up to a destination.
         /// </summary>
@@ -136,7 +136,7 @@ namespace Unity.AppUI.Navigation
             get => m_ExitAnim;
             set => m_ExitAnim = value;
         }
-        
+
         /// <summary>
         /// The custom enter Animation/Animator that should be run when this destination is popped from the back stack.
         /// </summary>

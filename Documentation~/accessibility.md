@@ -5,7 +5,7 @@ uid: accessibility
 # Accessibility
 
 Accessibility support in game engines can be more complex than other platforms, since there are no universal standards for
-how to implement accessibility features. However, App UI provides a few features that can help make your UI more 
+how to implement accessibility features. However, App UI provides a few features that can help make your UI more
 accessible to users with disabilities.
 
 ## Focus Outline
@@ -19,7 +19,7 @@ This indicator is only visible when the UI element has been focused via a keyboa
 
 ## Keyboard navigation
 
-One key feature for accessibility is keyboard navigation. This feature allows users to navigate through UI elements using 
+One key feature for accessibility is keyboard navigation. This feature allows users to navigate through UI elements using
 the <kbd>Tab</kbd> and <kbd>Shift</kbd>+<kbd>Tab</kbd> keys.
 App UI supports keyboard navigation through the UI-Toolkit Focus Ring. When an element is focused, it is outlined with a focus indicator.
 This feature is important for users who rely on a keyboard to navigate UIs.
@@ -38,13 +38,13 @@ using Unity.AppUI.UI;
 var myButton = new Button();
 
 // Legacy UITK focusable mode, to be navigated with tab key
-myButton.focusable = true; 
+myButton.focusable = true;
 
 // New focusable mode for more granular control
 myButton.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn, OnFocusOut));
 ```
 
-Thanks to this manipulator, you will be able to make the difference between a focus triggered by a keyboard navigation 
+Thanks to this manipulator, you will be able to make the difference between a focus triggered by a keyboard navigation
 or a pointer navigation. Based on this information, you can apply a different visual effect to the focused element.
 
 The manipulator also adds and removes a specific style class to the focused element. You can use these style classes to
@@ -66,8 +66,8 @@ change the visual effect of the focused element when it is focused by a keyboard
 
 The layout direction context provides a way to adjust the layout of the UI based on the
 current language. Some languages are read from right to left, so the UI should be mirrored
-to reflect this behavior. The supported values are [LTR](xref:Unity.AppUI.Core.Dir.Ltr) and 
-[RTL](xref:Unity.AppUI.Core.Dir.Rtl). 
+to reflect this behavior. The supported values are [LTR](xref:Unity.AppUI.Core.Dir.Ltr) and
+[RTL](xref:Unity.AppUI.Core.Dir.Rtl).
 
 <p align="center">
   <img src="images/ltr-rtl.gif" alt="Layout direction">
@@ -107,6 +107,6 @@ void OnDirContextChanged(ContextChangedEvent<DirContext> evt)
 ## Platform-specific features
 
 App UI provides a few properties that can help you adapt your UI to the user's preferences,
-based on the system settings. For more information, see the [Platform](xref:Unity.AppUI.Core.Platform) class 
-and the [Accessibility Features](xref:native-integration#accessibility-features) section from 
+based on the system settings. For more information, see the [Platform](xref:Unity.AppUI.Core.Platform) class
+and the [Accessibility Features](xref:native-integration#accessibility-features) section from
 the Native Integration documentation.

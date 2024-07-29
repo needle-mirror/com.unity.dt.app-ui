@@ -74,7 +74,7 @@ namespace Unity.AppUI.Core
                 OnChange();
             }
         }
-        
+
         /// <summary>
         /// Enable this option to enable gesture recognition on macOS.
         /// </summary>
@@ -110,7 +110,7 @@ namespace Unity.AppUI.Core
         [SerializeField]
         // ReSharper disable once InconsistentNaming
         bool m_AutoOverrideAndroidManifest = true;
-        
+
         [Tooltip("Enable this option to enable gesture recognition on macOS.")]
         [SerializeField]
         // ReSharper disable once InconsistentNaming

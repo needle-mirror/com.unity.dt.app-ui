@@ -36,7 +36,7 @@ namespace Unity.AppUI.Tests.UI
                     },
                     itemsSource = Enumerable.Range(0, 50).ToList(),
                 });
-                
+
                 yield return new Story("ThreeColumns", _ => new MasonryGridView
                 {
                     style =
@@ -61,7 +61,7 @@ namespace Unity.AppUI.Tests.UI
             @"<appui:MasonryGridView />",
             @"<appui:MasonryGridView selection-type=""Multiple"" allow-no-selection=""true"" prevent-scroll-with-modifiers=""true""  />",
         };
-        
+
         [UnityTest, Order(10)]
         public IEnumerator CanConstructGridView()
         {

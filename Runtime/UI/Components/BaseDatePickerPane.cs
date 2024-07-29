@@ -6,19 +6,19 @@ namespace Unity.AppUI.UI
     abstract class BaseDatePickerPane : VisualElement
     {
         public const string ussClassName = "appui-date-picker-pane";
-        
+
         public static readonly string headerUssClassName = ussClassName + "__header";
-        
+
         public static readonly string leftButtonGroupUssClassName = ussClassName + "__button-group--left";
-        
+
         public static readonly string headerContentUssClassName = ussClassName + "__header-content";
-        
+
         public static readonly string rightButtonGroupUssClassName = ussClassName + "__button-group--right";
-        
+
         public static readonly string bodyUssClassName = ussClassName + "__body";
-        
+
         public static readonly string footerUssClassName = ussClassName + "__footer";
-        
+
         protected readonly BaseDatePicker m_DatePicker;
 
         protected VisualElement m_HeaderElement;
@@ -43,31 +43,31 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
             pickingMode = PickingMode.Ignore;
-            
+
             m_HeaderElement = new VisualElement
             {
-                name = headerUssClassName, 
+                name = headerUssClassName,
                 pickingMode = PickingMode.Ignore
             };
             m_HeaderElement.AddToClassList(headerUssClassName);
             hierarchy.Add(m_HeaderElement);
-            
+
             m_BodyElement = new VisualElement
             {
-                name = bodyUssClassName, 
+                name = bodyUssClassName,
                 pickingMode = PickingMode.Ignore
             };
             m_BodyElement.AddToClassList(bodyUssClassName);
             hierarchy.Add(m_BodyElement);
-            
+
             m_FooterElement = new VisualElement
             {
-                name = footerUssClassName, 
+                name = footerUssClassName,
                 pickingMode = PickingMode.Ignore
             };
             m_FooterElement.AddToClassList(footerUssClassName);
             hierarchy.Add(m_FooterElement);
-            
+
             ConstructHeaderUI();
             ConstructBodyUI();
             ConstructFooterUI();
@@ -77,28 +77,28 @@ namespace Unity.AppUI.UI
         {
             m_LeftButtonGroup = new VisualElement
             {
-                name = leftButtonGroupUssClassName, 
+                name = leftButtonGroupUssClassName,
                 pickingMode = PickingMode.Ignore
             };
             m_LeftButtonGroup.AddToClassList(leftButtonGroupUssClassName);
             m_HeaderElement.hierarchy.Add(m_LeftButtonGroup);
-            
+
             m_HeaderContentElement = new VisualElement
             {
-                name = headerContentUssClassName, 
+                name = headerContentUssClassName,
                 pickingMode = PickingMode.Ignore
             };
             m_HeaderContentElement.AddToClassList(headerContentUssClassName);
             m_HeaderElement.hierarchy.Add(m_HeaderContentElement);
-            
+
             m_RightButtonGroup = new VisualElement
             {
-                name = rightButtonGroupUssClassName, 
+                name = rightButtonGroupUssClassName,
                 pickingMode = PickingMode.Ignore
             };
             m_RightButtonGroup.AddToClassList(rightButtonGroupUssClassName);
             m_HeaderElement.hierarchy.Add(m_RightButtonGroup);
-            
+
             ConstructLeftButtonGroupUI();
             ConstructHeaderContentUI();
             ConstructRightButtonGroupUI();
@@ -106,17 +106,17 @@ namespace Unity.AppUI.UI
 
         protected virtual void ConstructLeftButtonGroupUI()
         {
-            
+
         }
 
         protected virtual void ConstructHeaderContentUI()
         {
-            
+
         }
 
         protected virtual void ConstructRightButtonGroupUI()
         {
-            
+
         }
 
         protected virtual void ConstructBodyUI()
@@ -126,12 +126,12 @@ namespace Unity.AppUI.UI
 
         protected virtual void ConstructFooterUI()
         {
-            
+
         }
-        
+
         internal virtual void RefreshUI()
         {
-            
+
         }
     }
 }

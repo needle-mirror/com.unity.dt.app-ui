@@ -16,17 +16,17 @@ namespace Unity.AppUI.UI
     public partial class RectField : BaseVisualElement, IInputElement<Rect>, ISizeableElement, INotifyValueChanging<Rect>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId invalidProperty = nameof(invalid);
-        
+
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
-        
+
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
 #endif
-        
+
         /// <summary>
         /// The RectField main styling class.
         /// </summary>
@@ -136,7 +136,7 @@ namespace Unity.AppUI.UI
             m_YField.RegisterValueChangedCallback(OnYFieldChanged);
             m_HField.RegisterValueChangedCallback(OnHFieldChanged);
             m_WField.RegisterValueChangedCallback(OnWFieldChanged);
-            
+
             m_XField.RegisterValueChangingCallback(OnXFieldChanging);
             m_YField.RegisterValueChangingCallback(OnYFieldChanging);
             m_HField.RegisterValueChangingCallback(OnHFieldChanging);
@@ -170,7 +170,7 @@ namespace Unity.AppUI.UI
                 m_YField.size = m_Size;
                 m_HField.size = m_Size;
                 m_WField.size = m_Size;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -212,7 +212,7 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
 #endif
@@ -240,7 +240,7 @@ namespace Unity.AppUI.UI
                 m_YField.EnableInClassList(Styles.invalidUssClassName, value);
                 m_HField.EnableInClassList(Styles.invalidUssClassName, value);
                 m_WField.EnableInClassList(Styles.invalidUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
@@ -262,7 +262,7 @@ namespace Unity.AppUI.UI
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
@@ -289,7 +289,7 @@ namespace Unity.AppUI.UI
         {
             value = new Rect(evt.newValue, value.y, value.width, value.height);
         }
-        
+
         void OnHFieldChanging(ChangingEvent<float> evt)
         {
             evt.StopPropagation();
@@ -317,16 +317,16 @@ namespace Unity.AppUI.UI
             var val = new Rect(evt.newValue, value.y, value.width, value.height);
             TrySendChangingEvent(val);
         }
-        
+
         void TrySendChangingEvent(Rect newVal)
         {
             var previousValue = m_Value;
             m_Value = newVal;
-            
+
             if (m_Value != previousValue)
             {
                 if (validateValue != null) invalid = !validateValue(m_Value);
-                
+
                 using var changeEvent = ChangingEvent<Rect>.GetPooled();
                 changeEvent.target = this;
                 changeEvent.previousValue = previousValue;
@@ -334,7 +334,7 @@ namespace Unity.AppUI.UI
                 SendEvent(changeEvent);
             }
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -367,7 +367,7 @@ namespace Unity.AppUI.UI
                 element.size = m_Size.GetValueFromBag(bag, cc);
             }
         }
-        
+
 #endif
     }
 }

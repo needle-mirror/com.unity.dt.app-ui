@@ -10,7 +10,7 @@ namespace Unity.AppUI.Core
         /// <summary>
         /// Left to right.
         /// </summary>
-        [InspectorName("Left to Right")] 
+        [InspectorName("Left to Right")]
         Ltr,
 
         /// <summary>
@@ -23,6 +23,7 @@ namespace Unity.AppUI.Core
     /// <summary>
     /// The layout direction context of the application.
     /// </summary>
+    /// <param name="dir"> The layout direction. </param>
     public record DirContext(Dir dir) : IContext
     {
         /// <summary>

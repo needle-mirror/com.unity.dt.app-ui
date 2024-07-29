@@ -3,10 +3,11 @@ using System;
 namespace Unity.AppUI.Core
 {
     /// <summary>
-    /// Handler gives you the ability to send and receive <see cref="Message"/> objects.
-    /// <para></para>
+    /// <para>Handler gives you the ability to send and receive <see cref="Message"/> objects.</para>
+    /// <para>
     /// When you create a new <see cref="Handler"/> it is bound to a <see cref="Looper"/>.
     /// It will deliver messages to that Looper's message queue and execute them.
+    /// </para>
     /// </summary>
     public class Handler
     {

@@ -23,7 +23,7 @@ namespace Unity.AppUI.Tests.UI
             </appui:Breadcrumbs>"
         };
     }
-    
+
     [TestFixture]
     [TestOf(typeof(BreadcrumbItem))]
     class BreadcrumbItemTests : VisualElementTests<BreadcrumbItem>
@@ -36,13 +36,13 @@ namespace Unity.AppUI.Tests.UI
             @"<appui:BreadcrumbItem text=""Home"" is-current=""true"" />"
         };
     }
-    
+
     [TestFixture]
     [TestOf(typeof(BreadcrumbSeparator))]
     class BreadcrumbSeparatorTests : VisualElementTests<BreadcrumbSeparator>
     {
         protected override string mainUssClassName => BreadcrumbSeparator.ussClassName;
-        
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:BreadcrumbSeparator />",

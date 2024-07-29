@@ -9,12 +9,12 @@ namespace Unity.AppUI.Redux
         /// The thunk is pending.
         /// </summary>
         Pending,
-        
+
         /// <summary>
         /// The thunk has been fulfilled.
         /// </summary>
         Fulfilled,
-        
+
         /// <summary>
         /// The thunk has been rejected.
         /// </summary>

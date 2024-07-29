@@ -56,12 +56,12 @@ namespace Unity.AppUI.UI
         /// The callback which will be called when the UI Component bound to this action will be interacted with.
         /// </summary>
         public Action<Toast> callback { get; }
-        
+
         /// <summary>
         /// Whether the toast should be dismissed automatically after the action is triggered.
         /// </summary>
         public bool autoDismiss { get; }
-        
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -95,7 +95,7 @@ namespace Unity.AppUI.UI
         }
 
         ToastVisualElement toast => (ToastVisualElement)view;
-        
+
         /// <summary>
         /// The icon used inside the Toast as leading UI element.
         /// </summary>
@@ -118,12 +118,13 @@ namespace Unity.AppUI.UI
         /// <param name="message"> The raw message or Localization dictionary key for the action to be displayed.</param>
         /// <param name="callback"> The callback which will be called when the action is triggered.</param>
         /// <param name="autoDismiss"> Whether the toast should be dismissed automatically after the action is triggered.</param>
+        /// <returns>The <see cref="Toast"/> instance, if no exception has occured.</returns>
         public Toast AddAction(int actionId, string message, Action<Toast> callback, bool autoDismiss = true)
         {
             toast.AddAction(actionId, new ToastActionItem(actionId, message, callback, autoDismiss));
             return this;
         }
-        
+
         /// <summary>
         /// Remove an already existing action.
         /// </summary>
@@ -136,7 +137,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// Build and return a <see cref="Toast"/> UI element.
+        /// <para>Build and return a <see cref="Toast"/> UI element.</para>
         /// <para>
         /// The method will find the best suitable parent view which will contain the Toast element.
         /// </para>
@@ -145,17 +146,22 @@ namespace Unity.AppUI.UI
         /// <param name="referenceView">An arbitrary <see cref="VisualElement"/> which is currently present in the UI panel.</param>
         /// <param name="text">The raw message or Localization dictionary key for the message to be displayed inside
         /// the <see cref="Toast"/>.</param>
-        /// <param name="duration"></param>
+        /// <param name="duration">A duration enum value.</param>
         /// <returns>The <see cref="Toast"/> instance, if no exception has occured.</returns>
         /// <exception cref="ArgumentException">The provided view is not contained in a valid UI panel.</exception>
         public static Toast Build(VisualElement referenceView, string text, NotificationDuration duration)
         {
-            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
-            
-            if (panel == null)
+            if (referenceView == null)
+                throw new ArgumentNullException(nameof(referenceView));
+
+            if (referenceView.panel == null)
                 throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-            
-            var parentView = panel.notificationContainer;
+
+            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>() ?? referenceView.panel?.visualTree;
+            if (panel == null)
+                throw new InvalidOperationException("Unable to find determine a valid container in the hierarchy.");
+
+            var parentView = (panel as Panel)?.notificationContainer ?? panel;
             var bar = new Toast(parentView, new ToastVisualElement()).SetText(text).SetDuration(duration);
             return bar;
         }
@@ -172,9 +178,9 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        ///
+        /// Set the styling used by the bar.
         /// </summary>
-        /// <param name="notificationStyle"></param>
+        /// <param name="notificationStyle">A notification style enum value. See <see cref="NotificationStyle"/> for more information.</param>
         /// <returns>The <see cref="Toast"/> to continuously build the element.</returns>
         public Toast SetStyle(NotificationStyle notificationStyle)
         {
@@ -192,7 +198,7 @@ namespace Unity.AppUI.UI
             toast.text = txt;
             return this;
         }
-        
+
         void OnActionTriggered(ToastActionItem actionItem)
         {
             actionItem.callback?.Invoke(this);
@@ -200,18 +206,18 @@ namespace Unity.AppUI.UI
                 Dismiss();
         }
     }
-    
+
     /// <summary>
     /// The Toast UI Element.
     /// </summary>
     sealed partial class ToastVisualElement : VisualElement
     {
         public event Action<ToastActionItem> actionTriggered;
-        
+
         public const string ussClassName = "appui-toast";
-        
+
         public const string containerUssClassName = ussClassName + "-container";
-        
+
         [EnumName("GetNotificationStyleUssClassName", typeof(NotificationStyle))]
         public const string variantUssClassName = ussClassName + "--";
 
@@ -230,7 +236,7 @@ namespace Unity.AppUI.UI
         readonly VisualElement m_ActionContainer;
 
         readonly Dictionary<int, ToastActionItem> m_Actions = new Dictionary<int, ToastActionItem>();
-        
+
         readonly Dictionary<int, Pressable> m_ActionPressableManipulators = new Dictionary<int, Pressable>();
 
         readonly Divider m_Divider;
@@ -246,7 +252,7 @@ namespace Unity.AppUI.UI
             pickingMode = PickingMode.Ignore;
             usageHints |= UsageHints.DynamicTransform;
             AddToClassList(containerUssClassName);
-            
+
             m_ToastElement = new ExVisualElement
             {
                 name = ussClassName,
@@ -266,8 +272,8 @@ namespace Unity.AppUI.UI
 
             m_Divider = new Divider
             {
-                name = dividerUssClassName, 
-                size = Size.M, spacing = Spacing.L, 
+                name = dividerUssClassName,
+                size = Size.M, spacing = Spacing.L,
                 direction = Direction.Vertical
             };
             m_Divider.AddToClassList(dividerUssClassName);
@@ -327,7 +333,7 @@ namespace Unity.AppUI.UI
             {
                 pressable.clickedWithEventInfo -= OnActionTriggered;
             }
-            
+
             m_ActionPressableManipulators.Clear();
             m_ActionContainer.Clear();
 
@@ -348,7 +354,7 @@ namespace Unity.AppUI.UI
                 m_ActionPressableManipulators[actionItem.key] = pressable;
                 m_ActionContainer.Add(actionButton);
             }
-            
+
             m_Divider.EnableInClassList(Styles.hiddenUssClassName, noActions);
             m_ActionContainer.EnableInClassList(Styles.hiddenUssClassName, noActions);
         }
