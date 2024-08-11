@@ -24,7 +24,7 @@ namespace Unity.AppUI.Core
                 k_Recognizers.Add(typeof(PinchGestureRecognizer), s_PinchGestureRecognizer);
             }
 
-#if ENABLE_INPUT_SYSTEM
+#if ENABLE_INPUT_SYSTEM && UNITY_INPUTSYSTEM_PRESENT
             if (Application.isMobilePlatform)
                 UnityEngine.InputSystem.EnhancedTouch.EnhancedTouchSupport.Enable();
 #endif
@@ -53,6 +53,7 @@ namespace Unity.AppUI.Core
         internal static AppUITouch[] GetCurrentInputSystemTouches()
         {
 #if ENABLE_INPUT_SYSTEM
+#if UNITY_INPUTSYSTEM_PRESENT
             var appUITouches = new List<AppUITouch>();
 
             if (UnityEngine.InputSystem.EnhancedTouch.EnhancedTouchSupport.enabled)
@@ -72,7 +73,7 @@ namespace Unity.AppUI.Core
                 }
                 return appUITouches.ToArray();
             }
-
+#endif
 #elif ENABLE_LEGACY_INPUT_MANAGER
 
             if (Input.touchSupported)

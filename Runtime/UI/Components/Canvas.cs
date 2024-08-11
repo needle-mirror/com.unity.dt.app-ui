@@ -899,7 +899,7 @@ namespace Unity.AppUI.UI
                     GrabMode.Grab : GrabMode.None;
 
                 // damping the velocity
-                var durationMs = 750f;
+                const float durationMs = 750f;
                 var elapsed = 0f;
                 m_DampingEffect?.Pause();
                 m_DampingEffect = schedule.Execute(evt =>
@@ -908,7 +908,7 @@ namespace Unity.AppUI.UI
                     elapsed += evt.deltaTime;
                     newScrollOffset += m_Velocity * (1.0f - (elapsed / durationMs));
                     scrollOffset = newScrollOffset;
-                }).Every(16L).ForDuration((long)durationMs);
+                }).Every(Styles.animationRefreshDelayMs).ForDuration((long)durationMs);
             }
         }
 

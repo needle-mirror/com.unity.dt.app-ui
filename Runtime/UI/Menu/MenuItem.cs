@@ -283,9 +283,12 @@ namespace Unity.AppUI.UI
                 popoverElement.style.marginTop = pos.marginTop;
                 popoverElement.visible = true;
                 popoverElement.style.opacity = 1f;
-                popoverElement.Focus();
-                subMenuOpened?.Invoke();
-            }).ExecuteLater(16L);
+                popoverElement.schedule.Execute(() =>
+                {
+                    popoverElement.Focus();
+                    subMenuOpened?.Invoke();
+                });
+            });
 
             k_SubMenuStack.Push(subMenu);
         }

@@ -86,13 +86,11 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="parentView">The popup container.</param>
+        /// <param name="referenceView">The view used as context provider for the Toast.</param>
         /// <param name="contentView">The content inside the popup.</param>
-        Toast(VisualElement parentView, ToastVisualElement contentView)
-            : base(parentView, contentView)
-        {
-            contentView.actionTriggered += OnActionTriggered;
-        }
+        Toast(VisualElement referenceView, ToastVisualElement contentView)
+            : base(referenceView, contentView)
+        { }
 
         ToastVisualElement toast => (ToastVisualElement)view;
 
@@ -148,21 +146,13 @@ namespace Unity.AppUI.UI
         /// the <see cref="Toast"/>.</param>
         /// <param name="duration">A duration enum value.</param>
         /// <returns>The <see cref="Toast"/> instance, if no exception has occured.</returns>
-        /// <exception cref="ArgumentException">The provided view is not contained in a valid UI panel.</exception>
+        /// <exception cref="ArgumentNullException">If <paramref name="referenceView"/> is null.</exception>
         public static Toast Build(VisualElement referenceView, string text, NotificationDuration duration)
         {
             if (referenceView == null)
                 throw new ArgumentNullException(nameof(referenceView));
 
-            if (referenceView.panel == null)
-                throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-
-            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>() ?? referenceView.panel?.visualTree;
-            if (panel == null)
-                throw new InvalidOperationException("Unable to find determine a valid container in the hierarchy.");
-
-            var parentView = (panel as Panel)?.notificationContainer ?? panel;
-            var bar = new Toast(parentView, new ToastVisualElement()).SetText(text).SetDuration(duration);
+            var bar = new Toast(referenceView, new ToastVisualElement()).SetText(text).SetDuration(duration);
             return bar;
         }
 
@@ -197,6 +187,20 @@ namespace Unity.AppUI.UI
         {
             toast.text = txt;
             return this;
+        }
+
+        /// <inheritdoc />
+        protected override void InvokeShownEventHandlers()
+        {
+            base.InvokeShownEventHandlers();
+            toast.actionTriggered += OnActionTriggered;
+        }
+
+        /// <inheritdoc />
+        protected override void HideView(DismissType reason)
+        {
+            toast.actionTriggered -= OnActionTriggered;
+            base.HideView(reason);
         }
 
         void OnActionTriggered(ToastActionItem actionItem)

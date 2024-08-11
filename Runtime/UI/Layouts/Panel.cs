@@ -105,8 +105,6 @@ namespace Unity.AppUI.UI
 
         readonly VisualElement m_TooltipContainer;
 
-        readonly HashSet<Popup> m_DismissablePopups = new HashSet<Popup>();
-
         TooltipManipulator m_TooltipManipulator;
 
         bool m_ForceUseTooltipSystem;
@@ -143,6 +141,7 @@ namespace Unity.AppUI.UI
 
             RegisterCallback<AttachToPanelEvent>(OnAttachedToPanel);
             RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
+            RegisterCallback<FocusOutEvent>(OnFocusOut);
 
             this.RegisterContextChangedCallback<ThemeContext>(OnThemeContextChanged);
             this.RegisterContextChangedCallback<ScaleContext>(OnScaleContextChanged);
@@ -449,6 +448,11 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// If true, this panel is the root panel of the application.
+        /// </summary>
+        internal bool isRootPanel { get; private set; }
+
+        /// <summary>
         /// The main UI layer container.
         /// </summary>
         public override VisualElement contentContainer => m_MainContainer;
@@ -475,8 +479,49 @@ namespace Unity.AppUI.UI
                 if (m_TooltipManipulator != null)
                     this.RemoveManipulator(m_TooltipManipulator);
                 UnregisterLocalizationCallback();
-                global::Unity.AppUI.Core.AppUI.UnregisterPanel(this);
+                global::Unity.AppUI.Core.AppUI.UnregisterPanel(evt.originPanel, this);
             }
+        }
+
+        void CheckRootPanel()
+        {
+            var panelsFound = 0;
+            var appUiPanel = (VisualElement)this;
+            while (appUiPanel != null)
+            {
+                if (appUiPanel is Panel)
+                    panelsFound++;
+                if (panelsFound > 1)
+                {
+                    isRootPanel = false;
+                    return;
+                }
+                appUiPanel = appUiPanel.parent;
+            }
+            isRootPanel = panelsFound == 1;
+        }
+
+        void OnFocusOut(FocusOutEvent evt)
+        {
+            if (!isRootPanel)
+                return;
+
+            var shouldDismissPopups = true;
+            if (evt.relatedTarget != null)
+            {
+                var p = evt.relatedTarget as VisualElement;
+                while (p != null)
+                {
+                    if (p == this)
+                    {
+                        shouldDismissPopups = false;
+                        break;
+                    }
+                    p = p.parent;
+                }
+            }
+            if (shouldDismissPopups)
+                global::Unity.AppUI.Core.AppUI.DismissAnyPopups(panel, DismissType.OutOfBounds);
         }
 
         void OnAttachedToPanel(AttachToPanelEvent evt)
@@ -491,6 +536,7 @@ namespace Unity.AppUI.UI
                 m_TooltipManipulator.force = forceUseTooltipSystem;
 
                 global::Unity.AppUI.Core.AppUI.RegisterPanel(this);
+                CheckRootPanel();
                 lang = GetLang();
             }
         }
@@ -538,36 +584,6 @@ namespace Unity.AppUI.UI
             element.style.bottom = 0;
             element.style.left = 0;
             element.style.right = 0;
-        }
-
-        /// <summary>
-        /// Dismiss any open <see cref="Popup"/> that are actually open.
-        /// </summary>
-        internal void DismissAnyPopups(DismissType reason)
-        {
-            foreach (var popover in m_DismissablePopups)
-            {
-                popover?.Dismiss(reason);
-            }
-            m_DismissablePopups.Clear();
-        }
-
-        /// <summary>
-        /// Register a <see cref="Popup"/> to the list of dismissable popups.
-        /// </summary>
-        /// <param name="popup"> The <see cref="Popup"/> to register.</param>
-        internal void RegisterPopup(Popup popup)
-        {
-            m_DismissablePopups.Add(popup);
-        }
-
-        /// <summary>
-        /// Unregister a <see cref="Popup"/> from the list of dismissable popups.
-        /// </summary>
-        /// <param name="popup"> The <see cref="Popup"/> to unregister.</param>
-        public void UnregisterPopup(Popup popup)
-        {
-            m_DismissablePopups.Remove(popup);
         }
 
 #if ENABLE_UXML_TRAITS

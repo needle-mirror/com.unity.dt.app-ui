@@ -45,7 +45,7 @@ namespace Unity.AppUI.UI
     /// <typeparam name="T">The sealed anchor popup class type.</typeparam>
     public abstract class AnchorPopup<T> : Popup<T> where T : AnchorPopup<T>
     {
-        const long k_AnchorUpdateInterval = 8L;
+        const long k_AnchorUpdateInterval = 12L;
 
         const int k_AnchorPopUpFadeInDurationMs = 150;
 
@@ -67,19 +67,15 @@ namespace Unity.AppUI.UI
 
         Rect m_ContentBounds;
 
-        Panel panel { get; }
-
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="parentView">The popup container.</param>
+        /// <param name="referenceView"> The visual element used as context provider for the popup.</param>
         /// <param name="view">The popup visual element itself.</param>
         /// <param name="contentView">The content that will appear inside this popup.</param>
-        protected AnchorPopup(VisualElement parentView, VisualElement view, VisualElement contentView = null)
-            : base(parentView, view, contentView)
-        {
-            panel = parentView.panel.visualTree.Q<Panel>();
-        }
+        protected AnchorPopup(VisualElement referenceView, VisualElement view, VisualElement contentView = null)
+            : base(referenceView, view, contentView)
+        { }
 
         /// <summary>
         /// The desired placement.
@@ -281,7 +277,7 @@ namespace Unity.AppUI.UI
         protected override void ShowView()
         {
             base.ShowView();
-            panel.RegisterPopup(this);
+            global::Unity.AppUI.Core.AppUI.RegisterPopup(containerView.panel, this);
         }
 
         /// <summary>
@@ -318,12 +314,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         /// <param name="reason"> The reason for the dismissal.</param>
         /// <returns> `True` if the popup should be dismissed, `False` otherwise.</returns>
-        protected override bool ShouldDismiss(DismissType reason)
-        {
-            if (reason == DismissType.OutOfBounds && !outsideClickDismissEnabled)
-                return false;
-            return true;
-        }
+        protected override bool ShouldDismiss(DismissType reason) => outsideClickDismissEnabled || base.ShouldDismiss(reason);
 
         /// <summary>
         /// Called when the popup's <see cref="Handler"/> has received a <see cref="Popup.k_PopupDismiss"/> message.
@@ -331,9 +322,10 @@ namespace Unity.AppUI.UI
         /// <param name="reason">The reason why the popup should be dismissed.</param>
         protected override void HideView(DismissType reason)
         {
-            base.HideView(reason);
+            if (containerView?.panel != null)
+                global::Unity.AppUI.Core.AppUI.UnregisterPopup(containerView.panel, this);
             contentView?.UnregisterCallback<GeometryChangedEvent>(OnContentGeometryChanged);
-            panel.UnregisterPopup(this);
+            base.HideView(reason);
         }
 
         /// <summary>
@@ -394,7 +386,7 @@ namespace Unity.AppUI.UI
                 return;
 
             var movableElement = GetMovableElement();
-            var result = AnchorPopupUtils.ComputePosition(movableElement, m_Anchor, panel, new PositionOptions(placement, offset, crossOffset, shouldFlip));
+            var result = AnchorPopupUtils.ComputePosition(movableElement, m_Anchor, containerView, new PositionOptions(placement, offset, crossOffset, shouldFlip));
             movableElement.style.left = result.left;
             movableElement.style.top = result.top;
             movableElement.style.marginLeft = result.marginLeft;

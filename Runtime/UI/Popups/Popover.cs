@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -288,15 +289,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="parentView">The popup container.</param>
+        /// <param name="referenceView">The view used as context provider for the Popover.</param>
         /// <param name="popover">The popup visual element itself.</param>
         /// <param name="contentView">The content that will appear inside this popup.</param>
-        Popover(VisualElement parentView, PopoverVisualElement popover, VisualElement contentView)
-            : base(parentView, popover, contentView)
-        {
-            parentView.panel.visualTree.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
-            parentView.panel.visualTree.RegisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
-        }
+        Popover(VisualElement referenceView, PopoverVisualElement popover, VisualElement contentView)
+            : base(referenceView, popover, contentView)
+        { }
 
         PopoverVisualElement popover => (PopoverVisualElement)view;
 
@@ -306,21 +304,14 @@ namespace Unity.AppUI.UI
         /// <param name="referenceView">An arbitrary UI element in the current panel.</param>
         /// <param name="contentView">The content that will appear inside this popup.</param>
         /// <returns>The <see cref="Popover"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">If the referenceView is null.</exception>
         public static Popover Build(VisualElement referenceView, VisualElement contentView)
         {
             if (referenceView == null)
                 throw new ArgumentNullException(nameof(referenceView));
 
-            if (referenceView.panel == null)
-                throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-
-            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>() ?? referenceView.panel?.visualTree;
-            if (panel == null)
-                throw new InvalidOperationException("Unable to find determine a valid container in the hierarchy.");
-
-            var parentView = (panel as Panel)?.popupContainer ?? panel;
             var popoverVisualElement = new PopoverVisualElement(contentView);
-            var popoverElement = new Popover(parentView, popoverVisualElement, contentView)
+            var popoverElement = new Popover(referenceView, popoverVisualElement, contentView)
                 .SetAnchor(referenceView)
                 .SetLastFocusedElement(referenceView);
             return popoverElement;
@@ -338,7 +329,7 @@ namespace Unity.AppUI.UI
 
         void OnTreeDown(PointerDownEvent evt)
         {
-            if (!outsideClickDismissEnabled || outsideClickStrategy == 0)
+            if (!outsideClickDismissEnabled || outsideClickStrategy == 0 || view.parent == null)
                 return;
 
             var index = view.parent.IndexOf(view);
@@ -365,7 +356,6 @@ namespace Unity.AppUI.UI
             if (insideAnchor || insideLastFocusedElement)
             {
                 // prevent reopening the same popover again...
-
                 evt.StopImmediatePropagation();
             }
             Dismiss(DismissType.OutOfBounds);
@@ -400,12 +390,20 @@ namespace Unity.AppUI.UI
             return popover.popoverElement;
         }
 
-        /// <inheritdoc cref="Popup{T}.InvokeDismissedEventHandlers"/>
-        protected override void InvokeDismissedEventHandlers(DismissType reason)
+        /// <inheritdoc />
+        protected override void InvokeShownEventHandlers()
         {
-            base.InvokeDismissedEventHandlers(reason);
-            containerView?.panel?.visualTree.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
-            containerView?.panel?.visualTree.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
+            base.InvokeShownEventHandlers();
+            containerView?.panel?.visualTree?.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            containerView?.panel?.visualTree?.RegisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
+        }
+
+        /// <inheritdoc />
+        protected override void HideView(DismissType reason)
+        {
+            containerView?.panel?.visualTree?.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            containerView?.panel?.visualTree?.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
+            base.HideView(reason);
         }
 
         /// <summary>

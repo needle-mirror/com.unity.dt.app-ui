@@ -16,6 +16,7 @@ namespace Unity.AppUI.Sample.Editor
         public DragAndDropPage()
         {
             m_Stories.Add(new StoryBookStory("Main", MainStory));
+            m_Stories.Add(new StoryBookStory("Over Elements", OverElementsStory));
         }
 
         static VisualElement MainStory()
@@ -29,6 +30,19 @@ namespace Unity.AppUI.Sample.Editor
             desc.text += "\nYou can also drag items from others panels of the Editor into the destination list to generate items based on dragged paths.";
             root.styleSheets.Add(styleSheet);
             var script = new Unity.AppUI.Samples.DragAndDropSample.DragAndDropSampleScript();
+            script.Start(root);
+            return root;
+        }
+
+        static VisualElement OverElementsStory()
+        {
+            var element = new VisualElement();
+            var tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath("3c2afccb5abd4b5896196ba58ac8af96"));
+            var styleSheet = AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(AssetDatabase.GUIDToAssetPath("2a9862e95ebae4adaa5eb143ed0b4c98"));
+            tree.CloneTree(element);
+            var root = element.Q<VisualElement>("main-root");
+            root.styleSheets.Add(styleSheet);
+            var script = new Unity.AppUI.Samples.DragAndDropOverElementsSample.DragAndDropOverElementsSampleScript();
             script.Start(root);
             return root;
         }

@@ -29,17 +29,14 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="parentView"> The parent view of the Menu. </param>
+        /// <param name="referenceView"> The element used as context provider for the Menu. </param>
         /// <param name="view"> The Menu visual element (used by the popup system). </param>
         /// <param name="contentView"> The Menu's content visual element. </param>
-        public MenuBuilder(VisualElement parentView, VisualElement view, VisualElement contentView)
-            : base(parentView, view, contentView)
+        public MenuBuilder(VisualElement referenceView, VisualElement view, VisualElement contentView)
+            : base(referenceView, view, contentView)
         {
             m_MenuStack = new Stack<Menu>();
             m_MenuStack.Push((Menu)contentView);
-
-            parentView.panel.visualTree.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
-            parentView.panel.visualTree.RegisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
         }
 
         void OnWheel(WheelEvent evt)
@@ -54,7 +51,7 @@ namespace Unity.AppUI.UI
 
         void OnTreeDown(PointerDownEvent evt)
         {
-            if (!outsideClickDismissEnabled || outsideClickStrategy == 0)
+            if (!outsideClickDismissEnabled || outsideClickStrategy == 0 || view.parent == null)
                 return;
 
             var shouldDismiss = true;
@@ -89,7 +86,6 @@ namespace Unity.AppUI.UI
             if (insideAnchor || insideLastFocusedElement)
             {
                 // prevent reopening the same popover again...
-
                 evt.StopImmediatePropagation();
             }
 
@@ -282,12 +278,31 @@ namespace Unity.AppUI.UI
             return popover.popoverElement;
         }
 
-        /// <inheritdoc cref="Popup{T}.InvokeDismissedEventHandlers"/>
-        protected override void InvokeDismissedEventHandlers(DismissType reason)
+        /// <inheritdoc />
+        protected override void InvokeShownEventHandlers()
         {
-            base.InvokeDismissedEventHandlers(reason);
-            containerView?.panel?.visualTree.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
-            containerView?.panel?.visualTree.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
+            base.InvokeShownEventHandlers();
+            containerView?.panel?.visualTree?.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            containerView?.panel?.visualTree?.RegisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
+            popover.RegisterCallback<ActionTriggeredEvent>(OnActionTriggered);
+        }
+
+        /// <inheritdoc />
+        protected override void HideView(DismissType reason)
+        {
+            containerView?.panel?.visualTree?.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            containerView?.panel?.visualTree?.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
+            popover.UnregisterCallback<ActionTriggeredEvent>(OnActionTriggered);
+            base.HideView(reason);
+        }
+
+        void OnActionTriggered(ActionTriggeredEvent evt)
+        {
+            if (closeOnSelection || evt.target is MenuItem { selectable: false })
+            {
+                evt.StopPropagation();
+                Dismiss(DismissType.Action);
+            }
         }
 
         /// <summary>
@@ -296,34 +311,22 @@ namespace Unity.AppUI.UI
         /// <param name="referenceView"> The reference view to position the menu. </param>
         /// <param name="menu"> The menu to display. </param>
         /// <returns> The MenuBuilder instance. </returns>
+        /// <exception cref="ArgumentNullException"> If <paramref name="referenceView"/> is null. </exception>
         public static MenuBuilder Build(VisualElement referenceView, Menu menu = null)
         {
             if (referenceView == null)
                 throw new ArgumentNullException(nameof(referenceView));
 
-            if (referenceView.panel == null)
-                throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-
-            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>() ?? referenceView.panel?.visualTree;
-            if (panel == null)
-                throw new InvalidOperationException("Unable to find determine a valid container in the hierarchy.");
-
-            var parentView = (panel as Panel)?.popupContainer ?? panel;
             var dir = referenceView.GetContext<DirContext>()?.dir ?? Dir.Ltr;
             menu ??= new Menu();
             var popoverVisualElement = CreateMenuPopoverVisualElement(menu);
-            var menuBuilder = new MenuBuilder(parentView, popoverVisualElement, menu)
+            var menuBuilder = new MenuBuilder(referenceView, popoverVisualElement, menu)
                 .SetLastFocusedElement(referenceView)
                 .SetArrowVisible(false)
                 .SetPlacement(dir == Dir.Ltr ? PopoverPlacement.BottomStart : PopoverPlacement.BottomEnd)
                 .SetOutsideClickStrategy(OutsideClickStrategy.Pick)
                 .SetCrossOffset(-8)
                 .SetAnchor(referenceView);
-            popoverVisualElement.RegisterCallback<ActionTriggeredEvent>(evt =>
-            {
-                if (menuBuilder.closeOnSelection || evt.target is MenuItem { selectable: false })
-                    menuBuilder.Dismiss(DismissType.Action);
-            });
             menuBuilder.dismissed += (_, _) => menu.CloseSubMenus();
 
             return menuBuilder;

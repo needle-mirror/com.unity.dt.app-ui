@@ -187,6 +187,15 @@ namespace Unity.AppUI.UI
 
         void OpenUnityEditorPicker()
         {
+            if (panel == null)
+                return;
+
+            if (panel.contextType == ContextType.Player)
+            {
+                Debug.LogWarning("UnityEditor ColorPicker is not available in Player context.");
+                return;
+            }
+
             m_PreviousValue = value;
             ColorPickerExtensionsBridge.Show(OnPickerValueChanged, m_PreviousValue, showAlpha, hdr);
         }

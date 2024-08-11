@@ -85,9 +85,9 @@ namespace Unity.AppUI.UI
                 OnTooltipTemplateOrContentChanged();
                 hasTooltip = true;
             }
-            else if (CanDisplayTooltipInCurrentContext(m_AnchorElement) && !string.IsNullOrEmpty(m_AnchorElement?.tooltip))
+            else if (CanDisplayTooltipInCurrentContext(m_AnchorElement) && GetTooltipText(m_AnchorElement) is {} text)
             {
-                m_Tooltip.SetText(m_AnchorElement.tooltip);
+                m_Tooltip.SetText(text);
                 hasTooltip = true;
             }
 
@@ -104,6 +104,14 @@ namespace Unity.AppUI.UI
                 var callback = m_AnchorElement.GetTooltipContent();
                 callback?.Invoke(template);
             }
+        }
+
+        static string GetTooltipText(VisualElement element)
+        {
+            if (element is TextElement {displayTooltipWhenElided: true, isElided: true} textElement && string.IsNullOrEmpty(textElement.tooltip))
+                return string.IsNullOrEmpty(textElement.text) ? null : textElement.text;
+
+            return string.IsNullOrEmpty(element?.tooltip) ? null : element.tooltip;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

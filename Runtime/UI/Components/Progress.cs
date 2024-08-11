@@ -161,19 +161,10 @@ namespace Unity.AppUI.UI
             roundedProgressCorners = true;
 
             m_Image.generateVisualContent += OnGenerateVisualContent;
-            RegisterCallback<AttachToPanelEvent>(OnAttachedToPanel);
+            generateVisualContent = OnGenerateVisualMainContent;
             RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
             RegisterCallback<CustomStyleResolvedEvent>(OnStylesResolved);
-        }
-
-        void OnAttachedToPanel(AttachToPanelEvent evt)
-        {
-            if (evt.destinationPanel != null)
-            {
-                m_Update?.Pause();
-                m_Update = null;
-                m_Update = schedule.Execute(MarkContentDirtyRepaint).Every(8L);
-            }
+            RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         }
 
         void MarkContentDirtyRepaint()
@@ -203,6 +194,31 @@ namespace Unity.AppUI.UI
             }
 
             return false;
+        }
+
+        // When the element goes to Display.None, GeometryChangedEvent will be called.
+        void OnGeometryChanged(GeometryChangedEvent _)
+        {
+            UpdateScheduledItem();
+        }
+
+        // When the element MarkDirtyRepaint is called, GenerateVisualMainContent will be called.
+        void OnGenerateVisualMainContent(MeshGenerationContext _)
+        {
+            UpdateScheduledItem();
+        }
+
+        void UpdateScheduledItem()
+        {
+            if (this.IsInvisible())
+            {
+                m_Update?.Pause();
+                m_Update = null;
+                return;
+            }
+
+            if (variant == Variant.Indeterminate)
+                m_Update ??= schedule.Execute(MarkContentDirtyRepaint).Every(Styles.animationRefreshDelayMs);
         }
 
         void OnGenerateVisualContent(MeshGenerationContext mgc)

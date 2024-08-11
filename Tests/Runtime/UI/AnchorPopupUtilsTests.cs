@@ -48,7 +48,8 @@ namespace Unity.AppUI.Tests.UI
                 m_Panel.Add(m_Element);
                 m_TestUI.rootVisualElement.Add(m_Panel);
             }
-            m_Panel.DismissAnyPopups(DismissType.Manual);
+
+            global::Unity.AppUI.Core.AppUI.s_Manager.DismissAnyPopups(m_Panel.panel, DismissType.Manual);
             yield return new WaitForSeconds(0.1f);
             m_SetupDone = true;
         }

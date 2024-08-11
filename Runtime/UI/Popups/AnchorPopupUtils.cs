@@ -176,22 +176,25 @@ namespace Unity.AppUI.UI
         /// </summary>
         /// <param name="element">The element which needs to be positioned</param>
         /// <param name="anchor">The element used as an anchor for the element.</param>
-        /// <param name="panel">The panel containing elements.</param>
+        /// <param name="container">The element used as container.</param>
         /// <param name="options"> The options used to compute the position.</param>
         /// <returns>The computed position.</returns>
         /// <exception cref="ArgumentOutOfRangeException">The provided `favoritePlacement` value is invalid.</exception>
-        public static PositionResult ComputePosition(VisualElement element, VisualElement anchor, Panel panel, PositionOptions options)
+        public static PositionResult ComputePosition(VisualElement element, VisualElement anchor, VisualElement container, PositionOptions options)
         {
+            var result = new PositionResult();
+            result.finalPlacement = options.favoritePlacement;
+
+            if (container == null)
+                return result;
+
             var anchorRect = anchor.worldBound;
-            anchorRect.x -= panel.worldBound.x;
-            anchorRect.y -= panel.worldBound.y;
-            var screenRect = new Rect(Vector2.zero, panel.worldBound.size);
+            anchorRect.x -= container.worldBound.x;
+            anchorRect.y -= container.worldBound.y;
+            var screenRect = new Rect(Vector2.zero, container.worldBound.size);
             var elementRect = element.worldBound;
             var halfHorizontalDeltaWidth = (elementRect.width - anchorRect.width) * 0.5f;
             var halfVerticalDeltaWidth = (elementRect.height - anchorRect.height) * 0.5f;
-
-            var result = new PositionResult();
-            result.finalPlacement = options.favoritePlacement;
 
             if (float.IsNaN(halfHorizontalDeltaWidth) || float.IsNaN(halfVerticalDeltaWidth))
                 return result;

@@ -12,6 +12,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The threshold in pixels after which a drag will start.
         /// </summary>
+        /// <remarks>
+        /// The default value is 8 pixels.
+        /// </remarks>
         public float dragThreshold { get; set; } = 8f;
 
         Action<PointerMoveEvent> m_DragStarted;
@@ -48,8 +51,6 @@ namespace Unity.AppUI.UI
 
         int m_PointerId = -1;
 
-        static VisualElement s_VisualElement;
-
         /// <summary>
         /// Creates a new <see cref="Dragger"/> instance.
         /// </summary>
@@ -64,9 +65,6 @@ namespace Unity.AppUI.UI
             m_Dragging = dragging;
             m_DragEnded = dragEnded;
             m_DragCanceled = dragCanceled;
-
-            if (s_VisualElement == null)
-                CreateVisualElement();
         }
 
         /// <summary>
@@ -132,10 +130,6 @@ namespace Unity.AppUI.UI
 
                         isActive = true;
                         m_DragStarted?.Invoke(evt);
-
-                        var panel = target.GetFirstAncestorOfType<Panel>();
-                        if (panel != null && s_VisualElement.parent != panel.tooltipContainer)
-                            panel.tooltipContainer.Add(s_VisualElement);
                     }
                 }
                 else
@@ -150,9 +144,6 @@ namespace Unity.AppUI.UI
                     }
 
                     m_Dragging?.Invoke(evt);
-                    var elementPosition = s_VisualElement.parent.WorldToLocal(evt.position);
-                    s_VisualElement.style.left = elementPosition.x;
-                    s_VisualElement.style.top = elementPosition.y;
                 }
             }
         }
@@ -161,9 +152,6 @@ namespace Unity.AppUI.UI
         {
             if (m_PointerId != evt.pointerId)
                 return;
-
-            if (s_VisualElement.parent != null)
-                s_VisualElement.RemoveFromHierarchy();
 
             if (target.HasPointerCapture(evt.pointerId))
                 target.ReleasePointer(evt.pointerId);
@@ -194,7 +182,6 @@ namespace Unity.AppUI.UI
 
             if (evt.keyCode == KeyCode.Escape)
             {
-
                 evt.StopImmediatePropagation();
                 Cancel();
             }
@@ -215,21 +202,6 @@ namespace Unity.AppUI.UI
             }
 
             m_PointerId = -1;
-        }
-
-        static void CreateVisualElement()
-        {
-            s_VisualElement = new Icon
-            {
-                pickingMode = PickingMode.Ignore,
-                iconName = "plus",
-                style =
-                {
-                    position = Position.Absolute,
-                    marginLeft = 16,
-                    marginTop = 16
-                }
-            };
         }
     }
 }

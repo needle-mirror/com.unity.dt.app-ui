@@ -57,7 +57,7 @@ namespace Unity.AppUI.Tests.UI
                 m_Panel.Add(m_Trigger);
                 m_TestUI.rootVisualElement.Add(m_Panel);
             }
-            m_Panel.DismissAnyPopups(DismissType.Manual);
+            global::Unity.AppUI.Core.AppUI.s_Manager.DismissAnyPopups(m_Panel.panel, DismissType.Manual);
             m_SetupDone = true;
         }
 
@@ -92,7 +92,8 @@ namespace Unity.AppUI.Tests.UI
             else
                 Assert.IsNull(m_Popup.contentView);
 
-            Assert.IsNotNull(m_Popup.containerView);
+            Assert.IsNull(m_Popup.containerView,
+                "The container view should be null until the popup is requested to be shown for the first time.");
 
             OnCanBuildPopupTested();
         }

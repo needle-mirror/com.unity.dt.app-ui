@@ -35,13 +35,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="parentView">The popup container.</param>
+        /// <param name="referenceView"> The element used as context provider for the Tray.</param>
         /// <param name="view">The Tray visual element itself.</param>
-        Tray(VisualElement parentView, TrayVisualElement view)
-            : base(parentView, view)
+        Tray(VisualElement referenceView, TrayVisualElement view)
+            : base(referenceView, view)
         {
             keyboardDismissEnabled = true;
-            view.RegisterCallback<ClickEvent>(OnTrayClicked);
         }
 
         TrayVisualElement tray => (TrayVisualElement)view;
@@ -170,11 +169,18 @@ namespace Unity.AppUI.UI
             }).Ease(Easing.OutQuad).Start();
         }
 
-        /// <inheritdoc cref="Popup{T}.InvokeDismissedEventHandlers"/>
-        protected override void InvokeDismissedEventHandlers(DismissType reason)
+        /// <inheritdoc />
+        protected override void InvokeShownEventHandlers()
         {
-            base.InvokeDismissedEventHandlers(reason);
+            base.InvokeShownEventHandlers();
+            view.RegisterCallback<ClickEvent>(OnTrayClicked);
+        }
+
+        /// <inheritdoc />
+        protected override void HideView(DismissType reason)
+        {
             tray.trayElement.UnregisterCallback<ClickEvent>(OnTrayClicked);
+            base.HideView(reason);
         }
 
         /// <summary>
@@ -183,20 +189,13 @@ namespace Unity.AppUI.UI
         /// <param name="referenceView">An arbitrary UI element inside the UI panel.</param>
         /// <param name="content">The content to display inside this <see cref="Tray"/>.</param>
         /// <returns>The <see cref="Tray"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="referenceView"/> is null.</exception>
         public static Tray Build(VisualElement referenceView, VisualElement content)
         {
             if (referenceView == null)
                 throw new ArgumentNullException(nameof(referenceView));
 
-            if (referenceView.panel == null)
-                throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-
-            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>() ?? referenceView.panel.visualTree;
-            if (panel == null)
-                throw new InvalidOperationException("Unable to find determine a valid container in the hierarchy.");
-
-            var parentView = (panel as Panel)?.popupContainer ?? panel;
-            return new Tray(parentView, new TrayVisualElement(content))
+            return new Tray(referenceView, new TrayVisualElement(content))
                 .SetLastFocusedElement(referenceView);
         }
 

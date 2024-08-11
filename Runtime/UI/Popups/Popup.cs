@@ -30,15 +30,16 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="parentView">The popup container.</param>
+        /// <param name="referenceView">The reference view used as context provider for the popup.</param>
         /// <param name="view">The popup visual element itself.</param>
         /// <param name="contentView">The content that will appear inside this popup.</param>
-        /// <exception cref="ArgumentException">The container can't be null.</exception>
-        protected Popup(VisualElement parentView, VisualElement view, VisualElement contentView = null)
+        /// <exception cref="ArgumentNullException">The referenceView can't be null.</exception>
+        /// <exception cref="ArgumentNullException">The view can't be null.</exception>
+        protected Popup(VisualElement referenceView, VisualElement view, VisualElement contentView = null)
         {
             this.contentView = contentView;
-            containerView = parentView ?? throw new ArgumentException("The parent view can't be null.");
-            this.view = view ?? throw new ArgumentException("The view can't be null.");
+            this.referenceView = referenceView ?? throw new ArgumentNullException(nameof(referenceView));
+            this.view = view ?? throw new ArgumentNullException(nameof(view));
 
             if (contentView is IDismissInvocator invocator)
                 invocator.dismissRequested += Dismiss;
@@ -90,6 +91,11 @@ namespace Unity.AppUI.UI
         public VisualElement containerView { get; protected set; }
 
         /// <summary>
+        /// The view used as context provider for the popup.
+        /// </summary>
+        public VisualElement referenceView { get; }
+
+        /// <summary>
         /// The content of the popup.
         /// </summary>
         public VisualElement contentView { get; }
@@ -139,15 +145,20 @@ namespace Unity.AppUI.UI
         /// <remarks>
         /// In this method the view should become visible at some point (directly or via an animation).
         /// </remarks>
+        /// <exception cref="InvalidOperationException">Unable to find a suitable parent for the popup.</exception>
         protected virtual void ShowView()
         {
-            if (view.panel == null)
+            if (view.panel == null) // not added into the visual tree yet
             {
-                // not added into the visual tree yet
-                containerView.Add(view);
+                // find a suitable parent for the popup
+                containerView ??= FindSuitableParent(referenceView);
+                if (containerView == null)
+                    throw new InvalidOperationException("Unable to find a suitable parent for the popup.");
 
                 // set invisible in order to calculate layout before displaying the element (avoid flickering)
                 view.visible = false;
+                // add the view to the container
+                containerView.Add(view);
             }
 
             view.RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
@@ -286,10 +297,11 @@ namespace Unity.AppUI.UI
         /// <returns>The popup container <see cref="VisualElement"/> in the current panel.</returns>
         /// <remarks>
         /// This is usually one of the layers from the <see cref="Panel"/> root UI element.
+        /// If no <see cref="Panel"/> is found, the method will return the visual tree root of the given element.
         /// </remarks>
         protected virtual VisualElement FindSuitableParent(VisualElement element)
         {
-            return Panel.FindPopupLayer(element);
+            return Panel.FindPopupLayer(element) ?? element?.panel?.visualTree;
         }
     }
 
@@ -307,11 +319,11 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="parentView">The popup container.</param>
+        /// <param name="referenceView">The reference view used as context provider for the popup.</param>
         /// <param name="view">The popup visual element itself.</param>
         /// <param name="contentView">The content that will appear inside this popup.</param>
-        protected Popup(VisualElement parentView, VisualElement view, VisualElement contentView = null)
-            : base(parentView, view, contentView) { }
+        protected Popup(VisualElement referenceView, VisualElement view, VisualElement contentView = null)
+            : base(referenceView, view, contentView) { }
 
         /// <summary>
         /// Event triggered when the popup has become visible.
@@ -334,9 +346,12 @@ namespace Unity.AppUI.UI
         /// </remarks>
         public T SetContainerView(VisualElement element)
         {
-            var needChanges = view.panel != null;
+            if (contentView == element)
+                return (T)this;
+
+            var isAlreadyInVisualTree = view.panel != null;
             containerView = element;
-            if (needChanges)
+            if (isAlreadyInVisualTree)
             {
                 Debug.LogWarning("Changing the container view of a popup that is already " +
                     "part of the visual tree can lead to unexpected behavior.");
@@ -388,7 +403,7 @@ namespace Unity.AppUI.UI
             dismissed?.Invoke((T)this, reason);
 
             // we can safely remove the notification element from the visual tree now.
-            if (view.parent == containerView) containerView.Remove(view);
+            view.RemoveFromHierarchy();
 
             // focus last focused element (if any)
             if (reason != DismissType.OutOfBounds)

@@ -4,7 +4,6 @@ using System.Linq;
 using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Object = UnityEngine.Object;
 
 namespace Unity.AppUI.Samples
 {
@@ -54,18 +53,25 @@ namespace Unity.AppUI.Samples
                 m_SrcList.selectionType = SelectionType.Multiple;
 
                 // Subscribe to the drag event from the source list
-                m_SrcList.dragStarted += OnDragStarted;
-                m_SrcList.dragFinished += OnDragFinished;
-                m_SrcList.dragCanceled += OnDragCanceled;
+                m_SrcList.dragStarted += OnDragListItemStarted;
 
                 // Handle drop in the dropzone
-                m_Dropzone.tryGetDroppableFromPath = TryGetDroppableFromPath;
-                m_Dropzone.tryGetDroppablesFromUnityObjects = TryGetDroppableFromUnityObjects;
-                m_Dropzone.dropped += OnDropped;
-                m_Dropzone.dragStarted += OnEditorDragStarted;
-                m_Dropzone.dragEnded += Reset;
+                var dropController = m_Dropzone.controller;
+                dropController.dropped += OnDropped;
+                dropController.acceptDrag = ShouldAcceptDrag;
+                dropController.dragEnded += () => UpdateView();
 
-                Reset();
+#if UNITY_EDITOR
+                root.RegisterCallback<DragUpdatedEvent>(_ => UpdateView(true));
+                root.RegisterCallback<DragExitedEvent>(_ => UpdateView());
+#endif
+
+                UpdateView();
+            }
+
+            void UpdateView(bool forceShowDropZone = false)
+            {
+                m_Dropzone.visibleIndicator = forceShowDropZone || m_DstList.itemsSource == null || m_DstList.itemsSource.Count == 0;
             }
 
             void BindDstItem(VisualElement el, int idx)
@@ -90,11 +96,36 @@ namespace Unity.AppUI.Samples
                 return item;
             }
 
-            void Reset()
+            void OnDragListItemStarted(PointerMoveEvent evt)
             {
-                m_Dropzone.state = DropZoneState.Default;
-                m_Dropzone.visibleIndicator = m_DstList.itemsSource == null || m_DstList.itemsSource.Count == 0;
-                SetDraggedObjects(null);
+                // store the dragged items
+                var draggedItems = m_SrcList.selectedIndices.Select(i => m_SrcList.itemsSource[i]).ToList();
+
+                // We will handle drag and drop with App UI drag and drop system, so we can release the pointer capture
+                var capturingElement = m_SrcList.panel.GetCapturingElement(evt.pointerId);
+                capturingElement?.ReleasePointer(evt.pointerId);
+
+                // Start the drag operation
+                Core.DragAndDrop.PrepareStartDrag();
+                Core.DragAndDrop.objects = draggedItems;
+                Core.DragAndDrop.StartDrag($"{draggedItems.Count} list item{(draggedItems.Count > 1 ? "s" : "")}");
+            }
+
+            static bool ShouldAcceptDrag(IEnumerable<object> draggedObjects)
+            {
+                var ret = false;
+                foreach (var obj in draggedObjects)
+                {
+                    switch (obj)
+                    {
+                        case "Item 0":
+                            return false;
+                        case string:
+                            ret = true;
+                            break;
+                    }
+                }
+                return ret;
             }
 
             void OnDropped(IEnumerable<object> objects)
@@ -117,64 +148,7 @@ namespace Unity.AppUI.Samples
                 }
                 m_SrcList.itemsSource = srcItems;
 
-                // Hide the dropzone if the destination list is not empty
-                m_Dropzone.visibleIndicator = m_DstList.itemsSource != null || m_DstList.itemsSource.Count == 0;
-            }
-
-            void OnDragCanceled()
-            {
-                Reset();
-            }
-
-            void OnDragFinished(PointerUpEvent evt)
-            {
-                if (m_Dropzone.state == DropZoneState.AcceptDrag &&
-                    m_Dropzone.ContainsPoint(m_Dropzone.WorldToLocal(evt.position)) &&
-                    s_DraggedObjects != null)
-                    OnDropped(s_DraggedObjects);
-
-                Reset();
-            }
-
-            void OnEditorDragStarted()
-            {
-                // Accept every path from the editor
-                m_Dropzone.visibleIndicator = true;
-                m_Dropzone.state = DropZoneState.AcceptDrag;
-            }
-
-            void OnDragStarted(PointerMoveEvent evt)
-            {
-                var selection = new List<int>(m_SrcList.selectedIndices);
-
-                // Show the dropzone
-                m_Dropzone.visibleIndicator = true;
-
-                // Enable dropzone if there is a selection
-                m_Dropzone.state = selection.Count > 0 && !selection.Contains(0) ?
-                    DropZoneState.AcceptDrag : DropZoneState.RejectDrag;
-
-                // Set the dragged objects
-                SetDraggedObjects(selection.Select(i => (string)m_SrcList.itemsSource[i]));
-            }
-
-            static void SetDraggedObjects(IEnumerable<string> objects)
-            {
-                s_DraggedObjects = objects == null ? null : new List<string>(objects);
-            }
-
-            static bool TryGetDroppableFromPath(string path, out object droppable)
-            {
-                // Use path directly as droppable item
-                droppable = path;
-                return true;
-            }
-
-            static bool TryGetDroppableFromUnityObjects(Object[] objects, out List<object> droppables)
-            {
-                // We don't want to support Unity objects in this sample
-                droppables = null;
-                return false;
+                UpdateView();
             }
         }
     }

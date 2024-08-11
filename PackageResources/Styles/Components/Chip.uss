@@ -6,10 +6,11 @@
     align-items: center;
     flex-shrink: 0;
     flex-grow: 0;
+    padding: 0 var(--appui-alias-control-gap-md);
 
-    height: var(--appui-sizing-600);
-    border-radius: var(--appui-sizing-300);
-    border-width: 1px;
+    height: var(--appui-alias-control-sizing-md-height);
+    border-radius: var(--appui-alias-control-border-radius);
+    border-width: var(--appui-alias-control-border-width);
 
     border-color: var(--appui-foregrounds-25);
     background-color: var(--appui-backgrounds-100);
@@ -59,18 +60,17 @@
 
 .appui-chip__ornament-container {
     flex-shrink: 0;
-    width: var(--appui-sizing-400);
-    height: var(--appui-sizing-400);
-    border-radius: var(--appui-sizing-200);
-    margin-left: var(--appui-spacing-100);
-    margin-right: 0;
+    width: var(--appui-sizing-300);
+    height: var(--appui-sizing-300);
+    margin-left: 0;
+    margin-right: var(--appui-alias-control-gap-md);
     overflow: hidden;
     display: none;
 }
 
 .appui--rtl .appui-chip__ornament-container {
-    margin-left: 0;
-    margin-right: var(--appui-spacing-100);
+    margin-left: var(--appui-alias-control-gap-md);
+    margin-right: 0;
 }
 
 .appui-chip--with-ornament > .appui-chip__ornament-container {
@@ -81,8 +81,6 @@
     display: flex;
     flex-shrink: 0;
     font-size: var(--appui-font-sizes-body-md);
-    padding-left: var(--appui-spacing-250);
-    padding-right: var(--appui-spacing-250);
     -unity-text-align: middle-center;
     white-space: nowrap;
     color: var(--appui-foregrounds-100);
@@ -95,10 +93,10 @@
 
 .appui-chip__delete-button {
     display: none;
-    width: 24px;
-    height: 24px;
-    margin: 0 5px 0 -6px;
-    border-radius: 100%;
+    width: var(--appui-sizing-400);
+    height: var(--appui-sizing-400);
+    border-radius: var(--appui-alias-control-border-radius);
+    translate: var(--appui-alias-control-gap-sm) 0;
     flex-shrink: 0;
     justify-content: center;
     align-items: center;
@@ -109,7 +107,7 @@
 }
 
 .appui--rtl .appui-chip__delete-button {
-    margin: 0 -6px 0 5px;
+    translate: 0 0;
 }
 
 .appui-chip__delete-button > .appui-chip__delete-icon.appui-icon {
@@ -129,8 +127,7 @@
 }
 
 .appui-chip--outlined > .appui-chip__delete-button {
-    width: 20px;
-    height: 20px;
+
 }
 
 .appui-chip--deletable > .appui-chip__delete-button {

@@ -272,12 +272,30 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// Event fired when the Chip is clicked.
+        /// </summary>
+        public event Action<EventBase> clickedWithEventInfo
+        {
+            add => m_Clickable.clickedWithEventInfo += value;
+            remove => m_Clickable.clickedWithEventInfo -= value;
+        }
+
+        /// <summary>
         /// Event fired when the Chip is deleted.
         /// </summary>
         public event Action deleted
         {
             add => m_Deletable.clicked += value;
             remove => m_Deletable.clicked -= value;
+        }
+
+        /// <summary>
+        /// Event fired when the Chip is deleted.
+        /// </summary>
+        public event Action<EventBase> deletedWithEventInfo
+        {
+            add => m_Deletable.clickedWithEventInfo += value;
+            remove => m_Deletable.clickedWithEventInfo -= value;
         }
 
         /// <summary>

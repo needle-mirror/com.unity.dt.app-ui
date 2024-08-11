@@ -1,3 +1,4 @@
+// #define APPUI_PLATFORM_EDITOR_ONLY
 using System;
 using UnityEngine;
 
@@ -17,7 +18,9 @@ namespace Unity.AppUI.Core
         /// <summary>
         /// Creates the AppUIManagerBehaviour instance.
         /// </summary>
+#if !APPUI_PLATFORM_EDITOR_ONLY
         [RuntimeInitializeOnLoadMethod(loadType: RuntimeInitializeLoadType.AfterSceneLoad)]
+#endif
         public static void Create()
         {
             if (!instance)

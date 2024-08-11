@@ -29,10 +29,10 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="parentView">The popup container.</param>
+        /// <param name="referenceView"> The element used as context provider for the tooltip. </param>
         /// <param name="contentView">The content to display inside the popup.</param>
-        Tooltip(VisualElement parentView, VisualElement contentView)
-            : base(parentView, contentView)
+        Tooltip(VisualElement referenceView, VisualElement contentView)
+            : base(referenceView, contentView)
         {
             m_Animation = contentView.experimental.animation.Start(0, 1, k_TooltipFadeInDurationMs, (element, f) => element.style.opacity = f).OnCompleted(InvokeShownEventHandlers).KeepAlive();
             m_Animation.Stop();
@@ -151,20 +151,13 @@ namespace Unity.AppUI.UI
         /// In the Application element, only one Tooltip is create and moved at the right place when hovering others UI
         /// elements. The Tooltip is handled by the <see cref="TooltipManipulator"/>.
         /// </remarks>
+        /// <exception cref="ArgumentNullException">If <paramref name="referenceView"/> is null.</exception>
         public static Tooltip Build(VisualElement referenceView)
         {
             if (referenceView == null)
                 throw new ArgumentNullException(nameof(referenceView));
 
-            if (referenceView.panel == null)
-                throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-
-            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>() ?? referenceView.panel?.visualTree;
-            if (panel == null)
-                throw new InvalidOperationException("Unable to find determine a valid container in the hierarchy.");
-
-            var parentView = (panel as Panel)?.tooltipContainer ?? panel;
-            var tooltipElement = new Tooltip(parentView, new TooltipVisualElement())
+            var tooltipElement = new Tooltip(referenceView, new TooltipVisualElement())
                 .SetPlacement(defaultPlacement);
 
             return tooltipElement;

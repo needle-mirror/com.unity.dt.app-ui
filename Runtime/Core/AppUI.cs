@@ -2,6 +2,7 @@ using System;
 using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.UIElements;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -83,14 +84,53 @@ namespace Unity.AppUI.Core
         /// <summary>
         /// Unregister a Panel with the App UI system.
         /// </summary>
+        /// <param name="iPanel"> The UITK panel that owns the panel.</param>
         /// <param name="panel">A panel</param>
         /// <exception cref="InvalidOperationException">Thrown if the App UI system is not ready.</exception>
-        internal static void UnregisterPanel(Panel panel)
+        internal static void UnregisterPanel(IPanel iPanel, Panel panel)
         {
             if (s_Manager == null)
                 throw new InvalidOperationException("The App UI Manager is not ready");
 
-            s_Manager.UnregisterPanel(panel);
+            s_Manager.UnregisterPanel(iPanel, panel);
+        }
+
+        /// <summary>
+        /// Register a <see cref="Popup"/> to the list of dismissable popups.
+        /// </summary>
+        /// <param name="panel"> The panel that owns the popup.</param>
+        /// <param name="popup"> The popup to register.</param>
+        /// <exception cref="InvalidOperationException"> Thrown if the App UI system is not ready.</exception>
+        internal static void RegisterPopup(IPanel panel, Popup popup)
+        {
+            if (s_Manager == null)
+                throw new InvalidOperationException("The App UI Manager is not ready");
+
+            s_Manager.RegisterPopup(panel, popup);
+        }
+
+        /// <summary>
+        /// Unregister a <see cref="Popup"/> from the list of dismissable popups.
+        /// </summary>
+        /// <param name="panel"> The panel that owns the popup.</param>
+        /// <param name="popup"> The popup to unregister.</param>
+        /// <exception cref="InvalidOperationException"> Thrown if the App UI system is not ready.</exception>
+        internal static void UnregisterPopup(IPanel panel, Popup popup)
+        {
+            if (s_Manager == null)
+                throw new InvalidOperationException("The App UI Manager is not ready");
+
+            s_Manager.UnregisterPopup(panel, popup);
+        }
+
+        /// <summary>
+        /// Dismiss any popups that are currently open in a specific panel.
+        /// </summary>
+        /// <param name="iPanel"> The UITK panel that owns the popups.</param>
+        /// <param name="reason"> The reason for dismissing the popups.</param>
+        public static void DismissAnyPopups(IPanel iPanel, DismissType reason)
+        {
+            s_Manager?.DismissAnyPopups(iPanel, reason);
         }
 
         /// <summary>

@@ -50,19 +50,14 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="parentView">The popup container.</param>
+        /// <param name="referenceView">The view used as context provider for the Modal.</param>
         /// <param name="modalView">The popup visual element itself.</param>
         /// <param name="content">The content that will appear inside this popup.</param>
-        Modal(VisualElement parentView, ModalVisualElement modalView, VisualElement content)
-            : base(parentView, modalView, content)
-        {
-            panel = parentView.panel.visualTree.Q<Panel>();
-            parentView.panel.visualTree.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
-        }
+        Modal(VisualElement referenceView, ModalVisualElement modalView, VisualElement content)
+            : base(referenceView, modalView, content)
+        { }
 
         ModalVisualElement modal => (ModalVisualElement)view;
-
-        Panel panel { get; }
 
         /// <summary>
         /// <para>Set the fullscreen mode for this <see cref="Modal"/>.</para>
@@ -121,7 +116,7 @@ namespace Unity.AppUI.UI
 
         void OnTreeDown(PointerDownEvent evt)
         {
-            if (!outsideClickDismissEnabled || outsideClickStrategy == 0)
+            if (!outsideClickDismissEnabled || outsideClickStrategy == 0 || view.parent == null)
                 return;
 
             var index = view.parent.IndexOf(view);
@@ -149,13 +144,13 @@ namespace Unity.AppUI.UI
         }
 
         /// <inheritdoc cref="Popup.ShouldDismiss"/>
-        protected override bool ShouldDismiss(DismissType reason) => true;
+        protected override bool ShouldDismiss(DismissType reason) => outsideClickDismissEnabled || base.ShouldDismiss(reason);
 
-        /// <inheritdoc cref="Popup.InvokeDismissedEventHandlers"/>
-        protected override void InvokeDismissedEventHandlers(DismissType reason)
+        /// <inheritdoc cref="Popup.InvokeShownEventHandlers"/>
+        protected override void InvokeShownEventHandlers()
         {
-            base.InvokeDismissedEventHandlers(reason);
-            containerView?.panel?.visualTree?.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            base.InvokeShownEventHandlers();
+            containerView?.panel?.visualTree?.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
         }
 
         /// <inheritdoc cref="Popup.ShowView"/>
@@ -163,13 +158,14 @@ namespace Unity.AppUI.UI
         {
             base.ShowView();
             if (outsideClickDismissEnabled)
-                panel?.RegisterPopup(this);
+                global::Unity.AppUI.Core.AppUI.RegisterPopup(containerView.panel, this);
         }
 
         /// <inheritdoc cref="Popup.HideView"/>
         protected override void HideView(DismissType reason)
         {
-            panel?.UnregisterPopup(this);
+            containerView.panel?.visualTree?.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            global::Unity.AppUI.Core.AppUI.UnregisterPopup(containerView.panel, this);
             base.HideView(reason);
         }
 
@@ -179,20 +175,13 @@ namespace Unity.AppUI.UI
         /// <param name="referenceView">An arbitrary UI element inside the UI panel.</param>
         /// <param name="content">The <see cref="VisualElement"/> UI element to display inside this <see cref="Modal"/>.</param>
         /// <returns>The <see cref="Modal"/> instance.</returns>
+        /// <exception cref="ArgumentNullException">If <paramref name="referenceView"/> is null.</exception>
         public static Modal Build(VisualElement referenceView, VisualElement content)
         {
             if (referenceView == null)
                 throw new ArgumentNullException(nameof(referenceView));
 
-            if (referenceView.panel == null)
-                throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-
-            var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>() ?? referenceView?.panel.visualTree;
-            if (panel == null)
-                throw new InvalidOperationException("Unable to find determine a valid container in the hierarchy.");
-
-            var parentView = (panel as Panel)?.popupContainer ?? panel;
-            var popup = new Modal(parentView, new ModalVisualElement(content), content)
+            var popup = new Modal(referenceView, new ModalVisualElement(content), content)
                 .SetLastFocusedElement(referenceView);
             return popup;
         }

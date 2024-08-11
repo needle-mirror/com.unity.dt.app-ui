@@ -39,6 +39,8 @@
     --appui-linear-progress-border-height: var(--appui-sizing-150);
     --appui-linear-progress-border-radius: var(--appui-sizing-75);
 
+    --appui-splitview-splitter-anchor-size: var(--appui-sizing-60);
+
     --appui-spacing-1000: 40px;
     --appui-spacing-900: 56px;
     --appui-spacing-800: 32px;

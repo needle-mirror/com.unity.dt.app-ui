@@ -2,7 +2,6 @@
     min-width: var(--appui-sizing-400);
     min-height: var(--appui-sizing-400);
     position: relative;
-    cursor: var(--appui-alias-control-cursor-pointer);
 }
 
 .appui-dropzone--acceptdrag {
@@ -24,7 +23,7 @@
     --border-style: 3; /* dashed */
     --border-dot-factor: 8; /* 8 times bigger than --border-width */
     --border-width: 3;
-    --border-color: var(--appui-base-300);
+    --border-color: var(--appui-foregrounds-25);
     --border-speed: 0.1;
 }
 
@@ -42,7 +41,7 @@
 
 .appui-dropzone:hover .appui-dropzone__frame,
 .appui-dropzone.is-hovered .appui-dropzone__frame {
-    --border-color: var(--appui-base-400);
+    --border-color: var(--appui-foregrounds-100);
 }
 
 .appui-dropzone--acceptdrag:hover .appui-dropzone__frame,
@@ -66,16 +65,22 @@
     justify-content: center;
     align-items: center;
     opacity: 0;
-    transition: opacity var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
+    background-color: var(--appui-color-transparent-black-0);
+    transition-property: opacity, background-color;
+    transition-duration: var(--appui-animation-duration-125);
+    transition-timing-function: var(--appui-animation-easing-ease-out);
+}
+
+.appui-dropzone--visible-indicator .appui-dropzone__background {
+    opacity: 0.15;
+    background-color: var(--appui-backgrounds-50);
 }
 
 .appui-dropzone--visible-indicator.appui-dropzone--acceptdrag .appui-dropzone__background {
-    opacity: 0.1;
     background-color: var(--appui-accent-25);
 }
 
 .appui-dropzone--visible-indicator.appui-dropzone--rejectdrag .appui-dropzone__background {
-    opacity: 0.1;
     background-color: var(--appui-destructive-25);
 }
 

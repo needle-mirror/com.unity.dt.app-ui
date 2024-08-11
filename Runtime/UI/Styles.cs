@@ -55,6 +55,11 @@ namespace Unity.AppUI.UI
     public static class Styles
     {
         /// <summary>
+        /// The delay between Animation Refresh calls.
+        /// </summary>
+        public const uint animationRefreshDelayMs = 16;
+
+        /// <summary>
         /// The styling class used to hide an element completely.
         /// </summary>
         public const string hiddenUssClassName = "unity-hidden";

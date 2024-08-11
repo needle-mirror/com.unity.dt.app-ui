@@ -697,7 +697,7 @@
                     <appui:Text text="Custom Delete Icon" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="example-row">
-                            <appui:Chip variant="Filled" label="Custom delete icon" class="appui-chip--deletable" delete-icon="delete" />
+                            <appui:Chip variant="Filled" label="Custom delete icon" class="appui-chip--deletable" delete-icon="info" />
                             <appui:Chip variant="Outlined" label="Custom delete icon" class="appui-chip--deletable" delete-icon="check" />
                         </ui:VisualElement>
                     </ui:VisualElement>

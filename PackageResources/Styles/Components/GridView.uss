@@ -64,6 +64,11 @@
     padding-left: 0;
 }
 
+.appui-grid-view__first-column.appui-grid-view__last-column {
+    padding-right: 0;
+    padding-left: 0;
+}
+
 .appui-grid-view .unity-scroller--vertical {
     margin-left: var(--appui-grid-view-scroller-gutter);
     margin-right: 0;

@@ -1,4 +1,8 @@
 /* SplitView */
+:root {
+    --appui-splitview-splitter-anchor-size: var(--appui-sizing-25);
+}
+
 .appui-splitview {
     display: flex;
     position: relative;
@@ -91,12 +95,12 @@
 
 .appui-splitview--direction-horizontal .appui-splitter__anchor {
     height: 100%;
-    width: var(--appui-sizing-60);
+    width: var(--appui-splitview-splitter-anchor-size);
 }
 
 .appui-splitview--direction-vertical .appui-splitter__anchor {
     width: 100%;
-    height: var(--appui-sizing-60);
+    height: var(--appui-splitview-splitter-anchor-size);
 }
 
 .appui-splitter:hover .appui-splitter__anchor,

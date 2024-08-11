@@ -2,7 +2,6 @@ using System;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.UIElements.Experimental;
 
 namespace Unity.AppUI.UI
 {
@@ -107,10 +106,10 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="parentView">The popup container.</param>
+        /// <param name="referenceView"> The view used as context provider for the popup notification.</param>
         /// <param name="view">The popup visual element itself.</param>
-        protected PopupNotification(VisualElement parentView, VisualElement view)
-            : base(parentView, view)
+        protected PopupNotification(VisualElement referenceView, VisualElement view)
+            : base(referenceView, view)
         {
             m_ManagerCallback = new ManagerCallback(this);
             keyboardDismissEnabled = false;

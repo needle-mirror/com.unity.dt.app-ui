@@ -9,6 +9,8 @@ namespace Unity.AppUI.Core
 {
     class WindowsPlatformImpl : PlatformImpl
     {
+        static WindowsPlatformImpl s_Instance;
+
         delegate void DebugLogDelegate(IntPtr messagePtr, uint length);
         delegate void HighContrastChangedDelegate(bool highContrastEnabled);
         delegate void ReduceMotionChangedDelegate(bool reduceMotionEnabled);
@@ -77,45 +79,45 @@ namespace Unity.AppUI.Core
         }
 
         [MonoPInvokeCallback(typeof(HighContrastChangedDelegate))]
-        void OnHighContrastChanged(bool highContrastEnabled)
+        static void OnHighContrastChanged(bool highContrastEnabled)
         {
-            InvokeHighContrastChanged(highContrastEnabled);
+            s_Instance?.InvokeHighContrastChanged(highContrastEnabled);
         }
 
-        [MonoPInvokeCallback(typeof(HighContrastChangedDelegate))]
-        void OnReduceMotionChanged(bool reduceMotionEnabled)
+        [MonoPInvokeCallback(typeof(ReduceMotionChangedDelegate))]
+        static void OnReduceMotionChanged(bool reduceMotionEnabled)
         {
-            InvokeReduceMotionChanged(reduceMotionEnabled);
+            s_Instance?.InvokeReduceMotionChanged(reduceMotionEnabled);
         }
 
         [MonoPInvokeCallback(typeof(ThemeChangedDelegate))]
-        void OnThemeChanged(bool darkModeEnabled)
+        static void OnThemeChanged(bool darkModeEnabled)
         {
-            InvokeThemeChanged(darkModeEnabled);
+            s_Instance?.InvokeThemeChanged(darkModeEnabled);
         }
 
         [MonoPInvokeCallback(typeof(TextScaleFactorChangedDelegate))]
-        void OnTextScaleFactorChanged(float textScaleFactor)
+        static void OnTextScaleFactorChanged(float textScaleFactor)
         {
-            InvokeTextScaleFactorChanged(textScaleFactor);
+            s_Instance?.InvokeTextScaleFactorChanged(textScaleFactor);
         }
 
         [MonoPInvokeCallback(typeof(ScaleFactorChangedDelegate))]
-        void OnScaleFactorChanged(float scaleFactor)
+        static void OnScaleFactorChanged(float scaleFactor)
         {
-            InvokeScaleFactorChanged(scaleFactor);
+            s_Instance?.InvokeScaleFactorChanged(scaleFactor);
         }
 
-        [MonoPInvokeCallback(typeof(ScaleFactorChangedDelegate))]
-        void OnLayoutDirectionChanged(byte layoutDirection)
+        [MonoPInvokeCallback(typeof(LayoutDirectionChangedDelegate))]
+        static void OnLayoutDirectionChanged(byte layoutDirection)
         {
-            InvokeLayoutDirectionChanged(layoutDirection);
+            s_Instance?.InvokeLayoutDirectionChanged(layoutDirection);
         }
 
         [MonoPInvokeCallback(typeof(SystemColorChangedDelegate))]
-        void OnSystemColorChanged()
+        static void OnSystemColorChanged()
         {
-            InvokeSystemColorChanged();
+            s_Instance?.InvokeSystemColorChanged();
         }
 
         static IntPtr s_ConfigDataPtr = IntPtr.Zero;
@@ -143,6 +145,7 @@ namespace Unity.AppUI.Core
             Marshal.StructureToPtr(m_ConfigData, s_ConfigDataPtr, false);
             if (!NativeAppUI_Initialize(s_ConfigDataPtr))
                 Debug.LogError("Failed to initialize the native plugin");
+            s_Instance = this;
         }
 
         ~WindowsPlatformImpl() => CleanUp();
@@ -152,6 +155,7 @@ namespace Unity.AppUI.Core
             NativeAppUI_Uninitialize();
             if (s_ConfigDataPtr != IntPtr.Zero)
                 Marshal.FreeHGlobal(s_ConfigDataPtr);
+            s_Instance = null;
         }
 
         public override float referenceDpi

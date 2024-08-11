@@ -29,6 +29,8 @@ namespace Unity.AppUI.Core
 
         readonly HashSet<Panel> m_Panels = new HashSet<Panel>();
 
+        readonly Dictionary<IPanel, HashSet<Popup>> m_DismissablePopupsPerPanel = new Dictionary<IPanel, HashSet<Popup>>();
+
         NotificationManager m_NotificationManager;
 
         internal AppUISettings defaultSettings { get; private set; }
@@ -151,6 +153,7 @@ namespace Unity.AppUI.Core
         {
             m_MainLooper?.RemoveCallbacksAndMessages(null);
             UnregisterAllPanels();
+            UnregisterAllPopups();
         }
 
         void OnScaleFactorChanged(float _)
@@ -233,7 +236,7 @@ namespace Unity.AppUI.Core
                     }
 
                     if (mouseLeftButtonDown && pickedElement == null)
-                        panel.DismissAnyPopups(DismissType.OutOfBounds);
+                        DismissAnyPopups(iPanel, DismissType.OutOfBounds);
 
 #if UNITY_EDITOR
                     if (needToFindPickedElement && iPanel.contextType == ContextType.Editor &&
@@ -269,6 +272,26 @@ namespace Unity.AppUI.Core
         }
 
         /// <summary>
+        /// Dismisses all popups.
+        /// </summary>
+        /// <param name="panel"> The panel that owns the popups. </param>
+        /// <param name="reason"> The reason for dismissing the popups. </param>
+        internal void DismissAnyPopups(IPanel panel, DismissType reason)
+        {
+            if (panel == null)
+                return;
+
+            if (m_DismissablePopupsPerPanel.TryGetValue(panel, out var popups))
+            {
+                foreach (var popup in popups)
+                {
+                    popup?.Dismiss(reason);
+                }
+                popups.Clear();
+            }
+        }
+
+        /// <summary>
         /// Registers a panel.
         /// </summary>
         /// <param name="element">The panel to register.</param>
@@ -281,7 +304,6 @@ namespace Unity.AppUI.Core
             m_Panels.Add(element);
 
             var panelSettings = element.panel?.GetPanelSettings();
-
             if (panelSettings == null)
                 return;
 
@@ -296,23 +318,24 @@ namespace Unity.AppUI.Core
         /// <summary>
         /// Unregisters a panel.
         /// </summary>
-        /// <param name="element">The panel to unregister.</param>
+        /// <param name="iPanel">The UITK Panel that owns the panel.</param>
+        /// <param name="panel">The panel to unregister.</param>
         /// <exception cref="ArgumentNullException">Thrown when the provided panel is null.</exception>
-        internal void UnregisterPanel(Panel element)
+        internal void UnregisterPanel(IPanel iPanel, Panel panel)
         {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
+            if (panel == null)
+                throw new ArgumentNullException(nameof(panel));
 
-            m_Panels.Remove(element);
+            UnregisterPopups(iPanel);
+            m_Panels.Remove(panel);
 
-            var panelSettings = element.panel?.GetPanelSettings();
-
+            var panelSettings = iPanel?.GetPanelSettings();
             if (panelSettings == null)
                 return;
 
             if (m_PanelSettings.ContainsKey(panelSettings))
             {
-                m_PanelSettings[panelSettings].Remove(element);
+                m_PanelSettings[panelSettings].Remove(panel);
                 if (m_PanelSettings[panelSettings].Count == 0)
                     m_PanelSettings.Remove(panelSettings);
             }
@@ -325,6 +348,62 @@ namespace Unity.AppUI.Core
         {
             m_PanelSettings.Clear();
             m_Panels.Clear();
+        }
+
+        /// <summary>
+        /// Registers a popup.
+        /// </summary>
+        /// <param name="panel"> The panel that owns the popup. </param>
+        /// <param name="popup"> The popup to register. </param>
+        internal void RegisterPopup(IPanel panel, Popup popup)
+        {
+            if (panel == null || popup == null)
+                return;
+
+            if (!m_DismissablePopupsPerPanel.TryGetValue(panel, out var popups))
+            {
+                popups = new HashSet<Popup>();
+                m_DismissablePopupsPerPanel.Add(panel, popups);
+            }
+            popups.Add(popup);
+        }
+
+        /// <summary>
+        /// Unregisters a popup.
+        /// </summary>
+        /// <param name="panel"> The panel that owns the popup. </param>
+        /// <param name="popup"> The popup to unregister. </param>
+        internal void UnregisterPopup(IPanel panel, Popup popup)
+        {
+            if (panel == null || popup == null)
+                return;
+
+            if (m_DismissablePopupsPerPanel.TryGetValue(panel, out var popups))
+            {
+                popups.Remove(popup);
+                if (popups.Count == 0)
+                    m_DismissablePopupsPerPanel.Remove(panel);
+            }
+        }
+
+        /// <summary>
+        /// Unregisters all popups.
+        /// </summary>
+        internal void UnregisterAllPopups()
+        {
+            m_DismissablePopupsPerPanel.Clear();
+        }
+
+        /// <summary>
+        /// Unregisters all popups for a panel.
+        /// </summary>
+        /// <param name="panel"> The panel that owns the popups. </param>
+        internal void UnregisterPopups(IPanel panel)
+        {
+            if (panel == null)
+                return;
+
+            m_DismissablePopupsPerPanel.Remove(panel);
         }
     }
 }
