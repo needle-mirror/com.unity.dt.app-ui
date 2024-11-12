@@ -59,7 +59,7 @@ namespace Unity.AppUI.UI
             tooltip.text = value;
             return this;
         }
-        
+
         /// <summary>
         /// The template to display inside the popup.
         /// </summary>
@@ -134,21 +134,21 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Build a new Tooltip.
+        /// </summary>
         /// <remarks>
         /// In the Application element, only one Tooltip is create and moved at the right place when hovering others UI
         /// elements. The Tooltip is handled by the <see cref="TooltipManipulator"/>.
         /// </remarks>
-        /// </summary>
         /// <param name="referenceView">An arbitrary UI element used as reference for the application
         /// context to attach to the popup.</param>
         /// <returns>A Tooltip instance.</returns>
         public static Tooltip Build(VisualElement referenceView)
         {
             var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
-            
+
             if (panel == null)
                 throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-            
+
             var parentView = panel.tooltipContainer;
             var tooltipElement = new Tooltip(parentView, new TooltipVisualElement())
                 .SetPlacement(defaultPlacement);

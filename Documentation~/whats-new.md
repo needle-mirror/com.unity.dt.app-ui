@@ -10,19 +10,13 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [1.1.0] - 2024-05-01
+## [1.1.1] - 2024-11-12
+
+### Changed
+
+- App UI shaders are now optionally embedded in Player builds. You can change this setting in your main App UI settings instance. The default value is `true`.
 
 ### Fixed
 
-- Reduced the amount of heap memory allocation for String values used in USS classes
-- Fixed the support of new Android entrypoints in Unity starting 2023.2
-
-### Removed
-
-- Removed the usage of self-provided fonts in App UI default themes.
-- Removed provided Fonts assets from the package.
-
-### Added
-
-- Added AppUIGameActivity for Android builds in Unity 2023.2+
+- Fixed an exception thrown when trying to update UXML schemas in the Editor.
 

@@ -166,7 +166,7 @@ namespace Unity.AppUI.Core
         {
             return HashCode.Combine(deltaMagnification, (int) phase);
         }
-        
+
         /// <summary>
         /// Determines whether two specified MagnificationGesture objects are equal.
         /// </summary>
@@ -177,7 +177,7 @@ namespace Unity.AppUI.Core
         {
             return left.Equals(right);
         }
-        
+
         /// <summary>
         /// Determines whether two specified MagnificationGesture objects are not equal.
         /// </summary>
@@ -204,12 +204,12 @@ namespace Unity.AppUI.Core
         /// The phase of the gesture.
         /// </summary>
         public TouchPhase phase { get; }
-        
+
         /// <summary>
         /// The position of the touch in normalized coordinates.
         /// </summary>
         public Vector2 position { get; }
-        
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -251,7 +251,7 @@ namespace Unity.AppUI.Core
         {
             return HashCode.Combine(deltaPos, position, (int) phase);
         }
-        
+
         /// <summary>
         /// Determines whether two specified PanGesture objects are equal.
         /// </summary>
@@ -262,7 +262,7 @@ namespace Unity.AppUI.Core
         {
             return left.Equals(right);
         }
-        
+
         /// <summary>
         /// Determines whether two specified PanGesture objects are not equal.
         /// </summary>
@@ -274,9 +274,9 @@ namespace Unity.AppUI.Core
             return !left.Equals(right);
         }
     }
-    
+
     [StructLayout(LayoutKind.Sequential)]
-    struct PlatformTouchEvent 
+    struct PlatformTouchEvent
     {
         public byte touchId;
         public byte phase;
@@ -291,18 +291,20 @@ namespace Unity.AppUI.Core
     /// </summary>
     public static partial class Platform
     {
-#if UNITY_EDITOR 
-        static Object s_LastEditorWindow;        
+#if UNITY_EDITOR
+        static Object s_LastEditorWindow;
 #endif
-        
+
         /// <summary>
         /// The base DPI value used in <see cref="UnityEngine.UIElements.PanelSettings"/>.
         /// </summary>
         public const float baseDpi = 96f;
 
         /// <summary>
+        /// <para>
         /// The DPI value that should be used in UI-Toolkit PanelSettings
         /// <see cref="UnityEngine.UIElements.PanelSettings.referenceDpi"/>.
+        /// </para>
         /// <para>
         /// This value is the value of <see cref="Screen.dpi"/> divided by the main screen scale factor.
         /// </para>
@@ -323,10 +325,10 @@ namespace Unity.AppUI.Core
 
         /// <summary>
         /// The main screen scale factor.
+        /// </summary>
         /// <remarks>
         /// The "main" screen is the current screen used at highest priority to display the application window.
         /// </remarks>
-        /// </summary>
         public static float mainScreenScale
         {
             get
@@ -419,7 +421,7 @@ namespace Unity.AppUI.Core
         static Vector2 s_DeltaPos0;
         static Vector2 s_DeltaPos1;
 
-        internal enum GestureType 
+        internal enum GestureType
         {
             Unknown,
             Pan,
@@ -445,9 +447,9 @@ namespace Unity.AppUI.Core
         {
             panGestureChangedThisFrame = false;
             magnificationGestureChangedThisFrame = false;
-            
+
             var touches = GetTrackpadTouches();
-            
+
             isTouchGestureSupported = isTouchGestureSupported || touches.Count > 0;
 
             foreach (var touch in touches)
@@ -470,7 +472,7 @@ namespace Unity.AppUI.Core
                         s_DeltaPos0 = Vector2.zero;
                         s_DeltaPos1 = Vector2.zero;
                     }
-                    
+
                     if (s_Touch0.fingerId != touch.fingerId && s_Touch1.fingerId != touch.fingerId && s_TwoFingersUsed)
                     {
                         // we can deactivate here since more than 2 fingers are used
@@ -520,7 +522,7 @@ namespace Unity.AppUI.Core
                             s_Gesture = GestureType.Pan;
                             panGesture = new PanGesture(s_Touch0.position, Vector2.zero, TouchPhase.Began);
                         }
-                        else 
+                        else
                         {
                             // mag
                             s_Gesture = GestureType.Mag;
@@ -552,13 +554,13 @@ namespace Unity.AppUI.Core
         static readonly Dictionary<int, TrackPadTouch> k_PrevTouches = new Dictionary<int, TrackPadTouch>();
         static readonly List<TrackPadTouch> k_FrameTouches = new List<TrackPadTouch>();
 
-        static List<TrackPadTouch> GetTrackpadTouches() 
+        static List<TrackPadTouch> GetTrackpadTouches()
         {
             s_LastTime = Time.unscaledTime;
             if ((Application.isPlaying && s_LastFrame != Time.frameCount) || !Application.isPlaying)
             {
                 s_LastFrame = Time.frameCount;
-                
+
                 k_PrevTouches.Clear();
                 foreach (var touch in k_FrameTouches)
                 {
@@ -566,7 +568,7 @@ namespace Unity.AppUI.Core
                 }
 
                 k_FrameTouches.Clear();
-                
+
                 PlatformTouchEvent e;
                 e.touchId = 0;
                 e.phase = 0;
@@ -580,7 +582,7 @@ namespace Unity.AppUI.Core
                 if (currentWindow != s_LastEditorWindow && currentWindow)
                     SetupFocusedTrackingObject();
                 s_LastEditorWindow = currentWindow;
-                
+
                 if (currentWindow)
 #endif
                 {
@@ -593,7 +595,7 @@ namespace Unity.AppUI.Core
                             deltaPos = screenPos - prevTouch.position;
 
                         var timeDelta = Time.unscaledTime - s_LastTime;
-                        var phase = e.phase switch 
+                        var phase = e.phase switch
                         {
                             0 => TouchPhase.Began,
                             1 => TouchPhase.Moved,
@@ -609,7 +611,7 @@ namespace Unity.AppUI.Core
 
                 s_LastTime = Time.unscaledTime;
             }
-            
+
             return k_FrameTouches;
         }
 
@@ -620,11 +622,11 @@ namespace Unity.AppUI.Core
                 return _NSReadTouchEvent(ref touch);
             else
                 return false;
-#else 
+#else
             return false;
 #endif
         }
-        
+
         static void SetupFocusedTrackingObject()
         {
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
@@ -641,22 +643,22 @@ namespace Unity.AppUI.Core
             panGesture = new PanGesture(Vector2.zero, Vector2.zero, phase);
             magnificationGesture = new MagnificationGesture(0f, phase);
         }
-        
+
         /// <summary>
         /// Event triggered when a pan gesture is received.
         /// </summary>
         public static event Action<PanGesture> panGestureChanged;
-        
+
         /// <summary>
         /// Event triggered when a magnification gesture is received.
         /// </summary>
         public static event Action<MagnificationGesture> magnificationGestureChanged;
-        
+
         /// <summary>
         /// Whether the pan gesture has changed this frame.
         /// </summary>
         public static bool panGestureChangedThisFrame { get; set; }
-        
+
         /// <summary>
         /// Whether the magnification gesture has changed this frame.
         /// </summary>
@@ -695,7 +697,7 @@ namespace Unity.AppUI.Core
                 }
             }
         }
-        
+
         /// <summary>
         /// Whether the current platform supports touch gestures.
         /// </summary>

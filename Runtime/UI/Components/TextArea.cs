@@ -18,28 +18,28 @@ namespace Unity.AppUI.UI
     public partial class TextArea : ExVisualElement, IInputElement<string>, INotifyValueChanging<string>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId isReadOnlyProperty = nameof(isReadOnly);
-        
+
         internal static readonly BindingId maxLengthProperty = nameof(maxLength);
-        
+
         internal static readonly BindingId placeholderProperty = nameof(placeholder);
-        
+
         internal static readonly BindingId autoResizeProperty = nameof(autoResize);
-        
+
         internal static readonly BindingId submitOnEnterProperty = nameof(submitOnEnter);
-        
+
         internal static readonly BindingId submitModifiersProperty = nameof(submitModifiers);
-        
+
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
-        
+
         internal static readonly BindingId invalidProperty = nameof(invalid);
-        
+
 #endif
-        
-        
+
+
         /// <summary>
         /// The TextArea main styling class.
         /// </summary>
@@ -64,9 +64,9 @@ namespace Unity.AppUI.UI
         /// The TextArea placeholder styling class.
         /// </summary>
         public const string placeholderUssClassName = ussClassName + "__placeholder";
-        
+
         const bool k_IsReadOnlyDefault = false;
-        
+
         const int k_MaxLengthDefault = -1;
 
         readonly UnityEngine.UIElements.TextField m_InputField;
@@ -80,7 +80,7 @@ namespace Unity.AppUI.UI
         Size m_Size;
 
         string m_Value;
-        
+
         readonly VisualElement m_ResizeHandle;
 
         string m_PreviousValue;
@@ -110,10 +110,10 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Construct a TextArea with a predefined text value.
+        /// </summary>
         /// <remarks>
         /// No event will be triggered when setting the text value during construction.
         /// </remarks>
-        /// </summary>
         /// <param name="value">A default text value.</param>
         public TextArea(string value)
         {
@@ -180,7 +180,7 @@ namespace Unity.AppUI.UI
             };
             m_ResizeHandle.AddManipulator(dragManipulator);
             m_ResizeHandle.RegisterCallback<ClickEvent>(OnResizeHandleClicked);
-            
+
             isReadOnly = k_IsReadOnlyDefault;
             maxLength = k_MaxLengthDefault;
             autoResize = false;
@@ -235,11 +235,11 @@ namespace Unity.AppUI.UI
 #endif
                 submitted?.Invoke();
             }
-            
+
             m_RequestSubmit = false;
             m_RequestTab = false;
         }
-        
+
         void OnResizeHandleClicked(ClickEvent evt)
         {
             if (evt.clickCount == 2)
@@ -270,13 +270,13 @@ namespace Unity.AppUI.UI
 
             if (autoResize)
                 AutoResize();
-            
+
             using var evt = ChangingEvent<string>.GetPooled();
             evt.target = this;
             evt.previousValue = m_Value;
             m_Value = e.newValue;
             evt.newValue = m_Value;
-            
+
             if (validateValue != null) invalid = !validateValue(m_Value);
             RefreshUI();
             SendEvent(evt);
@@ -286,7 +286,7 @@ namespace Unity.AppUI.UI
         {
             if (panel == null || !contentRect.IsValid())
                 return;
-            
+
             var width = m_InputField.resolvedStyle.width -
                 m_InputField.resolvedStyle.borderLeftWidth -
                 m_InputField.resolvedStyle.borderRightWidth -
@@ -294,11 +294,11 @@ namespace Unity.AppUI.UI
                 m_InputField.resolvedStyle.paddingRight;
 
             var textSize = m_InputField.MeasureTextSize(
-                m_InputField.text, 
+                m_InputField.text,
                 width, MeasureMode.Exactly,
                 0, MeasureMode.Undefined);
-            
-            var newHeight = textSize.y + 
+
+            var newHeight = textSize.y +
                 resolvedStyle.paddingTop +
                 resolvedStyle.paddingBottom +
                 resolvedStyle.borderTopWidth +
@@ -309,9 +309,9 @@ namespace Unity.AppUI.UI
                 m_InputField.resolvedStyle.marginBottom +
                 m_InputField.resolvedStyle.paddingTop +
                 m_InputField.resolvedStyle.paddingBottom;
-            
+
             newHeight = Mathf.Max(resolvedStyle.minHeight.value, newHeight);
-            
+
             if (newHeight > resolvedStyle.height)
                 style.height = newHeight;
         }
@@ -343,7 +343,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_Placeholder.text != value;
                 m_Placeholder.text = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in placeholderProperty);
@@ -388,14 +388,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(Styles.invalidUssClassName) != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// Whether the TextArea is read-only.
         /// </summary>
@@ -412,14 +412,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_InputField.isReadOnly != value;
                 m_InputField.isReadOnly = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in isReadOnlyProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The maximum length of the TextArea.
         /// </summary>
@@ -436,7 +436,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_InputField.maxLength != value;
                 m_InputField.maxLength = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in maxLengthProperty);
@@ -449,8 +449,6 @@ namespace Unity.AppUI.UI
         /// </summary>
         /// <remarks>
         /// This will only grow the <see cref="TextArea"/>. It will not shrink it.
-        /// </remarks>
-        /// <remarks>
         /// If the user manually resizes the <see cref="TextArea"/>, the auto resize will be disabled.
         /// </remarks>
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -559,7 +557,7 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
 #endif
@@ -593,7 +591,7 @@ namespace Unity.AppUI.UI
         {
             m_Placeholder.EnableInClassList(Styles.hiddenUssClassName, !string.IsNullOrEmpty(m_Value));
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -617,31 +615,31 @@ namespace Unity.AppUI.UI
                 name = "value",
                 defaultValue = null
             };
-            
+
             readonly UxmlBoolAttributeDescription m_AutoResize = new()
             {
                 name = "auto-resize",
                 defaultValue = false
             };
-            
+
             readonly UxmlBoolAttributeDescription m_SubmitOnEnter = new()
             {
                 name = "submit-on-enter",
                 defaultValue = false
             };
-            
+
             readonly UxmlEnumAttributeDescription<EventModifiers> m_SubmitModifiers = new()
             {
                 name = "submit-modifiers",
                 defaultValue = EventModifiers.None
             };
-            
+
             readonly UxmlBoolAttributeDescription m_IsReadOnly = new()
             {
                 name = "is-read-only",
                 defaultValue = k_IsReadOnlyDefault
             };
-            
+
             readonly UxmlIntAttributeDescription m_MaxLength = new()
             {
                 name = "max-length",
@@ -663,14 +661,14 @@ namespace Unity.AppUI.UI
                 el.placeholder = m_Placeholder.GetValueFromBag(bag, cc);
                 el.autoResize = m_AutoResize.GetValueFromBag(bag, cc);
                 el.value = m_Value.GetValueFromBag(bag, cc);
-                
+
                 el.submitOnEnter = m_SubmitOnEnter.GetValueFromBag(bag, cc);
                 el.submitModifiers = m_SubmitModifiers.GetValueFromBag(bag, cc);
                 el.isReadOnly = m_IsReadOnly.GetValueFromBag(bag, cc);
                 el.maxLength = m_MaxLength.GetValueFromBag(bag, cc);
             }
         }
-        
+
 #endif
     }
 }

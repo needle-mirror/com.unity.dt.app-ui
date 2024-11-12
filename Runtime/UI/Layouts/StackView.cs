@@ -182,20 +182,18 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
 
 #endif
-        
+
         readonly Stack<StackViewItem> m_Stack;
-        
+
         /// <summary>
         /// Event emitted when the current item in the stack changes.
         /// </summary>
         /// <remarks>
         /// The event is emitted at the end of the animation (if any).
-        /// </remarks>
-        /// <remarks>
         /// The event is emitted after the <see cref="currentItemChanging"/> event.
         /// </remarks>
         public event Action currentItemChanged;
-        
+
         /// <summary>
         /// Event emitted when the current item in the stack is about to change.
         /// </summary>
@@ -393,7 +391,7 @@ namespace Unity.AppUI.UI
             {
                 m_Stack.Pop();
             }
-            
+
             return Push(item, callback, operation);
         }
 
@@ -479,7 +477,7 @@ namespace Unity.AppUI.UI
         {
 
         }
-        
+
 #endif
     }
 }

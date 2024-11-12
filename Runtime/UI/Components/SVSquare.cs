@@ -10,7 +10,6 @@ namespace Unity.AppUI.UI
 {
     /// <summary>
     /// SVSquare UI element. It is a square that allows to select a color by selecting a point in a 2D space.
-    /// <para />
     /// The X axis represents the Hue and the Y axis represents the Saturation.
     /// </summary>
 #if ENABLE_UXML_SERIALIZED_DATA
@@ -19,27 +18,27 @@ namespace Unity.AppUI.UI
     public partial class SVSquare : BaseVisualElement, IInputElement<Vector2>, INotifyValueChanging<Vector2>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId brightnessProperty = nameof(brightness);
-        
+
         internal static readonly BindingId referenceColorProperty = nameof(referenceColor);
-        
+
         internal static readonly BindingId referenceHueProperty = nameof(referenceHue);
-        
+
         internal static readonly BindingId saturationProperty = nameof(saturation);
-        
+
         internal static readonly BindingId selectedColorProperty = nameof(selectedColor);
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId incrementFactorProperty = nameof(incrementFactor);
-        
+
         internal static readonly BindingId invalidProperty = nameof(invalid);
-        
+
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
-        
+
 #endif
-        
+
         /// <summary>
         /// The SVSquare main styling class.
         /// </summary>
@@ -65,7 +64,7 @@ namespace Unity.AppUI.UI
         Vector2 m_Value;
 
         readonly ExVisualElement m_Thumb;
-        
+
         readonly VisualElement m_ThumbSwatch;
 
         readonly Draggable m_DragManipulator;
@@ -83,9 +82,9 @@ namespace Unity.AppUI.UI
         Vector2 m_PreviousValue;
 
         float m_IncrementFactor;
-        
+
         const float k_DefaultIncrementFactor = 0.01f;
-        
+
         Func<Vector2, bool> m_ValidateValue;
 
         /// <summary>
@@ -129,7 +128,7 @@ namespace Unity.AppUI.UI
                 m_RefHue = value;
                 GenerateTextures();
                 SetValueWithoutNotify(this.value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
@@ -184,7 +183,7 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(validValue);
                 SendEvent(evt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
                 NotifyPropertyChanged(in saturationProperty);
@@ -217,7 +216,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// The SVSquare invalid state.
         /// </summary>
@@ -234,14 +233,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = invalid != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The SVSquare validation function.
         /// </summary>
@@ -255,7 +254,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
@@ -304,7 +303,7 @@ namespace Unity.AppUI.UI
             RegisterCallback<KeyDownEvent>(OnKeyDown);
 
             SetValueWithoutNotify(Vector2.zero);
-            
+
             incrementFactor = k_DefaultIncrementFactor;
         }
 
@@ -352,7 +351,7 @@ namespace Unity.AppUI.UI
 
             if (handled)
             {
-                
+
                 evt.StopPropagation();
 
                 var validValue = new Vector2(Mathf.Clamp01(val.x), Mathf.Clamp01(val.y));
@@ -450,7 +449,7 @@ namespace Unity.AppUI.UI
             m_Thumb.style.top = (paddingRect.height - brightness * paddingRect.height) - m_Thumb.resolvedStyle.height * 0.5f;
             m_Thumb.style.left = saturation * paddingRect.width - m_Thumb.resolvedStyle.width * 0.5f;
             m_ThumbSwatch.style.backgroundColor = selectedColor;
-            
+
             if (m_ValidateValue != null)
                 invalid = !m_ValidateValue(newValue);
         }
@@ -470,7 +469,7 @@ namespace Unity.AppUI.UI
                 if (!s_Material)
                     return;
             }
-            
+
             var rect = contentRect;
 
             if (!rect.IsValid())
@@ -504,7 +503,7 @@ namespace Unity.AppUI.UI
                 m_Image.image = m_RT;
             m_Image.MarkDirtyRepaint();
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -556,7 +555,7 @@ namespace Unity.AppUI.UI
                 square.SetValueWithoutNotify(satBri);
             }
         }
-        
+
 #endif
     }
 }

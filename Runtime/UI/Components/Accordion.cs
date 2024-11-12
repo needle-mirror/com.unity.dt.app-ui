@@ -18,19 +18,19 @@ namespace Unity.AppUI.UI
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId titleProperty = nameof(title);
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId trailingContentTemplateProperty = nameof(trailingContentTemplate);
 #endif
-        
+
         const string k_IndicatorIconName = "caret-down";
-        
+
         /// <summary>
         /// The AccordionItem main styling class.
         /// </summary>
         public const string ussClassName = "appui-accordionitem";
-        
+
         /// <summary>
         /// The AccordionItem content parent styling class.
         /// </summary>
@@ -50,7 +50,7 @@ namespace Unity.AppUI.UI
         /// The AccordionItem headertext styling class.
         /// </summary>
         public const string headerTextUssClassName = ussClassName + "__headertext";
-        
+
         /// <summary>
         /// The AccordionItem trailing container styling class.
         /// </summary>
@@ -67,7 +67,7 @@ namespace Unity.AppUI.UI
         public const string headingUssClassName = ussClassName + "__heading";
 
         readonly VisualElement m_ContentElement;
-        
+
         readonly VisualElement m_ContentParentElement;
 
         readonly LocalizedTextElement m_HeaderTextElement;
@@ -90,7 +90,7 @@ namespace Unity.AppUI.UI
 
             m_HeaderTextElement = new LocalizedTextElement { name = headerTextUssClassName, pickingMode = PickingMode.Ignore };
             m_HeaderTextElement.AddToClassList(headerTextUssClassName);
-            
+
             trailingContainer = new VisualElement { name = trailingContainerUssClassName, pickingMode = PickingMode.Ignore };
             trailingContainer.AddToClassList(trailingContainerUssClassName);
 
@@ -99,8 +99,8 @@ namespace Unity.AppUI.UI
 
             m_HeaderElement = new ExVisualElement
             {
-                name = headerUssClassName, 
-                pickingMode = PickingMode.Position, 
+                name = headerUssClassName,
+                pickingMode = PickingMode.Position,
                 focusable = true,
                 passMask = 0,
             };
@@ -115,7 +115,7 @@ namespace Unity.AppUI.UI
             var headingElement = new VisualElement { pickingMode = PickingMode.Ignore };
             headingElement.AddToClassList(headingUssClassName);
             headingElement.hierarchy.Add(m_HeaderElement);
-            
+
             m_ContentParentElement = new VisualElement
             {
                 name = contentParentUssClassName,
@@ -134,10 +134,10 @@ namespace Unity.AppUI.UI
 
             hierarchy.Add(headingElement);
             hierarchy.Add(m_ContentParentElement);
-            
+
             SetValueWithoutNotify(false);
         }
-        
+
         void OnContentGeometryChanged(GeometryChangedEvent evt)
         {
             if (value)
@@ -162,7 +162,7 @@ namespace Unity.AppUI.UI
         /// The content container of the AccordionItem.
         /// </summary>
         public override VisualElement contentContainer => m_ContentElement;
-        
+
         /// <summary>
         /// The header's trailing container of the AccordionItem.
         /// </summary>
@@ -211,9 +211,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var previousValue = m_HeaderTextElement.text;
-                
+
                 m_HeaderTextElement.text = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (previousValue != value)
                     NotifyPropertyChanged(titleProperty);
@@ -246,7 +246,7 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
                 SendEvent(itemEvt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(valueProperty);
 #endif
@@ -291,7 +291,7 @@ namespace Unity.AppUI.UI
                 name = "title",
                 defaultValue = "Header",
             };
-            
+
             readonly UxmlBoolAttributeDescription m_Value = new UxmlBoolAttributeDescription
             {
                 name = "value",
@@ -328,16 +328,18 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId isExclusiveProperty = nameof(isExclusive);
 #endif
-        
+
         /// <summary>
         /// The Accordion main styling class.
         /// </summary>
         public const string ussClassName = "appui-accordion";
-        
+
         bool m_IsExclusive;
 
         /// <summary>
+        /// <para>
         /// The behavior of the Accordion when multiple items are open.
+        /// </para>
         /// <para>
         /// If true, a maximum of one item can be open at a time.
         /// </para>
@@ -357,7 +359,7 @@ namespace Unity.AppUI.UI
             {
                 var previousValue = m_IsExclusive;
                 m_IsExclusive = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (previousValue != value)
                     NotifyPropertyChanged(isExclusiveProperty);
@@ -375,7 +377,7 @@ namespace Unity.AppUI.UI
             RegisterCallback<AccordionItemValueChangedEvent>(OnAccordionItemValueChanged);
 
             pickingMode = PickingMode.Ignore;
-            
+
             isExclusive = false;
         }
 

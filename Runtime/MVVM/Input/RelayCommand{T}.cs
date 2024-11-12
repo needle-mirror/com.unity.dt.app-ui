@@ -15,12 +15,12 @@ namespace Unity.AppUI.MVVM
         readonly Action<T?> m_Execute;
 
         readonly Predicate<T?>? m_CanExecute;
-        
+
         /// <summary>
         /// Event raised when <see cref="CanExecute(object?)"/> changes.
         /// </summary>
         public event EventHandler? CanExecuteChanged;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RelayCommand{T}"/> class.
         /// </summary>
@@ -30,7 +30,7 @@ namespace Unity.AppUI.MVVM
         {
             m_Execute = execute ?? throw new ArgumentNullException(nameof(execute));
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RelayCommand{T}"/> class.
         /// </summary>
@@ -47,16 +47,16 @@ namespace Unity.AppUI.MVVM
         /// Determines whether this <see cref="RelayCommand{T}"/> can execute in its current state.
         /// </summary>
         /// <param name="parameter"> Data used by the command. </param>
-        /// <returns> <langword>true</langword> if this command can be executed; otherwise, <langword>false</langword>. </returns>
-        /// <exception cref="InvalidOperationException"></exception>
+        /// <returns> <see langword="true" /> if this command can be executed; otherwise, <see langword="false" />. </returns>
+        /// <exception cref="InvalidOperationException"> Thrown if unable to cast <paramref name="parameter"/> to <typeparamref name="T"/>. </exception>
         public bool CanExecute(object? parameter)
         {
             if (parameter == null && default(T) is not null)
                 return false;
 
             if (!TryGetCommandArg(parameter, out var result))
-                throw new InvalidOperationException("");
-            
+                throw new InvalidOperationException("Invalid parameter type.");
+
             return CanExecute(result);
         }
 
@@ -69,7 +69,7 @@ namespace Unity.AppUI.MVVM
         {
             if (!TryGetCommandArg(parameter, out var result))
                 throw new InvalidOperationException("Invalid parameter type.");
-            
+
             Execute(result);
         }
 
@@ -95,7 +95,7 @@ namespace Unity.AppUI.MVVM
         /// Determines whether this <see cref="RelayCommand{T}"/> can execute in its current state.
         /// </summary>
         /// <param name="parameter"> Data used by the command. </param>
-        /// <returns> <langword>true</langword> if this command can be executed; otherwise, <langword>false</langword>. </returns>
+        /// <returns> <see langword="true"/> if the command can be executed; otherwise, <see langword="false"/>. </returns>
         public bool CanExecute(T? parameter)
         {
             return m_CanExecute?.Invoke(parameter) ?? true;

@@ -18,20 +18,20 @@ namespace Unity.AppUI.UI
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
         internal static readonly BindingId labelProperty = nameof(label);
-        
+
         internal static readonly BindingId iconProperty = nameof(icon);
-        
+
         internal static readonly BindingId iconVariantProperty = nameof(iconVariant);
-        
+
         internal static readonly BindingId quietProperty = nameof(quiet);
-        
+
         internal static readonly BindingId selectedProperty = nameof(selected);
-        
+
         internal static readonly BindingId accentProperty = nameof(accent);
 #endif
-        
+
         /// <summary>
         /// The ActionButton main styling class.
         /// </summary>
@@ -103,7 +103,7 @@ namespace Unity.AppUI.UI
             m_IconElement.AddToClassList(iconUssClassName);
             m_LabelElement = new LocalizedTextElement { name = labelUssClassName, text = null, pickingMode = PickingMode.Ignore };
             m_LabelElement.AddToClassList(labelUssClassName);
-            
+
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocus, OnFocus));
 
             hierarchy.Add(m_IconElement);
@@ -158,7 +158,7 @@ namespace Unity.AppUI.UI
             add => clickable.clicked += value;
             remove => clickable.clicked -= value;
         }
-        
+
         /// <summary>
         /// The ActionButton label.
         /// </summary>
@@ -209,7 +209,7 @@ namespace Unity.AppUI.UI
 #endif
             }
         }
-        
+
         /// <summary>
         /// The ActionButton icon variant.
         /// </summary>
@@ -340,7 +340,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Set the selected state of the ActionButton without notifying the click event.
         /// </summary>
-        /// <param name="newValue"></param>
+        /// <param name="newValue"> The new selected state.</param>
         public void SetSelectedWithoutNotify(bool newValue)
         {
             EnableInClassList(Styles.selectedUssClassName, newValue);
@@ -407,7 +407,7 @@ namespace Unity.AppUI.UI
                 name = "size",
                 defaultValue = Size.M,
             };
-            
+
             readonly UxmlEnumAttributeDescription<IconVariant> m_IconVariant = new UxmlEnumAttributeDescription<IconVariant>
             {
                 name = "icon-variant",

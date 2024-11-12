@@ -24,31 +24,31 @@ namespace Unity.AppUI.UI
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId scaleProperty = nameof(scale);
-        
+
         internal static readonly BindingId themeProperty = nameof(theme);
-        
+
         internal static readonly BindingId layoutDirectionProperty = nameof(layoutDirection);
-        
+
         internal static readonly BindingId langProperty = nameof(lang);
-        
+
         internal static readonly BindingId tooltipPlacementProperty = nameof(preferredTooltipPlacement);
-        
+
         internal static readonly BindingId tooltipDelayMsProperty = nameof(tooltipDelayMs);
-        
+
         internal static readonly BindingId forceUseTooltipSystemProperty = nameof(forceUseTooltipSystem);
 #endif
-        
+
         /// <summary>
         /// Main Uss Class Name.
         /// </summary>
         public const string ussClassName = "appui";
-        
+
         /// <summary>
         /// Prefix used in App UI context USS classes.
         /// </summary>
         [EnumName("GetLayoutDirectionUssClassName", typeof(Dir))]
         public const string contextPrefix = "appui--";
-        
+
         /// <summary>
         /// The name of the main UI layer.
         /// </summary>
@@ -83,20 +83,20 @@ namespace Unity.AppUI.UI
         /// The default theme for this panel.
         /// </summary>
         internal const string defaultTheme = "dark";
-        
+
         /// <summary>
         /// The default layout direction for this panel.
         /// </summary>
         internal const Dir defaultDir = Dir.Ltr;
 
         string m_PreviousTheme;
-        
+
         string m_PreviousScale;
-        
+
         Dir m_PreviousDir;
-        
+
         string m_PreviousLang;
-        
+
         readonly VisualElement m_MainContainer;
 
         readonly VisualElement m_NotificationContainer;
@@ -117,7 +117,7 @@ namespace Unity.AppUI.UI
         public Panel()
         {
             AddToClassList(ussClassName);
-            
+
             // Add a layer for the main UI
             m_MainContainer = new VisualElement { name = mainContainerName, pickingMode = PickingMode.Ignore };
             SetFixedFullScreen(m_MainContainer);
@@ -143,7 +143,7 @@ namespace Unity.AppUI.UI
 
             RegisterCallback<AttachToPanelEvent>(OnAttachedToPanel);
             RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
-            
+
             this.RegisterContextChangedCallback<ThemeContext>(OnThemeContextChanged);
             this.RegisterContextChangedCallback<ScaleContext>(OnScaleContextChanged);
             this.RegisterContextChangedCallback<DirContext>(OnDirContextChanged);
@@ -170,14 +170,14 @@ namespace Unity.AppUI.UI
 #endif
             return ret;
         }
-        
+
 #if UNITY_LOCALIZATION_PRESENT
         void OnSelectedLocaleChanged(Locale locale)
         {
             lang = locale ? locale.Identifier.Code ?? defaultLang : defaultLang;
         }
 #endif
-        
+
         void UnregisterLocalizationCallback()
         {
 #if UNITY_LOCALIZATION_PRESENT
@@ -204,7 +204,7 @@ namespace Unity.AppUI.UI
                 m_PreviousTheme = newTheme;
             }
         }
-        
+
         void OnScaleContextChanged(ContextChangedEvent<ScaleContext> evt)
         {
             // only handle the event if it comes from this panel
@@ -216,13 +216,13 @@ namespace Unity.AppUI.UI
             {
                 if (m_PreviousScale != null)
                     RemoveFromClassList(MemoryUtils.Concatenate(contextPrefix, m_PreviousScale));
-                if (newScale != null) 
+                if (newScale != null)
                     AddToClassList(MemoryUtils.Concatenate(contextPrefix, newScale));
-            
+
                 m_PreviousScale = newScale;
             }
         }
-        
+
         void OnDirContextChanged(ContextChangedEvent<DirContext> evt)
         {
             // only handle the event if it comes from this panel
@@ -236,10 +236,10 @@ namespace Unity.AppUI.UI
             AddToClassList(GetLayoutDirectionUssClassName(newDir));
             if (m_PreviousDir != newDir)
                 RemoveFromClassList(GetLayoutDirectionUssClassName(m_PreviousDir));
-            
+
             m_PreviousDir = newDir;
         }
-        
+
         void OnLangContextChanged(ContextChangedEvent<LangContext> evt)
         {
             // only handle the event if it comes from this panel
@@ -312,7 +312,7 @@ namespace Unity.AppUI.UI
                 }
             }
         }
-        
+
         /// <summary>
         /// The default theme for this panel.
         /// </summary>
@@ -340,7 +340,7 @@ namespace Unity.AppUI.UI
                 }
             }
         }
-        
+
         /// <summary>
         /// The default layout direction for this panel.
         /// </summary>
@@ -366,7 +366,7 @@ namespace Unity.AppUI.UI
                 }
             }
         }
-        
+
         /// <summary>
         /// The default preferred tooltip placement for this panel.
         /// </summary>
@@ -396,7 +396,7 @@ namespace Unity.AppUI.UI
                 }
             }
         }
-        
+
         /// <summary>
         /// The default tooltip delay in milliseconds for this panel.
         /// </summary>
@@ -422,7 +422,7 @@ namespace Unity.AppUI.UI
                 }
             }
         }
-        
+
         /// <summary>
         /// If true, the panel will use the tooltip system, even if the default UI-Toolkit tooltips are enabled.
         /// </summary>
@@ -441,7 +441,7 @@ namespace Unity.AppUI.UI
                 m_ForceUseTooltipSystem = value;
                 if (m_TooltipManipulator != null)
                     m_TooltipManipulator.force = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in forceUseTooltipSystemProperty);
 #endif
@@ -564,7 +564,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Unregister a <see cref="Popup"/> from the list of dismissable popups.
         /// </summary>
-        /// <param name="anchorPopup"></param>
+        /// <param name="anchorPopup"> The popup to unregister.</param>
         public void UnregisterPopup(Popup anchorPopup)
         {
             m_DismissablePopups.Remove(anchorPopup);
@@ -586,57 +586,57 @@ namespace Unity.AppUI.UI
                 name = "lang",
                 defaultValue = defaultLang
             };
-            
+
             readonly UxmlStringAttributeDescription m_Scale = new UxmlStringAttributeDescription
             {
-                name = "scale", 
+                name = "scale",
                 defaultValue = defaultScale,
                 restriction = new UxmlEnumeration
                 {
                     values = new[] { "small", "medium", "large" }
                 }
             };
-            
+
             readonly UxmlStringAttributeDescription m_Theme = new UxmlStringAttributeDescription
             {
-                name = "theme", 
+                name = "theme",
                 defaultValue = defaultTheme,
                 restriction = new UxmlEnumeration
                 {
                     values = new[] { "light", "dark", "editor-dark", "editor-light" }
                 }
             };
-            
+
             readonly UxmlEnumAttributeDescription<Dir> m_Dir = new UxmlEnumAttributeDescription<Dir>
             {
-                name = "dir", 
+                name = "dir",
                 defaultValue = defaultDir
             };
-            
+
             readonly UxmlEnumAttributeDescription<PopoverPlacement> m_PreferredTooltipPlacement = new UxmlEnumAttributeDescription<PopoverPlacement>
             {
-                name = "preferred-tooltip-placement", 
+                name = "preferred-tooltip-placement",
                 defaultValue = Tooltip.defaultPlacement
             };
-            
+
             readonly UxmlIntAttributeDescription m_TooltipDelayMs = new UxmlIntAttributeDescription
             {
-                name = "tooltip-delay-ms", 
+                name = "tooltip-delay-ms",
                 defaultValue = TooltipManipulator.defaultDelayMs
             };
-            
+
             readonly UxmlBoolAttributeDescription m_ForceUseTooltipSystem = new UxmlBoolAttributeDescription
             {
-                name = "force-use-tooltip-system", 
+                name = "force-use-tooltip-system",
                 defaultValue = false
             };
 
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                
+
                 var panel = (Panel)ve;
-                
+
                 panel.lang = m_Lang.GetValueFromBag(bag, cc);
                 panel.scale = m_Scale.GetValueFromBag(bag, cc);
                 panel.theme = m_Theme.GetValueFromBag(bag, cc);

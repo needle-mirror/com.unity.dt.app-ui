@@ -10,8 +10,8 @@ namespace Unity.AppUI.Navigation
         /// <summary>
         /// Find the NavigationController used by the NavigationContainer that contains this visual element.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element"> A target element. </param>
+        /// <returns> The Navigation Controller. </returns>
         public static NavController FindNavController(this VisualElement element)
         {
             return element?.GetFirstAncestorOfType<NavHost>()?.navController;

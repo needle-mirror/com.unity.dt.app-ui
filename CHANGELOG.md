@@ -4,6 +4,173 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2024-11-12
+
+### Changed
+
+- App UI shaders are now optionally embedded in Player builds. You can change this setting in your main App UI settings instance. The default value is `true`.
+
+### Fixed
+
+- Fixed an exception thrown when trying to update UXML schemas in the Editor.
+
+## [1.1.1] - 2024-08-29
+
+### Fixed
+
+- Fixed XMLDoc documentation for the public API.
+
+## [2.0.0-pre.8] - 2024-08-12
+
+### Changed
+
+- Refactored completely the DropZone UI element. Now the DropZone doesn't embed any logic, but uses a `DropZoneController` instead. You can access this controller via `DropZone.controller` property and attaches a callback method to accept dragged objects and listens to drop events.
+- Defer checking Popup's container candidate when the Popup is about to be shown, instead of during Popup creation.
+- Refactored the styling of Chip UI element.
+- Upgraded the old Drag And Drop Sample to use the refactored DropZone and the new Drag And Drop system.
+- Changed the way MarkDirtyRepaint is scheduled on elements containing animated textures (check properly for visibility).
+- Refactored the styling of DropZone UI element.
+
+### Added
+
+- Added the `Unity.AppUI.UI.DropZoneController` Manipulator for a lower level approach to create your own "drop zones".
+- Added `--appui-splitview-splitter-anchor-size` design token.
+- `Added Unity.AppUI.Core.DragAndDrop` class to handle drag and drop (in-panel and/or with the Editor). The support of external drag and drop at runtime is planned for future releases.
+- Added `Unity.AppUI.UI.Chip.deletedWithEventInfo` and `Unity.AppUI.UI.Chip.clickedWithEventInfo` events.
+- Added new Story in the Drag And Drop sample.
+- Added support of `TextElement.displayTooltipWhenElided` to show elided text as a tooltip using the App UI tooltip system.
+
+### Fixed
+
+- Fixed compilation errors when the Unity project's Input Handling is set to `Both` or `New Input System` and the package `com.unity.inputsystem` is not installed.
+- Fixed IL2CPP Compilation errors on Windows Platform due to non-static MonoPInvokeCallback.
+- Fixed PInvoke delegate types on Windows platform.
+- Fixed styling of SplitView's Splitter Anchor size.
+- Fixed styling of BaseGridView when containing a single column.
+- Popovers and Modals now correctly start checking for PointerDown events in the visual tree when they become visible.
+- Removed console message when trying to add an Editor MonoBehaviour in the scene during PlayMode.
+
+## [2.0.0-pre.7] - 2024-07-30
+
+### Changed
+
+- Changed DialogTrigger.keyboardDismissDisabled to DialogTrigger.keyboardDismissEnabled for consistency.
+- Renamed Popup.parentView to Popup.containerView for more clarity.
+
+### Added
+
+- Added Modal.outsideClickDismissEnabled and Modal.outsideClickStrategy properties to support dismissing Modals by clicking outside of them.
+- Added Popup<T>.SetContainerView method to set a custom container which will be the parent of the popup's view.
+- Made `AnchorPopup.GetMovableElement` method public for easier access and increase customization possibilities.
+
+### Fixed
+
+- Fixed "Shape" icon.
+- Fixed border color variable for AccordionItem.
+- Fixed CultureInfo used during source code generation.
+
+### Removed
+
+- Removed intrusive Debug.Log calls from Platform class on Windows platform.
+- Removed warning message when using Single selection type in an overflown ActionGroup.
+
+## [2.0.0-pre.6] - 2024-07-07
+
+### Added
+
+- Added support of Attributes on fields and properties in the Dependency Injection system.
+- Added support of UnityEditor ColorPicker in ColorField component.
+- Added support of Color without alpha information in ColorField and ColorPicker.
+- Added `rounded-progress-corners` boolean property in `CircularProgress` and `LinearProgress` to be able to disable rounded corners.
+- Added `trailing-icon` property in `ActionButton` component.
+- Added customization support for the size of the Color swatch inside the ColorField.
+- Added arrow-square-in icon.
+
+### Changed
+
+- Changed the Text element inside the ColorField to become a selectable text.
+
+### Fixed
+
+- Fixed styling issues in `ActionButton` component.
+- Fixed Menu's backdrop to block pointer events
+- Fixed ColorField styling issues.
+- Use correct color variables for Radio and Checkbox components
+
+## [2.0.0-pre.5] - 2024-06-18
+
+### Changed
+
+- Complete rewrite of the SplitView component. The SplitView is no more a derived from TwoPaneSplitView from UI-Toolkit, but a full custom component that supports any number of panes.
+
+### Fixed
+
+- Fixed reset of Dropdown value when changing its source items.
+- Fixed a visual bug where the checkmark symbol didn't appear on DropdownItem or MenuItem that have a `selected` state.
+
+### Added
+
+- Added `indicatorPosition` property in `AccordionItem` component, in order to swap the indicator position either at start or end of the heading row.
+- Added `check` regular icon as a required icon in App UI themes.
+
+## [2.0.0-pre.4] - 2024-06-05
+
+### Fixed
+
+- Fixed MacOS native plugin memory leak when opening the Help menu in the Editor.
+
+## [2.0.0-pre.3] - 2024-05-30
+
+### Added
+
+- Added AsyncThunk support for Redux implementation.
+- Added Anchor Position support for Toast UI elements.
+- Added the `key` string property on `Radio` component to be used as unique identifier in their group.
+- Added unit tests for MemoryUtils utility class.
+
+### Removed
+
+- Removed programatic construction of RadioGroup with IList object. Since App UI offers the possibility to have Radio component as deep as you want in the visual tree compared to its RadioGroup ancestor, we wanted to limit conflicts between construction kinds.
+
+### Changed
+
+- Moved Toast animation logic from code to USS.
+- The `RadioGroup` component uses a `string` type for its `value` property. This string value is equal to the currently checked `Radio` component's `key` property.
+- The `Toast.AddAction` method will now ask for a callback that takes a `Toast` object as argument (instead of no argument at all). This will give you an easier way to dismiss the toast from the action callback.
+- You can now pass an `autoDismiss` argument to the `Toast.AddAction` method. This will automatically dismiss the toast when the action is triggered. This argument is optional and defaults to `true` for backward compatibility.
+- Changed MemoryUtils.Concatenate implementation to not use variadic parameters and avoid implicit allocations.
+
+### Fixed
+
+- Fixed Action Dispatch to every Slice Reducers
+- Every shared libraries of native plugins are now correctly signed with the correct Unity Technologies certificate (MacOS and Windows only)
+- Fixed support of Radio component that are deeper than the direct child of a RadioGroup.
+
+## [2.0.0-pre.2] - 2024-05-07
+
+### Added
+
+- Added `PinchGestureRecognizer` implementation for the new Gesture Recognizer System.
+- Added an experimental method `Platform.GetSystemColor` to fetch color values defined by the Operating System for specific UI element types. This can be useful if you want to precisely follow the color palette of a high-contrast theme directed by the OS.
+- Added "Icon Browser", a new Editor tool that enables users to generate UI-Toolkit stylesheets with a specific list of icons.
+- Added a new experimental Gesture Recognizer System.
+- Added the ability to subscribe and check if the current operating system is in Reduce-Motion Accessibility Mode (Windows/Mac/Android/iOS).
+- Added the ability to subscribe and check if the current Text Scale Factor of the currently used window (Unity Player window or the Game view window in the Editor) (Windows/Mac/Android/iOS).
+- Added the ability to subscribe and check if the current operating system is in High-Contrast Mode (Windows/Mac/Android/iOS).
+- Added the ability to subscribe and check if the current operating system is in LeftToRight or RightToLeft layout direction (Windows/Mac/Android/iOS).
+- Added the ability to subscribe and check if the current Scale Factor of the currently used window (Unity Player window or the Game view window in the Editor) (Windows/Mac/Android/iOS).
+- Added the ability to subscribe and check if the current operating system is in Dark Mode (Windows/Mac/Android/iOS).
+
+### Changed
+
+- Refactored every native plugin provided by the package.
+- Changed the Trackpad sample project to work properly with the new events coming from the new Gesture Recognizer System.
+
+### Fixed
+
+- Fixed meta files for native plugins on Windows platform.
+- Fixed an early return in the PreProcessBuild callback of App UI when no persistent AppUISettings have been found.
+
 ## [1.1.0] - 2024-05-01
 
 ### Fixed
@@ -19,6 +186,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Added AppUIGameActivity for Android builds in Unity 2023.2+
+
+## [2.0.0-pre.1] - 2024-03-25
+
+### Added
+
+- Added `DatePicker`, `DateRangePicker`, `DateField` and `DateRangeField` components. Theses components use the new `Date` and `DateRange` data structure also provided by App UI.
+- Added `VisualElementExtensions.SetTooltipContent` method to populate a tooltip template with new content.
+- Added `MasonryGridView` component.
+- Added tests for Pan and Magnify gesture data structures.
+
+### Removed
+
+- TextFieldExtensions.BlinkingCursor extension method has become obsolete. Please use the new BlinkingCursor manipulator instead.
+
+### Changed
+
+- Replaced the MacOS native plugin by a `.dylib` library instead of a `.bundle` one.
+
+### Fixed
+
+- Fixed some namespace usage to avoid relative ones.
 
 ## [1.0.6] - 2024-03-15
 
@@ -459,7 +647,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed the previous value sent in `ChangeEvent` of `NumericalField`, `VectorField` and `Picker` (Dropdown) components.
 - Improved the synchronization of the `AnchorPopup` components to refresh their position in the layout faster.
 
-### Changed 
+### Changed
 
 - Changed the USS selector for component-level aliases to use directly `:root` selector instead of `<component_main_uss_class>` selector.
 
@@ -477,11 +665,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed items selection persistence between refreshes in `GridView` component. 
+- Fixed items selection persistence between refreshes in `GridView` component.
 
 ## [0.6.2] - 2023-10-27
 
-### Added 
+### Added
 
 - Added `closeOnSelection` property to the `MenuTrigger` component.
 - Added `closeOnSelection` property to the `ActionGroup` component to close the popover menu (if any) when an item is selected.
@@ -499,7 +687,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added `allowNoSelection` property to the `GridView` component to enable or disable the selection of no items. 
+- Added `allowNoSelection` property to the `GridView` component to enable or disable the selection of no items.
 
 ### Fixed
 
@@ -527,13 +715,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The `InputLabel` component uses the `FieldLabel` and `HelpText` components to display the label and the help text.
 - The `Avatar` component now listens to `AvatarVarianContext` and `SizeContext` changes to update the variant and size of the avatar.
 
-### Removed 
+### Removed
 
 - Removed the `size` property from the `InputLabel` component.
 
 ## [0.5.5] - 2023-10-27
 
-### Added 
+### Added
 
 - [Backport] Added `closeOnSelection` property to the `MenuTrigger` component.
 - [Backport] Added `closeOnSelection` property to the `ActionGroup` component to close the popover menu (if any) when an item is selected.
@@ -550,7 +738,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added `allowNoSelection` property to the `GridView` component to enable or disable the selection of no items. 
+- Added `allowNoSelection` property to the `GridView` component to enable or disable the selection of no items.
 
 ### Fixed
 
@@ -628,7 +816,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The `Pressable` manipulator nows inherits from `PointerManipulator` instead of `Manipulator`.
 - Changed the `GridView.GetIndexByPosition` method to use a world-space position instead of a local-space position and renamed it to `GetIndexByWorldPosition`.
 - TouchSlider component will now loose focus when a slide interaction has ended.
-- When calling `GridView.Reset()` method, the selection won't be restored if no custom `GridView.getItemId` function has been provided. 
+- When calling `GridView.Reset()` method, the selection won't be restored if no custom `GridView.getItemId` function has been provided.
 - When using `--box-shadow-type: 1` (inset box-shadow), the `--box-shadow-spread` value was interpreted with the same direction as outset box-shadow. This has been fixed so you can use a positive spread value to go inside the element and a negative spread value to go outside the element.
 - The `Dropdown` component inherits from `Picker` component. Users will be able to create custom dropdown-like components by inheriting from `Picker` component.
 - The `Dropdown` component now has a selection mode property to choose between single and multiple selection modes.
@@ -675,7 +863,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.3.9] - 2023-08-17
 
-### Added 
+### Added
 
 - Added Context API which is accessible through any `VisualElement` instance.
 - Added `preventScrollWithModifiers` property to the `GridView` component.
@@ -692,7 +880,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `tooltip-delay-ms` property to the `ContextProvider` component to customize the tooltip delay.
 - Added more shortcuts to the `Canvas` component.
 
-### Fixed 
+### Fixed
 
 - Fixed Editor crash when updating packages from UPM window.
 
@@ -746,7 +934,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.3.3] - 2023-07-06
 
-### Added 
+### Added
 
 - Added Magic Trackpad gesture support for MacOS.
 - Added `PanGesture` and `MagnificationGesture` events for UITK dispatcher.
@@ -759,7 +947,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.3.2] - 2023-06-01
 
-### Fixed 
+### Fixed
 
 - Fixed NavAction being added twice in NavGraph when deleting a linked NavDestination.
 
@@ -851,7 +1039,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.2.9] - 2023-05-04
 
-### Changed 
+### Changed
 
 - Removed `Replica` word from the documentation.
 

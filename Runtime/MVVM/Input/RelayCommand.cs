@@ -23,7 +23,7 @@ namespace Unity.AppUI.MVVM
         /// The optional action to invoke when <see cref="CanExecute(object?)"/> is used.
         /// </summary>
         readonly Func<bool>? m_CanExecute;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RelayCommand{T}"/> class.
         /// </summary>
@@ -33,7 +33,7 @@ namespace Unity.AppUI.MVVM
         {
             m_Execute = execute ?? throw new ArgumentNullException(nameof(execute));
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RelayCommand{T}"/> class.
         /// </summary>
@@ -45,7 +45,7 @@ namespace Unity.AppUI.MVVM
             m_Execute = execute ?? throw new ArgumentNullException(nameof(execute));
             m_CanExecute = canExecute ?? throw new ArgumentNullException(nameof(canExecute));
         }
-        
+
         /// <summary>
         /// Determines whether this <see cref="RelayCommand"/> can execute in its current state.
         /// </summary>
@@ -55,11 +55,11 @@ namespace Unity.AppUI.MVVM
         {
             return m_CanExecute?.Invoke() ?? true;
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RelayCommand"/> class.
         /// </summary>
-        /// <returns></returns>
+        /// <returns> <see langword="true"/> if this command can be executed; otherwise, <see langword="false"/>. </returns>
         public bool CanExecute() => CanExecute(null);
 
         /// <summary>

@@ -17,22 +17,22 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public abstract partial class TouchSlider<TValueType> : BaseSlider<TValueType, TValueType> 
+    public abstract partial class TouchSlider<TValueType> : BaseSlider<TValueType, TValueType>
         where TValueType : struct, IComparable, IEquatable<TValueType>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
         internal static readonly BindingId labelProperty = nameof(label);
-        
+
 #endif
-        
+
         /// <summary>
         /// The TouchSlider main styling class.
         /// </summary>
         public const string ussClassName = "appui-touchslider";
-        
+
         /// <summary>
         /// The TouchSlider container styling class.
         /// </summary>
@@ -157,7 +157,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// Specify a unit for the value encapsulated in this slider.
+        /// <para>Specify a unit for the value encapsulated in this slider. </para>
         /// <para>This unit will be displayed next to value into the slider.</para>
         /// </summary>
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -219,7 +219,7 @@ namespace Unity.AppUI.UI
             m_IsEditingTextField = false;
             RemoveFromClassList(Styles.focusedUssClassName);
             HideInputField();
-            
+
             var currentValueStr = ParseValueToString(value);
             if (m_InputField.value != currentValueStr && ParseStringToValue(m_InputField.value, out var newValue))
             {
@@ -254,7 +254,7 @@ namespace Unity.AppUI.UI
                 if (handled)
                 {
                     evt.StopPropagation();
-                    
+
 
                     SetValueWithoutNotify(newValue);
 
@@ -306,7 +306,7 @@ namespace Unity.AppUI.UI
                 result = highBound;
             return result;
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -345,7 +345,7 @@ namespace Unity.AppUI.UI
 
             }
         }
-        
+
 #endif
     }
 }

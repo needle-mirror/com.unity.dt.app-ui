@@ -60,7 +60,9 @@ namespace Unity.AppUI.UI
         ModalVisualElement modal => (ModalVisualElement)view;
 
         /// <summary>
+        /// <para>
         /// Set the fullscreen mode for this <see cref="Modal"/>.
+        /// </para>
         /// <para>
         /// See <see cref="ModalFullScreenMode"/> values for more info.
         /// </para>
@@ -81,7 +83,7 @@ namespace Unity.AppUI.UI
             fullscreenMode = mode;
             return this;
         }
-        
+
         /// <summary>
         /// Build a new Modal component.
         /// </summary>
@@ -91,10 +93,10 @@ namespace Unity.AppUI.UI
         public static Modal Build(VisualElement referenceView, VisualElement content)
         {
             var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
-            
+
             if (panel == null)
                 throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-            
+
             var parentView = panel.popupContainer;
             var popup = new Modal(parentView, new ModalVisualElement(content), content)
                 .SetLastFocusedElement(referenceView);
@@ -145,7 +147,7 @@ namespace Unity.AppUI.UI
                 m_ContentContainer.SetIsCompositeRoot(true);
                 m_ContentContainer.SetExcludeFromFocusRing(true);
                 m_ContentContainer.delegatesFocus = true;
-                
+
                 m_ContentContainer.AddToClassList(contentContainerUssClassName);
 
                 hierarchy.Add(m_ContentContainer);

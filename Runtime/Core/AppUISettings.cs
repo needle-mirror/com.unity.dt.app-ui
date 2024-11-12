@@ -74,7 +74,7 @@ namespace Unity.AppUI.Core
                 OnChange();
             }
         }
-        
+
         /// <summary>
         /// Enable this option to enable gesture recognition on macOS.
         /// </summary>
@@ -87,6 +87,22 @@ namespace Unity.AppUI.Core
                     return;
 
                 m_EnableMacOSGestureRecognition = value;
+                OnChange();
+            }
+        }
+
+        /// <summary>
+        /// Enable this option to include the App UI shaders in the player build.
+        /// </summary>
+        internal bool includeShadersInPlayerBuild
+        {
+            get => m_IncludeShadersInPlayerBuild;
+            set
+            {
+                if (m_IncludeShadersInPlayerBuild == value)
+                    return;
+
+                m_IncludeShadersInPlayerBuild = value;
                 OnChange();
             }
         }
@@ -110,11 +126,16 @@ namespace Unity.AppUI.Core
         [SerializeField]
         // ReSharper disable once InconsistentNaming
         bool m_AutoOverrideAndroidManifest = true;
-        
+
         [Tooltip("Enable this option to enable gesture recognition on macOS.")]
         [SerializeField]
         // ReSharper disable once InconsistentNaming
         bool m_EnableMacOSGestureRecognition = true;
+
+        [Tooltip("Enable this option to include the App UI shaders in the player build.")]
+        [SerializeField]
+        // ReSharper disable once InconsistentNaming
+        bool m_IncludeShadersInPlayerBuild = true;
 
         internal void OnChange()
         {

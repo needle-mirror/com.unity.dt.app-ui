@@ -8,7 +8,6 @@ namespace Unity.AppUI.Navigation
     /// Navigation actions provide a level of indirection between your navigation code and the underlying destinations.
     /// This allows you to define common actions that change their destination or <see cref="NavOptions"/> based
     /// on the current <see cref="NavDestination"/>.
-    /// <para/>
     /// The <see cref="NavOptions"/> associated with a <see cref="NavAction"/> are used by default when navigating
     /// to this action via <see cref="NavController.Navigate(string, NavOptions, Argument[])"/>.
     /// </summary>
@@ -20,7 +19,7 @@ namespace Unity.AppUI.Navigation
 
         [SerializeField]
         NavOptions m_Options;
-        
+
         [SerializeField]
         List<Argument> m_DefaultArguments;
 
@@ -32,7 +31,7 @@ namespace Unity.AppUI.Navigation
             get => m_Destination;
             set => m_Destination = value;
         }
-        
+
         /// <summary>
         /// The NavOptions to be used by default when navigating to this action
         /// </summary>
@@ -41,7 +40,7 @@ namespace Unity.AppUI.Navigation
             get => m_Options;
             set => m_Options = value;
         }
-        
+
         /// <summary>
         /// The default arguments to be used when navigating to this action
         /// </summary>

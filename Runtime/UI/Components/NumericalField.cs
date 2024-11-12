@@ -15,30 +15,30 @@ namespace Unity.AppUI.UI
     /// <typeparam name="TValueType">The type of the numerical value.</typeparam>
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif 
+#endif
     public abstract partial class NumericalField<TValueType> : ExVisualElement, IInputElement<TValueType>, ISizeableElement, INotifyValueChanging<TValueType>
         where TValueType : struct, IComparable, IComparable<TValueType>, IFormattable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
-        
+
         internal static readonly BindingId formatStringProperty = new BindingId(nameof(formatString));
-        
+
         internal static readonly BindingId unitProperty = new BindingId(nameof(unit));
-        
+
         internal static readonly BindingId invalidProperty = new BindingId(nameof(invalid));
-        
+
         internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
-        
+
         internal static readonly BindingId lowValueProperty = new BindingId(nameof(lowValue));
-        
+
         internal static readonly BindingId highValueProperty = new BindingId(nameof(highValue));
-        
+
         internal static readonly BindingId validateValueProperty = new BindingId(nameof(validateValue));
-        
+
 #endif
-        
+
         /// <summary>
         /// The NumericalField main styling class.
         /// </summary>
@@ -132,7 +132,7 @@ namespace Unity.AppUI.UI
                 var changed = m_FormatString != value;
                 m_FormatString = value;
                 SetValueWithoutNotify(this.value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
@@ -174,11 +174,13 @@ namespace Unity.AppUI.UI
 
             m_InputElement.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
             m_InputElement.RegisterValueChangedCallback(OnInputValueChanged);
+
+            size = Size.M;
         }
 
         void OnInputValueChanged(ChangeEvent<string> evt)
         {
-            
+
             evt.StopPropagation();
             if (ParseStringToValue(evt.newValue, out var newValue))
             {
@@ -189,9 +191,9 @@ namespace Unity.AppUI.UI
 
                 var previousValue = m_Value;
                 m_Value = newValue;
-                
+
                 if (validateValue != null) invalid = !validateValue(newValue);
-                
+
                 if (previousValue.CompareTo(m_Value) == 0)
                     return;
 
@@ -224,7 +226,7 @@ namespace Unity.AppUI.UI
                 var changed = m_UnitElement.text != value;
                 m_UnitElement.text = value;
                 m_UnitElement.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_UnitElement.text));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in unitProperty);
@@ -249,7 +251,7 @@ namespace Unity.AppUI.UI
                 var changed = m_LowValue != value;
                 m_LowValue = value;
                 SetValueWithoutNotify(this.value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in lowValueProperty);
@@ -305,7 +307,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -356,7 +358,7 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(val);
                 SendEvent(evt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
 #endif
@@ -379,7 +381,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(Styles.invalidUssClassName) != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
@@ -402,7 +404,7 @@ namespace Unity.AppUI.UI
                 m_ValidateValue = value;
                 if (m_ValidateValue != null)
                     invalid = !m_ValidateValue(this.value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
@@ -443,7 +445,7 @@ namespace Unity.AppUI.UI
         /// Define the conversion from the <see cref="string"/> value to a <typeparamref name="TValueType"/> value.
         /// </summary>
         /// <param name="strValue">The <see cref="string"/> value to convert.</param>
-        /// /// <param name="val">The <typeparamref name="TValueType"/> value returned.</param>
+        /// <param name="val">The <typeparamref name="TValueType"/> value returned.</param>
         /// <returns>True if the conversion is possible, False otherwise.</returns>
         protected abstract bool ParseStringToValue(string strValue, out TValueType val);
 
@@ -453,7 +455,7 @@ namespace Unity.AppUI.UI
         /// <param name="val">The <typeparamref name="TValueType"/> value to convert.</param>
         /// <returns>The converted value.</returns>
         protected abstract string ParseValueToString(TValueType val);
-        
+
         /// <summary>
         /// Define the conversion from a <typeparamref name="TValueType"/> value to a <see cref="string"/> value.
         /// </summary>
@@ -483,26 +485,26 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Return the smallest value between a and b.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <param name="a"> The first value. </param>
+        /// <param name="b"> The second value. </param>
+        /// <returns> The smallest value. </returns>
         protected abstract TValueType Min(TValueType a, TValueType b);
 
         /// <summary>
         /// Return the biggest value between a and b.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <param name="a"> The first value. </param>
+        /// <param name="b"> The second value. </param>
+        /// <returns> The biggest value. </returns>
         protected abstract TValueType Max(TValueType a, TValueType b);
 
         /// <summary>
         /// Calculate the increment factor based on a base value.
         /// </summary>
-        /// <param name="baseValue"></param>
-        /// <returns></returns>
+        /// <param name="baseValue"> The base value to use to calculate the increment factor. </param>
+        /// <returns> The increment factor. </returns>
         protected abstract float GetIncrementFactor(TValueType baseValue);
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -563,7 +565,7 @@ namespace Unity.AppUI.UI
 
             }
         }
-        
+
 #endif
     }
 }

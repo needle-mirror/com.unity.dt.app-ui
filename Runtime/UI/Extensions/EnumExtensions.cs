@@ -3,15 +3,10 @@ using System;
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Extension methods for enums.
+    /// Methods to extend the functionality of enums.
     /// </summary>
     public static partial class EnumExtensions
     {
-        /// <summary>
-        /// Converts a UnityEngine.UIElements.Align enum value to a string.
-        /// </summary>
-        /// <param name="enumValue"> The enum value to convert. </param>
-        /// <returns> The string representation of the enum value. </returns>
         internal static string ToLowerCase(this UnityEngine.UIElements.Align enumValue)
         {
             return enumValue switch

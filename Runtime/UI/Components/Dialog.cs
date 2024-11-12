@@ -16,15 +16,15 @@ namespace Unity.AppUI.UI
     public abstract partial class BaseDialog : BaseVisualElement, ISizeableElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId titlePropertyKey = new BindingId(nameof(title));
-        
+
         internal static readonly BindingId descriptionPropertyKey = new BindingId(nameof(description));
-        
+
         internal static readonly BindingId sizePropertyKey = new BindingId(nameof(size));
-        
+
 #endif
-        
+
         /// <summary>
         /// The Dialog main styling class.
         /// </summary>
@@ -150,7 +150,7 @@ namespace Unity.AppUI.UI
                 var changed = m_Header.text != value;
                 m_Header.text = value;
                 RefreshHeading();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in titlePropertyKey);
@@ -188,10 +188,10 @@ namespace Unity.AppUI.UI
         {
             get => m_Content.text;
             set
-            { 
+            {
                 var changed = m_Content.text != value;
                 m_Content.text = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in descriptionPropertyKey);
@@ -217,14 +217,14 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizePropertyKey);
 #endif
             }
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace Unity.AppUI.UI
                 element.title = m_Title.GetValueFromBag(bag, cc);
             }
         }
-        
+
 #endif
     }
 
@@ -272,11 +272,11 @@ namespace Unity.AppUI.UI
     public partial class Dialog : BaseDialog, IDismissInvocator
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId dismissablePropertyKey = new BindingId(nameof(dismissable));
-        
+
 #endif
-        
+
         /// <summary>
         /// The Dialog close button styling class.
         /// </summary>
@@ -301,10 +301,10 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// The close button.
+        /// </summary>
         /// <remarks>
         /// The button is only visible if <see cref="dismissable"/> is `True`.
         /// </remarks>
-        /// </summary>
         public Button closeButton { get; }
 
         /// <summary>
@@ -324,7 +324,7 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(dismissableUssClassName) != value;
                 EnableInClassList(dismissableUssClassName, value);
                 RefreshHeading();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in dismissablePropertyKey);

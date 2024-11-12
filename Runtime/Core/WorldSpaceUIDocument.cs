@@ -12,10 +12,10 @@ namespace Unity.AppUI.Core
     {
         /// <summary>
         /// The camera used to raycast against World-Space UI Panels.
+        /// </summary>
         /// <remarks>
         /// You can also use <see cref="customRayFunc"/> property to use a custom Ray computation method.
         /// </remarks>
-        /// </summary>
         [Tooltip("The camera used to raycast against WorldSpace UI Panels.\n" +
             "You can also use WorldSpaceUIDocument.customRayFunc property to use a custom Ray computation method.")]
         public Camera targetCamera;
@@ -30,7 +30,7 @@ namespace Unity.AppUI.Core
         /// A custom method to compute a Ray used as reference to raycast against World-Space UI Panels.
         /// </summary>
         public Func<Ray> customRayFunc;
-        
+
         /// <summary>
         /// The maximum distance used with raycasts against World-Space UI Panels.
         /// </summary>

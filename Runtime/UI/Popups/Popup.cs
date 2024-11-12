@@ -14,7 +14,7 @@ namespace Unity.AppUI.UI
         /// The average duration of a frame in milliseconds. Used to delay position calculations.
         /// </summary>
         protected const int k_NextFrameDurationMs = 16;
-        
+
         /// <summary>
         /// The message id used to show the popup.
         /// </summary>
@@ -72,7 +72,10 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// `True` if the the popup can be dismissed by pressing the escape key or the return button on mobile, `False` otherwise.
+        /// <para>
+        /// <see langword="true"/> if the the popup can be dismissed by pressing the escape key or the return button on mobile,
+        /// <see langword="false"/> otherwise.
+        /// </para>
         /// <para>
         /// The default value is `True`.
         /// </para>
@@ -88,7 +91,7 @@ namespace Unity.AppUI.UI
         /// The parent of the <see cref="view"/> when the popup will be displayed.
         /// </summary>
         public VisualElement targetParent { get; }
-        
+
         /// <summary>
         /// The content of the popup.
         /// </summary>
@@ -135,10 +138,10 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Called when the popup's <see cref="Handler"/> has received a <see cref="k_PopupShow"/> message.
+        /// </summary>
         /// <remarks>
         /// In this method the view should become visible at some point (directly or via an animation).
         /// </remarks>
-        /// </summary>
         protected virtual void ShowView()
         {
             if (view.parent == null)
@@ -166,7 +169,9 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// <para>
         /// Returns the element that will be focused when the view will become visible.
+        /// </para>
         /// <para>
         /// The default value is `null`.
         /// </para>
@@ -206,7 +211,9 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// <para>
         /// Called when the popup has received a <see cref="KeyDownEvent"/>.
+        /// </para>
         /// <para>
         /// By default this method handles the dismiss of the popup via the Escape key or a Return button.
         /// </para>
@@ -217,7 +224,7 @@ namespace Unity.AppUI.UI
             var focusableElement = GetFocusableElement();
             if (keyboardDismissEnabled && focusableElement != null && evt.keyCode == KeyCode.Escape)
             {
-                
+
                 evt.StopPropagation();
                 Dismiss(DismissType.Cancel);
             }
@@ -281,10 +288,10 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Find the parent <see cref="VisualElement"/> where the popup will be added.
+        /// </summary>
         /// <remarks>
         /// This is usually one of the layers from the <see cref="Panel"/> root UI element.
         /// </remarks>
-        /// </summary>
         /// <param name="element">An arbitrary UI element inside the panel.</param>
         /// <returns>The popup container <see cref="VisualElement"/> in the current panel.</returns>
         protected virtual VisualElement FindSuitableParent(VisualElement element)
@@ -359,7 +366,7 @@ namespace Unity.AppUI.UI
         /// Called when the popup has been dismissed.
         /// This method will invoke any handlers attached to the <see cref="dismissed"/> event.
         /// </summary>
-        /// <param name="reason"></param>
+        /// <param name="reason"> The reason for the dismissal.</param>
         protected override void InvokeDismissedEventHandlers(DismissType reason)
         {
             base.InvokeDismissedEventHandlers(reason);

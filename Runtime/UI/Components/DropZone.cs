@@ -18,18 +18,18 @@ namespace Unity.AppUI.UI
         /// The default state of the DropZone.
         /// </summary>
         Default,
-        
+
         /// <summary>
         /// The reject drag state of the DropZone.
         /// </summary>
         RejectDrag,
-        
+
         /// <summary>
         /// The accept drag state of the DropZone.
         /// </summary>
         AcceptDrag
     }
-    
+
     /// <summary>
     /// A drop zone is a container that can be used to drop content into.
     /// </summary>
@@ -45,7 +45,7 @@ namespace Unity.AppUI.UI
         /// <param name="droppable">The droppable object(s) found.</param>
         /// <returns>True if the target accepts the drag, false otherwise.</returns>
         public delegate bool TryGetDroppableFromPathHandler(string path, out object droppable);
-        
+
         /// <summary>
         /// Delegate used to find any droppable object(s) that can be dropped on the target using the current drag and drop objects data.
         /// </summary>
@@ -53,40 +53,40 @@ namespace Unity.AppUI.UI
         /// <param name="droppables">The droppable object(s) found.</param>
         /// <returns>True if the target accepts the drag, false otherwise.</returns>
         public delegate bool TryGetDroppablesFromUnityObjectsHandler(UnityEngine.Object[] objects, out List<object> droppables);
-        
+
         /// <summary>
         /// Delegate used to find any droppable object(s) that can be dropped on the target.
         /// </summary>
         /// <param name="droppables">The droppable object(s) found.</param>
         /// <returns>True if the target accepts the drag, false otherwise.</returns>
         public delegate bool TryGetDroppablesHandler(out List<object> droppables);
-        
+
         /// <summary>
         /// The DropZone main styling class.
         /// </summary>
         public const string ussClassName = "appui-dropzone";
-        
+
         /// <summary>
         /// The DropZone frame styling class.
         /// </summary>
         public const string frameUssClassName = ussClassName + "__frame";
-        
+
         /// <summary>
         /// The DropZone background styling class.
         /// </summary>
         public const string backgroundUssClassName = ussClassName + "__background";
-        
+
         /// <summary>
         /// The DropZone state styling class.
         /// </summary>
         [EnumName("GetDropZoneStateUssClassName", typeof(DropZoneState))]
         public const string stateUssClassName = ussClassName + "--";
-        
+
         /// <summary>
         /// The DropZone visible indicator styling class.
         /// </summary>
         public const string visibleIndicatorUssClassName = ussClassName + "--visible-indicator";
-        
+
         readonly ExVisualElement m_DropZoneFrame;
 
         readonly VisualElement m_Background;
@@ -103,7 +103,9 @@ namespace Unity.AppUI.UI
         public event Action<IEnumerable<object>> dropped;
 
         /// <summary>
+        /// <para>
         /// Event fired when the user starts dragging droppable object(s).
+        /// </para>
         /// <para>
         /// Use this event to perform validate the drag and drop operation via the <see cref="state"/> property.
         /// </para>
@@ -111,7 +113,9 @@ namespace Unity.AppUI.UI
         public event Action dragStarted;
 
         /// <summary>
+        /// <para>
         /// Event fired when the user stops dragging droppable object(s).
+        /// </para>
         /// <para>
         /// Use this event to perform any cleanup after a drag and drop operation.
         /// </para>
@@ -141,8 +145,10 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// <para>
         /// Method invoked when a drag is started to find any droppable object(s) that can be dropped on the target
         /// using the current drag and drop path data.
+        /// </para>
         /// <para>
         /// See <see cref="UnityEditor.DragAndDrop.paths"/> for more information.
         /// </para>
@@ -158,8 +164,10 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// <para>
         /// Method invoked when a drag is started to find any droppable object(s) that can be dropped on the target
         /// using the current drag and drop objects data.
+        /// </para>
         /// <para>
         /// See <see cref="UnityEditor.DragAndDrop.objectReferences"/> for more information.
         /// </para>
@@ -179,8 +187,6 @@ namespace Unity.AppUI.UI
         /// </summary>
         /// <remarks>
         /// This method will be called in both the Unity Editor and Unity Runtime.
-        /// </remarks>
-        /// <remarks>
         /// For Unity Editor specific Drag And Drop system, use <see cref="tryGetDroppableFromPath"/> and <see cref="tryGetDroppablesFromUnityObjects"/>.
         /// </remarks>
         public TryGetDroppablesHandler tryGetDroppables
@@ -202,7 +208,7 @@ namespace Unity.AppUI.UI
                 AddToClassList(GetDropZoneStateUssClassName(m_DropZoneState));
             }
         }
-        
+
         /// <summary>
         /// The visible indicator state of the DropZone.
         /// </summary>
@@ -218,7 +224,7 @@ namespace Unity.AppUI.UI
         public DropZone()
             : this(null)
         {
-            
+
         }
 
         /// <summary>
@@ -230,16 +236,16 @@ namespace Unity.AppUI.UI
             pickingMode = PickingMode.Position;
             focusable = true;
             clickable = new Pressable(onClick);
-            
+
             AddToClassList(ussClassName);
-            
+
             m_Background = new VisualElement { name = backgroundUssClassName, pickingMode = PickingMode.Ignore };
             m_Background.AddToClassList(backgroundUssClassName);
             hierarchy.Add(m_Background);
-            
+
             m_DropZoneFrame = new ExVisualElement
             {
-                name = frameUssClassName, 
+                name = frameUssClassName,
                 pickingMode = PickingMode.Ignore,
                 passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.Borders,
             };
@@ -251,7 +257,7 @@ namespace Unity.AppUI.UI
             m_DropTarget.dragStarted += OnDragStarted;
             m_DropTarget.dragEnded += OnDragEnded;
             this.AddManipulator(m_DropTarget);
-            
+
             state = DropZoneState.Default;
 
             schedule.Execute(m_DropZoneFrame.MarkDirtyRepaint).Every(16L);
@@ -277,32 +283,32 @@ namespace Unity.AppUI.UI
         class DropZoneTarget : DropTarget<object>
         {
             internal TryGetDroppablesHandler tryGetDroppables { get; set; }
-            
+
             internal TryGetDroppableFromPathHandler tryGetDroppableFromPath { get; set; }
-            
+
             internal TryGetDroppablesFromUnityObjectsHandler tryGetDroppablesFromUnityObjects { get; set; }
-            
+
             protected override List<object> GetDroppableObjects()
             {
                 // In GetDroppableObjects, we have to call both the tryGetDroppables and the base method.
                 // This insures that Editor specific logic is also called.
                 if (tryGetDroppables != null && tryGetDroppables.Invoke(out var droppables))
                     return droppables;
-                
+
                 return base.GetDroppableObjects();
             }
 
             protected override bool GetDroppableObjectForPath(string path, out object obj)
             {
-                return tryGetDroppableFromPath != null ? 
-                    tryGetDroppableFromPath.Invoke(path, out obj) : 
+                return tryGetDroppableFromPath != null ?
+                    tryGetDroppableFromPath.Invoke(path, out obj) :
                     base.GetDroppableObjectForPath(path, out obj);
             }
 
             protected override bool GetDroppableObjectsForUnityObjects(Object[] objects, out List<object> objs)
             {
-                return tryGetDroppablesFromUnityObjects != null ? 
-                    tryGetDroppablesFromUnityObjects.Invoke(objects, out objs) : 
+                return tryGetDroppablesFromUnityObjects != null ?
+                    tryGetDroppablesFromUnityObjects.Invoke(objects, out objs) :
                     base.GetDroppableObjectsForUnityObjects(objects, out objs);
             }
         }
@@ -318,7 +324,7 @@ namespace Unity.AppUI.UI
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="DropZone"/>.
         /// </summary>
         public new class UxmlTraits : BaseVisualElement.UxmlTraits { }
-        
+
 #endif
     }
 }

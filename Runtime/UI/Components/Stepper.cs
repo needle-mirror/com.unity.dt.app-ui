@@ -16,13 +16,13 @@ namespace Unity.AppUI.UI
     public partial class Stepper : ExVisualElement, INotifyValueChanged<int>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
 #endif
-        
+
         /// <summary>
         /// The Stepper main styling class.
         /// </summary>
@@ -149,7 +149,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -168,7 +168,7 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// The value of the Stepper. 1 means increment, -1 means decrement.
-        /// <para /> It is not recommended to get or set this value directly.
+        /// It is not recommended to get or set this value directly.
         /// To track the changes of the value, use <see cref="INotifyValueChangedExtensions.RegisterValueChangedCallback{T}"/> instead.
         /// </summary>
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -186,7 +186,7 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
 #endif
@@ -223,7 +223,7 @@ namespace Unity.AppUI.UI
                 if (handled)
                 {
                     evt.StopPropagation();
-                    
+
                 }
             }
         }
@@ -237,7 +237,7 @@ namespace Unity.AppUI.UI
         {
             value = -1;
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -268,10 +268,10 @@ namespace Unity.AppUI.UI
 
                 var el = (Stepper)ve;
                 el.size = m_Size.GetValueFromBag(bag, cc);
-                
+
             }
         }
-        
+
 #endif
     }
 }

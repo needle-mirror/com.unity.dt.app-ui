@@ -18,25 +18,25 @@ namespace Unity.AppUI.UI
     public partial class MenuItem : BaseVisualElement, INotifyValueChanged<bool>, IPressable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId labelProperty = new BindingId(nameof(label));
-        
+
         internal static readonly BindingId shortcutProperty = new BindingId(nameof(shortcut));
-        
+
         internal static readonly BindingId iconProperty = new BindingId(nameof(icon));
-        
+
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
-        
+
         internal static readonly BindingId selectableProperty = new BindingId(nameof(selectable));
-        
+
         internal static readonly BindingId activeProperty = new BindingId(nameof(active));
-        
+
         internal static readonly BindingId subMenuProperty = new BindingId(nameof(subMenu));
-        
+
         internal static readonly BindingId hasSubMenuProperty = new BindingId(nameof(hasSubMenu));
-        
+
 #endif
-        
+
         static readonly Stack<Menu> k_SubMenuStack = new Stack<Menu>();
 
         internal const string checkmarkIconName = "check";
@@ -52,7 +52,7 @@ namespace Unity.AppUI.UI
         /// The MenuItem label styling class.
         /// </summary>
         public const string labelUssClassName = ussClassName + "__label";
-        
+
         /// <summary>
         /// The MenuItem shortcut styling class.
         /// </summary>
@@ -82,7 +82,7 @@ namespace Unity.AppUI.UI
         /// The MenuItem selectable mode styling class.
         /// </summary>
         public const string selectableUssClassname = ussClassName + "--selectable";
-        
+
         /// <summary>
         /// The MenuItem active styling class.
         /// </summary>
@@ -92,7 +92,7 @@ namespace Unity.AppUI.UI
         /// The content container of the MenuItem.
         /// </summary>
         public override VisualElement contentContainer => m_SubMenuContainer;
-        
+
         /// <summary>
         /// The event raised when the item's submenu is opened.
         /// </summary>
@@ -141,7 +141,7 @@ namespace Unity.AppUI.UI
             hierarchy.Add(m_Label);
             hierarchy.Add(m_Shortcut);
             hierarchy.Add(subMenuIcon);
-            
+
             this.AddManipulator(new KeyboardFocusController());
 
             m_SubMenuContainer = new VisualElement { style = { display = DisplayStyle.None } };
@@ -152,7 +152,7 @@ namespace Unity.AppUI.UI
             icon = null;
             label = null;
             subMenu = null;
-            
+
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             RegisterCallback<PointerOverEvent>(OnEntered);
             RegisterCallback<PointerOutEvent>(OnLeft);
@@ -195,7 +195,7 @@ namespace Unity.AppUI.UI
             if (handled)
             {
                 evt.StopPropagation();
-                
+
             }
         }
 
@@ -245,10 +245,10 @@ namespace Unity.AppUI.UI
         void ScheduleOpenSubMenu(int delayMs)
         {
             m_ScheduledItem?.Pause();
-            
+
             if (!enabledInHierarchy || !enabledSelf)
                 return;
-            
+
             m_ScheduledItem = schedule.Execute(OpenSubMenu);
             if (delayMs > 0)
                 m_ScheduledItem.ExecuteLater(delayMs);
@@ -272,7 +272,7 @@ namespace Unity.AppUI.UI
                 var pos = AnchorPopupUtils
                     .ComputePosition(
                         popoverElement,
-                        this, 
+                        this,
                         GetFirstAncestorOfType<Panel>(),
                         new PositionOptions(dir == Dir.Ltr ? PopoverPlacement.EndTop : PopoverPlacement.StartTop,
                             -4,
@@ -344,14 +344,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_Label.text != value;
                 m_Label.text = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The shortcut text value.
         /// </summary>
@@ -393,7 +393,7 @@ namespace Unity.AppUI.UI
                 var changed = m_Icon.iconName != value;
                 m_Icon.iconName = value;
                 m_Icon.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in iconProperty);
@@ -402,9 +402,9 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// The selected state of the item.
-        /// <remarks>You should set the item as <see cref="selectable"/> first to see any result.</remarks>
+        /// <para>The selected state of the item.</para>
         /// </summary>
+        /// <remarks>You should set the item as <see cref="selectable"/> first to see any result.</remarks>
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
@@ -423,7 +423,7 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 if (selectable)
                     SendEvent(evt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
 #endif
@@ -431,7 +431,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// Enable or disable the selectable mode of the item.
+        /// <para>Enable or disable the selectable mode of the item.</para>
         /// <para>
         /// A selectable item is an item with a small checkmark as leading UI element.
         /// </para>
@@ -449,7 +449,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = selectable != value;
                 EnableInClassList(selectableUssClassname, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in selectableProperty);
@@ -473,7 +473,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = active != value;
                 EnableInClassList(activeUssClassname, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in activeProperty);
@@ -482,7 +482,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// Sub Menu linked to this item.
+        /// <para>Sub Menu linked to this item.</para>
         /// <para>
         /// An item with a submenu mode enabled has a small caret as trailing UI element which defines that a sub menu
         /// will appear if you trigger the item's action.
@@ -499,7 +499,7 @@ namespace Unity.AppUI.UI
                 var changed = m_SubMenu != value;
                 m_SubMenu = value;
                 EnableInClassList(subMenuItemUssClassname, m_SubMenu != null);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
@@ -511,7 +511,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        ///
+        /// Weathers or not this item has a submenu.
         /// </summary>
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
@@ -519,7 +519,9 @@ namespace Unity.AppUI.UI
         public bool hasSubMenu => subMenu != null;
 
         /// <summary>
+        /// <para>
         /// Set the selected state of this item.
+        /// </para>
         /// <para>
         /// See <see cref="value"/> and <see cref="selectable"/> properties for more info.
         /// </para>
@@ -535,7 +537,7 @@ namespace Unity.AppUI.UI
         {
             if (selectable)
                 value = !value;
-            
+
             if (subMenu != null)
             {
                 ScheduleOpenSubMenu(0);
@@ -547,7 +549,7 @@ namespace Unity.AppUI.UI
                 SendEvent(evt);
             }
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -581,7 +583,7 @@ namespace Unity.AppUI.UI
                 name = "label",
                 defaultValue = null
             };
-            
+
             readonly UxmlStringAttributeDescription m_Shortcut = new UxmlStringAttributeDescription
             {
                 name = "shortcut",
@@ -620,7 +622,7 @@ namespace Unity.AppUI.UI
 
             }
         }
-        
+
 #endif
     }
 }

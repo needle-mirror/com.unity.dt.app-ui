@@ -100,7 +100,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// Build and return a <see cref="Toast"/> UI element.
+        /// <para> Build and return a <see cref="Toast"/> UI element.</para>
         /// <para>
         /// The method will find the best suitable parent view which will contain the Toast element.
         /// </para>
@@ -109,16 +109,16 @@ namespace Unity.AppUI.UI
         /// <param name="referenceView">An arbitrary <see cref="VisualElement"/> which is currently present in the UI panel.</param>
         /// <param name="text">The raw message or Localization dictionary key for the message to be displayed inside
         /// the <see cref="Toast"/>.</param>
-        /// <param name="duration"></param>
+        /// <param name="duration"> The duration to display the Toast </param>
         /// <returns>The <see cref="Toast"/> instance, if no exception has occured.</returns>
         /// <exception cref="ArgumentException">The provided view is not contained in a valid UI panel.</exception>
         public static Toast Build(VisualElement referenceView, string text, NotificationDuration duration)
         {
             var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
-            
+
             if (panel == null)
                 throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-            
+
             var parentView = panel.notificationContainer;
             var bar = new Toast(parentView, new ToastVisualElement()).SetText(text).SetDuration(duration);
             return bar;
@@ -141,9 +141,9 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        ///
+        /// Set the style of the <see cref="Toast"/>.
         /// </summary>
-        /// <param name="notificationStyle"></param>
+        /// <param name="notificationStyle"> The style to apply.</param>
         /// <returns>The <see cref="Toast"/> to continuously build the element.</returns>
         public Toast SetStyle(NotificationStyle notificationStyle)
         {
@@ -162,14 +162,14 @@ namespace Unity.AppUI.UI
             return this;
         }
     }
-    
+
     /// <summary>
     /// The Toast UI Element.
     /// </summary>
     sealed partial class ToastVisualElement : ExVisualElement
     {
         public const string ussClassName = "appui-toast";
-        
+
         [EnumName("GetNotificationStyleUssClassName", typeof(NotificationStyle))]
         public const string variantUssClassName = ussClassName + "--";
 
@@ -214,8 +214,8 @@ namespace Unity.AppUI.UI
 
             m_Divider = new Divider
             {
-                name = dividerUssClassName, 
-                size = Size.M, spacing = Spacing.L, 
+                name = dividerUssClassName,
+                size = Size.M, spacing = Spacing.L,
                 direction = Direction.Vertical
             };
             m_Divider.AddToClassList(dividerUssClassName);

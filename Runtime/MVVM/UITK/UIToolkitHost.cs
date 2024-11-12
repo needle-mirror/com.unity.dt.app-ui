@@ -5,7 +5,6 @@ namespace Unity.AppUI.MVVM
 {
     /// <summary>
     /// A class used to host an app in a UIDocument.
-    /// <para />
     /// This is a wrapper around a UIDocument that implements <see cref="IUIToolkitHost"/>.
     /// </summary>
     public sealed class UIToolkitHost : IUIToolkitHost
@@ -13,7 +12,7 @@ namespace Unity.AppUI.MVVM
         UIDocument m_Document;
 
         bool m_Disposed;
-        
+
         /// <summary>
         /// Default constructor. Creates a new instance of <see cref="UIToolkitHost"/> that hosts an app in the given UIDocument.
         /// </summary>
@@ -22,10 +21,9 @@ namespace Unity.AppUI.MVVM
         {
             m_Document = uiDocument;
         }
-        
+
         /// <summary>
         /// Called when the app is being hosted.
-        /// <para />
         /// A service provider is provided that can be used to resolve services through the host itself.
         /// </summary>
         /// <param name="app"> The app to host. </param>
@@ -35,7 +33,7 @@ namespace Unity.AppUI.MVVM
             m_Document.rootVisualElement?.Clear();
             m_Document.rootVisualElement?.Add(app.mainPage);
         }
-        
+
         /// <summary>
         /// Tries to find an element of the given type in the visual tree of the app.
         /// </summary>
@@ -50,7 +48,7 @@ namespace Unity.AppUI.MVVM
                 element = null;
                 return false;
             }
-            
+
             element = m_Document.rootVisualElement.Q<T>();
             return element != null;
         }
@@ -62,7 +60,7 @@ namespace Unity.AppUI.MVVM
         {
             if (m_Disposed)
                 return;
-            
+
             m_Document = null;
             m_Disposed = true;
         }

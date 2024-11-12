@@ -24,21 +24,21 @@ namespace Unity.AppUI.UI
         where THandleValueType : struct, IComparable, IEquatable<THandleValueType>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId lowValueProperty = nameof(lowValue);
-        
+
         internal static readonly BindingId highValueProperty = nameof(highValue);
-        
+
         internal static readonly BindingId formatStringProperty = nameof(formatString);
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId invalidProperty = nameof(invalid);
-        
+
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
-        
+
 #endif
-        
+
         /// <summary>
         /// The dragger manipulator used to move the slider.
         /// </summary>
@@ -98,7 +98,7 @@ namespace Unity.AppUI.UI
                 {
                     m_LowValue = value;
                     OnSliderRangeChanged();
-                    
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in lowValueProperty);
 #endif
@@ -121,7 +121,7 @@ namespace Unity.AppUI.UI
                 {
                     m_HighValue = value;
                     OnSliderRangeChanged();
-                    
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in highValueProperty);
 #endif
@@ -143,7 +143,7 @@ namespace Unity.AppUI.UI
                 var changed = m_FormatString != value;
                 m_FormatString = value;
                 SetValueWithoutNotify(this.value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
@@ -178,7 +178,7 @@ namespace Unity.AppUI.UI
                         evt.target = this;
                         SetValueWithoutNotify(newValue);
                         SendEvent(evt);
-                        
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                         NotifyPropertyChanged(in valueProperty);
 #endif
@@ -208,9 +208,9 @@ namespace Unity.AppUI.UI
             {
                 if (invalid == value)
                     return;
-                
+
                 EnableInClassList(Styles.invalidUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in invalidProperty);
 #endif
@@ -231,7 +231,7 @@ namespace Unity.AppUI.UI
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
@@ -246,7 +246,7 @@ namespace Unity.AppUI.UI
         {
             ClampValue();
         }
-        
+
         /// <summary>
         /// Called when the value of the slider has changed via the <see cref="value"/> property.
         /// </summary>
@@ -260,12 +260,12 @@ namespace Unity.AppUI.UI
         {
             SetValueWithoutNotify(value);
         }
-        
+
         /// <summary>
         /// Event callback called when the direction of the layout has changed.
         /// </summary>
-        /// <param name="evt"></param>
-        protected virtual void OnDirectionChanged(ContextChangedEvent<DirContext> evt) 
+        /// <param name="evt"> The direction changed event.</param>
+        protected virtual void OnDirectionChanged(ContextChangedEvent<DirContext> evt)
         {
             m_CurrentDirection = evt.context?.dir ?? Dir.Ltr;
             SetValueWithoutNotify(value);
@@ -278,7 +278,7 @@ namespace Unity.AppUI.UI
         protected virtual void OnTrackUp(Draggable dragger)
         {
             Blur();
-            
+
             if (value.Equals(m_PreviousValue))
                 return;
 
@@ -338,7 +338,7 @@ namespace Unity.AppUI.UI
         {
             if (sliderLength < Mathf.Epsilon)
                 return default;
-            
+
             var finalPos = m_CurrentDirection == Dir.Ltr ? dragElementPos : sliderLength - dragElementPos;
             var normalizedDragElementPosition = Mathf.Max(0f, Mathf.Min(finalPos, sliderLength)) / sliderLength;
             return SliderLerpUnclamped(lowValue, highValue, normalizedDragElementPosition);
@@ -346,10 +346,10 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Called when the track has received a click event.
+        /// </summary>
         /// <remarks>
         /// Always check if the mouse has moved using <see cref="Draggable.hasMoved"/>.
         /// </remarks>
-        /// </summary>
         protected virtual void OnTrackClicked()
         {
             if (!m_DraggerManipulator.hasMoved)
@@ -361,12 +361,12 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Return the clamped value using current <see cref="lowValue"/> and <see cref="highValue"/> values.
+        /// </summary>
         /// <remarks>
         /// The method also checks if low and high values are inverted.
         /// </remarks>
-        /// </summary>
         /// <param name="newValue">The value to clamp.</param>
-        /// <returns></returns>
+        /// <returns> The clamped value.</returns>
         protected virtual TValueType GetClampedValue(TValueType newValue)
         {
             THandleValueType lowest = lowValue, highest = highValue;
@@ -399,17 +399,17 @@ namespace Unity.AppUI.UI
         protected abstract TValueType Clamp(TValueType v, THandleValueType lowBound, THandleValueType highBound);
 
         /// <summary>
-        /// Method to implement to resolve a <typeparamref name="TValueType"/> value into a <see cref="string"/> value.
+        /// <para>Method to implement to resolve a <typeparamref name="TValueType"/> value into a <see cref="string"/> value.</para>
         /// <para>You can use <see cref="object.ToString"/> for floating point value types for example.</para>
         /// <para>You can also round the value if you want a specific number of decimals.</para>
         /// </summary>
         /// <param name="val">The <typeparamref name="TValueType"/> value to convert.</param>
-        /// <returns></returns>
+        /// <returns> The value in string format. </returns>
         protected virtual string ParseValueToString(TValueType val)
         {
             return val.ToString();
         }
-        
+
         /// <summary>
         /// Method to implement to resolve a <typeparamref name="TValueType"/> value into a <see cref="string"/> value.
         /// </summary>
@@ -423,21 +423,21 @@ namespace Unity.AppUI.UI
         {
             return val.ToString();
         }
-        
+
         /// <summary>
-        /// Method to implement to resolve a <typeparamref name="TValueType"/> value into a <see cref="string"/> value.
+        /// <para>Method to implement to resolve a <typeparamref name="TValueType"/> value into a <see cref="string"/> value.</para>
         /// <para>You can use <see cref="object.ToString"/> for floating point value types for example.</para>
         /// <para>You can also round the value if you want a specific number of decimals.</para>
         /// </summary>
         /// <param name="val">The <typeparamref name="TValueType"/> value to convert.</param>
-        /// <returns></returns>
+        /// <returns> The handle value in string format. </returns>
         protected virtual string ParseHandleValueToString(THandleValueType val)
         {
             return val.ToString();
         }
 
         /// <summary>
-        /// Method to implement to resolve a <see cref="string"/> value into a <typeparamref name="TValueType"/> value.
+        /// <para>Method to implement to resolve a <see cref="string"/> value into a <typeparamref name="TValueType"/> value.</para>
         /// <para>You can use <see cref="float.TryParse(string, out float)"/> for floating point value types for example.</para>
         /// </summary>
         /// <param name="strValue">The <see cref="string"/> value to convert.</param>
@@ -446,24 +446,26 @@ namespace Unity.AppUI.UI
         protected abstract bool ParseStringToValue(string strValue, out TValueType value);
 
         /// <summary>
+        /// <para>
         /// Method to implement which returns a value based on the linear interpolation of a given interpolant between
         /// a specific range.
+        /// </para>
         /// <para>Usually you can use directly <see cref="Mathf.LerpUnclamped"/> for floating point value types.</para>
         /// </summary>
         /// <param name="a">The lowest value in the range.</param>
         /// <param name="b">The highest value in the range.</param>
         /// <param name="interpolant">The normalized value to process.</param>
-        /// <returns></returns>
+        /// <returns> The new value. </returns>
         protected abstract TValueType SliderLerpUnclamped(THandleValueType a, THandleValueType b, float interpolant);
 
         /// <summary>
-        /// Method to implement which returns the normalized value of a given value in a specific range.
+        /// <para>Method to implement which returns the normalized value of a given value in a specific range.</para>
         /// <para>Usually you can use directly an <see cref="Mathf.InverseLerp"/> for floating point value types.</para>
         /// </summary>
         /// <param name="currentValue">The value to normalize.</param>
         /// <param name="lowerValue">The lowest value in the range.</param>
         /// <param name="higherValue">The highest value in the range.</param>
-        /// <returns></returns>
+        /// <returns> The new value. </returns>
         protected abstract float SliderNormalizeValue(THandleValueType currentValue, THandleValueType lowerValue, THandleValueType higherValue);
 
         /// <summary>
@@ -479,14 +481,14 @@ namespace Unity.AppUI.UI
         /// <param name="val"> The value to increment.</param>
         /// <returns> The incremented value.</returns>
         protected abstract THandleValueType Increment(THandleValueType val);
-        
+
 #if ENABLE_UXML_TRAITS
-        
+
         /// <summary>
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="BaseSlider{TValueType,THandleValueType}"/>.
         /// </summary>
         public new class UxmlTraits : ExVisualElement.UxmlTraits {}
-        
+
 #endif
 
     }

@@ -16,31 +16,31 @@ namespace Unity.AppUI.UI
     public partial class TextField : ExVisualElement, IInputElement<string>, INotifyValueChanging<string>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId isReadOnlyProperty = nameof(isReadOnly);
-        
+
         internal static readonly BindingId maxLengthProperty = nameof(maxLength);
-        
+
         internal static readonly BindingId placeholderProperty = nameof(placeholder);
-        
+
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
-        
+
         internal static readonly BindingId invalidProperty = nameof(invalid);
-        
+
         internal static readonly BindingId isPasswordProperty = nameof(isPassword);
-        
+
         internal static readonly BindingId maskCharProperty = nameof(maskChar);
-        
+
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
         internal static readonly BindingId leadingIconNameProperty = nameof(leadingIconName);
-        
+
         internal static readonly BindingId trailingIconNameProperty = nameof(trailingIconName);
-        
+
 #endif
-        
+
         /// <summary>
         /// The TextField main styling class.
         /// </summary>
@@ -86,15 +86,15 @@ namespace Unity.AppUI.UI
         /// The TextField trailing icon styling class.
         /// </summary>
         public const string trailingIconUssClassName = ussClassName + "__trailingicon";
-        
+
         const bool k_IsPasswordDefault = false;
-        
+
         const bool k_IsReadOnlyDefault = false;
-        
+
         const char k_MaskCharDefault = '*';
-        
+
         const int k_MaxLengthDefault = -1;
-        
+
         readonly UnityEngine.UIElements.TextField m_InputField;
 
         readonly VisualElement m_LeadingContainer;
@@ -108,7 +108,7 @@ namespace Unity.AppUI.UI
         string m_Value;
 
         string m_PreviousValue;
-        
+
         VisualElement m_LeadingElement;
 
         VisualElement m_TrailingElement;
@@ -123,10 +123,10 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Construct a TextField with a predefined text value.
+        /// </summary>
         /// <remarks>
         /// No event will be triggered when setting the text value during construction.
         /// </remarks>
-        /// </summary>
         /// <param name="value">A default text value.</param>
         public TextField(string value)
         {
@@ -188,13 +188,13 @@ namespace Unity.AppUI.UI
         void OnInputValueChanged(ChangeEvent<string> e)
         {
             e.StopPropagation();
-            
+
             using var evt = ChangingEvent<string>.GetPooled();
             evt.target = this;
             evt.previousValue = m_Value;
             m_Value = e.newValue;
             evt.newValue = m_Value;
-            
+
             if (validateValue != null) invalid = !validateValue(m_Value);
             RefreshUI();
             SendEvent(evt);
@@ -268,14 +268,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_InputField.isPasswordField != value;
                 m_InputField.isPasswordField = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in isPasswordProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// Whether the TextField is read-only.
         /// </summary>
@@ -292,14 +292,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_InputField.isReadOnly != value;
                 m_InputField.isReadOnly = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in isReadOnlyProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The TextField mask character.
         /// </summary>
@@ -316,14 +316,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_InputField.maskChar != value;
                 m_InputField.maskChar = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in maskCharProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The TextField max length.
         /// </summary>
@@ -340,7 +340,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_InputField.maxLength != value;
                 m_InputField.maxLength = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in maxLengthProperty);
@@ -364,7 +364,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_Placeholder.text != value;
                 m_Placeholder.text = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in placeholderProperty);
@@ -392,7 +392,7 @@ namespace Unity.AppUI.UI
                 var changed = icon.iconName != value;
                 icon.iconName = value;
                 m_TrailingContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(icon.iconName));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in trailingIconNameProperty);
@@ -420,7 +420,7 @@ namespace Unity.AppUI.UI
                 var changed = icon.iconName != value;
                 icon.iconName = value;
                 m_LeadingContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(icon.iconName));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in leadingIconNameProperty);
@@ -478,7 +478,7 @@ namespace Unity.AppUI.UI
                         };
                         break;
                 }
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -500,7 +500,7 @@ namespace Unity.AppUI.UI
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
@@ -524,7 +524,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(Styles.invalidUssClassName) != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
@@ -569,7 +569,7 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
 #endif
@@ -605,7 +605,7 @@ namespace Unity.AppUI.UI
         {
             m_Placeholder.EnableInClassList(Styles.hiddenUssClassName, !string.IsNullOrEmpty(m_Value));
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -647,25 +647,25 @@ namespace Unity.AppUI.UI
                 name = "value",
                 defaultValue = null
             };
-            
+
             readonly UxmlBoolAttributeDescription m_IsPassword = new UxmlBoolAttributeDescription
             {
                 name = "is-password",
                 defaultValue = k_IsPasswordDefault
             };
-            
+
             readonly UxmlBoolAttributeDescription m_IsReadOnly = new UxmlBoolAttributeDescription
             {
                 name = "is-read-only",
                 defaultValue = k_IsReadOnlyDefault
             };
-            
+
             readonly UxmlStringAttributeDescription m_MaskChar = new UxmlStringAttributeDescription
             {
                 name = "mask-char",
                 defaultValue = k_MaskCharDefault.ToString()
             };
-            
+
             readonly UxmlIntAttributeDescription m_MaxLength = new UxmlIntAttributeDescription
             {
                 name = "max-length",
@@ -687,43 +687,43 @@ namespace Unity.AppUI.UI
                 var size = Size.M;
                 if (m_Size.TryGetValueFromBag(bag, cc, ref size))
                     el.size = size;
-                
+
                 var placeholder = string.Empty;
                 if (m_Placeholder.TryGetValueFromBag(bag, cc, ref placeholder))
                     el.placeholder = placeholder;
-                
+
                 var value = string.Empty;
                 if (m_Value.TryGetValueFromBag(bag, cc, ref value))
                     el.value = value;
-                
+
                 var leadingIconName = string.Empty;
                 if (m_LeadingIconName.TryGetValueFromBag(bag, cc, ref leadingIconName))
                     el.leadingIconName = leadingIconName;
-                
+
                 var trailingIconName = string.Empty;
                 if (m_TrailingIconName.TryGetValueFromBag(bag, cc, ref trailingIconName))
                     el.trailingIconName = trailingIconName;
-                
+
                 var isPassword = k_IsPasswordDefault;
                 if (m_IsPassword.TryGetValueFromBag(bag, cc, ref isPassword))
                     el.isPassword = isPassword;
-                
+
                 var isReadOnly = k_IsReadOnlyDefault;
                 if (m_IsReadOnly.TryGetValueFromBag(bag, cc, ref isReadOnly))
                     el.isReadOnly = isReadOnly;
-                
+
                 var maskChar = k_MaskCharDefault.ToString();
                 if (m_MaskChar.TryGetValueFromBag(bag, cc, ref maskChar))
                     el.maskChar = string.IsNullOrEmpty(maskChar) ? k_MaskCharDefault : maskChar[0];
-                
+
                 var maxLength = k_MaxLengthDefault;
                 if (m_MaxLength.TryGetValueFromBag(bag, cc, ref maxLength))
                     el.maxLength = maxLength;
-                
-                
+
+
             }
         }
-        
+
 #endif
     }
 }
