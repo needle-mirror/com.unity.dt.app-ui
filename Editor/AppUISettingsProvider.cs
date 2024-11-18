@@ -99,6 +99,16 @@ namespace Unity.AppUI.Editor
 
                 EditorGUILayout.Space();
 
+                EditorGUILayout.LabelField("Common", EditorStyles.boldLabel);
+
+                EditorGUI.indentLevel++;
+
+                EditorGUILayout.PropertyField(m_IncludeShadersInPlayerBuild, m_IncludeShadersInPlayerBuildContent);
+
+                EditorGUI.indentLevel--;
+
+                EditorGUILayout.Space();
+
                 EditorGUILayout.LabelField("Android", EditorStyles.boldLabel);
 
                 EditorGUI.indentLevel++;
@@ -249,6 +259,9 @@ namespace Unity.AppUI.Editor
 
             m_EnableMacOSGestureRecognition = m_SettingsObject.FindProperty("m_EnableMacOSGestureRecognition");
             m_EnableMacOSGestureRecognitionContent = new GUIContent("Enable Gesture Recognition", "");
+
+            m_IncludeShadersInPlayerBuild = m_SettingsObject.FindProperty("m_IncludeShadersInPlayerBuild");
+            m_IncludeShadersInPlayerBuildContent = new GUIContent("Include Shaders in Player Build", "");
         }
 
         void Apply()
@@ -290,6 +303,7 @@ namespace Unity.AppUI.Editor
         [NonSerialized] SerializedProperty m_EditorUpdateFrequency;
         [NonSerialized] SerializedProperty m_AutoOverrideAndroidManifest;
         [NonSerialized] SerializedProperty m_EnableMacOSGestureRecognition;
+        [NonSerialized] SerializedProperty m_IncludeShadersInPlayerBuild;
 
         [NonSerialized] List<string> m_AvailableInputSettingsAssets;
         [NonSerialized] GUIContent[] m_AvailableSettingsAssetsOptions;
@@ -302,6 +316,7 @@ namespace Unity.AppUI.Editor
         GUIContent m_EditorUpdateFrequencyContent;
         GUIContent m_AutoOverrideAndroidManifestContent;
         GUIContent m_EnableMacOSGestureRecognitionContent;
+        GUIContent m_IncludeShadersInPlayerBuildContent;
 
         static AppUISettingsProvider s_Instance;
 

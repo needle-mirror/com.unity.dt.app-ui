@@ -1,4 +1,9 @@
 /* AppBar */
+:root {
+    --appui-appbar-height-default: var(--appui-sizing-700);
+    --appui-appbar-height-compact: var(--appui-sizing-500);
+}
+
 .appui-appbar {
     display: flex;
     flex-direction: column;
@@ -15,11 +20,11 @@
     background-color: var(--appui-backgrounds-100);
     position: relative;
     padding: 0 var(--appui-spacing-100);
-    height: var(--appui-sizing-700);
+    height: var(--appui-appbar-height-default);
 }
 
 .appui-appbar--compact > .appui-appbar__bar {
-    height: var(--appui-sizing-500);
+    height: var(--appui-appbar-height-compact);
 }
 
 .appui-appbar__flexible-space {

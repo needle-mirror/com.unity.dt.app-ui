@@ -45,6 +45,7 @@
 @import "./Components/Menu.uss";
 @import "./Components/MonthPicker.uss";
 @import "./Components/Navigation.uss";
+@import "./Components/NavigationRail.uss";
 @import "./Components/PageIndicator.uss";
 @import "./Components/PageView.uss";
 @import "./Components/Picker.uss";

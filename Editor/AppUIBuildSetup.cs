@@ -7,6 +7,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using Unity.AppUI.Core;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Unity.AppUI.Editor
 {
@@ -33,6 +34,9 @@ namespace Unity.AppUI.Editor
             }
 
             EnsureAppUISettingsArePreloaded();
+
+            if (Core.AppUI.settings.includeShadersInPlayerBuild)
+                EnsureShadersAreEmbedded();
 
             if (report.summary.platform == BuildTarget.Android && Core.AppUI.settings.autoOverrideAndroidManifest)
                 BuildAndroidManifest();
@@ -88,21 +92,53 @@ namespace Unity.AppUI.Editor
             var manifestNode = (XmlElement)doc.SelectSingleNode("/manifest");
             var activity = (XmlElement)doc.SelectSingleNode("/manifest/application/activity");
 
+            var isGameActivity =
 #if UNITY_2023_2_OR_NEWER
-            var activityName = PlayerSettings.Android.applicationEntry.HasFlag(AndroidApplicationEntry.GameActivity) ?
-                "com.unity3d.player.appui.AppUIGameActivity" : "com.unity3d.player.appui.AppUIActivity";
-            activity!.SetAttribute("name", androidNamespace, activityName);
+                PlayerSettings.Android.applicationEntry.HasFlag(AndroidApplicationEntry.GameActivity)
 #else
-            activity!.SetAttribute("name", androidNamespace, "com.unity3d.player.appui.AppUIActivity");
+                false
 #endif
+            ;
+
+            // ReSharper disable ConditionIsAlwaysTrueOrFalse
+
+            var activityName = isGameActivity ? "com.unity3d.player.appui.AppUIGameActivity" : "com.unity3d.player.appui.AppUIActivity";
+            var themeName = isGameActivity ? "@style/BaseUnityGameActivityTheme" : "@style/UnityThemeSelector";
+
+            activity!.SetAttribute("name", androidNamespace, activityName);
+            activity!.SetAttribute("theme", androidNamespace, themeName);
+
+            var libName = doc.SelectSingleNode("/manifest/application/activity/meta-data[@android:name='android.app.lib_name']", nsManager) as XmlElement;
+
+            if (isGameActivity)
+            {
+                if (libName == null)
+                {
+                    libName = doc.CreateElement("meta-data");
+                    libName.SetAttribute("name", androidNamespace, "android.app.lib_name");
+                    libName.SetAttribute("value", androidNamespace, "game");
+                    activity.AppendChild(libName);
+                }
+                else
+                {
+                    libName.SetAttribute("value", androidNamespace, "game");
+                }
+            }
+            else if (libName != null)
+            {
+                activity.RemoveChild(libName);
+            }
+
+            // ReSharper restore ConditionIsAlwaysTrueOrFalse
 
             var vibratePermission = doc.SelectSingleNode("/manifest/uses-permission[@android:name='android.permission.VIBRATE']", nsManager) as XmlElement;
             if (vibratePermission == null)
             {
                 vibratePermission = doc.CreateElement("uses-permission");
                 vibratePermission.SetAttribute("name", androidNamespace, "android.permission.VIBRATE");
-                manifestNode.AppendChild(vibratePermission);
+                manifestNode!.AppendChild(vibratePermission);
             }
+
             doc.Save(manifest);
         }
 
@@ -115,6 +151,37 @@ namespace Unity.AppUI.Editor
             // Revert back to original state by removing all input settings from preloaded assets.
             var preloadedAssets = PlayerSettings.GetPreloadedAssets().ToList();
             PlayerSettings.SetPreloadedAssets(preloadedAssets.Where(x => x is not AppUISettings).ToArray());
+
+            RemoveAnyEmbeddedShaders();
+        }
+
+        static void EnsureShadersAreEmbedded()
+        {
+            var graphicsSettingsObj = AssetDatabase.LoadAssetAtPath<GraphicsSettings>("ProjectSettings/GraphicsSettings.asset");
+            var serializedObject = new SerializedObject(graphicsSettingsObj);
+            var preloadedShadersProperty = serializedObject.FindProperty("m_PreloadedShaders");
+            var collection = AssetDatabase.LoadAssetAtPath<ShaderVariantCollection>("Packages/com.unity.dt.app-ui/PackageResources/Shaders/App UI Shaders.shadervariants");
+
+            if (Utils.AddItemInArray(preloadedShadersProperty, collection))
+            {
+                serializedObject.ApplyModifiedProperties();
+                AssetDatabase.SaveAssets();
+            }
+        }
+
+        static void RemoveAnyEmbeddedShaders()
+        {
+            var graphicsSettingsObj = AssetDatabase.LoadAssetAtPath<GraphicsSettings>("ProjectSettings/GraphicsSettings.asset");
+            var serializedObject = new SerializedObject(graphicsSettingsObj);
+            var preloadedShadersProperty = serializedObject.FindProperty("m_PreloadedShaders");
+            var collection = AssetDatabase.LoadAssetAtPath<ShaderVariantCollection>("Packages/com.unity.dt.app-ui/PackageResources/Shaders/App UI Shaders.shadervariants");
+            var collectionIndex = Utils.IndexOf(preloadedShadersProperty, collection);
+            if (collectionIndex != -1)
+            {
+                preloadedShadersProperty.DeleteArrayElementAtIndex(collectionIndex);
+                serializedObject.ApplyModifiedProperties();
+                AssetDatabase.SaveAssets();
+            }
         }
     }
 }

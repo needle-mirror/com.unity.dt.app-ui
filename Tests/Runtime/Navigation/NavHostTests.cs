@@ -38,6 +38,14 @@ namespace Unity.AppUI.Tests.Navigation
 
                 }
             }
+
+            public void SetupNavigationRail(NavigationRail navigationRail, NavDestination destination, NavController navController)
+            {
+                if (destination.showNavigationRail)
+                {
+
+                }
+            }
         }
 
         UIDocument m_Document;

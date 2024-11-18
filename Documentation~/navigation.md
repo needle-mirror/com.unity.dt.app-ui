@@ -106,6 +106,18 @@ class MyVisualController : INavVisualController
 
         // etc ...
     }
+    public void SetupNavigationRail(NavigationRail navigationRail, NavDestination destination, NavController navController)
+    {
+        navigationRail.anchor = NavigationRailAnchor.End;
+        navigationRail.labelType = LabelType.Selected;
+        navigationRail.groupAlignment = GroupAlignment.Center;
+
+        var homeButton = new NavigationRailItem { icon = "info", label = "Home", selected = destination.name == Destinations.home };
+        homeButton.clickable.clicked += () => navController.Navigate(Actions.navigateToHome);
+        navigationRail.mainContainer.Add(homeButton);
+
+        // etc ...
+    }
 }
 ```
 
@@ -119,6 +131,7 @@ navHost.visualController = new MyVisualController();
 ### Handling Navigation Visual Components Per Navigation Screen
 
 You also have the possibility to implement
+[SetupNavigationRail](xref:Unity.AppUI.Navigation.NavigationScreen.SetupNavigationRail(Unity.AppUI.UI.NavigationRail)),
 [SetupAppBar](xref:Unity.AppUI.Navigation.NavigationScreen.SetupAppBar(Unity.AppUI.UI.AppBar)),
 [SetupBottomNavBar](xref:Unity.AppUI.Navigation.NavigationScreen.SetupBottomNavBar(Unity.AppUI.UI.BottomNavBar)) and
 [SetupDrawer](xref:Unity.AppUI.Navigation.NavigationScreen.SetupDrawer(Unity.AppUI.UI.Drawer))
@@ -146,22 +159,43 @@ of the screen. It can be used to display a button to display the [Drawer](#drawe
 
 You can also add a [actions](xref:Unity.AppUI.UI.ActionButton) to the AppBar component to display a button on the right side of the AppBar.
 
-When navigating to a page, you can set the [title](xref:Unity.AppUI.UI.AppBar.title) property of the AppBar component to display the title of the page.
-If the navigation back stack is not empty, the AppBar component will display a back button that will navigate to the previous page.
+When navigating to a page, you can set the [title](xref:Unity.AppUI.UI.AppBar.title) property of the `AppBar` component to display the title of the page.
+If the navigation back stack is not empty, the `AppBar` component will display a back button that will navigate to the previous page.
 
 ### Drawer Component
 
 The [Drawer](xref:Unity.AppUI.UI.Drawer) component is a navigation component located on the left or right side of the screen.
 It can be used to display a list of links to other pages in your application, or to display a list of links to other applications.
 
-The Drawer component can be collapsed or expanded. When collapsed, the AppBar component will display a button to expand the Drawer component.
-The Drawer component can be expanded by clicking on the button displayed by the AppBar component, or by dragging the edge of the screen.
+The `Drawer` component can be collapsed or expanded. When collapsed, the `AppBar` component will display a button to expand the `Drawer` component.
+The `Drawer` component can be expanded by clicking on the button displayed by the `AppBar`s component, or by dragging the edge of the screen.
 
 ### BottomNavBar Component
 
 The [BottomNavBar](xref:Unity.AppUI.UI.BottomNavBar) component is a navigation component located at the bottom of the screen.
 
-The BottomNavBar component can be used to display a list of links to other pages in your application, or to display a list of links to other applications.
+The `BottomNavBar` component can be used to display a list of links to other pages in your application, or to display a list of links to other applications.
+
+### NavigationRail Component
+
+The [NavigationRail](xref:Unity.AppUI.UI.NavigationRail) component is a navigation component located on the left or right side of the screen.
+You can choose which side of the screen the `NavigationRail` component is displayed by setting the [anchor](xref:Unity.AppUI.UI.NavigationRail.anchor) property.
+
+The `NavigationRail` component can be used to display items similar to the BottomNavBar component, but in a vertical layout.
+
+It is composed of three parts:
+- The [leading container](xref:Unity.AppUI.UI.NavigationRail.leadingContainer).
+- The [main container](xref:Unity.AppUI.UI.NavigationRail.mainContainer), which you can align to the start, center or end of the vertical layout.
+- The [trailing container](xref:Unity.AppUI.UI.NavigationRail.trailingContainer).
+
+These containers usually contain [NavigationRailItem](xref:Unity.AppUI.UI.NavigationRailItem) interactable components,
+where you can specify an icon and a label to display.
+
+You can customize the way labels are displayed in the main container by setting the [labelType](xref:Unity.AppUI.UI.NavigationRail.labelType) property.
+
+> [!NOTE]
+> When using a `NavigationRail` component, we recommend to not use any other navigation components like the `Drawer` or the
+> `BottomNavBar` in order to avoid redundancy.
 
 ## Navigation Graph Editor
 

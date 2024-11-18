@@ -287,6 +287,13 @@ namespace Unity.AppUI.UI
             contentView?.RegisterCallback(m_OnContentGeometryChangedAction);
         }
 
+        /// <inheritdoc />
+        protected override void PrepareAnimateViewIn()
+        {
+            base.PrepareAnimateViewIn();
+            RefreshPosition();
+        }
+
         /// <summary>
         /// Start the animation for this popup.
         /// </summary>
@@ -356,6 +363,9 @@ namespace Unity.AppUI.UI
 
         void OnContentGeometryChanged(GeometryChangedEvent evt)
         {
+            if (!ShouldRefreshPosition())
+                return;
+
             if (!Mathf.Approximately(evt.newRect.width, evt.oldRect.width) || !Mathf.Approximately(evt.newRect.height, evt.oldRect.height))
                 RefreshPosition();
         }
@@ -368,6 +378,9 @@ namespace Unity.AppUI.UI
                 return;
             }
 
+            if (!ShouldRefreshPosition())
+                return;
+
             if (m_AnchorBounds != m_Anchor.worldBound)
             {
                 m_AnchorBounds = m_Anchor.worldBound;
@@ -378,6 +391,16 @@ namespace Unity.AppUI.UI
                 m_ContentBounds = contentView.worldBound;
                 RefreshPosition();
             }
+        }
+
+        /// <summary>
+        /// Method to determine if the position of the popup should be refreshed every time the anchor or the popup's content
+        /// geometry changes.
+        /// </summary>
+        /// <returns> `True` if the position should be refreshed, `False` otherwise.</returns>
+        protected virtual bool ShouldRefreshPosition()
+        {
+            return true;
         }
 
         /// <summary>

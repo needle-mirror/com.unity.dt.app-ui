@@ -115,6 +115,16 @@ namespace Unity.AppUI.UI
         public VisualElement contentView { get; }
 
         /// <summary>
+        /// The root view of the popup. It can be the container view itself or one of its ancestors.
+        /// </summary>
+        /// <remarks>
+        /// We do not use the panel.visualTree element as root view directly because this element persists in between tabbed
+        /// windows and can be shared between multiple panels. This would end up with a leak of the popup element.
+        /// </remarks>
+        /// <seealso cref="VisualElementExtensions.GetExclusiveRootElement"/>
+        public VisualElement rootView => containerView?.GetExclusiveRootElement();
+
+        /// <summary>
         /// Dismiss the <see cref="Popup"/>.
         /// </summary>
         public virtual void Dismiss()
@@ -353,7 +363,7 @@ namespace Unity.AppUI.UI
         /// </remarks>
         protected virtual VisualElement FindSuitableParent(VisualElement element)
         {
-            return Panel.FindPopupLayer(element) ?? element?.panel?.visualTree;
+            return Panel.FindPopupLayer(element) ?? element?.GetExclusiveRootElement();
         }
     }
 

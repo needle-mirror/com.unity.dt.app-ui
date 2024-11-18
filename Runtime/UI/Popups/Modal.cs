@@ -155,13 +155,13 @@ namespace Unity.AppUI.UI
             if (outsideClickDismissEnabled)
                 global::Unity.AppUI.Core.AppUI.RegisterPopup(containerView.panel, this);
             base.InvokeShownEventHandlers();
-            containerView?.panel?.visualTree?.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            rootView?.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
         }
 
         /// <inheritdoc cref="Popup.HideView"/>
         protected override void HideView(DismissType reason)
         {
-            containerView.panel?.visualTree?.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            rootView?.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
             global::Unity.AppUI.Core.AppUI.UnregisterPopup(containerView.panel, this);
             base.HideView(reason);
         }

@@ -89,3 +89,13 @@ Here are the available settings:
   > This setting only affects [Android](https://docs.unity3d.com/Manual/android-introducing.html) development.
   >
   > On others platforms there is no need to override a manifest file.
+
+- #### Include App UI Shaders In Player Build
+
+  This setting allows you to include the App UI shaders in the player build.
+  By default, this setting is enabled.
+  If you are not using the App UI shaders, you can disable this setting to reduce the build size.
+
+  > [!NOTE]
+  > The App UI shaders are used to render the UI elements.
+  > If you are using the App UI package, you will need to enable this setting.

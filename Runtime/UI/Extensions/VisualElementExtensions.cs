@@ -99,6 +99,34 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// Retrieve the root element of a <see cref="VisualElement"/> in the current visual tree that is exclusive to this tree.
+        /// In Runtime panel context, this is the root of the panel's visual tree directly.
+        /// In Editor context, tabbed Editor windows share the same root container, so this method will return the child
+        /// of the root container that is exclusive to this tree and will exclude any <see cref="IMGUIContainer"/>.
+        /// </summary>
+        /// <param name="element"> The <see cref="VisualElement"/> object.</param>
+        /// <returns> The root element of the visual tree.</returns>
+        public static VisualElement GetExclusiveRootElement(this VisualElement element)
+        {
+            var panel = element?.panel;
+            if (panel == null)
+                return null;
+
+            if (panel.contextType == ContextType.Player)
+                return panel.visualTree;
+
+            var root = element.panel.visualTree;
+            for (var i = 0; i < root.childCount; i++)
+            {
+                var child = root[i];
+                if (child is not IMGUIContainer)
+                    return child;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Get the preferred placement for a <see cref="VisualElement"/>'s <see cref="Tooltip"/>.
         /// </summary>
         /// <param name="element">The <see cref="VisualElement"/> which contains a tooltip.</param>

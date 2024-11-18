@@ -14,6 +14,7 @@ namespace Unity.AppUI.UI
     /// </summary>
     public class DropZoneController : Manipulator
     {
+#pragma warning disable 67
         /// <summary>
         /// Method called to determine if the target can accept the drag.
         /// </summary>
@@ -34,6 +35,7 @@ namespace Unity.AppUI.UI
         /// This event is fired only if the target is currently accepting the drag operation.
         /// </remarks>
         public event Action<IEnumerable<object>> dropped;
+#pragma warning restore 67
 
         DropZone dropZone => target as DropZone;
 

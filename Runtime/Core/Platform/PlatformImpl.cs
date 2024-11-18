@@ -321,6 +321,12 @@ namespace Unity.AppUI.Core
 
         public virtual Color GetSystemColor(SystemColorType colorType) => Color.clear;
 
+        public virtual bool HasPasteboardData(PasteboardType type) => false;
+
+        public virtual byte[] GetPasteboardData(PasteboardType type) => Array.Empty<byte>();
+
+        public virtual void SetPasteboardData(PasteboardType type, byte[] data) { }
+
         public virtual int layoutDirection => m_LastLayoutDirection;
 
         protected void InvokeLayoutDirectionChanged(int layoutDirection)

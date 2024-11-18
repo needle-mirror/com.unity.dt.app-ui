@@ -174,6 +174,8 @@ namespace Unity.AppUI.UI
 
             m_InputElement.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
             m_InputElement.RegisterValueChangedCallback(OnInputValueChanged);
+
+            size = Size.M;
         }
 
         void OnInputValueChanged(ChangeEvent<string> evt)

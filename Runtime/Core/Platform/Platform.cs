@@ -34,6 +34,8 @@ namespace Unity.AppUI.Core
 
 #if UNITY_EDITOR_OSX
                 s_Impl = new OSXPlatformImpl();
+#elif UNITY_EDITOR_LINUX
+                s_Impl = new LinuxPlatformImpl();
 #elif UNITY_EDITOR_WIN
                 s_Impl = new WindowsPlatformImpl();
 #else
@@ -46,6 +48,8 @@ namespace Unity.AppUI.Core
                 s_Impl = new IOSPlatformImpl();
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
                 s_Impl = new OSXPlatformImpl();
+#elif UNITY_STANDALONE_LINUX || UNITY_EDITOR_LINUX
+                s_Impl = new LinuxPlatformImpl();
 #elif UNITY_ANDROID && !UNITY_EDITOR
                 s_Impl = new AndroidPlatformImpl();
 #elif UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
@@ -227,6 +231,27 @@ namespace Unity.AppUI.Core
         /// <param name="colorType"> The type of system color to get.</param>
         /// <returns> The system color for the given color type if any, otherwise Color.clear.</returns>
         public static Color GetSystemColor(SystemColorType colorType) => s_Impl.GetSystemColor(colorType);
+
+        /// <summary>
+        /// Whether the current platform's pasteboard has data for the given type.
+        /// </summary>
+        /// <param name="type"> The type of data to check for.</param>
+        /// <returns> True if the pasteboard has data for the given type, otherwise false.</returns>
+        public static bool HasPasteboardData(PasteboardType type) => s_Impl.HasPasteboardData(type);
+
+        /// <summary>
+        /// Get the pasteboard data.
+        /// </summary>
+        /// <param name="type"> The type of data to get.</param>
+        /// <returns> The pasteboard data.</returns>
+        public static byte[] GetPasteboardData(PasteboardType type) => s_Impl.GetPasteboardData(type);
+
+        /// <summary>
+        /// Set the pasteboard data.
+        /// </summary>
+        /// <param name="type"> The type of data to set.</param>
+        /// <param name="data"> The data to set.</param>
+        public static void SetPasteboardData(PasteboardType type, byte[] data) => s_Impl.SetPasteboardData(type, data);
 
         /// <summary>
         /// Handle an native message coming from a native App UI plugin.

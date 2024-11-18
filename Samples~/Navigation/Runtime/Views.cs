@@ -399,5 +399,10 @@ namespace Unity.AppUI.Samples.Navigation
             };
             drawer.Add(profileButton);
         }
+
+        public void SetupNavigationRail(NavigationRail navigationRail, NavDestination destination, NavController navController)
+        {
+            // Not used in this sample
+        }
     }
 }

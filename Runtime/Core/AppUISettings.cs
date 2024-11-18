@@ -91,6 +91,22 @@ namespace Unity.AppUI.Core
             }
         }
 
+        /// <summary>
+        /// Enable this option to include the App UI shaders in the player build.
+        /// </summary>
+        public bool includeShadersInPlayerBuild
+        {
+            get => m_IncludeShadersInPlayerBuild;
+            set
+            {
+                if (m_IncludeShadersInPlayerBuild == value)
+                    return;
+
+                m_IncludeShadersInPlayerBuild = value;
+                OnChange();
+            }
+        }
+
         [Tooltip("Enable this options to correct the scale of UIDocuments, depending on the target platform and screen dpi.")]
         [SerializeField]
         // ReSharper disable once InconsistentNaming
@@ -115,6 +131,11 @@ namespace Unity.AppUI.Core
         [SerializeField]
         // ReSharper disable once InconsistentNaming
         bool m_EnableMacOSGestureRecognition = true;
+
+        [Tooltip("Enable this option to include the App UI shaders in the player build.")]
+        [SerializeField]
+        // ReSharper disable once InconsistentNaming
+        bool m_IncludeShadersInPlayerBuild = true;
 
         internal void OnChange()
         {

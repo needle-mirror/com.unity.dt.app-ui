@@ -28,19 +28,21 @@ namespace Unity.AppUI.UI
         /// </remarks>
         public bool force { get; set; }
 
+        VisualElement rootElement => target.GetExclusiveRootElement();
+
         protected override void RegisterCallbacksOnTarget()
         {
             m_Tooltip = Tooltip.Build(target);
             m_ScheduledItem = target.schedule.Execute(StartFadeIn);
             m_ScheduledItem.Pause();
             target.RegisterCallback<PointerMoveEvent>(OnPointerMoved);
-            target.panel.visualTree.RegisterCallback<PointerDownEvent>(OnClick, TrickleDown.TrickleDown);
+            rootElement?.RegisterCallback<PointerDownEvent>(OnClick, TrickleDown.TrickleDown);
         }
 
         protected override void UnregisterCallbacksFromTarget()
         {
             target.UnregisterCallback<PointerMoveEvent>(OnPointerMoved);
-            target.panel?.visualTree.UnregisterCallback<PointerDownEvent>(OnClick, TrickleDown.TrickleDown);
+            rootElement?.UnregisterCallback<PointerDownEvent>(OnClick, TrickleDown.TrickleDown);
         }
 
         void OnClick(PointerDownEvent evt)

@@ -282,16 +282,16 @@ namespace Unity.AppUI.UI
         protected override void InvokeShownEventHandlers()
         {
             base.InvokeShownEventHandlers();
-            containerView?.panel?.visualTree?.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
-            containerView?.panel?.visualTree?.RegisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
+            rootView?.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            rootView?.RegisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
             popover.RegisterCallback<ActionTriggeredEvent>(OnActionTriggered);
         }
 
         /// <inheritdoc />
         protected override void HideView(DismissType reason)
         {
-            containerView?.panel?.visualTree?.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
-            containerView?.panel?.visualTree?.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
+            rootView?.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            rootView?.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
             popover.UnregisterCallback<ActionTriggeredEvent>(OnActionTriggered);
             base.HideView(reason);
         }

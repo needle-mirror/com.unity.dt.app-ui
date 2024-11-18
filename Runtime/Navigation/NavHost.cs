@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.Core;
 using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -29,6 +30,16 @@ namespace Unity.AppUI.Navigation
         /// The NavHost item styling class.
         /// </summary>
         public const string itemUssClassName = ussClassName + "__item";
+
+        /// <summary>
+        /// The NavHost item container styling class.
+        /// </summary>
+        public const string itemContainerUssClassName = itemUssClassName + "__container";
+
+        /// <summary>
+        /// The NavHost item with rail styling class.
+        /// </summary>
+        public const string withRailUssClassName = itemUssClassName + "--with-rail--";
 
         /// <summary>
         /// The controller that manages the navigation stack.
@@ -131,7 +142,7 @@ namespace Unity.AppUI.Navigation
                     if (enterAnimationFunc.durationMs > 0 && exitAnimationFunc.durationMs == 0)
                         exitAnimationFunc.durationMs = enterAnimationFunc.durationMs;
                     var previousItem = m_Container[0];
-                    (previousItem.ElementAt(0) as NavigationScreen)!.InvokeOnExit(navController, destination, args);
+                    previousItem.Q<NavigationScreen>()!.InvokeOnExit(navController, destination, args);
                     m_RemoveAnim = previousItem.experimental.animation.Start(0, 1,
                             exitAnimationFunc.durationMs,
                             exitAnimationFunc.callback)
@@ -171,6 +182,9 @@ namespace Unity.AppUI.Navigation
         {
             var item = new VisualElement { name = itemUssClassName, pickingMode = PickingMode.Ignore };
             item.AddToClassList(itemUssClassName);
+            var itemContainer = new VisualElement { name = itemContainerUssClassName, pickingMode = PickingMode.Ignore };
+            itemContainer.AddToClassList(itemContainerUssClassName);
+            item.Add(itemContainer);
 
             var screenType = (string.IsNullOrEmpty(template) || Type.GetType(template) is not {} t) ?
                 typeof(NavigationScreen) : t;
@@ -179,12 +193,22 @@ namespace Unity.AppUI.Navigation
             if (screen == null)
                 throw new InvalidOperationException($"The screen type {screenType} could not be created.");
 
-            item.Add(screen);
+            itemContainer.Add(screen);
+
+            if (destination.showNavigationRail)
+            {
+                var navigationRail = new NavigationRail();
+                itemContainer.Add(navigationRail);
+                visualController?.SetupNavigationRail(navigationRail, destination, navController);
+                screen.SetupNavigationRail(navigationRail);
+                item.AddToClassList(MemoryUtils.Concatenate(withRailUssClassName, navigationRail!.anchor.ToLowerCase()));
+                item.Insert(0, navigationRail);
+            }
 
             if (destination.showBottomNavBar)
             {
                 var bottomNavBar = new BottomNavBar();
-                item.Add(bottomNavBar);
+                itemContainer.Add(bottomNavBar);
                 visualController?.SetupBottomNavBar(bottomNavBar, destination, navController);
                 screen.SetupBottomNavBar(bottomNavBar);
             }
@@ -193,25 +217,9 @@ namespace Unity.AppUI.Navigation
             if (destination.showAppBar)
             {
                 appBar = new AppBar();
-                item.Add(appBar);
+                itemContainer.Add(appBar);
                 visualController?.SetupAppBar(appBar, destination, navController);
                 screen.SetupAppBar(appBar);
-
-                if (appBar.stretch)
-                {
-                    screen.scrollView.verticalScroller.valueChanged += (f) =>
-                    {
-                        appBar.scrollOffset = f;
-                    };
-                    appBar.RegisterCallback<GeometryChangedEvent>(evt =>
-                    {
-                        var h = evt.newRect.height;
-                        screen.style.marginTop = h;
-                    });
-                }
-                appBar.scrollOffset = screen.scrollView.verticalScroller.value;
-                screen.AddToClassList(NavigationScreen.withAppBarUssClassName);
-                screen.EnableInClassList(NavigationScreen.withCompactAppBarUssClassName, appBar.compact);
 
                 if (destination.showBackButton && navController.canGoBack)
                 {
@@ -223,7 +231,7 @@ namespace Unity.AppUI.Navigation
             if (destination.showDrawer)
             {
                 var drawer = new Drawer();
-                item.Add(drawer);
+                itemContainer.Add(drawer);
                 visualController?.SetupDrawer(drawer, destination, navController);
                 screen.SetupDrawer(drawer);
 

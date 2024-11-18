@@ -54,7 +54,7 @@
     --appui-color-dark-gray-1500: #e9e9e9; /* darkGray: tint */
     --appui-color-dark-gray-1400: #eeeeee; /* darkGray: tint */
     --appui-color-dark-gray-1300: #d2d2d2; /* darkGray: tint */
-    --appui-color-dark-gray-1200: #d2d2d2; /* darkGray: tint */
+    --appui-color-dark-gray-1200: #cbcbcb; /* darkGray: tint */
     --appui-color-dark-gray-1100: #b4b4b4; /* darkGray: tint */
     --appui-color-dark-gray-1000: #a2a2a2; /* darkGray: tint */
     --appui-color-dark-gray-900: #858585; /* darkGray: tint */

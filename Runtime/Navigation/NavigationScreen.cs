@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.Core;
 using Unity.AppUI.UI;
 using UnityEngine.UIElements;
 
@@ -26,6 +27,16 @@ namespace Unity.AppUI.Navigation
         /// The NavigationScreen with app bar styling class.
         /// </summary>
         public const string withAppBarUssClassName = ussClassName + "--with-appbar";
+
+        /// <summary>
+        /// The NavigationScreen with drawer styling class.
+        /// </summary>
+        public const string withDrawerUssClassName = ussClassName + "--with-drawer--";
+
+        /// <summary>
+        /// The NavigationScreen with rail styling class.
+        /// </summary>
+        public const string withRailUssClassName = ussClassName + "--with-rail--";
 
         /// <summary>
         /// The NavigationScreen with compact app bar styling class.
@@ -103,7 +114,21 @@ namespace Unity.AppUI.Navigation
         /// </remarks>
         protected internal virtual void SetupAppBar(AppBar appBar)
         {
-
+            if (appBar.stretch)
+            {
+                scrollView.verticalScroller.valueChanged += (f) =>
+                {
+                    appBar.scrollOffset = f;
+                };
+                appBar.RegisterCallback<GeometryChangedEvent>(evt =>
+                {
+                    var h = evt.newRect.height;
+                    style.marginTop = h;
+                });
+            }
+            appBar.scrollOffset = scrollView.verticalScroller.value;
+            AddToClassList(withAppBarUssClassName);
+            EnableInClassList(withCompactAppBarUssClassName, appBar.compact);
         }
 
         /// <summary>
@@ -116,7 +141,16 @@ namespace Unity.AppUI.Navigation
         /// </remarks>
         protected internal virtual void SetupDrawer(Drawer drawer)
         {
+            AddToClassList(MemoryUtils.Concatenate(withDrawerUssClassName, drawer.anchor.ToLowerCase()));
+        }
 
+        /// <summary>
+        /// Implement this method to setup the <see cref="NavigationRail"/> of this screen specifically.
+        /// </summary>
+        /// <param name="navigationRail"> The <see cref="NavigationRail"/> to setup. </param>
+        protected internal virtual void SetupNavigationRail(NavigationRail navigationRail)
+        {
+            AddToClassList(MemoryUtils.Concatenate(withRailUssClassName, navigationRail.anchor.ToLowerCase()));
         }
 
         internal void InvokeOnEnter(NavController controller, NavDestination destination, Argument[] args)

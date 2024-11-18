@@ -552,7 +552,7 @@ namespace Unity.AppUI.UI
             m_SwipeManipulator = new Scrollable(OnDrag, OnUp, OnDown, OnCancel)
             {
                 direction = ScrollViewMode.Horizontal,
-                threshold = 1f,
+                threshold = 0,
             };
             this.AddManipulator(m_SwipeManipulator);
 
@@ -936,6 +936,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// The anchor of the Drawer. The Drawer will be anchored to the left or right side of the screen.
     /// </summary>
+    [GenerateLowerCaseStrings]
     public enum DrawerAnchor
     {
         /// <summary>

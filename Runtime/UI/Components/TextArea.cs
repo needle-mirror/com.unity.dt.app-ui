@@ -29,6 +29,8 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId autoResizeProperty = nameof(autoResize);
 
+        internal static readonly BindingId autoShrinkProperty = nameof(autoShrink);
+
         internal static readonly BindingId submitOnEnterProperty = nameof(submitOnEnter);
 
         internal static readonly BindingId submitModifiersProperty = nameof(submitModifiers);
@@ -96,6 +98,8 @@ namespace Unity.AppUI.UI
         Func<string, bool> m_ValidateValue;
 
         bool m_AutoResize;
+
+        bool m_AutoShrink;
 
         /// <summary>
         /// Event triggered when the user presses the Enter key and <see cref="submitOnEnter"/> is true.
@@ -184,6 +188,7 @@ namespace Unity.AppUI.UI
             isReadOnly = k_IsReadOnlyDefault;
             maxLength = k_MaxLengthDefault;
             autoResize = false;
+            autoShrink = false;
             placeholder = string.Empty;
             submitModifiers = EventModifiers.None;
             submitOnEnter = false;
@@ -312,7 +317,10 @@ namespace Unity.AppUI.UI
 
             newHeight = Mathf.Max(resolvedStyle.minHeight.value, newHeight);
 
-            if (newHeight > resolvedStyle.height)
+            if (Mathf.Approximately(newHeight, resolvedStyle.height))
+                return;
+
+            if (newHeight > resolvedStyle.height || autoShrink)
                 style.height = newHeight;
         }
 
@@ -473,6 +481,33 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// Whether the <see cref="TextArea"/> should automatically shrink if the content is smaller than the current size.
+        /// </summary>
+        /// <remarks>
+        /// To enable this feature, <see cref="autoResize"/> must be set to true.
+        /// </remarks>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool autoShrink
+        {
+            get => m_AutoShrink;
+            set
+            {
+                var changed = m_AutoShrink != value;
+                m_AutoShrink = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in autoShrinkProperty);
+#endif
+            }
+        }
+
+        /// <summary>
         /// Set the TextArea value without notifying the change.
         /// </summary>
         /// <param name="newValue"> The new value of the TextArea. </param>
@@ -622,6 +657,12 @@ namespace Unity.AppUI.UI
                 defaultValue = false
             };
 
+            readonly UxmlBoolAttributeDescription m_AutoShrink = new()
+            {
+                name = "auto-shrink",
+                defaultValue = false
+            };
+
             readonly UxmlBoolAttributeDescription m_SubmitOnEnter = new()
             {
                 name = "submit-on-enter",
@@ -660,6 +701,7 @@ namespace Unity.AppUI.UI
 
                 el.placeholder = m_Placeholder.GetValueFromBag(bag, cc);
                 el.autoResize = m_AutoResize.GetValueFromBag(bag, cc);
+                el.autoShrink = m_AutoShrink.GetValueFromBag(bag, cc);
                 el.value = m_Value.GetValueFromBag(bag, cc);
 
                 el.submitOnEnter = m_SubmitOnEnter.GetValueFromBag(bag, cc);
