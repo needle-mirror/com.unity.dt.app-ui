@@ -31,6 +31,10 @@ namespace Unity.AppUI.Core
 
         readonly Dictionary<IPanel, HashSet<Popup>> m_DismissablePopupsPerPanel = new Dictionary<IPanel, HashSet<Popup>>();
 
+        readonly List<WeakReference<VisualElement>> m_UpdateCallbacks = new List<WeakReference<VisualElement>>();
+
+        readonly List<int> m_InvalidUpdateCallbacks = new List<int>();
+
         NotificationManager m_NotificationManager;
 
         internal AppUISettings defaultSettings { get; private set; }
@@ -133,6 +137,7 @@ namespace Unity.AppUI.Core
         /// </summary>
         internal void Shutdown()
         {
+            Cleanup();
             m_MainLooper.Quit();
         }
 
@@ -151,6 +156,7 @@ namespace Unity.AppUI.Core
         /// </summary>
         internal void Cleanup()
         {
+            m_UpdateCallbacks.Clear();
             m_MainLooper?.RemoveCallbacksAndMessages(null);
             UnregisterAllPanels();
             UnregisterAllPopups();
@@ -266,6 +272,7 @@ namespace Unity.AppUI.Core
             }
 
             m_MainLooper.LoopOnce();
+            InvokeUpdateCallbacks();
         }
 
         /// <summary>
@@ -401,6 +408,45 @@ namespace Unity.AppUI.Core
                 return;
 
             m_DismissablePopupsPerPanel.Remove(panel);
+        }
+
+        internal void RegisterUpdateCallback(VisualElement updatableElement)
+        {
+            // check if the callback is already registered
+            foreach (var t in m_UpdateCallbacks)
+            {
+                if (t.TryGetTarget(out var updatable) && updatable == updatableElement)
+                    return;
+            }
+
+            m_UpdateCallbacks.Add(new WeakReference<VisualElement>(updatableElement));
+        }
+
+        internal void UnregisterUpdateCallback(VisualElement updatableElement)
+        {
+            for (var i = 0; i < m_UpdateCallbacks.Count; i++)
+            {
+                if (m_UpdateCallbacks[i].TryGetTarget(out var updatable) && updatable == updatableElement)
+                {
+                    m_UpdateCallbacks.RemoveAt(i);
+                    return;
+                }
+            }
+        }
+
+        void InvokeUpdateCallbacks()
+        {
+            m_UpdateCallbacks.RemoveAll(wr =>
+            {
+                if (wr.TryGetTarget(out var updatable))
+                {
+                    using var evt = UpdateEvent.GetPooled();
+                    evt.target = updatable;
+                    updatable.SendEvent(evt);
+                    return false;
+                }
+                return true;
+            });
         }
     }
 }

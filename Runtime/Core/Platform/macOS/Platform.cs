@@ -149,13 +149,15 @@ namespace Unity.AppUI.Core
 
         int m_LastUpdateFrame;
 
+        PluginConfigData m_ConfigData;
+
         public OSXPlatformImpl() => Setup();
 
         void Setup()
         {
             CleanUp();
 
-            var configData = new PluginConfigData
+            m_ConfigData = new PluginConfigData
             {
                 isEditor = Application.isEditor,
                 DebugLogCSharpHandler = DebugLogProxy,
@@ -169,7 +171,7 @@ namespace Unity.AppUI.Core
                 RotateGestureEventCSharpHandler = InvokeRotateGestureEventProxy,
                 SmartMagnifyEventCSharpHandler = InvokeSmartMagnifyEventProxy,
             };
-            NativeAppUI_Initialize(ref configData);
+            NativeAppUI_Initialize(ref m_ConfigData);
             s_Instance = this;
         }
 

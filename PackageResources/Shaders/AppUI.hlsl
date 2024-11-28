@@ -1,4 +1,15 @@
-fixed4 checker_board(float2 uv, float width, float height, float pixelSize, fixed4 color1, fixed4 color2)
+#ifndef UNITY_APPUI_SHADERLIB_INCLUDED
+#define UNITY_APPUI_SHADERLIB_INCLUDED
+
+#if UNITY_VERSION >= 70000000
+#include "UnityCG.hlsl"
+#include "UnityUI.hlsl"
+#else
+#include "UnityCG.cginc"
+#include "UnityUI.cginc"
+#endif
+
+half4 checker_board(float2 uv, float width, float height, float pixelSize, half4 color1, half4 color2)
 {
     const float2 checker_uv = floor(uv.xy * float2(width, height) / pixelSize);
     const float check = frac((checker_uv.x + checker_uv.y) * 0.5) * 2.0;
@@ -128,3 +139,4 @@ float4 paBox( in float2 p, in float2 b, const in float r, const in float s)
     return float4(k1 - ra, k3 * l2 + k4 * (b.y + (q.y > 0.0 ? k5 + k2 * ra : q.y)), 4.0 * l2, k1);
 }
 
+#endif // UNITY_APPUI_SHADERLIB_INCLUDED

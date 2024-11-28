@@ -1,6 +1,10 @@
 using System;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
+using UnityEngine;
+#if FOCUSABLE_AS_VISUALELEMENT
+using CallbackEventHandler = UnityEngine.UIElements.VisualElement;
+#endif
 
 namespace Unity.AppUI.UI
 {
@@ -25,7 +29,7 @@ namespace Unity.AppUI.UI
         [Preserve]
         public static bool RegisterValueChangingCallback<TValueType>(this INotifyValueChanging<TValueType> control, EventCallback<ChangingEvent<TValueType>> callback)
         {
-            if (!(control is CallbackEventHandler callbackEventHandler))
+            if (control is not CallbackEventHandler callbackEventHandler)
                 return false;
             callbackEventHandler.RegisterCallback(callback);
             return true;
@@ -41,7 +45,7 @@ namespace Unity.AppUI.UI
         [Preserve]
         public static bool UnregisterValueChangingCallback<TValueType>(this INotifyValueChanging<TValueType> control, EventCallback<ChangingEvent<TValueType>> callback)
         {
-            if (!(control is CallbackEventHandler callbackEventHandler))
+            if (control is not CallbackEventHandler callbackEventHandler)
                 return false;
             callbackEventHandler.UnregisterCallback(callback);
             return true;

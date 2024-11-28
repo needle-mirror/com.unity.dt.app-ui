@@ -95,6 +95,8 @@ namespace Unity.AppUI.UI
 
         static readonly CustomStyleProperty<Color> k_UssColor = new CustomStyleProperty<Color>("--progress-color");
 
+        static readonly EventCallback<UpdateEvent> k_UpdateCallback = new EventCallback<UpdateEvent>(OnUpdate);
+
         Size m_Size;
 
         Optional<Color> m_ColorFromCode;
@@ -162,9 +164,18 @@ namespace Unity.AppUI.UI
 
             m_Image.generateVisualContent += OnGenerateVisualContent;
             generateVisualContent = OnGenerateVisualMainContent;
+
+            RegisterCallback<AttachToPanelEvent>(OnAttachedToPanel);
             RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
             RegisterCallback<CustomStyleResolvedEvent>(OnStylesResolved);
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+        }
+
+        static void OnUpdate(UpdateEvent evt)
+        {
+            if (evt.target is not Progress progress)
+                return;
+            progress.UpdateScheduledItem();
         }
 
         void MarkContentDirtyRepaint()
@@ -210,7 +221,7 @@ namespace Unity.AppUI.UI
 
         void UpdateScheduledItem()
         {
-            if (this.IsInvisible())
+            if (this.IsInvisible() || !this.IsOnScreen())
             {
                 m_Update?.Pause();
                 m_Update = null;
@@ -434,8 +445,15 @@ namespace Unity.AppUI.UI
             }
         }
 
+        void OnAttachedToPanel(AttachToPanelEvent evt)
+        {
+            this.RegisterUpdateCallback(k_UpdateCallback);
+        }
+
         void OnDetachedFromPanel(DetachFromPanelEvent evt)
         {
+            this.UnregisterUpdateCallback(k_UpdateCallback);
+
             if (m_RT)
             {
                 m_RT.Release();

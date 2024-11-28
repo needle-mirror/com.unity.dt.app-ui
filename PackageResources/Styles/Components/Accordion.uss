@@ -94,6 +94,7 @@
     -unity-text-align: middle-right;
 }
 
+.appui-accordionitem__leading-container,
 .appui-accordionitem__trailing-container {
     display: flex;
     flex-direction: row;
@@ -102,6 +103,7 @@
     justify-content: flex-end;
 }
 
+.appui--rtl .appui-accordionitem__leading-container,
 .appui--rtl .appui-accordionitem__trailing-container {
     flex-direction: row-reverse;
 }

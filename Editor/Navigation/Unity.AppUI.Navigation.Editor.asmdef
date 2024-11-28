@@ -15,6 +15,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "Unity",
+            "expression": "7000.0.0a1",
+            "define": "ENABLE_INSTANCE_ID"
+        }
+    ],
     "noEngineReferences": false
 }

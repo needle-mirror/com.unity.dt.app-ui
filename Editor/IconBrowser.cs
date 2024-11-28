@@ -138,7 +138,13 @@ namespace Unity.AppUI.Editor
 
             if (selectedIndices.Count > 0)
             {
-                if (EditorUtility.DisplayDialog("Delete selected icons",
+                if (
+#if ENABLE_INSTANCE_ID
+                    EditorDialog.DisplayDecisionDialog
+#else
+                    EditorUtility.DisplayDialog
+#endif
+                        ("Delete selected icons",
                         "Are you sure you want to delete the selected icons from the stylesheet?", "Yes", "No"))
                 {
                     var source = gridView.itemsSource.Cast<IconEntry>().ToList();
@@ -315,9 +321,14 @@ namespace Unity.AppUI.Editor
         [UnityEditor.MenuItem("Assets/Create/App UI/Icons Style Sheet Asset")]
         static void CreateIconsStyleSheetAsset()
         {
+#if ENABLE_INSTANCE_ID
+            var instanceId = InstanceID.None;
+#else
+            var instanceId = 0;
+#endif
             var endAction = CreateInstance<IconBrowserActions>();
             ProjectWindowUtil.StartNameEditingIfProjectWindowExists(
-                0,
+                instanceId,
                 endAction,
                 "AppUIIcons.uss",
                 null,
@@ -334,7 +345,12 @@ namespace Unity.AppUI.Editor
             var adbPath = ToAdbPath(outPath);
             if (string.IsNullOrEmpty(adbPath))
             {
-                EditorUtility.DisplayDialog("Invalid path",
+#if ENABLE_INSTANCE_ID
+                EditorDialog.DisplayAlertDialog
+#else
+                EditorUtility.DisplayDialog
+#endif
+                ("Invalid path",
                     "The selected path must be inside the Assets or Packages folder", "OK");
                 return;
             }
@@ -623,7 +639,19 @@ namespace Unity.AppUI.Editor
 
         class IconBrowserActions : EndNameEditAction
         {
+#if ENABLE_INSTANCE_ID
+            public override void Action(InstanceID instanceId, string pathName, string resourceFile)
+            {
+                HandleAction(pathName);
+            }
+#else
             public override void Action(int instanceId, string pathName, string resourceFile)
+            {
+                HandleAction(pathName);
+            }
+#endif
+
+            static void HandleAction(string pathName)
             {
                 System.IO.File.WriteAllText(pathName, GetStyleSheetContent(Array.Empty<IconEntry>()));
                 AssetDatabase.Refresh();

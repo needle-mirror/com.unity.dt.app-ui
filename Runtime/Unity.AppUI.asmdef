@@ -92,6 +92,11 @@
             "name": "Unity",
             "expression": "[2021.3.36f1,2022.1.0a1)",
             "define": "CONDITIONAL_WEAK_TABLE_IL2CPP"
+        },
+        {
+            "name": "Unity",
+            "expression": "7000.0.0a1",
+            "define": "FOCUSABLE_AS_VISUALELEMENT"
         }
     ],
     "noEngineReferences": false

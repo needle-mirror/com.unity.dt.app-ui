@@ -44,9 +44,9 @@ namespace Unity.AppUI.Editor
                 menu.AddDisabledItem(new GUIContent("Available Settings Assets:"));
                 menu.AddSeparator("");
                 for (var i = 0; i < m_AvailableSettingsAssetsOptions.Length; i++)
-                    menu.AddItem(new GUIContent(m_AvailableSettingsAssetsOptions[i]), m_CurrentSelectedInputSettingsAsset == i, (path) => {
+                    menu.AddItem(new GUIContent(m_AvailableSettingsAssetsOptions[i]), m_CurrentSelectedAppUISettingsAsset == i, (path) => {
                         Core.AppUI.settings = AssetDatabase.LoadAssetAtPath<AppUISettings>((string)path);
-                    }, m_AvailableInputSettingsAssets[i]);
+                    }, m_AvailableAppUISettingsAssets[i]);
                 menu.AddSeparator("");
                 menu.AddItem(new GUIContent("New Settings Asset…"), false, CreateNewSettingsAsset);
                 menu.ShowAsContext();
@@ -60,7 +60,7 @@ namespace Unity.AppUI.Editor
 
             EditorGUIUtility.labelWidth = 200;
 
-            if (m_AvailableInputSettingsAssets.Count == 0)
+            if (m_AvailableAppUISettingsAssets.Count == 0)
             {
                 EditorGUILayout.HelpBox(
                     "Settings for App UI are stored in an asset. Click the button below to create a settings asset you can edit.",
@@ -70,7 +70,7 @@ namespace Unity.AppUI.Editor
                 GUILayout.Space(20);
             }
 
-            using (new EditorGUI.DisabledScope(m_AvailableInputSettingsAssets.Count == 0))
+            using (new EditorGUI.DisabledScope(m_AvailableAppUISettingsAssets.Count == 0))
             {
                 EditorGUILayout.Space();
                 EditorGUILayout.Separator();
@@ -198,7 +198,7 @@ namespace Unity.AppUI.Editor
         void InitializeWithCurrentSettings()
         {
             // Find the set of available assets in the project.
-            m_AvailableInputSettingsAssets = new List<string>(FindInputSettingsInProject());
+            m_AvailableAppUISettingsAssets = new List<string>(FindAppUISettingsInProject());
 
             // See which is the active one.
             m_Settings = Core.AppUI.settings;
@@ -206,20 +206,20 @@ namespace Unity.AppUI.Editor
             var currentSettingsPath = AssetDatabase.GetAssetPath(m_Settings);
             if (string.IsNullOrEmpty(currentSettingsPath))
             {
-                if (m_AvailableInputSettingsAssets.Count != 0)
+                if (m_AvailableAppUISettingsAssets.Count != 0)
                 {
-                    m_CurrentSelectedInputSettingsAsset = 0;
-                    m_Settings = AssetDatabase.LoadAssetAtPath<AppUISettings>(m_AvailableInputSettingsAssets[0]);
+                    m_CurrentSelectedAppUISettingsAsset = 0;
+                    m_Settings = AssetDatabase.LoadAssetAtPath<AppUISettings>(m_AvailableAppUISettingsAssets[0]);
                     Core.AppUI.settings = m_Settings;
                 }
             }
             else
             {
-                m_CurrentSelectedInputSettingsAsset = m_AvailableInputSettingsAssets.IndexOf(currentSettingsPath);
-                if (m_CurrentSelectedInputSettingsAsset == -1)
+                m_CurrentSelectedAppUISettingsAsset = m_AvailableAppUISettingsAssets.IndexOf(currentSettingsPath);
+                if (m_CurrentSelectedAppUISettingsAsset == -1)
                 {
-                    m_AvailableInputSettingsAssets.Add(currentSettingsPath);
-                    m_CurrentSelectedInputSettingsAsset = m_AvailableInputSettingsAssets.IndexOf(currentSettingsPath);
+                    m_AvailableAppUISettingsAssets.Add(currentSettingsPath);
+                    m_CurrentSelectedAppUISettingsAsset = m_AvailableAppUISettingsAssets.IndexOf(currentSettingsPath);
                 }
 
                 ////REVIEW: should we store this by platform?
@@ -227,10 +227,10 @@ namespace Unity.AppUI.Editor
             }
 
             // Refresh the list of assets we display in the UI.
-            m_AvailableSettingsAssetsOptions = new GUIContent[m_AvailableInputSettingsAssets.Count];
-            for (var i = 0; i < m_AvailableInputSettingsAssets.Count; ++i)
+            m_AvailableSettingsAssetsOptions = new GUIContent[m_AvailableAppUISettingsAssets.Count];
+            for (var i = 0; i < m_AvailableAppUISettingsAssets.Count; ++i)
             {
-                var name = m_AvailableInputSettingsAssets[i];
+                var name = m_AvailableAppUISettingsAssets[i];
                 if (name.StartsWith("Assets/"))
                     name = name.Substring("Assets/".Length);
                 if (name.EndsWith(".asset"))
@@ -277,8 +277,8 @@ namespace Unity.AppUI.Editor
         /// <summary>
         /// Find all <see cref="AppUISettings"/> stored in assets in the current project.
         /// </summary>
-        /// <returns>List of input settings in project.</returns>
-        static IEnumerable<string> FindInputSettingsInProject()
+        /// <returns>List of AppUI settings in project.</returns>
+        static IEnumerable<string> FindAppUISettingsInProject()
         {
             var guids = AssetDatabase.FindAssets("t:AppUISettings");
 
@@ -305,9 +305,9 @@ namespace Unity.AppUI.Editor
         [NonSerialized] SerializedProperty m_EnableMacOSGestureRecognition;
         [NonSerialized] SerializedProperty m_IncludeShadersInPlayerBuild;
 
-        [NonSerialized] List<string> m_AvailableInputSettingsAssets;
+        [NonSerialized] List<string> m_AvailableAppUISettingsAssets;
         [NonSerialized] GUIContent[] m_AvailableSettingsAssetsOptions;
-        [NonSerialized] int m_CurrentSelectedInputSettingsAsset;
+        [NonSerialized] int m_CurrentSelectedAppUISettingsAsset;
 
         [NonSerialized] GUIStyle m_NewAssetButtonStyle;
 

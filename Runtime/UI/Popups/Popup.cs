@@ -2,6 +2,9 @@ using System;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
+#if FOCUSABLE_AS_VISUALELEMENT
+using Focusable = UnityEngine.UIElements.VisualElement;
+#endif
 
 namespace Unity.AppUI.UI
 {

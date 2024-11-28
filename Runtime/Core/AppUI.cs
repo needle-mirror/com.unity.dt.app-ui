@@ -180,6 +180,16 @@ namespace Unity.AppUI.Core
             s_Manager.Update();
         }
 
+        internal static void RegisterUpdateCallback(VisualElement updatableElement)
+        {
+            s_Manager?.RegisterUpdateCallback(updatableElement);
+        }
+
+        internal static void UnregisterUpdateCallback(VisualElement updatableElement)
+        {
+            s_Manager?.UnregisterUpdateCallback(updatableElement);
+        }
+
         /// <summary>
         /// Manage internal App UI features when the application has gained or lost focus.
         /// </summary>

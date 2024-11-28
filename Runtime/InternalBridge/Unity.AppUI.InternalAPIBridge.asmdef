@@ -9,6 +9,12 @@
     "precompiledReferences": [],
     "autoReferenced": false,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "Unity",
+            "expression": "7000.0.0a1",
+            "define": "FOCUSABLE_AS_VISUALELEMENT"
+        }
+    ],
     "noEngineReferences": false
 }

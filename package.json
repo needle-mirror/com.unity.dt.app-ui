@@ -1,1 +1,91 @@
-{"name":"com.unity.dt.app-ui","displayName":"App UI","version":"2.0.0-pre.12","unity":"2021.3","category":"UI","keywords":["app","ui","components","runtime","framework","navigation","dependency-injection","mvvm","undostack","redux","state-management","dark-theme","data-binding","cloud","unity","app-ui"],"description":"App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.","dependencies":{"com.unity.modules.androidjni":"1.0.0","com.unity.modules.uielements":"1.0.0","com.unity.modules.physics":"1.0.0","com.unity.modules.screencapture":"1.0.0"},"samples":[{"displayName":"Drag And Drop","description":"Example of drag and drop system using App UI DropZone component and Dragger/DropTarget manipulators","path":"Samples~/Drag And Drop"},{"displayName":"UI Kit","description":"Every component in a single page","path":"Samples~/UI Kit"},{"displayName":"StoryBook","description":"StoryBookJS-like window in the Editor","path":"Samples~/StoryBook"},{"displayName":"Navigation","description":"Navigation system","path":"Samples~/Navigation"},{"displayName":"MVVM","description":"Example that showcases the MVVM pattern with dependency injection","path":"Samples~/MVVM"},{"displayName":"Redux","description":"Example of state management with Redux","path":"Samples~/Redux"},{"displayName":"MVVM And Redux","description":"Example that showcases the MVVM pattern with dependency injection and state management with Redux","path":"Samples~/MVVM And Redux"},{"displayName":"UndoRedo","description":"Example of undo/redo system","path":"Samples~/UndoRedo"},{"displayName":"Trackpad","description":"Example of Trackpad gesture recognition","path":"Samples~/Trackpad"}],"repository":{"revision":"e0ced267af7543bdcf703ec4dc04c7267affc32b","type":"git","url":"https://github.com/Unity-Technologies/unity-app-ui.git"},"documentationUrl":"https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.0/manual/index.html","_upm":{"changelog":"### Added\n\n- Navigation: Added `NavigationRail` component which can be used inside NavigationScreen views.\n- Added `autoShrink` property to the `TextArea` component to automatically shrink the component when the text fits in a smaller area. You need to set `autoResize` property to `true` to use the shrinking feature.\n- Added `ResizeHandle` component. This special component can be added to your layout to resize a given `target` when dragging it. This component is currently used in the new resizable `Popover` element.\n- Added `resizable` and `resizableDirection` properties in `Popover` class. You are now able to resize a `Popover` using the bottom-right corner of the popover pane. A resizable Popover will not be repositionned.\n- Added Clipboard handling support for **UTF8 Text** and **PNG** format on _iOS_, _Windows_, _macOS_, and _Linux_ platforms. Please refer to the **Native Integration** documentation page for more information.\n\n### Changed\n\n- App UI shaders are now optionally embedded in Player builds. You can change this setting in your main App UI settings instance. The default value is `true`.\n\n### Fixed\n\n- Fixed Dark Gray 1200 color value in Design Tokens for Editor-Dark theme.\n- Fixed a bug where `Popover` elements were not correctly anchored in Unity versions older than 6.\n- Fixed usage of AppCompat theme for AppUI GameActivity on Android platform.\n- Fixed an exception thrown when trying to update UXML schemas in the Editor.\n- Register trickledown events for popups on the first child of the visual tree root element instead of the root element itself to avoid leaks."}}
+{
+  "name": "com.unity.dt.app-ui",
+  "displayName": "App UI",
+  "version": "2.0.0-pre.13",
+  "unity": "2021.3",
+  "category": "UI",
+  "keywords": [
+    "app",
+    "ui",
+    "components",
+    "runtime",
+    "framework",
+    "navigation",
+    "dependency-injection",
+    "mvvm",
+    "undostack",
+    "redux",
+    "state-management",
+    "dark-theme",
+    "data-binding",
+    "cloud",
+    "unity",
+    "app-ui"
+  ],
+  "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
+  "dependencies": {
+    "com.unity.modules.androidjni": "1.0.0",
+    "com.unity.modules.uielements": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.screencapture": "1.0.0"
+  },
+  "samples": [
+    {
+      "displayName": "Drag And Drop",
+      "description": "Example of drag and drop system using App UI DropZone component and Dragger/DropTarget manipulators",
+      "path": "Samples~/Drag And Drop"
+    },
+    {
+      "displayName": "UI Kit",
+      "description": "Every component in a single page",
+      "path": "Samples~/UI Kit"
+    },
+    {
+      "displayName": "StoryBook",
+      "description": "StoryBookJS-like window in the Editor",
+      "path": "Samples~/StoryBook"
+    },
+    {
+      "displayName": "Navigation",
+      "description": "Navigation system",
+      "path": "Samples~/Navigation"
+    },
+    {
+      "displayName": "MVVM",
+      "description": "Example that showcases the MVVM pattern with dependency injection",
+      "path": "Samples~/MVVM"
+    },
+    {
+      "displayName": "Redux",
+      "description": "Example of state management with Redux",
+      "path": "Samples~/Redux"
+    },
+    {
+      "displayName": "MVVM And Redux",
+      "description": "Example that showcases the MVVM pattern with dependency injection and state management with Redux",
+      "path": "Samples~/MVVM And Redux"
+    },
+    {
+      "displayName": "UndoRedo",
+      "description": "Example of undo/redo system",
+      "path": "Samples~/UndoRedo"
+    },
+    {
+      "displayName": "Trackpad",
+      "description": "Example of Trackpad gesture recognition",
+      "path": "Samples~/Trackpad"
+    }
+  ],
+  "_upm": {
+    "changelog": "### Added\n\n- Added `RegisterUpdateCallback` to register a callback on VisualElement that needs to be notified when App UI's main loop has done a new iteration.\n- Added `VisualElementExtensions.IsOnScreen` method to determine if a `VisualElement` is on-screen or off-screen.\n- Added `leadingContainer` and `leadingContentTemplate` properties to the `AccordionItem` element.\n\n### Changed\n\n- Rewrite of App UI shaders in pure `HLSL` instead of legacy `CG` language.\n- Refactored the `FindResponderInChain` native method in MacOS platform to avoid undefined behaviours.\n- `CircularProgress` and `LinearProgress` elements with `Indeterminate` variant won't be marked as `DirtyRepaint` if they are off-screen anymore.\n\n### Fixed\n\n- Fixed random segmentation fault on MacOS platform which appeared after domain reloads.\n- Prevent GC to collect Platform configuration to not break communication with native plugins (MacOS and iOS)."
+  },
+  "upmCi": {
+    "footprint": "286e6dbad66318f7f63feb18fadecde78f3f5afe"
+  },
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.0/manual/index.html",
+  "repository": {
+    "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
+    "type": "git",
+    "revision": "027f4960264ebb1dae91e341541e1a4a61079895"
+  }
+}

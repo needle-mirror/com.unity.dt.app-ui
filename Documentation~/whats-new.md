@@ -10,25 +10,22 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [2.0.0-pre.12] - 2024-11-18
+## [2.0.0-pre.13] - 2024-11-28
 
 ### Added
 
-- Navigation: Added `NavigationRail` component which can be used inside NavigationScreen views.
-- Added `autoShrink` property to the `TextArea` component to automatically shrink the component when the text fits in a smaller area. You need to set `autoResize` property to `true` to use the shrinking feature.
-- Added `ResizeHandle` component. This special component can be added to your layout to resize a given `target` when dragging it. This component is currently used in the new resizable `Popover` element.
-- Added `resizable` and `resizableDirection` properties in `Popover` class. You are now able to resize a `Popover` using the bottom-right corner of the popover pane. A resizable Popover will not be repositionned.
-- Added Clipboard handling support for **UTF8 Text** and **PNG** format on _iOS_, _Windows_, _macOS_, and _Linux_ platforms. Please refer to the **Native Integration** documentation page for more information.
+- Added `RegisterUpdateCallback` to register a callback on VisualElement that needs to be notified when App UI's main loop has done a new iteration.
+- Added `VisualElementExtensions.IsOnScreen` method to determine if a `VisualElement` is on-screen or off-screen.
+- Added `leadingContainer` and `leadingContentTemplate` properties to the `AccordionItem` element.
 
 ### Changed
 
-- App UI shaders are now optionally embedded in Player builds. You can change this setting in your main App UI settings instance. The default value is `true`.
+- Rewrite of App UI shaders in pure `HLSL` instead of legacy `CG` language.
+- Refactored the `FindResponderInChain` native method in MacOS platform to avoid undefined behaviours.
+- `CircularProgress` and `LinearProgress` elements with `Indeterminate` variant won't be marked as `DirtyRepaint` if they are off-screen anymore.
 
 ### Fixed
 
-- Fixed Dark Gray 1200 color value in Design Tokens for Editor-Dark theme.
-- Fixed a bug where `Popover` elements were not correctly anchored in Unity versions older than 6.
-- Fixed usage of AppCompat theme for AppUI GameActivity on Android platform.
-- Fixed an exception thrown when trying to update UXML schemas in the Editor.
-- Register trickledown events for popups on the first child of the visual tree root element instead of the root element itself to avoid leaks.
+- Fixed random segmentation fault on MacOS platform which appeared after domain reloads.
+- Prevent GC to collect Platform configuration to not break communication with native plugins (MacOS and iOS).
 

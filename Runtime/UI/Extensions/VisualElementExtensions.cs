@@ -4,6 +4,7 @@ using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Runtime.CompilerServices;
+using Unity.AppUI.Bridge;
 
 namespace Unity.AppUI.UI
 {
@@ -53,6 +54,28 @@ namespace Unity.AppUI.UI
                 throw new ArgumentNullException(nameof(element));
 
             return element.panel == null || !element.visible || element.resolvedStyle.opacity < 0.001f || element.resolvedStyle.display == DisplayStyle.None;
+        }
+
+        /// <summary>
+        /// Check if a <see cref="VisualElement"/> is on screen.
+        /// </summary>
+        /// <param name="element"> The <see cref="VisualElement"/> object.</param>
+        /// <returns> True if the element is on screen, false otherwise.</returns>
+        /// <exception cref="ArgumentNullException"> The <see cref="VisualElement"/> object can't be null.</exception>
+        public static bool IsOnScreen(this VisualElement element)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+
+            var panel = element.panel;
+            if (panel == null)
+                return false;
+
+            var rect = element.GetWorldBoundingBox();
+            if (!rect.IsValid())
+                return false;
+
+            return rect.xMax > 0 && rect.xMin < panel.visualTree.layout.width && rect.yMax > 0 && rect.yMin < panel.visualTree.layout.height;
         }
 
         /// <summary>

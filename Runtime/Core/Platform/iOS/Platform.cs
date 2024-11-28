@@ -130,13 +130,15 @@ namespace Unity.AppUI.Core
         [DllImport("__Internal")]
         static extern void NativeAppUI_SetPasteBoardData(PasteboardType type, UIntPtr size, IntPtr data);
 
+        PluginConfigData m_ConfigData;
+
         public IOSPlatformImpl() => Setup();
 
         void Setup()
         {
             CleanUp();
 
-            var configData = new PluginConfigData
+            m_ConfigData = new PluginConfigData
             {
                 isEditor = Application.isEditor,
                 DebugLogCSharpHandler = DebugLogProxy,
@@ -150,7 +152,7 @@ namespace Unity.AppUI.Core
                 RotateGestureEventCSharpHandler = InvokeRotateGestureEventProxy,
                 SmartMagnifyEventCSharpHandler = InvokeSmartMagnifyEventProxy,
             };
-            NativeAppUI_Initialize(ref configData);
+            NativeAppUI_Initialize(ref m_ConfigData);
             s_Instance = this;
         }
 
