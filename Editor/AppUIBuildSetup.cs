@@ -34,6 +34,11 @@ namespace Unity.AppUI.Editor
                     "Please go to Edit > Project Settings > App UI and create a new Settings asset.");
             }
 
+            Revert();
+
+            if (Core.AppUI.settings.editorOnly)
+                return;
+
             EnsureAppUISettingsArePreloaded();
 
             if (Core.AppUI.settings.includeShadersInPlayerBuild)
@@ -148,6 +153,11 @@ namespace Unity.AppUI.Editor
         /// </summary>
         /// <param name="report"> Unity Build report. </param>
         public void OnPostprocessBuild(BuildReport report)
+        {
+            Revert();
+        }
+
+        static void Revert()
         {
             // Revert back to original state by removing all AppUI settings from preloaded assets.
             PlayerSettings.SetPreloadedAssets(PlayerSettings.GetPreloadedAssets().Where(x => x is not AppUISettings).ToArray());

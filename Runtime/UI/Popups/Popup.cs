@@ -14,16 +14,6 @@ namespace Unity.AppUI.UI
     public abstract class Popup
     {
         /// <summary>
-        /// The message id used to show the popup.
-        /// </summary>
-        protected const int k_PopupShow = 1;
-
-        /// <summary>
-        /// The message id used to dismiss the popup.
-        /// </summary>
-        protected const int k_PopupDismiss = 2;
-
-        /// <summary>
         /// A pre-allocated Action that calls <see cref="InvokeShownEventHandlers"/>.
         /// </summary>
         protected readonly Action m_InvokeShownAction;
@@ -60,33 +50,6 @@ namespace Unity.AppUI.UI
             m_InvokeShownAction = new Action(InvokeShownEventHandlers);
             m_PrepareAnimateViewInAction = new Action(PrepareAnimateViewInInternal);
             m_OnLayoutReadyToAnimateInAction = new Action(OnLayoutReadyToAnimateInInternal);
-        }
-
-        /// <summary>
-        /// The handler that receives and dispatches messages. This is useful in multi-threaded applications.
-        /// </summary>
-        protected Handler handler
-        {
-            get
-            {
-                if (m_Handler == null)
-                    m_Handler = new Handler(global::Unity.AppUI.Core.AppUI.mainLooper, message =>
-                    {
-                        switch (message.what)
-                        {
-                            case k_PopupShow:
-                                ((Popup)message.obj).ShowView();
-                                return true;
-                            case k_PopupDismiss:
-                                ((Popup)message.obj).HideView((DismissType)message.arg1);
-                                return true;
-                            default:
-                                return false;
-                        }
-                    });
-
-                return m_Handler;
-            }
         }
 
         /// <summary>
@@ -142,7 +105,7 @@ namespace Unity.AppUI.UI
         public virtual void Dismiss(DismissType reason)
         {
             if (ShouldDismiss(reason))
-                handler.SendMessage(handler.ObtainMessage(k_PopupDismiss, (int)reason, this));
+                HideView(reason);
         }
 
         /// <summary>
@@ -163,11 +126,11 @@ namespace Unity.AppUI.UI
         /// </summary>
         public virtual void Show()
         {
-            handler.SendMessage(handler.ObtainMessage(k_PopupShow, this));
+            ShowView();
         }
 
         /// <summary>
-        /// Called when the popup's <see cref="Handler"/> has received a <see cref="k_PopupShow"/> message.
+        /// Called when it is time to show the popup.
         /// </summary>
         /// <remarks>
         /// In this method the view should become visible at some point (directly or via an animation).
@@ -305,7 +268,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// Called when the popup's <see cref="Handler"/> has received a <see cref="k_PopupDismiss"/> message.
+        /// Called when it is time to hide the popup.
         /// </summary>
         /// <param name="reason">The reason why the popup should be dismissed.</param>
         protected virtual void HideView(DismissType reason)

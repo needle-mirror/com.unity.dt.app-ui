@@ -107,6 +107,22 @@ namespace Unity.AppUI.Core
             }
         }
 
+        /// <summary>
+        /// Enable this option to get App UI working in the editor only.
+        /// </summary>
+        public bool editorOnly
+        {
+            get => m_EditorOnly;
+            set
+            {
+                if (m_EditorOnly == value)
+                    return;
+
+                m_EditorOnly = value;
+                OnChange();
+            }
+        }
+
         [Tooltip("Enable this options to correct the scale of UIDocuments, depending on the target platform and screen dpi.")]
         [SerializeField]
         // ReSharper disable once InconsistentNaming
@@ -136,6 +152,10 @@ namespace Unity.AppUI.Core
         [SerializeField]
         // ReSharper disable once InconsistentNaming
         bool m_IncludeShadersInPlayerBuild = true;
+
+        [Tooltip("Enable this option to get App UI working in the editor only.")]
+        [SerializeField]
+        bool m_EditorOnly = false;
 
         internal void OnChange()
         {

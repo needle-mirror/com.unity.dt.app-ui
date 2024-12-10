@@ -10,6 +10,10 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.EventSystems;
 #endif
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.Build;
+#endif
 
 namespace Unity.AppUI.Core
 {
@@ -149,6 +153,24 @@ namespace Unity.AppUI.Core
             Platform.scaleFactorChanged -= OnScaleFactorChanged;
             if (AppUI.settings.autoCorrectUiScale)
                 Platform.scaleFactorChanged += OnScaleFactorChanged;
+
+#if UNITY_EDITOR
+            EditorApplication.delayCall += () =>
+            {
+                const string kEditorOnlyDefine = "APP_UI_EDITOR_ONLY";
+                var group = EditorUserBuildSettings.selectedBuildTargetGroup;
+                var target = NamedBuildTarget.FromBuildTargetGroup(group);
+                var defineStr = PlayerSettings.GetScriptingDefineSymbols(target);
+                var defines = new HashSet<string>(defineStr.Split(";"));
+                if (m_Settings.editorOnly)
+                    defines.Add(kEditorOnlyDefine);
+                else
+                    defines.Remove(kEditorOnlyDefine);
+                var newDefineStr = string.Join(";", defines);
+                if (newDefineStr.Length != defineStr.Length)
+                    PlayerSettings.SetScriptingDefineSymbols(target, newDefineStr);
+            };
+#endif
         }
 
         /// <summary>

@@ -35,6 +35,10 @@
     cursor: var(--appui-alias-control-cursor-disabled);
 }
 
+.unity-text-element__selectable {
+    cursor: var(--appui-alias-control-cursor-text);
+}
+
 .unity-collection-view__item {
     color: var(--appui-foregrounds-100);
 }

@@ -59,6 +59,12 @@ Here are the available settings:
   Like in web browser, our stylesheets are designed to work with a 96 DPI screen. When the screen has a higher DPI, the UI elements will be scaled up to match the current DPI.
   This way your CSS stylesheets will work as USS stylesheets in your Unity project.
 
+- #### Editor-only mode
+
+  This setting allows you to enable or disable the editor-only mode. When enabled, the App UI manager will inject
+  a scripting definition symbol to the project settings which will prevent App UI assemblies to get included in the build.
+  This setting is disabled by default and is only useful if you want to use App UI features only in the editor.
+
 > [!NOTE]
 > USS stands for **Unity Style Sheets**. It is the new UI styling system introduced with UI Toolkit.
 >

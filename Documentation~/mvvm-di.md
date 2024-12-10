@@ -27,13 +27,13 @@ There are two types of dependencies that you can register in the App UI framewor
 
 Transient dependencies are created each time they are requested. This is the default behavior when registering a dependency.
 
-You can use [AddTransient](xref:Unity.AppUI.MVVM.ServicesCollectionExtensions.AddTransient(Unity.AppUI.MVVM.IServiceCollection,System.Type)) to register a transient dependency.
+You can use [AddTransient](xref:Unity.AppUI.MVVM.ServicesCollectionExtensions.AddTransient``1(Unity.AppUI.MVVM.IServiceCollection)) to register a transient dependency.
 
 ### Singleton Dependencies
 
 Singleton dependencies are created the first time they are requested, and then reused for all subsequent requests.
 
-You can use [AddSingleton](xref:Unity.AppUI.MVVM.ServicesCollectionExtensions.AddSingleton(Unity.AppUI.MVVM.IServiceCollection,System.Type)) to register a singleton dependency.
+You can use [AddSingleton](xref:Unity.AppUI.MVVM.ServicesCollectionExtensions.AddSingleton``1(Unity.AppUI.MVVM.IServiceCollection)) to register a singleton dependency.
 
 ### Scoped Dependencies
 

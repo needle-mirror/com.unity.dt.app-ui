@@ -44,9 +44,13 @@ namespace Unity.AppUI.Editor
                 menu.AddDisabledItem(new GUIContent("Available Settings Assets:"));
                 menu.AddSeparator("");
                 for (var i = 0; i < m_AvailableSettingsAssetsOptions.Length; i++)
-                    menu.AddItem(new GUIContent(m_AvailableSettingsAssetsOptions[i]), m_CurrentSelectedAppUISettingsAsset == i, (path) => {
-                        Core.AppUI.settings = AssetDatabase.LoadAssetAtPath<AppUISettings>((string)path);
-                    }, m_AvailableAppUISettingsAssets[i]);
+                {
+                    menu.AddItem(new GUIContent(m_AvailableSettingsAssetsOptions[i]),
+                        m_CurrentSelectedAppUISettingsAsset == i, (path) =>
+                        {
+                            Core.AppUI.settings = AssetDatabase.LoadAssetAtPath<AppUISettings>((string) path);
+                        }, m_AvailableAppUISettingsAssets[i]);
+                }
                 menu.AddSeparator("");
                 menu.AddItem(new GUIContent("New Settings Asset…"), false, CreateNewSettingsAsset);
                 menu.ShowAsContext();
@@ -80,13 +84,11 @@ namespace Unity.AppUI.Editor
 
                 EditorGUI.BeginChangeCheck();
 
-                EditorGUILayout.Space();
-
-                EditorGUILayout.PropertyField(m_AutoScaleUI, m_AutoScaleUIContent);
-
                 EditorGUILayout.LabelField("Editor", EditorStyles.boldLabel);
 
                 EditorGUI.indentLevel++;
+
+                EditorGUILayout.PropertyField(m_EditorOnly, m_EditorOnlyContent);
 
                 EditorGUILayout.PropertyField(m_UseCustomEditorUpdateFrequency, m_UseCustomEditorUpdateFrequencyContent);
 
@@ -99,11 +101,16 @@ namespace Unity.AppUI.Editor
 
                 EditorGUILayout.Space();
 
-                EditorGUILayout.LabelField("Common", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField("Runtime", EditorStyles.boldLabel);
 
                 EditorGUI.indentLevel++;
 
-                EditorGUILayout.PropertyField(m_IncludeShadersInPlayerBuild, m_IncludeShadersInPlayerBuildContent);
+                EditorGUILayout.PropertyField(m_AutoScaleUI, m_AutoScaleUIContent);
+
+                using (new EditorGUI.DisabledScope(m_EditorOnly.boolValue))
+                {
+                    EditorGUILayout.PropertyField(m_IncludeShadersInPlayerBuild, m_IncludeShadersInPlayerBuildContent);
+                }
 
                 EditorGUI.indentLevel--;
 
@@ -117,7 +124,10 @@ namespace Unity.AppUI.Editor
                     "you need to override the default Android manifest file with the one provided by App UI.",
                     MessageType.Warning);
 
-                EditorGUILayout.PropertyField(m_AutoOverrideAndroidManifest, m_AutoOverrideAndroidManifestContent);
+                using (new EditorGUI.DisabledScope(m_EditorOnly.boolValue))
+                {
+                    EditorGUILayout.PropertyField(m_AutoOverrideAndroidManifest, m_AutoOverrideAndroidManifestContent);
+                }
 
                 EditorGUI.indentLevel--;
 
@@ -242,6 +252,11 @@ namespace Unity.AppUI.Editor
 
             // Look up properties.
             m_SettingsObject = new SerializedObject(m_Settings);
+
+            m_EditorOnly = m_SettingsObject.FindProperty("m_EditorOnly");
+            m_EditorOnlyContent = new GUIContent("Editor Only",
+                "Enable this options to prevent the App UI system from running in the player builds.");
+
             m_AutoScaleUI = m_SettingsObject.FindProperty("m_AutoCorrectUiScale");
             m_AutoScaleUIContent = new GUIContent("Auto Scale UI",
                 "Enable this options to correct the scale of UIDocuments, depending on the target platform and screen dpi.");
@@ -280,7 +295,7 @@ namespace Unity.AppUI.Editor
         /// <returns>List of AppUI settings in project.</returns>
         static IEnumerable<string> FindAppUISettingsInProject()
         {
-            var guids = AssetDatabase.FindAssets("t:AppUISettings");
+            var guids = AssetDatabase.FindAssets($"t:{nameof(AppUISettings)} a:all");
 
             var paths = new List<string>();
 
@@ -298,6 +313,7 @@ namespace Unity.AppUI.Editor
 
         [NonSerialized] int m_SettingsDirtyCount;
         [NonSerialized] SerializedObject m_SettingsObject;
+        [NonSerialized] SerializedProperty m_EditorOnly;
         [NonSerialized] SerializedProperty m_AutoScaleUI;
         [NonSerialized] SerializedProperty m_UseCustomEditorUpdateFrequency;
         [NonSerialized] SerializedProperty m_EditorUpdateFrequency;
@@ -311,6 +327,7 @@ namespace Unity.AppUI.Editor
 
         [NonSerialized] GUIStyle m_NewAssetButtonStyle;
 
+        GUIContent m_EditorOnlyContent;
         GUIContent m_AutoScaleUIContent;
         GUIContent m_UseCustomEditorUpdateFrequencyContent;
         GUIContent m_EditorUpdateFrequencyContent;

@@ -38,6 +38,7 @@ namespace Unity.AppUI.Samples
 
 #if UNITY_EDITOR
                 root.RegisterCallback<DragUpdatedEvent>(_ => UpdateView(true));
+                root.RegisterCallback<DragLeaveEvent>(_ => UpdateView(false));
                 root.RegisterCallback<DragExitedEvent>(_ => UpdateView(false));
 #endif
 

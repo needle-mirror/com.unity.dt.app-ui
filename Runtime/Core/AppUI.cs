@@ -3,6 +3,7 @@ using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -213,7 +214,7 @@ namespace Unity.AppUI.Core
             Reset();
 
             var existingSystemObjects = Resources.FindObjectsOfTypeAll<AppUISystemObject>();
-            if (existingSystemObjects != null && existingSystemObjects.Length > 0)
+            if (existingSystemObjects is {Length: > 0})
             {
                 s_SystemObject = existingSystemObjects[0];
                 // here we can restore some state saved inside the system object
@@ -224,12 +225,30 @@ namespace Unity.AppUI.Core
                 s_SystemObject.hideFlags = HideFlags.HideAndDontSave;
             }
 
+            AppUISettings newSettings = null;
             if (EditorBuildSettings.TryGetConfigObject(AppUISettings.configName,
                     out AppUISettings settingsAsset))
             {
+                newSettings = settingsAsset;
+            }
+            else
+            {
+                // nothing found yet, we can try to find the asset database
+                var settingsGuids = AssetDatabase.FindAssets($"t:{nameof(AppUISettings)} a:all");
+                if (settingsGuids.Length > 0)
+                {
+                    var settingsPath = AssetDatabase.GUIDToAssetPath(settingsGuids[0]);
+                    newSettings = AssetDatabase.LoadAssetAtPath<AppUISettings>(settingsPath);
+                }
+            }
+
+            if (newSettings)
+            {
                 if (s_Manager.m_Settings.hideFlags == HideFlags.HideAndDontSave)
-                    ScriptableObject.DestroyImmediate(s_Manager.m_Settings);
-                s_Manager.m_Settings = settingsAsset;
+                    Object.DestroyImmediate(s_Manager.m_Settings);
+                s_Manager.m_Settings = newSettings;
+                EditorBuildSettings.AddConfigObject(AppUISettings.configName,
+                    s_Manager.m_Settings, true);
                 // here we can apply new settings on managers
                 s_Manager.ApplySettings();
             }
@@ -237,10 +256,7 @@ namespace Unity.AppUI.Core
 
         static void Reset()
         {
-            if (s_Manager != null)
-            {
-                s_Manager.Shutdown();
-            }
+            s_Manager?.Shutdown();
 
             var newSettings = ScriptableObject.CreateInstance<AppUISettings>();
             newSettings.hideFlags = HideFlags.HideAndDontSave;

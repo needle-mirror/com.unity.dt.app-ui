@@ -272,14 +272,14 @@ namespace Unity.AppUI.UI
 
             public void Show()
             {
-                var handler = ((PopupNotification<T>)obj).handler;
-                handler.SendMessage(handler.ObtainMessage(k_PopupShow, obj));
+                if (obj is PopupNotification<T> popup)
+                    popup.ShowView();
             }
 
             public void Dismiss(DismissType reason)
             {
-                var handler = ((PopupNotification<T>)obj).handler;
-                handler.SendMessage(handler.ObtainMessage(k_PopupDismiss, (int)reason, obj));
+                if (obj is PopupNotification<T> popup)
+                    popup.HideView(reason);
             }
 
             public object obj { get; }

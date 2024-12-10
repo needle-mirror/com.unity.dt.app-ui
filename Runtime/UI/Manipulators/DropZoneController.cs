@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Object = UnityEngine.Object;
 using Unity.AppUI.Core;
 using System.Linq;
 
@@ -37,7 +36,21 @@ namespace Unity.AppUI.UI
         public event Action<IEnumerable<object>> dropped;
 #pragma warning restore 67
 
-        DropZone dropZone => target as DropZone;
+        readonly Action<DragAndDropState> m_StateChanged;
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public DropZoneController() : this(null) { }
+
+        /// <summary>
+        /// Constructor with a state changed callback.
+        /// </summary>
+        /// <param name="stateChanged"> The callback to be called when the drag and drop state changes. </param>
+        public DropZoneController(Action<DragAndDropState> stateChanged)
+        {
+            m_StateChanged = stateChanged;
+        }
 
         /// <summary>
         /// Called to register event callbacks on the target element.
@@ -104,18 +117,18 @@ namespace Unity.AppUI.UI
             DragAndDrop.activeDropTarget = this;
             if (acceptDrag == null)
             {
-                dropZone.state = DragAndDropState.Default;
+                m_StateChanged?.Invoke(DragAndDropState.Default);
                 return;
             }
 
             var state = acceptDrag(DragAndDrop.objects) ? DragAndDropState.AcceptDrag : DragAndDropState.RejectDrag;
             DragAndDrop.state = state;
-            dropZone.state = state;
+            m_StateChanged?.Invoke(state);
         }
 
         void EndDragOperation()
         {
-            dropZone.state = DragAndDropState.Default;
+            m_StateChanged?.Invoke(DragAndDropState.Default);
             if (DragAndDrop.activeDropTarget == this)
                 DragAndDrop.activeDropTarget = null;
             dragEnded?.Invoke();

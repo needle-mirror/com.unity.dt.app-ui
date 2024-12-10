@@ -9,13 +9,11 @@ namespace Unity.AppUI.Samples.MVVMRedux
 {
     public class MainViewModel : ObservableObject
     {
-        const string k_SliceName = "app";
-
         readonly IStoreService m_StoreService;
 
         readonly ILocalStorageService m_LocalStorageService;
 
-        readonly Unsubscriber m_Unsubscribe;
+        IDisposableSubscription m_Subscription;
 
         Todo[] m_Todos;
 
@@ -56,23 +54,16 @@ namespace Unity.AppUI.Samples.MVVMRedux
             toggleCompleteTodoCommand = new RelayCommand<Todo>(ToggleCompleteTodo);
             searchTodoCommand = new AsyncRelayCommand<string>(SearchTodo, AsyncRelayCommandOptions.None);
 
-            // State
-            var initialState = m_LocalStorageService.GetValue(k_SliceName, new AppState());
-            m_StoreService.store.CreateSlice(k_SliceName, initialState, builder =>
-            {
-                builder
-                    .Add<string>(Actions.createTodo, Reducers.CreateTodoReducer)
-                    .Add<string>(Actions.deleteTodo, Reducers.DeleteTodoReducer)
-                    .Add<(string, string)>(Actions.editTodo, Reducers.EditTodoReducer)
-                    .Add<(string, bool)>(Actions.completeTodo, Reducers.CompleteTodoReducer)
-                    .Add<string>(Actions.setSearchInput, Reducers.SetSearchInputReducer);
-            });
-
-            m_Todos = initialState.todos;
+            m_Todos = m_StoreService.store.GetState<AppState>(m_StoreService.sliceName).todos;
 
             // Events
-            m_Unsubscribe = m_StoreService.store.Subscribe<AppState>(k_SliceName, OnStateChanged);
+            m_Subscription = m_StoreService.store.Subscribe(SelectAppSlice, OnStateChanged);
             App.shuttingDown += OnShuttingDown;
+        }
+
+        AppState SelectAppSlice(PartitionedState state)
+        {
+            return state.Get<AppState>(m_StoreService.sliceName);
         }
 
         async Task SearchTodo(string input, CancellationToken cancellationToken)
@@ -102,6 +93,8 @@ namespace Unity.AppUI.Samples.MVVMRedux
 
         async void OnStateChanged(AppState state)
         {
+            Debug.Log("Redux state has changed:\n" + state);
+
             if (state.todos != todos)
             {
                 todos = state.todos;
@@ -131,9 +124,10 @@ namespace Unity.AppUI.Samples.MVVMRedux
 
         void OnShuttingDown()
         {
-            m_LocalStorageService?.SetValue(k_SliceName, m_StoreService.store.GetState<AppState>(k_SliceName));
+            m_StoreService.SaveState();
             App.shuttingDown -= OnShuttingDown;
-            m_Unsubscribe?.Invoke();
+            m_Subscription?.Dispose();
+            m_Subscription = null;
         }
     }
 }

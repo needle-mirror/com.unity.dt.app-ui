@@ -208,10 +208,10 @@ We provide a way to interact with the Clipboard on the following platforms:
 - macOS
 - Linux
 
-You can use [GetPasteboardData](xref:Unity.AppUI.Core.Platform.GetPasteboardData)
-and [SetPasteboardData](xref:Unity.AppUI.Core.Platform.SetPasteboardData) to interact with the Clipboard.
+You can use [GetPasteboardData](xref:Unity.AppUI.Core.Platform.GetPasteboardData(Unity.AppUI.Core.PasteboardType))
+and [SetPasteboardData](xref:Unity.AppUI.Core.Platform.SetPasteboardData(Unity.AppUI.Core.PasteboardType,System.Byte[])) to interact with the Clipboard.
 
-You can also check if the Clipboard currently contains data using the [HasPasteboardData](xref:Unity.AppUI.Core.Platform.HasPasteboardData) method.
+You can also check if the Clipboard currently contains data using the [HasPasteboardData](xref:Unity.AppUI.Core.Platform.HasPasteboardData(Unity.AppUI.Core.PasteboardType)) method.
 
 The supported formats are:
 - `Text`: a UTF-8 string
