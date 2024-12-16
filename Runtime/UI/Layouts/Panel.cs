@@ -111,6 +111,10 @@ namespace Unity.AppUI.UI
 
         bool m_ForceUseTooltipSystem;
 
+#if UNITY_LOCALIZATION_PRESENT
+        SelectedLocaleListener m_SelectedLocaleListener;
+#endif
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -155,36 +159,6 @@ namespace Unity.AppUI.UI
             layoutDirection = defaultDir;
             preferredTooltipPlacement = Tooltip.defaultPlacement;
             tooltipDelayMs = TooltipManipulator.defaultDelayMs;
-        }
-
-        string GetLang()
-        {
-            var ret = defaultLang;
-#if UNITY_LOCALIZATION_PRESENT
-            var localizationSettings = LocalizationSettings.GetInstanceDontCreateDefault();
-            if (localizationSettings != null)
-            {
-                ret = localizationSettings.GetSelectedLocale()?.Identifier.Code ?? defaultLang;
-                localizationSettings.OnSelectedLocaleChanged += OnSelectedLocaleChanged;
-            }
-#endif
-            return ret;
-        }
-
-#if UNITY_LOCALIZATION_PRESENT
-        void OnSelectedLocaleChanged(Locale locale)
-        {
-            lang = locale ? locale.Identifier.Code ?? defaultLang : defaultLang;
-        }
-#endif
-
-        void UnregisterLocalizationCallback()
-        {
-#if UNITY_LOCALIZATION_PRESENT
-            var localizationSettings = LocalizationSettings.GetInstanceDontCreateDefault();
-            if (localizationSettings != null)
-                localizationSettings.OnSelectedLocaleChanged -= OnSelectedLocaleChanged;
-#endif
         }
 
         void OnThemeContextChanged(ContextChangedEvent<ThemeContext> evt)
@@ -449,6 +423,11 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// If true, this panel is the root panel of the application.
+        /// </summary>
+        internal bool isRootPanel { get; private set; }
+
+        /// <summary>
         /// The main UI layer container.
         /// </summary>
         public override VisualElement contentContainer => m_MainContainer;
@@ -474,9 +453,30 @@ namespace Unity.AppUI.UI
             {
                 if (m_TooltipManipulator != null)
                     this.RemoveManipulator(m_TooltipManipulator);
-                UnregisterLocalizationCallback();
-                Core.AppUI.UnregisterPanel(this);
+#if UNITY_LOCALIZATION_PRESENT
+                if (m_SelectedLocaleListener != null)
+                    this.RemoveManipulator(m_SelectedLocaleListener);
+#endif
+                global::Unity.AppUI.Core.AppUI.UnregisterPanel(this);
             }
+        }
+
+        void CheckRootPanel()
+        {
+            var panelsFound = 0;
+            var appUiPanel = (VisualElement)this;
+            while (appUiPanel != null)
+            {
+                if (appUiPanel is Panel)
+                    panelsFound++;
+                if (panelsFound > 1)
+                {
+                    isRootPanel = false;
+                    return;
+                }
+                appUiPanel = appUiPanel.parent;
+            }
+            isRootPanel = panelsFound == 1;
         }
 
         void OnAttachedToPanel(AttachToPanelEvent evt)
@@ -490,8 +490,15 @@ namespace Unity.AppUI.UI
                 }
                 m_TooltipManipulator.force = forceUseTooltipSystem;
 
-                Core.AppUI.RegisterPanel(this);
-                lang = GetLang();
+                global::Unity.AppUI.Core.AppUI.RegisterPanel(this);
+                CheckRootPanel();
+#if UNITY_LOCALIZATION_PRESENT
+                if (isRootPanel)
+                {
+                    m_SelectedLocaleListener ??= new SelectedLocaleListener();
+                    this.AddManipulator(m_SelectedLocaleListener);
+                }
+#endif
             }
         }
 

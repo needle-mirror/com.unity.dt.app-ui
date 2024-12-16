@@ -10,9 +10,9 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [1.2.0] - 2024-11-28
+## [1.2.1] - 2024-12-16
 
-### Changed
+### Fixed
 
-- Backported Localization package support from App UI 2.x.
+- Avoid calling `WaitForCompletion` during Localization initialization to not get any error message in WebGL builds.
 

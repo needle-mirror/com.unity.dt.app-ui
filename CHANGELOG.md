@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2024-12-16
+
+### Fixed
+
+- Avoid calling `WaitForCompletion` during Localization initialization to not get any error message in WebGL builds.
+
 ## [1.2.0] - 2024-11-28
 
 ### Changed
