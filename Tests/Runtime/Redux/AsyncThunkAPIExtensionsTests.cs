@@ -99,11 +99,11 @@ namespace Unity.AppUI.Tests.Redux
             Assert.DoesNotThrow(() => AsyncThunkAPIExtensions.Dispatch(thunkApi, k_DummyActionWithPayload.type, 99));
         }
 
-        static Store CreateStore()
+        static IStore<PartitionedState> CreateStore()
         {
-            return Store.CreateStore(new[]
+            return StoreFactory.CreateStore(new[]
             {
-                Store.CreateSlice("dummySlice", new DummyState(), reducers =>
+                StoreFactory.CreateSlice("dummySlice", new DummyState(), reducers =>
                 {
                     reducers.AddCase(k_DummyAction, DummyActionReducer);
                     reducers.AddCase(k_DummyActionWithPayload, DummyActionWithPayloadReducer);

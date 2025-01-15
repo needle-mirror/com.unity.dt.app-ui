@@ -102,7 +102,7 @@ namespace Unity.AppUI.Core
         /// <summary>
         /// The touches on the trackpad.
         /// </summary>
-        AppUITouch[] touches { get; }
+        ReadOnlySpan<AppUITouch> touches { get; }
 
         /// <summary>
         /// Get the system color for the given color type.

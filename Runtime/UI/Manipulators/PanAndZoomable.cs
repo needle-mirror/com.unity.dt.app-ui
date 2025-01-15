@@ -39,7 +39,7 @@ namespace Unity.AppUI.UI
 
         const bool k_DefaultUseSpaceBar = true;
 
-        int m_PointerId;
+        int m_PointerId = PointerId.invalidPointerId;
 
         Vector2 m_Velocity;
 
@@ -310,7 +310,7 @@ namespace Unity.AppUI.UI
             if (target.panel == null || target.panel.GetCapturingElement(evt.pointerId) != null)
                 return;
 
-            if (Application.isPlaying && Application.isMobilePlatform && m_PointerId >= 0 && evt.pointerId != m_PointerId)
+            if (Application.isPlaying && Application.isMobilePlatform && m_PointerId != PointerId.invalidPointerId && evt.pointerId != m_PointerId)
             {
                 evt.StopPropagation();
                 if (target.HasPointerCapture(m_PointerId))
@@ -368,7 +368,7 @@ namespace Unity.AppUI.UI
         {
             if (evt.pointerId == m_PointerId)
             {
-                m_PointerId = -1;
+                m_PointerId = PointerId.invalidPointerId;
                 m_LastTimestamp = 0;
                 grabMode = m_SpaceBarPressed || m_PrimaryManipulator == CanvasManipulator.Pan ?
                     GrabMode.Grab : GrabMode.None;
@@ -425,7 +425,7 @@ namespace Unity.AppUI.UI
                         evt.StopImmediatePropagation();
                         if (target.HasPointerCapture(m_PointerId))
                             target.ReleasePointer(m_PointerId);
-                        m_PointerId = -1;
+                        m_PointerId = PointerId.invalidPointerId;
                     }
                     break;
                 }
@@ -495,7 +495,7 @@ namespace Unity.AppUI.UI
         {
             m_SpaceBarPressed = false;
             grabMode = m_PrimaryManipulator == CanvasManipulator.Pan ? GrabMode.Grab : GrabMode.None;
-            m_PointerId = -1;
+            m_PointerId = PointerId.invalidPointerId;
         }
 
 

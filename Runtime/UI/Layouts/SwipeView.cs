@@ -679,7 +679,7 @@ namespace Unity.AppUI.UI
                 name = containerUssClassName,
                 pickingMode = PickingMode.Ignore,
             };
-            m_Container.usageHints |= UsageHints.DynamicTransform;
+            m_Container.EnableDynamicTransform(true);
             m_Container.AddToClassList(containerUssClassName);
             hierarchy.Add(m_Container);
 

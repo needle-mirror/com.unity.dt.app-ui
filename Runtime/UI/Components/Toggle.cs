@@ -87,8 +87,8 @@ namespace Unity.AppUI.UI
             {
                 name = checkmarkUssClassName,
                 pickingMode = PickingMode.Ignore,
-                usageHints = UsageHints.DynamicTransform,
             };
+            checkmark.EnableDynamicTransform(true);
             checkmark.AddToClassList(checkmarkUssClassName);
             var checkmarkContainer = new VisualElement { name = checkmarkContainerUssClassName, pickingMode = PickingMode.Ignore };
             checkmarkContainer.AddToClassList(checkmarkContainerUssClassName);

@@ -1052,7 +1052,7 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
             pickingMode = PickingMode.Position;
-            usageHints |= UsageHints.DynamicTransform;
+            this.EnableDynamicTransform(true);
 
             m_SplitView = splitView;
             m_Index = index;

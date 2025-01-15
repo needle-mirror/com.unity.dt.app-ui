@@ -13,21 +13,21 @@ Please read the [State Management](xref:state-management) guide for more informa
 
 ### Create a store and slices
 
-When the [Store](xref:Unity.AppUI.Redux.Store) instance is constructed and returned, it is ready to be used.
+When the [Store&lt;TState&gt;](xref:Unity.AppUI.Redux.Store`1) instance is constructed and returned, it is ready to be used.
 You cannot add slices to the store after it has been created.
 
 Before:
 ```csharp
 var store = new Store();
-store.AddSlice("sliceName", new SliceState(), builder => { /* ... */ });
+store.AddSlice("sliceName", new MySliceState(), builder => { /* ... */ });
 store.AddSlice("slice2Name", /* ... */ );
 ```
 
 After:
 ```csharp
-var store = Store.CreateStore(new [] {
-    Store.CreateSlice("sliceName", new SliceState(), builder => { /* ... */ }),
-    Store.CreateSlice("slice2Name", /* ... */ )
+var store = StoreFactory.CreateStore(new [] {
+    StoreFactory.CreateSlice("sliceName", new MySliceState(), builder => { /* ... */ }),
+    StoreFactory.CreateSlice("slice2Name", /* ... */ )
     // ...
 });
 ```
@@ -43,14 +43,14 @@ The `AddDefault` and `AddMatcher` methods are still only available in the extra 
 
 Before:
 ```csharp
-store.AddSlice("sliceName", new SliceState(), builder => {
+store.AddSlice("sliceName", new MySliceState(), builder => {
     builder.Add("actionType", (state, action) => { /* ... */ });
 });
 ```
 
 After:
 ```csharp
-store.AddSlice("sliceName", new SliceState(), builder => {
+StoreFactory.CreateSlice("sliceName", new MySliceState(), builder => {
     builder.AddCase("actionType", (state, action) => { /* ... */ });
 });
 ```
@@ -61,7 +61,7 @@ You can also directly pass an `ActionCreator` or `ActionCreator<T>` instance.
 
 Before:
 ```csharp
-store.AddSlice("sliceName", new SliceState(), builder => {
+store.AddSlice("sliceName", new MySliceState(), builder => {
     builder.Add("actionType", (state, action) => { /* ... */ });
 });
 ```
@@ -71,7 +71,7 @@ After:
 static readonly ActionCreator actionType0 = "actionType0"; // no payload
 static readonly ActionCreator<int> actionType1 = nameof(actionType1); // with int payload
 
-store.AddSlice("sliceName", new SliceState(), builder => {
+StoreFactory.CreateSlice("sliceName", new MySliceState(), builder => {
     builder.AddCase((ActionCreator<int>)"actionType2", (state, action) => { /* ... */ }); // cast to ActionCreator<int>
 });
 ```

@@ -1,18 +1,18 @@
 using System;
-using Unity.AppUI.Redux.DevTools.UI;
 using UnityEditor;
+using UnityEngine;
 
-namespace Unity.AppUI.Editor.Redux
+namespace Unity.AppUI.Editor.Redux.DevTools
 {
     /// <summary>
     /// A window that provides a set of tools for debugging and inspecting the state of the store.
     /// </summary>
-    public class DevToolsWindow : EditorWindow
+    class DevToolsWindow : EditorWindow, IHasCustomMenu
     {
         /// <summary>
         /// Show a Redux DevTools editor window.
         /// </summary>
-        //[MenuItem("Window/Analysis/Redux DevTools")]
+        [MenuItem("Window/Analysis/Redux DevTools")]
         static void ShowWindow()
         {
             var window = CreateWindow<DevToolsWindow>();
@@ -25,6 +25,11 @@ namespace Unity.AppUI.Editor.Redux
             var root = rootVisualElement;
             var devToolsGUI = new DevToolsView();
             root.Add(devToolsGUI);
+        }
+
+        void IHasCustomMenu.AddItemsToMenu(GenericMenu menu)
+        {
+            //todo
         }
     }
 }

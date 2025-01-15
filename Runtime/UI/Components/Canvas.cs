@@ -595,8 +595,8 @@ namespace Unity.AppUI.UI
             {
                 name = viewportUssClassName,
                 pickingMode = PickingMode.Ignore,
-                usageHints = UsageHints.DynamicTransform
             };
+            m_Viewport.EnableDynamicTransform(true);
             m_Viewport.AddToClassList(viewportUssClassName);
             hierarchy.Add(m_Viewport);
 

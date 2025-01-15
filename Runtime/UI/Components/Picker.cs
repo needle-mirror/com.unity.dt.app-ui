@@ -797,14 +797,14 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A Picker UI element with a title and a list of items.
     /// </summary>
-    /// <typeparam name="TItemType"> The type of the items contained in the Picker. </typeparam>
-    /// <typeparam name="TTitleType"> The type of the title contained in the Picker. </typeparam>
+    /// <typeparam name="TItem"> The type of the items contained in the Picker. </typeparam>
+    /// <typeparam name="TTitle"> The type of the title contained in the Picker. </typeparam>
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public abstract partial class Picker<TItemType, TTitleType> : Picker
-        where TItemType : BaseVisualElement, new()
-        where TTitleType : BaseVisualElement, new()
+    public abstract partial class Picker<TItem, TTitle> : Picker
+        where TItem : BaseVisualElement, new()
+        where TTitle : BaseVisualElement, new()
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
 
@@ -820,15 +820,15 @@ namespace Unity.AppUI.UI
 
 #endif
 
-        Action<TItemType, int> m_BindItem;
+        Action<TItem, int> m_BindItem;
 
-        Func<TItemType> m_MakeItem;
+        Func<TItem> m_MakeItem;
 
-        Func<TTitleType> m_MakeTitle;
+        Func<TTitle> m_MakeTitle;
 
-        Action<TTitleType, IEnumerable<int>> m_BindTitle;
+        Action<TTitle, IEnumerable<int>> m_BindTitle;
 
-        Action<TItemType, int> m_UnbindItem;
+        Action<TItem, int> m_UnbindItem;
 
         /// <summary>
         /// The function used to create a Picker item.
@@ -836,7 +836,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
-        public Func<TItemType> makeItem
+        public Func<TItem> makeItem
         {
             get => m_MakeItem;
             set
@@ -858,7 +858,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
-        public Action<TItemType, int> bindItem
+        public Action<TItem, int> bindItem
         {
             get => m_BindItem;
             set
@@ -880,7 +880,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
-        public Action<TItemType, int> unbindItem
+        public Action<TItem, int> unbindItem
         {
             get => m_UnbindItem;
             set
@@ -902,7 +902,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
-        public Func<TTitleType> makeTitle
+        public Func<TTitle> makeTitle
         {
             get => m_MakeTitle;
             set
@@ -924,7 +924,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
-        public Action<TTitleType, IEnumerable<int>> bindTitle
+        public Action<TTitle, IEnumerable<int>> bindTitle
         {
             get => m_BindTitle;
             set
@@ -952,11 +952,11 @@ namespace Unity.AppUI.UI
         /// <param name="defaultIndices"> The selected index by default. </param>
         public Picker(
             IList items,
-            Func<TItemType> makeItemFunc = null,
-            Func<TTitleType> makeTitleFunc = null,
-            Action<TItemType, int> bindItemFunc = null,
-            Action<TTitleType, IEnumerable<int>> bindTitleFunc = null,
-            Action<TItemType, int> unbindItemFunc = null,
+            Func<TItem> makeItemFunc = null,
+            Func<TTitle> makeTitleFunc = null,
+            Action<TItem, int> bindItemFunc = null,
+            Action<TTitle, IEnumerable<int>> bindTitleFunc = null,
+            Action<TItem, int> unbindItemFunc = null,
             int[] defaultIndices = null)
             : base(items, defaultIndices)
         {
@@ -971,7 +971,7 @@ namespace Unity.AppUI.UI
         protected override void RefreshTitleUI()
         {
             m_TitleContainer.Clear();
-            var title = makeTitle?.Invoke() ?? new TTitleType();
+            var title = makeTitle?.Invoke() ?? new TTitle();
             title.name = titleUssClassName;
             title.pickingMode = PickingMode.Ignore;
             title.AddToClassList(titleUssClassName);
@@ -983,7 +983,7 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="Picker.OnRequestItemCreation"/>
         protected override VisualElement OnRequestItemCreation(int i)
         {
-            var content = makeItem?.Invoke() ?? new TItemType();
+            var content = makeItem?.Invoke() ?? new TItem();
             if (bindItem != null)
                 bindItem.Invoke(content, i);
             else if (content is LocalizedTextElement text)
@@ -995,7 +995,7 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="Picker.OnUnbindItem"/>
         protected override void OnUnbindItem(VisualElement item, int index)
         {
-            if (item is TItemType typedItem)
+            if (item is TItem typedItem)
                 unbindItem?.Invoke(typedItem, index);
         }
 
@@ -1004,12 +1004,12 @@ namespace Unity.AppUI.UI
         /// </summary>
         /// <param name="index"> The index of the item to get. </param>
         /// <returns> The Picker item at the given index. </returns>
-        protected TItemType GetPickerItem(int index)
+        protected TItem GetPickerItem(int index)
         {
             if (index < 0 || index >= sourceItems.Count)
                 return null;
 
-            return m_Items[index] as TItemType;
+            return m_Items[index] as TItem;
         }
 
 #if ENABLE_UXML_TRAITS

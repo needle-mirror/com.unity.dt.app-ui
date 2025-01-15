@@ -532,6 +532,42 @@ namespace Unity.AppUI.Samples
             var collapsibleSplitView = root.Q<SplitView>("collapsible-split-view");
             root.Q<Button>("sv-cs0b").clicked += () => collapsibleSplitView.CollapseSplitter(0, CollapseDirection.Backward);
             root.Q<Button>("sv-cs1f").clicked += () => collapsibleSplitView.CollapseSplitter(1, CollapseDirection.Forward);
+
+            var restrictedSlider = root.Q<UI.SliderFloat>("restricted-slider");
+            var restrictedStepSlider = root.Q<UI.SliderFloat>("restricted-step-slider");
+            var customMarks = new List<SliderMark<float>>
+            {
+                new SliderMark<float> { value = 0.0f, label = "0"},
+                new SliderMark<float> { value = 0.4f, label = "40" },
+                new SliderMark<float> { value = 0.5f, label = "50" },
+                new SliderMark<float> { value = 0.75f, label = "75" },
+            };
+            restrictedSlider.customMarks = customMarks;
+            restrictedStepSlider.customMarks = customMarks;
+
+            var scaledSlider = root.Q<UI.SliderInt>("scaled-slider");
+            var calculateValue = new UI.SliderInt.ScaleHandler(v => (int)Mathf.Pow(2, v));
+            scaledSlider.scale = calculateValue;
+            scaledSlider.formatFunction = v =>
+            {
+                var units = new string[] { "KB", "MB", "GB", "TB" };
+                var unitIndex = 0;
+                var scaledValue = v;
+                while (scaledValue >= 1024 && unitIndex < units.Length - 1)
+                {
+                    scaledValue /= 1024;
+                    unitIndex++;
+                }
+
+                return $"{scaledValue} {units[unitIndex]}";
+            };
+
+            var scaledSliderText = root.Q<Text>("scaled-slider-text");
+            scaledSlider.RegisterValueChangingCallback(evt =>
+            {
+                scaledSliderText.text = "Storage Size: " + scaledSlider.formatFunction(calculateValue(evt.newValue));
+            });
+            scaledSliderText.text = "Storage Size: " + scaledSlider.formatFunction(calculateValue(scaledSlider.value));
         }
 
         static void OpenAlertDialog(VisualElement anchor, AlertSemantic semantic)

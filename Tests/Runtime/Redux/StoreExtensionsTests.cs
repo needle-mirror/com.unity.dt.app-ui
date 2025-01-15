@@ -31,9 +31,9 @@ namespace Unity.AppUI.Tests.Redux
         [Test]
         public void Dispatch_ActionTypeStringValue_CreatesAction()
         {
-            var store = Store.CreateStore(new[]
+            var store = StoreFactory.CreateStore(new[]
             {
-                Store.CreateSlice(dummySliceName, new DummyState(), reducers =>
+                StoreFactory.CreateSlice(dummySliceName, new DummyState(), reducers =>
                 {
                     reducers.AddCase(k_DummyAction, DummyActionReducer);
                 })
@@ -49,9 +49,9 @@ namespace Unity.AppUI.Tests.Redux
         [Test]
         public void Dispatch_ActionTypeWithPayloadStringValue_CreatesAction()
         {
-            var store = Store.CreateStore(new[]
+            var store = StoreFactory.CreateStore(new[]
             {
-                Store.CreateSlice(dummySliceName, new DummyState(), reducers =>
+                StoreFactory.CreateSlice(dummySliceName, new DummyState(), reducers =>
                 {
                     reducers.AddCase(k_DummyActionWithPayload, DummyActionWithPayloadReducer);
                 })
@@ -68,9 +68,9 @@ namespace Unity.AppUI.Tests.Redux
         [Test]
         public void Dispatch_ActionCreator_CreatesAction()
         {
-            var store = Store.CreateStore(new[]
+            var store = StoreFactory.CreateStore(new[]
             {
-                Store.CreateSlice(dummySliceName, new DummyState(), reducers =>
+                StoreFactory.CreateSlice(dummySliceName, new DummyState(), reducers =>
                 {
                     reducers.AddCase(k_DummyAction, DummyActionReducer);
                 })
@@ -86,9 +86,9 @@ namespace Unity.AppUI.Tests.Redux
         [Test]
         public void Dispatch_ActionCreatorWithPayload_CreatesAction()
         {
-            var store = Store.CreateStore(new[]
+            var store = StoreFactory.CreateStore(new[]
             {
-                Store.CreateSlice(dummySliceName, new DummyState(), reducers =>
+                StoreFactory.CreateSlice(dummySliceName, new DummyState(), reducers =>
                 {
                     reducers.AddCase(k_DummyActionWithPayload, DummyActionWithPayloadReducer);
                 })
@@ -105,9 +105,9 @@ namespace Unity.AppUI.Tests.Redux
         [Test]
         public void GetState_WithSliceName_ReturnsState()
         {
-            var store = Store.CreateStore(new[]
+            var store = StoreFactory.CreateStore(new[]
             {
-                Store.CreateSlice(dummySliceName, new DummyState(), reducers =>
+                StoreFactory.CreateSlice(dummySliceName, new DummyState(), reducers =>
                 {
                     reducers.AddCase(k_DummyAction, DummyActionReducer);
                 })
@@ -123,9 +123,9 @@ namespace Unity.AppUI.Tests.Redux
         [Test]
         public void Subscribe_ToSliceStateChange()
         {
-            var store = Store.CreateStore(new[]
+            var store = StoreFactory.CreateStore(new[]
             {
-                Store.CreateSlice(dummySliceName, new DummyState(), reducers =>
+                StoreFactory.CreateSlice(dummySliceName, new DummyState(), reducers =>
                 {
                     reducers.AddCase(k_DummyAction, DummyActionReducer);
                 })
@@ -136,7 +136,7 @@ namespace Unity.AppUI.Tests.Redux
             {
                 Assert.AreEqual(k_DummyAction.type, sliceState.action.type);
                 called = true;
-            }, new SubscribeOptions<DummyState> { invokeOnSubscribe = false });
+            }, new SubscribeOptions<DummyState> { fireImmediately = false });
             Assert.IsNotNull(sub);
             store.Dispatch(k_DummyAction.type);
             Assert.Throws<ArgumentNullException>(() => StoreExtensions.Subscribe<PartitionedState,DummyState>(null, dummySliceName, _ => { }));
@@ -151,9 +151,9 @@ namespace Unity.AppUI.Tests.Redux
         [Test]
         public void Subscribe_ToSliceStateChange_WithSelector()
         {
-            var store = Store.CreateStore(new[]
+            var store = StoreFactory.CreateStore(new[]
             {
-                Store.CreateSlice(dummySliceName, new DummyState(), reducers =>
+                StoreFactory.CreateSlice(dummySliceName, new DummyState(), reducers =>
                 {
                     reducers.AddCase(k_DummyAction, DummyActionReducer);
                 })
@@ -165,7 +165,7 @@ namespace Unity.AppUI.Tests.Redux
             {
                 Assert.AreEqual(k_DummyAction.type, actionInState.type);
                 called = true;
-            }, new SubscribeOptions<IAction> { invokeOnSubscribe = false });
+            }, new SubscribeOptions<IAction> { fireImmediately = false });
             Assert.IsNotNull(sub);
             store.Dispatch(k_DummyAction.type);
             Assert.Throws<ArgumentNullException>(() => StoreExtensions.Subscribe<PartitionedState,IAction,DummyState>(null, dummySliceName, selector, _ => { }));

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AOT;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Unity.AppUI.Core
 {
@@ -141,13 +142,19 @@ namespace Unity.AppUI.Core
 
         float m_PollEventTime;
 
-        readonly List<AppUITouch> k_FrameTouches = new List<AppUITouch>();
+        const int k_MaxTouches = 512;
 
-        readonly Dictionary<int, AppUITouch> k_PrevTouches = new Dictionary<int, AppUITouch>();
+        readonly AppUITouch[] k_FrameTouches = new AppUITouch[k_MaxTouches];
 
-        AppUITouch[] m_AppUITouches = Array.Empty<AppUITouch>();
+        int m_FrameTouchCount;
+
+        readonly AppUITouch[] k_PrevTouches = new AppUITouch[k_MaxTouches];
+
+        int m_PrevTouchCount;
 
         int m_LastUpdateFrame;
+
+        NativeTouch m_NativeTouch;
 
         PluginConfigData m_ConfigData;
 
@@ -262,48 +269,44 @@ namespace Unity.AppUI.Core
             {
                 m_LastUpdateFrame = Time.frameCount;
 
-                k_PrevTouches.Clear();
-                foreach (var touch in k_FrameTouches)
+                for (var i = 0; i < k_MaxTouches; i++)
                 {
-                    k_PrevTouches[touch.fingerId] = touch;
+                    if (i == m_FrameTouchCount)
+                        break;
+                    k_PrevTouches[i] = k_FrameTouches[i];
                 }
 
-                k_FrameTouches.Clear();
+                m_PrevTouchCount = m_FrameTouchCount;
+                m_FrameTouchCount = 0;
 
-                NativeTouch nativeTouch;
-                nativeTouch.fingerId = 0;
-                nativeTouch.positionX = 0;
-                nativeTouch.positionY = 0;
-                nativeTouch.deviceWidth = 0;
-                nativeTouch.deviceHeight = 0;
-                nativeTouch.timestamp = 0;
-                nativeTouch.phase = 0;
-
-                while (NativeAppUI_ReadTouch(ref nativeTouch))
+                for (var i = 0; i < k_MaxTouches; i++)
                 {
-                    var touch = new AppUITouch
-                    {
-                        fingerId = nativeTouch.fingerId,
-                        position = new Vector2(nativeTouch.positionX * nativeTouch.deviceWidth,
-                            nativeTouch.positionY * nativeTouch.deviceHeight),
-                        phase = nativeTouch.phase
-                    };
+                    m_NativeTouch = default;
+                    if (!NativeAppUI_ReadTouch(ref m_NativeTouch))
+                        break;
 
-                    if (k_PrevTouches.TryGetValue(nativeTouch.fingerId, out var prev))
+                    ref var touch = ref k_FrameTouches[m_FrameTouchCount++];
+                    touch.fingerId = m_NativeTouch.fingerId;
+                    touch.position = new Vector2(m_NativeTouch.positionX * m_NativeTouch.deviceWidth,
+                        m_NativeTouch.positionY * m_NativeTouch.deviceHeight);
+                    touch.phase = m_NativeTouch.phase;
+
+                    for (var j = m_PrevTouchCount - 1; j >= 0; j--)
                     {
-                        touch.deltaPos = touch.position - prev.position;
-                        touch.deltaTime = Time.unscaledTime - m_PollEventTime;
+                        if (k_PrevTouches[i].fingerId == m_NativeTouch.fingerId)
+                        {
+                            touch.deltaPos = touch.position - k_PrevTouches[i].position;
+                            touch.deltaTime = Time.unscaledTime - m_PollEventTime;
+                            break;
+                        }
                     }
-
-                    k_FrameTouches.Add(touch);
                 }
 
-                m_AppUITouches = k_FrameTouches.ToArray();
                 m_PollEventTime = Time.unscaledTime;
             }
         }
 
-        public override AppUITouch[] touches => m_AppUITouches;
+        public override ReadOnlySpan<AppUITouch> touches => k_FrameTouches.AsSpan(0, m_FrameTouchCount);
 
         protected override void LowFrequencyUpdate()
         {

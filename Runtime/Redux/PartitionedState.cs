@@ -31,22 +31,13 @@ namespace Unity.AppUI.Redux
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public PartitionedState()
-        {
-
-        }
+        public PartitionedState() { }
 
         /// <summary>
         /// Copy constructor.
         /// </summary>
         /// <param name="partitionedState"> The partitioned state to copy. </param>
-        public PartitionedState(PartitionedState partitionedState)
-        {
-            foreach (var (sliceName, slice) in partitionedState)
-            {
-                Add(sliceName, slice);
-            }
-        }
+        public PartitionedState(PartitionedState partitionedState) : base(partitionedState) { }
 
         /// <inheritdoc/>
         public TSliceState Get<TSliceState>(string sliceName)
@@ -65,9 +56,7 @@ namespace Unity.AppUI.Redux
         {
             if (string.IsNullOrEmpty(sliceName))
                 throw new ArgumentException("Slice name cannot be null or empty.", nameof(sliceName));
-
-            this[sliceName] = sliceState;
-            return new PartitionedState(this);
+            return new PartitionedState(this) { [sliceName] = sliceState };
         }
 
         /// <inheritdoc/>

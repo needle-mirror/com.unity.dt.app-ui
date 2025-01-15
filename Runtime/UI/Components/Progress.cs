@@ -454,13 +454,7 @@ namespace Unity.AppUI.UI
         {
             this.UnregisterUpdateCallback(k_UpdateCallback);
 
-            if (m_RT)
-            {
-                m_RT.Release();
-                UnityObject.Destroy(m_RT);
-            }
-
-            m_RT = null;
+            ReleaseTextures();
 
             m_Update?.Pause();
             m_Update = null;
@@ -480,6 +474,16 @@ namespace Unity.AppUI.UI
         /// Generates the textures for the progress.
         /// </summary>
         protected virtual void GenerateTextures() { }
+
+        /// <summary>
+        /// Releases the textures.
+        /// </summary>
+        protected void ReleaseTextures()
+        {
+            if (m_RT)
+                RenderTexture.ReleaseTemporary(m_RT);
+            m_RT = null;
+        }
 
 #if ENABLE_UXML_TRAITS
 

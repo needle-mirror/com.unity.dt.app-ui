@@ -532,8 +532,8 @@ namespace Unity.AppUI.UI
             {
                 name = drawerUssClassName,
                 pickingMode = PickingMode.Ignore,
-                usageHints = UsageHints.DynamicTransform,
             };
+            m_DrawerElement.EnableDynamicTransform(true);
             m_DrawerContainer = new ExVisualElement
             {
                 name = drawerContainerUssClassName,

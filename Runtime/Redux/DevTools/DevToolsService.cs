@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Unity.AppUI.Redux.DevTools
@@ -6,92 +7,217 @@ namespace Unity.AppUI.Redux.DevTools
     /// <summary>
     /// The configuration for the DevTools.
     /// </summary>
-    public struct DevToolsConfiguration
+    public class DevToolsConfiguration
     {
         /// <summary>
         /// Whether the DevTools are enabled.
         /// </summary>
-        public bool enabled;
+        public bool enabled { get; set; }
+
+        /// <summary>
+        /// The name of the store.
+        /// </summary>
+        public string name { get; set; }
+
+        /// <summary>
+        /// Whether the DevTools should automatically record actions.
+        /// </summary>
+        public bool shouldRecordChanges { get; set; } = true;
+
+        /// <summary>
+        /// Whether the DevTools should start locked.
+        /// </summary>
+        public bool shouldStartLocked { get; set; } = false;
+
+        /// <summary>
+        /// The maximum number of actions to record.
+        /// </summary>
+        public int maxAge { get; set; } = 100;
+
+        /// <summary>
+        /// Whether the DevTools should catch exceptions.
+        /// </summary>
+        public bool shouldCatchExceptions { get; set; } = true;
+    }
+
+    /// <summary>
+    /// The service that provides a set of tools for debugging and inspecting the state of the store.
+    /// </summary>
+    public interface IDevToolsService
+    {
+        /// <summary>
+        /// Event that is invoked when the list of connected stores has changed.
+        /// </summary>
+        event System.Action connectedStoresChanged;
+
+        /// <summary>
+        /// Connect the DevTools to a store.
+        /// </summary>
+        /// <param name="store"> The store to connect to. </param>
+        void Connect(IInstrumentedStore store);
+
+        /// <summary>
+        /// Disconnect the DevTools from a store.
+        /// </summary>
+        /// <param name="store"> The store to disconnect from. </param>
+        void Disconnect(IInstrumentedStore store);
+
+        /// <summary>
+        /// Get the stores that the DevTools are connected to.
+        /// </summary>
+        /// <returns> The stores that the DevTools are connected to. </returns>
+        IInstrumentedStore[] GetConnectedStores();
+
+        /// <summary>
+        /// Get a store by its ID if it is connected to the DevTools.
+        /// </summary>
+        /// <param name="id"> The ID of the store. </param>
+        /// <returns> The store if it is connected to the DevTools; otherwise, null. </returns>
+        IInstrumentedStore GetStoreById(string id);
     }
 
     /// <summary>
     /// A class that provides a set of tools for debugging and inspecting the state of the store.
     /// </summary>
-    public class DevToolsService
+    public class DevToolsService : IDevToolsService
     {
-        const string initActionType = "@@INIT";
-
-        const string pausedActionType = "@@PAUSED";
-
-        const string resumedActionType = "@@RESUMED";
-
-        const string lockedActionType = "@@LOCKED";
-
-        const string unlockedActionType = "@@UNLOCKED";
-
-        internal static DevToolsService Instance { get; } = new DevToolsService();
+        static readonly Lazy<DevToolsService> k_Instance = new Lazy<DevToolsService>(() => new DevToolsService());
 
         /// <summary>
-        /// A reducer for DevTools actions.
+        /// The singleton instance of the DevTools service.
         /// </summary>
-        /// <param name="baseReducer"> The base reducer. </param>
-        /// <typeparam name="TStoreState"> The type of the store state. </typeparam>
-        /// <returns> The new reducer. </returns>
-        public static Reducer<TStoreState> Reducer<TStoreState>(Reducer<TStoreState> baseReducer)
-        {
-            return (state, action) =>
-            {
-                if (action == null)
-                    return state;
+        internal static IDevToolsService Instance => k_Instance.Value;
 
-                return action.type switch
+        readonly object m_ConnectedStoresLock = new object();
+
+        readonly List<WeakReference<IInstrumentedStore>> m_ConnectedStores = new List<WeakReference<IInstrumentedStore>>();
+
+        /// <summary>
+        /// Event that is invoked when the connected stores change.
+        /// </summary>
+        public event System.Action connectedStoresChanged;
+
+        /// <summary>
+        /// Create a new instance of the DevTools service.
+        /// </summary>
+        DevToolsService() { }
+
+        /// <summary>
+        /// Connect the DevTools to a store.
+        /// </summary>
+        /// <param name="store"> The store to connect to. </param>
+        /// <exception cref="ArgumentNullException"> Thrown if <paramref name="store"/> is null. </exception>
+        public void Connect(IInstrumentedStore store)
+        {
+            if (store == null)
+                throw new ArgumentNullException(nameof(store));
+
+            lock (m_ConnectedStoresLock)
+            {
+                foreach (var s in m_ConnectedStores)
                 {
-                    initActionType => state,
-                    pausedActionType => state,
-                    resumedActionType => state,
-                    lockedActionType => state,
-                    unlockedActionType => state,
-                    _ => baseReducer(state, action)
-                };
-            };
+                    if (s.TryGetTarget(out var target) && target == store)
+                        return;
+                }
+
+                m_ConnectedStores.Add(new WeakReference<IInstrumentedStore>(store));
+            }
+
+            if (EnsureConnectedStores())
+                connectedStoresChanged?.Invoke();
         }
 
         /// <summary>
-        /// Enhancer for the store creation that adds the DevTools to the store.
+        /// Disconnect the DevTools from a store.
         /// </summary>
-        /// <param name="config"> The configuration for the DevTools. </param>
-        /// <typeparam name="TStoreState"> The type of the store state. </typeparam>
-        /// <returns> The store enhancer. </returns>
-        public static StoreEnhancer<Store<TStoreState>.CreationContext,TStoreState>
-            Enhancer<TStoreState>(DevToolsConfiguration config = default)
+        /// <param name="store"> The store to disconnect from. </param>
+        /// <exception cref="ArgumentNullException"> Thrown if <paramref name="store"/> is null. </exception>
+        public void Disconnect(IInstrumentedStore store)
         {
-            return createStore => (reducer, initialState) =>
-            {
-                var storeCreator = createStore(reducer, initialState);
-                if (!config.enabled)
-                    return storeCreator;
-                var originalDispatcher = storeCreator.dispatcher;
-                storeCreator.reducer = Reducer(storeCreator.reducer);
-                storeCreator.dispatcher = action =>
-                {
-                    var previousState = storeCreator.store.GetState();
-                    originalDispatcher(action);
-                    var nextState = storeCreator.store.GetState();
-                    Instance.Record(storeCreator.store, config, action, previousState, nextState);
-                };
+            if (store == null)
+                throw new ArgumentNullException(nameof(store));
 
-                return storeCreator;
-            };
+            var found = false;
+            lock (m_ConnectedStoresLock)
+            {
+                for (var i = m_ConnectedStores.Count - 1; i >= 0; i--)
+                {
+                    if (m_ConnectedStores[i].TryGetTarget(out var target) && target == store)
+                    {
+                        m_ConnectedStores.RemoveAt(i);
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (EnsureConnectedStores() && found)
+                connectedStoresChanged?.Invoke();
         }
 
-        internal void Record<TState>(
-            Store<TState> store,
-            DevToolsConfiguration config,
-            IAction action,
-            TState previousState,
-            TState nextState)
+        /// <summary>
+        /// Get the stores that the DevTools are connected to.
+        /// </summary>
+        /// <returns> The stores that the DevTools are connected to. </returns>
+        public IInstrumentedStore[] GetConnectedStores()
         {
-            Debug.Log($"Action: {action.type}");
+            EnsureConnectedStores();
+            IInstrumentedStore[] stores;
+            lock (m_ConnectedStoresLock)
+            {
+                stores = new IInstrumentedStore[m_ConnectedStores.Count];
+                for (var i = 0; i < m_ConnectedStores.Count; i++)
+                {
+                    if (m_ConnectedStores[i].TryGetTarget(out var store))
+                        stores[i] = store;
+                }
+            }
+            return stores;
+        }
+
+        /// <inheritdoc />
+        public IInstrumentedStore GetStoreById(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return null;
+
+            EnsureConnectedStores();
+            IInstrumentedStore ret = null;
+            lock (m_ConnectedStoresLock)
+            {
+                foreach (var store in m_ConnectedStores)
+                {
+                    if (store.TryGetTarget(out var target) && target.id == id)
+                    {
+                        ret = target;
+                        break;
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        bool EnsureConnectedStores()
+        {
+            // remove all stores that have been garbage collected
+            var removed = false;
+            lock (m_ConnectedStoresLock)
+            {
+                for (var i = m_ConnectedStores.Count - 1; i >= 0; i--)
+                {
+                    if (!m_ConnectedStores[i].TryGetTarget(out _))
+                    {
+                        m_ConnectedStores.RemoveAt(i);
+                        removed = true;
+                    }
+                }
+            }
+
+            if (removed)
+                connectedStoresChanged?.Invoke();
+
+            return !removed;
         }
     }
 }

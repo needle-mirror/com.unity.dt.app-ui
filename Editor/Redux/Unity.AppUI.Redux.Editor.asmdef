@@ -11,10 +11,33 @@
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Unity.Plastic.Newtonsoft.Json.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.collab-proxy",
+            "expression": "2.0.0",
+            "define": "UNITY_ENABLE_VERSION_CONTROL"
+        },
+        {
+            "name": "Unity",
+            "expression": "6000.0.0a1",
+            "define": "UNITY_ENABLE_TABVIEW"
+        },
+        {
+            "name": "Unity",
+            "expression": "6000.0.0a1",
+            "define": "UNITY_ENABLE_SLIDER_FILL"
+        },
+        {
+            "name": "Unity",
+            "expression": "2022.2.0a9",
+            "define": "UITK_SELECTED_INDICES_CHANGED"
+        }
+    ],
     "noEngineReferences": false
 }

@@ -46,7 +46,7 @@ namespace Unity.AppUI.Tests.Redux
         [Test]
         public void DispatchAsyncThunk_WhenAsyncThunkIsNull_ThrowsArgumentNullException()
         {
-            var store = Store.CreateStore((state, _) => state, new PartitionedState());
+            var store = StoreFactory.CreateStore((state, _) => state, new PartitionedState());
             Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await StoreExtensions.DispatchAsyncThunk<string,string>(store, null));
         }
@@ -62,7 +62,7 @@ namespace Unity.AppUI.Tests.Redux
         [Test]
         public void DispatchAsyncThunkCoroutine_WhenAsyncThunkIsNull_ThrowsArgumentNullException()
         {
-            var store = Store.CreateStore((state, _) => state, new PartitionedState());
+            var store = StoreFactory.CreateStore((state, _) => state, new PartitionedState());
             Assert.Throws<ArgumentNullException>(() => StoreExtensions.DispatchAsyncThunkCoroutine<string,string>(store, null));
         }
 
@@ -75,7 +75,7 @@ namespace Unity.AppUI.Tests.Redux
         [Test]
         public void ThunkAPI_DispatchThunk_WhenAsyncThunkIsNull_ThrowsArgumentNullException()
         {
-            var store = Store.CreateStore((state, _) => state, new PartitionedState());
+            var store = StoreFactory.CreateStore((state, _) => state, new PartitionedState());
             var api = new ThunkAPI<string,string>(store, new AsyncThunkCreator<string,string>(
                 "dummy/action", _ => Task.FromResult("result")).Invoke("arg"));
             Assert.DoesNotThrowAsync(async () => await api.DispatchThunk());
@@ -207,9 +207,9 @@ namespace Unity.AppUI.Tests.Redux
             var asyncThunk = new AsyncThunkCreator<string, string>(
                 "myAsyncThunk", async _ => await Task.FromResult("result"));
 
-            var store = Store.CreateStore(new[]
+            var store = StoreFactory.CreateStore(new[]
             {
-                Store.CreateSlice("mySlice", new MyState(), null, builder =>
+                StoreFactory.CreateSlice("mySlice", new MyState(), null, builder =>
                 {
                     builder.AddCase(asyncThunk.fulfilled, (state, action) => state with { value = action.payload });
                 })
@@ -225,9 +225,9 @@ namespace Unity.AppUI.Tests.Redux
             var asyncThunk = new AsyncThunkCreator<string, string>(
                 "myAsyncThunk", async _ => await Task.FromResult("result"));
 
-            var store = Store.CreateStore(new []
+            var store = StoreFactory.CreateStore(new []
             {
-                Store.CreateSlice("mySlice", new MyState(), null, builder =>
+                StoreFactory.CreateSlice("mySlice", new MyState(), null, builder =>
                 {
                     builder.AddCase(asyncThunk.fulfilled, (state, action) => state with { value = action.payload });
                 })
@@ -257,9 +257,9 @@ namespace Unity.AppUI.Tests.Redux
                 "myAsyncThunk", async _ => await Task.FromResult("result"),
                 options);
 
-            var store = Store.CreateStore(new[]
+            var store = StoreFactory.CreateStore(new[]
             {
-                Store.CreateSlice("mySlice", new MyState(), null, builder =>
+                StoreFactory.CreateSlice("mySlice", new MyState(), null, builder =>
                 {
                     builder.AddCase(asyncThunk.pending, (state, _) => state with { value = "pending" });
                     builder.AddCase(asyncThunk.fulfilled, (state, _) => state with { value = "fulfilled" });
@@ -281,9 +281,9 @@ namespace Unity.AppUI.Tests.Redux
                     return "result";
                 });
 
-            var store = Store.CreateStore(new []
+            var store = StoreFactory.CreateStore(new []
             {
-                Store.CreateSlice("mySlice", new MyState(), null, builder =>
+                StoreFactory.CreateSlice("mySlice", new MyState(), null, builder =>
                 {
                     builder.AddCase(asyncThunk.pending, (state, action) => state with { value = action });
                     builder.AddCase(asyncThunk.fulfilled, (state, action) => state with { value = action });
@@ -341,9 +341,9 @@ namespace Unity.AppUI.Tests.Redux
                     return "result";
                 });
 
-            var store = Store.CreateStore(new []
+            var store = StoreFactory.CreateStore(new []
             {
-                Store.CreateSlice("mySlice", new MyState(), null, builder =>
+                StoreFactory.CreateSlice("mySlice", new MyState(), null, builder =>
                 {
                     builder.AddCase(asyncThunk.pending, (state, action) => state with { value = action });
                     builder.AddCase(asyncThunk.fulfilled, (state, action) => state with { value = action });
@@ -382,9 +382,9 @@ namespace Unity.AppUI.Tests.Redux
                     return "result";
                 });
 
-            var store = Store.CreateStore(new[]
+            var store = StoreFactory.CreateStore(new[]
             {
-                Store.CreateSlice("mySlice", new MyState(), null, builder =>
+                StoreFactory.CreateSlice("mySlice", new MyState(), null, builder =>
                 {
                     builder.AddCase(asyncThunk.pending, (state, action) => state with { value = action });
                     builder.AddCase(asyncThunk.fulfilled, (state, action) => state with { value = action });
@@ -424,9 +424,9 @@ namespace Unity.AppUI.Tests.Redux
                     return "result";
                 });
 
-            var store = Store.CreateStore(new[]
+            var store = StoreFactory.CreateStore(new[]
             {
-                Store.CreateSlice("mySlice", new MyState(), null, builder =>
+                StoreFactory.CreateSlice("mySlice", new MyState(), null, builder =>
                 {
                     builder.AddCase(asyncThunk.pending, (state, action) => state with { value = action });
                     builder.AddCase(asyncThunk.fulfilled, (state, action) => state with { value = action });

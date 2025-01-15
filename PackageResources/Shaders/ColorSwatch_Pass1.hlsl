@@ -17,6 +17,7 @@ struct v2f
 
 #define COLORSWATCH_MAX_ITEMS 16
 
+uniform int _Orientation;
 uniform int _ColorCount;
 uniform int _AlphaCount;
 uniform int _IsFixed;
@@ -39,7 +40,7 @@ half4 frag (v2f i) : SV_Target
     if (color_count == 0 || alpha_count == 0)
         return half4(0, 0, 0, 0);
 
-    const float current_position = i.uv.x;
+    const float current_position = _Orientation ? i.uv.y : i.uv.x;
 
     // colors must be sorted by position to work
 

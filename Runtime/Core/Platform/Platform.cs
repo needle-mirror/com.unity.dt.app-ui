@@ -136,7 +136,7 @@ namespace Unity.AppUI.Core
         /// <see cref="UnityEngine.UIElements.PanelSettings.referenceDpi"/>.
         /// </para>
         /// <para>
-        /// This value is the value of <see cref="Screen.dpi"/> divided by the main screen scale factor.
+        /// This value is computed differently depending on the platform.
         /// </para>
         /// </summary>
         public static float referenceDpi => s_Impl.referenceDpi;
@@ -191,7 +191,7 @@ namespace Unity.AppUI.Core
         /// This can be either coming from the Old or New Input System, but also from custom the App UI Input System for
         /// trackpad/touchpad support.
         /// </remarks>
-        public static AppUITouch[] touches => s_Impl.touches;
+        public static ReadOnlySpan<AppUITouch> touches => s_Impl.touches;
 
         /// <summary>
         /// Run a haptic feedback on the current platform.

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.Contracts;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace Unity.AppUI.Redux
             if (string.IsNullOrEmpty(actionType))
                 throw new ArgumentNullException(nameof(actionType));
 
-            store.Dispatch(Store.CreateAction(actionType).Invoke());
+            store.Dispatch(new ActionCreator(actionType).Invoke());
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace Unity.AppUI.Redux
             if (string.IsNullOrEmpty(actionType))
                 throw new ArgumentNullException(nameof(actionType));
 
-            store.Dispatch(Store.CreateAction<TPayload>(actionType).Invoke(payload));
+            store.Dispatch(new ActionCreator<TPayload>(actionType).Invoke(payload));
         }
 
         /// <summary>
@@ -169,6 +170,77 @@ namespace Unity.AppUI.Redux
                 throw new ArgumentNullException(nameof(sliceName));
 
             return store.GetState().Get<TSliceState>(sliceName);
+        }
+
+        /// <summary>
+        /// Get a selected part of the state.
+        /// </summary>
+        /// <param name="store"> The store. </param>
+        /// <param name="selector"> The selector to get the selected part of the state. </param>
+        /// <typeparam name="TState"> The type of the state. </typeparam>
+        /// <typeparam name="TSelected"> The type of the selected part of the state. </typeparam>
+        /// <returns> The selected part of the state. </returns>
+        /// <exception cref="ArgumentNullException"> Thrown when the store is null. </exception>
+        public static TSelected GetState<TState,TSelected>(this IStateProvider<TState> store,
+            Selector<TState, TSelected> selector)
+        {
+            if (store == null)
+                throw new ArgumentNullException(nameof(store));
+
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return selector(store.GetState());
+        }
+
+        /// <summary>
+        /// Get the selected part of the state in a slice.
+        /// </summary>
+        /// <param name="store"> The store. </param>
+        /// <param name="sliceName"> The name of the slice. </param>
+        /// <param name="selector"> The selector to get the selected part of the state. </param>
+        /// <typeparam name="TSliceState"> The type of the slice state. </typeparam>
+        /// <typeparam name="TSelected"> The type of the selected part of the state. </typeparam>
+        /// <returns> The selected part of the state. </returns>
+        /// <exception cref="ArgumentNullException"> Thrown when any of the arguments is null. </exception>
+        public static TSelected GetState<TSliceState, TSelected>(this IStateProvider<IPartionableState> store,
+            string sliceName, Selector<TSliceState, TSelected> selector)
+        {
+            if (store == null)
+                throw new ArgumentNullException(nameof(store));
+
+            if (string.IsNullOrEmpty(sliceName))
+                throw new ArgumentNullException(nameof(sliceName));
+
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return selector(store.GetState().Get<TSliceState>(sliceName));
+        }
+
+        /// <summary>
+        /// Adds a change listener.
+        /// It will be called any time an action is dispatched, and some part of the state tree may potentially have changed.
+        /// </summary>
+        /// <remarks>
+        /// This method doesn't check for duplicate listeners,
+        /// so calling it multiple times with the same listener will result in the listener being called multiple times.
+        /// </remarks>
+        /// <typeparam name="TStoreState"> The type of the store state. </typeparam>
+        /// <param name="store"> The store. </param>
+        /// <param name="listener"> A callback to be invoked on every dispatch. </param>
+        /// <param name="options"> The options for the subscription. </param>
+        /// <returns> A Subscription object that can be disposed. </returns>
+        /// <exception cref="ArgumentNullException"> Thrown if the listener is null. </exception>
+        public static IDisposableSubscription Subscribe<TStoreState>(
+            this INotifiable<TStoreState> store,
+            Listener<TStoreState> listener,
+            SubscribeOptions<TStoreState> options = default)
+        {
+            return store.Subscribe(DefaultStateSelector, listener, options);
+
+            [Pure]
+            static TStoreState DefaultStateSelector(TStoreState state) => state;
         }
 
         /// <summary>

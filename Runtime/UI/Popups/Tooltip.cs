@@ -147,10 +147,10 @@ namespace Unity.AppUI.UI
                 m_Container = new ExVisualElement
                 {
                     name = containerUssClassName,
-                    usageHints = UsageHints.DynamicTransform,
                     pickingMode = PickingMode.Ignore,
                     passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.OutsetShadows
                 };
+                m_Container.EnableDynamicTransform(true);
                 m_Container.AddToClassList(containerUssClassName);
                 hierarchy.Add(m_Container);
 

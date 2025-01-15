@@ -34,11 +34,11 @@
   --appui-alias-field-border-color-hover: var(--appui-base-500);
   --appui-alias-field-border-color-default: var(--appui-base-400);
 
-  --appui-alias-field-background-color-disabled: var(--appui-base-100);
-  --appui-alias-field-background-color-focus: var(--appui-base-100);
-  --appui-alias-field-background-color-active: var(--appui-base-100);
-  --appui-alias-field-background-color-hover: var(--appui-base-200);
-  --appui-alias-field-background-color-default: var(--appui-base-100);
+  --appui-alias-field-background-color-disabled: var(--appui-base-25);
+  --appui-alias-field-background-color-focus: var(--appui-base-25);
+  --appui-alias-field-background-color-active: var(--appui-base-25);
+  --appui-alias-field-background-color-hover: var(--appui-base-50);
+  --appui-alias-field-background-color-default: var(--appui-base-25);
 
   --appui-alias-text-disabled: var(--appui-foregrounds-25);
   --appui-alias-text-secondary: var(--appui-foregrounds-50);
@@ -108,7 +108,7 @@
   --appui-alias-control-gap-lg: var(--appui-spacing-150);
   --appui-alias-control-gap-md: var(--appui-spacing-100);
   --appui-alias-control-gap-sm: var(--appui-spacing-50);
-  --appui-alias-control-outline-offset: 4;
+  --appui-alias-control-outline-offset: 2;
   --appui-alias-control-outline-width: 2;
   --appui-alias-control-outline-color: rgba(11, 126, 224, 0.8);
 
@@ -156,6 +156,8 @@
   --appui-alias-actions-accent-background-color-default: var(--appui-accent-100);
 
   --appui-alias-menu-border-color-default: var(--appui-base-300);
+
+  --appui-alias-highlight-background-color-default: var(--appui-alias-field-border-color-focus);
 
   --appui-alias-caret-icon-default: var(--appui-icon-caret-down-regular);
 }

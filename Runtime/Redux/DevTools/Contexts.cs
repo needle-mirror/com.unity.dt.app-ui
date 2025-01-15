@@ -1,9 +1,9 @@
 using Unity.AppUI.Core;
 
-namespace Unity.AppUI.Redux.DevTools.Contexts
+namespace Unity.AppUI.Redux.DevTools
 {
-    record StoreContext(Store store) : IContext
+    record StoreContext<TState>(IStore<TState> store) : IContext
     {
-        public Store store { get; } = store;
+        public IStore<TState> store { get; } = store;
     }
 }

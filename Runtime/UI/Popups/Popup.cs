@@ -47,9 +47,11 @@ namespace Unity.AppUI.UI
             if (contentView is IDismissInvocator invocator)
                 invocator.dismissRequested += Dismiss;
 
-            m_InvokeShownAction = new Action(InvokeShownEventHandlers);
+            m_InvokeShownAction = new Action(InvokeShownEventHandlersInternal);
             m_PrepareAnimateViewInAction = new Action(PrepareAnimateViewInInternal);
             m_OnLayoutReadyToAnimateInAction = new Action(OnLayoutReadyToAnimateInInternal);
+
+            view.userData = this;
         }
 
         /// <summary>
@@ -79,6 +81,11 @@ namespace Unity.AppUI.UI
         /// The content of the popup.
         /// </summary>
         public VisualElement contentView { get; }
+
+        /// <summary>
+        /// Whether the popup can be dismissed by clicking outside of it.
+        /// </summary>
+        internal virtual bool focusOutDismissable { get; }
 
         /// <summary>
         /// The root view of the popup. It can be the container view itself or one of its ancestors.
@@ -164,7 +171,7 @@ namespace Unity.AppUI.UI
             {
                 // be sure its visible
                 view.visible = true;
-                InvokeShownEventHandlers();
+                m_InvokeShownAction();
             }
         }
 
@@ -197,15 +204,11 @@ namespace Unity.AppUI.UI
         protected virtual void InvokeShownEventHandlers()
         {
             var focusableElement = GetFocusableElement();
-            if (focusableElement != null)
-                focusableElement.schedule.Execute(() =>
-                {
-                    // Instead of force focusing an element in the popup content,
-                    // we should change the current FocusController of the panel:
-                    // focusableElement.panel.focusController = new FocusController(new VisualElementFocusRing(focusableElement));
-                    // but UITK doesnt provide any accessible way to do it
-                    focusableElement.Focus();
-                });
+            // Instead of force focusing an element in the popup content,
+            // we should change the current FocusController of the panel:
+            // focusableElement.panel.focusController = new FocusController(new VisualElementFocusRing(focusableElement));
+            // but UITK doesnt provide any accessible way to do it
+            focusableElement?.Focus();
         }
 
         /// <summary>
@@ -240,6 +243,11 @@ namespace Unity.AppUI.UI
             PrepareAnimateViewIn();
             // delay the animation to the next frame in case PrepareAnimateViewIn overrides the layout
             m_ScheduledAnimateViewIn = view.schedule.Execute(AnimateViewIn);
+        }
+
+        void InvokeShownEventHandlersInternal()
+        {
+            InvokeShownEventHandlers();
         }
 
         /// <summary>

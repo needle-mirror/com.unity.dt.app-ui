@@ -8,19 +8,21 @@ namespace Unity.AppUI.Tests.Redux
     [TestOf(typeof(DevToolsService))]
     class DevToolsTests
     {
+        record DummyState {}
+
         [Test]
         public void CanCreateStoreWithDevTools()
         {
             var defaultEnhancer =
-                DefaultEnhancer.GetDefaultEnhancer<Store, PartitionedState>(
-                    new DefaultEnhancer.Configuration
+                StoreFactory.DefaultEnhancer<DummyState>(
+                    new DefaultEnhancerConfiguration()
                     {
                         devTools = { enabled = true}
                     });
-            var store = Store.CreateStore((state, action) => state, new PartitionedState(), defaultEnhancer);
+            var store = StoreFactory.CreateStore((state, _) => state with {}, new DummyState(), defaultEnhancer);
             Assert.IsNotNull(store);
-            Assert.DoesNotThrow(() => store.Dispatch(Store.CreateAction("test")));
-            Assert.DoesNotThrow(() => store.Dispatch(Store.CreateAction<int>("testWithPayload"), 0));
+            Assert.DoesNotThrow(() => store.Dispatch(new ActionCreator("test").Invoke()));
+            Assert.DoesNotThrow(() => store.Dispatch( new ActionCreator<int>("testWithPayload"), 0));
         }
     }
 }

@@ -5,6 +5,23 @@ using System.Threading;
 namespace Unity.AppUI.Redux
 {
     /// <summary>
+    /// Representation of a Redux Store.
+    /// </summary>
+    public interface IStore : IDispatchable, IDisposable { }
+
+    /// <summary>
+    /// Representation of a Redux Store.
+    /// </summary>
+    /// <typeparam name="TState"> The type of the store state. </typeparam>
+    public interface IStore<TState> : IStore, IStateProvider<TState>, INotifiable<TState>
+    {
+        /// <summary>
+        /// The reducer function that will be used to update the state.
+        /// </summary>
+        Reducer<TState> reducer { get; }
+    }
+
+    /// <summary>
     /// An object that can dispatch an <see cref="Action"/>.
     /// </summary>
     public interface IDispatchable
@@ -16,6 +33,11 @@ namespace Unity.AppUI.Redux
         /// <exception cref="ArgumentException"> Thrown if the reducer for the action type does not exist. </exception>
         /// <exception cref="ArgumentNullException"> Thrown if the action is null. </exception>
         void Dispatch(IAction action);
+
+        /// <summary>
+        /// The dispatcher that will be used to dispatch actions.
+        /// </summary>
+        Dispatcher dispatcher { get; set; }
     }
 
     /// <summary>
@@ -35,24 +57,8 @@ namespace Unity.AppUI.Redux
     /// Interface for a store that can notify subscribers of state changes.
     /// </summary>
     /// <typeparam name="TState"> The type of the store state. </typeparam>
-    public interface INotifiable<TState>
+    public interface INotifiable<out TState>
     {
-        /// <summary>
-        /// Adds a change listener.
-        /// It will be called any time an action is dispatched, and some part of the state tree may potentially have changed.
-        /// </summary>
-        /// <remarks>
-        /// This method doesn't check for duplicate listeners,
-        /// so calling it multiple times with the same listener will result in the listener being called multiple times.
-        /// </remarks>
-        /// <param name="listener"> A callback to be invoked on every dispatch. </param>
-        /// <param name="options"> The options for the subscription. </param>
-        /// <returns> A Subscription object that can be disposed. </returns>
-        /// <exception cref="ArgumentNullException"> Thrown if the listener is null. </exception>
-        IDisposableSubscription Subscribe(
-            Listener<TState> listener,
-            SubscribeOptions<TState> options = default);
-
         /// <summary>
         /// Subscribe to a state change and listen to a specific part of the state.
         /// </summary>
@@ -66,6 +72,18 @@ namespace Unity.AppUI.Redux
             Selector<TState,TSelected> selector,
             Listener<TSelected> listener,
             SubscribeOptions<TSelected> options = default);
+
+        /// <summary>
+        /// Remove a subscription from the store.
+        /// </summary>
+        /// <param name="subscription"> The subscription to remove. </param>
+        /// <returns> True if the subscription was removed, false otherwise. </returns>
+        bool Unsubscribe(ISubscription<TState> subscription);
+
+        /// <summary>
+        /// Notify the subscribers of a new state.
+        /// </summary>
+        void NotifySubscribers();
     }
 
     /// <summary>
@@ -130,6 +148,30 @@ namespace Unity.AppUI.Redux
     }
 
     /// <summary>
+    /// Interface for an action.
+    /// </summary>
+    public interface IAction
+    {
+        /// <summary>
+        /// The type of the action.
+        /// This is used to determine which reducer to call.
+        /// </summary>
+        string type { get; }
+    }
+
+    /// <summary>
+    /// Interface for an action with a payload.
+    /// </summary>
+    /// <typeparam name="TPayload"> The type of the payload. </typeparam>
+    public interface IAction<out TPayload> : IAction
+    {
+        /// <summary>
+        /// The payload of the action.
+        /// </summary>
+        TPayload payload { get; }
+    }
+
+    /// <summary>
     /// Interface for an async thunk creator.
     /// </summary>
     /// <typeparam name="TPayload"> The type of the payload. </typeparam>
@@ -155,30 +197,6 @@ namespace Unity.AppUI.Redux
         /// <param name="arg"> The argument to pass to the thunk. </param>
         /// <returns> The async thunk. </returns>
         AsyncThunkAction<TArg, TPayload> Invoke(TArg arg);
-    }
-
-    /// <summary>
-    /// Interface for an action.
-    /// </summary>
-    public interface IAction
-    {
-        /// <summary>
-        /// The type of the action.
-        /// This is used to determine which reducer to call.
-        /// </summary>
-        string type { get; }
-    }
-
-    /// <summary>
-    /// Interface for an action with a payload.
-    /// </summary>
-    /// <typeparam name="TPayload"> The type of the payload. </typeparam>
-    public interface IAction<out TPayload> : IAction
-    {
-        /// <summary>
-        /// The payload of the action.
-        /// </summary>
-        TPayload payload { get; }
     }
 
     /// <summary>
@@ -278,10 +296,9 @@ namespace Unity.AppUI.Redux
     }
 
     /// <summary>
-    /// Thunk API definition.
+    /// Base interface for the Thunk API.
     /// </summary>
-    /// <typeparam name="TPayload"> The type of the payload that the thunk will return. </typeparam>
-    public interface IThunkAPI<in TPayload> : IAPIInterceptor<TPayload>
+    public interface IThunkAPI
     {
         /// <summary>
         /// The request id of the thunk.
@@ -309,6 +326,12 @@ namespace Unity.AppUI.Redux
         /// <param name="reason"> The reason for the cancellation. </param>
         void Abort(object reason);
     }
+
+    /// <summary>
+    /// Thunk API definition.
+    /// </summary>
+    /// <typeparam name="TPayload"> The type of the payload that the thunk will return. </typeparam>
+    public interface IThunkAPI<in TPayload> : IAPIInterceptor<TPayload>, IThunkAPI { }
 
     /// <summary>
     /// A Thunk API that can early reject or fulfill the thunk with a value.
@@ -340,5 +363,38 @@ namespace Unity.AppUI.Redux
         /// The argument that the thunk has received when it was dispatched.
         /// </summary>
         TArg arg { get; }
+    }
+
+    /// <summary>
+    /// Represents a subscription to a store.
+    /// </summary>
+    public interface IDisposableSubscription : IDisposable
+    {
+        /// <summary>
+        /// Whether the subscription is still valid.
+        /// A Subscription is no longer valid when it has been unsubscribed
+        /// or of the store it was subscribed to has been disposed.
+        /// </summary>
+        /// <returns> True if the subscription is still valid, false otherwise. </returns>
+        bool IsValid();
+    }
+
+    /// <summary>
+    /// A Subscription to a store. This abstraction is used by the store to manage subscriptions.
+    /// </summary>
+    /// <typeparam name="TState"> The type of the state. </typeparam>
+    public interface ISubscription<in TState> : IDisposableSubscription
+    {
+        /// <summary>
+        /// Unsubscribe from the store.
+        /// </summary>
+        /// <returns> True if the subscription was removed, false otherwise. </returns>
+        bool Unsubscribe();
+
+        /// <summary>
+        /// Notify the listener of a new state.
+        /// </summary>
+        /// <param name="state"> The new state of the store. </param>
+        void Notify(TState state);
     }
 }

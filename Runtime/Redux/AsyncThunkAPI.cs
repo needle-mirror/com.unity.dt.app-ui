@@ -231,10 +231,8 @@ namespace Unity.AppUI.Redux
         /// </summary>
         /// <param name="api"> The thunk API. </param>
         /// <param name="action"> The action to dispatch. </param>
-        /// <typeparam name="TArg"> The type of the argument to pass to the thunk. </typeparam>
-        /// <typeparam name="TPayload"> The type of the payload. </typeparam>
         /// <exception cref="ArgumentNullException"> Thrown if the action or thunk API is null. </exception>
-        public static void Dispatch<TArg,TPayload>(this IThunkAPI<TArg,TPayload> api, IAction action)
+        public static void Dispatch(this IThunkAPI api, IAction action)
         {
             if (api == null)
                 throw new ArgumentNullException(nameof(api));
@@ -248,10 +246,8 @@ namespace Unity.AppUI.Redux
         /// </summary>
         /// <param name="api"> The thunk API. </param>
         /// <param name="creator"> The action creator to dispatch. </param>
-        /// <typeparam name="TArg"> The type of the argument to pass to the thunk. </typeparam>
-        /// <typeparam name="TPayload"> The type of the payload. </typeparam>
         /// <exception cref="ArgumentNullException"> Thrown if the action creator or thunk API is null. </exception>
-        public static void Dispatch<TArg,TPayload>(this IThunkAPI<TArg,TPayload> api, ActionCreator creator)
+        public static void Dispatch(this IThunkAPI api, ActionCreator creator)
         {
             if (api == null)
                 throw new ArgumentNullException(nameof(api));
@@ -266,12 +262,9 @@ namespace Unity.AppUI.Redux
         /// <param name="api"> The thunk API. </param>
         /// <param name="creator"> The action creator to dispatch. </param>
         /// <param name="payload"> The payload to pass to the action creator. </param>
-        /// <typeparam name="TArg"> The type of the argument to pass to the thunk. </typeparam>
-        /// <typeparam name="TPayload"> The type of the payload. </typeparam>
-        /// <typeparam name="TActionPayload"> The type of the payload. </typeparam>
+        /// <typeparam name="TPayload"> The type of the payload for the action to dispatch. </typeparam>
         /// <exception cref="ArgumentNullException"> Thrown if the action creator or thunk API is null. </exception>
-        public static void Dispatch<TArg,TPayload,TActionPayload>(
-            this IThunkAPI<TArg,TPayload> api, ActionCreator<TActionPayload> creator, TActionPayload payload)
+        public static void Dispatch<TPayload>(this IThunkAPI api, ActionCreator<TPayload> creator, TPayload payload)
         {
             if (api == null)
                 throw new ArgumentNullException(nameof(api));
@@ -285,10 +278,8 @@ namespace Unity.AppUI.Redux
         /// </summary>
         /// <param name="api"> The thunk API. </param>
         /// <param name="actionType"> The action type to dispatch. </param>
-        /// <typeparam name="TArg"> The type of the argument to pass to the thunk. </typeparam>
-        /// <typeparam name="TPayload"> The type of the payload. </typeparam>
         /// <exception cref="ArgumentNullException"> Thrown if the thunk API is null. </exception>
-        public static void Dispatch<TArg, TPayload>(this IThunkAPI<TArg, TPayload> api, string actionType)
+        public static void Dispatch(this IThunkAPI api, string actionType)
         {
             if (api == null)
                 throw new ArgumentNullException(nameof(api));
@@ -303,16 +294,32 @@ namespace Unity.AppUI.Redux
         /// <param name="api"> The thunk API. </param>
         /// <param name="actionType"> The action type to dispatch. </param>
         /// <param name="payload"> The payload to pass to the action creator. </param>
-        /// <typeparam name="TArg"> The type of the argument to pass to the thunk. </typeparam>
-        /// <typeparam name="TPayload"> The type of the payload. </typeparam>
+        /// <typeparam name="TPayload"> The type of the payload for the action to dispatch. </typeparam>
         /// <exception cref="ArgumentNullException"> Thrown if the thunk API is null. </exception>
-        public static void Dispatch<TArg, TPayload>(this IThunkAPI<TArg, TPayload> api, string actionType, TPayload payload)
+        public static void Dispatch<TPayload>(this IThunkAPI api, string actionType, TPayload payload)
         {
             if (api == null)
                 throw new ArgumentNullException(nameof(api));
             if (string.IsNullOrEmpty(actionType))
                 throw new ArgumentNullException(nameof(actionType));
             api.store.Dispatch(actionType, payload);
+        }
+
+        /// <summary>
+        /// Gets the state of the store.
+        /// </summary>
+        /// <param name="api"> The thunk API. </param>
+        /// <typeparam name="TState"> The type of the store state. </typeparam>
+        /// <returns> The state of the store. </returns>
+        /// <exception cref="ArgumentNullException"> Thrown if the thunk API is null. </exception>
+        /// <exception cref="InvalidOperationException"> Thrown if the store does not implement IStore{T}. </exception>
+        public static TState GetState<TState>(this IThunkAPI api)
+        {
+            if (api == null)
+                throw new ArgumentNullException(nameof(api));
+            if (api.store is IStore<TState> s)
+                return s.GetState();
+            throw new InvalidOperationException("The store does not implement IStore<T>.");
         }
     }
 }

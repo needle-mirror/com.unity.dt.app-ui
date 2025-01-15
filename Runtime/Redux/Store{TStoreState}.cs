@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Scripting;
 
 namespace Unity.AppUI.Redux
@@ -32,51 +33,56 @@ namespace Unity.AppUI.Redux
     /// </summary>
     /// <typeparam name="TStoreState"> The type of the store state. </typeparam>
     [Preserve]
-    public partial class Store<TStoreState> : INotifiable<TStoreState>, IStateProvider<TStoreState>, IDispatchable
+    public partial class Store<TStoreState> : IStore<TStoreState>
     {
+        bool m_Disposed;
+
+        /// <summary>
+        /// The subscriptions of the store.
+        /// </summary>
+        protected readonly List<ISubscription<TStoreState>> m_Subscriptions = new();
+
+        /// <summary>
+        /// The subscribe lock of the store.
+        /// </summary>
+        protected readonly object m_SubscribeLock = new();
+
         /// <summary>
         /// The state of the store.
         /// </summary>
         protected TStoreState m_State;
 
         /// <summary>
-        /// The subscriptions of the store.
+        /// The reducer of the store.
         /// </summary>
-        protected readonly List<ISubscription> m_Subscriptions = new();
+        protected readonly Reducer<TStoreState> m_Reducer;
 
         /// <summary>
-        /// The lock for the subscriptions.
+        /// The reducer of the store.
         /// </summary>
-        protected readonly object m_SubscriptionsLock = new();
+        public Reducer<TStoreState> reducer => m_Reducer;
 
         /// <summary>
-        /// The root reducer of the store. You can override this to provide custom state handling logic inside enhancers.
+        /// The dispatcher of the store.
         /// </summary>
-        Reducer<TStoreState> m_Reducer;
-
-        /// <summary>
-        /// The dispatcher of the store. You can override this to provide custom dispatching logic inside enhancers.
-        /// </summary>
-        /// <seealso cref="StoreEnhancer{TStore,TStoreState}"/>
-        Dispatcher m_Dispatcher;
+        public Dispatcher dispatcher { get; set; }
 
         /// <summary>
         /// Creates a Redux store that holds the complete state tree of your app.
         /// </summary>
-        /// <param name="rootReducer"> The root reducer of the store. </param>
+        /// <param name="reducer"> The root reducer that returns the next state tree. </param>
         /// <param name="initialState"> The initial state of the store. </param>
-        /// <param name="dispatcher"> The dispatcher of the store. </param>
         /// <remarks>
         /// You should not use directly this constructor to create a store.
-        /// Instead, use <c>StoreFactory.CreateStore{TStoreState}</c> to create a store with optional enhancers.
+        /// Instead, use <c>Store.CreateStore{TStoreState}</c> to create a store with optional enhancers.
         /// This constructor should be called only by enhancers to return an enhanced store.
         /// </remarks>
         [Preserve]
-        internal Store(Reducer<TStoreState> rootReducer, TStoreState initialState, Dispatcher dispatcher)
+        public Store(Reducer<TStoreState> reducer, TStoreState initialState)
         {
+            m_Reducer = reducer ?? throw new ArgumentNullException(nameof(reducer));
             m_State = initialState;
-            m_Reducer = rootReducer;
-            m_Dispatcher = dispatcher ?? DefaultDispatch;
+            dispatcher = DefaultDispatcher;
         }
 
         /// <summary>
@@ -96,42 +102,17 @@ namespace Unity.AppUI.Redux
         /// <exception cref="ArgumentNullException"> Thrown if the action is null. </exception>
         public void Dispatch(IAction action)
         {
+            dispatcher(action);
+        }
+
+        void DefaultDispatcher(IAction action)
+        {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
 
-            m_Dispatcher(action);
+            m_State = m_Reducer(m_State, action);
+
             NotifySubscribers();
-        }
-
-        /// <summary>
-        /// Adds a change listener.
-        /// It will be called any time an action is dispatched, and some part of the state tree may potentially have changed.
-        /// </summary>
-        /// <remarks>
-        /// This method doesn't check for duplicate listeners,
-        /// so calling it multiple times with the same listener will result in the listener being called multiple times.
-        /// </remarks>
-        /// <param name="listener"> A callback to be invoked on every dispatch. </param>
-        /// <param name="options"> The options for the subscription. </param>
-        /// <returns> A Subscription object that can be disposed. </returns>
-        /// <exception cref="ArgumentNullException"> Thrown if the listener is null. </exception>
-        public IDisposableSubscription Subscribe(
-            Listener<TStoreState> listener,
-            SubscribeOptions<TStoreState> options = default)
-        {
-            if (listener == null)
-                throw new ArgumentNullException(nameof(listener));
-
-            var subscription = new Subscription(listener, this, options);
-            lock (m_SubscriptionsLock)
-            {
-                m_Subscriptions.Add(subscription);
-            }
-
-            if (options.invokeOnSubscribe)
-                listener(m_State);
-
-            return subscription;
         }
 
         /// <summary>
@@ -153,32 +134,65 @@ namespace Unity.AppUI.Redux
             if (listener == null)
                 throw new ArgumentNullException(nameof(listener));
 
-            var subscription = new SelectorSubscription<TSelected>(selector, listener, this, options);
-            lock (m_SubscriptionsLock)
+            var subscription = new Subscription<TStoreState,TSelected>(selector, listener, this, options);
+            lock (m_SubscribeLock)
             {
                 m_Subscriptions.Add(subscription);
             }
 
-            if (options.invokeOnSubscribe)
+            if (options.fireImmediately)
                 listener(selector(m_State));
 
             return subscription;
         }
 
-        internal void DefaultDispatch(IAction action)
+        /// <inheritdoc />
+        bool INotifiable<TStoreState>.Unsubscribe(ISubscription<TStoreState> subscription)
         {
-            m_State = m_Reducer(m_State, action);
+            lock (m_SubscribeLock)
+            {
+                return m_Subscriptions.Remove(subscription);
+            }
         }
 
-        void NotifySubscribers()
+        /// <inheritdoc />
+        public void NotifySubscribers()
         {
-            lock (m_SubscriptionsLock)
+            lock (m_SubscribeLock)
             {
                 foreach (var subscription in m_Subscriptions)
                 {
-                    subscription.Notify(m_State);
+                    subscription.Notify(GetState());
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            if (m_Disposed)
+                return;
+
+            ISubscription<TStoreState>[] subscriptions;
+            lock (m_SubscribeLock)
+            {
+                subscriptions = m_Subscriptions.ToArray();
+            }
+
+            foreach (var subscription in subscriptions)
+            {
+                subscription.Dispose();
+            }
+
+            lock (m_SubscribeLock)
+            {
+                if (m_Subscriptions.Count > 0)
+                    Debug.LogWarning($"The Store still has {m_Subscriptions.Count} active subscriptions. " +
+                        $"You should not subscribe to the store when it is being disposed.");
+                m_Subscriptions.Clear();
+            }
+
+            m_Disposed = true;
         }
     }
 }

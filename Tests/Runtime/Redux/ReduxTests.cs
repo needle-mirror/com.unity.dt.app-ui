@@ -78,7 +78,7 @@ namespace Unity.AppUI.Tests.Redux
 
         IDisposableSubscription m_CounterSubscription;
 
-        Store m_Store;
+        IStore<PartitionedState> m_Store;
 
         int m_ExpectedCounterValue;
 
@@ -88,20 +88,20 @@ namespace Unity.AppUI.Tests.Redux
         public void CanComposeEnhancers()
         {
             var result = 0;
-            var enhancer1 = new StoreEnhancer<Store.CreationContext, PartitionedState>(createStore => (reducer, initialState) =>
+            var enhancer1 = new StoreEnhancer<PartitionedState>(createStore => (reducer, initialState) =>
             {
                 result += 2;
                 var store = createStore(reducer, initialState);
                 return store;
             });
-            var enhancer2 = new StoreEnhancer<Store.CreationContext, PartitionedState>(createStore => (reducer, initialState) =>
+            var enhancer2 = new StoreEnhancer<PartitionedState>(createStore => (reducer, initialState) =>
             {
                 result *= 2;
                 var store = createStore(reducer, initialState);
                 return store;
             });
-            var composedEnhancer = Store.ComposeEnhancers(enhancer2, enhancer1);
-            var store = Store.CreateStore((state, _) => state, new PartitionedState(), composedEnhancer);
+            var composedEnhancer = StoreFactory.ComposeEnhancers(enhancer2, enhancer1);
+            var store = StoreFactory.CreateStore((state, _) => state, new PartitionedState(), composedEnhancer);
             Assert.IsNotNull(store);
             Assert.AreEqual(4, result);
         }
@@ -112,7 +112,7 @@ namespace Unity.AppUI.Tests.Redux
             Reducer<PartitionedState> combinedReducer = null;
             var reducer1 = new Reducer<PartitionedState>((state, _) => state);
             var reducer2 = new Reducer<PartitionedState>((state, _) => state);
-            Assert.DoesNotThrow(() => combinedReducer = Store.CombineReducers(new List<Reducer<PartitionedState>>
+            Assert.DoesNotThrow(() => combinedReducer = StoreFactory.CombineReducers(new List<Reducer<PartitionedState>>
             {
                 reducer1,
                 reducer2,
@@ -124,9 +124,9 @@ namespace Unity.AppUI.Tests.Redux
         [Test, Order(1)]
         public void ShouldCreateAStore()
         {
-            Assert.Throws(typeof(ArgumentNullException), () => Store.CreateStore((ISlice<PartitionedState>[]) null));
-            Assert.Throws(typeof(ArgumentNullException), () => Store.CreateStore((Reducer<PartitionedState>) null));
-            Assert.DoesNotThrow(() => m_Store = Store.CreateStore((state, _) => state));
+            Assert.Throws(typeof(ArgumentNullException), () => StoreFactory.CreateStore((ISlice<PartitionedState>[]) null));
+            Assert.Throws(typeof(ArgumentNullException), () => StoreFactory.CreateStore((Reducer<PartitionedState>) null));
+            Assert.DoesNotThrow(() => m_Store = StoreFactory.CreateStore((state, _) => state));
             Assert.IsNotNull(m_Store);
             Assert.IsNotNull(m_Store.GetState());
         }
@@ -134,10 +134,10 @@ namespace Unity.AppUI.Tests.Redux
         [Test, Order(2)]
         public void ShouldCreateAnEmptySlice()
         {
-            Assert.Throws<ArgumentException>(() => Store.CreateSlice(null, new DummyState(), null));
+            Assert.Throws<ArgumentException>(() => StoreFactory.CreateSlice(null, new DummyState(), null));
 
             Slice<DummyState,PartitionedState> slice = null;
-            Assert.DoesNotThrow(() => slice = Store.CreateSlice("dummy", new DummyState(), null));
+            Assert.DoesNotThrow(() => slice = StoreFactory.CreateSlice("dummy", new DummyState(), null));
             Assert.IsNotNull(slice);
 
             slice = new Slice<DummyState,PartitionedState>("dummy", new DummyState(), null);
@@ -152,7 +152,7 @@ namespace Unity.AppUI.Tests.Redux
         public void ShouldCreateActions()
         {
             m_IncrementAction = null;
-            Assert.DoesNotThrow(() => m_IncrementAction = Store.CreateAction("counter/Increment"));
+            Assert.DoesNotThrow(() => m_IncrementAction = new ActionCreator("counter/Increment"));
             Assert.IsNotNull(m_IncrementAction);
             Assert.AreEqual("counter/Increment", m_IncrementAction.type);
             Assert.IsTrue(m_IncrementAction.Match(new Action("counter/Increment")));
@@ -165,7 +165,7 @@ namespace Unity.AppUI.Tests.Redux
             Assert.IsTrue(incrementAction.GetHashCode() != 0);
 
             m_IncrementByAction = null;
-            Assert.DoesNotThrow(() => m_IncrementByAction = Store.CreateAction<int>("counter/IncrementBy"));
+            Assert.DoesNotThrow(() => m_IncrementByAction = new ActionCreator<int>("counter/IncrementBy"));
             Assert.IsNotNull(m_IncrementByAction);
             Assert.AreEqual("counter/IncrementBy", m_IncrementByAction.type);
             Assert.IsTrue(m_IncrementByAction.Match(new AppUI.Redux.Action<int>("counter/IncrementBy", 0)));
@@ -177,7 +177,7 @@ namespace Unity.AppUI.Tests.Redux
             Assert.IsTrue(incrementByAction.GetHashCode() != 0);
 
             m_ResetAction = null;
-            Assert.DoesNotThrow(() => m_ResetAction = Store.CreateAction("Reset"));
+            Assert.DoesNotThrow(() => m_ResetAction = new ActionCreator("Reset"));
             Assert.IsNotNull(m_ResetAction);
             Assert.AreEqual("Reset", m_ResetAction.type);
             Assert.IsTrue(m_ResetAction.Match(new Action("Reset")));
@@ -205,7 +205,7 @@ namespace Unity.AppUI.Tests.Redux
             Slice<CounterState,PartitionedState> counterSlice = null;
             Slice<CounterState,PartitionedState> otherSlice = null;
 
-            Assert.DoesNotThrow(() => slice = counterSlice = Store.CreateSlice(
+            Assert.DoesNotThrow(() => slice = counterSlice = StoreFactory.CreateSlice(
                 name: "counter",
                 initialState: new CounterState(0),
                 reducers =>
@@ -239,9 +239,9 @@ namespace Unity.AppUI.Tests.Redux
             Assert.IsNotNull(m_DecrementAction);
             Assert.IsNotNull(m_SetAction);
 
-            Assert.DoesNotThrow(() => slice = dummySlice = Store.CreateSlice("dummy", new DummyState(), _ => { }));
+            Assert.DoesNotThrow(() => slice = dummySlice = StoreFactory.CreateSlice("dummy", new DummyState(), _ => { }));
 
-            m_Store = Store.CreateStore(new ISlice<PartitionedState>[]
+            m_Store = StoreFactory.CreateStore(new ISlice<PartitionedState>[]
             {
                 dummySlice,
                 counterSlice,
@@ -253,7 +253,7 @@ namespace Unity.AppUI.Tests.Redux
             Assert.IsTrue(slices.ContainsKey("counter"));
 
             var incrementActionCreator = (ActionCreator)counterSlice.actionCreators["counter/Increment"];
-            Assert.DoesNotThrow(() => slice = otherSlice = Store.CreateSlice("otherSlice", new CounterState(0),
+            Assert.DoesNotThrow(() => slice = otherSlice = StoreFactory.CreateSlice("otherSlice", new CounterState(0),
                 _ => {}, builder =>
                 {
                     builder.AddCase(incrementActionCreator, Increment);
@@ -262,7 +262,7 @@ namespace Unity.AppUI.Tests.Redux
                     builder.AddCase(m_LoadDataAction.rejected, OnRejected);
                 }));
 
-            m_Store = Store.CreateStore(new ISlice<PartitionedState>[]
+            m_Store = StoreFactory.CreateStore(new ISlice<PartitionedState>[]
             {
                 dummySlice,
                 counterSlice,

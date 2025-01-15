@@ -45,6 +45,7 @@
   border-radius: var(--appui-alias-control-border-radius);
   align-self: flex-start;
   background-color: var(--appui-base-50);
+  -unity-font-style: bold;
 }
 
 .appui--rtl .example-subtitle {

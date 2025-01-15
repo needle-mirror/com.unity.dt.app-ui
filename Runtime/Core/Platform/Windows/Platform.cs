@@ -203,7 +203,7 @@ namespace Unity.AppUI.Core
             PollLayoutDirection();
         }
 
-        public override AppUITouch[] touches => AppUIInput.GetCurrentInputSystemTouches();
+        public override ReadOnlySpan<AppUITouch> touches => AppUIInput.GetCurrentInputSystemTouches();
 
         public override bool darkMode => NativeAppUI_DarkMode();
 

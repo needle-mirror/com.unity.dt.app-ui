@@ -113,7 +113,7 @@ namespace Unity.AppUI.UI
         {
             m_ManagerCallback = new ManagerCallback(this);
             keyboardDismissEnabled = false;
-            view.usageHints = UsageHints.DynamicTransform;
+            view.EnableDynamicTransform(true);
             view.AddToClassList(k_USSClassName);
             view.AddToClassList(MemoryUtils.Concatenate(k_VariantClassName, m_Placement.ToLowerCase()));
             view.AddToClassList(MemoryUtils.Concatenate(k_VariantClassName, m_AnimationMode.ToLowerCase()));

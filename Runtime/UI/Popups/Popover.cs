@@ -508,8 +508,8 @@ namespace Unity.AppUI.UI
                     name = popoverUssClassName,
                     pickingMode = PickingMode.Ignore,
                     focusable = true,
-                    usageHints = UsageHints.DynamicTransform,
                 };
+                popoverElement.EnableDynamicTransform(true);
                 popoverElement.AddToClassList(popoverUssClassName);
                 hierarchy.Add(popoverElement);
 

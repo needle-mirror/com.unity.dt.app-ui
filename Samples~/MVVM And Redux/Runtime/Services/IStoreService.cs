@@ -4,7 +4,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
 {
     public interface IStoreService
     {
-        Store store { get; }
+        IStore<PartitionedState> store { get; }
 
         public string sliceName { get; }
 

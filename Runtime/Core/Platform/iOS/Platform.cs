@@ -227,7 +227,7 @@ namespace Unity.AppUI.Core
             NativeAppUI_Update();
         }
 
-        public override AppUITouch[] touches => AppUIInput.GetCurrentInputSystemTouches();
+        public override ReadOnlySpan<AppUITouch> touches => AppUIInput.GetCurrentInputSystemTouches();
 
         public override void RunNativeHapticFeedback(HapticFeedbackType feedbackType)
         {

@@ -12,18 +12,25 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Numerical Field UI element.
     /// </summary>
-    /// <typeparam name="TValueType">The type of the numerical value.</typeparam>
+    /// <typeparam name="TValue">The type of the numerical value.</typeparam>
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public abstract partial class NumericalField<TValueType> : ExVisualElement, IInputElement<TValueType>, ISizeableElement, INotifyValueChanging<TValueType>
-        where TValueType : struct, IComparable, IComparable<TValueType>, IFormattable
+    public abstract partial class NumericalField<TValue>
+        : ExVisualElement,
+            IInputElement<TValue>,
+            ISizeableElement,
+            INotifyValueChanging<TValue>,
+            IFormattable<TValue>
+        where TValue : struct, IComparable, IComparable<TValue>, IFormattable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
 
         internal static readonly BindingId formatStringProperty = new BindingId(nameof(formatString));
+
+        internal static readonly BindingId formatFunctionProperty = new BindingId(nameof(formatFunction));
 
         internal static readonly BindingId unitProperty = new BindingId(nameof(unit));
 
@@ -98,7 +105,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the element.
         /// </summary>
-        protected TValueType m_Value;
+        protected TValue m_Value;
 
         string m_FormatString;
 
@@ -107,13 +114,15 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The last value of the element set during <see cref="SetValueWithoutNotify"/>.
         /// </summary>
-        protected TValueType m_LastValue;
+        protected TValue m_LastValue;
 
-        Optional<TValueType> m_LowValue;
+        Optional<TValue> m_LowValue;
 
-        Optional<TValueType> m_HighValue;
+        Optional<TValue> m_HighValue;
 
-        Func<TValueType, bool> m_ValidateValue;
+        Func<TValue, bool> m_ValidateValue;
+
+        FormatFunction<TValue> m_FormatFunction;
 
         /// <summary>
         /// The format string of the element.
@@ -136,6 +145,28 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// The format function of the element.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public FormatFunction<TValue> formatFunction
+        {
+            get => m_FormatFunction;
+            set
+            {
+                var changed = m_FormatFunction != value;
+                m_FormatFunction = value;
+                SetValueWithoutNotify(this.value);
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in formatFunctionProperty);
 #endif
             }
         }
@@ -197,7 +228,7 @@ namespace Unity.AppUI.UI
                 if (previousValue.CompareTo(m_Value) == 0)
                     return;
 
-                using var changeEvent = ChangingEvent<TValueType>.GetPooled();
+                using var changeEvent = ChangingEvent<TValue>.GetPooled();
                 changeEvent.target = this;
                 changeEvent.previousValue = previousValue;
                 changeEvent.newValue = m_Value;
@@ -243,7 +274,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
 #endif
-        public Optional<TValueType> lowValue
+        public Optional<TValue> lowValue
         {
             get => m_LowValue;
             set
@@ -268,7 +299,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
 #endif
-        public Optional<TValueType> highValue
+        public Optional<TValue> highValue
         {
             get => m_HighValue;
             set
@@ -319,7 +350,7 @@ namespace Unity.AppUI.UI
         /// Set the value of the element without notifying the change.
         /// </summary>
         /// <param name="newValue"> The new value of the element. </param>
-        public void SetValueWithoutNotify(TValueType newValue)
+        public void SetValueWithoutNotify(TValue newValue)
         {
             if (lowValue.IsSet)
                 newValue = Max(newValue, lowValue.Value);
@@ -341,7 +372,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
 #endif
-        public TValueType value
+        public TValue value
         {
             get => string.IsNullOrEmpty(m_InputElement.value) && ParseStringToValue(m_InputElement.value, out var val) ? val : m_Value;
             set
@@ -354,7 +385,7 @@ namespace Unity.AppUI.UI
                 if (AreEqual(m_LastValue, val) && AreEqual(m_Value, val))
                     return;
 
-                using var evt = ChangeEvent<TValueType>.GetPooled(m_LastValue, val);
+                using var evt = ChangeEvent<TValue>.GetPooled(m_LastValue, val);
                 evt.target = this;
                 SetValueWithoutNotify(val);
                 SendEvent(evt);
@@ -395,7 +426,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
-        public Func<TValueType, bool> validateValue
+        public Func<TValue, bool> validateValue
         {
             get => m_ValidateValue;
             set
@@ -442,37 +473,37 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// Define the conversion from the <see cref="string"/> value to a <typeparamref name="TValueType"/> value.
+        /// Define the conversion from the <see cref="string"/> value to a <typeparamref name="TValue"/> value.
         /// </summary>
         /// <param name="strValue">The <see cref="string"/> value to convert.</param>
-        /// <param name="val">The <typeparamref name="TValueType"/> value returned.</param>
+        /// <param name="val">The <typeparamref name="TValue"/> value returned.</param>
         /// <returns>True if the conversion is possible, False otherwise.</returns>
-        protected abstract bool ParseStringToValue(string strValue, out TValueType val);
+        protected abstract bool ParseStringToValue(string strValue, out TValue val);
 
         /// <summary>
-        /// Define the conversion from a <typeparamref name="TValueType"/> value to a <see cref="string"/> value.
+        /// Define the conversion from a <typeparamref name="TValue"/> value to a <see cref="string"/> value.
         /// </summary>
-        /// <param name="val">The <typeparamref name="TValueType"/> value to convert.</param>
+        /// <param name="val">The <typeparamref name="TValue"/> value to convert.</param>
         /// <returns>The converted value.</returns>
-        protected abstract string ParseValueToString(TValueType val);
+        protected abstract string ParseValueToString(TValue val);
 
         /// <summary>
-        /// Define the conversion from a <typeparamref name="TValueType"/> value to a <see cref="string"/> value.
+        /// Define the conversion from a <typeparamref name="TValue"/> value to a <see cref="string"/> value.
         /// </summary>
-        /// <param name="val"> The <typeparamref name="TValueType"/> value to convert. </param>
+        /// <param name="val"> The <typeparamref name="TValue"/> value to convert. </param>
         /// <returns> The converted value. </returns>
         /// <remarks>
         /// This method is used to convert the value to a string without any formatting.
         /// </remarks>
-        protected abstract string ParseRawValueToString(TValueType val);
+        protected abstract string ParseRawValueToString(TValue val);
 
         /// <summary>
-        /// Check if two values of type <typeparamref name="TValueType"/> are equal.
+        /// Check if two values of type <typeparamref name="TValue"/> are equal.
         /// </summary>
         /// <param name="a">The first value to test.</param>
         /// <param name="b">The second value to test.</param>
         /// <returns>True if both values are considered equals, false otherwise.</returns>
-        protected abstract bool AreEqual(TValueType a, TValueType b);
+        protected abstract bool AreEqual(TValue a, TValue b);
 
         /// <summary>
         /// Increment a given value with a given delta.
@@ -480,7 +511,7 @@ namespace Unity.AppUI.UI
         /// <param name="originalValue">The original value.</param>
         /// <param name="delta">The delta used for increment.</param>
         /// <returns>The incremented value.</returns>
-        protected abstract TValueType Increment(TValueType originalValue, float delta);
+        protected abstract TValue Increment(TValue originalValue, float delta);
 
         /// <summary>
         /// Return the smallest value between a and b.
@@ -488,7 +519,7 @@ namespace Unity.AppUI.UI
         /// <param name="a">The first value to test.</param>
         /// <param name="b">The second value to test.</param>
         /// <returns>The smallest value.</returns>
-        protected abstract TValueType Min(TValueType a, TValueType b);
+        protected abstract TValue Min(TValue a, TValue b);
 
         /// <summary>
         /// Return the biggest value between a and b.
@@ -496,19 +527,19 @@ namespace Unity.AppUI.UI
         /// <param name="a">The first value to test.</param>
         /// <param name="b">The second value to test.</param>
         /// <returns>The biggest value.</returns>
-        protected abstract TValueType Max(TValueType a, TValueType b);
+        protected abstract TValue Max(TValue a, TValue b);
 
         /// <summary>
         /// Calculate the increment factor based on a base value.
         /// </summary>
         /// <param name="baseValue">The base value.</param>
         /// <returns>The increment factor.</returns>
-        protected abstract float GetIncrementFactor(TValueType baseValue);
+        protected abstract float GetIncrementFactor(TValue baseValue);
 
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="NumericalField{TValueType}"/>.
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="NumericalField{TValue}"/>.
         /// </summary>
         public new class UxmlTraits : ExVisualElement.UxmlTraits
         {
@@ -542,7 +573,7 @@ namespace Unity.AppUI.UI
             {
                 base.Init(ve, bag, cc);
 
-                var element = (NumericalField<TValueType>)ve;
+                var element = (NumericalField<TValue>)ve;
                 element.size = m_Size.GetValueFromBag(bag, cc);
                 element.unit = m_Unit.GetValueFromBag(bag, cc);
 

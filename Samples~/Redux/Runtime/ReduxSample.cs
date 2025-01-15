@@ -31,7 +31,7 @@ namespace Unity.AppUI.Samples.Redux
             // You can create slices of state that will be stored in the store
             // Each slice of state can have its own reducers and actions
             // It is possible to pass extra reducers that are bound to external actions (no prefix)
-            var slice = Store.CreateSlice(
+            var slice = StoreFactory.CreateSlice(
                 COUNTER_SLICE,
                 new CounterState(0),
                 (builder) =>
@@ -48,7 +48,7 @@ namespace Unity.AppUI.Samples.Redux
             // Now you need to create a store that will hold the state of your application
             // Store creation can occur only when all its dependencies are created and configured
             // (slices, reducers, actions, enhancers, middlewares).
-            var store = Store.CreateStore(new[] { slice });
+            var store = StoreFactory.CreateStore(new[] { slice });
 
             // You can then retrieve the state of a slice of state from the store
             // The state is immutable, so you can't modify it directly

@@ -6,7 +6,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
     {
         readonly ILocalStorageService m_LocalStorageService;
 
-        public Store store { get; }
+        public IStore<PartitionedState> store { get; }
 
         public string sliceName => "app";
 
@@ -20,9 +20,9 @@ namespace Unity.AppUI.Samples.MVVMRedux
         {
             m_LocalStorageService = localStorageService;
             var initialState = localStorageService.GetValue(sliceName, new AppState());
-            store = Store.CreateStore(new []
+            store = StoreFactory.CreateStore(new []
             {
-                Store.CreateSlice<AppState>(sliceName, initialState, builder =>
+                StoreFactory.CreateSlice<AppState>(sliceName, initialState, builder =>
                 {
                     builder
                         .AddCase(Actions.createTodo, Reducers.CreateTodoReducer)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -131,7 +132,7 @@ namespace Unity.AppUI.Core
         }
 
         /// <inheritdoc />
-        public override void Recognize(AppUITouch[] appuiTouches)
+        public override void Recognize(ReadOnlySpan<AppUITouch> appuiTouches)
         {
             // clear before polling gesture.
             base.Recognize(appuiTouches);

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using System.Runtime.CompilerServices;
 using Unity.AppUI.Bridge;
+using UnityEngine.Rendering;
 
 namespace Unity.AppUI.UI
 {
@@ -79,6 +80,19 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// Set UsageHint on a <see cref="VisualElement"/>.
+        /// </summary>
+        /// <param name="element"> The <see cref="VisualElement"/> object.</param>
+        /// <param name="enabled"> True to set the UsageHint to Dynamic, false to set it to Static.</param>
+        public static void EnableDynamicTransform(this VisualElement element, bool enabled)
+        {
+            if (enabled)
+                element.usageHints |= UsageHints.DynamicTransform;
+            else
+                element.usageHints &= ~UsageHints.DynamicTransform;
+        }
+
+        /// <summary>
         /// Set the picking mode of a <see cref="VisualElement"/>.
         /// </summary>
         /// <param name="element"> The <see cref="VisualElement"/> object.</param>
@@ -147,6 +161,61 @@ namespace Unity.AppUI.UI
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Get the last ancestor of a given type.
+        /// </summary>
+        /// <param name="view"> The <see cref="VisualElement"/> object.</param>
+        /// <typeparam name="T"> The type of the ancestor to search for.</typeparam>
+        /// <returns> The last ancestor of the given type.</returns>
+        public static T GetLastAncestorOfType<T>(this VisualElement view) where T : VisualElement
+        {
+            if (view == null)
+                return null;
+
+            T lastFound = null;
+            var current = view;
+
+            while (current != null)
+            {
+                if (current is T match)
+                    lastFound = match;
+                current = current.parent;
+            }
+
+            return lastFound;
+        }
+
+        /// <summary>
+        /// Check if a <see cref="VisualElement"/> has multiple ancestors of a given type.
+        /// </summary>
+        /// <param name="element"> The <see cref="VisualElement"/> object.</param>
+        /// <typeparam name="T"> The type of the ancestor to search for.</typeparam>
+        /// <returns> True if the element has multiple ancestors of the given type, false otherwise.</returns>
+        /// <remarks>
+        /// This will not include the element itself in the search.
+        /// </remarks>
+        public static bool HasAncestorsOfType<T>(this VisualElement element) where T : VisualElement
+        {
+            if (element == null)
+                return false;
+
+            var foundOne = false;
+            var current = element.parent;
+
+            while (current != null)
+            {
+                if (current is T)
+                {
+                    if (foundOne)
+                        return true;
+                    foundOne = true;
+                }
+                current = current.parent;
+            }
+
+            return false;
         }
 
         /// <summary>

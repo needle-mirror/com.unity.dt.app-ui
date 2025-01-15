@@ -41,7 +41,7 @@ namespace Unity.AppUI.Samples.UndoRedo
                 color = Color.white,
                 text = "Result"
             };
-            var appSlice = Store.CreateSlice(k_AppStateSlice, initialState, builder =>
+            var appSlice = StoreFactory.CreateSlice(k_AppStateSlice, initialState, builder =>
             {
                 builder.AddCase(setColor, (state, action) =>
                 {
@@ -55,7 +55,7 @@ namespace Unity.AppUI.Samples.UndoRedo
                     return state;
                 });
             });
-            var store = Store.CreateStore(new[]
+            var store = StoreFactory.CreateStore(new[]
             {
                 appSlice
             });
@@ -167,9 +167,9 @@ namespace Unity.AppUI.Samples.UndoRedo
 
             public Color newColor { get; private set; }
 
-            public Store store { get; private set; }
+            public IStore<PartitionedState> store { get; private set; }
 
-            public SetColorCommand(string name, Color previousColor, Color newColor, Store store)
+            public SetColorCommand(string name, Color previousColor, Color newColor, IStore<PartitionedState> store)
                 : base(name)
             {
                 this.previousColor = previousColor;
@@ -214,9 +214,9 @@ namespace Unity.AppUI.Samples.UndoRedo
 
             public string newText { get; private set; }
 
-            public Store store { get; private set; }
+            public IStore<PartitionedState> store { get; private set; }
 
-            public SetTextCommand(string name, string previousText, string newText, Store store)
+            public SetTextCommand(string name, string previousText, string newText, IStore<PartitionedState> store)
                 : base(name)
             {
                 this.previousText = previousText;

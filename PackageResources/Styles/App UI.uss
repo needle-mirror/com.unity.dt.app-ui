@@ -67,6 +67,7 @@
 @import "./Components/Text.uss";
 @import "./Components/TextArea.uss";
 @import "./Components/TextField.uss";
+@import "./Components/Thumb.uss";
 @import "./Components/Toast.uss";
 @import "./Components/Toggle.uss";
 @import "./Components/Toolbar.uss";

@@ -31,8 +31,7 @@ namespace Unity.AppUI.Redux
     /// <summary>
     /// A function to enhance the store creation.
     /// </summary>
-    /// <typeparam name="TStoreCreatorContext"> The type of the store creation context. </typeparam>
-    /// <typeparam name="TStoreState"> The type of the store state. </typeparam>
+    /// <typeparam name="TState"> The type of the store state. </typeparam>
     /// <param name="createStore"> The store creation function. </param>
     /// <returns> The enhanced store creation function. </returns>
     /// <example>
@@ -59,18 +58,17 @@ namespace Unity.AppUI.Redux
     /// var store = Store.CreateStore(reducer, initialState, composedEnhancer);
     /// </code>
     /// </example>
-    public delegate StoreContextCreator<TStoreCreatorContext,TStoreState> StoreEnhancer<TStoreCreatorContext,TStoreState>(StoreContextCreator<TStoreCreatorContext,TStoreState> createStore);
+    public delegate StoreEnhancerStoreCreator<TState> StoreEnhancer<TState>(StoreEnhancerStoreCreator<TState> createStore);
 
     /// <summary>
     /// A function that creates a new store. This is a parameter to the store enhancer.
     /// </summary>
-    /// <typeparam name="TStoreCreatorContext"> The type of the store creation context. </typeparam>
-    /// <typeparam name="TStoreState"> The type of the store state. </typeparam>
+    /// <typeparam name="TState"> The type of the store state. </typeparam>
     /// <param name="rootReducer"> The root reducer of the store. </param>
     /// <param name="initialState"> The initial state of the store. </param>
     /// <returns> The new store. </returns>
-    /// <seealso cref="StoreEnhancer{TStore,TStoreState}"/>
-    public delegate TStoreCreatorContext StoreContextCreator<out TStoreCreatorContext,TStoreState>(Reducer<TStoreState> rootReducer, TStoreState initialState);
+    /// <seealso cref="StoreEnhancer{TState}"/>
+    public delegate IStore<TState> StoreEnhancerStoreCreator<TState>(Reducer<TState> rootReducer, TState initialState);
 
     /// <summary>
     /// A function that dispatches an action in the store to update the state.
@@ -79,19 +77,18 @@ namespace Unity.AppUI.Redux
     public delegate void Dispatcher(IAction action);
 
     /// <summary>
-    /// A function that enhances the dispatcher. This is the returned type of a <see cref="Middleware{TStore,TStoreState}"/>
-    /// and is used to compose the dispatcher with other middleware using <see cref="Store.ApplyMiddleware{TStore,TStoreState}"/>.
+    /// A function that enhances the dispatcher. This is the returned type of a <see cref="Middleware{TStoreState}"/>
+    /// and is used to compose the dispatcher with other middleware using <see cref="StoreFactory.ApplyMiddleware{TStoreState}"/>.
     /// </summary>
     /// <param name="dispatcher"> The dispatcher to enhance. </param>
     /// <returns> The enhanced dispatcher. </returns>
-    /// <seealso cref="Middleware{TStore,TStoreState}"/>
-    /// <seealso cref="Store.ApplyMiddleware{TStore,TStoreState}"/>
+    /// <seealso cref="Middleware{TStoreState}"/>
+    /// <seealso cref="StoreFactory.ApplyMiddleware{TStoreState}"/>
     public delegate Dispatcher DispatcherComposer(Dispatcher dispatcher);
 
     /// <summary>
     /// A Redux middleware is a higher-order function that composes a dispatch function to return a new dispatch function.
     /// </summary>
-    /// <typeparam name="TStore"> The type of the store. </typeparam>
     /// <typeparam name="TStoreState"> The type of the store state. </typeparam>
     /// <param name="store"> The store. </param>
     /// <returns> The dispatcher composer. </returns>
@@ -113,8 +110,8 @@ namespace Unity.AppUI.Redux
     /// var store = Store.CreateStore(reducer, initialState, enhancer);
     /// </code>
     /// </example>
-    /// <seealso cref="Store.ApplyMiddleware{TStore,TStoreState}"/>
-    public delegate DispatcherComposer Middleware<in TStore,TStoreState>(TStore store);
+    /// <seealso cref="StoreFactory.ApplyMiddleware{TStoreState}"/>
+    public delegate DispatcherComposer Middleware<TStoreState>(IStore<TStoreState> store);
 
     /// <summary>
     /// A listener for the store state change.

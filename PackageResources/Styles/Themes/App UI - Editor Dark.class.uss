@@ -44,7 +44,7 @@
     --appui-base-25: var(--appui-primary-100);
     --appui-foregrounds-200: var(--appui-primary-1100);
     --appui-foregrounds-100: var(--appui-primary-1000);
-    --appui-foregrounds-50: var(--appui-primary-900);
+    --appui-foregrounds-50: var(--appui-primary-800);
     --appui-foregrounds-25: var(--appui-primary-700);
     --appui-backgrounds-300: var(--appui-primary-300);
     --appui-backgrounds-200: var(--appui-primary-200);
