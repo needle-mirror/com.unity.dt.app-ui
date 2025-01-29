@@ -598,7 +598,6 @@ namespace Unity.AppUI.UI
                     if (dpiChanged && isValidDpi)
                     {
                         panelSettings.referenceDpi = dpi;
-                        Debug.Log($"DPI changed to {dpi}");
                         // send event
                         using var evt = DpiChangedEvent.GetPooled();
                         evt.previousValue = m_PreviousDpi;

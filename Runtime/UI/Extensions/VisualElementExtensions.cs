@@ -885,7 +885,7 @@ namespace Unity.AppUI.UI
 
             void SendContextChangedEventToChildren(VisualElement parent, ContextChangedEvent<T> evt)
             {
-                if (parent.IsContextProvider<T>())
+                if (parent.IsContextProvider<T>(key))
                     return;
 
                 CallCallbacks(parent, evt);

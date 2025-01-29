@@ -18,6 +18,14 @@ namespace Unity.AppUI.MVVM
 
         readonly ConcurrentDictionary<Type, object> m_Singletons;
 
+        readonly ConcurrentDictionary<Type, object> m_ScopedServices;
+
+        readonly ServiceProvider m_Parent;
+
+        ServiceProvider RootProvider => m_Parent?.RootProvider ?? this;
+
+        bool IsRootProvider => m_Parent == null;
+
         /// <summary>
         /// Whether the service provider has been disposed.
         /// </summary>
@@ -33,6 +41,13 @@ namespace Unity.AppUI.MVVM
             m_Services = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
             m_RealizedServices = new ConcurrentDictionary<Type, Func<object>>();
             m_Singletons = new ConcurrentDictionary<Type, object>();
+            m_ScopedServices = new ConcurrentDictionary<Type, object>();
+        }
+
+        internal ServiceProvider(IServiceCollection serviceCollection, ServiceProvider parent)
+            : this(serviceCollection)
+        {
+            m_Parent = parent;
         }
 
         Func<object> RealizeService(Type serviceType)
@@ -73,13 +88,27 @@ namespace Unity.AppUI.MVVM
 
             return () =>
             {
-                if (desc.lifetime == ServiceLifetime.Singleton)
+                switch (desc.lifetime)
                 {
-                    if (!m_Singletons.ContainsKey(serviceType))
-                        m_Singletons[serviceType] = ConstructAndInject(bestConstructor);
-                    return m_Singletons[serviceType];
+                    case ServiceLifetime.Singleton:
+                    {
+                        if (!RootProvider.m_Singletons.ContainsKey(serviceType))
+                            RootProvider.m_Singletons[serviceType] = ConstructAndInject(bestConstructor);
+                        return RootProvider.m_Singletons[serviceType];
+                    }
+                    case ServiceLifetime.Scoped:
+                    {
+                        if (!m_ScopedServices.ContainsKey(serviceType))
+                            m_ScopedServices[serviceType] = ConstructAndInject(bestConstructor);
+                        return m_ScopedServices[serviceType];
+                    }
+                    case ServiceLifetime.Transient:
+                    {
+                        return ConstructAndInject(bestConstructor);
+                    }
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
-                return ConstructAndInject(bestConstructor);
             };
         }
 
@@ -171,6 +200,15 @@ namespace Unity.AppUI.MVVM
         }
 
         /// <summary>
+        /// Create a new scope.
+        /// </summary>
+        /// <returns> The new scope. </returns>
+        public IServiceScope CreateScope()
+        {
+            return new ServiceScope(this, m_Services);
+        }
+
+        /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
@@ -180,6 +218,7 @@ namespace Unity.AppUI.MVVM
 
             m_RealizedServices.Clear();
             m_Singletons.Clear();
+            m_ScopedServices.Clear();
             disposed = true;
         }
     }

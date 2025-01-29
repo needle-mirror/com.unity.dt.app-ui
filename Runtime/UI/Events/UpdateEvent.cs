@@ -1,8 +1,6 @@
 using System;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
-using Unity.AppUI.Bridge;
-using EventPropagation = Unity.AppUI.Bridge.EventBaseExtensionsBridge.EventPropagation;
 #if FOCUSABLE_AS_VISUALELEMENT
 using CallbackEventHandler = UnityEngine.UIElements.VisualElement;
 #endif
@@ -72,7 +70,8 @@ namespace Unity.AppUI.UI
 
         void LocalInit()
         {
-            this.SetPropagation(EventPropagation.None);
+            tricklesDown = false;
+            bubbles = false;
         }
 
         /// <summary>

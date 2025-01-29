@@ -71,7 +71,13 @@ namespace Unity.AppUI.UI
             clickable = new Pressable(OnClick);
 
             RegisterCallback<KeyDownEvent>(OnKeyDown);
-            this.AddManipulator(new KeyboardFocusController());
+            this.AddManipulator(new KeyboardFocusController(OnFocusIn, OnFocusIn));
+        }
+
+        void OnFocusIn(FocusInEvent evt)
+        {
+            if (GetFirstAncestorOfType<ScrollView>() is {} scrollView)
+                scrollView.ScrollTo(this);
         }
 
         void OnClick()
@@ -83,30 +89,22 @@ namespace Unity.AppUI.UI
 
         void OnKeyDown(KeyDownEvent evt)
         {
-            var handled = false;
-
             switch (evt.keyCode)
             {
                 case KeyCode.DownArrow:
+                    evt.StopPropagation();
                     if (parent.IndexOf(this) != parent.childCount - 1)
-                        focusController.FocusNextInDirectionEx(VisualElementFocusChangeDirection.right);
-                    handled = true;
+                        focusController.FocusNextInDirectionEx(this, VisualElementFocusChangeDirection.right);
                     break;
                 case KeyCode.UpArrow:
+                    evt.StopPropagation();
                     if (parent.IndexOf(this) != 0)
-                        focusController.FocusNextInDirectionEx(VisualElementFocusChangeDirection.left);
-                    handled = true;
+                        focusController.FocusNextInDirectionEx(this, VisualElementFocusChangeDirection.left);
                     break;
                 case KeyCode.RightArrow:
                 case KeyCode.LeftArrow:
-                    handled = true;
+                    evt.StopPropagation();
                     break;
-            }
-
-            if (handled)
-            {
-                evt.StopPropagation();
-
             }
         }
     }

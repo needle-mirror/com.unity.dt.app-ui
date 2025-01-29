@@ -62,7 +62,7 @@
   --appui-alias-actions-quiet-foreground-color-default: var(--appui-alias-actions-foreground-color-default);
 
   --appui-alias-actions-quiet-background-color-disabled: var(--appui-color-transparent-black-0);
-  --appui-alias-actions-quiet-background-color-selected: var(--appui-alias-actions-background-color-selected);
+  --appui-alias-actions-quiet-background-color-selected: var(--appui-alias-actions-selected-background-color-default);
   --appui-alias-actions-quiet-background-color-focus: var(--appui-base-50);
   --appui-alias-actions-quiet-background-color-active: var(--appui-alias-actions-background-color-active);
   --appui-alias-actions-quiet-background-color-hover: var(--appui-alias-actions-background-color-hover);
@@ -88,7 +88,12 @@
   --appui-alias-actions-foreground-color-hover: var(--appui-foregrounds-200);
   --appui-alias-actions-foreground-color-default: var(--appui-foregrounds-100);
 
-  --appui-alias-actions-background-color-selected: var(--appui-base-300);
+  --appui-alias-actions-selected-background-color-default: rgba(8, 146, 255, 0.5);
+  --appui-alias-actions-selected-background-color-hover: rgba(8, 146, 255, 0.6);
+  --appui-alias-actions-selected-background-color-active: rgba(8, 146, 255, 0.4);
+  --appui-alias-actions-selected-background-color-focus: rgba(8, 146, 255, 0.6);
+  --appui-alias-actions-selected-background-color-disabled: rgba(16, 133, 225, 0.15);
+
   --appui-alias-actions-background-color-disabled: var(--appui-base-100);
   --appui-alias-actions-background-color-focus: var(--appui-base-50);
   --appui-alias-actions-background-color-active: var(--appui-base-50);

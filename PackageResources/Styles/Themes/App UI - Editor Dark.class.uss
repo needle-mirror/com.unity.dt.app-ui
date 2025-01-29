@@ -88,7 +88,11 @@
     --appui-alias-actions-border-color-active: #242424;
     --appui-alias-actions-border-color-hover: #303030;
     --appui-alias-actions-border-color-default: #303030;
-    --appui-alias-actions-background-color-selected: #46607C;
+    --appui-alias-actions-selected-background-color-default: #46607c;
+    --appui-alias-actions-selected-background-color-hover: #4f657f;
+    --appui-alias-actions-selected-background-color-active: #4f657f;
+    --appui-alias-actions-selected-background-color-focus: #537395;
+    --appui-alias-actions-selected-background-color-disabled: rgba(70, 96, 124, 0.5);
     --appui-alias-actions-background-color-disabled: #585858;
     --appui-alias-actions-background-color-focus: #6E6E6E;
     --appui-alias-actions-background-color-active: #6E6E6E;

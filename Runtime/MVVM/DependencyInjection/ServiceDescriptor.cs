@@ -61,6 +61,28 @@ namespace Unity.AppUI.MVVM
             return Describe(serviceType, implementationType, ServiceLifetime.Singleton);
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="ServiceDescriptor"/> as a scoped.
+        /// </summary>
+        /// <param name="serviceType"> The service type. </param>
+        /// <param name="implementationType"> The implementation type. </param>
+        /// <returns> The service descriptor </returns>
+        public static ServiceDescriptor Scoped(Type serviceType, Type implementationType)
+        {
+            return Describe(serviceType, implementationType, ServiceLifetime.Scoped);
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ServiceDescriptor"/> as a transient.
+        /// </summary>
+        /// <param name="type"> The service type. </param>
+        /// <param name="implementationType"> The implementation type. </param>
+        /// <returns> The service descriptor. </returns>
+        public static ServiceDescriptor Transient(Type type, Type implementationType)
+        {
+            return Describe(type, implementationType, ServiceLifetime.Transient);
+        }
+
         static ServiceDescriptor Describe(Type serviceType, Type implementationType, ServiceLifetime lifetime)
         {
             return new ServiceDescriptor(serviceType, implementationType, lifetime);

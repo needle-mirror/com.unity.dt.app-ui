@@ -29,18 +29,68 @@ Transient dependencies are created each time they are requested. This is the def
 
 You can use [AddTransient](xref:Unity.AppUI.MVVM.ServicesCollectionExtensions.AddTransient``1(Unity.AppUI.MVVM.IServiceCollection)) to register a transient dependency.
 
+```csharp
+using Unity.AppUI.MVVM;
+
+public class MyViewModel : ObservableObject
+{
+    public MyViewModel(IServiceProvider serviceProvider)
+    {
+        var transientService = serviceProvider.GetRequiredService<ITransientService>();
+        var transientService2 = serviceProvider.GetRequiredService<ITransientService>();
+        Debug.Assert(transientService != transientService2);
+    }
+}
+```
+
 ### Singleton Dependencies
 
 Singleton dependencies are created the first time they are requested, and then reused for all subsequent requests.
 
 You can use [AddSingleton](xref:Unity.AppUI.MVVM.ServicesCollectionExtensions.AddSingleton``1(Unity.AppUI.MVVM.IServiceCollection)) to register a singleton dependency.
 
+Requesting a singleton service from scoped service providers will return the same instance for all requests.
+
+```csharp
+using Unity.AppUI.MVVM;
+
+public class MyViewModel : ObservableObject
+{
+    public MyViewModel(IServiceProvider serviceProvider)
+    {
+        var singletonService = serviceProvider.GetRequiredService<ISingletonService>();
+
+        using (var scope = serviceProvider.CreateScope())
+        {
+            var scopedService = scope.ServiceProvider.GetRequiredService<ISingletonService>();
+            Debug.Assert(singletonService == scopedService);
+        }
+    }
+}
+```
+
 ### Scoped Dependencies
 
 Scoped dependencies are created once per scope. A scope is an object that handles the lifetime of dependencies.
 
-> [!NOTE]
-> The App UI framework does not provide a built-in implementation of scopes right now.
+You can use [AddScoped](xref:Unity.AppUI.MVVM.ServicesCollectionExtensions.AddScoped``1(Unity.AppUI.MVVM.IServiceCollection)) to register a scoped dependency.
+
+You can create a scope from a service provider by calling the [CreateScope](xref:Unity.AppUI.MVVM.ServiceProvider.CreateScope) method.
+
+```csharp
+using Unity.AppUI.MVVM;
+
+public class MyViewModel : ObservableObject
+{
+    public MyViewModel(IServiceProvider serviceProvider)
+    {
+        using (var scope = serviceProvider.CreateScope())
+        {
+            var scopedService = scope.ServiceProvider.GetRequiredService<IScopedService>();
+        }
+    }
+}
+```
 
 ## Registering Dependencies
 

@@ -1,4 +1,5 @@
 using System;
+using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -509,6 +510,8 @@ namespace Unity.AppUI.UI
                     pickingMode = PickingMode.Ignore,
                     focusable = true,
                 };
+                popoverElement.SetIsCompositeRoot(true);
+                popoverElement.SetExcludeFromFocusRing(true);
                 popoverElement.EnableDynamicTransform(true);
                 popoverElement.AddToClassList(popoverUssClassName);
                 hierarchy.Add(popoverElement);
@@ -548,6 +551,16 @@ namespace Unity.AppUI.UI
                 m_ContentContainer.hierarchy.Add(resizeHandle);
 
                 resizable = false;
+
+                // auto-set delegate focus if there are focusable elements in the content
+                foreach (var element in m_ContentContainer.Query().Build())
+                {
+                    if (element is {focusable: true, delegatesFocus: false} && element.resolvedStyle.display != DisplayStyle.None)
+                    {
+                        popoverElement.delegatesFocus = true;
+                        break;
+                    }
+                }
 
                 RefreshPlacement();
             }

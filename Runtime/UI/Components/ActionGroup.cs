@@ -693,7 +693,7 @@ namespace Unity.AppUI.UI
             m_MenuBuilder.Show();
         }
 
-        void OnMenuActionPressed(ClickEvent evt)
+        void OnMenuActionPressed(EventBase evt)
         {
             if (
                 evt.target is MenuItem {userData: int actionId and >= 0} &&

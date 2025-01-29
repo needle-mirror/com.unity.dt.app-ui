@@ -1,1 +1,91 @@
-{"name":"com.unity.dt.app-ui","displayName":"App UI","version":"2.0.0-pre.16","unity":"2021.3","category":"UI","keywords":["app","ui","components","runtime","framework","navigation","dependency-injection","mvvm","undostack","redux","state-management","dark-theme","data-binding","cloud","unity","app-ui"],"description":"App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.","dependencies":{"com.unity.modules.androidjni":"1.0.0","com.unity.modules.uielements":"1.0.0","com.unity.modules.physics":"1.0.0","com.unity.modules.screencapture":"1.0.0"},"samples":[{"displayName":"Drag And Drop","description":"Example of drag and drop system using App UI DropZone component and Dragger/DropTarget manipulators","path":"Samples~/Drag And Drop"},{"displayName":"UI Kit","description":"Every component in a single page","path":"Samples~/UI Kit"},{"displayName":"StoryBook","description":"StoryBookJS-like window in the Editor","path":"Samples~/StoryBook"},{"displayName":"Navigation","description":"Navigation system","path":"Samples~/Navigation"},{"displayName":"MVVM","description":"Example that showcases the MVVM pattern with dependency injection","path":"Samples~/MVVM"},{"displayName":"Redux","description":"Example of state management with Redux","path":"Samples~/Redux"},{"displayName":"MVVM And Redux","description":"Example that showcases the MVVM pattern with dependency injection and state management with Redux","path":"Samples~/MVVM And Redux"},{"displayName":"UndoRedo","description":"Example of undo/redo system","path":"Samples~/UndoRedo"},{"displayName":"Trackpad","description":"Example of Trackpad gesture recognition","path":"Samples~/Trackpad"}],"repository":{"revision":"507f4d2c0b743f52c3651d613d680bc909905b46","type":"git","url":"https://github.com/Unity-Technologies/unity-app-ui.git"},"documentationUrl":"https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.0/manual/index.html","_upm":{"changelog":"### Removed\n\n- Removed `Unity.AppUI.Core.AppUI.DismissAnyPopups` method. Popups are now registered per `Panel` element.\n\n### Changed\n\n- Refactored SliderBase and BaseSlider for performance improvements and better features. The RangeSliderBase class has been removed and RangeSliderFloat/RangeSliderInt are now derived from SliderBase directly.\n- The `Platform`, `AppUIInput` and `GestureRecognizer` classes now use pre-allocated buffers to deal with Touch events in a single frame, and expects a `ReadOnlySpan<AppUITouch>` type to work with instead of `AppUITouch[]`.\n- Changed `ticks` related properties in Slider components with a new `marks` property. To configure marks you can you the new `step` property or directly set your `customMarks`\n- Updated App UI Native plugins for MacOS and iOS.\n\n### Added\n\n- Added `scale` property on slider components to support custom non-linear scaling of displayed values in the UI.\n- Added the support of inverted track progress in slider components.\n- Added Redux Debugging tool.\n- Added `formatFunction` along with `formatString` and grouped them into a new `IFormattable<TValueType>` interface. The `formatFunction` will give you the possibility to customize entirely the string formatted value of a given `TValueType`.\n- Added a `RestrictedValuePolicy` on slider components where you can choose if the slider can take a value related to the `step` or `customMarks` with modifier keys or not.\n- `VisualElementExtensions.HasAncestorsOfType{T}` method to verify if an element as any ancestor of a specific type.\n- Added the serialzation of last selected indices in Storybook window to save and restore selection.\n- Added `orientation` property on slider components, to support vertical sliders.\n- Added `VisualElementExtensions.GetLastAncestorOfType{T}` method to retrieve the last ancestor of a specific type in the tree.\n- Added `VisualElementExtensions.EnableDynamicTransform` method to set/unset the `UsageHints.DynamicTransform` flag in your element's usageHints.\n- Added `RectExtensions.Approximately` method to verify if two Rect object are approximately the same.\n- Popup elements such as `Popover`, `Modal` or `MenuBuilder` now get their view's `userData` filled with the `Popup` instance itself. This way you can retrieve information about the `Popup` instance that created this popup element from within the visual tree.\n- Added USS custom properties to choose the font style of AccordionItem header and TabItem text.\n\n### Fixed\n\n- Fixed calling `shown` event callbacks when a `Modal` is displayed.\n- Fixed Tabs emphasized color in Editor-light theme.\n- Use `RenderTexture.GetTemporary` instead of `new RenderTexture` to optimize RT allocations, especially on tile-based renderers such as mobile platforms.\n- Fixed an exception thrown when dismiss any popup of a panel when this panel becomes out of focus."}}
+{
+  "name": "com.unity.dt.app-ui",
+  "displayName": "App UI",
+  "version": "2.0.0-pre.17",
+  "unity": "2021.3",
+  "category": "UI",
+  "keywords": [
+    "app",
+    "ui",
+    "components",
+    "runtime",
+    "framework",
+    "navigation",
+    "dependency-injection",
+    "mvvm",
+    "undostack",
+    "redux",
+    "state-management",
+    "dark-theme",
+    "data-binding",
+    "cloud",
+    "unity",
+    "app-ui"
+  ],
+  "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
+  "dependencies": {
+    "com.unity.modules.androidjni": "1.0.0",
+    "com.unity.modules.uielements": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.screencapture": "1.0.0"
+  },
+  "samples": [
+    {
+      "displayName": "Drag And Drop",
+      "description": "Example of drag and drop system using App UI DropZone component and Dragger/DropTarget manipulators",
+      "path": "Samples~/Drag And Drop"
+    },
+    {
+      "displayName": "UI Kit",
+      "description": "Every component in a single page",
+      "path": "Samples~/UI Kit"
+    },
+    {
+      "displayName": "StoryBook",
+      "description": "StoryBookJS-like window in the Editor",
+      "path": "Samples~/StoryBook"
+    },
+    {
+      "displayName": "Navigation",
+      "description": "Navigation system",
+      "path": "Samples~/Navigation"
+    },
+    {
+      "displayName": "MVVM",
+      "description": "Example that showcases the MVVM pattern with dependency injection",
+      "path": "Samples~/MVVM"
+    },
+    {
+      "displayName": "Redux",
+      "description": "Example of state management with Redux",
+      "path": "Samples~/Redux"
+    },
+    {
+      "displayName": "MVVM And Redux",
+      "description": "Example that showcases the MVVM pattern with dependency injection and state management with Redux",
+      "path": "Samples~/MVVM And Redux"
+    },
+    {
+      "displayName": "UndoRedo",
+      "description": "Example of undo/redo system",
+      "path": "Samples~/UndoRedo"
+    },
+    {
+      "displayName": "Trackpad",
+      "description": "Example of Trackpad gesture recognition",
+      "path": "Samples~/Trackpad"
+    }
+  ],
+  "_upm": {
+    "changelog": "### Changed\n\n- Replaced ClickEvent action in MenuItem builder by an EventBase action\n\n### Fixed\n\n- Fixed styling of MenuItem element\n- Fixed some SplitView styling issues when nesting SplitViews in a visual tree.\n- Fixed context propoagation per key\n\n### Added\n\n- Added scoped service provider implementation.\n- Added `showExpandButtons` property to the `SplitView` UI element.\n\n### Removed\n\n- Removed EventBaseExtensionsBridge class"
+  },
+  "upmCi": {
+    "footprint": "9bc147c343c1b4315b26606911f93c816adbc599"
+  },
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.0/manual/index.html",
+  "repository": {
+    "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
+    "type": "git",
+    "revision": "4fd85e62facefa5ec902722cfa1da1132ad0b710"
+  }
+}

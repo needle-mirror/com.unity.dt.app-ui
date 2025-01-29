@@ -79,6 +79,44 @@ namespace Unity.AppUI.Tests.MVVM
             Assert.AreEqual(1, service.onDependenciesInjectedCalled);
         }
 
+        [Test]
+        public void ServiceProvider_ShouldCreateScope()
+        {
+            var services = new ServiceCollection();
+            services.AddSingleton<ServiceWithValidConstructor>();
+            services.AddSingleton<ServiceWithValidConstructor2>();
+            services.AddScoped<ServiceWithAttributes>();
+            var serviceProvider = services.BuildServiceProvider();
+
+            var service1 = serviceProvider.GetService<ServiceWithValidConstructor>();
+            Assert.IsNotNull(service1);
+            var service2 = serviceProvider.GetService<ServiceWithValidConstructor2>();
+            Assert.IsNotNull(service2);
+
+            var service3 = serviceProvider.GetService<ServiceWithAttributes>();
+            Assert.IsNotNull(service3);
+
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var scoped1 = scope.ServiceProvider.GetService<ServiceWithValidConstructor>();
+                Assert.IsNotNull(scoped1);
+                Assert.AreSame(service1, scoped1);
+
+                var scoped2 = scope.ServiceProvider.GetService<ServiceWithValidConstructor2>();
+                Assert.IsNotNull(scoped2);
+                Assert.AreSame(service2, scoped2);
+
+                var scoped3 = scope.ServiceProvider.GetService<ServiceWithAttributes>();
+                Assert.IsNotNull(scoped3);
+                Assert.IsNotNull(scoped3.dependency1);
+                Assert.IsNotNull(scoped3.dependency2);
+                Assert.IsNotNull(scoped3.dependency2.dep);
+                Assert.AreEqual(1, scoped3.onDependenciesInjectedCalled);
+
+                Assert.AreNotSame(service3, scoped3);
+            }
+        }
+
         public class ServiceWithValidConstructor
         {
             public ServiceWithValidConstructor() { }

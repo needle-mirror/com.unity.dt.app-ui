@@ -58,6 +58,8 @@ namespace Unity.AppUI.Samples
             void SetTheme()
             {
                 Platform.darkModeChanged -= OnSystemThemeChanged;
+                if (string.IsNullOrEmpty(themeSwitcher.value))
+                    themeSwitcher.SetValueWithoutNotify("dark");
                 if (themeSwitcher.value == "system")
                 {
                     Platform.darkModeChanged += OnSystemThemeChanged;
@@ -72,12 +74,16 @@ namespace Unity.AppUI.Samples
 
             void SetScale()
             {
+                if (string.IsNullOrEmpty(scaleSwitcher.value))
+                    scaleSwitcher.SetValueWithoutNotify("medium");
                 panel.scale = scaleSwitcher.value;
                 PlayerPrefs.SetString("scale", scaleSwitcher.value);
             }
 
             void SetDir()
             {
+                if (string.IsNullOrEmpty(dirSwitcher.value))
+                    dirSwitcher.SetValueWithoutNotify("Ltr");
                 Enum.TryParse<Dir>(dirSwitcher.value, out var dir);
                 panel.layoutDirection = dir;
                 PlayerPrefs.SetString("dir", dirSwitcher.value);
@@ -530,6 +536,7 @@ namespace Unity.AppUI.Samples
             });
 
             var collapsibleSplitView = root.Q<SplitView>("collapsible-split-view");
+            collapsibleSplitView.showExpandButtons = true;
             root.Q<Button>("sv-cs0b").clicked += () => collapsibleSplitView.CollapseSplitter(0, CollapseDirection.Backward);
             root.Q<Button>("sv-cs1f").clicked += () => collapsibleSplitView.CollapseSplitter(1, CollapseDirection.Forward);
 
