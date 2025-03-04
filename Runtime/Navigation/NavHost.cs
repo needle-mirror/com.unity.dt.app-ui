@@ -235,7 +235,7 @@ namespace Unity.AppUI.Navigation
                 visualController?.SetupDrawer(drawer, destination, navController);
                 screen.SetupDrawer(drawer);
 
-                if (destination.showAppBar && !navController.canGoBack)
+                if (destination.showAppBar && (!navController.canGoBack || !destination.showBackButton))
                 {
                     appBar.showDrawerButton = true;
                     appBar.drawerButtonTriggered += () => drawer.Toggle();

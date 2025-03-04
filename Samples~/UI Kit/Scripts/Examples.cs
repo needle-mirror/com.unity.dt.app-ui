@@ -535,6 +535,11 @@ namespace Unity.AppUI.Samples
                 Debug.Log($"SliderFloat Changing: {evt.newValue}");
             });
 
+            var maskField = root.Q<MaskField>("mask-field");
+            maskField.sourceItems = new List<string> { "Choice 1", "Choice 2", "Choice 3" };
+            maskField.getDisplayName = i => $"{maskField.sourceItems[i]}";
+            maskField.getMaskValue = i => 1 << i;
+
             var collapsibleSplitView = root.Q<SplitView>("collapsible-split-view");
             collapsibleSplitView.showExpandButtons = true;
             root.Q<Button>("sv-cs0b").clicked += () => collapsibleSplitView.CollapseSplitter(0, CollapseDirection.Backward);

@@ -4,6 +4,23 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0-pre.18] - 2025-03-04
+
+### Added
+
+- Added MaskField UI component.
+- Added `EnumField` UI component.
+- Added Source Generators for MVVM module. Source Generators helps to get rid of boilerplate code and focus on business logic.
+
+### Fixed
+
+- Fixed backgrounds color of the input fields.
+- Fixed the merge of default and new `Argument` objects during navigation to a `NavDestination`.
+
+### Changed
+
+- Others assembly modules such as `Redux`, `MVVM` and `Navigation` has been configured to be auto-referenced in the Unity project's assemblies.
+
 ## [2.0.0-pre.17] - 2025-01-29
 
 ### Changed

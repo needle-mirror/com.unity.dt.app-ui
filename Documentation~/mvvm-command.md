@@ -142,6 +142,36 @@ public class MyViewModel : ObservableObject
 }
 ```
 
+## ICommand Attribute
+
+You can use the [ICommand](xref:Unity.AppUI.MVVM.ICommandAttribute) attribute to mark a method as a command in the ViewModel.
+When you use the `ICommand` attribute, the method will be automatically wrapped in a `RelayCommand` instance.
+
+Example usage:
+```cs
+[ObservableObject]
+public partial class MyViewModel
+{
+    [ICommand]
+    void DoSomething() { /* Your logic here */ }
+
+    [ICommand]
+    Task DoSomethingAsync(string textParameter, CancellationToken token) { /* Your logic here */ }
+}
+```
+
+Will generate:
+```csharp
+public partial class MyViewModel
+{
+    RelayCommand m_DoSomethingCommand;
+    public RelayCommand DoSomethingCommand => m_DoSomethingCommand ??= new RelayCommand(DoSomething);
+
+    AsyncRelayCommand<string> m_DoSomethingAsyncCommand;
+    public AsyncRelayCommand<string> DoSomethingAsyncCommand => m_DoSomethingAsyncCommand ??= new AsyncRelayCommand<string>(DoSomethingAsync);
+}
+```
+
 ## Command Binding
 
 Usually in MVVM, you will want to bind a command to a user interface element. In App UI, you can do this by listening to

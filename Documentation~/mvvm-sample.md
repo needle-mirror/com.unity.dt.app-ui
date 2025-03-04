@@ -97,7 +97,8 @@ The **MainViewModel** class is a [ObservableObject](xref:Unity.AppUI.MVVM.Observ
 constructed by the Dependency Injection system. It is defined as a **ViewModel** in the MVVM pattern.
 
 ```cs
-public class MainViewModel : ObservableObject
+[ObservableObject]
+public partial class MainViewModel
 {
     public MainViewModel()
     {

@@ -10,24 +10,20 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [2.0.0-pre.17] - 2025-01-29
-
-### Changed
-
-- Replaced ClickEvent action in MenuItem builder by an EventBase action
-
-### Fixed
-
-- Fixed styling of MenuItem element
-- Fixed some SplitView styling issues when nesting SplitViews in a visual tree.
-- Fixed context propoagation per key
+## [2.0.0-pre.18] - 2025-03-04
 
 ### Added
 
-- Added scoped service provider implementation.
-- Added `showExpandButtons` property to the `SplitView` UI element.
+- Added MaskField UI component.
+- Added `EnumField` UI component.
+- Added Source Generators for MVVM module. Source Generators helps to get rid of boilerplate code and focus on business logic.
 
-### Removed
+### Fixed
 
-- Removed EventBaseExtensionsBridge class
+- Fixed backgrounds color of the input fields.
+- Fixed the merge of default and new `Argument` objects during navigation to a `NavDestination`.
+
+### Changed
+
+- Others assembly modules such as `Redux`, `MVVM` and `Navigation` has been configured to be auto-referenced in the Unity project's assemblies.
 

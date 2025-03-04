@@ -9,7 +9,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
     public record AppState
     {
         [SerializeField]
-        public Todo[] todos;
+        public Todo[] todos = Array.Empty<Todo>();
 
         [SerializeField]
         public string searchInput;

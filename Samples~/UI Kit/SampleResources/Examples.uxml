@@ -1273,6 +1273,13 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
 
+                    <!-- EnumField -->
+                    <appui:Heading text="ENUMFIELD" class="example-title" />
+                    <appui:Text text="enum-type='Unity.AppUI.UI.Direction, Unity.AppUI'" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:EnumField enum-type="Unity.AppUI.UI.Direction, Unity.AppUI" enum-value="Horizontal" />
+                    </ui:VisualElement>
+
                     <!-- Numerical Field -->
                     <appui:Heading text="NUMERICALFIELD" class="example-title" />
                     <appui:Text text="Sizing" class="example-subtitle" />
@@ -1564,6 +1571,13 @@
                             <appui:LocalizedTextElement name="playerAppleCount" text="@UI:playerAppleCount" />
                             <appui:LocalizedTextElement name="nameIs" text="@UI:nameIs" />
                         </appui:ContextProvider>
+                    </ui:VisualElement>
+
+                    <!-- MaskField -->
+                    <appui:Heading text="MASKFIELD" class="example-title" />
+                    <appui:Text text="Default" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:MaskField name="mask-field" />
                     </ui:VisualElement>
 
                     <!-- Menu -->

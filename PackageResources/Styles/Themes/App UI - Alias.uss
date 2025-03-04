@@ -34,11 +34,11 @@
   --appui-alias-field-border-color-hover: var(--appui-base-500);
   --appui-alias-field-border-color-default: var(--appui-base-400);
 
-  --appui-alias-field-background-color-disabled: var(--appui-base-25);
-  --appui-alias-field-background-color-focus: var(--appui-base-25);
-  --appui-alias-field-background-color-active: var(--appui-base-25);
-  --appui-alias-field-background-color-hover: var(--appui-base-50);
-  --appui-alias-field-background-color-default: var(--appui-base-25);
+  --appui-alias-field-background-color-disabled: var(--appui-base-100);
+  --appui-alias-field-background-color-focus: var(--appui-base-100);
+  --appui-alias-field-background-color-active: var(--appui-base-100);
+  --appui-alias-field-background-color-hover: var(--appui-base-200);
+  --appui-alias-field-background-color-default: var(--appui-base-100);
 
   --appui-alias-text-disabled: var(--appui-foregrounds-25);
   --appui-alias-text-secondary: var(--appui-foregrounds-50);

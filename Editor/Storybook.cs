@@ -18,8 +18,10 @@ using UnityEngine.Localization.Settings;
 #endif
 #if UNITY_2022_1_OR_NEWER
 using FloatField = UnityEngine.UIElements.FloatField;
+using EnumField = UnityEngine.UIElements.EnumField;
 #else
 using FloatField = UnityEditor.UIElements.FloatField;
+using EnumField = UnityEditor.UIElements.EnumField;
 #endif
 
 namespace Unity.AppUI.Editor

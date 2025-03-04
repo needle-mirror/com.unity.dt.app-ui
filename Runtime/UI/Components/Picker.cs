@@ -59,6 +59,11 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// The index of this item in the collection.
+        /// </summary>
+        public int index { get; set; }
+
+        /// <summary>
         /// Default constructor.
         /// </summary>
         public PickerItem()
@@ -565,14 +570,17 @@ namespace Unity.AppUI.UI
             {
                 for (var i = 0; i < menu.childCount; i++)
                 {
-                    var item = menu[i];
-                    var isSelected = m_Value.Contains(i);
+                    var item = (PickerItem)menu[i];
+                    var itemIndex = item.index;
+                    var isSelected = m_Value.Contains(itemIndex);
                     item.EnableInClassList(Styles.selectedUssClassName, isSelected);
                 }
             }
 
             if (m_ValidateValue != null)
                 invalid = !m_ValidateValue.Invoke(m_Value);
+
+            OnValueSet();
         }
 
         /// <summary>
@@ -662,8 +670,10 @@ namespace Unity.AppUI.UI
             // clear items
             for (var i = 0; i < m_Items.Count; i++)
             {
-                OnUnbindItem(m_Items[i], i);
+                if (m_Items[i].index >= 0)
+                    OnUnbindItem(m_Items[i], i);
                 m_Items[i].clickable.clickedWithEventInfo -= OnItemClicked;
+                OnPickerItemRemoved(m_Items[i], i);
             }
             m_Items.Clear();
 
@@ -672,12 +682,13 @@ namespace Unity.AppUI.UI
             {
                 for (var i = 0; i < sourceItems.Count; i++)
                 {
-                    var item = new PickerItem();
+                    var item = new PickerItem { index = i };
                     item.clickable.clickedWithEventInfo += OnItemClicked;
                     var content = OnRequestItemCreation(i);
                     item.Add(content);
                     m_Items.Add(item);
                 }
+                OnPickerItemsCreated();
             }
         }
 
@@ -694,6 +705,23 @@ namespace Unity.AppUI.UI
         protected abstract VisualElement OnRequestItemCreation(int i);
 
         /// <summary>
+        /// Called when the Picker items are created.
+        /// </summary>
+        protected virtual void OnPickerItemsCreated() { }
+
+        /// <summary>
+        /// Called when the Picker value is set with or without notifying listeners.
+        /// </summary>
+        protected virtual void OnValueSet() { }
+
+        /// <summary>
+        /// Called when a Picker item is removed.
+        /// </summary>
+        /// <param name="item"> The item to remove. </param>
+        /// <param name="index"> The index of the item to remove. </param>
+        protected virtual void OnPickerItemRemoved(PickerItem item, int index) { }
+
+        /// <summary>
         /// Unbind a Picker item.
         /// </summary>
         /// <param name="item"> The item to unbind. </param>
@@ -702,9 +730,9 @@ namespace Unity.AppUI.UI
 
         void OnItemClicked(EventBase evt)
         {
-            if (evt.target is VisualElement item)
+            if (evt.target is PickerItem item)
             {
-                var idx = item.parent.IndexOf(item);
+                var idx = item.index;
                 if (m_SelectionType == PickerSelectionType.Single)
                 {
                     value = new[] {idx};
@@ -728,11 +756,12 @@ namespace Unity.AppUI.UI
             menu.AddToClassList(appuiPickerMenu);
             menu.style.minWidth = paddingRect.width - 6;
 
-            for (var i = 0; i < m_Items.Count; i++)
+            foreach (var pickerItem in m_Items)
             {
-                var isSelected = m_Value.Contains(i);
-                m_Items[i].EnableInClassList(Styles.selectedUssClassName, isSelected);
-                menu.Add(m_Items[i]);
+                var itemIndex = pickerItem.index;
+                var isSelected = m_Value.Contains(itemIndex);
+                pickerItem.EnableInClassList(Styles.selectedUssClassName, isSelected);
+                menu.Add(pickerItem);
             }
 
             return menu;
@@ -818,15 +847,29 @@ namespace Unity.AppUI.UI
 
 #endif
 
-        Action<TItem, int> m_BindItem;
+        /// <summary>
+        /// Method to bind the item data to the Dropdown menu item element.
+        /// </summary>
+        /// <param name="item"> The item to bind. </param>
+        /// <param name="index"> The index of the item to bind. </param>
+        public delegate void BindItemFunc(TItem item, int index);
+
+        /// <summary>
+        /// Method to bind the title data to the Dropdown button element.
+        /// </summary>
+        /// <param name="item"> The title to bind. </param>
+        /// <param name="selectedIndices"> The currently selected indices from the source items. </param>
+        public delegate void BindTitleFunc(TTitle item, IEnumerable<int> selectedIndices);
+
+        BindItemFunc m_BindItem;
 
         Func<TItem> m_MakeItem;
 
         Func<TTitle> m_MakeTitle;
 
-        Action<TTitle, IEnumerable<int>> m_BindTitle;
+        BindTitleFunc m_BindTitle;
 
-        Action<TItem, int> m_UnbindItem;
+        BindItemFunc m_UnbindItem;
 
         /// <summary>
         /// The function used to create a Picker item.
@@ -856,7 +899,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
-        public Action<TItem, int> bindItem
+        public BindItemFunc bindItem
         {
             get => m_BindItem;
             set
@@ -878,7 +921,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
-        public Action<TItem, int> unbindItem
+        public BindItemFunc unbindItem
         {
             get => m_UnbindItem;
             set
@@ -922,7 +965,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
-        public Action<TTitle, IEnumerable<int>> bindTitle
+        public BindTitleFunc bindTitle
         {
             get => m_BindTitle;
             set
@@ -952,9 +995,9 @@ namespace Unity.AppUI.UI
             IList items,
             Func<TItem> makeItemFunc = null,
             Func<TTitle> makeTitleFunc = null,
-            Action<TItem, int> bindItemFunc = null,
-            Action<TTitle, IEnumerable<int>> bindTitleFunc = null,
-            Action<TItem, int> unbindItemFunc = null,
+            BindItemFunc bindItemFunc = null,
+            BindTitleFunc bindTitleFunc = null,
+            BindItemFunc unbindItemFunc = null,
             int[] defaultIndices = null)
             : base(items, defaultIndices)
         {
