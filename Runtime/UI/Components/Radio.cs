@@ -224,6 +224,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_Label.text != value;
                 m_Label.text = value;
+                if (string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
+                    key = value;
 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)

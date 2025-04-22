@@ -171,9 +171,9 @@ namespace Unity.AppUI.UI
                     return;
 
                 var previousGrabMode = m_GrabMode;
-                target.RemoveFromClassList(GetGrabModeUssClassName(m_GrabMode));
+                //target.RemoveFromClassList(GetGrabModeUssClassName(m_GrabMode));
                 m_GrabMode = value;
-                target.AddToClassList(GetGrabModeUssClassName(m_GrabMode));
+                //target.AddToClassList(GetGrabModeUssClassName(m_GrabMode));
                 m_GrabModeChanged?.Invoke(previousGrabMode, m_GrabMode);
             }
         }

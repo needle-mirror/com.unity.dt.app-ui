@@ -350,8 +350,12 @@ namespace Unity.AppUI.UI
         /// <param name="reason"> The reason for the dismissal.</param>
         protected override void AnimateViewOut(DismissType reason)
         {
-            view.visible = false;
-            InvokeDismissedEventHandlers(reason);
+            if (view.visible)
+                view.schedule.Execute(() =>
+                {
+                    view.visible = false;
+                    InvokeDismissedEventHandlers(reason);
+                });
         }
 
         void OnContentGeometryChanged(GeometryChangedEvent evt)
