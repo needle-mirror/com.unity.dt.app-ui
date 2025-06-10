@@ -19,6 +19,10 @@
     --unity-cursor-color: var(--appui-foregrounds-200);
 }
 
+.unity-text-field.appui-text-cursor--transparent {
+    --unity-cursor-color: rgba(0, 0, 0, 0);
+}
+
 .unity-base-text-field__input--placeholder {
     color: var(--appui-foregrounds-50);
 }

@@ -43,6 +43,7 @@ namespace Unity.AppUI.UI
             target?.RegisterCallback<PointerMoveEvent>(OnPointerMoved);
             rootElement?.RegisterCallback<PointerUpEvent>(OnPointerUp, TrickleDown.TrickleDown);
             rootElement?.RegisterCallback<PointerCancelEvent>(OnPointerCanceled, TrickleDown.TrickleDown);
+            rootElement?.RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
         }
 
         protected override void UnregisterCallbacksFromTarget()
@@ -51,6 +52,12 @@ namespace Unity.AppUI.UI
             target?.UnregisterCallback<PointerMoveEvent>(OnPointerMoved);
             rootElement?.UnregisterCallback<PointerUpEvent>(OnPointerUp, TrickleDown.TrickleDown);
             rootElement?.UnregisterCallback<PointerCancelEvent>(OnPointerCanceled, TrickleDown.TrickleDown);
+            rootElement?.UnregisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
+        }
+
+        void OnKeyDown(KeyDownEvent evt)
+        {
+            HideTooltip();
         }
 
         void OnPointerDown(PointerDownEvent evt)
@@ -182,6 +189,11 @@ namespace Unity.AppUI.UI
 
         void StartFadeIn()
         {
+            if (m_AnchorElement == null || m_AnchorElement.IsInvisible())
+            {
+                HideTooltip();
+                return;
+            }
             m_Tooltip?.SetAnchor(m_AnchorElement);
             m_Tooltip?.SetPlacement(m_AnchorElement.GetPreferredTooltipPlacement());
             m_Tooltip?.Show();

@@ -43,8 +43,8 @@ namespace Unity.AppUI.UI
         /// Check if a <see cref="VisualElement"/> is invisible.
         /// </summary>
         /// <remarks>
-        /// An element is considered invisible if it's not attached to a panel, its visibility attribute is set to <see cref="Visibility.Hidden"/>,
-        /// has an opacity lower than 0.001 or has a display style set to <see cref="DisplayStyle.None"/>.
+        /// An element is considered invisible if it's not attached to a panel, its visibility attribute or the one from its ancestors is set to <see cref="Visibility.Hidden"/>,
+        /// has a computed opacity value lower than 0.001 or has a display style (itself or ancestors) set to <see cref="DisplayStyle.None"/>.
         /// </remarks>
         /// <param name="element"> The <see cref="VisualElement"/> object.</param>
         /// <returns> True if the element is invisible, false otherwise.</returns>
@@ -54,7 +54,20 @@ namespace Unity.AppUI.UI
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
 
-            return element.panel == null || !element.visible || element.resolvedStyle.opacity < 0.001f || element.resolvedStyle.display == DisplayStyle.None;
+            if (element.panel == null || !element.visible || element.resolvedStyle.opacity < 0.001f || element.resolvedStyle.display == DisplayStyle.None)
+                return true;
+
+            // check ancestors
+            var parent = element.parent;
+            while (parent != null)
+            {
+                if (!parent.visible || parent.resolvedStyle.opacity < 0.001f || parent.resolvedStyle.display == DisplayStyle.None)
+                    return true;
+
+                parent = parent.parent;
+            }
+
+            return false;
         }
 
         /// <summary>

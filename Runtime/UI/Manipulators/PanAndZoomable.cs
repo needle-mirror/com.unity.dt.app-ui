@@ -17,8 +17,6 @@ namespace Unity.AppUI.UI
         [EnumName("GetGrabModeUssClassName", typeof(GrabMode))]
         const string k_CursorUssClassName = Styles.cursorUsClassNamePrefix;
 
-        const ScrollDirection k_DefaultScrollDirection = ScrollDirection.Natural;
-
         const CanvasControlScheme k_DefaultControlScheme = CanvasControlScheme.Modern;
 
         const CanvasManipulator k_DefaultPrimaryManipulator = CanvasManipulator.None;
@@ -105,11 +103,6 @@ namespace Unity.AppUI.UI
         public bool useSpaceBar { get; set; } = k_DefaultUseSpaceBar;
 
         /// <summary>
-        /// The scroll direction.
-        /// </summary>
-        public ScrollDirection scrollDirection { get; set; } = k_DefaultScrollDirection;
-
-        /// <summary>
         /// The duration of the damping effect in milliseconds.
         /// </summary>
         public int dampingEffectDurationMs { get; set; } = k_DefaultDampingEffectDurationMs;
@@ -124,11 +117,19 @@ namespace Unity.AppUI.UI
         /// </summary>
         public Vector2 scrollOffset
         {
+#if UNITY_6000_2_OR_NEWER
+            get => viewport.resolvedStyle.translate * -1;
+#else
             get => viewport.transform.position * -1;
+#endif
             set
             {
                 var newPosition = new Vector3(-value.x, -value.y, 0);
+#if UNITY_6000_2_OR_NEWER
+                var previousPosition = viewport.resolvedStyle.translate;
+#else
                 var previousPosition = viewport.transform.position;
+#endif
                 var changed =
                     !Mathf.Approximately(previousPosition.x, newPosition.x) ||
                     !Mathf.Approximately(previousPosition.y, newPosition.y);
@@ -145,15 +146,27 @@ namespace Unity.AppUI.UI
         /// </summary>
         public Vector2 zoom
         {
+#if UNITY_6000_2_OR_NEWER
+            get => viewport.resolvedStyle.scale.value;
+#else
             get => viewport.transform.scale;
+#endif
             set
             {
+#if UNITY_6000_2_OR_NEWER
+                var previousScale = viewport.resolvedStyle.scale.value;
+#else
                 var previousScale = viewport.transform.scale;
+#endif
                 var newScale = new Vector3(Mathf.Clamp(value.x, minZoom, maxZoom), Mathf.Clamp(value.y, minZoom, maxZoom), 1);
                 var changed =
                     !Mathf.Approximately(previousScale.x, newScale.x) ||
                     !Mathf.Approximately(previousScale.y, newScale.y);
+#if UNITY_6000_2_OR_NEWER
+                viewport.style.scale = new Scale(newScale);
+#else
                 viewport.transform.scale = newScale;
+#endif
                 if (changed)
                     m_ZoomChanged?.Invoke(previousScale, newScale);
             }
@@ -171,9 +184,9 @@ namespace Unity.AppUI.UI
                     return;
 
                 var previousGrabMode = m_GrabMode;
-                //target.RemoveFromClassList(GetGrabModeUssClassName(m_GrabMode));
+                target.RemoveFromClassList(GetGrabModeUssClassName(m_GrabMode));
                 m_GrabMode = value;
-                //target.AddToClassList(GetGrabModeUssClassName(m_GrabMode));
+                target.AddToClassList(GetGrabModeUssClassName(m_GrabMode));
                 m_GrabModeChanged?.Invoke(previousGrabMode, m_GrabMode);
             }
         }
@@ -235,9 +248,10 @@ namespace Unity.AppUI.UI
         protected override void RegisterCallbacksOnTarget()
         {
             target.RegisterCallback<WheelEvent>(OnWheel);
-            target.RegisterCallback<PointerDownEvent>(OnPointerDown, TrickleDown.TrickleDown);
+            target.RegisterCallback<PointerDownEvent>(OnPointerDownTrickleDown, TrickleDown.TrickleDown);
+            target.RegisterCallback<PointerDownEvent>(OnPointerDown);
 #if !UNITY_2023_1_OR_NEWER
-            target.RegisterCallback<MouseDownEvent>(OnMouseDown, TrickleDown.TrickleDown);
+            target.RegisterCallback<MouseDownEvent>(OnMouseDown);
 #endif
             target.RegisterCallback<PointerUpEvent>(OnPointerUp);
             target.RegisterCallback<PointerCancelEvent>(OnPointerCancel);
@@ -252,9 +266,10 @@ namespace Unity.AppUI.UI
         protected override void UnregisterCallbacksFromTarget()
         {
             target.UnregisterCallback<WheelEvent>(OnWheel);
-            target.UnregisterCallback<PointerDownEvent>(OnPointerDown, TrickleDown.TrickleDown);
+            target.UnregisterCallback<PointerDownEvent>(OnPointerDownTrickleDown, TrickleDown.TrickleDown);
+            target.UnregisterCallback<PointerDownEvent>(OnPointerDown);
 #if !UNITY_2023_1_OR_NEWER
-            target.UnregisterCallback<MouseDownEvent>(OnMouseDown, TrickleDown.TrickleDown);
+            target.UnregisterCallback<MouseDownEvent>(OnMouseDown);
 #endif
             target.UnregisterCallback<PointerUpEvent>(OnPointerUp);
             target.UnregisterCallback<PointerCancelEvent>(OnPointerCancel);
@@ -302,11 +317,14 @@ namespace Unity.AppUI.UI
             }
         }
 
-        void OnPointerDown(PointerDownEvent evt)
+        void OnPointerDownTrickleDown(PointerDownEvent evt)
         {
             m_Velocity = Vector2.zero;
             StopAnyDampingEffect();
+        }
 
+        void OnPointerDown(PointerDownEvent evt)
+        {
             if (target.panel == null || target.panel.GetCapturingElement(evt.pointerId) != null)
                 return;
 
@@ -401,8 +419,7 @@ namespace Unity.AppUI.UI
                 grabMode = GrabMode.Grabbing;
                 var oldScrollOffset = scrollOffset;
                 var newScrollOffset = scrollOffset;
-                newScrollOffset += (Vector2)(evt.localPosition - m_PointerPosition) *
-                    (scrollDirection == ScrollDirection.Natural ? -1f : 1f);
+                newScrollOffset -= (Vector2) (evt.localPosition - m_PointerPosition);
                 if (m_LastTimestamp == 0)
                     m_LastTimestamp = evt.timestamp;
                 var deltaTime = evt.timestamp - m_LastTimestamp;
@@ -505,7 +522,7 @@ namespace Unity.AppUI.UI
                 return;
 
             var newScrollOffset = scrollOffset;
-            newScrollOffset += (delta * scrollSpeed) * (scrollDirection == ScrollDirection.Natural ? -1f : 1f);
+            newScrollOffset += delta * scrollSpeed;
             scrollOffset = newScrollOffset;
         }
 
@@ -537,7 +554,11 @@ namespace Unity.AppUI.UI
         /// <param name="newValue"> The new scroll offset. </param>
         public void SetScrollOffsetWithoutNotify(Vector2 newValue)
         {
+#if UNITY_6000_2_OR_NEWER
+            viewport.style.translate = new Translate(-newValue.x, -newValue.y, 0);
+#else
             viewport.transform.position = new Vector3(-newValue.x, -newValue.y, 0);
+#endif
         }
 
         void StopAnyDampingEffect()

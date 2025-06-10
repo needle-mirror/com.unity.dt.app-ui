@@ -171,6 +171,7 @@ namespace Unity.AppUI.UI
             {
                 // be sure its visible
                 view.visible = true;
+                view.AddToClassList(Styles.openUssClassName);
                 m_InvokeShownAction();
             }
         }
