@@ -12,7 +12,7 @@ namespace Unity.AppUI.Editor.Redux.DevTools
         /// <summary>
         /// Show a Redux DevTools editor window.
         /// </summary>
-        [MenuItem("Window/Analysis/Redux DevTools")]
+        [MenuItem("Window/App UI/Redux DevTools", priority = 2161)]
         static void ShowWindow()
         {
             var window = CreateWindow<DevToolsWindow>();

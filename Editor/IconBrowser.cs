@@ -23,7 +23,7 @@ namespace Unity.AppUI.Editor
 
         const string k_BoldVariant = "bold";
 
-        [UnityEditor.MenuItem("Window/App UI/Icon Browser")]
+        [UnityEditor.MenuItem("Window/App UI/Icon Browser", priority = 2111)]
         public static void ShowWindow()
         {
             var window = GetWindow<IconBrowser>();

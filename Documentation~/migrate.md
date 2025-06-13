@@ -338,6 +338,13 @@ Assert.IsFalse(subscription.IsValid());
 
 The `INavVisualController` interface has a new method `SetupNavigationRail` that you have to implement to set up the navigation rail. Like the others setup methods, you can early check if the navigation destination has to use the navigation rail.
 
+Also, `NavDestination` does not have the `showBottombar`, `showAppBar`, and `showDrawer` properties anymore.
+These properties have moved into the `DefaultDestinationTemplate` class, set in `NavDestination.destinationTemplate`.
+This specialized template type is used with the default `NavigationScreen` which contain the `BottomNavBar`, `AppBar`, `Drawer`, and `NavigationRail` components.
+
+In the case you are creating your own implementation of `INavigationScreen`, make sure to create also an implementation of `NavDestinationTemplate` that contains
+all the logic you need to set up your screen creation. Implementing your own `INavigationScreen` means you have to call the `SetupXXX` methods of `INavVisualController` yourself during `OnEnter` callback. See [Navigation](xref:navigation) for more information.
+
 Before:
 ```csharp
 public class MyNavController : INavVisualController
@@ -374,7 +381,7 @@ public class MyNavController : INavVisualController
 {
     public void SetupBottomNavBar(BottomNavBar bottomNavBar, NavDestination destination, NavController navController)
     {
-        if (destination.showBottombar)
+        if (destination.destinationTemplate is DefaultDestinationTemplate defaultTemplate && defaultTemplate.showBottombar)
         {
             /* ... */
         }
@@ -382,7 +389,7 @@ public class MyNavController : INavVisualController
 
     public void SetupAppBar(AppBar appBar, NavDestination destination, NavController navController)
     {
-        if (destination.showAppBar)
+        if (destination.destinationTemplate is DefaultDestinationTemplate defaultTemplate && defaultTemplate.showAppBar)
         {
             /* ... */
         }
@@ -390,7 +397,7 @@ public class MyNavController : INavVisualController
 
     public void SetupDrawer(Drawer drawer, NavDestination destination, NavController navController)
     {
-        if (destination.showDrawer)
+        if (destination.destinationTemplate is DefaultDestinationTemplate defaultTemplate && defaultTemplate.showDrawer)
         {
             /* ... */
         }
@@ -398,9 +405,10 @@ public class MyNavController : INavVisualController
 
     public void SetupNavigationRail(NavigationRail navigationRail, NavDestination destination, NavController navController)
     {
-        if (destination.showNavigationRail)
+        if (destination.destinationTemplate is DefaultDestinationTemplate defaultTemplate && defaultTemplate.showNavigationRail)
         {
-            /* ... */
+            // Set up the navigation rail
+            // You can access the destination and navController to customize the navigation rail
         }
     }
 }

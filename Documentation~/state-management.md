@@ -254,7 +254,7 @@ public static class Application
 
 The Redux DevTools is a debugging tool that allows you to inspect the state of your application and track the actions that
 are dispatched to the store.
-The Redux DevTools is available in Unity Editor under the **Window > Analysis > Redux DevTools** menu.
+The Redux DevTools is available in Unity Editor under the **Window > App UI > Redux DevTools** menu.
 
 <p align="center">
  <img src="images/redux-devtools.png" alt="Redux DevTools">

@@ -331,7 +331,7 @@ namespace Unity.AppUI.Editor
         /// <summary>
         /// Open the StoryBook window.
         /// </summary>
-        [UnityEditor.MenuItem("Window/App UI/ Storybook")]
+        [UnityEditor.MenuItem("Window/App UI/ Storybook", priority = 2101)]
         public static void OpenStoryBook()
         {
             var window = GetWindow<Storybook>("App UI - StoryBook");

@@ -23,7 +23,7 @@ namespace Unity.AppUI.Navigation.Editor
         /// <summary>
         /// Initializes the window.
         /// </summary>
-        [MenuItem("Window/App UI/Navigation Graph")]
+        [MenuItem("Window/App UI/Navigation Graph", priority = 2150)]
         static void Init()
         {
             if (s_Instance == null)
