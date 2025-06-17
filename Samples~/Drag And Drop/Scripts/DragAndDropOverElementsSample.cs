@@ -66,7 +66,7 @@ namespace Unity.AppUI.Samples
                         label = System.IO.Path.GetFileName(path),
                         variant = Chip.Variant.Outlined
                     };
-                    chip.deletedWithEventInfo += OnChipDeleted;
+                    chip.delete.clickedWithEventInfo += OnChipDeleted;
                     m_ItemsContainer.Add(chip);
                 }
             }
@@ -76,7 +76,7 @@ namespace Unity.AppUI.Samples
                 if (evt.target is VisualElement element && element.GetFirstAncestorOfType<Chip>() is {} chip)
                 {
                     m_ItemsContainer.Remove(chip);
-                    chip.deletedWithEventInfo -= OnChipDeleted;
+                    chip.delete.clickedWithEventInfo -= OnChipDeleted;
                     UpdateView(false);
                 }
             }

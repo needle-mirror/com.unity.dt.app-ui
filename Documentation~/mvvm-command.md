@@ -192,3 +192,76 @@ MyCommand.CanExecuteChanged += (sender, args) => myButton.SetEnabled(MyCommand.C
 
 > [!NOTE]
 > It is up to the user to call `NotifyCanExecuteChanged` when the state of the command should change.
+
+You can also bind commands via UXML or UI Builder to any UI element that provides a `clickable.command` property.
+
+Here is an example of how to bind a command to a button in UXML:
+
+```xml
+<ui:UXML
+    xmlns:ui="UnityEngine.UIElements"
+    xmlns:appui="Unity.AppUI.UI">
+    <appui:Panel
+        data-source-type="MyNamespace.ClickableScript, Assembly-CSharp"
+        data-source="project://database/Assets/MyAsset.asset">
+        <appui:Button title="Click me!">
+            <Bindings>
+                <ui:DataBinding
+                    property="clickable.command"
+                    binding-mode="ToTarget"
+                    data-source-path="clickCommand"/>
+                <ui:DataBinding
+                    property="enabledSelf"
+                    binding-mode="ToTarget"
+                    data-source-path="canExecute"/>
+            </Bindings>
+        </appui:Button>
+    </appui:Panel>
+</ui:UXML>
+```
+
+And the corresponding C# code to create the `ClickableScript` asset:
+
+```csharp
+using System;
+using System.Threading.Tasks;
+using Unity.AppUI.MVVM;
+using UnityEngine;
+using Unity.Properties;
+using UnityEngine.UIElements;
+
+namespace MyNamespace
+{
+    [CreateAssetMenu(fileName = "MyAsset", menuName = "ClickableScript")]
+    public class ClickableScript : ScriptableObject, INotifyBindablePropertyChanged
+    {
+        static readonly BindingId canExecuteProperty = nameof(canExecute);
+
+        [CreateProperty(ReadOnly = true)]
+        public AsyncRelayCommand clickCommand { get; private set; }
+
+        [CreateProperty(ReadOnly = true)]
+        public bool canExecute => clickCommand.CanExecute(null);
+
+        void Awake()
+        {
+            clickCommand = new AsyncRelayCommand(OnClick, AsyncRelayCommandOptions.None);
+            clickCommand.CanExecuteChanged += (sender, args) =>
+            {
+                // Notify the UI that the command can execute state has changed
+                propertyChanged.Invoke(
+                    this,
+                    new BindablePropertyChangedEventArgs(in canExecuteProperty));
+            };
+        }
+
+        async Task OnClick()
+        {
+            await Task.Delay(1000); // Simulate some async work
+            Debug.Log("Button clicked!");
+        }
+
+        public event EventHandler<BindablePropertyChangedEventArgs> propertyChanged;
+    }
+}
+```

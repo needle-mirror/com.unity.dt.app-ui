@@ -22,6 +22,8 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId iconProperty = nameof(icon);
 
+        internal static readonly BindingId clickableProperty = nameof(clickable);
+
 #endif
         /// <summary>
         /// Main styling class for the NavigationRailItem.
@@ -41,6 +43,8 @@ namespace Unity.AppUI.UI
         Icon m_IconElement;
 
         LocalizedTextElement m_LabelElement;
+
+        Pressable m_Clickable;
 
         /// <summary>
         /// Whether the NavigationRailItem is in selected state.
@@ -119,7 +123,24 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Clickable Manipulator for this NavigationRailItem.
         /// </summary>
-        public Pressable clickable { get; }
+        public Pressable clickable
+        {
+            get => m_Clickable;
+            set
+            {
+                var changed = m_Clickable != value;
+                if (m_Clickable != null && m_Clickable.target == this)
+                    this.RemoveManipulator(m_Clickable);
+                m_Clickable = value;
+                if (m_Clickable == null)
+                    return;
+                this.AddManipulator(m_Clickable);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in clickableProperty);
+#endif
+            }
+        }
 
         /// <summary>
         /// Default constructor.

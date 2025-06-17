@@ -34,6 +34,11 @@ namespace Unity.AppUI.UI
 #endif
     public partial class PickerItem : BaseVisualElement, IPressable
     {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+
+        internal static readonly BindingId clickableProperty = new BindingId(nameof(clickable));
+
+#endif
         /// <summary>
         /// The main styling class for the PickerItem.
         /// </summary>
@@ -42,19 +47,24 @@ namespace Unity.AppUI.UI
         Pressable m_Clickable;
 
         /// <summary>
-        /// Clickable Manipulator for this MenuItem.
+        /// Clickable Manipulator for this PickerItem.
         /// </summary>
         public Pressable clickable
         {
             get => m_Clickable;
             set
             {
+                var changed = m_Clickable != value;
                 if (m_Clickable != null && m_Clickable.target == this)
                     this.RemoveManipulator(m_Clickable);
                 m_Clickable = value;
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in clickableProperty);
+#endif
             }
         }
 
@@ -145,6 +155,8 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId invalidProperty = new BindingId(nameof(invalid));
 
         internal static readonly BindingId validateValueProperty = new BindingId(nameof(validateValue));
+
+        internal static readonly BindingId clickableProperty = new BindingId(nameof(clickable));
 
 #endif
 
@@ -307,12 +319,17 @@ namespace Unity.AppUI.UI
             get => m_Clickable;
             set
             {
+                var changed = m_Clickable != value;
                 if (m_Clickable != null && m_Clickable.target == this)
                     this.RemoveManipulator(m_Clickable);
                 m_Clickable = value;
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in clickableProperty);
+#endif
             }
         }
 

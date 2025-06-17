@@ -41,6 +41,8 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId hasSubMenuProperty = new BindingId(nameof(hasSubMenu));
 
+        internal static readonly BindingId clickableProperty = new BindingId(nameof(clickable));
+
 #endif
 
         const int k_DefaultOpenSubMenuDelay = 300;
@@ -354,17 +356,25 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Clickable Manipulator for this MenuItem.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Pressable clickable
         {
             get => m_Clickable;
             set
             {
+                var changed = m_Clickable != value;
                 if (m_Clickable != null && m_Clickable.target == this)
                     this.RemoveManipulator(m_Clickable);
                 m_Clickable = value;
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in clickableProperty);
+#endif
             }
         }
 

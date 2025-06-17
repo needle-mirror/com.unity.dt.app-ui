@@ -10,15 +10,10 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [2.0.0-pre.21] - 2025-06-13
-
-### Changed
-
-- The `NavDestination` node now uses a `NavDestinationTemplate` as a delegate to create and set up a `INavigationScreen` when reaching this destination.
-- Moved `NavDestination` specific settings such as `showAppBar` inside the new `DefaultNavDestinationTemplate`.
+## [2.0.0-pre.22] - 2025-06-17
 
 ### Added
 
-- Added a default implementation of `NavDestinationTemplate` named `DefaultNavDestinationTemplate` which handles the creation of default `NavigationScreen` objects.
-- Added `INavigationScreen` interface, more extensible than the base class `NavigationScreen`.
+- Added support of `ICommand` in `Pressable` manipulator.
+- Added runtime binding support for commands in `Pressable` via `clickable.command` property in most interactable UI elements.
 

@@ -34,9 +34,11 @@ namespace Unity.AppUI.Tests.Redux
             Assert.Throws<ArgumentNullException>(() => new AsyncThunkCreator<string,string>(null, asyncThunkDelegate));
         }
 
+#if TEST_FRAMEWORK_1_4_0_OR_NEWER
         [Test]
         public void DispatchAsyncThunk_WhenStoreIsNull_ThrowsArgumentNullException()
         {
+
             AsyncThunk<string,string> asyncThunkDelegate = _ => Task.FromResult("result");
             var asyncThunk = new AsyncThunkCreator<string,string>("myAsyncThunk", asyncThunkDelegate);
             Assert.ThrowsAsync<ArgumentNullException>(async () =>
@@ -50,6 +52,7 @@ namespace Unity.AppUI.Tests.Redux
             Assert.ThrowsAsync<ArgumentNullException>(async () =>
                 await StoreExtensions.DispatchAsyncThunk<string,string>(store, null));
         }
+#endif
 
         [Test]
         public void DispatchAsyncThunkCoroutine_WhenStoreIsNull_ThrowsArgumentNullException()
@@ -72,6 +75,7 @@ namespace Unity.AppUI.Tests.Redux
             Assert.Throws<ArgumentNullException>(() => new ThunkAPI<string,string>(null, null));
         }
 
+#if TEST_FRAMEWORK_1_4_0_OR_NEWER
         [Test]
         public void ThunkAPI_DispatchThunk_WhenAsyncThunkIsNull_ThrowsArgumentNullException()
         {
@@ -80,6 +84,7 @@ namespace Unity.AppUI.Tests.Redux
                 "dummy/action", _ => Task.FromResult("result")).Invoke("arg"));
             Assert.DoesNotThrowAsync(async () => await api.DispatchThunk());
         }
+#endif
 
         [Test]
         public void Store_CreateAsyncThunk_ShouldCreateAsyncThunk()
