@@ -284,6 +284,7 @@ namespace Unity.AppUI.UI
                     CrossSnapVertically(ref result, screenRect, elementRect, options.crossSnap);
                     break;
                 case PopoverPlacement.InsideTopStart:
+                case PopoverPlacement.InsideTopLeft:
                     result.top = anchorRect.yMin;
                     result.marginTop = options.offset;
                     result.left = anchorRect.xMin;

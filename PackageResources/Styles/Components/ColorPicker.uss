@@ -94,3 +94,44 @@
 .appui-colorpicker__blue-channel-slider > .appui-slider__slider-control > .appui-slider__progress-container > .appui-slider__progress {
     background-color: #0051ff;
 }
+
+.appui-eye-dropper-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.appui-eye-dropper-magnifier {
+    position: absolute;
+    border-radius: var(--appui-alias-control-border-radius);
+    padding: var(--appui-alias-control-gap-md);
+    overflow: hidden;
+    background-color: var(--appui-color-gray-700);
+}
+
+.appui-eye-dropper-magnifier__row {
+    flex-direction: row;
+}
+
+.appui-eye-dropper-magnifier__cell {
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: var(--appui-sizing-300);
+    height: var(--appui-sizing-300);
+    border-top-width: 1px;
+    border-left-width: 1px;
+    border-color: var(--appui-color-gray-700);
+}
+
+.appui-eye-dropper-magnifier__color-name-label {
+    flex-shrink: 0;
+    flex-grow: 0;
+    color: var(--appui-color-black);
+    background-color: var(--appui-color-white);
+    -unity-text-align: middle-center;
+    font-size: var(--appui-font-sizes-75);
+    padding: var(--appui-alias-control-gap-sm);
+    margin-top: var(--appui-alias-control-gap-sm);
+}

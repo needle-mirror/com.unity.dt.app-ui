@@ -111,6 +111,9 @@ namespace Unity.AppUI.Core
         internal void ApplySettings()
         {
 #if UNITY_EDITOR
+            if (EditorUtility.IsPersistent(m_Settings))
+                EditorBuildSettings.AddConfigObject(AppUISettings.configName, m_Settings, true);
+
             EditorApplication.delayCall += () =>
             {
                 const string kEditorOnlyDefine = "APP_UI_EDITOR_ONLY";

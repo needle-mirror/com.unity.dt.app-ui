@@ -124,6 +124,8 @@ namespace Unity.AppUI.UI
 
         bool m_Hdr;
 
+        Popover m_Popover;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -231,16 +233,19 @@ namespace Unity.AppUI.UI
             m_Picker.RegisterValueChangedCallback(OnPickerValueChanged);
             if (inlinePicker)
             {
+                m_Picker.eyeDropperButton.clickable = new Pressable(m_Picker.OnEyeDropperClicked);
                 var idx = parent.IndexOf(this) + 1;
                 parent.Insert(idx, m_Picker);
             }
             else
             {
-                var popover = Popover.Build(this, m_Picker);
-                popover.dismissed += (_, _) =>
+                m_Picker.eyeDropperButton.clickable = new Pressable(OnEyeDropperClicked);
+                m_Popover = Popover.Build(this, m_Picker);
+                m_Popover.dismissed += (_, _) =>
                 {
                     RemoveFromClassList(Styles.focusedUssClassName);
                     m_Picker.UnregisterValueChangedCallback(OnPickerValueChanged);
+                    m_Picker.eyeDropperButton.clickable = null;
                     if (m_PreviousValue != m_Picker.value)
                     {
                         using var evt = ChangeEvent<Color>.GetPooled(m_PreviousValue, m_Picker.value);
@@ -248,15 +253,28 @@ namespace Unity.AppUI.UI
                         evt.target = this;
                         SendEvent(evt);
                     }
+                    m_Popover = null;
                     Focus();
                 };
-                popover.Show();
+                m_Popover.Show();
             }
             AddToClassList(Styles.focusedUssClassName);
         }
 
+        void OnEyeDropperClicked(EventBase evt)
+        {
+            if (m_Popover == null)
+                return;
+
+            // hide the ColorPicker if it is open
+            m_Popover.view.style.visibility= Visibility.Hidden;
+            m_Picker.OnEyeDropperClicked(evt);
+        }
+
         void OnPickerValueChanged(ChangeEvent<Color> e)
         {
+            if (m_Popover != null)
+                m_Popover.view.style.visibility = Visibility.Visible;
             OnPickerValueChanged(e.newValue);
         }
 

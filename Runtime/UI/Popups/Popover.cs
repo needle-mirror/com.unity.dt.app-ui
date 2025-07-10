@@ -628,6 +628,7 @@ namespace Unity.AppUI.UI
                     case PopoverPlacement.InsideTopStart:
                     case PopoverPlacement.InsideTopLeft:
                     case PopoverPlacement.InsideTop:
+                    case PopoverPlacement.InsideTopEnd:
                         up = true;
                         break;
                     case PopoverPlacement.Top:

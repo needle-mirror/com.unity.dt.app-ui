@@ -24,6 +24,8 @@ namespace Unity.AppUI.Samples
 
         const int CONFIRM_ACTION = 42;
 
+        ScrollView m_ScrollView;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -40,6 +42,14 @@ namespace Unity.AppUI.Samples
                 uiDocument.rootVisualElement.Q<CircularProgress>("determinateCircularProgressWithLabel").value = progressValue;
                 uiDocument.rootVisualElement.Q<Text>("determinateCircularProgressLabel").text = $"{Mathf.RoundToInt(progressValue * 100f)}%";
                 uiDocument.rootVisualElement.Q<LinearProgress>("determinateLinearProgress").value = progressValue;
+
+#if UNITY_6000_0_OR_NEWER
+                if (m_ScrollView == null)
+                {
+                    m_ScrollView = uiDocument.rootVisualElement.Q<ScrollView>();
+                    m_ScrollView.mouseWheelScrollSize = 1;
+                }
+#endif
             }
         }
 
@@ -413,9 +423,12 @@ namespace Unity.AppUI.Samples
             var swipeViewD = root.Q<SwipeView>("swipeview-distance");
             swipeViewD.beingSwiped += OnBeingSwiped;
 
-            swipeViewD.Query<Avatar>().ForEach(avatar =>
+            swipeViewD.Query<Text>().ForEach(txt =>
             {
-                avatar.AddManipulator(new Pressable(() => swipeViewD.GoTo(swipeViewD.IndexOf(avatar.parent))));
+                txt.AddManipulator(new Pressable(() =>
+                {
+                    swipeViewD.GoTo(swipeViewD.IndexOf(txt.parent));
+                }));
             });
 
             root.Q<Chip>("filled-chip-ornament").ornament = new Image

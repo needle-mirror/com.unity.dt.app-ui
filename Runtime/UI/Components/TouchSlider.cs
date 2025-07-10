@@ -135,6 +135,7 @@ namespace Unity.AppUI.UI
             m_InputField.AddToClassList(valueUssClassName);
             m_InputField.RegisterCallback<FocusEvent>(OnInputFocusedIn);
             m_InputField.RegisterCallback<FocusOutEvent>(OnInputFocusedOut);
+            m_InputField.RuntimeContextMenu();
             m_InputField.RegisterValueChangedCallback(OnInputValueChanged);
             m_ValueLabelContainer.Add(m_InputField);
 

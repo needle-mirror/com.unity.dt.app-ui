@@ -374,7 +374,7 @@ namespace Unity.AppUI.UI
             if (!keepEventPropagation)
                 return;
 
-            m_MoveEvent.mousePosition = evt.originalMousePosition;
+            m_MoveEvent.mousePosition = evt.position;
             m_MoveEvent.delta = evt.deltaPosition;
             m_MoveEvent.button = evt.button;
             m_MoveEvent.modifiers = evt.modifiers;
@@ -417,7 +417,7 @@ namespace Unity.AppUI.UI
             if (parent == null || !keepEventPropagation)
                 return;
 
-            m_UpEvent.mousePosition = evt.originalMousePosition;
+            m_UpEvent.mousePosition = evt.position;
             m_UpEvent.delta = evt.deltaPosition;
             m_UpEvent.button = evt.button;
             m_UpEvent.modifiers = evt.modifiers;

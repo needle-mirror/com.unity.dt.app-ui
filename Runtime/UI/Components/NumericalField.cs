@@ -204,6 +204,7 @@ namespace Unity.AppUI.UI
             hierarchy.Add(m_TrailingContainer);
 
             m_InputElement.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
+            m_InputElement.RuntimeContextMenu();
             m_InputElement.RegisterValueChangedCallback(OnInputValueChanged);
 
             size = Size.M;

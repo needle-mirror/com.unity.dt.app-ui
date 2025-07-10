@@ -140,9 +140,8 @@ namespace Unity.AppUI.UI
             m_Placeholder.AddToClassList(placeholderUssClassName);
             hierarchy.Add(m_Placeholder);
 
-            m_InputField = new UnityEngine.UIElements.TextField { name = inputUssClassName, multiline = true };
+            m_InputField = new UnityEngine.UIElements.TextField {name = inputUssClassName, multiline = true};
             m_InputField.AddToClassList(inputUssClassName);
-            m_InputField.AddManipulator(new BlinkingCursor());
 #if UNITY_2022_1_OR_NEWER
 #if UNITY_2023_1_OR_NEWER
             m_InputField.verticalScrollerVisibility = ScrollerVisibility.Auto;
@@ -195,6 +194,8 @@ namespace Unity.AppUI.UI
 
             SetValueWithoutNotify(value);
             m_InputField.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
+            m_InputField.AddManipulator(new BlinkingCursor());
+            m_InputField.RuntimeContextMenu();
             m_InputField.RegisterValueChangedCallback(OnInputValueChanged);
             m_Placeholder.RegisterValueChangedCallback(OnPlaceholderValueChanged);
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);

@@ -29,7 +29,7 @@
 
 .appui-slider--horizontal > .appui-slider__input-field {
     margin-left: var(--appui-alias-control-gap-md);
-    flex-basis: 20%;
+    flex-basis: 22%;
 }
 
 .appui-slider--vertical > .appui-slider__input-field {
@@ -165,11 +165,11 @@
 .appui-slider__progress {
     position: absolute;
     background-color: var(--appui-slider-progress-color);
-    visibility: hidden;
+    opacity: 0;
 }
 
 .appui-slider__progress.is-active {
-    visibility: visible;
+    opacity: 1;
 }
 
 .appui-slider--horizontal > .appui-slider__slider-control > .appui-slider__progress-container > .appui-slider__progress {

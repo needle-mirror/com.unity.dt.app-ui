@@ -10,7 +10,6 @@ namespace Unity.AppUI.Editor
 {
     class AppUISettingsProvider : SettingsProvider, IDisposable
     {
-        public const string kEditorBuildSettingsConfigKey = "com.unity.dt.app-ui";
         public const string kSettingsPath = "Project/App UI";
 
         class Styles
@@ -59,6 +58,29 @@ namespace Unity.AppUI.Editor
             m_SettingsObject?.Dispose();
         }
 
+        static bool IsInReadOnlyPackage(AppUISettings settings)
+        {
+            if (!settings)
+                return false;
+
+            var path = AssetDatabase.GetAssetPath(settings);
+            if (string.IsNullOrEmpty(path))
+                return false;
+
+            // Check if the asset is in a read-only package.
+            var packageInfo = UnityEditor.PackageManager.PackageInfo.FindForAssetPath(path);
+            return packageInfo is
+            {
+                source: UnityEditor.PackageManager.PackageSource.BuiltIn
+                or UnityEditor.PackageManager.PackageSource.Embedded
+            };
+        }
+
+        static bool IsEditableSettings(AppUISettings settings)
+        {
+            return settings && EditorUtility.IsPersistent(settings) && !IsInReadOnlyPackage(settings);
+        }
+
         public override void OnGUI(string searchContext)
         {
             var currentSettingsAsset = m_Settings && EditorUtility.IsPersistent(m_Settings) ? m_Settings : null;
@@ -89,7 +111,17 @@ namespace Unity.AppUI.Editor
                 GUILayout.Space(20);
             }
 
-            using (new EditorGUI.DisabledScope(!EditorUtility.IsPersistent(m_Settings)))
+            if (m_Settings && EditorUtility.IsPersistent(m_Settings) && IsInReadOnlyPackage(m_Settings))
+            {
+                EditorGUILayout.HelpBox(
+                    $"The App UI settings asset is stored in a read-only package. If you want to edit it, please create a new App UI settings asset in your project.\n\nClick the button below to create a new settings asset you can edit.",
+                    MessageType.Warning);
+                if (GUILayout.Button(Styles.createSettingsAssetContent, GUILayout.Height(30)))
+                    CreateNewSettingsAsset();
+                GUILayout.Space(20);
+            }
+
+            using (new EditorGUI.DisabledScope(!IsEditableSettings(m_Settings)))
             {
                 EditorGUILayout.Space();
                 EditorGUILayout.Separator();
@@ -229,11 +261,6 @@ namespace Unity.AppUI.Editor
                     m_Settings = AssetDatabase.LoadAssetAtPath<AppUISettings>(m_AvailableAppUISettingsAssets[0]);
                     Core.AppUI.settings = m_Settings;
                 }
-            }
-            else
-            {
-                ////REVIEW: should we store this by platform?
-                EditorBuildSettings.AddConfigObject(kEditorBuildSettingsConfigKey, m_Settings, true);
             }
 
             // Look up properties.

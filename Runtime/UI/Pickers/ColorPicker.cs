@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -207,6 +208,8 @@ namespace Unity.AppUI.UI
         readonly SliderFloat m_BrightnessSlider;
 
         readonly TextField m_HexField;
+
+        internal ActionButton eyeDropperButton => m_Toolbar.eyeDropperButton;
 
         Color m_Value;
 
@@ -643,12 +646,52 @@ namespace Unity.AppUI.UI
             m_AlphaSlider.RegisterValueChangingCallback(OnAlphaChannelValueChanging);
 
             m_Toolbar.previousColorSwatchClicked += OnPreviousSwatchClicked;
+            eyeDropperButton.clickable = new Pressable(OnEyeDropperClicked);
 
             m_HexField.RegisterValueChangedCallback(OnHexValueChanged);
 
             m_ChannelsDropdown.SetValueWithoutNotify(new []{ (int)SliderMode.RGB255 });
             OnChannelModeChanged(null);
             SetValueWithoutNotify(Color.clear);
+        }
+
+        internal void OnEyeDropperClicked(EventBase evt)
+        {
+            if (AppUI.Core.AppUI.gameObject)
+            {
+                var pos = evt is IPointerEvent e ? (Vector2)e.position : evt.originalMousePosition;
+                AppUI.Core.AppUI.gameObject.StartCoroutine(StartEyedropper(pos));
+            }
+            else
+            {
+                Debug.LogWarning("The Eyedropper tool is not available in this context (runtime only).");
+            }
+        }
+
+        IEnumerator StartEyedropper(Vector2 mousePosition)
+        {
+            var panel = this.GetLastAncestorOfType<Panel>();
+            if (panel == null)
+            {
+                Debug.LogWarning("No panel found to show the eyedropper tool.");
+                yield break;
+            }
+            var container = panel.popupContainer;
+            var overlay = new EyeDropperOverlay(value);
+            container.Add(overlay);
+
+            yield return new WaitForEndOfFrame();
+            overlay.StartEyedropper(mousePosition);
+            overlay.RegisterValueChangedCallback(OnOverlayValueChanged);
+        }
+
+        void OnOverlayValueChanged(ChangeEvent<Color> evt)
+        {
+            var overlay = (EyeDropperOverlay) evt.target;
+            overlay.UnregisterValueChangedCallback(OnOverlayValueChanged);
+            overlay.RemoveFromHierarchy();
+            value = evt.newValue;
+            schedule.Execute(Focus);
         }
 
         void OnHexValueChanged(ChangeEvent<string> evt)
