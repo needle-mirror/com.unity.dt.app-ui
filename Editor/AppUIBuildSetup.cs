@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,6 +34,11 @@ namespace Unity.AppUI.Editor
                     "Please go to Edit > Project Settings > App UI and create a new Settings asset.");
             }
 
+            Revert();
+
+            if (Core.AppUI.settings.editorOnly)
+                return;
+
             EnsureAppUISettingsArePreloaded();
 
             if (Core.AppUI.settings.includeShadersInPlayerBuild)
@@ -44,7 +50,7 @@ namespace Unity.AppUI.Editor
 
         static void EnsureAppUISettingsArePreloaded()
         {
-            // If we operate on temporary object instead of input setting asset,
+            // If we operate on temporary object instead of AppUI setting asset,
             // adding temporary asset would result in preloadedAssets containing null object "{fileID: 0}".
             // Hence we ignore adding temporary objects to preloaded assets.
             if (EditorUtility.IsPersistent(Core.AppUI.settings))
@@ -148,12 +154,29 @@ namespace Unity.AppUI.Editor
         /// <param name="report"> Unity Build report. </param>
         public void OnPostprocessBuild(BuildReport report)
         {
-            // Revert back to original state by removing all input settings from preloaded assets.
-            var preloadedAssets = PlayerSettings.GetPreloadedAssets().ToList();
-            PlayerSettings.SetPreloadedAssets(preloadedAssets.Where(x => x is not AppUISettings).ToArray());
+            Revert();
+        }
 
+        static void Revert()
+        {
+            // Revert back to original state by removing all AppUI settings from preloaded assets.
+            PlayerSettings.SetPreloadedAssets(PlayerSettings.GetPreloadedAssets().Where(x => x is not AppUISettings).ToArray());
             RemoveAnyEmbeddedShaders();
         }
+
+#if ENABLE_ALWAYS_INCLUDED_SHADERS
+        static readonly string[] k_ShaderPaths = new string[]
+        {
+            "Packages/com.unity.dt.app-ui/PackageResources/Shaders/Box.shader",
+            "Packages/com.unity.dt.app-ui/PackageResources/Shaders/CanvasBackground.shader",
+            "Packages/com.unity.dt.app-ui/PackageResources/Shaders/CircularProgress.shader",
+            "Packages/com.unity.dt.app-ui/PackageResources/Shaders/ColorSwatch.shader",
+            "Packages/com.unity.dt.app-ui/PackageResources/Shaders/ColorWheel.shader",
+            "Packages/com.unity.dt.app-ui/PackageResources/Shaders/LinearProgress.shader",
+            "Packages/com.unity.dt.app-ui/PackageResources/Shaders/Mask.shader",
+            "Packages/com.unity.dt.app-ui/PackageResources/Shaders/SVSquare.shader",
+        };
+#endif
 
         static void EnsureShadersAreEmbedded()
         {
@@ -162,7 +185,19 @@ namespace Unity.AppUI.Editor
             var preloadedShadersProperty = serializedObject.FindProperty("m_PreloadedShaders");
             var collection = AssetDatabase.LoadAssetAtPath<ShaderVariantCollection>("Packages/com.unity.dt.app-ui/PackageResources/Shaders/App UI Shaders.shadervariants");
 
-            if (Utils.AddItemInArray(preloadedShadersProperty, collection))
+            var changed = Utils.AddItemInArray(preloadedShadersProperty, collection);
+#if ENABLE_ALWAYS_INCLUDED_SHADERS
+            var alwaysIncludedShadersProperty = serializedObject.FindProperty("m_AlwaysIncludedShaders");
+            foreach (var shaderPath in k_ShaderPaths)
+            {
+                var shader = AssetDatabase.LoadAssetAtPath<Shader>(shaderPath);
+                if (shader == null)
+                    throw new System.InvalidOperationException($"Shader not found at path: {shaderPath}");
+                changed |= Utils.AddItemInArray(alwaysIncludedShadersProperty, shader);
+            }
+#endif
+
+            if (changed)
             {
                 serializedObject.ApplyModifiedProperties();
                 AssetDatabase.SaveAssets();
@@ -176,9 +211,34 @@ namespace Unity.AppUI.Editor
             var preloadedShadersProperty = serializedObject.FindProperty("m_PreloadedShaders");
             var collection = AssetDatabase.LoadAssetAtPath<ShaderVariantCollection>("Packages/com.unity.dt.app-ui/PackageResources/Shaders/App UI Shaders.shadervariants");
             var collectionIndex = Utils.IndexOf(preloadedShadersProperty, collection);
-            if (collectionIndex != -1)
-            {
+            var changed = collectionIndex != -1;
+            if (changed)
                 preloadedShadersProperty.DeleteArrayElementAtIndex(collectionIndex);
+
+#if ENABLE_ALWAYS_INCLUDED_SHADERS
+            var alwaysIncludedShadersProperty = serializedObject.FindProperty("m_AlwaysIncludedShaders");
+            var foundShaders = new List<int>();
+            foreach (var shaderPath in k_ShaderPaths)
+            {
+                var shader = AssetDatabase.LoadAssetAtPath<Shader>(shaderPath);
+                if (shader == null)
+                    throw new System.InvalidOperationException($"Shader not found at path: {shaderPath}");
+                var shaderIndex = Utils.IndexOf(alwaysIncludedShadersProperty, shader);
+                if (shaderIndex != -1)
+                {
+                    foundShaders.Add(shaderIndex);
+                    changed = true;
+                }
+            }
+
+            foundShaders
+                .OrderByDescending(x => x)
+                .ToList()
+                .ForEach(x => alwaysIncludedShadersProperty.DeleteArrayElementAtIndex(x));
+#endif
+
+            if (changed)
+            {
                 serializedObject.ApplyModifiedProperties();
                 AssetDatabase.SaveAssets();
             }

@@ -4,6 +4,8 @@ using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
+#pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
 
 namespace Unity.AppUI.Samples
 {
@@ -43,6 +45,7 @@ namespace Unity.AppUI.Samples
             var pos = tr.position;
 
             var panGesture = Platform.panGesture;
+
             if (panGesture.phase == TouchPhase.Moved)
                 tr.position = new Vector3(pos.x + panGesture.deltaPos.x * moveFactor, pos.y, pos.z + panGesture.deltaPos.y * moveFactor);
 

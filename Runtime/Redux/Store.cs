@@ -31,13 +31,6 @@ namespace Unity.AppUI.Redux
     public delegate object Reducer(object state, Action action);
 
     /// <summary>
-    /// A predicate function that takes an action and returns true if the action should be handled by the reducer.
-    /// </summary>
-    /// <param name="action"> The action. </param>
-    /// <returns> True if the action should be handled by the reducer, false otherwise. </returns>
-    public delegate bool ActionMatcher(Action action);
-
-    /// <summary>
     /// A function obtained from <see cref="Store.Subscribe{TState}"/> that can be called to unsubscribe the listener.
     /// </summary>
     /// <returns> True if the listener was removed, false otherwise. </returns>
@@ -69,6 +62,7 @@ namespace Unity.AppUI.Redux
     ///  - Reducers must not call <see cref="Dispatch(Action)"/><br/>
     /// </para>
     /// </summary>
+    [Obsolete("Use Store<TStoreState> instead. This class will be removed in a future major version.")]
     public class Store
     {
         readonly Dictionary<string, object> m_State;

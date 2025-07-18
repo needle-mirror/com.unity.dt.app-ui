@@ -4,6 +4,27 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2025-07-18
+
+### Removed
+
+- Removed warning messages about using obsolete code.
+
+## [1.3.0] - 2025-07-18
+
+### Changed
+
+- Backported the `Canvas` UI element from App UI v2, working with the new `PanAndZoomable` manipulator.
+
+### Added
+
+- Added the `PanAndZoomable` manipulator, which allows for panning and zooming of UI elements in the App UI framework. This manipulator is designed to work with the new `Canvas` UI element introduced in App UI v2.
+- Backported the support of dismissing `Modal` windows by clicking outside the modal area, enhancing user experience in the App UI framework. This feature is now consistent with the behavior in App UI v2.
+- Backported the Redux implementation from App UI v2, allowing for more flexible state management in the App UI framework. Previous implementations of Redux are now obsolete and will be removed in a future release.
+- Added obsolete attributes in preparation for App UI v2.
+- Backported the Gesture Recognizer system from App UI v2, allowing for more flexible gesture handling in the App UI framework. Previous implementations of gesture recognizers are now obsolete and will be removed in a future release.
+- Added `AppUISettings.editorOnly` property to control editor-only behavior.
+
 ## [1.2.1] - 2024-12-16
 
 ### Fixed

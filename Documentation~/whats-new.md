@@ -10,9 +10,9 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [1.2.1] - 2024-12-16
+## [1.3.1] - 2025-07-18
 
-### Fixed
+### Removed
 
-- Avoid calling `WaitForCompletion` during Localization initialization to not get any error message in WebGL builds.
+- Removed warning messages about using obsolete code.
 

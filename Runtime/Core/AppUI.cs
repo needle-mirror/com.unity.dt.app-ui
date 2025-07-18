@@ -1,6 +1,8 @@
 using System;
 using Unity.AppUI.UI;
 using UnityEngine;
+using UnityEngine.Assertions;
+using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -28,10 +30,32 @@ namespace Unity.AppUI.Core
         /// The id of the touchpad button in synthesized mouse events.
         /// </summary>
         public const int touchPadId = 3;
-        
+
         static AppUISystemObject s_SystemObject;
 
         internal static AppUIManager s_Manager;
+
+        internal static AppUIManagerBehaviour gameObject
+        {
+            get
+            {
+                if (!AppUIManagerBehaviour.instance)
+                {
+                    if (Application.isPlaying)
+                    {
+                        AppUIManagerBehaviour.Create();
+                        Assert.IsNotNull(AppUIManagerBehaviour.instance);
+                    }
+                    else
+                    {
+                        Debug.LogError("Trying to access AppUIManagerBehaviour.instance in edit mode. " +
+                            "This instance is only available in play mode.");
+                    }
+                }
+
+                return AppUIManagerBehaviour.instance;
+            }
+        }
 
         /// <summary>
         /// Initialize the App UI system.
@@ -43,32 +67,6 @@ namespace Unity.AppUI.Core
 #else
             InitializeInPlayer();
 #endif
-        }
-
-        /// <summary>
-        /// Register a Panel with the App UI system.
-        /// </summary>
-        /// <param name="panel">A panel</param>
-        /// <exception cref="InvalidOperationException">Thrown if the App UI system is not ready.</exception>
-        internal static void RegisterPanel(Panel panel)
-        {
-            if (s_Manager == null)
-                throw new InvalidOperationException("The App UI Manager is not ready");
-
-            s_Manager.RegisterPanel(panel);
-        }
-
-        /// <summary>
-        /// Unregister a Panel with the App UI system.
-        /// </summary>
-        /// <param name="panel">A panel</param>
-        /// <exception cref="InvalidOperationException">Thrown if the App UI system is not ready.</exception>
-        internal static void UnregisterPanel(Panel panel)
-        {
-            if (s_Manager == null)
-                throw new InvalidOperationException("The App UI Manager is not ready");
-
-            s_Manager.UnregisterPanel(panel);
         }
 
         /// <summary>
@@ -118,10 +116,30 @@ namespace Unity.AppUI.Core
             s_Manager.Update();
         }
 
+        internal static void RegisterUpdateCallback(VisualElement updatableElement)
+        {
+            s_Manager?.RegisterUpdateCallback(updatableElement);
+        }
+
+        internal static void UnregisterUpdateCallback(VisualElement updatableElement)
+        {
+            s_Manager?.UnregisterUpdateCallback(updatableElement);
+        }
+
+
+        /// <summary>
+        /// Manage internal App UI features when the application has gained or lost focus.
+        /// </summary>
+        /// <param name="hasFocus"></param>
+        internal static void OnApplicationFocus(bool hasFocus)
+        {
+            s_Manager?.OnApplicationFocus(hasFocus);
+        }
+
 #if UNITY_EDITOR
-        
+
         static uint s_UpdateFrame = 0;
-        
+
         const uint k_EditorUpdateDelay = 20;
 
         /// <summary>
@@ -175,6 +193,10 @@ namespace Unity.AppUI.Core
             EditorApplication.playModeStateChanged += OnPlayModeChange;
             EditorApplication.update -= EditorUpdate;
             EditorApplication.update += EditorUpdate;
+#if UNITY_2022_2_OR_NEWER
+            EditorApplication.focusChanged -= OnApplicationFocus;
+            EditorApplication.focusChanged += OnApplicationFocus;
+#endif
         }
 
         static void OnPlayModeChange(PlayModeStateChange change)
@@ -217,7 +239,7 @@ namespace Unity.AppUI.Core
         {
             if (s_UpdateFrame < k_EditorUpdateDelay)
                 s_UpdateFrame++;
-            
+
             if (s_UpdateFrame < k_EditorUpdateDelay && s_Manager == null)
                 return;
 
@@ -243,8 +265,6 @@ namespace Unity.AppUI.Core
             }
         }
 #else
-
-        static AppUIManagerBehaviour s_Updater;
 
         static void InitializeInPlayer()
         {
@@ -274,55 +294,14 @@ namespace Unity.AppUI.Core
 #endif
         }
 
-        [RuntimeInitializeOnLoadMethod(loadType: RuntimeInitializeLoadType.AfterSceneLoad)]
-        static void AddUpdater()
-        {
-#if !UNITY_EDITOR
-            if (s_Updater == null)
-            {
-                var availableUpdaters = Resources.FindObjectsOfTypeAll<AppUIManagerBehaviour>();
-                if (availableUpdaters != null && availableUpdaters.Length > 0)
-                {
-                    for (var i = availableUpdaters.Length - 1; i >= 0; i--)
-                    {
-                        Object.Destroy(availableUpdaters[i].gameObject);
-                    }
-                }
-                s_Updater = new GameObject("AppUIUpdater").AddComponent<AppUIManagerBehaviour>();
-                s_Updater.hideFlags = HideFlags.HideAndDontSave;
-                Object.DontDestroyOnLoad(s_Updater);
-            }
-#endif
-        }
-
         /// <summary>
         /// The settings used by the App UI system.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when the value is null.</exception>
         public static AppUISettings settings
         {
-            get
-            {
-                return s_Manager.settings;
-            }
-            internal set
-            {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
-
-                if (s_Manager.settings == value)
-                    return;
-
-#if UNITY_EDITOR
-                if (!string.IsNullOrEmpty(AssetDatabase.GetAssetPath(value)))
-                {
-                    EditorBuildSettings.AddConfigObject(AppUISettings.configName,
-                        value, true);
-                }
-#endif
-
-                s_Manager.settings = value;
-            }
+            get => s_Manager.settings;
+            internal set => s_Manager.settings = value;
         }
     }
 }

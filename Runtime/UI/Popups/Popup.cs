@@ -98,6 +98,12 @@ namespace Unity.AppUI.UI
         public VisualElement contentView { get; }
 
         /// <summary>
+        /// Whether the popup can be dismissed by clicking outside of it.
+        /// </summary>
+        internal virtual bool focusOutDismissable { get; }
+
+
+        /// <summary>
         /// Dismiss the <see cref="Popup"/>.
         /// </summary>
         public virtual void Dismiss()

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
 using UnityEngine;
+using UnityEngine.Pool;
 using UnityEngine.UIElements;
 #if UNITY_LOCALIZATION_PRESENT
 using UnityEngine.Localization;
@@ -111,6 +113,14 @@ namespace Unity.AppUI.UI
 
         bool m_ForceUseTooltipSystem;
 
+        float m_PreviousDpi = 96f;
+
+        Vector2 m_PrimaryPointerPosition = Vector2.negativeInfinity;
+
+        static readonly ObjectPool<Event> k_EventPool = new ObjectPool<Event>(() => new Event());
+
+        static readonly EventCallback<UpdateEvent> k_UpdateCallback = new EventCallback<UpdateEvent>(OnUpdate);
+
 #if UNITY_LOCALIZATION_PRESENT
         SelectedLocaleListener m_SelectedLocaleListener;
 #endif
@@ -147,6 +157,9 @@ namespace Unity.AppUI.UI
 
             RegisterCallback<AttachToPanelEvent>(OnAttachedToPanel);
             RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
+            RegisterCallback<FocusOutEvent>(OnFocusOut);
+            RegisterCallback<PointerMoveEvent>(OnPointerMoved);
+            RegisterCallback<PointerLeaveEvent>(OnPointerLeft);
 
             this.RegisterContextChangedCallback<ThemeContext>(OnThemeContextChanged);
             this.RegisterContextChangedCallback<ScaleContext>(OnScaleContextChanged);
@@ -449,56 +462,160 @@ namespace Unity.AppUI.UI
 
         void OnDetachedFromPanel(DetachFromPanelEvent evt)
         {
-            if (evt.originPanel != null)
-            {
-                if (m_TooltipManipulator != null)
-                    this.RemoveManipulator(m_TooltipManipulator);
+            UnregisterCallback<UpdateEvent>(OnUpdate);
+            Platform.scaleFactorChanged -= OnScaleFactorChanged;
+            DismissAllPopups();
+            isRootPanel = false;
+            if (m_TooltipManipulator != null)
+                this.RemoveManipulator(m_TooltipManipulator);
 #if UNITY_LOCALIZATION_PRESENT
-                if (m_SelectedLocaleListener != null)
-                    this.RemoveManipulator(m_SelectedLocaleListener);
+            if (m_SelectedLocaleListener != null)
+                this.RemoveManipulator(m_SelectedLocaleListener);
 #endif
-                global::Unity.AppUI.Core.AppUI.UnregisterPanel(this);
+        }
+
+        void OnFocusOut(FocusOutEvent evt)
+        {
+            if (!isRootPanel)
+                return;
+
+            // we receive focus out event even when calling Focus() on a child element,
+            // we need to filter out those cases
+            if (evt.relatedTarget is VisualElement target && target.FindCommonAncestor(this) == this)
+                return;
+
+            DismissAllPopups(DismissType.OutOfBounds);
+        }
+
+        internal void DismissAllPopups(DismissType reason = DismissType.Manual)
+        {
+            for (var i = m_PopupContainer.childCount - 1; i >= 0; i--)
+            {
+                var popupElement = m_PopupContainer[i];
+                if (popupElement.userData is Popup popup)
+                {
+                    var shouldDismiss = reason == DismissType.Manual ||
+                        (reason == DismissType.OutOfBounds && popup.focusOutDismissable);
+                    if (shouldDismiss)
+                        popup.Dismiss(reason);
+                }
             }
         }
 
-        void CheckRootPanel()
+        void OnPointerMoved(PointerMoveEvent evt)
         {
-            var panelsFound = 0;
-            var appUiPanel = (VisualElement)this;
-            while (appUiPanel != null)
-            {
-                if (appUiPanel is Panel)
-                    panelsFound++;
-                if (panelsFound > 1)
-                {
-                    isRootPanel = false;
-                    return;
-                }
-                appUiPanel = appUiPanel.parent;
-            }
-            isRootPanel = panelsFound == 1;
+            if (evt.isPrimary)
+                m_PrimaryPointerPosition = evt.position;
+        }
+
+        void OnPointerLeft(PointerLeaveEvent evt)
+        {
+            if (evt.isPrimary)
+                m_PrimaryPointerPosition = Vector2.negativeInfinity;
         }
 
         void OnAttachedToPanel(AttachToPanelEvent evt)
         {
             if (evt.destinationPanel != null)
             {
-                if (m_TooltipManipulator == null)
-                {
-                    m_TooltipManipulator = new TooltipManipulator();
-                    this.AddManipulator(m_TooltipManipulator);
-                }
+                m_TooltipManipulator ??= new TooltipManipulator();
+                this.AddManipulator(m_TooltipManipulator);
                 m_TooltipManipulator.force = forceUseTooltipSystem;
 
-                global::Unity.AppUI.Core.AppUI.RegisterPanel(this);
-                CheckRootPanel();
-#if UNITY_LOCALIZATION_PRESENT
+                isRootPanel = !this.HasAncestorsOfType<Panel>();
                 if (isRootPanel)
                 {
+                    if (global::Unity.AppUI.Core.AppUI.settings.autoCorrectUiScale &&
+                        evt.destinationPanel.contextType == ContextType.Player)
+                    {
+                        m_PreviousDpi = panel.GetPanelSettings().referenceDpi;
+                        // we wait to let a chance fo others panels to set their previous DPI correctly
+                        schedule.Execute(() => OnScaleFactorChanged(m_PreviousDpi));
+                    }
+                    Platform.scaleFactorChanged -= OnScaleFactorChanged;
+                    Platform.scaleFactorChanged += OnScaleFactorChanged;
+                    this.RegisterUpdateCallback(k_UpdateCallback);
+#if UNITY_LOCALIZATION_PRESENT
                     m_SelectedLocaleListener ??= new SelectedLocaleListener();
                     this.AddManipulator(m_SelectedLocaleListener);
-                }
 #endif
+                }
+            }
+        }
+
+        static void OnUpdate(UpdateEvent e)
+        {
+            if (e.target is not Panel panelElement)
+                return;
+
+            // skip sending event to unattached panels
+            var iPanel = panelElement.panel;
+            if (iPanel == null)
+                return;
+
+            var shouldPickElement = AppUIInput.pinchGestureChangedThisFrame;
+            var pickedElement = shouldPickElement ? iPanel.Pick(panelElement.m_PrimaryPointerPosition) : null;
+            var shouldHandleGestures = pickedElement != null;
+
+            if (AppUIInput.pinchGestureChangedThisFrame)
+            {
+                if (shouldHandleGestures)
+                {
+                    using var evt = PinchGestureEvent.GetPooled();
+                    evt.gesture = AppUIInput.pinchGesture;
+                    evt.target = pickedElement;
+                    panelElement.SendEvent(evt);
+
+                    var systemEvent = k_EventPool.Get();
+                    systemEvent.type = EventType.ScrollWheel;
+                    systemEvent.pointerType = UnityEngine.PointerType.Mouse;
+                    systemEvent.modifiers = EventModifiers.Control;
+                    systemEvent.mousePosition = panelElement.m_PrimaryPointerPosition;
+                    systemEvent.delta = evt.gesture.scrollDelta;
+                    systemEvent.button = global::Unity.AppUI.Core.AppUI.touchPadId;
+                    systemEvent.clickCount = 0;
+
+                    using var evt2 = WheelEvent.GetPooled(systemEvent);
+                    evt2.target = pickedElement;
+                    panelElement.SendEvent(evt2);
+
+                    k_EventPool.Release(systemEvent);
+                }
+            }
+        }
+
+        void OnScaleFactorChanged(float _)
+        {
+            if (!isRootPanel ||
+                panel is not {contextType: ContextType.Player} ||
+                !global::Unity.AppUI.Core.AppUI.settings.autoCorrectUiScale)
+                return;
+
+            try
+            {
+                var dpi = Platform.referenceDpi;
+                var panelSettings = panel?.GetPanelSettings();
+                if (panelSettings)
+                {
+                    var isValidDpi = dpi > 0;
+                    var dpiChanged = !Mathf.Approximately(m_PreviousDpi, dpi);
+
+                    if (dpiChanged && isValidDpi)
+                    {
+                        panelSettings.referenceDpi = dpi;
+                        // send event
+                        using var evt = DpiChangedEvent.GetPooled();
+                        evt.previousValue = m_PreviousDpi;
+                        evt.newValue = dpi;
+                        evt.target = this;
+                        SendEvent(evt);
+                        m_PreviousDpi = dpi;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
             }
         }
 

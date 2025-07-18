@@ -1,6 +1,7 @@
 using System;
 using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.UI
@@ -74,6 +75,19 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// `True` if the Modal can be dismissed by clicking outside of it, `False` otherwise.
+        /// </summary>
+        public bool outsideClickDismissEnabled { get; set; }
+
+        /// <summary>
+        /// The strategy used to determine if the click is outside the Modal.
+        /// </summary>
+        public OutsideClickStrategy outsideClickStrategy { get; set; } = OutsideClickStrategy.Bounds;
+
+        /// <inheritdoc />
+        internal override bool focusOutDismissable => outsideClickDismissEnabled;
+
+        /// <summary>
         /// Set a new value for <see cref="fullscreenMode"/> property.
         /// </summary>
         /// <param name="mode">The new value.</param>
@@ -82,6 +96,74 @@ namespace Unity.AppUI.UI
         {
             fullscreenMode = mode;
             return this;
+        }
+
+        /// <summary>
+        /// Activate the possibility to dismiss the Modal by clicking outside of it.
+        /// </summary>
+        /// <param name="dismissEnabled"> `True` to activate the feature, `False` otherwise.</param>
+        /// <returns> The modal </returns>
+        public Modal SetOutsideClickDismiss(bool dismissEnabled)
+        {
+            outsideClickDismissEnabled = dismissEnabled;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the strategy used to determine if the click is outside the Modal.
+        /// </summary>
+        /// <param name="strategy"> The strategy to use.</param>
+        /// <returns> The modal </returns>
+        public Modal SetOutsideClickStrategy(OutsideClickStrategy strategy)
+        {
+            outsideClickStrategy = strategy;
+            return this;
+        }
+
+        void OnTreeDown(PointerDownEvent evt)
+        {
+            if (!outsideClickDismissEnabled || outsideClickStrategy == 0 || view.parent == null)
+                return;
+
+            var index = view.parent.IndexOf(view);
+            if (index != view.parent.childCount - 1)
+                return;
+
+            var shouldDismiss = true;
+            if ((outsideClickStrategy & OutsideClickStrategy.Bounds) != 0)
+                shouldDismiss = !modal.contentContainer.worldBound.Contains((Vector2)evt.position);
+
+            if (shouldDismiss && (outsideClickStrategy & OutsideClickStrategy.Pick) != 0)
+            {
+                var picked = view.panel.Pick(evt.position);
+                var commonAncestor = picked?.FindCommonAncestor(view);
+                if (commonAncestor == view) // if the picked element is a child of the popover, don't dismiss
+                    shouldDismiss = false;
+            }
+
+            if (!shouldDismiss)
+                return;
+
+            // prevent reopening the same modal again...
+            evt.StopImmediatePropagation();
+            Dismiss(DismissType.OutOfBounds);
+        }
+
+        /// <inheritdoc />
+        protected override bool ShouldDismiss(DismissType reason) => outsideClickDismissEnabled || base.ShouldDismiss(reason);
+
+        /// <inheritdoc />
+        protected override void InvokeShownEventHandlers()
+        {
+            base.InvokeShownEventHandlers();
+            targetParent?.panel?.visualTree?.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+        }
+
+        /// <inheritdoc />
+        protected override void HideView(DismissType reason)
+        {
+            targetParent?.panel?.visualTree?.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            base.HideView(reason);
         }
 
         /// <summary>

@@ -4,15 +4,17 @@ using System.Threading.Tasks;
 using Unity.AppUI.MVVM;
 using Unity.AppUI.Redux;
 using UnityEngine;
+#pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
 
 namespace Unity.AppUI.Samples.MVVMRedux
 {
     public class MainViewModel : ObservableObject
     {
         const string k_SliceName = "app";
-        
+
         readonly IStoreService m_StoreService;
-        
+
         readonly ILocalStorageService m_LocalStorageService;
 
         readonly Unsubscriber m_Unsubscribe;
@@ -22,13 +24,13 @@ namespace Unity.AppUI.Samples.MVVMRedux
         Todo[] m_TodosSearchResults;
 
         public RelayCommand<string> createTodoCommand { get; }
-        
+
         public RelayCommand<Todo> deleteTodoCommand { get; }
-        
+
         public RelayCommand<(Todo, string)> editTodoCommand { get; }
-        
+
         public RelayCommand<Todo> toggleCompleteTodoCommand { get; }
-        
+
         public AsyncRelayCommand<string> searchTodoCommand { get; }
 
         public Todo[] todos
@@ -48,15 +50,15 @@ namespace Unity.AppUI.Samples.MVVMRedux
             // Services
             m_StoreService = storeService;
             m_LocalStorageService = localStorageService;
-            
+
             // Commands
             createTodoCommand = new RelayCommand<string>(CreateTodo);
             deleteTodoCommand = new RelayCommand<Todo>(DeleteTodo);
             editTodoCommand = new RelayCommand<(Todo,string)>(EditTodo);
             toggleCompleteTodoCommand = new RelayCommand<Todo>(ToggleCompleteTodo);
             searchTodoCommand = new AsyncRelayCommand<string>(SearchTodo, AsyncRelayCommandOptions.None);
-            
-            // State 
+
+            // State
             var initialState = m_LocalStorageService.GetValue(k_SliceName, new AppState());
             m_StoreService.store.CreateSlice(k_SliceName, initialState, builder =>
             {
@@ -67,9 +69,9 @@ namespace Unity.AppUI.Samples.MVVMRedux
                     .Add<(string, bool)>(Actions.completeTodo, Reducers.CompleteTodoReducer)
                     .Add<string>(Actions.setSearchInput, Reducers.SetSearchInputReducer);
             });
-            
+
             m_Todos = initialState.todos;
-            
+
             // Events
             m_Unsubscribe = m_StoreService.store.Subscribe<AppState>(k_SliceName, OnStateChanged);
             App.shuttingDown += OnShuttingDown;
@@ -93,7 +95,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
                     result.Add(todo);
                 }
             }
-            
+
             // Simulate a network request
             await Task.Delay(300, cancellationToken);
 

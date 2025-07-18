@@ -3,6 +3,7 @@ using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.UIElements.Experimental;
 #if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
 #endif
@@ -18,13 +19,13 @@ namespace Unity.AppUI.UI
         /// The natural scroll direction.
         /// </summary>
         Natural,
-        
+
         /// <summary>
         /// The inversed scroll direction.
         /// </summary>
         Inverse,
     }
-    
+
     /// <summary>
     /// The current Grab Mode.
     /// </summary>
@@ -34,12 +35,12 @@ namespace Unity.AppUI.UI
         /// No grab possible for the moment.
         /// </summary>
         None,
-        
+
         /// <summary>
         /// Elements can be grabbed.
         /// </summary>
         Grab,
-        
+
         /// <summary>
         /// Elements are currently grabbed.
         /// </summary>
@@ -48,20 +49,100 @@ namespace Unity.AppUI.UI
 
     /// <summary>
     /// The current Canvas control scheme.
+    ///
+    /// > [!NOTE]
+    /// > The control scheme defines the key bindings for the Canvas manipulator.
+    /// >
+    /// > * LMB = Left mouse button
+    /// > * MMB = Middle mouse button (wheel button)
+    /// > * RMB = Right mouse button
+    ///
+    /// > [!WARNING]
+    /// > If a primaryManipulator is set on the Canvas,
+    /// > this manipulator will override the control scheme when the pointer (mouse, trackpad, etc)
+    /// > is used without modifier keys.
     /// </summary>
     public enum CanvasControlScheme
     {
         /// <summary>
         /// The default control scheme, similar to others Unity Editor tools.
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Control</term>
+        /// <description>Bindings</description>
+        /// </listheader>
+        /// <item>
+        /// <term>Pan</term>
+        /// <description><c>MMB</c></description>
+        /// </item>
+        /// <item>
+        /// <term>Pan (alt)</term>
+        /// <description><c>Alt</c> + <c>LMB</c></description>
+        /// </item>
+        /// <item>
+        /// <term>Zoom</term>
+        /// <description>Mouse/Trackpad Scroll</description>
+        /// </item>
+        /// <item>
+        /// <term>Zoom In</term>
+        /// <description><c>Ctrl</c>/<c>Cmd</c> + <c>+</c></description>
+        /// </item>
+        /// <item>
+        /// <term>Zoom Out</term>
+        /// <description><c>Ctrl</c>/<c>Cmd</c> + <c>-</c></description>
+        /// </item>
+        /// <item>
+        /// <term>Reset Zoom</term>
+        /// <description><c>Ctrl</c>/<c>Cmd</c> + <c>0</c></description>
+        /// </item>
+        /// </list>
         /// </summary>
         Editor,
-        
+
         /// <summary>
         /// The alternate control scheme, similar to Figma, Sketch, etc.
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Control</term>
+        /// <description>Bindings</description>
+        /// </listheader>
+        /// <item>
+        /// <term>Pan</term>
+        /// <description><c>MMB</c></description>
+        /// </item>
+        /// <item>
+        /// <term>Pan (alt)</term>
+        /// <description><c>Space</c> + <c>LMB</c></description>
+        /// </item>
+        /// <item>
+        /// <term>Pan (trackpad alternative)</term>
+        /// <description>Swipe gesture</description>
+        /// </item>
+        /// <item>
+        /// <term>Zoom</term>
+        /// <description><c>Ctrl</c>/<c>Cmd</c> + Mouse Scroll</description>
+        /// </item>
+        /// <item>
+        /// <term>Zoom (trackpad alternative)</term>
+        /// <description>Pinch gesture</description>
+        /// </item>
+        /// <item>
+        /// <term>Zoom In</term>
+        /// <description><c>Ctrl</c>/<c>Cmd</c> + <c>+</c></description>
+        /// </item>
+        /// <item>
+        /// <term>Zoom Out</term>
+        /// <description><c>Ctrl</c>/<c>Cmd</c> + <c>-</c></description>
+        /// </item>
+        /// <item>
+        /// <term>Reset Zoom</term>
+        /// <description><c>Ctrl</c>/<c>Cmd</c> + <c>0</c></description>
+        /// </item>
+        /// </list>
         /// </summary>
         Modern,
     }
-    
+
     /// <summary>
     /// The current Canvas manipulator for the primary pointer.
     /// </summary>
@@ -71,12 +152,12 @@ namespace Unity.AppUI.UI
         /// The pointer has no manipulator when no modifier is pressed.
         /// </summary>
         None,
-        
+
         /// <summary>
         /// The pointer is used to pan into the <see cref="Canvas"/> when no modifier is pressed.
         /// </summary>
         Pan,
-        
+
         /// <summary>
         /// The pointer is used to zoom into the <see cref="Canvas"/> when no modifier is pressed.
         /// </summary>
@@ -96,147 +177,133 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId frameContainerProperty = nameof(frameContainer);
 
         internal static readonly BindingId scrollOffsetProperty = nameof(scrollOffset);
-        
+
         internal static readonly BindingId scrollSpeedProperty = nameof(scrollSpeed);
-        
+
         internal static readonly BindingId minZoomProperty = nameof(minZoom);
-        
+
         internal static readonly BindingId maxZoomProperty = nameof(maxZoom);
-        
+
         internal static readonly BindingId zoomSpeedProperty = nameof(zoomSpeed);
-        
+
         internal static readonly BindingId zoomMultiplierProperty = nameof(zoomMultiplier);
-        
+
         internal static readonly BindingId panMultiplierProperty = nameof(panMultiplier);
-        
-        internal static readonly BindingId scrollDirectionProperty = nameof(scrollDirection);
-        
+
         internal static readonly BindingId zoomProperty = nameof(zoom);
-        
+
+        internal static readonly BindingId dampingEffectDurationProperty = nameof(dampingEffectDuration);
+
         internal static readonly BindingId frameMarginProperty = nameof(frameMargin);
-        
+
         internal static readonly BindingId useSpaceBarProperty = nameof(useSpaceBar);
-        
+
         internal static readonly BindingId grabModeProperty = nameof(grabMode);
-        
+
         internal static readonly BindingId controlSchemeProperty = nameof(controlScheme);
-        
+
         internal static readonly BindingId primaryManipulatorProperty = nameof(primaryManipulator);
+
+        internal static readonly BindingId scrollDirectionProperty = nameof(scrollDirection);
 
 #endif
         /// <summary>
         /// USS class name of elements of this type.
         /// </summary>
         public const string ussClassName = "appui-canvas";
-        
+
         /// <summary>
         /// USS class name prefix for the cursor.
         /// </summary>
         [EnumName("GetGrabModeUssClassName", typeof(GrabMode))]
         public const string cursorUssClassName = Styles.cursorUsClassNamePrefix;
-        
+
         /// <summary>
         /// USS class name of the background element of this type.
         /// </summary>
         public const string backgroundUssClassName = ussClassName + "__background";
-        
+
         /// <summary>
         /// USS class name of the viewport element of this type.
         /// </summary>
         public const string viewportUssClassName = ussClassName + "__viewport";
-        
+
         /// <summary>
         /// USS class name of the viewport container element of this type.
         /// </summary>
         public const string viewportContainerUssClassName = ussClassName + "__viewport-container";
-        
+
         /// <summary>
         /// USS class name of the horizontal scroller element of this type.
         /// </summary>
         public const string horizontalScrollerUssClassName = ussClassName + "__horizontal-scroller";
-        
+
         /// <summary>
         /// USS class name of the vertical scroller element of this type.
         /// </summary>
         public const string verticalScrollerUssClassName = ussClassName + "__vertical-scroller";
-        
+
         /// <summary>
         /// Event that is triggered when the scroll position of the Canvas has changed.
         /// </summary>
         public event Action scrollOffsetChanged;
-        
+
         /// <summary>
         /// Event that is triggered when the zoom factor of the Canvas has changed.
         /// </summary>
         public event Action zoomChanged;
-        
+
         const float k_DefaultScrollSpeed = 2f;
-        
+
         const float k_DefaultMinZoom = 0.1f;
-        
+
         const float k_DefaultMaxZoom = 100.0f;
 
         const float k_DefaultZoomSpeed = 0.075f;
-        
+
         const float k_DefaultZoomMultiplier = 2f;
-        
+
         const float k_DefaultPanMultiplier = 3f;
 
         const float k_DefaultFrameMargin = 12f;
-        
+
         const bool k_DefaultUseSpaceBar = true;
-        
+
         const ScrollDirection k_DefaultScrollDirection = ScrollDirection.Natural;
-        
+
+        Vector2 m_Velocity;
+
+        long m_LastTimestamp;
+
+        ValueAnimation<float> m_DampingEffect;
+
+        const int k_DefaultDampingEffectDurationMs = 750;
+
         const CanvasControlScheme k_DefaultControlScheme = CanvasControlScheme.Modern;
-        
-        const CanvasManipulator k_DefaultPrimaryManipulator = CanvasManipulator.None;
 
         readonly CanvasBackground m_Background;
 
         readonly VisualElement m_Viewport;
-        
+
         readonly VisualElement m_ViewportContainer;
-        
+
         readonly Scroller m_HorizontalScroller;
-        
+
         readonly Scroller m_VerticalScroller;
 
         Vector3 m_PointerPosition;
 
-        GrabMode m_GrabMode = GrabMode.None;
-
         bool m_UpdatingScrollers;
 
         Vector2 m_LastScrollersPosition;
-        
-        int m_PointerId = -1;
-        
-        bool m_SpaceBarPressed;
-
-        CanvasManipulator m_PrimaryManipulator = k_DefaultPrimaryManipulator;
 
         Optional<Rect> m_FrameContainer = Optional<Rect>.none;
-
-        float m_ScrollSpeed = k_DefaultScrollSpeed;
-
-        float m_MinZoom = k_DefaultMinZoom;
-
-        float m_MaxZoom = k_DefaultMaxZoom;
-
-        float m_ZoomSpeed = k_DefaultZoomSpeed;
-
-        float m_ZoomMultiplier = k_DefaultZoomMultiplier;
-
-        float m_PanMultiplier = k_DefaultPanMultiplier;
 
         ScrollDirection m_ScrollDirection = k_DefaultScrollDirection;
 
         float m_FrameMargin = k_DefaultFrameMargin;
 
-        bool m_UseSpaceBar = k_DefaultUseSpaceBar;
-
-        CanvasControlScheme m_ControlScheme = k_DefaultControlScheme;
+        readonly PanAndZoomable m_Manipulator;
 
         /// <summary>
         /// The content container of the Canvas.
@@ -262,14 +329,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_FrameContainer != value;
                 m_FrameContainer = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in frameContainerProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The scroll coordinates of the Canvas.
         /// </summary>
@@ -278,17 +345,8 @@ namespace Unity.AppUI.UI
 #endif
         public Vector2 scrollOffset
         {
-            get => m_Viewport.transform.position * -1;
-            set
-            {
-                SetScrollOffset(value);
-                UpdateScrollers();
-                scrollOffsetChanged?.Invoke();
-                
-#if ENABLE_RUNTIME_DATA_BINDINGS
-                NotifyPropertyChanged(in scrollOffsetProperty);
-#endif
-            }
+            get => m_Manipulator.scrollOffset;
+            set => m_Manipulator.scrollOffset = value;
         }
 
         /// <summary>
@@ -302,19 +360,19 @@ namespace Unity.AppUI.UI
 #endif
         public float scrollSpeed
         {
-            get => m_ScrollSpeed;
+            get => m_Manipulator.scrollSpeed;
             set
             {
-                var changed = m_ScrollSpeed != value;
-                m_ScrollSpeed = value;
-                
+                var changed = !Mathf.Approximately(m_Manipulator.scrollSpeed, value);
+                m_Manipulator.scrollSpeed = value;
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in scrollSpeedProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The minimum zoom factor of the Canvas.
         /// </summary>
@@ -324,21 +382,21 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
 #endif
-        public float minZoom 
+        public float minZoom
         {
-            get => m_MinZoom;
+            get => m_Manipulator.minZoom;
             set
             {
-                var changed = m_MinZoom != value;
-                m_MinZoom = value;
-                
+                var changed = !Mathf.Approximately(m_Manipulator.minZoom, value);
+                m_Manipulator.minZoom = value;
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in minZoomProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The maximum zoom factor of the Canvas.
         /// </summary>
@@ -348,14 +406,14 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
 #endif
-        public float maxZoom 
+        public float maxZoom
         {
-            get => m_MaxZoom;
+            get => m_Manipulator.maxZoom;
             set
             {
-                var changed = m_MaxZoom != value;
-                m_MaxZoom = value;
-                
+                var changed = !Mathf.Approximately(m_Manipulator.maxZoom, value);
+                m_Manipulator.maxZoom = value;
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in maxZoomProperty);
@@ -374,12 +432,12 @@ namespace Unity.AppUI.UI
 #endif
         public float zoomSpeed
         {
-            get => m_ZoomSpeed;
+            get => m_Manipulator.zoomSpeed;
             set
             {
-                var changed = m_ZoomSpeed != value;
-                m_ZoomSpeed = value;
-                
+                var changed = !Mathf.Approximately(m_Manipulator.zoomSpeed, value);
+                m_Manipulator.zoomSpeed = value;
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in zoomSpeedProperty);
@@ -398,12 +456,12 @@ namespace Unity.AppUI.UI
 #endif
         public float zoomMultiplier
         {
-            get => m_ZoomMultiplier;
+            get => m_Manipulator.zoomMultiplier;
             set
             {
-                var changed = m_ZoomMultiplier != value;
-                m_ZoomMultiplier = value;
-                
+                var changed = !Mathf.Approximately(m_Manipulator.zoomMultiplier, value);
+                m_Manipulator.zoomMultiplier = value;
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in zoomMultiplierProperty);
@@ -422,12 +480,12 @@ namespace Unity.AppUI.UI
 #endif
         public float panMultiplier
         {
-            get => m_PanMultiplier;
+            get => m_Manipulator.panMultiplier;
             set
             {
-                var changed = m_PanMultiplier != value;
-                m_PanMultiplier = value;
-                
+                var changed = !Mathf.Approximately(m_Manipulator.panMultiplier, value);
+                m_Manipulator.panMultiplier = value;
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in panMultiplierProperty);
@@ -451,14 +509,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_ScrollDirection != value;
                 m_ScrollDirection = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in scrollDirectionProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The zoom factor of the Canvas.
         /// </summary>
@@ -470,20 +528,30 @@ namespace Unity.AppUI.UI
 #endif
         public float zoom
         {
-            get => m_Viewport.transform.scale.x;
+            get => m_Manipulator.zoom.y;
+            set => m_Manipulator.zoom = new Vector2(value, value);
+        }
+
+        /// <summary>
+        /// The damping effect duration in milliseconds.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public int dampingEffectDuration
+        {
+            get => m_Manipulator.dampingEffectDurationMs;
             set
             {
-                var changed = !Mathf.Approximately(m_Viewport.transform.scale.x, value);
-                m_Viewport.transform.scale = new Vector3(value, value, 1);
-                m_Background.scale = value;
-                UpdateScrollers();
-                
-                if (changed)
-                    zoomChanged?.Invoke();
-                
+                var changed = m_Manipulator.dampingEffectDurationMs != value;
+                m_Manipulator.dampingEffectDurationMs = value;
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
-                    NotifyPropertyChanged(in zoomProperty);
+                    NotifyPropertyChanged(in dampingEffectDurationProperty);
 #endif
             }
         }
@@ -502,9 +570,9 @@ namespace Unity.AppUI.UI
             get => m_FrameMargin;
             set
             {
-                var changed = m_FrameMargin != value;
+                var changed = !Mathf.Approximately(m_FrameMargin, value);
                 m_FrameMargin = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in frameMarginProperty);
@@ -523,12 +591,12 @@ namespace Unity.AppUI.UI
 #endif
         public bool useSpaceBar
         {
-            get => m_UseSpaceBar;
+            get => m_Manipulator.useSpaceBar;
             set
             {
-                var changed = m_UseSpaceBar != value;
-                m_UseSpaceBar = value;
-                
+                var changed = m_Manipulator.useSpaceBar != value;
+                m_Manipulator.useSpaceBar = value;
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in useSpaceBarProperty);
@@ -542,23 +610,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
 #endif
-        public GrabMode grabMode
-        {
-            get => m_GrabMode;
-            private set
-            {
-                if (m_GrabMode == value)
-                    return;
-                
-                RemoveFromClassList(GetGrabModeUssClassName(m_GrabMode));
-                m_GrabMode = value;
-                AddToClassList(GetGrabModeUssClassName(m_GrabMode));
-
-#if ENABLE_RUNTIME_DATA_BINDINGS
-                NotifyPropertyChanged(in grabModeProperty);
-#endif
-            }
-        }
+        public GrabMode grabMode => m_Manipulator.grabMode;
 
         /// <summary>
         /// The current control scheme of the canvas.
@@ -571,12 +623,12 @@ namespace Unity.AppUI.UI
 #endif
         public CanvasControlScheme controlScheme
         {
-            get => m_ControlScheme;
+            get => m_Manipulator.controlScheme;
             set
             {
-                var changed = m_ControlScheme != value;
-                m_ControlScheme = value;
-                
+                var changed = m_Manipulator.controlScheme != value;
+                m_Manipulator.controlScheme = value;
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in controlSchemeProperty);
@@ -595,17 +647,12 @@ namespace Unity.AppUI.UI
 #endif
         public CanvasManipulator primaryManipulator
         {
-            get => m_PrimaryManipulator;
+            get => m_Manipulator.primaryManipulator;
             set
             {
-                var changed = m_PrimaryManipulator != value;
-                m_PrimaryManipulator = value;
-                grabMode = m_PrimaryManipulator switch
-                {
-                    CanvasManipulator.Pan => GrabMode.Grab,
-                    _ => GrabMode.None
-                };
-                
+                var changed = m_Manipulator.primaryManipulator != value;
+                m_Manipulator.primaryManipulator = value;
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in primaryManipulatorProperty);
@@ -625,20 +672,20 @@ namespace Unity.AppUI.UI
             m_Background = new CanvasBackground {name = backgroundUssClassName, pickingMode = PickingMode.Ignore};
             m_Background.AddToClassList(backgroundUssClassName);
             hierarchy.Add(m_Background);
-            
+
             m_Viewport = new VisualElement
             {
-                name = viewportUssClassName, 
-                pickingMode = PickingMode.Ignore, 
-                usageHints = UsageHints.DynamicTransform
+                name = viewportUssClassName,
+                pickingMode = PickingMode.Ignore,
             };
+            m_Viewport.EnableDynamicTransform(true);
             m_Viewport.AddToClassList(viewportUssClassName);
             hierarchy.Add(m_Viewport);
-            
+
             m_ViewportContainer = new VisualElement
             {
-                name = viewportContainerUssClassName, 
-                pickingMode = PickingMode.Ignore, 
+                name = viewportContainerUssClassName,
+                pickingMode = PickingMode.Ignore,
                 usageHints = UsageHints.GroupTransform
             };
             m_ViewportContainer.AddToClassList(viewportContainerUssClassName);
@@ -654,7 +701,7 @@ namespace Unity.AppUI.UI
             m_VerticalScroller.slider.RegisterCallback<PointerCaptureEvent>(OnScrollerPointerCapture);
             m_VerticalScroller.slider.RegisterCallback<PointerCaptureOutEvent>(OnScrollerPointerCaptureOut);
             hierarchy.Add(m_VerticalScroller);
-            
+
             m_HorizontalScroller = new Scroller
             {
                 name = horizontalScrollerUssClassName,
@@ -665,19 +712,11 @@ namespace Unity.AppUI.UI
             m_HorizontalScroller.slider.RegisterCallback<PointerCaptureEvent>(OnScrollerPointerCapture);
             m_HorizontalScroller.slider.RegisterCallback<PointerCaptureOutEvent>(OnScrollerPointerCaptureOut);
             hierarchy.Add(m_HorizontalScroller);
-            
-            RegisterCallback<WheelEvent>(OnWheel);
-            RegisterCallback<PointerDownEvent>(OnPointerDown, TrickleDown.TrickleDown);
-#if !UNITY_2023_1_OR_NEWER
-            RegisterCallback<MouseDownEvent>(OnMouseDown, TrickleDown.TrickleDown);
-#endif
-            RegisterCallback<PointerUpEvent>(OnPointerUp);
-            RegisterCallback<PointerCancelEvent>(OnPointerCancel);
-            RegisterCallback<PointerCaptureOutEvent>(OnPointerCaptureOut);
-            RegisterCallback<PointerMoveEvent>(OnPointerMove);
+
+            m_Manipulator = new PanAndZoomable(OnZoomChanged, OnScrollOffsetChanged, OnGrabModeChanged);
+            this.AddManipulator(m_Manipulator);
+
             RegisterCallback<KeyDownEvent>(OnKeyDown);
-            RegisterCallback<KeyUpEvent>(OnKeyUp);
-            RegisterCallback<FocusOutEvent>(OnFocusOut);
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         }
 
@@ -689,23 +728,23 @@ namespace Unity.AppUI.UI
         {
             if (worldRect.size.sqrMagnitude == 0)
                 return;
-            
+
             var container = frameContainer.IsSet ? frameContainer.Value : contentRect;
             var containerCenter = new Vector2(container.width * 0.5f, container.height * 0.5f) + container.position;
-            
+
             var localRect = this.WorldToLocal(worldRect);
             var zoomRatio = Mathf.Min(
-                (container.width - frameMargin * 2f) / localRect.width, 
+                (container.width - frameMargin * 2f) / localRect.width,
                 (container.height - frameMargin * 2f) / localRect.height);
             var newZoom = zoom * zoomRatio;
 
             var centerDelta = localRect.center - containerCenter;
             scrollOffset += centerDelta;
-            
+
             var zoomDelta = newZoom - zoom;
-            ApplyZoom(containerCenter, zoomDelta);
+            m_Manipulator.ApplyZoom(containerCenter, new Vector2(zoomDelta, zoomDelta));
         }
-        
+
         /// <summary>
         /// Frame the Canvas to the given area. The area is in the Viewport's local coordinates.
         /// </summary>
@@ -727,11 +766,11 @@ namespace Unity.AppUI.UI
         {
             if (element == null)
                 return;
-            
+
             var boundingBox = element.GetWorldBoundingBox();
             if (boundingBox.size.sqrMagnitude == 0)
                 return;
-            
+
             FrameArea(m_Viewport.WorldToLocal(boundingBox));
         }
 
@@ -743,212 +782,74 @@ namespace Unity.AppUI.UI
             FrameElement(m_ViewportContainer);
         }
 
-        void OnKeyUp(KeyUpEvent evt)
-        {
-            switch (evt.keyCode)
-            {
-                case KeyCode.Space:
-                {
-                    if (controlScheme != CanvasControlScheme.Editor && useSpaceBar)
-                    {
-                        m_SpaceBarPressed = false;
-                        if (m_PrimaryManipulator != CanvasManipulator.Pan)
-                            grabMode = GrabMode.None;
-                        if (m_PointerId >= 0 && this.HasPointerCapture(m_PointerId))
-                            this.ReleasePointer(m_PointerId);
-                    }
-                    break;
-                }
-            }
-        }
-        
-        void OnFocusOut(FocusOutEvent evt)
-        {
-            m_SpaceBarPressed = false;
-            grabMode = m_PrimaryManipulator == CanvasManipulator.Pan ? GrabMode.Grab : GrabMode.None;
-            m_PointerId = -1;
-        }
-
         void OnKeyDown(KeyDownEvent evt)
         {
-            switch (evt.keyCode)
+            if (evt.keyCode == KeyCode.F)
             {
-                case KeyCode.F:
-                    evt.StopImmediatePropagation();
-                    FrameAll();
-                    break;
-                case KeyCode.Escape:
-                {
-                    if (m_PointerId >= 0)
-                    {
-                        evt.StopImmediatePropagation();
-                        if (this.HasPointerCapture(m_PointerId))
-                            this.ReleasePointer(m_PointerId);
-                        m_PointerId = -1;
-                    }
-                    break;
-                }
-                case KeyCode.Space:
-                    if (controlScheme != CanvasControlScheme.Editor && useSpaceBar)
-                    {
-                        evt.StopImmediatePropagation();
-                        m_SpaceBarPressed = true;
-                        grabMode = GrabMode.Grab;
-                    }
-                    break;
-                case KeyCode.Minus when evt.actionKey:
-                case KeyCode.KeypadMinus when evt.actionKey:
-                    {
-                        evt.StopImmediatePropagation();
-                        // logarithmic zoom
-                        var multiplier = evt.shiftKey ? zoomMultiplier : 1f;
-                        var zoomDelta = zoomSpeed * -1f * multiplier;
-                        zoomDelta = (zoom * Mathf.Pow(2f, zoomDelta)) - zoom;
-                        ApplyZoom(new Vector2(contentRect.width * 0.5f, contentRect.height * 0.5f), zoomDelta);
-                    }
-                    break;
-                case KeyCode.Plus when evt.actionKey:
-                case KeyCode.Equals when evt.actionKey:
-                case KeyCode.KeypadPlus when evt.actionKey:
-                    {
-                        evt.StopImmediatePropagation();
-                        // logarithmic zoom
-                        var multiplier = evt.shiftKey ? zoomMultiplier : 1f; 
-                        var zoomDelta = zoomSpeed * 1f * multiplier;
-                        zoomDelta = (zoom * Mathf.Pow(2f, zoomDelta)) - zoom;
-                        ApplyZoom(new Vector2(contentRect.width * 0.5f, contentRect.height * 0.5f), zoomDelta);
-                    }
-                    break;
-                case KeyCode.Alpha0 when evt.actionKey:
-                case KeyCode.Keypad0 when evt.actionKey:
-                    {
-                        evt.StopImmediatePropagation();
-                        ApplyZoom(new Vector2(contentRect.width * 0.5f, contentRect.height * 0.5f), 1f - zoom);
-                    }
-                    break;
+                evt.StopImmediatePropagation();
+                FrameAll();
             }
         }
 
-        void OnPointerDown(PointerDownEvent evt)
+        void OnZoomChanged(Vector2 previousZoom, Vector2 newZoom)
         {
-            if (panel == null || panel.GetCapturingElement(evt.pointerId) != null)
-                return;
-
-            var hasModifierPressed = controlScheme switch
-            {
-                CanvasControlScheme.Modern => m_SpaceBarPressed,
-                CanvasControlScheme.Editor => evt.altKey,
-                _ => m_SpaceBarPressed
-            } || primaryManipulator == CanvasManipulator.Pan;
-
-            if (evt.button == (int)MouseButton.MiddleMouse || 
-                (evt.button == (int)MouseButton.LeftMouse && hasModifierPressed))
-            {
-                if (!this.HasPointerCapture(evt.pointerId))
-                {
-                    this.CapturePointer(evt.pointerId);
-#if !UNITY_2023_1_OR_NEWER
-                    if (evt.pointerId == PointerId.mousePointerId)
-                        this.CaptureMouse();
+            UpdateScrollers();
+            m_Background.scale = newZoom.y;
+            zoomChanged?.Invoke();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+            NotifyPropertyChanged(in zoomProperty);
 #endif
-                }
-                
-                evt.StopPropagation();
-                m_PointerId = evt.pointerId;
-                m_PointerPosition = evt.localPosition;
-                grabMode = GrabMode.Grabbing;
-            }
         }
 
-        void OnMouseDown(MouseDownEvent evt)
+        void OnScrollOffsetChanged(Vector2 previousScrollOffset, Vector2 newScrollOffset)
         {
-            if (this.HasMouseCapture())
-                evt.StopPropagation();
+            UpdateScrollers();
+#if UNITY_6000_2_OR_NEWER
+            m_Background.offset = m_Viewport.resolvedStyle.translate;
+#else
+            m_Background.offset = m_Viewport.transform.position;
+#endif
+            scrollOffsetChanged?.Invoke();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+            NotifyPropertyChanged(in scrollOffsetProperty);
+#endif
         }
 
-        void OnPointerUp(PointerUpEvent evt)
+        void OnGrabModeChanged(GrabMode previousGrabMode, GrabMode newGrabMode)
         {
-            if (this.HasPointerCapture(evt.pointerId))
-                this.ReleasePointer(evt.pointerId);
-        }
-
-        void OnPointerCancel(PointerCancelEvent evt)
-        {
-            if (this.HasPointerCapture(evt.pointerId))
-                this.ReleasePointer(evt.pointerId);
-        }
-
-        void OnPointerCaptureOut(PointerCaptureOutEvent evt)
-        {
-            if (evt.pointerId == m_PointerId)
-            {
-                m_PointerId = -1;
-                grabMode = m_SpaceBarPressed || m_PrimaryManipulator == CanvasManipulator.Pan ? 
-                    GrabMode.Grab : GrabMode.None;
-            }
-        }
-
-        void OnPointerMove(PointerMoveEvent evt)
-        {
-            if (this.HasPointerCapture(evt.pointerId))
-            {
-                grabMode = GrabMode.Grabbing;
-                scrollOffset += (Vector2)(evt.localPosition - m_PointerPosition) *
-                                (scrollDirection == ScrollDirection.Natural ? -1f : 1f);
-            }
-            
-            m_PointerPosition = evt.localPosition;
-        }
-
-        void OnWheel(WheelEvent evt)
-        {
-            
-            evt.StopImmediatePropagation();
-
-            // no support of touchpad App UI events in Alternate control scheme
-            if (controlScheme == CanvasControlScheme.Editor && evt.button == Core.AppUI.touchPadId)
-                return;
-
-            var shouldZoom = controlScheme switch
-            {
-                CanvasControlScheme.Modern => evt.ctrlKey || evt.commandKey,
-                CanvasControlScheme.Editor => true,
-                _ => evt.ctrlKey || evt.commandKey
-            };
-            
-            if (shouldZoom)
-            {
-                var multiplier = evt.shiftKey ? zoomMultiplier : 1f;
-                // logarithmic zoom
-                var zoomDelta = zoomSpeed * -evt.delta.y * multiplier;
-                zoomDelta = (zoom * Mathf.Pow(2f, zoomDelta)) - zoom;
-                ApplyZoom(m_PointerPosition, zoomDelta);
-            }
-            else
-            {
-                var multiplier = evt.shiftKey ? panMultiplier : 1f;
-                ApplyScrollOffset(evt.delta * multiplier * 2f);
-            }
+#if ENABLE_RUNTIME_DATA_BINDINGS
+            NotifyPropertyChanged(in grabModeProperty);
+#endif
         }
 
         void OnVerticalScrollValueChanged(ChangeEvent<float> evt)
         {
             if (m_UpdatingScrollers)
                 return;
-            
+
             var delta = evt.newValue - m_LastScrollersPosition.y;
-            SetScrollOffset(new Vector2(scrollOffset.x, scrollOffset.y + delta));
+            m_Manipulator.SetScrollOffsetWithoutNotify(new Vector2(scrollOffset.x, scrollOffset.y + delta));
+#if UNITY_6000_2_OR_NEWER
+            m_Background.offset = m_Viewport.resolvedStyle.translate;
+#else
+            m_Background.offset = m_Viewport.transform.position;
+#endif
             m_LastScrollersPosition.y = evt.newValue;
             scrollOffsetChanged?.Invoke();
         }
-        
+
         void OnHorizontalScrollValueChanged(ChangeEvent<float> evt)
         {
             if (m_UpdatingScrollers)
                 return;
-            
+
             var delta = evt.newValue - m_LastScrollersPosition.x;
-            SetScrollOffset(new Vector2(scrollOffset.x - delta, scrollOffset.y));
+            m_Manipulator.SetScrollOffsetWithoutNotify(new Vector2(scrollOffset.x - delta, scrollOffset.y));
+#if UNITY_6000_2_OR_NEWER
+            m_Background.offset = m_Viewport.resolvedStyle.translate;
+#else
+            m_Background.offset = m_Viewport.transform.position;
+#endif
             m_LastScrollersPosition.x = evt.newValue;
             scrollOffsetChanged?.Invoke();
         }
@@ -960,7 +861,7 @@ namespace Unity.AppUI.UI
 
             UpdateScrollers();
         }
-        
+
         void OnScrollerPointerCapture(PointerCaptureEvent evt)
         {
             if (evt.target == m_HorizontalScroller.slider || evt.target == m_VerticalScroller.slider)
@@ -968,7 +869,7 @@ namespace Unity.AppUI.UI
                 m_LastScrollersPosition = new Vector2(m_HorizontalScroller.slider.value, m_VerticalScroller.slider.value);
             }
         }
-        
+
         void OnScrollerPointerCaptureOut(PointerCaptureOutEvent evt)
         {
             if (evt.target == m_HorizontalScroller.slider || evt.target == m_VerticalScroller.slider)
@@ -982,15 +883,15 @@ namespace Unity.AppUI.UI
             var viewportRect = contentRect;
             if (!viewportRect.IsValid())
                 return;
-            
+
             var canvasContentRect = this.WorldToLocal(m_ViewportContainer.GetWorldBoundingBox());
-            
+
             // Shrinking the canvas content rect by 1 pixel on each side to avoid rounding issues
             canvasContentRect.xMin += 1;
             canvasContentRect.yMin += 1;
             canvasContentRect.xMax -= 1;
             canvasContentRect.yMax -= 1;
-            
+
             // Encapsulating the canvas content rect by the viewport rect
             canvasContentRect.xMin = Mathf.Min(canvasContentRect.xMin, 0);
             canvasContentRect.yMin = Mathf.Min(canvasContentRect.yMin, 0);
@@ -1002,7 +903,7 @@ namespace Unity.AppUI.UI
             xRatio = Mathf.Approximately(1f, xRatio) ? 1f : xRatio;
             var yRatio = canvasContentRect.height > 0 ? viewportRect.height / canvasContentRect.height : 1f;
             yRatio = Mathf.Approximately(1f, yRatio) ? 1f : yRatio;
-            
+
             m_UpdatingScrollers = true;
 
             if (xRatio < 1f)
@@ -1013,7 +914,7 @@ namespace Unity.AppUI.UI
                 var min = 0;
                 var max = Mathf.Max(min, canvasContentRect.width - viewportRect.width);
                 var newValue = max - Mathf.Clamp(-canvasContentRect.xMin, min, max);
-                
+
                 m_HorizontalScroller.slider.SetValueWithoutNotify(newValue);
                 m_HorizontalScroller.lowValue = min;
                 m_HorizontalScroller.highValue = max;
@@ -1023,7 +924,7 @@ namespace Unity.AppUI.UI
             {
                 m_VerticalScroller.lowValue = float.MinValue;
                 m_VerticalScroller.highValue = float.MaxValue;
-                
+
                 var min = 0;
                 var max = Mathf.Max(min, canvasContentRect.height - viewportRect.height);
                 var newValue = Mathf.Clamp(-canvasContentRect.yMin, min, max);
@@ -1032,52 +933,20 @@ namespace Unity.AppUI.UI
                 m_VerticalScroller.lowValue = min;
                 m_VerticalScroller.highValue = max;
             }
-            
+
             m_HorizontalScroller.Adjust(xRatio);
             m_VerticalScroller.Adjust(yRatio);
-            
+
             m_UpdatingScrollers = false;
         }
 
-        void ApplyScrollOffset(Vector2 delta)
-        {
-            if (delta == Vector2.zero)
-                return;
-            
-            var newScrollOffset = scrollOffset;
-            newScrollOffset += (delta * scrollSpeed) * (scrollDirection == ScrollDirection.Natural ? -1f : 1f);
-            scrollOffset = newScrollOffset;
-        }
-
-        void ApplyZoom(Vector2 pivot, float delta)
-        {
-            if (delta == 0)
-                return;
-            
-            var newZoom = zoom;
-            newZoom += delta;
-            newZoom = Mathf.Clamp(newZoom, minZoom, maxZoom);
-            var zoomRatio = newZoom / zoom;
-            zoom = newZoom;
-                
-            var newScrollOffset = scrollOffset;
-            newScrollOffset = (newScrollOffset + pivot) * zoomRatio - pivot;
-            scrollOffset = newScrollOffset;
-        }
-
-        void SetScrollOffset(Vector2 newValue)
-        {
-            m_Viewport.transform.position = new Vector3(-newValue.x, -newValue.y, 0);
-            m_Background.offset = m_Viewport.transform.position;
-        }
-        
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
         /// Defines the UxmlFactory for the Canvas.
         /// </summary>
         public new class UxmlFactory : UxmlFactory<Canvas, UxmlTraits> { }
-        
+
         /// <summary>
         /// Class containing the UXML traits for the <see cref="Canvas"/>.
         /// </summary>
@@ -1085,103 +954,110 @@ namespace Unity.AppUI.UI
         {
             readonly UxmlFloatAttributeDescription m_ScrollSpeed = new UxmlFloatAttributeDescription
             {
-                name = "scroll-speed", 
+                name = "scroll-speed",
                 defaultValue = k_DefaultScrollSpeed
             };
-            
+
             readonly UxmlFloatAttributeDescription m_MinZoom = new UxmlFloatAttributeDescription
             {
-                name = "min-zoom", 
+                name = "min-zoom",
                 defaultValue = k_DefaultMinZoom
             };
-            
+
             readonly UxmlFloatAttributeDescription m_MaxZoom = new UxmlFloatAttributeDescription
             {
-                name = "max-zoom", 
+                name = "max-zoom",
                 defaultValue = k_DefaultMaxZoom
             };
 
             readonly UxmlFloatAttributeDescription m_ZoomSpeed = new UxmlFloatAttributeDescription
             {
-                name = "zoom-speed", 
+                name = "zoom-speed",
                 defaultValue = k_DefaultZoomSpeed
             };
-            
+
             readonly UxmlFloatAttributeDescription m_ZoomMultiplier = new UxmlFloatAttributeDescription
             {
-                name = "zoom-multiplier", 
+                name = "zoom-multiplier",
                 defaultValue = k_DefaultZoomMultiplier
             };
-            
+
             readonly UxmlFloatAttributeDescription m_PanMultiplier = new UxmlFloatAttributeDescription
             {
-                name = "pan-multiplier", 
+                name = "pan-multiplier",
                 defaultValue = k_DefaultPanMultiplier
             };
-            
+
+            readonly UxmlIntAttributeDescription m_DampingEffectDuration = new UxmlIntAttributeDescription
+            {
+                name = "damping-effect-duration",
+                defaultValue = k_DefaultDampingEffectDurationMs
+            };
+
             readonly UxmlFloatAttributeDescription m_FrameMargin = new UxmlFloatAttributeDescription
             {
-                name = "frame-margin", 
+                name = "frame-margin",
                 defaultValue = k_DefaultFrameMargin
             };
-            
-            readonly UxmlEnumAttributeDescription<ScrollDirection> m_ScrollDirection = new UxmlEnumAttributeDescription<ScrollDirection>
-            {
-                name = "scroll-direction", 
-                defaultValue = k_DefaultScrollDirection
-            };
-            
+
             readonly UxmlEnumAttributeDescription<CanvasControlScheme> m_ControlScheme = new UxmlEnumAttributeDescription<CanvasControlScheme>
             {
-                name = "control-scheme", 
+                name = "control-scheme",
                 defaultValue = k_DefaultControlScheme
             };
-            
+
             readonly UxmlBoolAttributeDescription m_UseSpaceBar = new UxmlBoolAttributeDescription
             {
-                name = "use-space-bar", 
+                name = "use-space-bar",
                 defaultValue = k_DefaultUseSpaceBar
             };
-            
-            
-            
-            
+
+            readonly UxmlEnumAttributeDescription<ScrollDirection> m_ScrollDirection = new UxmlEnumAttributeDescription<ScrollDirection>
+            {
+                name = "scroll-direction",
+                defaultValue = k_DefaultScrollDirection
+            };
+
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                
+
                 var canvas = (Canvas)ve;
-                
+
                 var floatVal = 0f;
                 if (m_ScrollSpeed.TryGetValueFromBag(bag, cc, ref floatVal))
                     canvas.scrollSpeed = floatVal;
-                
+
                 if (m_MinZoom.TryGetValueFromBag(bag, cc, ref floatVal))
                     canvas.minZoom = floatVal;
-                
+
                 if (m_MaxZoom.TryGetValueFromBag(bag, cc, ref floatVal))
                     canvas.maxZoom = floatVal;
-                
+
                 if (m_ZoomSpeed.TryGetValueFromBag(bag, cc, ref floatVal))
                     canvas.zoomSpeed = floatVal;
-                
+
                 if (m_ZoomMultiplier.TryGetValueFromBag(bag, cc, ref floatVal))
                     canvas.zoomMultiplier = floatVal;
-                
+
                 if (m_PanMultiplier.TryGetValueFromBag(bag, cc, ref floatVal))
                     canvas.panMultiplier = floatVal;
-                
+
+                var intVal = 0;
+                if (m_DampingEffectDuration.TryGetValueFromBag(bag, cc, ref intVal))
+                    canvas.dampingEffectDuration = intVal;
+
                 if (m_FrameMargin.TryGetValueFromBag(bag, cc, ref floatVal))
                     canvas.frameMargin = floatVal;
-                
+
                 var scrollDirectionVal = ScrollDirection.Natural;
                 if (m_ScrollDirection.TryGetValueFromBag(bag, cc, ref scrollDirectionVal))
                     canvas.scrollDirection = scrollDirectionVal;
-                
+
                 var controlSchemeVal = CanvasControlScheme.Modern;
                 if (m_ControlScheme.TryGetValueFromBag(bag, cc, ref controlSchemeVal))
                     canvas.controlScheme = controlSchemeVal;
-                
+
                 var boolVal = false;
                 if (m_UseSpaceBar.TryGetValueFromBag(bag, cc, ref boolVal))
                     canvas.useSpaceBar = boolVal;

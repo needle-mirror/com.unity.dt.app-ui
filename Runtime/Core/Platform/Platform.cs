@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using Object = UnityEngine.Object;
+#pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
 
 namespace Unity.AppUI.Core
 {
@@ -443,6 +445,7 @@ namespace Unity.AppUI.Core
         /// <summary>
         /// Polls the gestures and triggers gesture events if a gesture has been received.
         /// </summary>
+        [Obsolete]
         internal static void PollGestures()
         {
             panGestureChangedThisFrame = false;
@@ -554,6 +557,7 @@ namespace Unity.AppUI.Core
         static readonly Dictionary<int, TrackPadTouch> k_PrevTouches = new Dictionary<int, TrackPadTouch>();
         static readonly List<TrackPadTouch> k_FrameTouches = new List<TrackPadTouch>();
 
+        [Obsolete]
         static List<TrackPadTouch> GetTrackpadTouches()
         {
             s_LastTime = Time.unscaledTime;
@@ -647,26 +651,31 @@ namespace Unity.AppUI.Core
         /// <summary>
         /// Event triggered when a pan gesture is received.
         /// </summary>
+        [Obsolete]
         public static event Action<PanGesture> panGestureChanged;
 
         /// <summary>
         /// Event triggered when a magnification gesture is received.
         /// </summary>
+        [Obsolete]
         public static event Action<MagnificationGesture> magnificationGestureChanged;
 
         /// <summary>
         /// Whether the pan gesture has changed this frame.
         /// </summary>
+        [Obsolete]
         public static bool panGestureChangedThisFrame { get; set; }
 
         /// <summary>
         /// Whether the magnification gesture has changed this frame.
         /// </summary>
+        [Obsolete]
         public static bool magnificationGestureChangedThisFrame { get; set; }
 
         /// <summary>
         /// The pan gesture data.
         /// </summary>
+        [Obsolete]
         public static PanGesture panGesture
         {
             get => s_PanGesture;
@@ -684,6 +693,7 @@ namespace Unity.AppUI.Core
         /// <summary>
         /// The magnification gesture data.
         /// </summary>
+        [Obsolete]
         public static MagnificationGesture magnificationGesture
         {
             get => s_MagnificationGesture;
@@ -745,5 +755,85 @@ namespace Unity.AppUI.Core
                 Debug.LogWarning("Haptic Feedbacks are not supported on the current platform.");
 #endif
         }
+
+        static float s_PreviousScaleFactor = 1f;
+        internal static event Action<float> scaleFactorChanged;
+
+        internal static void Update()
+        {
+            PollSystemTheme();
+            var newScaleFactor = mainScreenScale;
+            if (!Mathf.Approximately(newScaleFactor, s_PreviousScaleFactor) && !Mathf.Approximately(newScaleFactor, 0f))
+            {
+                s_PreviousScaleFactor = newScaleFactor;
+                scaleFactorChanged?.Invoke(newScaleFactor);
+            }
+            ReadNativeTouches();
+        }
+
+        static float m_PollEventTime;
+
+        const int k_MaxTouches = 512;
+
+        static readonly AppUITouch[] k_FrameAppUITouches = new AppUITouch[k_MaxTouches];
+
+        static int m_FrameTouchCount;
+
+        static readonly AppUITouch[] k_PrevAppUITouches = new AppUITouch[k_MaxTouches];
+
+        static int m_PrevTouchCount;
+
+        static int m_LastUpdateFrame;
+
+        static PlatformTouchEvent m_NativeTouch;
+
+
+        static void ReadNativeTouches()
+        {
+            // be sure to only read touches once per frame
+            if ((Application.isPlaying && m_LastUpdateFrame != Time.frameCount) || !Application.isPlaying)
+            {
+                m_LastUpdateFrame = Time.frameCount;
+
+                for (var i = 0; i < k_MaxTouches; i++)
+                {
+                    if (i == m_FrameTouchCount)
+                        break;
+                    k_PrevAppUITouches[i] = k_FrameAppUITouches[i];
+                }
+
+                m_PrevTouchCount = m_FrameTouchCount;
+                m_FrameTouchCount = 0;
+
+                for (var i = 0; i < k_MaxTouches; i++)
+                {
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+                    m_NativeTouch = default;
+                    if (!_NSReadTouchEvent(ref m_NativeTouch))
+                        break;
+
+                    ref var touch = ref k_FrameAppUITouches[m_FrameTouchCount++];
+                    touch.fingerId = m_NativeTouch.touchId;
+                    touch.position = new Vector2(m_NativeTouch.normalizedX * m_NativeTouch.deviceWidth,
+                        m_NativeTouch.normalizedY * m_NativeTouch.deviceHeight);
+                    touch.phase = ConvertTouchPhase(m_NativeTouch.phase);
+
+                    for (var j = m_PrevTouchCount - 1; j >= 0; j--)
+                    {
+                        if (k_PrevAppUITouches[i].fingerId == m_NativeTouch.touchId)
+                        {
+                            touch.deltaPos = touch.position - k_PrevAppUITouches[i].position;
+                            touch.deltaTime = Time.unscaledTime - m_PollEventTime;
+                            break;
+                        }
+                    }
+#endif
+                }
+
+                m_PollEventTime = Time.unscaledTime;
+            }
+        }
+
+        internal static ReadOnlySpan<AppUITouch> touches => k_FrameAppUITouches.AsSpan(0, m_FrameTouchCount);
     }
 }

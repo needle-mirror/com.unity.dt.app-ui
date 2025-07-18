@@ -7,36 +7,38 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using TextField = Unity.AppUI.UI.TextField;
 using Button = Unity.AppUI.UI.Button;
+#pragma warning disable CS0612 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
 
 namespace Unity.AppUI.Samples.UndoRedo
 {
     public class UndoRedoSample : MonoBehaviour
     {
         const string k_AppStateSlice = "app";
-        
+
         const string k_SetColorAction = "app/SetColor";
-        
+
         const string k_SetTextAction = "app/SetText";
-     
+
         static readonly ActionCreator<Color> setColorAction = Store.CreateAction<Color>(k_SetColorAction);
-        
+
         static readonly ActionCreator<string> setTextAction = Store.CreateAction<string>(k_SetTextAction);
-        
+
         Unsubscriber m_Unsubscriber;
-        
+
         void Start()
         {
-            var uiDocument = GetComponent<UIDocument>();  
-            var colorInput = uiDocument.rootVisualElement.Q<ColorField>("colorInput"); 
+            var uiDocument = GetComponent<UIDocument>();
+            var colorInput = uiDocument.rootVisualElement.Q<ColorField>("colorInput");
             var textInput = uiDocument.rootVisualElement.Q<TextField>("textInput");
             var result = uiDocument.rootVisualElement.Q<Text>("result");
             var undoButton = uiDocument.rootVisualElement.Q<ActionButton>("undoButton");
             var redoButton = uiDocument.rootVisualElement.Q<ActionButton>("redoButton");
             var historyListView = uiDocument.rootVisualElement.Q<ListView>("history");
-            
+
             undoButton.SetEnabled(false);
             redoButton.SetEnabled(false);
-            
+
             colorInput.SetValueWithoutNotify(Color.white);
 
             var store = new Store();
@@ -53,7 +55,7 @@ namespace Unity.AppUI.Samples.UndoRedo
                     state = state with { color = action.payload };
                     return state;
                 });
-                
+
                 builder.Add<string>(k_SetTextAction, (state, action) =>
                 {
                     state = state with { text = action.payload };
@@ -65,10 +67,10 @@ namespace Unity.AppUI.Samples.UndoRedo
             {
                 result.style.color = state.color;
                 result.text = state.text;
-                
+
                 undoButton.SetEnabled(undoStack.canUndo);
                 redoButton.SetEnabled(undoStack.canRedo);
-                
+
                 if (colorInput.value != state.color)
                     colorInput.SetValueWithoutNotify(state.color);
                 if (textInput.value != state.text)
@@ -85,34 +87,34 @@ namespace Unity.AppUI.Samples.UndoRedo
                 var cmd = new SetColorCommand("Set Color", evt.previousValue, evt.newValue, store);
                 undoStack.Push(cmd);
             });
-            
+
             textInput.RegisterValueChangingCallback(evt =>
             {
                 store.Dispatch(setTextAction.Invoke(evt.newValue));
             });
-            
+
             textInput.RegisterValueChangedCallback(evt =>
             {
                 var cmd = new SetTextCommand("Set Text", evt.previousValue, evt.newValue, store);
                 undoStack.Push(cmd);
             });
-            
+
             historyListView.selectionType = SelectionType.Single;
-            
+
             historyListView.makeItem = () =>
             {
                 var item = new Label();
                 item.AddToClassList("history-item");
                 return item;
             };
-            
+
             historyListView.bindItem = (element, idx) =>
             {
                 var item = (Label)element;
                 var cmd = historyListView.itemsSource[idx] as UndoCommand;
                 item.text = cmd?.name;
             };
-            
+
 #if UNITY_2022_2_OR_NEWER
             historyListView.selectedIndicesChanged += (indices) =>
 #else
@@ -126,23 +128,23 @@ namespace Unity.AppUI.Samples.UndoRedo
                     break;
                 }
             };
-            
+
             undoStack.indexChanged += (idx) =>
             {
                 var list = undoStack.commands.ToList();
                 historyListView.itemsSource = list;
                 historyListView.RefreshItems();
                 historyListView.SetSelectionWithoutNotify(new []{ idx });
-                
+
                 undoButton.SetEnabled(undoStack.canUndo);
                 redoButton.SetEnabled(undoStack.canRedo);
             };
-            
+
             undoButton.clickable.clicked += () =>
             {
                 undoStack.Undo();
             };
-            
+
             redoButton.clickable.clicked += () =>
             {
                 undoStack.Redo();
@@ -158,21 +160,21 @@ namespace Unity.AppUI.Samples.UndoRedo
         public record AppState
         {
             public Color color { get; set; } = Color.white;
-            
+
             public string text { get; set; } = "Result";
         }
-        
+
         public class SetColorCommand : UndoCommand
         {
             public Color previousColor { get; private set; }
-            
+
             public Color newColor { get; private set; }
-            
+
             public Store store { get; private set; }
-            
+
             public SetColorCommand(string name, Color previousColor, Color newColor, Store store)
                 : base(name)
-            { 
+            {
                 this.previousColor = previousColor;
                 this.newColor = newColor;
                 this.store = store;
@@ -191,7 +193,7 @@ namespace Unity.AppUI.Samples.UndoRedo
             {
                 store.Dispatch(setColorAction.Invoke(newColor));
             }
-            
+
             public override bool MergeWith(UndoCommand command)
             {
                 if (command.id == id)
@@ -199,34 +201,34 @@ namespace Unity.AppUI.Samples.UndoRedo
                     newColor = ((SetColorCommand)command).newColor;
                     return true;
                 }
-                
+
                 return false;
             }
-            
+
             public override void OnFlush()
             {
                 store = null;
             }
         }
-        
+
         public class SetTextCommand : UndoCommand
         {
             public string previousText { get; private set; }
-            
+
             public string newText { get; private set; }
-            
+
             public Store store { get; private set; }
-            
+
             public SetTextCommand(string name, string previousText, string newText, Store store)
                 : base(name)
-            { 
+            {
                 this.previousText = previousText;
                 this.newText = newText;
                 this.store = store;
             }
 
             public override string id => k_SetTextAction;
-            
+
             public override ulong memorySize => 16;
 
             public override void Undo()
@@ -238,7 +240,7 @@ namespace Unity.AppUI.Samples.UndoRedo
             {
                 store.Dispatch(setTextAction.Invoke(newText));
             }
-            
+
             public override bool MergeWith(UndoCommand command)
             {
                 if (command.id == id)
@@ -246,7 +248,7 @@ namespace Unity.AppUI.Samples.UndoRedo
                     newText = ((SetTextCommand)command).newText;
                     return true;
                 }
-                
+
                 return false;
             }
 

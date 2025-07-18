@@ -139,6 +139,9 @@ namespace Unity.AppUI.UI
         /// </summary>
         public OutsideClickStrategy outsideClickStrategy { get; protected set; } = OutsideClickStrategy.Bounds;
 
+        /// <inheritdoc />
+        internal override bool focusOutDismissable => outsideClickDismissEnabled;
+
         /// <summary>
         /// The popup's anchor.
         /// </summary>

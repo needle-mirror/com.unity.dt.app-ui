@@ -18,6 +18,19 @@ namespace Unity.AppUI.Core
 
         [DllImport("AppUINativePlugin")]
         static extern void _NSSetupFocusedTrackingObject();
+
+        static TouchPhase ConvertTouchPhase(byte nativePhase)
+        {
+            return nativePhase switch
+            {
+                0 => TouchPhase.Began,
+                1 => TouchPhase.Moved,
+                2 => TouchPhase.Ended,
+                3 => TouchPhase.Canceled,
+                4 => TouchPhase.Stationary,
+                _ => TouchPhase.Ended
+            };
+        }
     }
 }
 #endif
