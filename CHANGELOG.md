@@ -4,6 +4,23 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-07-24
+
+### Added
+
+- Added input field text selection context menu to cut/copy/paste the currently selected text (starting Unity 2023.1).
+- Added EyeDropper system (runtime-only) to pick a color in the last game frame.
+- Added `goToStrategy` property in `SwipeView` component to choose how `GoTo` method should behave regarding animation direction.
+
+### Fixed
+
+- Fixed some Icons that had white horizontal or vertical borders.
+- fix: Add missing InsideTopLeft case in ComputePosition switch statement
+- Fixed App UI Settings registration in EditorBuildSettings.
+- fix: Add tip/arrow placement logic for Inside\* popover placements
+- Fixed event propagation bug in `Pressable` which sent the wrong pointer position value to ancestors when `keepEventPropagation` was `true`.
+- Fixed GTK initialization on Linux platform when checking if any windowing system is available.
+
 ## [2.1.0-pre.3] - 2025-07-22
 
 ### Fixed
