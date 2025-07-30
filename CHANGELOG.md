@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.1-pre.1] - 2025-07-30
+
+### Fixed
+
+- Fixed label of the blue channel slider in the ColorPicker
+- Fixed hiding Alpha channel label in `ColorPicker` when `showAlpha` is set to `false`.
+
 ## [2.1.0] - 2025-07-24
 
 ### Added

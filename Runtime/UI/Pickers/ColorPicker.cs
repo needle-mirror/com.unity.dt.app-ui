@@ -284,11 +284,11 @@ namespace Unity.AppUI.UI
 #endif
         public bool showAlpha
         {
-            get => !m_AlphaSlider.ClassListContains(Styles.hiddenUssClassName);
+            get => !m_AlphaSlider.parent.ClassListContains(Styles.hiddenUssClassName);
             set
             {
                 var changed = showAlpha != value;
-                m_AlphaSlider.EnableInClassList(Styles.hiddenUssClassName, !value);
+                m_AlphaSlider.parent.EnableInClassList(Styles.hiddenUssClassName, !value);
 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
@@ -471,7 +471,7 @@ namespace Unity.AppUI.UI
             row.AddToClassList(channelRowUssClassName);
             m_RGBContainer.hierarchy.Add(row);
 
-            var blueLabel = new LocalizedTextElement(k_DefaultGreenChannelText);
+            var blueLabel = new LocalizedTextElement(k_DefaultBlueChannelText);
             blueLabel.AddToClassList(channelLabelUssClassName);
             row.Add(blueLabel);
 
