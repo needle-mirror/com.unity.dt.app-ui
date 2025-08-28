@@ -512,5 +512,67 @@ namespace Unity.AppUI.MVVM
             serviceCollection.Add(serviceDescriptor);
             return serviceCollection;
         }
+
+        /// <summary>
+        /// Extension method to add conditional resolution to any ServiceDescriptor.
+        /// </summary>
+        /// <param name="descriptor"> The service descriptor to add condition to. </param>
+        /// <param name="condition"> The condition for service resolution. </param>
+        /// <returns> A new ServiceDescriptor with the condition applied. </returns>
+        public static ServiceDescriptor When(this ServiceDescriptor descriptor, ContextMatch condition)
+        {
+            return descriptor.When(condition);
+        }
+
+        /// <summary>
+        /// Adds a conditional singleton service to the collection.
+        /// </summary>
+        /// <param name="serviceCollection"> The service collection. </param>
+        /// <param name="serviceType"> The service type. </param>
+        /// <param name="implementationType"> The implementation type. </param>
+        /// <param name="condition"> The condition for resolution. </param>
+        /// <returns> The service collection for chaining. </returns>
+        public static IServiceCollection AddSingletonWhen(this IServiceCollection serviceCollection, Type serviceType, Type implementationType, ContextMatch condition)
+        {
+            if (serviceCollection == null)
+                throw new ArgumentNullException(nameof(serviceCollection));
+
+            var descriptor = ServiceDescriptor.Singleton(serviceType, implementationType).When(condition);
+            return Add(serviceCollection, descriptor);
+        }
+
+        /// <summary>
+        /// Adds a conditional scoped service to the collection.
+        /// </summary>
+        /// <param name="serviceCollection"> The service collection. </param>
+        /// <param name="serviceType"> The service type. </param>
+        /// <param name="implementationType"> The implementation type. </param>
+        /// <param name="condition"> The condition for resolution. </param>
+        /// <returns> The service collection for chaining. </returns>
+        public static IServiceCollection AddScopedWhen(this IServiceCollection serviceCollection, Type serviceType, Type implementationType, ContextMatch condition)
+        {
+            if (serviceCollection == null)
+                throw new ArgumentNullException(nameof(serviceCollection));
+
+            var descriptor = ServiceDescriptor.Scoped(serviceType, implementationType).When(condition);
+            return Add(serviceCollection, descriptor);
+        }
+
+        /// <summary>
+        /// Adds a conditional transient service to the collection.
+        /// </summary>
+        /// <param name="serviceCollection"> The service collection. </param>
+        /// <param name="serviceType"> The service type. </param>
+        /// <param name="implementationType"> The implementation type. </param>
+        /// <param name="condition"> The condition for resolution. </param>
+        /// <returns> The service collection for chaining. </returns>
+        public static IServiceCollection AddTransientWhen(this IServiceCollection serviceCollection, Type serviceType, Type implementationType, ContextMatch condition)
+        {
+            if (serviceCollection == null)
+                throw new ArgumentNullException(nameof(serviceCollection));
+
+            var descriptor = ServiceDescriptor.Transient(serviceType, implementationType).When(condition);
+            return Add(serviceCollection, descriptor);
+        }
     }
 }

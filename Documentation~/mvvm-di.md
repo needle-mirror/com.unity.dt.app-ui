@@ -241,3 +241,218 @@ public class MyViewModel : ObservableObject, IDependencyInjectionListener
     }
 }
 ```
+
+## Conditional Resolution
+
+Conditional resolution allows you to register multiple implementations of the same service interface and choose which implementation to use based on runtime context. This powerful feature enables context-aware dependency injection where different services can receive different implementations of the same interface.
+
+### When to Use Conditional Resolution
+
+Conditional resolution is particularly useful for:
+
+- **Context-specific implementations**: Different loggers for different subsystems
+- **Environment-based selection**: Debug vs production implementations
+- **Scope-aware services**: Different caching strategies based on scope context
+- **Modular architectures**: Feature-specific service implementations
+
+### Registration APIs
+
+The App UI framework provides several methods for registering conditional services:
+
+#### Direct Conditional Registration
+
+Use the `When` methods to register services with conditions:
+
+```csharp
+// Register different loggers for different services
+services.AddSingletonWhen(typeof(ILogger), typeof(FileLogger),
+    ctx => ctx.RequestingType == typeof(DatabaseService));
+
+services.AddSingletonWhen(typeof(ILogger), typeof(ConsoleLogger),
+    ctx => ctx.RequestingType == typeof(UIController));
+
+services.AddSingletonWhen(typeof(ILogger), typeof(NetworkLogger),
+    ctx => ctx.RequestingType == typeof(ApiClient));
+```
+
+### Resolution Context
+
+The `ResolutionContext` provides information about the current resolution request:
+
+| Property | Description |
+|----------|-------------|
+| `ServiceType` | The interface or service type being requested |
+| `RequestingType` | The class that is requesting this service |
+| `IsScoped` | Whether the resolution is happening in a scoped context |
+| `ServiceProvider` | The service provider performing the resolution |
+
+### Common Conditional Patterns
+
+#### Context-Based Selection
+
+Different implementations based on the requesting class:
+
+```csharp
+public class MyAppBuilder : UIToolkitAppBuilder<MyApp>
+{
+    protected override void OnConfiguringApp(AppBuilder appBuilder)
+    {
+        base.OnConfiguringApp(appBuilder);
+
+        // Database service gets file logger
+        appBuilder.services.AddSingletonWhen(typeof(ILogger), typeof(FileLogger),
+            ctx => ctx.RequestingType == typeof(DatabaseService));
+
+        // UI components get console logger
+        appBuilder.services.AddSingletonWhen(typeof(ILogger), typeof(ConsoleLogger),
+            ctx => ctx.RequestingType?.Name.EndsWith("Controller") == true);
+
+        // Network services get network logger
+        appBuilder.services.AddSingletonWhen(typeof(ILogger), typeof(NetworkLogger),
+            ctx => ctx.RequestingType?.Name.Contains("Api") == true);
+    }
+}
+```
+
+#### Environment-Based Conditions
+
+Different implementations for different environments:
+
+```csharp
+// Debug vs production implementations
+services.AddSingletonWhen(typeof(IPaymentProcessor), typeof(MockPaymentProcessor),
+    ctx => Application.isEditor);
+
+services.AddSingletonWhen(typeof(IPaymentProcessor), typeof(StripePaymentProcessor),
+    ctx => !Application.isEditor);
+
+// Platform-specific implementations
+services.AddTransientWhen(typeof(IInputHandler), typeof(MobileInputHandler),
+    ctx => Application.isMobilePlatform);
+
+services.AddTransientWhen(typeof(IInputHandler), typeof(DesktopInputHandler),
+    ctx => !Application.isMobilePlatform);
+```
+
+#### Scope-Aware Selection
+
+Different implementations based on scoped context:
+
+```csharp
+// Root scope gets shared cache, scoped contexts get isolated cache
+services.AddSingletonWhen(typeof(ICache), typeof(SharedCache),
+    ctx => !ctx.IsScoped);
+
+services.AddScopedWhen(typeof(ICache), typeof(IsolatedCache),
+    ctx => ctx.IsScoped);
+```
+
+### Advanced Usage Examples
+
+#### Service Hierarchy Conditions
+
+```csharp
+// All controllers get UI logger
+services.AddScopedWhen(typeof(ILogger), typeof(UILogger),
+    ctx => ctx.RequestingType?.BaseType?.Name.Contains("Controller") == true);
+
+// All repositories get data logger
+services.AddScopedWhen(typeof(ILogger), typeof(DataLogger),
+    ctx => ctx.RequestingType?.BaseType?.Name.Contains("Repository") == true);
+```
+
+#### Complex Business Logic
+
+```csharp
+// Custom condition logic
+services.AddTransientWhen(typeof(INotificationService), typeof(EmailNotificationService),
+    ctx => {
+        // Complex business logic
+        var isProductionBuild = !Application.isEditor;
+        var isNetworkAvailable = Application.internetReachability != NetworkReachability.NotReachable;
+        var isBusinessHours = DateTime.Now.Hour >= 9 && DateTime.Now.Hour <= 17;
+
+        return isProductionBuild && isNetworkAvailable && isBusinessHours;
+    });
+
+services.AddTransientWhen(typeof(INotificationService), typeof(LocalNotificationService),
+    ctx => Application.isEditor || Application.internetReachability == NetworkReachability.NotReachable);
+```
+
+### Usage in ViewModels
+
+Conditional resolution works seamlessly with both constructor and attribute injection:
+
+#### Constructor Injection
+
+```csharp
+public class DatabaseViewModel : ObservableObject
+{
+    private readonly ILogger logger; // Gets FileLogger due to conditional registration
+
+    public DatabaseViewModel(ILogger logger)
+    {
+        this.logger = logger; // Automatically resolved based on requesting type
+    }
+}
+
+public class UIController : ObservableObject
+{
+    private readonly ILogger logger; // Gets ConsoleLogger due to conditional registration
+
+    public UIController(ILogger logger)
+    {
+        this.logger = logger;
+    }
+}
+```
+
+#### Attribute Injection
+
+```csharp
+public class ApiClientService : IDependencyInjectionListener
+{
+    [Service]
+    private ILogger logger; // Gets NetworkLogger due to conditional registration
+
+    public void OnDependenciesInjected()
+    {
+        logger.Log("API client service initialized");
+    }
+}
+```
+
+### Best Practices
+
+1. **Keep Conditions Simple**: Avoid complex logic in condition delegates for better performance
+2. **Use Meaningful Names**: Make condition logic self-documenting
+3. **Consider Caching**: Conditional singletons are cached per context automatically
+4. **Test Thoroughly**: Ensure all condition branches are tested
+5. **Document Context**: Clearly document which services get which implementations
+
+### Performance Considerations
+
+- **Condition Evaluation**: Conditions are evaluated during service resolution
+- **Caching Strategy**: Conditional services use context-aware caching
+- **Memory Usage**: Each conditional singleton creates separate cache entries
+- **Resolution Order**: First matching condition wins, so order registration strategically
+
+### Debugging Conditional Resolution
+
+To debug conditional resolution issues:
+
+1. **Add Logging**: Include debug logs in condition delegates
+2. **Check Registration Order**: Ensure desired conditions are registered first
+3. **Verify Context**: Confirm `RequestingType` and other context values
+4. **Test Isolation**: Test each condition branch separately
+
+```csharp
+// Debug conditional registration
+services.AddSingletonWhen(typeof(ILogger), typeof(DebugLogger),
+    ctx => {
+        Debug.Log($"Evaluating condition for {ctx.RequestingType?.Name}");
+        var matches = ctx.RequestingType == typeof(MyService);
+        Debug.Log($"Condition result: {matches}");
+        return matches;
+    });
+```

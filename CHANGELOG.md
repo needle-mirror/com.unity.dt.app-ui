@@ -4,6 +4,18 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.2.0-pre.1] - 2025-08-28
+
+### Added
+
+- Added Conditional Resolution in Dependency Injection system.
+- Added documentation about getting started using UI Builder.
+
+### Fixed
+
+- Fixed an issue when trying to dismiss ColorPicker popup consecutively from ColorField
+- Fixed coordinates conversion in AnchorPopupUtils.ComputePosition method
+
 ## [2.1.1] - 2025-08-01
 
 ### Fixed

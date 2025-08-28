@@ -221,8 +221,16 @@ namespace Unity.AppUI.UI
         {
             if (isDown)
             {
+                var isValidPointerType = evt is MouseMoveEvent ||
+                    (evt is PointerMoveEvent pe && IsValidPointerType(pe.pointerId));
+
+                if (!isValidPointerType)
+                {
+                    // If the pointer type is not valid, we ignore the event.
+                    return;
+                }
+
                 this.localPosition = localPosition;
-                var isMouse = false;
                 switch (evt)
                 {
                     case PointerMoveEvent pme:
@@ -231,7 +239,6 @@ namespace Unity.AppUI.UI
                         shiftKey = pme.shiftKey;
                         altKey = pme.altKey;
                         actionKey = pme.actionKey;
-                        isMouse = pme.pointerId == PointerId.mousePointerId;
                         break;
                     case MouseMoveEvent mme:
                         position = mme.mousePosition;
@@ -239,14 +246,13 @@ namespace Unity.AppUI.UI
                         shiftKey = mme.shiftKey;
                         altKey = mme.altKey;
                         actionKey = mme.actionKey;
-                        isMouse = true;
                         break;
                 }
                 deltaPos = position - m_LastPos;
                 deltaStartPos = position - startPosition;
                 m_LastPos = position;
 
-                var canDrag = hasMoved || isMouse || IsDraggingInDirection();
+                var canDrag = hasMoved || IsDraggingInDirection();
                 if (canDrag || !hasMoved)
                 {
                     if (evt is PointerMoveEvent pointerMoveEvent)
@@ -291,6 +297,15 @@ namespace Unity.AppUI.UI
             }
 
             return r;
+        }
+
+        static bool IsValidPointerType(int pointerId)
+        {
+            return pointerId == PointerId.mousePointerId
+#if UNITY_6000_2_OR_NEWER
+                || pointerId >= PointerId.trackedPointerIdBase
+#endif
+                ;
         }
     }
 }

@@ -14,9 +14,9 @@ namespace Unity.AppUI.MVVM
     {
         readonly IServiceCollection m_Services;
 
-        readonly ConcurrentDictionary<Type, Func<object>> m_RealizedServices;
+        readonly ConcurrentDictionary<string, Func<object>> m_RealizedServices;
 
-        readonly ConcurrentDictionary<Type, object> m_Singletons;
+        readonly ConcurrentDictionary<string, object> m_Singletons;
 
         readonly ConcurrentDictionary<Type, object> m_ScopedServices;
 
@@ -39,8 +39,8 @@ namespace Unity.AppUI.MVVM
         public ServiceProvider(IServiceCollection serviceCollection)
         {
             m_Services = serviceCollection ?? throw new ArgumentNullException(nameof(serviceCollection));
-            m_RealizedServices = new ConcurrentDictionary<Type, Func<object>>();
-            m_Singletons = new ConcurrentDictionary<Type, object>();
+            m_RealizedServices = new ConcurrentDictionary<string, Func<object>>();
+            m_Singletons = new ConcurrentDictionary<string, object>();
             m_ScopedServices = new ConcurrentDictionary<Type, object>();
         }
 
@@ -50,16 +50,21 @@ namespace Unity.AppUI.MVVM
             m_Parent = parent;
         }
 
-        Func<object> RealizeService(Type serviceType)
+        Func<object> RealizeService(Type serviceType, Type requestingType)
         {
             ServiceDescriptor desc = null;
+            var context = new ResolutionContext(serviceType, this, !IsRootProvider, requestingType);
 
             foreach (var d in m_Services)
             {
                 if (d.serviceType == serviceType)
                 {
-                    desc = d;
-                    break;
+                    // Check if condition matches (if condition exists)
+                    if (d.condition == null || d.condition(context))
+                    {
+                        desc = d;
+                        break;
+                    }
                 }
             }
 
@@ -86,25 +91,28 @@ namespace Unity.AppUI.MVVM
                 throw new InvalidOperationException(
                     $"The type {desc.implementationType.FullName} doesn't contain any valid constructor.");
 
+            // Create cache key for singletons - same logic as main cache
+            var singletonCacheKey = desc.condition != null ? $"{serviceType.FullName}_{requestingType?.FullName}" : serviceType.FullName;
+
             return () =>
             {
                 switch (desc.lifetime)
                 {
                     case ServiceLifetime.Singleton:
                     {
-                        if (!RootProvider.m_Singletons.ContainsKey(serviceType))
-                            RootProvider.m_Singletons[serviceType] = ConstructAndInject(bestConstructor);
-                        return RootProvider.m_Singletons[serviceType];
+                        if (!RootProvider.m_Singletons.ContainsKey(singletonCacheKey))
+                            RootProvider.m_Singletons[singletonCacheKey] = ConstructAndInject(bestConstructor, desc.implementationType);
+                        return RootProvider.m_Singletons[singletonCacheKey];
                     }
                     case ServiceLifetime.Scoped:
                     {
                         if (!m_ScopedServices.ContainsKey(serviceType))
-                            m_ScopedServices[serviceType] = ConstructAndInject(bestConstructor);
+                            m_ScopedServices[serviceType] = ConstructAndInject(bestConstructor, desc.implementationType);
                         return m_ScopedServices[serviceType];
                     }
                     case ServiceLifetime.Transient:
                     {
-                        return ConstructAndInject(bestConstructor);
+                        return ConstructAndInject(bestConstructor, desc.implementationType);
                     }
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -112,21 +120,21 @@ namespace Unity.AppUI.MVVM
             };
         }
 
-        object ConstructAndInject(ConstructorInfo bestConstructor)
+        object ConstructAndInject(ConstructorInfo bestConstructor, Type requestingType)
         {
-            var service = bestConstructor.Invoke(GetConstructorParameters(bestConstructor));
+            var service = bestConstructor.Invoke(GetConstructorParameters(bestConstructor, requestingType));
             var serviceType = service.GetType();
 
             foreach (var field in serviceType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 if (field.GetCustomAttribute<ServiceAttribute>() != null)
-                    field.SetValue(service, GetService(field.FieldType));
+                    field.SetValue(service, GetServiceInternal(field.FieldType, serviceType));
             }
 
             foreach (var property in serviceType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 if (property.GetCustomAttribute<ServiceAttribute>() != null)
-                    property.SetValue(service, GetService(property.PropertyType));
+                    property.SetValue(service, GetServiceInternal(property.PropertyType, serviceType));
             }
 
             if (service is IDependencyInjectionListener listener)
@@ -135,7 +143,7 @@ namespace Unity.AppUI.MVVM
             return service;
         }
 
-        object[] GetConstructorParameters(ConstructorInfo info)
+        object[] GetConstructorParameters(ConstructorInfo info, Type requestingType)
         {
             var parameters = info.GetParameters();
             var result = new object[parameters.Length];
@@ -143,7 +151,7 @@ namespace Unity.AppUI.MVVM
             for (var i = 0; i < parameters.Length; i++)
             {
                 var parameter = parameters[i];
-                result[i] = GetService(parameter.ParameterType);
+                result[i] = GetServiceInternal(parameter.ParameterType, requestingType ?? info.DeclaringType);
             }
 
             return result;
@@ -179,23 +187,36 @@ namespace Unity.AppUI.MVVM
         /// <exception cref="InvalidOperationException"> Thrown when the requested service is not registered. </exception>
         public object GetService(Type serviceType)
         {
+            return GetServiceInternal(serviceType, null);
+        }
+
+        object GetServiceInternal(Type serviceType, Type requestingType)
+        {
             if (disposed)
                 throw new ObjectDisposedException($"The {nameof(ServiceProvider)} object has already been disposed.");
 
             ServiceDescriptor desc = null;
+            var context = new ResolutionContext(serviceType, this, !IsRootProvider, requestingType);
+
             foreach (var d in m_Services)
             {
                 if (d.serviceType == serviceType)
                 {
-                    desc = d;
-                    break;
+                    // Check if condition matches (if condition exists)
+                    if (d.condition == null || d.condition(context))
+                    {
+                        desc = d;
+                        break;
+                    }
                 }
             }
 
             if (desc == null)
                 throw new InvalidOperationException($"Unable to find Service Descriptor for {serviceType.FullName}.");
 
-            var realizedService = m_RealizedServices.GetOrAdd(serviceType, RealizeService);
+            // Create a unique key that includes the requesting type for conditional services
+            var cacheKey = desc.condition != null ? $"{serviceType.FullName}_{requestingType?.FullName}" : serviceType.FullName;
+            var realizedService = m_RealizedServices.GetOrAdd(cacheKey, _ => RealizeService(serviceType, requestingType));
             return realizedService?.Invoke();
         }
 

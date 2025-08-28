@@ -273,8 +273,12 @@ namespace Unity.AppUI.UI
 
         void OnPickerValueChanged(ChangeEvent<Color> e)
         {
-            if (m_Popover != null)
+            if (m_Popover != null && m_Popover.view.resolvedStyle.visibility != Visibility.Visible)
+            {
                 m_Popover.view.style.visibility = Visibility.Visible;
+                // Ensure the popover is still listening for outside clicks
+                m_Popover.EnsureEventHandlersRegistered();
+            }
             OnPickerValueChanged(e.newValue);
         }
 

@@ -499,13 +499,13 @@ namespace Unity.AppUI.UI
 
         void OnPointerMoved(PointerMoveEvent evt)
         {
-            if (evt.isPrimary)
+            if (evt.pointerId == PointerId.mousePointerId || evt.isPrimary)
                 m_PrimaryPointerPosition = evt.position;
         }
 
         void OnPointerLeft(PointerLeaveEvent evt)
         {
-            if (evt.isPrimary)
+            if (evt.pointerId == PointerId.mousePointerId || evt.isPrimary)
                 m_PrimaryPointerPosition = Vector2.negativeInfinity;
         }
 

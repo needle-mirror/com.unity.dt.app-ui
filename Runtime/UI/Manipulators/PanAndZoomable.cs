@@ -345,7 +345,7 @@ namespace Unity.AppUI.UI
 
             if (evt.button == (int)MouseButton.MiddleMouse ||
                 (evt.button == (int)MouseButton.LeftMouse && hasModifierPressed) ||
-                (evt.pointerId != PointerId.mousePointerId && evt.isPrimary))
+                (evt.pointerId != PointerId.mousePointerId && (Application.isMobilePlatform ? evt.isPrimary : true)))
             {
                 if (!target.HasPointerCapture(evt.pointerId))
                 {

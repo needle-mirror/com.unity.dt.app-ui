@@ -188,11 +188,15 @@ namespace Unity.AppUI.UI
             if (container == null)
                 return result;
 
-            var anchorRect = anchor.worldBound;
-            anchorRect.x -= container.worldBound.x;
-            anchorRect.y -= container.worldBound.y;
-            var screenRect = new Rect(Vector2.zero, container.worldBound.size);
-            var elementRect = element.worldBound;
+            // Convert anchor bounds to container's coordinate space
+            var anchorRect = container.WorldToLocal(anchor.worldBound);
+
+            // Convert element bounds to container's coordinate space
+            var elementRect = container.WorldToLocal(element.worldBound);
+
+            // Screen rect represents the container's local space bounds
+            var screenRect = new Rect(Vector2.zero, container.localBound.size);
+
             var halfHorizontalDeltaWidth = (elementRect.width - anchorRect.width) * 0.5f;
             var halfVerticalDeltaWidth = (elementRect.height - anchorRect.height) * 0.5f;
 

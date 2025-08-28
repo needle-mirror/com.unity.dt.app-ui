@@ -456,6 +456,18 @@ namespace Unity.AppUI.UI
             base.HideView(reason);
         }
 
+        internal void EnsureEventHandlersRegistered()
+        {
+            if (rootView == null)
+                return;
+
+            rootView.UnregisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            rootView.UnregisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
+
+            rootView.RegisterCallback<PointerDownEvent>(OnTreeDown, TrickleDown.TrickleDown);
+            rootView.RegisterCallback<WheelEvent>(OnWheel, TrickleDown.TrickleDown);
+        }
+
         /// <summary>
         /// The UI element used as a Popover.
         /// </summary>
