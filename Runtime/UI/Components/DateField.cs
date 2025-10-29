@@ -175,6 +175,10 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(m_Picker.value);
                 evt.target = this;
                 SendEvent(evt);
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in valueProperty);
+#endif
             }
             Focus();
         }
