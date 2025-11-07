@@ -6,7 +6,7 @@ namespace Unity.AppUI.UI
     /// A manipulator that makes the cursor of a <see cref="TextField"/> blink.
     /// </summary>
     class BlinkingCursor : Manipulator
-    { 
+    {
         IVisualElementScheduledItem m_ScheduledBlink;
 
         int m_Interval = 500;
@@ -27,21 +27,25 @@ namespace Unity.AppUI.UI
                 m_ScheduledBlink?.Pause();
             }
         }
-        
-        /// <inheritdoc/>
+
+        /// <summary>
+        /// Called to register event callbacks on the target element.
+        /// </summary>
         protected override void RegisterCallbacksOnTarget()
         {
 #if UNITY_2022_1_OR_NEWER
             if (target is not UnityEngine.UIElements.TextField)
                 return;
-            
+
             target.RegisterCallback<FocusInEvent>(OnFocusIn);
             target.RegisterCallback<FocusOutEvent>(OnFocusOut);
             interval = m_Interval;
 #endif
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Called to unregister event callbacks from the target element.
+        /// </summary>
         protected override void UnregisterCallbacksFromTarget()
         {
 #if UNITY_2022_1_OR_NEWER
@@ -51,23 +55,25 @@ namespace Unity.AppUI.UI
             m_ScheduledBlink = null;
 #endif
         }
-        
+
         void OnFocusIn(FocusInEvent e)
         {
             m_ScheduledBlink?.Resume();
         }
-        
+
         void OnFocusOut(FocusOutEvent e)
         {
             m_ScheduledBlink?.Pause();
         }
-        
+
         void UpdateCursorColor()
         {
-#if UNITY_2022_1_OR_NEWER
+#if UNITY_6000_0_OR_NEWER
+            textField.ToggleInClassList("appui-text-cursor--transparent");
+#elif UNITY_2022_1_OR_NEWER
             var color = textField.textSelection.cursorColor;
-            textField.textSelection.cursorColor = color.a == 0 
-                ? new UnityEngine.Color(color.r, color.g, color.b, 1) 
+            textField.textSelection.cursorColor = color.a == 0
+                ? new UnityEngine.Color(color.r, color.g, color.b, 1)
                 : new UnityEngine.Color(color.r, color.g, color.b, 0);
 #endif
         }

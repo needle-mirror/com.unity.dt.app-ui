@@ -10,9 +10,10 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [1.3.1] - 2025-07-18
+## [1.3.2] - 2025-11-07
 
-### Removed
+### Fixed
 
-- Removed warning messages about using obsolete code.
+- Added `CreateProperty` attribute to generated command properties for Unity 2023.2+ to enable Unity Properties Serialization support in the MVVM CommandGenerator.
+- Fixed Source Generators culture for Turkish region.
 
