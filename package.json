@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -77,15 +77,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed label of the blue channel slider in the ColorPicker\n- Fixed hiding Alpha channel label in `ColorPicker` when `showAlpha` is set to `false`."
+    "changelog": "### Fixed\n\n- Added `CreateProperty` attribute to generated command properties for Unity 2023.2+ to enable Unity Properties Serialization support in the MVVM CommandGenerator."
   },
   "upmCi": {
-    "footprint": "85f85160a5cf846fec810601a59e8c256a2f67cd"
+    "footprint": "101adef0dfb7db5595f3cea91c52d4b7f14af572"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.1/manual/index.html",
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "0b4acec1b42c10e436312fcaeca9b9477559a19a"
+    "revision": "ef7ae4304ce53d80b20727c37c7518183fdc591c"
   }
 }
