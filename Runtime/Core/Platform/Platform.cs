@@ -30,15 +30,15 @@ namespace Unity.AppUI.Core
 #else // APPUI_PLATFORM_DISABLED
             try
             {
-#if UNITY_IOS && !UNITY_EDITOR
+#if (UNITY_IOS && !UNITY_EDITOR)
                 s_Impl = new IOSPlatformImpl();
-#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-                s_Impl = new OSXPlatformImpl();
-#elif UNITY_STANDALONE_LINUX || UNITY_EDITOR_LINUX
-                s_Impl = new LinuxPlatformImpl();
-#elif UNITY_ANDROID && !UNITY_EDITOR
+#elif (UNITY_ANDROID && !UNITY_EDITOR)
                 s_Impl = new AndroidPlatformImpl();
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+#elif (UNITY_STANDALONE_OSX && !UNITY_EDITOR) || UNITY_EDITOR_OSX
+                s_Impl = new OSXPlatformImpl();
+#elif (UNITY_STANDALONE_LINUX && !UNITY_EDITOR) || UNITY_EDITOR_LINUX
+                s_Impl = new LinuxPlatformImpl();
+#elif (UNITY_STANDALONE_WIN && !UNITY_EDITOR) || UNITY_EDITOR_WIN
                 s_Impl = new WindowsPlatformImpl();
 #else
                 s_Impl = new PlatformImpl();

@@ -9,6 +9,9 @@ using Unity.AppUI.Navigation;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
+#if UNITY_6000_5_OR_NEWER
+using UnityEngine.Assemblies;
+#endif
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -32,7 +35,11 @@ namespace Unity.AppUI.Tests
             ConditionalIgnoreAttribute.AddConditionalIgnoreMapping("IgnoreInPlayer", !Application.isEditor);
 #if UNITY_EDITOR
             Type importerType = null;
+#if UNITY_6000_5_OR_NEWER
+            foreach (var assembly in CurrentAssemblies.GetLoadedAssemblies())
+#else
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+#endif
             {
                 foreach (var type in assembly.GetTypes())
                 {

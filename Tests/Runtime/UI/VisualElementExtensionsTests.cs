@@ -1,9 +1,15 @@
 using System;
+using System.Collections;
 using System.Linq;
 using NUnit.Framework;
 using Unity.AppUI.Core;
 using Unity.AppUI.UI;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.TestTools;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 using VisualElementExtensions = Unity.AppUI.UI.VisualElementExtensions;
 
 namespace Unity.AppUI.Tests.UI
@@ -12,6 +18,41 @@ namespace Unity.AppUI.Tests.UI
     [TestOf(typeof(VisualElementExtensions))]
     class VisualElementExtensionsTests
     {
+        UIDocument m_TestUI;
+        bool m_SetupDone;
+
+        [UnitySetUp]
+        public IEnumerator SetUp()
+        {
+            if (!m_SetupDone)
+            {
+                // Load new scene
+                var scene = SceneManager.CreateScene("VisualElementExtensionsTestScene-" + Random.Range(1, 100000));
+                while (!SceneManager.SetActiveScene(scene))
+                {
+                    yield return null;
+                }
+                yield return Utils.WaitForLocalizationPreloaded();
+                m_TestUI = Utils.ConstructTestUI();
+            }
+            UnityEngine.Device.Screen.SetResolution(120, 60, FullScreenMode.FullScreenWindow);
+            m_TestUI.rootVisualElement.Clear();
+            m_SetupDone = true;
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            if (m_TestUI)
+                Object.Destroy(m_TestUI.gameObject);
+
+            m_TestUI = null;
+            m_SetupDone = false;
+#pragma warning disable CS0618
+            SceneManager.UnloadScene(SceneManager.GetActiveScene());
+#pragma warning restore CS0618
+        }
+
         [Test]
         public void VisualElementExtensions_GetChildren_ShouldReturnChildren()
         {
@@ -152,6 +193,334 @@ namespace Unity.AppUI.Tests.UI
             v.UnregisterTooltipContentChangedCallback(OnTooltipContentChanged);
             v.SetTooltipContent(TemplateContent);
             Assert.AreEqual(2, changed);
+        }
+
+        [Test]
+        public void VisualElementExtensions_IsOnScreen_ShouldThrowWhenElementIsNull()
+        {
+            Assert.Throws<ArgumentNullException>(() => VisualElementExtensions.IsOnScreen(null));
+        }
+
+        [Test]
+        public void VisualElementExtensions_IsOnScreen_ShouldReturnFalseWhenNoPanel()
+        {
+            var element = new VisualElement();
+            Assert.IsFalse(element.IsOnScreen());
+        }
+
+        [UnityTest]
+        public IEnumerator VisualElementExtensions_IsOnScreen_ShouldReturnTrueWhenElementIsFullyVisible()
+        {
+            yield return null; // wait for one frame to ensure UI is initialized
+
+            var panel = new Panel();
+            panel.style.width = m_TestUI.rootVisualElement.layout.width;
+            panel.style.height = m_TestUI.rootVisualElement.layout.height;
+
+            var element = new VisualElement();
+            element.style.width = m_TestUI.rootVisualElement.layout.width - 1;
+            element.style.height = m_TestUI.rootVisualElement.layout.height - 1;
+            element.style.left = 0;
+            element.style.top = 0;
+            panel.Add(element);
+
+            m_TestUI.rootVisualElement.Add(panel);
+
+            yield return null;
+
+            Assert.IsTrue(element.IsOnScreen());
+        }
+
+        [UnityTest]
+        public IEnumerator VisualElementExtensions_IsOnScreen_ShouldReturnTrueWhenElementIsPartiallyOffScreenRight()
+        {
+            yield return null; // wait for one frame to ensure UI is initialized
+
+            var rootWidth = m_TestUI.rootVisualElement.layout.width;
+            var rootHeight = m_TestUI.rootVisualElement.layout.height;
+
+            var panel = new Panel();
+            panel.StretchToParentSize();
+
+            var element = new VisualElement();
+            element.style.width = rootWidth * 0.1f;
+            element.style.height = rootHeight * 0.1f;
+            element.style.left = rootWidth - (rootWidth * 0.05f); // partially off-screen on the right
+            element.style.top = rootHeight * 0.25f;
+            panel.Add(element);
+
+            m_TestUI.rootVisualElement.Add(panel);
+
+            yield return null;
+
+            // Element extends beyond the right edge, partially off-screen
+            Assert.IsTrue(element.IsOnScreen());
+        }
+
+        [UnityTest]
+        public IEnumerator VisualElementExtensions_IsOnScreen_ShouldReturnTrueWhenElementIsPartiallyOffScreenBottom()
+        {
+            yield return null; // wait for one frame to ensure UI is initialized
+
+            var rootWidth = m_TestUI.rootVisualElement.layout.width;
+            var rootHeight = m_TestUI.rootVisualElement.layout.height;
+
+            var panel = new Panel();
+            panel.StretchToParentSize();
+
+            var element = new VisualElement();
+            element.style.width = rootWidth * 0.1f;
+            element.style.height = rootHeight * 0.1f;
+            element.style.left = rootWidth * 0.25f;
+            element.style.top = rootHeight - (rootHeight * 0.05f); // partially off-screen on the bottom
+            panel.Add(element);
+
+            m_TestUI.rootVisualElement.Add(panel);
+
+            yield return null;
+
+            // Element extends beyond the bottom edge, partially off-screen
+            Assert.IsTrue(element.IsOnScreen());
+        }
+
+        [UnityTest]
+        public IEnumerator VisualElementExtensions_IsOnScreen_ShouldReturnFalseWhenElementIsCompletelyOffScreenLeft()
+        {
+            yield return null; // wait for one frame to ensure UI is initialized
+
+            var rootWidth = m_TestUI.rootVisualElement.layout.width;
+            var rootHeight = m_TestUI.rootVisualElement.layout.height;
+
+            var panel = new Panel();
+            panel.StretchToParentSize();
+
+            var element = new VisualElement();
+            element.style.width = rootWidth * 0.1f;
+            element.style.height = rootHeight * 0.1f;
+            element.style.left = -(rootWidth * 0.15f); // completely off-screen on the left
+            element.style.top = rootHeight * 0.25f;
+            panel.Add(element);
+
+            m_TestUI.rootVisualElement.Add(panel);
+
+            yield return null;
+
+            Assert.IsFalse(element.IsOnScreen());
+        }
+
+        [UnityTest]
+        public IEnumerator VisualElementExtensions_IsOnScreen_ShouldReturnFalseWhenElementIsCompletelyOffScreenTop()
+        {
+            yield return null; // wait for one frame to ensure UI is initialized
+
+            var rootWidth = m_TestUI.rootVisualElement.layout.width;
+            var rootHeight = m_TestUI.rootVisualElement.layout.height;
+
+            var panel = new Panel();
+            panel.StretchToParentSize();
+
+            var element = new VisualElement();
+            element.style.width = rootWidth * 0.1f;
+            element.style.height = rootHeight * 0.1f;
+            element.style.left = rootWidth * 0.25f;
+            element.style.top = -(rootHeight * 0.15f); // completely off-screen on the top
+            panel.Add(element);
+
+            m_TestUI.rootVisualElement.Add(panel);
+
+            yield return null;
+
+            Assert.IsFalse(element.IsOnScreen());
+        }
+
+        [UnityTest]
+        public IEnumerator VisualElementExtensions_IsOnScreen_ShouldReturnFalseWhenElementHasZeroArea()
+        {
+            yield return null; // wait for one frame to ensure UI is initialized
+
+            var rootWidth = m_TestUI.rootVisualElement.layout.width;
+            var rootHeight = m_TestUI.rootVisualElement.layout.height;
+
+            var panel = new Panel();
+            panel.StretchToParentSize();
+
+            var element = new VisualElement();
+            element.style.width = 0;
+            element.style.height = rootHeight * 0.1f;
+            element.style.left = rootWidth * 0.25f;
+            element.style.top = rootHeight * 0.25f;
+            panel.Add(element);
+
+            m_TestUI.rootVisualElement.Add(panel);
+
+            yield return null;
+
+            Assert.IsFalse(element.IsOnScreen());
+        }
+
+        [UnityTest]
+        public IEnumerator VisualElementExtensions_IsOnScreen_ShouldReturnTrueWhenElementIsAtLeftEdge()
+        {
+            yield return null; // wait for one frame to ensure UI is initialized
+
+            var rootWidth = m_TestUI.rootVisualElement.layout.width;
+            var rootHeight = m_TestUI.rootVisualElement.layout.height;
+
+            var panel = new Panel();
+            panel.StretchToParentSize();
+
+            var element = new VisualElement();
+            element.style.width = rootWidth * 0.1f;
+            element.style.height = rootHeight * 0.1f;
+            element.style.left = 0;
+            element.style.top = rootHeight * 0.25f;
+            panel.Add(element);
+
+            m_TestUI.rootVisualElement.Add(panel);
+
+            yield return null;
+
+            Assert.IsTrue(element.IsOnScreen());
+        }
+
+        [UnityTest]
+        public IEnumerator VisualElementExtensions_IsOnScreen_ShouldReturnTrueWhenElementIsAtTopEdge()
+        {
+            yield return null; // wait for one frame to ensure UI is initialized
+
+            var rootWidth = m_TestUI.rootVisualElement.layout.width;
+            var rootHeight = m_TestUI.rootVisualElement.layout.height;
+
+            var panel = new Panel();
+            panel.StretchToParentSize();
+
+            var element = new VisualElement();
+            element.style.width = rootWidth * 0.1f;
+            element.style.height = rootHeight * 0.1f;
+            element.style.left = rootWidth * 0.25f;
+            element.style.top = 0;
+            panel.Add(element);
+
+            m_TestUI.rootVisualElement.Add(panel);
+
+            yield return null;
+
+            Assert.IsTrue(element.IsOnScreen());
+        }
+
+        [UnityTest]
+        public IEnumerator VisualElementExtensions_IsOnScreen_ShouldReturnTrueWhenElementTouchesRightEdge()
+        {
+            yield return null; // wait for one frame to ensure UI is initialized
+
+            var rootWidth = m_TestUI.rootVisualElement.layout.width;
+            var rootHeight = m_TestUI.rootVisualElement.layout.height;
+
+            var panel = new Panel();
+            panel.StretchToParentSize();
+
+            var element = new VisualElement();
+            element.style.width = rootWidth * 0.1f;
+            element.style.height = rootHeight * 0.1f;
+            element.style.left = rootWidth - (rootWidth * 0.1f); // touches right edge
+            element.style.top = rootHeight * 0.25f;
+            panel.Add(element);
+
+            m_TestUI.rootVisualElement.Add(panel);
+
+            yield return null;
+
+            // Element touches right edge, should be on screen
+            Assert.IsTrue(element.IsOnScreen());
+        }
+
+        [UnityTest]
+        public IEnumerator VisualElementExtensions_IsOnScreen_ShouldReturnTrueWhenElementTouchesBottomEdge()
+        {
+            yield return null; // wait for one frame to ensure UI is initialized
+
+            var rootWidth = m_TestUI.rootVisualElement.layout.width;
+            var rootHeight = m_TestUI.rootVisualElement.layout.height;
+
+            var panel = new Panel();
+            panel.StretchToParentSize();
+
+            var element = new VisualElement();
+            element.style.width = rootWidth * 0.1f;
+            element.style.height = rootHeight * 0.1f;
+            element.style.left = rootWidth * 0.25f;
+            element.style.top = rootHeight - (rootHeight * 0.1f); // touches bottom edge
+            panel.Add(element);
+
+            m_TestUI.rootVisualElement.Add(panel);
+
+            yield return null;
+
+            // Element touches bottom edge, should be on screen
+            Assert.IsTrue(element.IsOnScreen());
+        }
+
+        [UnityTest]
+        public IEnumerator VisualElementExtensions_IsOnScreen_ShouldReturnFalseWhenElementIsInvisible()
+        {
+            yield return null; // wait for one frame to ensure UI is initialized
+
+            var rootWidth = m_TestUI.rootVisualElement.layout.width;
+            var rootHeight = m_TestUI.rootVisualElement.layout.height;
+
+            var panel = new Panel();
+            panel.StretchToParentSize();
+
+            var element = new VisualElement();
+            element.style.width = rootWidth * 0.1f;
+            element.style.height = rootHeight * 0.1f;
+            element.style.left = rootWidth * 0.25f;
+            element.style.top = rootHeight * 0.25f;
+            element.style.display = DisplayStyle.None;
+            panel.Add(element);
+
+            m_TestUI.rootVisualElement.Add(panel);
+
+            yield return null;
+
+            // IsOnScreen checks visibility via bounds validation, not visibility attribute
+            // but invisible elements may have invalid bounds
+            var isOnScreen = element.IsOnScreen();
+            // This test documents the actual behavior
+            Assert.IsFalse(isOnScreen);
+        }
+
+        [UnityTest]
+        public IEnumerator VisualElementExtensions_IsOnScreen_ShouldWorkWithNestedElements()
+        {
+            yield return null; // wait for one frame to ensure UI is initialized
+
+            var rootWidth = m_TestUI.rootVisualElement.layout.width;
+            var rootHeight = m_TestUI.rootVisualElement.layout.height;
+
+            var panel = new Panel();
+            panel.StretchToParentSize();
+
+            var parent = new VisualElement();
+            parent.style.width = rootWidth * 0.4f;
+            parent.style.height = rootHeight * 0.4f;
+            parent.style.left = rootWidth * 0.1f;
+            parent.style.top = rootHeight * 0.1f;
+            panel.Add(parent);
+
+            var child = new VisualElement();
+            child.style.width = rootWidth * 0.1f;
+            child.style.height = rootHeight * 0.1f;
+            child.style.left = rootWidth * 0.05f;
+            child.style.top = rootHeight * 0.05f;
+            parent.Add(child);
+
+            m_TestUI.rootVisualElement.Add(panel);
+
+            yield return null;
+
+            // Child should be on screen
+            Assert.IsTrue(child.IsOnScreen());
         }
     }
 }

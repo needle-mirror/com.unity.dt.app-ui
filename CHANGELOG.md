@@ -4,7 +4,40 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.2.0-pre.2] - 2025-10-29
+## [2.2.0-pre.3] - 2025-12-08
+
+### Added
+
+- A reference of the latest opened StyleSheet in IconBrowser tool is now stored per project. The next time you will open the tool, it will reload the latest StyleSheet.
+- Added support of CoreCLR for the migration from Mono scripting backend for Unity 6.5+
+
+### Fixed
+
+- Fixed the AppUI settings assets search and auto-assignation before building a project.
+- Fixed columns size and added more info in Storybook window.
+- Fixed `VisualElementExtensions.IsOnScreen` method which gave wrong result in world-space panels.
+- Fixed code path activation for native plugins depending on target platform
+
+## [2.0.1] - 2025-11-17
+
+### Fixed
+
+- Added `CreateProperty` attribute to generated command properties for Unity 2023.2+ to enable Unity Properties Serialization support in the MVVM CommandGenerator.
+
+## [2.1.2] - 2025-11-13
+
+### Fixed
+
+- Added `CreateProperty` attribute to generated command properties for Unity 2023.2+ to enable Unity Properties Serialization support in the MVVM CommandGenerator.
+
+## [1.3.2] - 2025-11-07
+
+### Fixed
+
+- Added `CreateProperty` attribute to generated command properties for Unity 2023.2+ to enable Unity Properties Serialization support in the MVVM CommandGenerator.
+- Fixed Source Generators culture for Turkish region.
+
+## [2.2.0-pre.2] - 2025-11-06
 
 ### Fixed
 
@@ -41,7 +74,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed label of the blue channel slider in the ColorPicker
 - Fixed hiding Alpha channel label in `ColorPicker` when `showAlpha` is set to `false`.
 
-## [2.1.0] - 2025-07-24
+## [2.1.0] - 2025-07-26
 
 ### Added
 
@@ -58,13 +91,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed event propagation bug in `Pressable` which sent the wrong pointer position value to ancestors when `keepEventPropagation` was `true`.
 - Fixed GTK initialization on Linux platform when checking if any windowing system is available.
 
-## [2.1.0-pre.3] - 2025-07-22
+## [2.1.0-pre.3] - 2025-07-23
 
 ### Fixed
 
 - Fixed GTK initialization on Linux platform when checking if any windowing system is available.
 
-## [1.3.1] - 2025-07-18
+## [1.3.1] - 2025-07-21
 
 ### Removed
 
@@ -76,7 +109,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed some Icons that had white horizontal or vertical borders.
 
-## [2.1.0-pre.1] - 2025-07-10
+## [2.1.0-pre.1] - 2025-07-11
 
 ### Added
 
@@ -318,7 +351,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an early return in the PreProcessBuild callback of App UI when no persistent AppUISettings have been found.
 - Fixed a bug where tooltips stop being shown when the window is docked/undocked.
 
-## [2.0.0-pre.22] - 2025-06-17
+## [2.0.0-pre.22] - 2025-06-18
 
 ### Added
 
@@ -337,7 +370,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added a default implementation of `NavDestinationTemplate` named `DefaultNavDestinationTemplate` which handles the creation of default `NavigationScreen` objects.
 - Added `INavigationScreen` interface, more extensible than the base class `NavigationScreen`.
 
-## [2.0.0-pre.20] - 2025-06-10
+## [2.0.0-pre.20] - 2025-06-11
 
 ### Removed
 
@@ -386,7 +419,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Others assembly modules such as `Redux`, `MVVM` and `Navigation` has been configured to be auto-referenced in the Unity project's assemblies.
 
-## [2.0.0-pre.17] - 2025-01-30
+## [2.0.0-pre.17] - 2025-01-31
 
 ### Changed
 
@@ -407,7 +440,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Removed EventBaseExtensionsBridge class
 
-## [2.0.0-pre.16] - 2025-01-15
+## [2.0.0-pre.16] - 2025-01-19
 
 ### Removed
 
@@ -443,13 +476,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Use `RenderTexture.GetTemporary` instead of `new RenderTexture` to optimize RT allocations, especially on tile-based renderers such as mobile platforms.
 - Fixed an exception thrown when dismiss any popup of a panel when this panel becomes out of focus.
 
-## [1.2.1] - 2024-12-16
+## [1.2.1] - 2024-12-17
 
 ### Fixed
 
 - Avoid calling `WaitForCompletion` during Localization initialization to not get any error message in WebGL builds.
 
-## [2.0.0-pre.15] - 2024-12-11
+## [2.0.0-pre.15] - 2024-12-12
 
 ### Changed
 
@@ -504,11 +537,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed random segmentation fault on MacOS platform which appeared after domain reloads.
 - Prevent GC to collect Platform configuration to not break communication with native plugins (MacOS and iOS).
 
-## [1.2.0] - 2024-11-29
+## [1.2.0] - 2024-11-30
 
 ### Changed
 
 - Backported Localization package support from App UI 2.x.
+
+## [1.1.1] - 2024-11-27
+
+### Changed
+
+- App UI shaders are now optionally embedded in Player builds. You can change this setting in your main App UI settings instance. The default value is `true`.
+
+### Fixed
+
+- Fixed an exception thrown when trying to update UXML schemas in the Editor.
 
 ## [2.0.0-pre.12] - 2024-11-18
 
@@ -531,16 +574,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed usage of AppCompat theme for AppUI GameActivity on Android platform.
 - Fixed an exception thrown when trying to update UXML schemas in the Editor.
 - Register trickledown events for popups on the first child of the visual tree root element instead of the root element itself to avoid leaks.
-
-## [1.1.1] - 2024-11-12
-
-### Changed
-
-- App UI shaders are now optionally embedded in Player builds. You can change this setting in your main App UI settings instance. The default value is `true`.
-
-### Fixed
-
-- Fixed an exception thrown when trying to update UXML schemas in the Editor.
 
 ## [2.0.0-pre.11] - 2024-10-01
 
@@ -674,7 +707,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed intrusive Debug.Log calls from Platform class on Windows platform.
 - Removed warning message when using Single selection type in an overflown ActionGroup.
 
-## [2.0.0-pre.6] - 2024-07-07
+## [2.0.0-pre.6] - 2024-07-08
 
 ### Added
 
@@ -746,7 +779,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Every shared libraries of native plugins are now correctly signed with the correct Unity Technologies certificate (MacOS and Windows only)
 - Fixed support of Radio component that are deeper than the direct child of a RadioGroup.
 
-## [2.0.0-pre.2] - 2024-05-07
+## [2.0.0-pre.2] - 2024-05-08
 
 ### Added
 
@@ -771,7 +804,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed meta files for native plugins on Windows platform.
 - Fixed an early return in the PreProcessBuild callback of App UI when no persistent AppUISettings have been found.
 
-## [1.0.6] - 2024-03-15
+## [1.0.6] - 2024-03-18
 
 ### Fixed
 
@@ -779,13 +812,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed the handling of Tab key to focus the next component from a TextArea
 - Fixed size of the Radio button for pixel alignment on 96dpi screens.
 
-## [1.0.5] - 2024-03-10
+## [1.0.5] - 2024-03-11
 
 ### Fixed
 
 - Fixed Hero banner in the documentation homepage
 
-## [1.0.4] - 2024-03-08
+## [1.0.4] - 2024-03-11
 
 ### Fixed
 
@@ -799,7 +832,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added gutter USS custom property for the GridView component.
 - Added answer in the FAQ documentation about MacOS quarantine attribute.
 
-## [1.0.3] - 2024-03-01
+## [1.0.3] - 2024-03-04
 
 ### Fixed
 
@@ -807,7 +840,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed performance issues with the blinking text cursor in input fields.
 - Fixed styling of the Toast Action container
 
-## [1.0.2] - 2024-02-26
+## [1.0.2] - 2024-02-28
 
 ### Fixed
 
@@ -819,7 +852,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Improved Localization Unity Package support with `LangContext` propagation.
 
-## [1.0.1] - 2024-02-14
+## [1.0.1] - 2024-02-16
 
 ### Fixed
 
@@ -888,7 +921,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Changed assembly definition files to support new UXML Serialization starting Unity 2023.3.0a1
 
-## [1.0.0-pre.12] - 2024-01-03
+## [1.0.0-pre.12] - 2024-01-04
 
 ### Changed
 
@@ -923,7 +956,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed small errors in UI Kit sample.
 - Fixed a refresh bug in the App UI Storybook window.
 
-## [1.0.0-pre.11] - 2023-12-20
+## [1.0.0-pre.11] - 2023-12-21
 
 ### Fixed
 
@@ -937,7 +970,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Removed `size` property from Checkbox and Toggle components.
 
-## [1.0.0-pre.10] - 2023-12-12
+## [1.0.0-pre.10] - 2023-12-13
 
 ### Fixed
 
@@ -1008,7 +1041,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed some unit tests
 
-## [1.0.0-pre.6] - 2023-11-18
+## [1.0.0-pre.6] - 2023-11-19
 
 ### Added
 
@@ -1019,7 +1052,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Previously the Panel Constructor set the default scale context to "large" on mobile platforms, now the default scale context for any platform is "medium".
 
-## [1.0.0-pre.5] - 2023-11-15
+## [1.0.0-pre.5] - 2023-11-16
 
 ### Changed
 

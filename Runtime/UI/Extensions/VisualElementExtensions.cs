@@ -17,9 +17,13 @@ namespace Unity.AppUI.UI
 #if !UNITY_EDITOR && ENABLE_IL2CPP && !CONDITIONAL_WEAK_TABLE_IL2CPP
         static readonly WeakReferenceTable<VisualElement, AdditionalData> k_AdditionalDataCache =
             new WeakReferenceTable<VisualElement, AdditionalData>();
+
+        static readonly WeakReferenceTable<IPanel, VisualElement> k_PanelRootCache = new ();
 #else
         static readonly ConditionalWeakTable<VisualElement, AdditionalData> k_AdditionalDataCache =
             new ConditionalWeakTable<VisualElement, AdditionalData>();
+
+        static readonly ConditionalWeakTable<IPanel, VisualElement> k_PanelRootCache = new ();
 #endif
 
         static bool TryGetValue(VisualElement key, out AdditionalData val)
@@ -85,11 +89,22 @@ namespace Unity.AppUI.UI
             if (panel == null)
                 return false;
 
-            var rect = element.GetWorldBoundingBox();
+            var root = k_PanelRootCache.GetValue(panel, p =>
+            {
+                var r = p.visualTree;
+
+                // For world-space UI, the root element is a UIDocumentRootElement that wraps the actual root
+                var documentRootElementType = UIDocumentRootElementBridge.UIDocumentRootElementType;
+                if (documentRootElementType != null && r.childCount > 0 && r[0].GetType() == documentRootElementType)
+                    r = r[0];
+                return r;
+            });
+
+            var rect = root.WorldToLocal(element.worldBound);
             if (!rect.IsValid())
                 return false;
 
-            return rect.xMax > 0 && rect.xMin < panel.visualTree.layout.width && rect.yMax > 0 && rect.yMin < panel.visualTree.layout.height;
+            return rect.xMax > 0 && rect.xMin < root.layout.width && rect.yMax > 0 && rect.yMin < root.layout.height;
         }
 
         /// <summary>

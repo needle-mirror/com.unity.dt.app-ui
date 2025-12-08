@@ -62,6 +62,16 @@ namespace Unity.AppUI.Editor
                 allowSceneObjects = false,
             };
             root.Add(objectField);
+
+            // Restore last used stylesheet
+            var lastUsedStyleSheet = IconBrowserSettings.instance.LastUsedStyleSheet;
+            if (lastUsedStyleSheet)
+            {
+                objectField.SetValueWithoutNotify(lastUsedStyleSheet);
+                styleSheetAsset = lastUsedStyleSheet;
+                tempContent = System.IO.File.ReadAllText(GetStyleSheetPath(lastUsedStyleSheet));
+            }
+
             var generateButton = new Button(OnGenerateButtonClicked)
             {
                 text = "Create a new App UI Icons style sheet"
@@ -404,6 +414,7 @@ namespace Unity.AppUI.Editor
             AssetDatabase.Refresh();
 
             styleSheetAsset = AssetDatabase.LoadAssetAtPath<StyleSheet>(adbPath);
+            IconBrowserSettings.instance.LastUsedStyleSheet = styleSheetAsset;
             tempContent = System.IO.File.ReadAllText(outPath);
             RefreshUI();
         }
@@ -411,6 +422,7 @@ namespace Unity.AppUI.Editor
         void OnSelectedStyleSheetChanged(ChangeEvent<Object> evt)
         {
             styleSheetAsset = evt.newValue as StyleSheet;
+            IconBrowserSettings.instance.LastUsedStyleSheet = styleSheetAsset;
             tempContent = styleSheetAsset ? System.IO.File.ReadAllText(GetStyleSheetPath(styleSheetAsset)) : string.Empty;
             RefreshUI();
         }
@@ -477,6 +489,7 @@ namespace Unity.AppUI.Editor
             AssetDatabase.Refresh();
 
             styleSheetAsset = AssetDatabase.LoadAssetAtPath<StyleSheet>(path);
+            IconBrowserSettings.instance.LastUsedStyleSheet = styleSheetAsset;
             tempContent = System.IO.File.ReadAllText(path);
             RefreshUI();
         }
@@ -714,6 +727,24 @@ namespace Unity.AppUI.Editor
             return path;
         }
 
+        static void HandleAction(string pathName)
+        {
+            System.IO.File.WriteAllText(pathName, GetStyleSheetContent(Array.Empty<IconEntry>()));
+            AssetDatabase.Refresh();
+
+            var obj = AssetDatabase.LoadAssetAtPath<StyleSheet>(pathName);
+            Selection.activeObject = obj;
+        }
+
+#if ENABLE_ENTITY_ID
+        class IconBrowserActions : AssetCreationEndAction
+        {
+            public override void Action(EntityId entityId, string pathName, string resourceFile)
+            {
+                HandleAction(pathName);
+            }
+        }
+#else
         class IconBrowserActions : EndNameEditAction
         {
 #if ENABLE_INSTANCE_ID
@@ -727,15 +758,7 @@ namespace Unity.AppUI.Editor
                 HandleAction(pathName);
             }
 #endif
-
-            static void HandleAction(string pathName)
-            {
-                System.IO.File.WriteAllText(pathName, GetStyleSheetContent(Array.Empty<IconEntry>()));
-                AssetDatabase.Refresh();
-
-                var obj = AssetDatabase.LoadAssetAtPath<StyleSheet>(pathName);
-                Selection.activeObject = obj;
-            }
         }
+#endif
     }
 }

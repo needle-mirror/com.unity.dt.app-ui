@@ -10,14 +10,17 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [2.2.0-pre.2] - 2025-10-29
-
-### Fixed
-
-- Fixed runtime bindings for `DateField` and `DateRangeField` `value` property.
-- Added `CreateProperty` attribute to generated command properties for Unity 2023.2+ to enable Unity Properties Serialization support in the MVVM CommandGenerator.
+## [2.2.0-pre.3] - 2025-12-08
 
 ### Added
 
-- Added support for the new EntityId API in Unity 6000.3.0a1 and newer.
+- A reference of the latest opened StyleSheet in IconBrowser tool is now stored per project. The next time you will open the tool, it will reload the latest StyleSheet.
+- Added support of CoreCLR for the migration from Mono scripting backend for Unity 6.5+
+
+### Fixed
+
+- Fixed the AppUI settings assets search and auto-assignation before building a project.
+- Fixed columns size and added more info in Storybook window.
+- Fixed `VisualElementExtensions.IsOnScreen` method which gave wrong result in world-space panels.
+- Fixed code path activation for native plugins depending on target platform
 
