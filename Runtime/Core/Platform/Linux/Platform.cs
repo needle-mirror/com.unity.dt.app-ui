@@ -1,4 +1,4 @@
-#if UNITY_STANDALONE_LINUX || UNITY_EDITOR_LINUX
+#if (UNITY_STANDALONE_LINUX && !UNITY_EDITOR) || UNITY_EDITOR_LINUX
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;

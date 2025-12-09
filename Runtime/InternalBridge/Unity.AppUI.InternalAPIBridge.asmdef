@@ -16,6 +16,11 @@
             "name": "Unity",
             "expression": "7000.0.0a1",
             "define": "FOCUSABLE_AS_VISUALELEMENT"
+        },
+        {
+            "name": "Unity",
+            "expression": "6000.2.0a6",
+            "define": "UI_DOCUMENT_ROOT_ELEMENT_TYPE_EXISTS"
         }
     ],
     "noEngineReferences": false
