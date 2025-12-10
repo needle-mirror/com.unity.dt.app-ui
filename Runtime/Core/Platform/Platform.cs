@@ -315,7 +315,7 @@ namespace Unity.AppUI.Core
         {
             get
             {
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+#if UNITY_EDITOR_WIN || (UNITY_STANDALONE_WIN && !UNITY_EDITOR)
             // On Windows we can use a value of 96dpi because UI Toolkit scales correctly the UI based on
             // Operating System's DPI and ScaleFactor changes.
             return baseDpi;
@@ -337,7 +337,7 @@ namespace Unity.AppUI.Core
             {
 #if UNITY_IOS && !UNITY_EDITOR
             return _IOSAppUIScaleFactor();
-#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+#elif (UNITY_STANDALONE_OSX && !UNITY_EDITOR) || UNITY_EDITOR_OSX
             return _NSAppUIScaleFactor();
 #elif UNITY_ANDROID && !UNITY_EDITOR
             // Android ScaledDensity: https://developer.android.com/reference/android/util/DisplayMetrics#scaledDensity
@@ -621,7 +621,7 @@ namespace Unity.AppUI.Core
 
         static bool ReadTouch(ref PlatformTouchEvent touch)
         {
-#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+#if UNITY_EDITOR_OSX || (UNITY_STANDALONE_OSX && !UNITY_EDITOR)
             if (AppUI.settings && AppUI.settings.enableMacOSGestureRecognition)
                 return _NSReadTouchEvent(ref touch);
             else
@@ -633,7 +633,7 @@ namespace Unity.AppUI.Core
 
         static void SetupFocusedTrackingObject()
         {
-#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+#if UNITY_EDITOR_OSX || (UNITY_STANDALONE_OSX && !UNITY_EDITOR)
             _NSSetupFocusedTrackingObject();
 #endif
         }
@@ -726,11 +726,11 @@ namespace Unity.AppUI.Core
             {
 #if UNITY_IOS && !UNITY_EDITOR
                 return _IOSCurrentAppearance() == 2 ? "dark" : "light";
-#elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+#elif (UNITY_STANDALONE_OSX && !UNITY_EDITOR) || UNITY_EDITOR_OSX
                 return _NSCurrentAppearance() == 2 ? "dark" : "light";
 #elif UNITY_ANDROID && !UNITY_EDITOR
                 return AndroidAppUI.isNightModeDefined && AndroidAppUI.isNightModeEnabled ? "dark" : "light";
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+#elif (UNITY_STANDALONE_WIN && !UNITY_EDITOR) || UNITY_EDITOR_WIN
                 return _WINUseLightTheme == 1 ? "light" : "dark";
 #else
                 return "dark";
@@ -807,7 +807,7 @@ namespace Unity.AppUI.Core
 
                 for (var i = 0; i < k_MaxTouches; i++)
                 {
-#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+#if UNITY_EDITOR_OSX || (UNITY_STANDALONE_OSX && !UNITY_EDITOR)
                     m_NativeTouch = default;
                     if (!_NSReadTouchEvent(ref m_NativeTouch))
                         break;

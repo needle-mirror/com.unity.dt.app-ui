@@ -1,4 +1,4 @@
-#if UNITY_IOS
+#if UNITY_IOS && !UNITY_EDITOR
 using System.Runtime.InteropServices;
 using UnityEngine;
 

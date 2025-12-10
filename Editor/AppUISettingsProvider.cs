@@ -249,7 +249,7 @@ namespace Unity.AppUI.Editor
         void InitializeWithCurrentSettings(bool removed)
         {
             // Find the set of available assets in the project.
-            m_AvailableAppUISettingsAssets = new List<string>(FindAppUISettingsInProject());
+            m_AvailableAppUISettingsAssets = new List<string>(Utils.FindAppUISettingsInProject());
 
             // See which is the active one.
             m_Settings = Core.AppUI.settings;
@@ -283,25 +283,6 @@ namespace Unity.AppUI.Editor
             m_SettingsObject.ApplyModifiedPropertiesWithoutUndo();
             m_SettingsObject.Update();
             m_Settings.OnChange();
-        }
-
-        /// <summary>
-        /// Find all <see cref="AppUISettings"/> stored in assets in the current project.
-        /// </summary>
-        /// <returns>List of AppUI settings in project.</returns>
-        static IEnumerable<string> FindAppUISettingsInProject()
-        {
-            var guids = AssetDatabase.FindAssets($"t:{nameof(AppUISettings)} a:all");
-
-            var paths = new List<string>();
-
-            foreach (var guid in guids)
-            {
-                var path = AssetDatabase.GUIDToAssetPath(guid);
-                paths.Add(path);
-            }
-
-            return paths;
         }
 
         [SerializeField] AppUISettings m_Settings;

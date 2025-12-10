@@ -22,7 +22,7 @@ namespace Unity.AppUI.Editor
         /// </summary>
         public string name { get; protected set; }
     }
-    
+
     /// <summary>
     /// This class defines a Enum property for a StoryBookComponent.
     /// </summary>
@@ -119,7 +119,7 @@ namespace Unity.AppUI.Editor
         /// The type of the UI element.
         /// </summary>
         public virtual Type uiElementType { get; }
-        
+
         /// <summary>
         /// Setup the component.
         /// </summary>
@@ -212,13 +212,15 @@ namespace Unity.AppUI.Editor
         ScrollView m_Inspector;
 
         TwoPaneSplitView m_VerticalPane;
-        
+
+        HelpBox m_HelpBox;
+
         string m_CurrentTheme = "dark";
-        
+
         string m_CurrentScale = "medium";
 
         EditorToolbarDropdown m_ThemeDropdown;
-        
+
         EditorToolbarDropdown m_ScaleDropdown;
 
         /// <summary>
@@ -228,6 +230,7 @@ namespace Unity.AppUI.Editor
         public static void OpenStoryBook()
         {
             var window = GetWindow<Storybook>("App UI - StoryBook");
+            window.minSize = new Vector2(600, 400);
             window.Show();
         }
 
@@ -263,7 +266,7 @@ namespace Unity.AppUI.Editor
                     }
                 }
             }
-            
+
             return stories;
         }
 
@@ -275,8 +278,11 @@ namespace Unity.AppUI.Editor
             m_ComponentTypes = new List<Type>(GetComponents());
             m_StoriesList = new List<StoryBookPage>(GetStories());
             var listPane = new TwoPaneSplitView(0, 100, TwoPaneSplitViewOrientation.Horizontal);
+            listPane.style.minWidth = 200;
             m_ListView = new ListView(m_StoriesList, -1f, MakeListVIewItem, BindListViewItem);
-            m_StoryListView = new ListView(null, -1f, MakeListVIewItem, BindStoryListViewItem);
+            m_ListView.style.minWidth = 100;
+            m_StoryListView = new ListView(new List<StoryBookStory>(), -1f, MakeListVIewItem, BindStoryListViewItem);
+            m_StoryListView.style.minWidth = 100;
             m_Preview = CreateDetailPage();
 #if UITK_SELECTED_INDICES_CHANGED
             m_ListView.selectedIndicesChanged += OnSelectionChanged;
@@ -291,6 +297,14 @@ namespace Unity.AppUI.Editor
             m_SplitView.Add(m_Preview);
 
             root.Add(m_SplitView);
+
+            m_HelpBox = new HelpBox("No stories found. You can create your own StoryBookPage by creating a class " +
+                "that inherits from StoryBookPage and adding it to the project.\n" +
+                "You also can install the Storybook sample from the Package Manager.",
+                HelpBoxMessageType.Info);
+            m_HelpBox.style.display = m_StoriesList is not { Count: > 0} ? DisplayStyle.Flex : DisplayStyle.None;
+            m_HelpBox.style.marginBottom = 4;
+            root.Add(m_HelpBox);
 
             root.Bind(new SerializedObject(this));
         }
@@ -374,7 +388,7 @@ namespace Unity.AppUI.Editor
                 menu.DropDown(m_ThemeDropdown.worldBound);
             });
             toolbar.Add(m_ThemeDropdown);
-            
+
             m_ScaleDropdown = new EditorToolbarDropdown("Scale", () =>
             {
                 var menu = new GenericMenu();
@@ -396,7 +410,7 @@ namespace Unity.AppUI.Editor
                 menu.DropDown(m_ScaleDropdown.worldBound);
             });
             toolbar.Add(m_ScaleDropdown);
-            
+
             detailPage.Add(toolbar);
 
             m_VerticalPane = new TwoPaneSplitView(1, 150, TwoPaneSplitViewOrientation.Vertical);
@@ -428,7 +442,7 @@ namespace Unity.AppUI.Editor
             var inspectorContainer = new VisualElement { name = "inspector-container" };
             m_Inspector.Add(inspectorContainer);
             m_VerticalPane.Add(m_Inspector);
-            
+
             detailPage.Add(m_VerticalPane);
 
             return detailPage;

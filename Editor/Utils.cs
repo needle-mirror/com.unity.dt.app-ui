@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEditor;
+using Unity.AppUI.Core;
 using UnityEngine;
 
 namespace Unity.AppUI.Editor
@@ -29,6 +31,25 @@ namespace Unity.AppUI.Editor
             }
 
             return -1;
+        }
+
+        /// <summary>
+        /// Find all <see cref="AppUISettings"/> stored as assets in the current project.
+        /// </summary>
+        /// <returns>List of asset paths containing AppUI settings.</returns>
+        internal static IEnumerable<string> FindAppUISettingsInProject()
+        {
+            var guids = AssetDatabase.FindAssets($"t:{nameof(AppUISettings)} a:all");
+
+            var paths = new List<string>();
+
+            foreach (var guid in guids)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                paths.Add(path);
+            }
+
+            return paths;
         }
     }
 }
