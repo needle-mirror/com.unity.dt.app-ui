@@ -23,14 +23,44 @@ namespace Unity.AppUI.Editor
         public int callbackOrder => 0;
 
         /// <summary>
+        /// Ensures App UI Settings are initialized. Attempts to find an existing settings asset in the project,
+        /// or creates a default instance if none are found.
+        /// </summary>
+        static void EnsureAppUISettingsAreInitialized()
+        {
+            // If settings are already set, nothing to do
+            if (Core.AppUI.settings)
+                return;
+
+            // Try to find an existing settings asset in the project
+            var settingsPaths = Utils.FindAppUISettingsInProject();
+            foreach (var path in settingsPaths)
+            {
+                var settings = AssetDatabase.LoadAssetAtPath<AppUISettings>(path);
+                if (settings != null)
+                {
+                    Core.AppUI.settings = settings;
+                    Debug.Log($"Auto-initialized App UI Settings from: {path}");
+                    return;
+                }
+            }
+
+            // No settings asset found, create a default one
+            Core.AppUI.settings = ScriptableObject.CreateInstance<AppUISettings>();
+            Debug.Log("No App UI Settings asset found, using default settings instance.");
+        }
+
+        /// <summary>
         /// Called before build starts.
         /// </summary>
         /// <param name="report"> Unity Build report. </param>
         public void OnPreprocessBuild(BuildReport report)
         {
-            if (Core.AppUI.settings == null)
+            EnsureAppUISettingsAreInitialized();
+
+            if (!Core.AppUI.settings)
             {
-                throw new System.InvalidOperationException("There's no App UI Settings set in your project./n" +
+                throw new System.InvalidOperationException("There's no App UI Settings set in your project. " +
                     "Please go to Edit > Project Settings > App UI and create a new Settings asset.");
             }
 

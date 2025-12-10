@@ -4,7 +4,47 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.0.1] - 2025-11-14
+## [2.0.2] - 2025-12-10
+
+### Fixed
+
+- Fixed the AppUI settings assets search and auto-assignation before building a project.
+- Fixed columns size and added more info in Storybook window.
+- Fixed `VisualElementExtensions.IsOnScreen` method which gave wrong results in world-space panels.
+- Fixed code path activation for native plugins depending on target platform
+
+### Added
+
+- Added support of CoreCLR for the migration from Mono scripting backend for Unity 6.5+
+
+## [2.1.3] - 2025-12-10
+
+### Fixed
+
+- Fixed the AppUI settings assets search and auto-assignation before building a project.
+- Fixed columns size and added more info in Storybook window.
+- Fixed `VisualElementExtensions.IsOnScreen` method which gave wrong results in world-space panels.
+- Fixed code path activation for native plugins depending on target platform
+
+### Added
+
+- Added support of CoreCLR for the migration from Mono scripting backend for Unity 6.5+
+
+## [2.2.0-pre.3] - 2025-12-09
+
+### Added
+
+- A reference of the latest opened StyleSheet in IconBrowser tool is now stored per project. The next time you will open the tool, it will reload the latest StyleSheet.
+- Added support of CoreCLR for the migration from Mono scripting backend for Unity 6.5+
+
+### Fixed
+
+- Fixed the AppUI settings assets search and auto-assignation before building a project.
+- Fixed columns size and added more info in Storybook window.
+- Fixed `VisualElementExtensions.IsOnScreen` method which gave wrong result in world-space panels.
+- Fixed code path activation for native plugins depending on target platform
+
+## [2.0.1] - 2025-11-17
 
 ### Fixed
 
@@ -23,7 +63,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `CreateProperty` attribute to generated command properties for Unity 2023.2+ to enable Unity Properties Serialization support in the MVVM CommandGenerator.
 - Fixed Source Generators culture for Turkish region.
 
-## [2.2.0-pre.2] - 2025-10-30
+## [2.2.0-pre.2] - 2025-11-06
 
 ### Fixed
 
@@ -60,7 +100,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed label of the blue channel slider in the ColorPicker
 - Fixed hiding Alpha channel label in `ColorPicker` when `showAlpha` is set to `false`.
 
-## [2.1.0] - 2025-07-24
+## [2.1.0] - 2025-07-26
 
 ### Added
 
@@ -77,13 +117,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed event propagation bug in `Pressable` which sent the wrong pointer position value to ancestors when `keepEventPropagation` was `true`.
 - Fixed GTK initialization on Linux platform when checking if any windowing system is available.
 
-## [2.1.0-pre.3] - 2025-07-22
+## [2.1.0-pre.3] - 2025-07-23
 
 ### Fixed
 
 - Fixed GTK initialization on Linux platform when checking if any windowing system is available.
 
-## [1.3.1] - 2025-07-18
+## [1.3.1] - 2025-07-21
 
 ### Removed
 
@@ -95,7 +135,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed some Icons that had white horizontal or vertical borders.
 
-## [2.1.0-pre.1] - 2025-07-10
+## [2.1.0-pre.1] - 2025-07-11
 
 ### Added
 
@@ -337,7 +377,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed an early return in the PreProcessBuild callback of App UI when no persistent AppUISettings have been found.
 - Fixed a bug where tooltips stop being shown when the window is docked/undocked.
 
-## [2.0.0-pre.22] - 2025-06-17
+## [2.0.0-pre.22] - 2025-06-18
 
 ### Added
 
@@ -356,7 +396,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added a default implementation of `NavDestinationTemplate` named `DefaultNavDestinationTemplate` which handles the creation of default `NavigationScreen` objects.
 - Added `INavigationScreen` interface, more extensible than the base class `NavigationScreen`.
 
-## [2.0.0-pre.20] - 2025-06-10
+## [2.0.0-pre.20] - 2025-06-11
 
 ### Removed
 
@@ -405,7 +445,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Others assembly modules such as `Redux`, `MVVM` and `Navigation` has been configured to be auto-referenced in the Unity project's assemblies.
 
-## [2.0.0-pre.17] - 2025-01-30
+## [2.0.0-pre.17] - 2025-01-31
 
 ### Changed
 
@@ -426,7 +466,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Removed EventBaseExtensionsBridge class
 
-## [2.0.0-pre.16] - 2025-01-15
+## [2.0.0-pre.16] - 2025-01-19
 
 ### Removed
 
@@ -462,13 +502,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Use `RenderTexture.GetTemporary` instead of `new RenderTexture` to optimize RT allocations, especially on tile-based renderers such as mobile platforms.
 - Fixed an exception thrown when dismiss any popup of a panel when this panel becomes out of focus.
 
-## [1.2.1] - 2024-12-16
+## [1.2.1] - 2024-12-17
 
 ### Fixed
 
 - Avoid calling `WaitForCompletion` during Localization initialization to not get any error message in WebGL builds.
 
-## [2.0.0-pre.15] - 2024-12-11
+## [2.0.0-pre.15] - 2024-12-12
 
 ### Changed
 
@@ -523,11 +563,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed random segmentation fault on MacOS platform which appeared after domain reloads.
 - Prevent GC to collect Platform configuration to not break communication with native plugins (MacOS and iOS).
 
-## [1.2.0] - 2024-11-29
+## [1.2.0] - 2024-11-30
 
 ### Changed
 
 - Backported Localization package support from App UI 2.x.
+
+## [1.1.1] - 2024-11-27
+
+### Changed
+
+- App UI shaders are now optionally embedded in Player builds. You can change this setting in your main App UI settings instance. The default value is `true`.
+
+### Fixed
+
+- Fixed an exception thrown when trying to update UXML schemas in the Editor.
 
 ## [2.0.0-pre.12] - 2024-11-18
 
@@ -550,16 +600,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed usage of AppCompat theme for AppUI GameActivity on Android platform.
 - Fixed an exception thrown when trying to update UXML schemas in the Editor.
 - Register trickledown events for popups on the first child of the visual tree root element instead of the root element itself to avoid leaks.
-
-## [1.1.1] - 2024-11-12
-
-### Changed
-
-- App UI shaders are now optionally embedded in Player builds. You can change this setting in your main App UI settings instance. The default value is `true`.
-
-### Fixed
-
-- Fixed an exception thrown when trying to update UXML schemas in the Editor.
 
 ## [2.0.0-pre.11] - 2024-10-01
 
@@ -693,7 +733,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed intrusive Debug.Log calls from Platform class on Windows platform.
 - Removed warning message when using Single selection type in an overflown ActionGroup.
 
-## [2.0.0-pre.6] - 2024-07-07
+## [2.0.0-pre.6] - 2024-07-08
 
 ### Added
 
@@ -765,7 +805,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Every shared libraries of native plugins are now correctly signed with the correct Unity Technologies certificate (MacOS and Windows only)
 - Fixed support of Radio component that are deeper than the direct child of a RadioGroup.
 
-## [2.0.0-pre.2] - 2024-05-07
+## [2.0.0-pre.2] - 2024-05-08
 
 ### Added
 
@@ -790,7 +830,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed meta files for native plugins on Windows platform.
 - Fixed an early return in the PreProcessBuild callback of App UI when no persistent AppUISettings have been found.
 
-## [1.0.6] - 2024-03-15
+## [1.0.6] - 2024-03-18
 
 ### Fixed
 
@@ -798,13 +838,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed the handling of Tab key to focus the next component from a TextArea
 - Fixed size of the Radio button for pixel alignment on 96dpi screens.
 
-## [1.0.5] - 2024-03-10
+## [1.0.5] - 2024-03-11
 
 ### Fixed
 
 - Fixed Hero banner in the documentation homepage
 
-## [1.0.4] - 2024-03-08
+## [1.0.4] - 2024-03-11
 
 ### Fixed
 
@@ -818,7 +858,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added gutter USS custom property for the GridView component.
 - Added answer in the FAQ documentation about MacOS quarantine attribute.
 
-## [1.0.3] - 2024-03-01
+## [1.0.3] - 2024-03-04
 
 ### Fixed
 
@@ -826,7 +866,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed performance issues with the blinking text cursor in input fields.
 - Fixed styling of the Toast Action container
 
-## [1.0.2] - 2024-02-26
+## [1.0.2] - 2024-02-28
 
 ### Fixed
 
@@ -838,7 +878,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Improved Localization Unity Package support with `LangContext` propagation.
 
-## [1.0.1] - 2024-02-14
+## [1.0.1] - 2024-02-16
 
 ### Fixed
 
@@ -907,7 +947,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Changed assembly definition files to support new UXML Serialization starting Unity 2023.3.0a1
 
-## [1.0.0-pre.12] - 2024-01-03
+## [1.0.0-pre.12] - 2024-01-04
 
 ### Changed
 
@@ -942,7 +982,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed small errors in UI Kit sample.
 - Fixed a refresh bug in the App UI Storybook window.
 
-## [1.0.0-pre.11] - 2023-12-20
+## [1.0.0-pre.11] - 2023-12-21
 
 ### Fixed
 
@@ -956,7 +996,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Removed `size` property from Checkbox and Toggle components.
 
-## [1.0.0-pre.10] - 2023-12-12
+## [1.0.0-pre.10] - 2023-12-13
 
 ### Fixed
 
@@ -1027,7 +1067,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed some unit tests
 
-## [1.0.0-pre.6] - 2023-11-18
+## [1.0.0-pre.6] - 2023-11-19
 
 ### Added
 
@@ -1038,7 +1078,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Previously the Panel Constructor set the default scale context to "large" on mobile platforms, now the default scale context for any platform is "medium".
 
-## [1.0.0-pre.5] - 2023-11-15
+## [1.0.0-pre.5] - 2023-11-16
 
 ### Changed
 
@@ -1353,36 +1393,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed Editor crash when updating packages from UPM window.
 
-## [0.3.7] - 2023-08-07
-
-### Added
-
-- Added `tooltipTemplate` property (by code only) on `VisualElement` to customize the tooltip content.
-
-### Fixed
-
-- Fixed Canvas manipulators for mouse devices and generic touchpads.
-- Fixed Tooltip manipulator coordinates to pick elements under the cursor.
-- Fixed Tooltip display for Editor context.
-- Fixed random crashes when switching focused window.
-
-## [0.3.6] - 2023-07-28
-
-### Added
-
-- Added `autoPlayDuration` property to the `PageView` component.
-- Added `variant` property to the `IconButton` component.
-- Added `Canvas` component.
-- Added `GridView` component.
-
-### Changed
-
-- Changed the calibration values for Magic Trackpad gestures recognition.
-
-### Fixed
-
-- Fixed horizontal ScrollView styling.
-
 ## [0.3.5] - 2023-07-26
 
 ### Fixed
@@ -1414,12 +1424,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed visual content rendering synchronization in `Progress` and `ExVisualElement` components.
 - Fixed Animation Recycling in `NavHost` component.
 
-## [0.2.13] - 2023-06-28
-
-### Fixed
-
-- Fixed RenderTextures destruction to avoid memory leaks.
-
 ## [0.3.2] - 2023-06-14
 
 ### Fixed
@@ -1447,64 +1451,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed warning messages about GUID conflicts in UI Kit samples.
 - Fixed warning messages about unused events in NavController.
 
-## [0.3.0] - 2023-05-17
-
-### Added
-
-- Added defaultMessage property on Dropdown component.
-- Added ChangingEvent on TextField, TextArea and NumericalField components.
-- Added the AppBar navigation component.
-- Added the variant property on the Icon component.
-- Added the support of Phosphor Icons through the `com.unity.replica.phosphor-icons` package.
-- Added the BottomNavBar component.
-- Added the FAB component.
-- Added the DrawerHeader component.
-- Added the NavHost component.
-- Added a ListViewItem component.
-- Added the Navigation System under the `Unity.AppUI.Navigation` namespace (in its own **non auto-referenced assembly**).
-- Added the support of nested Navigation graphs.
-- Added the INavVisualController interface to control the content of the navigation components.
-- Added the NavController, core component of the navigation system.
-- Added a sample called Navigation to demonstrate the navigation system.
-- Added the support of Enum properties in the Storybook editor window.
-- Added ObservableObject class to implement the INotifyPropertyChanged interface.
-- Host and App interfaces to create MVVM apps based on specific hosts.
-- Added UITK implementations of the Host and App interfaces.
-- Added Dependency Injection support for MVVM Toolkit via constructor injection.
-- Added an implementation of a ServiceProvider for MVVM Toolkit.
-- Added an App Builder utility MonoBehaviour to create MVVM apps as Unity component in a scene.
-- Added RelayCommand and RelayCommand<T> classes to implement the ICommand interface.
-- Added AsyncRelayCommand and AsyncRelayCommand<T> classes to implement the ICommand interface.
-- Added a sample project to show how to use MVVM Toolkit with App UI.
-- Added the MVVM implementation under the `Unity.AppUI.MVVM` namespace (in its own **non auto-referenced assembly**).
-- Added a Redux implementation under the `Unity.AppUI.Redux` namespace (in its own **non auto-referenced assembly**).
-- Added the UndoRedo system under the `Unity.AppUI.Undo` namespace (in its own **non auto-referenced assembly**).
-
-### Changed
-
-- The namespaces used by the package **has changed** from `UnityEngine.Dt.AppUI` to `Unity.AppUI`. See the migration guide in the documentation for more information.
-- `Header` component is now named `Heading`. The old name is still supported but will be removed in a future release.
-- CircularProgress innerRadius property is now publicly accessible.
-- App UI main Looper instance is now publicly accessible.
-- Improved StackView logic to support the navigation system.
-- Refactored Avatar component, there are no more containers for notifications and icons.
-- Refactored Badge component.
-
 ## [0.2.11] - 2023-05-15
 
 ### Added
 
 - Added `maxDistance` property to the World-Space UI Document component.
-
-## [0.2.10] - 2023-05-08
-
-### Added
-
-- Added resistance property to the `SwipeView` component.
-
-### Fixed
-
-- Fixed `Pressable` PointerDown event propagation.
 
 ## [0.2.9] - 2023-05-05
 
@@ -1524,181 +1475,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed the support of the New Input System.
 - Fixed the box-shadow shader with portrait aspect ratio.
 - Fixed async operations on LocalizedTextElement.
-
-## [0.2.8] - 2023-04-30
-
-### Added
-
-- Added transition animations to sliders components.
-- Added a `swipeable` property to the `SwipeView` component to be able to disable swipe interaction.
-- Added `Preloader` component to the UI Kit sample.
-- Added `Link` component.
-- Added `Breadcrumbs` component to the UI Kit sample.
-- Added `Toolbar` component to the UI Kit sample.
-
-### Changed
-
-- Updated USS vars to use the new version of App UI Design Tokens.
-
-### Fixed
-
-- Fixed `Pressable` event propagation.
-
-## [0.2.6] - 2023-04-17
-
-### Added
-
-- Added `innerRadius` property to the `CircularProgress` component.
-
-### Fixed
-
-- Fixed the RenderTexture format of the World-Space UI Kit sample.
-
-## [0.2.5] - 2023-03-30
-
-### Added
-
-- Added `SnapTo` and `GoTo` methods in the SwipeView component.
-- Added `startSwipeThreshold` property in the SwipeView component.
-- Added Scrollable Manipulator which uses a threshold before beginning to scroll.
-- Added Pressable Manipulator which can be used to capture a pointer during press but can continue propagation of Move and Up events.
-
-### Changed
-
-- SwipeView now uses the Scrollable Manipulator instead of Draggable.
-
-### Fixed
-
-- Removed the use of System.Linq in the App UI package.
-
-## [0.2.4] - 2023-03-23
-
-### Fixed
-
-- Fixed Localization initialization for WebGL platform.
-- Fixed ScrollView tracker styling.
-- Fixed Focusable property in constructor for newer versions of Unity.
-- Fixed UnityEngine namespace import for newer versions of Unity.
-
-## [0.2.3] - 2023-03-22
-
-### Fixed
-
-- Fixed styling on Scroller.
-- Fixed max-height on Dropdown menu.
-- Fixed dismissible dialogs in UI Kit sample.
-- Fixed flex-shrink value on multiple components.
-- Fixed TextField UXML construction.
-
-## [0.2.2] - 2023-03-20
-
-### Fixed
-
-- Fixed NullReferenceException in invalid AnchorPopup updates.
-
-## [0.2.1] - 2023-03-07
-
-### Fixed
-
-- Fixed the localization of the Dropdown component.
-- Fixed the sizing of Progress UI components.
-- Fixed OutOfBounds dismiss on cascading Popovers.
-- Fixed the blocking of placeholder events on TextField and TextArea.
-- Fixed compilation error on 2022.2.0a8.
-
-## [0.2.0] - 2023-03-05
-
-### Added
-
-- Added support of Native features such as system themes and scale. The support has been done for Android, iOS, MacOS, and Windows.
-- Added support of the [Unity Localization package](https://docs.unity3d.com/Packages/com.unity.localization@1.4/manual/index.html). You can localize strings from the Application Context or use a [LocalizedTextElement](xref:Unity.AppUI.UI.LocalizedTextElement) component to localize strings from the UI.
-- Added a global UI component property `preferred-tooltip-position` to set the default tooltip position. The property is available by code and UXML.
-- Added a App UI manager with a singleton pattern to manage the App UI configuration and lifecycle.
-- Added an option in the App UI Settings to auto-override the Android manifest file (Android builds only).
-- Added an option in the App UI Settings to enable or disable the usage of a custom loop frequency (Editor only).
-- Added a World Space UI Document component to display UI elements in the world space.
-- Added Avatar UI component to display an avatar with a name and a status.
-- Added a Badge UI component to display a badge with a number.
-- Added a BoundsField UI component to define a three-dimensional bounding box.
-- Added a BoundsIntField UI component to define a three-dimensional bounding box with integer values.
-- Added a Chip UI component to display a chip with a label and an icon.
-- Added a CircularProgress UI component to display a circular progress bar.
-- Added a LinearProgress UI component to display a linear progress bar.
-- Added a ColorField UI component to define a color.
-- Added a ColorSlider UI component to choose a value from a range of colors.
-- Added a ColorSwatch UI component to display a color.
-- Added a ColorWheel UI component to choose a hue from a color wheel.
-- Added a ColorPicker UI component to choose a color from a color wheel and a color slider.
-- Added a DoubleField UI component to define a double value.
-- Added a Drawer UI component to display additional content from the sides of the screen.
-- Added the support of `box-shadow` and `outline` using custom USS properties (see [ExVisualElement](xref:Unity.AppUI.UI.ExVisualElement)).
-- Added a IconButton UI component to display an icon button.
-- Added a LocalizedTextElement UI component to display a localized text. Most of the App UI components have been updated to use this component.
-- Added a LongField UI component to define a long value.
-- Added a Mask UI component to fill an area with a solid color.
-- Added a PageIndicator UI component to display dots in a pagination system.
-- Added a RectField UI component to define a two-dimensional rectangular area.
-- Added a RectIntField UI component to define a two-dimensional rectangular area with integer values.
-- Added a TextArea UI component to display a scrollable text area.
-- Added the support of expression evaluation in numeric fields (see `ExpressionEvaluator`).
-- Added an [ActionTriggered UITK event](xref:Unity.AppUI.UI.ActionTriggeredEvent) that can be triggered by Menu items.
-- Added a StackView UI component to display and animate a stack of items.
-- Added a SwipeView UI component to display a list of items that can be swiped in a direction.
-- Added a PageView UI component which is the combination of a SwipeView and a PageIndicator.
-- Added the `Submittable` UI-Toolkit manipulator to handle the submission of Action UI elements via keyboard/mouse/pointer.
-- Added the [KeyboardFocusController](xref:Unity.AppUI.UI.KeyboardFocusController) UI-Toolkit manipulator to differentiate the focus of a UI element from the keyboard or the pointer.
-- Added a MenuBuilder class to create a Menu from code.
-- Added the ability for Popover element to use a modal backdrop (Pointer events are blocked).
-- Added a simple implementation of a [Storybook](xref:storybook)-like tool to display and test UI components.
-
-### Changed
-
-- The **Application** UI element is now called [Panel](xref:Unity.AppUI.UI.Panel).
-- Improved the Slider UI component to display the current value.
-- Improved the Tray UI element to be resizable.
-- Ability to use the Modal component with any content derived from [VisualElement](xref:UnityEngine.UIElements.VisualElement).
-- The App UI main Looper is now part of the App UI manager and is not present in the Application UI element anymore.
-
-### Fixed
-
-- Fixed the Notification system when the Notificiation UI element has been destroyed without being dismissed.
-- Fixed the Menu system to handle sub-menus.
-- Fixed the position calculator of Popups.
-- Fixed the Popup system to be able to dismiss a popup when clicking outside of it in an area that is not handled by UI-Toolkit.
-- Fixed the formatting of numerical fields.
-- Fixed the handle of some edge-cases in TooltipManipulator.
-
-## [0.1.0] - 2022-08-19
-
-### Added
-
-- Package Structure
-- First draft of User Manual documentation
-- Accordion UI Component
-- ActionBar UI Component
-- ActionButton UI Component
-- ActionGroup UI Component
-- Button UI Component
-- Checkbox UI Component
-- Divider UI Component
-- Dropdown UI Component
-- NumericalField UI Components
-- Header UI Component
-- Icon UI Component
-- Radio UI Component
-- Slider UI Component
-- Stepper UI Component
-- Tabs UI Component
-- Text UI Component
-- TextField UI Component
-- Toggle UI Component
-- TouchSlider UI Component
-- VectorField UI Components
-- Dialogs & Alerts UI System
-- Menu UI System
-- Popup UI System
-- Notification Manager & Toasts
-- Message Queue System (Looper & Handler)
-- ContextProvider System
-- Tooltip System
 

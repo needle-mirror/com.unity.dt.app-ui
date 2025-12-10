@@ -89,7 +89,7 @@
 }
 
 .appui-inputlabel--horizontal.appui-inputlabel--input-alignment-auto .appui-inputlabel__container {
-    align-items: auto;
+    align-items: center;
 }
 
 .appui-inputlabel--horizontal.appui-inputlabel--input-alignment-center .appui-inputlabel__container {

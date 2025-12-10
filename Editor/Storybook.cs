@@ -308,6 +308,8 @@ namespace Unity.AppUI.Editor
 
         TwoPaneSplitView m_VerticalPane;
 
+        HelpBox m_HelpBox;
+
         string m_CurrentTheme = "dark";
 
         string m_CurrentScale = "medium";
@@ -335,6 +337,7 @@ namespace Unity.AppUI.Editor
         public static void OpenStoryBook()
         {
             var window = GetWindow<Storybook>("App UI - StoryBook");
+            window.minSize = new Vector2(600, 400);
             window.Show();
         }
 
@@ -372,8 +375,11 @@ namespace Unity.AppUI.Editor
             m_SplitView.viewDataKey = "StorybookSplitView";
             m_StoriesList = new List<StoryBookPage>(GetStories().OrderBy(s => s.displayName));
             var listPane = new TwoPaneSplitView(0, 100, TwoPaneSplitViewOrientation.Horizontal);
+            listPane.style.minWidth = 200;
             m_ListView = new ListView(m_StoriesList, -1f, MakeListVIewItem, BindListViewItem);
-            m_StoryListView = new ListView(null, -1f, MakeListVIewItem, BindStoryListViewItem);
+            m_ListView.style.minWidth = 100;
+            m_StoryListView = new ListView(new List<StoryBookStory>(), -1f, MakeListVIewItem, BindStoryListViewItem);
+            m_StoryListView.style.minWidth = 100;
             m_Preview = CreateDetailPage();
 #if UITK_SELECTED_INDICES_CHANGED
             m_ListView.selectedIndicesChanged += OnSelectionChanged;
@@ -388,6 +394,14 @@ namespace Unity.AppUI.Editor
             m_SplitView.Add(m_Preview);
 
             root.Add(m_SplitView);
+
+            m_HelpBox = new HelpBox("No stories found. You can create your own StoryBookPage by creating a class " +
+                "that inherits from StoryBookPage and adding it to the project.\n" +
+                "You also can install the Storybook sample from the Package Manager.",
+                HelpBoxMessageType.Info);
+            m_HelpBox.style.display = m_StoriesList is not { Count: > 0} ? DisplayStyle.Flex : DisplayStyle.None;
+            m_HelpBox.style.marginBottom = 4;
+            root.Add(m_HelpBox);
 
             root.Bind(new SerializedObject(this));
 
