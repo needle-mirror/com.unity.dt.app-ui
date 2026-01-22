@@ -525,7 +525,7 @@ namespace Unity.AppUI.UI
                     {
                         m_PreviousDpi = panel.GetPanelSettings().referenceDpi;
                         // we wait to let a chance fo others panels to set their previous DPI correctly
-                        schedule.Execute(() => OnScaleFactorChanged(m_PreviousDpi));
+                        schedule.Execute(() => OnScaleFactorChanged(Platform.scaleFactor));
                     }
                     Platform.scaleFactorChanged -= OnScaleFactorChanged;
                     Platform.scaleFactorChanged += OnScaleFactorChanged;

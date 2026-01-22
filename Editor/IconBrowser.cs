@@ -381,11 +381,12 @@ namespace Unity.AppUI.Editor
             var instanceId = 0;
 #endif
             var endAction = CreateInstance<IconBrowserActions>();
+            var icon = Utils.FindTextureByType(typeof(StyleSheet));
             ProjectWindowUtil.StartNameEditingIfProjectWindowExists(
                 instanceId,
                 endAction,
                 "AppUIIcons.uss",
-                null,
+                icon,
                 null);
         }
 

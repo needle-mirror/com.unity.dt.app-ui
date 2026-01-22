@@ -68,14 +68,37 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="NumericalField{T}.Increment"/>
         protected override int Increment(int originalValue, float delta)
         {
-            return originalValue + (Mathf.Approximately(0, delta) ? 0 : Math.Sign(delta));
+            return originalValue + (Mathf.Approximately(0, delta) ? 0 : Mathf.RoundToInt(delta));
         }
 
         /// <inheritdoc cref="NumericalField{T}.GetIncrementFactor"/>
         protected override float GetIncrementFactor(int baseValue)
         {
-            return Mathf.Abs(baseValue) > 100 ? Mathf.CeilToInt(baseValue * 0.1f) : 1;
+            var absValue = Math.Abs(baseValue);
+            if (absValue == 0 || absValue <= 10)
+                return 1;
+            if (absValue <= 100)
+                return 5;
+
+            // Use log scale for larger values
+            var magnitude = (int)Math.Pow(10, Math.Floor(Math.Log10(absValue)));
+            return Math.Max(1, magnitude / 10);
         }
+
+#if ENABLE_VALUEFIELD_INTERFACE
+        /// <inheritdoc/>
+        public override void ApplyInputDeviceDelta(Vector3 delta, DeltaSpeed speed, int startValue)
+        {
+            var previousValue = m_Value;
+            var sensitivity = UINumericFieldsUtils.CalculateIntDragSensitivity(startValue);
+            var acceleration = UINumericFieldsUtils.Acceleration(speed == DeltaSpeed.Fast, speed == DeltaSpeed.Slow);
+            var v = (long)previousValue;
+            v += (long)Math.Round(UINumericFieldsUtils.NiceDelta(delta, acceleration) * sensitivity);
+            var newValue = UINumericFieldsUtils.ClampToInt(v);
+            SetValueWithoutNotify(newValue);
+            TrySendChangingEvent(previousValue, newValue);
+        }
+#endif
 
 #if ENABLE_UXML_TRAITS
 

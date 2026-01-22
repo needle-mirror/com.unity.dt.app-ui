@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Unity.AppUI.UI
@@ -12,6 +13,8 @@ namespace Unity.AppUI.UI
         public const string k_DoubleFieldFormatString = "R";
         public const string k_FloatFieldFormatString = "g7";
         public const string k_IntFieldFormatString = "#######0";
+        internal const float k_DragSensitivity = .03f;
+        static bool s_UseYSign = false;
 
         /// <summary>
         /// Convert a string to a double by evaluating it as an expression.
@@ -102,5 +105,100 @@ namespace Unity.AppUI.UI
 
             return pCount == 1 && dCount > 0 && (formatString.StartsWith("%") || formatString.EndsWith("%"));
         }
+
+        /// <summary>
+        /// Calculate the drag sensitivity for a float value.
+        /// </summary>
+        /// <param name="value"> The float value.</param>
+        /// <returns> The drag sensitivity.</returns>
+        public static double CalculateFloatDragSensitivity(double value)
+        {
+            if (double.IsInfinity(value) || double.IsNaN(value))
+            {
+                return 0.0;
+            }
+            return Math.Max(1, Math.Pow(Math.Abs(value), 0.5)) * k_DragSensitivity;
+        }
+
+        /// <summary>
+        /// Calculate the drag sensitivity for an int value.
+        /// </summary>
+        /// <param name="value"> The int value as long.</param>
+        /// <returns> The drag sensitivity.</returns>
+        public static long CalculateIntDragSensitivity(long value)
+        {
+            return (long)CalculateIntDragSensitivity((double)value);
+        }
+
+        /// <summary>
+        /// Calculate the drag sensitivity for a double value.
+        /// </summary>
+        /// <param name="value"> The double value.</param>
+        /// <returns> The drag sensitivity.</returns>
+        public static double CalculateIntDragSensitivity(double value)
+        {
+            return Math.Max(1, Math.Pow(Math.Abs(value), 0.5) * k_DragSensitivity);
+        }
+
+        /// <summary>
+        /// Calculate the acceleration factor based on the shift and alt keys.
+        /// </summary>
+        /// <param name="shiftPressed"> Whether the shift key is pressed.</param>
+        /// <param name="altPressed"> Whether the alt key is pressed.</param>
+        /// <returns> The acceleration factor.</returns>
+        public static float Acceleration(bool shiftPressed, bool altPressed)
+        {
+            return (shiftPressed ? 4 : 1) * (altPressed ? .25f : 1);
+        }
+
+        /// <summary>
+        /// Calculate a "nice" delta value based on the device delta and acceleration.
+        /// </summary>
+        /// <param name="deviceDelta"> The device delta.</param>
+        /// <param name="acceleration"> The acceleration factor.</param>
+        /// <returns> The "nice" delta value.</returns>
+        public static double NiceDelta(Vector2 deviceDelta, float acceleration)
+        {
+            deviceDelta.y = -deviceDelta.y;
+
+            if (Mathf.Abs(Mathf.Abs(deviceDelta.x) - Mathf.Abs(deviceDelta.y)) / Mathf.Max(Mathf.Abs(deviceDelta.x), Mathf.Abs(deviceDelta.y)) > .1f)
+                s_UseYSign = !(Mathf.Abs(deviceDelta.x) > Mathf.Abs(deviceDelta.y));
+
+            if (s_UseYSign)
+                return Mathf.Sign(deviceDelta.y) * deviceDelta.magnitude * acceleration;
+
+            return Mathf.Sign(deviceDelta.x) * deviceDelta.magnitude * acceleration;
+        }
+
+        /// <summary>
+        /// Round a value based on a minimum difference.
+        /// </summary>
+        /// <param name="valueToRound"> The value to round.</param>
+        /// <param name="minDifference"> The minimum difference.</param>
+        /// <returns> The rounded value.</returns>
+        public static double RoundBasedOnMinimumDifference(double valueToRound, double minDifference)
+        {
+            if (minDifference == 0)
+                return DiscardLeastSignificantDecimal(valueToRound);
+            return Math.Round(valueToRound, GetNumberOfDecimalsForMinimumDifference(minDifference),
+                MidpointRounding.AwayFromZero);
+        }
+
+        static double DiscardLeastSignificantDecimal(double v)
+        {
+            var decimals = Math.Max(0, (int)(5 - Math.Log10(Math.Abs(v))));
+            try
+            {
+                return Math.Round(v, decimals);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                // This can happen for very small numbers.
+                return 0;
+            }
+        }
+
+        static int GetNumberOfDecimalsForMinimumDifference(double minDifference) =>
+            (int)Math.Max(0.0, -Math.Floor(Math.Log10(Math.Abs(minDifference))));
     }
 }

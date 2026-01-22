@@ -77,6 +77,21 @@ namespace Unity.AppUI.UI
             return Math.Abs(baseValue) > 100 ? (float)Math.Ceiling(baseValue * 0.1f) : 1;
         }
 
+#if ENABLE_VALUEFIELD_INTERFACE
+        /// <inheritdoc/>
+        public override void ApplyInputDeviceDelta(Vector3 delta, DeltaSpeed speed, long startValue)
+        {
+            var previousValue = m_Value;
+            var sensitivity = UINumericFieldsUtils.CalculateIntDragSensitivity(startValue);
+            var acceleration = UINumericFieldsUtils.Acceleration(speed == DeltaSpeed.Fast, speed == DeltaSpeed.Slow);
+            var v = previousValue;
+            v += (long)Math.Round(UINumericFieldsUtils.NiceDelta(delta, acceleration) * sensitivity);
+            var newValue = v;
+            SetValueWithoutNotify(newValue);
+            TrySendChangingEvent(previousValue, newValue);
+        }
+#endif
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>

@@ -42,6 +42,7 @@
     padding-right: var(--appui-alias-control-gap-md);
     padding-left: 0;
     flex-basis: var(--appui-inputlabel-label-size);
+    align-self: stretch;
 }
 
 .appui--rtl .appui-inputlabel--horizontal > .appui-inputlabel__label-container {
@@ -107,4 +108,9 @@
 
 .appui-inputlabel--horizontal.appui-inputlabel--with-help-text > .appui-inputlabel__label-container > .appui-inputlabel__help-text {
     display: flex;
+}
+
+.appui-inputlabel--dragging,
+.appui-inputlabel--dragging > .appui-inputlabel__label-container {
+    cursor: var(--appui-alias-control-cursor-ewresize);
 }

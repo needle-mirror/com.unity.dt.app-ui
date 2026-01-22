@@ -1,5 +1,6 @@
 using System.Collections;
 using NUnit.Framework;
+using Unity.AppUI.Core;
 using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -113,6 +114,48 @@ namespace Unity.AppUI.Tests.UI
             yield return new WaitUntilOrTimeOut(() => changedCount > 0);
 
             Assert.AreEqual(1, changedCount);
+        }
+
+#if ENABLE_VALUEFIELD_INTERFACE
+        [UnityTest]
+        [Order(6)]
+        public IEnumerator CanIncrementValueWithDrag()
+        {
+            m_TestUI.rootVisualElement.Clear();
+            var panel = new Panel();
+            var inputLabel = new InputLabel("Test") { draggable = true };
+            var field = new FloatField { value = 100f, acceptDragging = true };
+            inputLabel.Add(field);
+            panel.Add(inputLabel);
+            m_TestUI.rootVisualElement.Add(panel);
+
+            yield return null;
+
+            var initialValue = field.value;
+
+            // Simulate drag by providing context
+            inputLabel.ProvideContext(new DragContext(DragPhase.Dragging, new Vector3(10f, 0, 0), DeltaSpeed.Normal));
+
+            yield return null;
+
+            // Value should have increased
+            Assert.Greater(field.value, initialValue);
+        }
+#endif
+
+        [Test]
+        [Order(7)]
+        public void GetIncrementFactorScalesWithValue()
+        {
+            var field = new FloatField();
+
+            // Test that increment factor scales appropriately
+            var factor1 = field.InvokeGetIncrementFactor(0.001f);
+            var factor2 = field.InvokeGetIncrementFactor(1f);
+            var factor3 = field.InvokeGetIncrementFactor(1000f);
+
+            Assert.Greater(factor2, factor1);
+            Assert.Greater(factor3, factor2);
         }
     }
 }

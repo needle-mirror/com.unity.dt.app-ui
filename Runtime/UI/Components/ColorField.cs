@@ -25,6 +25,22 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
+    /// Interface for custom ColorField pickers.
+    /// </summary>
+    public interface ICustomColorFieldPicker
+    {
+        /// <summary>
+        /// Delegate method to show the custom ColorPicker.
+        /// </summary>
+        /// <param name="owner"> The owner ColorField. </param>
+        /// <param name="onValueChanging"> Callback when the color value has changed. It will send a value changing event. </param>
+        /// <param name="initialColor"> The initial color to show in the ColorPicker. </param>
+        /// <param name="showAlpha"> Whether to show the alpha channel in the ColorPicker. </param>
+        /// <param name="hdr"> Whether to show HDR colors in the ColorPicker. </param>
+        void Show(ColorField owner, Action<Color> onValueChanging, Color initialColor, bool showAlpha, bool hdr);
+    }
+
+    /// <summary>
     /// Color Field UI element.
     /// </summary>
 #if ENABLE_UXML_SERIALIZED_DATA
@@ -57,6 +73,8 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId hdrProperty = nameof(hdr);
 
         internal static readonly BindingId clickableProperty = nameof(clickable);
+
+        internal static readonly BindingId customPickerProperty = nameof(customPicker);
 
 #endif
 
@@ -96,6 +114,11 @@ namespace Unity.AppUI.UI
         /// </summary>
         public const string showTextUssClassName = ussClassName + "--show-text";
 
+        /// <summary>
+        /// The ColorField inline picker opened styling class.
+        /// </summary>
+        public const string inlinePickerOpenedUssClassName = ussClassName + "--inline-picker-opened";
+
         readonly ColorSwatch m_SwatchElement;
 
         readonly UnityEngine.UIElements.TextField m_LabelElement;
@@ -112,9 +135,11 @@ namespace Unity.AppUI.UI
 
         Color m_PreviousValue;
 
-        ColorPicker m_Picker;
+        ColorPicker m_InlineColorPicker;
 
         bool m_InlinePicker;
+
+        ICustomColorFieldPicker m_CustomPicker;
 
         Func<Color, bool> m_ValidateValue;
 
@@ -172,6 +197,8 @@ namespace Unity.AppUI.UI
             showText = true;
             showAlpha = true;
             hdr = false;
+            inlinePicker = false;
+            customPicker = new DefaultColorFieldPicker();
             SetValueWithoutNotify(Color.clear);
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));
         }
@@ -183,10 +210,59 @@ namespace Unity.AppUI.UI
 
         void OnClick()
         {
+            m_PreviousValue = m_Value;
             if (Application.isEditor && colorPickerType == ColorPickerType.UnityEditor)
+            {
+                AddToClassList(Styles.focusedUssClassName);
                 OpenUnityEditorPicker();
+            }
+            else if (inlinePicker)
+            {
+                AddToClassList(Styles.focusedUssClassName);
+                AddToClassList(inlinePickerOpenedUssClassName);
+                ToggleInlinePicker();
+            }
+            else if (customPicker != null)
+            {
+                customPicker.Show(this, OnPickerValueChanged, m_PreviousValue, showAlpha, hdr);
+            }
             else
-                OpenDefaultPicker();
+                Debug.LogWarning("No ColorPicker available to open.");
+        }
+
+        void ToggleInlinePicker()
+        {
+            var wasOpened = m_InlineColorPicker != null && m_InlineColorPicker.parent == parent;
+            m_InlineColorPicker?.parent?.Remove(m_InlineColorPicker);
+
+            if (wasOpened)
+            {
+                RemoveFromClassList(Styles.focusedUssClassName);
+                RemoveFromClassList(inlinePickerOpenedUssClassName);
+                m_InlineColorPicker.UnregisterValueChangedCallback(OnPickerValueChanged);
+                using var evt = ChangeEvent<Color>.GetPooled(m_PreviousValue, m_InlineColorPicker.value);
+                SetValueWithoutNotify(m_InlineColorPicker.value);
+                evt.target = this;
+                SendEvent(evt);
+                return;
+            }
+
+            m_InlineColorPicker ??= new ColorPicker
+            {
+                showAlpha = showAlpha,
+                showHex = true,
+                showToolbar = true,
+                hdr = hdr,
+            };
+            m_InlineColorPicker.showAlpha = showAlpha;
+            m_InlineColorPicker.hdr = hdr;
+            m_InlineColorPicker.previousValue = m_PreviousValue;
+            m_InlineColorPicker.SetValueWithoutNotify(m_PreviousValue);
+            m_InlineColorPicker.RegisterValueChangedCallback(OnPickerValueChanged);
+
+            m_InlineColorPicker.eyeDropperButton.clickable = new Pressable(m_InlineColorPicker.OnEyeDropperClicked);
+            var idx = parent.IndexOf(this) + 1;
+            parent.Insert(idx, m_InlineColorPicker);
         }
 
         void OpenUnityEditorPicker()
@@ -200,87 +276,10 @@ namespace Unity.AppUI.UI
                 return;
             }
 
-            m_PreviousValue = value;
             ColorPickerExtensionsBridge.Show(OnPickerValueChanged, m_PreviousValue, showAlpha, hdr);
         }
 
-        void OpenDefaultPicker()
-        {
-            var wasInline = m_Picker != null && m_Picker.parent == parent;
-            m_Picker?.parent?.Remove(m_Picker);
-
-            if (inlinePicker && wasInline)
-            {
-                RemoveFromClassList(Styles.focusedUssClassName);
-                m_Picker.UnregisterValueChangedCallback(OnPickerValueChanged);
-                using var evt = ChangeEvent<Color>.GetPooled(m_PreviousValue, m_Picker.value);
-                SetValueWithoutNotify(m_Picker.value);
-                evt.target = this;
-                SendEvent(evt);
-                return;
-            }
-
-            m_PreviousValue = value;
-            m_Picker ??= new ColorPicker
-            {
-                showAlpha = showAlpha,
-                showHex = true,
-                showToolbar = true,
-                hdr = hdr,
-            };
-            m_Picker.previousValue = m_PreviousValue;
-            m_Picker.SetValueWithoutNotify(m_PreviousValue);
-            m_Picker.RegisterValueChangedCallback(OnPickerValueChanged);
-            if (inlinePicker)
-            {
-                m_Picker.eyeDropperButton.clickable = new Pressable(m_Picker.OnEyeDropperClicked);
-                var idx = parent.IndexOf(this) + 1;
-                parent.Insert(idx, m_Picker);
-            }
-            else
-            {
-                m_Picker.eyeDropperButton.clickable = new Pressable(OnEyeDropperClicked);
-                m_Popover = Popover.Build(this, m_Picker);
-                m_Popover.dismissed += (_, _) =>
-                {
-                    RemoveFromClassList(Styles.focusedUssClassName);
-                    m_Picker.UnregisterValueChangedCallback(OnPickerValueChanged);
-                    m_Picker.eyeDropperButton.clickable = null;
-                    if (m_PreviousValue != m_Picker.value)
-                    {
-                        using var evt = ChangeEvent<Color>.GetPooled(m_PreviousValue, m_Picker.value);
-                        SetValueWithoutNotify(m_Picker.value);
-                        evt.target = this;
-                        SendEvent(evt);
-                    }
-                    m_Popover = null;
-                    Focus();
-                };
-                m_Popover.Show();
-            }
-            AddToClassList(Styles.focusedUssClassName);
-        }
-
-        void OnEyeDropperClicked(EventBase evt)
-        {
-            if (m_Popover == null)
-                return;
-
-            // hide the ColorPicker if it is open
-            m_Popover.view.style.visibility= Visibility.Hidden;
-            m_Picker.OnEyeDropperClicked(evt);
-        }
-
-        void OnPickerValueChanged(ChangeEvent<Color> e)
-        {
-            if (m_Popover != null && m_Popover.view.resolvedStyle.visibility != Visibility.Visible)
-            {
-                m_Popover.view.style.visibility = Visibility.Visible;
-                // Ensure the popover is still listening for outside clicks
-                m_Popover.EnsureEventHandlersRegistered();
-            }
-            OnPickerValueChanged(e.newValue);
-        }
+        void OnPickerValueChanged(ChangeEvent<Color> e) => OnPickerValueChanged(e.newValue);
 
         void OnPickerValueChanged(Color color)
         {
@@ -472,10 +471,91 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_InlinePicker != value;
                 m_InlinePicker = value;
-
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in inlinePickerProperty);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// The custom color picker for the ColorField.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// // Example implementation of a custom color picker
+        /// public class CustomColorPicker : ICustomColorFieldPicker
+        /// {
+        ///     private VisualElement m_PickerWindow;
+        ///     private Action&lt;Color&gt; m_OnValueChanging;
+        ///     private ColorField m_Owner;
+        ///     private Color m_InitialColor;
+        ///
+        ///     public void Show(ColorField owner, Action&lt;Color&gt; onValueChanging, Color initialColor, bool showAlpha, bool hdr)
+        ///     {
+        ///         m_Owner = owner;
+        ///         m_OnValueChanging = onValueChanging;
+        ///         m_InitialColor = initialColor;
+        ///
+        ///         // Create custom picker UI
+        ///         m_PickerWindow = new VisualElement { name = "custom-picker" };
+        ///
+        ///         // Setup picker with callbacks
+        ///         var picker = new MyCustomPickerUI(initialColor, showAlpha, hdr);
+        ///
+        ///         picker.onColorChanged += (color) =>
+        ///         {
+        ///             // Send ChangingEvent while picker is still open
+        ///             m_OnValueChanging?.Invoke(color);
+        ///         };
+        ///
+        ///         picker.onColorAccepted += (color) =>
+        ///         {
+        ///             // Send final ChangeEvent like the default implementation
+        ///             using var evt = ChangeEvent&lt;Color&gt;.GetPooled(m_InitialColor, color);
+        ///             evt.target = m_Owner;
+        ///             m_Owner.SetValueWithoutNotify(color);
+        ///             m_Owner.SendEvent(evt);
+        ///             ClosePickerWindow();
+        ///         };
+        ///
+        ///         picker.onCanceled += () =>
+        ///         {
+        ///             // Revert to initial color
+        ///             m_OnValueChanging?.Invoke(m_InitialColor);
+        ///             ClosePickerWindow();
+        ///         };
+        ///
+        ///         m_PickerWindow.Add(picker);
+        ///         owner.rootVisualElement.Add(m_PickerWindow);
+        ///     }
+        ///
+        ///     private void ClosePickerWindow()
+        ///     {
+        ///         m_PickerWindow?.RemoveFromHierarchy();
+        ///         m_OnValueChanging = null;
+        ///         m_Owner?.Focus();
+        ///     }
+        /// }
+        ///
+        /// // Usage:
+        /// var colorField = new ColorField();
+        /// colorField.customPicker = new CustomColorPicker();
+        /// </code>
+        /// </example>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public ICustomColorFieldPicker customPicker
+        {
+            get => m_CustomPicker;
+            set
+            {
+                var changed = m_CustomPicker != value;
+                m_CustomPicker = value;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in customPickerProperty);
 #endif
             }
         }
@@ -613,6 +693,83 @@ namespace Unity.AppUI.UI
                 if (changed)
                     NotifyPropertyChanged(in hdrProperty);
 #endif
+            }
+        }
+
+        /// <summary>
+        /// The default implementation of a custom ColorField picker.
+        /// </summary>
+        class DefaultColorFieldPicker : ICustomColorFieldPicker
+        {
+            ColorPicker m_Picker;
+            Popover m_Popover;
+            Action<Color> m_OnValueChanging;
+
+            public void Show(ColorField owner, Action<Color> onValueChanging, Color initialColor, bool showAlpha, bool hdr)
+            {
+                owner.AddToClassList(Styles.focusedUssClassName);
+
+                m_OnValueChanging = onValueChanging;
+                m_Picker ??= new ColorPicker
+                {
+                    showAlpha = showAlpha,
+                    showHex = true,
+                    showToolbar = true,
+                    hdr = hdr,
+                };
+                m_Picker.previousValue = initialColor;
+                m_Picker.SetValueWithoutNotify(initialColor);
+                m_Picker.RegisterValueChangedCallback(OnPickerValueChanged);
+                m_Picker.eyeDropperButton.clickable = new Pressable(OnEyeDropperClicked);
+
+                m_Popover = Popover.Build(owner, m_Picker);
+                m_Popover.SetAnchor(owner);
+                m_Popover.SetArrowVisible(false);
+                m_Popover.SetLastFocusedElement(owner);
+                m_Popover.SetPlacement(PopoverPlacement.End);
+                m_Popover.SetShouldFlip(true);
+                m_Popover.dismissed += (_, _) =>
+                {
+                    m_OnValueChanging = null;
+                    owner.RemoveFromClassList(Styles.focusedUssClassName);
+                    m_Picker.UnregisterValueChangedCallback(OnPickerValueChanged);
+                    m_Picker.eyeDropperButton.clickable = null;
+                    if (initialColor != m_Picker.value)
+                    {
+                        using var evt = ChangeEvent<Color>.GetPooled(initialColor, m_Picker.value);
+                        evt.target = owner;
+                        owner.SetValueWithoutNotify(m_Picker.value);
+                        owner.SendEvent(evt);
+                    }
+                    m_Popover = null;
+                    owner.Focus();
+                };
+                m_Popover.shown += popup =>
+                {
+                    popup.SetAnchor(null);
+                };
+                m_Popover.Show();
+            }
+
+            void OnEyeDropperClicked(EventBase evt)
+            {
+                if (m_Popover == null)
+                    return;
+
+                // hide the ColorPicker if it is open
+                m_Popover.view.style.visibility= Visibility.Hidden;
+                m_Picker.OnEyeDropperClicked(evt);
+            }
+
+            void OnPickerValueChanged(ChangeEvent<Color> e)
+            {
+                if (m_Popover != null && m_Popover.view.resolvedStyle.visibility != Visibility.Visible)
+                {
+                    m_Popover.view.style.visibility = Visibility.Visible;
+                    // Ensure the popover is still listening for outside clicks
+                    m_Popover.EnsureEventHandlersRegistered();
+                }
+                m_OnValueChanging?.Invoke(e.newValue);
             }
         }
 

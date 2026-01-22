@@ -29,6 +29,32 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId allowNoSelectionProperty = new BindingId(nameof(allowNoSelection));
 
+        internal static readonly BindingId columnCountProperty = new BindingId(nameof(columnCount));
+
+        internal static readonly BindingId itemsSourceProperty = new BindingId(nameof(itemsSource));
+
+        internal static readonly BindingId selectedIndexProperty = new BindingId(nameof(selectedIndex));
+
+        internal static readonly BindingId makeItemProperty = new BindingId(nameof(makeItem));
+
+        internal static readonly BindingId bindItemProperty = new BindingId(nameof(bindItem));
+
+        internal static readonly BindingId itemWidthProperty = new BindingId(nameof(itemWidth));
+
+        internal static readonly BindingId resolvedItemWidthProperty = new BindingId(nameof(resolvedItemWidth));
+
+        internal static readonly BindingId selectedItemProperty = new BindingId(nameof(selectedItem));
+
+        internal static readonly BindingId selectedItemsProperty = new BindingId(nameof(selectedItems));
+
+        internal static readonly BindingId selectedIndicesProperty = new BindingId(nameof(selectedIndices));
+
+        internal static readonly BindingId selectedIdsProperty = new BindingId(nameof(selectedIds));
+
+        internal static readonly BindingId selectionCountProperty = new BindingId(nameof(selectionCount));
+
+        internal static readonly BindingId isSelectingProperty = new BindingId(nameof(isSelecting));
+
 #endif
 
         /// <summary>
@@ -332,6 +358,9 @@ namespace Unity.AppUI.UI
         /// The method called by this callback receives the VisualElement to bind, and the index of the
         /// element to bind it to.
         /// </remarks>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Action<VisualElement, int> bindItem
         {
             get { return m_BindItem; }
@@ -339,12 +368,22 @@ namespace Unity.AppUI.UI
             {
                 m_BindItem = value;
                 Refresh();
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in bindItemProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The number of columns for this grid.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public int columnCount
         {
             get => m_ColumnCount;
@@ -355,6 +394,12 @@ namespace Unity.AppUI.UI
                 {
                     m_ColumnCount = value;
                     Refresh();
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                    NotifyPropertyChanged(in columnCountProperty);
+                    NotifyPropertyChanged(in itemWidthProperty);
+                    NotifyPropertyChanged(in resolvedItemWidthProperty);
+#endif
                 }
             }
         }
@@ -383,6 +428,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The width of the BaseGridView items.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public float itemWidth => (scrollView.contentViewport.layout.width / columnCount);
 
         /// <summary>
@@ -393,6 +441,9 @@ namespace Unity.AppUI.UI
         ///
         /// This property must be set for the list view to function.
         /// </remarks>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public IList itemsSource
         {
             get { return m_ItemsSource; }
@@ -410,6 +461,10 @@ namespace Unity.AppUI.UI
                 }
 
                 Refresh();
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in itemsSourceProperty);
+#endif
             }
         }
 
@@ -425,6 +480,9 @@ namespace Unity.AppUI.UI
         ///
         ///  This property must be set for the list view to function.
         /// </remarks>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Func<VisualElement> makeItem
         {
             get { return m_MakeItem; }
@@ -434,12 +492,19 @@ namespace Unity.AppUI.UI
                     return;
                 m_MakeItem = value;
                 Refresh();
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in makeItemProperty);
+#endif
             }
         }
 
         /// <summary>
         /// The width of the BaseGridView items in pixels.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public float resolvedItemWidth
         {
             get
@@ -453,6 +518,12 @@ namespace Unity.AppUI.UI
         /// Returns or sets the selected item's index in the data source. If multiple items are selected, returns the
         /// first selected item's index. If multiple items are provided, sets them all as selected.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
         public int selectedIndex
         {
             get { return m_SelectedIndices.Count == 0 ? -1 : m_SelectedIndices.First(); }
@@ -463,28 +534,43 @@ namespace Unity.AppUI.UI
         /// Returns the indices of selected items in the data source. Always returns an enumerable, even if no item  is selected, or a
         /// single item is selected.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public IEnumerable<int> selectedIndices => m_SelectedIndices;
 
         /// <summary>
         /// Returns the selected item from the data source. If multiple items are selected, returns the first selected item.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public object selectedItem => m_SelectedItems.Count == 0 ? null : m_SelectedItems.First();
 
         /// <summary>
         /// Returns the selected items from the data source. Always returns an enumerable, even if no item is selected, or a single
         /// item is selected.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public IEnumerable<object> selectedItems => m_SelectedItems;
 
         /// <summary>
         /// Returns the IDs of selected items in the data source. Always returns an enumerable, even if no item  is selected, or a
         /// single item is selected.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public IEnumerable<int> selectedIds => m_SelectedIds;
 
         /// <summary>
         /// The number of selected Items.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public int selectionCount => m_SelectedIndices.Count;
 
         /// <summary>
@@ -579,6 +665,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Returns true if the soft-selection is in progress.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty(ReadOnly = true)]
+#endif
         public bool isSelecting => m_SoftSelectIndex != -1;
 
         /// <summary>
@@ -1002,6 +1091,10 @@ namespace Unity.AppUI.UI
             m_SoftSelectIndex = clickedIndex;
             m_SoftSelectIndexWasPreviouslySelected = m_SelectedIndices.Contains(clickedIndex);
 
+#if ENABLE_RUNTIME_DATA_BINDINGS
+            NotifyPropertyChanged(in isSelectingProperty);
+#endif
+
             if (clickCount == 1)
             {
                 if (selectionType == SelectionType.None)
@@ -1093,6 +1186,15 @@ namespace Unity.AppUI.UI
                 selectionChanged?.Invoke(m_SelectedItems);
                 selectedIndicesChanged?.Invoke(m_SelectedIndices);
             }
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+            NotifyPropertyChanged(in selectedIndexProperty);
+            NotifyPropertyChanged(in selectedItemProperty);
+            NotifyPropertyChanged(in selectedItemsProperty);
+            NotifyPropertyChanged(in selectedIndicesProperty);
+            NotifyPropertyChanged(in selectedIdsProperty);
+            NotifyPropertyChanged(in selectionCountProperty);
+#endif
         }
 
         void OnAttachToPanel(AttachToPanelEvent evt)
@@ -1216,6 +1318,10 @@ namespace Unity.AppUI.UI
             var index = m_SoftSelectIndex;
             m_SoftSelectIndex = -1;
 
+#if ENABLE_RUNTIME_DATA_BINDINGS
+            NotifyPropertyChanged(in isSelectingProperty);
+#endif
+
             if (m_SoftSelectIndexWasPreviouslySelected &&
                 evt.button == (int)MouseButton.LeftMouse &&
                 evt.modifiers == EventModifiers.None)
@@ -1233,9 +1339,12 @@ namespace Unity.AppUI.UI
             {
                 SetSelectionInternal(m_OriginalSelection, false, false);
                 scrollView.verticalScroller.value = m_OriginalScrollOffset;
-            }
+                m_SoftSelectIndex = -1;
 
-            m_SoftSelectIndex = -1;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in isSelectingProperty);
+#endif
+            }
         }
 
         /// <summary>
@@ -1268,10 +1377,22 @@ namespace Unity.AppUI.UI
             if (!HasValidDataAndBindings())
                 return;
 
-            if (Mathf.Approximately(evt.newRect.height, evt.oldRect.height))
+            var heightChanged = !Mathf.Approximately(evt.newRect.height, evt.oldRect.height);
+            var widthChanged = !Mathf.Approximately(evt.newRect.width, evt.oldRect.width);
+
+            if (!heightChanged && !widthChanged)
                 return;
 
-            OnContainerHeightChanged(evt.newRect.height);
+            if (heightChanged)
+                OnContainerHeightChanged(evt.newRect.height);
+
+            if (widthChanged)
+            {
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in itemWidthProperty);
+                NotifyPropertyChanged(in resolvedItemWidthProperty);
+#endif
+            }
         }
 
         void ProcessSingleClick(int clickedIndex)
@@ -1329,6 +1450,18 @@ namespace Unity.AppUI.UI
                 defaultValue = true
             };
 
+            readonly UxmlIntAttributeDescription m_ColumnCount = new UxmlIntAttributeDescription
+            {
+                name = "column-count",
+                defaultValue = 1
+            };
+
+            readonly UxmlIntAttributeDescription m_SelectedIndex = new UxmlIntAttributeDescription
+            {
+                name = "selected-index",
+                defaultValue = -1
+            };
+
             /// <summary>
             /// Returns an empty enumerable, because list views usually do not have child elements.
             /// </summary>
@@ -1353,6 +1486,8 @@ namespace Unity.AppUI.UI
                 view.preventScrollWithModifiers = m_PreventScrollWithModifiers.GetValueFromBag(bag, cc);
                 view.selectionType = m_SelectionType.GetValueFromBag(bag, cc);
                 view.allowNoSelection = m_AllowNoSelection.GetValueFromBag(bag, cc);
+                view.columnCount = m_ColumnCount.GetValueFromBag(bag, cc);
+                view.selectedIndex = m_SelectedIndex.GetValueFromBag(bag, cc);
             }
         }
 #endif

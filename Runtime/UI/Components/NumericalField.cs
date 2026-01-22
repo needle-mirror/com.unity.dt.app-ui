@@ -22,6 +22,9 @@ namespace Unity.AppUI.UI
             ISizeableElement,
             INotifyValueChanging<TValue>,
             IFormattable<TValue>
+#if ENABLE_VALUEFIELD_INTERFACE
+            , IValueField<TValue>
+#endif
         where TValue : struct, IComparable, IComparable<TValue>, IFormattable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -43,6 +46,10 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId highValueProperty = new BindingId(nameof(highValue));
 
         internal static readonly BindingId validateValueProperty = new BindingId(nameof(validateValue));
+
+#if ENABLE_VALUEFIELD_INTERFACE
+        internal static readonly BindingId acceptDraggingProperty = new BindingId(nameof(acceptDragging));
+#endif
 
 #endif
 
@@ -124,6 +131,54 @@ namespace Unity.AppUI.UI
 
         FormatFunction<TValue> m_FormatFunction;
 
+#if ENABLE_VALUEFIELD_INTERFACE
+
+        /// <summary>
+        /// The unit dragger.
+        /// </summary>
+        protected readonly FieldMouseDragger<TValue> m_UnitDragger;
+
+        /// <summary>
+        /// Base value at the start of a drag operation.
+        /// </summary>
+        TValue m_DragBaseValue;
+
+        /// <summary>
+        /// Whether a drag operation is in progress.
+        /// </summary>
+        protected bool isDragging { get; private set; }
+
+        /// <summary>
+        /// Whether the field accepts dragging to change value.
+        /// </summary>
+        bool m_AcceptDragging;
+
+        /// <summary>
+        /// Whether the field accepts dragging to change value.
+        /// Setting this to true will enable drag context listening when the element is attached to a panel.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool acceptDragging
+        {
+            get => m_AcceptDragging;
+            set
+            {
+                var changed = m_AcceptDragging != value;
+                m_AcceptDragging = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in acceptDraggingProperty);
+#endif
+            }
+        }
+#endif
+
         /// <summary>
         /// The format string of the element.
         /// </summary>
@@ -194,7 +249,7 @@ namespace Unity.AppUI.UI
             m_InputElement = new UnityEngine.UIElements.TextField { name = inputUssClassName, pickingMode = PickingMode.Ignore };
             m_InputElement.AddToClassList(inputUssClassName);
             m_InputElement.AddManipulator(new BlinkingCursor());
-            m_UnitElement = new LocalizedTextElement { name = unitUssClassName, pickingMode = PickingMode.Ignore };
+            m_UnitElement = new LocalizedTextElement { name = unitUssClassName, pickingMode = PickingMode.Position };
             m_UnitElement.AddToClassList(unitUssClassName);
 
             m_InputContainer.hierarchy.Add(m_InputElement);
@@ -207,7 +262,113 @@ namespace Unity.AppUI.UI
             m_InputElement.RuntimeContextMenu();
             m_InputElement.RegisterValueChangedCallback(OnInputValueChanged);
 
+#if ENABLE_VALUEFIELD_INTERFACE
+            m_UnitDragger = new FieldMouseDragger<TValue>(this);
+            m_UnitDragger.SetDragZone(m_UnitElement);
+            RegisterCallback<AttachToPanelEvent>(OnAttachedToPanel);
+            RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
+            acceptDragging = false;
+#endif
+
             size = Size.M;
+        }
+
+#if ENABLE_VALUEFIELD_INTERFACE
+
+        void OnAttachedToPanel(AttachToPanelEvent evt)
+        {
+            if (!acceptDragging)
+                return;
+
+            // make sure to unregister first to avoid multiple registrations
+            this.UnregisterContextChangedCallback<DragContext>(OnDragContextChanged);
+            this.RegisterContextChangedCallback<DragContext>(OnDragContextChanged);
+        }
+
+        void OnDetachedFromPanel(DetachFromPanelEvent evt)
+        {
+            this.UnregisterContextChangedCallback<DragContext>(OnDragContextChanged);
+        }
+
+        void OnDragContextChanged(ContextChangedEvent<DragContext> evt)
+        {
+            // DragContext is sent only when the pointer has moved.
+            var context = evt.context;
+            if (context == null || context.phase == DragPhase.Ended)
+            {
+                // Drag ended, reset state
+                StopDragging();
+                return;
+            }
+
+            if (context.phase == DragPhase.Started)
+            {
+                // Drag started, initialize state
+                StartDragging();
+                return;
+            }
+
+            ApplyInputDeviceDelta(context.delta, context.speed, m_DragBaseValue);
+        }
+
+        // IValueField implementation for drag handling
+
+        /// <summary>
+        /// Apply input device delta to the <see cref="IValueField{T}"/> element.
+        /// </summary>
+        /// <param name="delta"> The delta from the input device. </param>
+        /// <param name="speed"> The speed of the delta application. </param>
+        /// <param name="startValue"> The starting value for the delta application. </param>
+        public abstract void ApplyInputDeviceDelta(Vector3 delta, DeltaSpeed speed, TValue startValue);
+
+        /// <summary>
+        /// Start dragging operation.
+        /// </summary>
+        public virtual void StartDragging()
+        {
+            isDragging = true;
+            m_InputElement.textSelection.SelectNone();
+            m_DragBaseValue = m_Value;
+            MarkDirtyRepaint();
+        }
+
+        /// <summary>
+        /// Stop dragging operation.
+        /// </summary>
+        public virtual void StopDragging()
+        {
+            isDragging = false;
+            TrySendChangeEvent(m_DragBaseValue, m_Value);
+            MarkDirtyRepaint();
+        }
+
+#endif
+
+        /// <summary>
+        /// Try to send a Changing event.
+        /// </summary>
+        /// <param name="previousValue"> The previous value. </param>
+        /// <param name="newValue"> The new value. </param>
+        protected void TrySendChangingEvent(TValue previousValue, TValue newValue)
+        {
+            if (newValue.CompareTo(previousValue) == 0)
+                return;
+
+            using var changeEvent = ChangingEvent<TValue>.GetPooled();
+            changeEvent.target = this;
+            changeEvent.previousValue = previousValue;
+            changeEvent.newValue = m_Value;
+            SendEvent(changeEvent);
+        }
+
+        void TrySendChangeEvent(TValue previousValue, TValue newValue)
+        {
+            if (newValue.CompareTo(previousValue) == 0)
+                return;
+
+            using var changeEvent = ChangeEvent<TValue>.GetPooled(previousValue, newValue);
+            changeEvent.target = this;
+            SendEvent(changeEvent);
         }
 
         void OnInputValueChanged(ChangeEvent<string> evt)
@@ -229,11 +390,7 @@ namespace Unity.AppUI.UI
                 if (previousValue.CompareTo(m_Value) == 0)
                     return;
 
-                using var changeEvent = ChangingEvent<TValue>.GetPooled();
-                changeEvent.target = this;
-                changeEvent.previousValue = previousValue;
-                changeEvent.newValue = m_Value;
-                SendEvent(changeEvent);
+                TrySendChangingEvent(previousValue, m_Value);
             }
             else if (validateValue != null)
             {
@@ -386,10 +543,9 @@ namespace Unity.AppUI.UI
                 if (AreEqual(m_LastValue, val) && AreEqual(m_Value, val))
                     return;
 
-                using var evt = ChangeEvent<TValue>.GetPooled(m_LastValue, val);
-                evt.target = this;
+                var previousValue = m_LastValue;
                 SetValueWithoutNotify(val);
-                SendEvent(evt);
+                TrySendChangeEvent(previousValue, m_Value);
 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
@@ -537,6 +693,23 @@ namespace Unity.AppUI.UI
         /// <returns>The increment factor.</returns>
         protected abstract float GetIncrementFactor(TValue baseValue);
 
+        /// <summary>
+        /// Calculate the increment factor based on a base value and modifiers.
+        /// </summary>
+        /// <param name="baseValue"> The base value.</param>
+        /// <param name="fastModifier"> The fast modifier key state (e.g., Shift key).</param>
+        /// <param name="slowModifier"> The slow modifier key state (e.g., Alt key).</param>
+        /// <returns> The increment factor.</returns>
+        protected virtual float GetIncrementFactor(TValue baseValue, bool fastModifier, bool slowModifier) =>
+            GetIncrementFactor(baseValue) * (fastModifier ? 10f : slowModifier ? 0.1f : 1f);
+
+        /// <summary>
+        /// Internal method to invoke GetIncrementFactor from tests.
+        /// </summary>
+        /// <param name="baseValue">The base value.</param>
+        /// <returns>The increment factor.</returns>
+        internal float InvokeGetIncrementFactor(TValue baseValue) => GetIncrementFactor(baseValue);
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -563,6 +736,14 @@ namespace Unity.AppUI.UI
             readonly UxmlStringAttributeDescription m_Value = new UxmlStringAttributeDescription { name = "value", defaultValue = "0" };
 
             readonly UxmlStringAttributeDescription m_Format = new UxmlStringAttributeDescription { name = "format-string", defaultValue = null };
+
+#if ENABLE_VALUEFIELD_INTERFACE
+            readonly UxmlBoolAttributeDescription m_AcceptDragging = new UxmlBoolAttributeDescription
+            {
+                name = "accept-dragging",
+                defaultValue = false
+            };
+#endif
 
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
@@ -594,7 +775,10 @@ namespace Unity.AppUI.UI
                 if (m_Format.TryGetValueFromBag(bag, cc, ref formatStr) && !string.IsNullOrEmpty(formatStr))
                     element.formatString = formatStr;
 
-
+#if ENABLE_VALUEFIELD_INTERFACE
+                var acceptDragging = m_AcceptDragging.GetValueFromBag(bag, cc);
+                element.acceptDragging = acceptDragging;
+#endif
             }
         }
 

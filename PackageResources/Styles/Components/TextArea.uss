@@ -76,16 +76,19 @@
     padding: var(--appui-sizing-60);
 }
 
-.appui-textarea:hover {
+.appui-textarea:hover,
+.appui-inputlabel:hover > .appui-textarea {
     background-color: var(--appui-alias-field-background-color-hover);
     border-color: var(--appui-alias-field-border-color-hover);
 }
 
-.appui-textarea:hover .appui-textarea__input {
+.appui-textarea:hover .appui-textarea__input,
+.appui-inputlabel:hover .appui-textarea__input {
     color: var(--appui-foregrounds-100);
 }
 
-.appui-textarea.is-focused {
+.appui-textarea.is-focused,
+.appui-inputlabel:hover > .appui-textarea.is-focused {
     background-color: var(--appui-alias-field-background-color-focus);
     border-color: var(--appui-alias-field-border-color-focus);
 }
@@ -118,7 +121,8 @@
 }
 
 .appui-textarea:disabled, /*.is-disabled.appui-textarea*/
-.appui-textarea:hover:disabled /*.is-disabled.appui-textarea*/
+.appui-textarea:hover:disabled, /*.is-disabled.appui-textarea*/
+.appui-inputlabel:hover > .appui-textarea:disabled /*.appui-inputlabel:hover .is-disabled.appui-textarea*/
 {
     background-color: var(--appui-alias-field-background-color-disabled);
     border-color: var(--appui-alias-field-border-color-disabled);

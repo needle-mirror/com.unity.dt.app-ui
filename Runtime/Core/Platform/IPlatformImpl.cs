@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Unity.AppUI.Core
@@ -131,6 +132,28 @@ namespace Unity.AppUI.Core
         /// <param name="type"> The type of data to set. </param>
         /// <param name="data"> The data to set. </param>
         void SetPasteboardData(PasteboardType type, byte[] data);
+
+        /// <summary>
+        /// Whether the platform has data of the given type in the pasteboard asynchronously.
+        /// </summary>
+        /// <param name="type"> The type of data to check for. </param>
+        /// <returns> A task that completes with whether the platform has data of the given type in the pasteboard. </returns>
+        Task<bool> HasPasteboardDataAsync(PasteboardType type);
+
+        /// <summary>
+        /// Get the data of the given type from the pasteboard asynchronously.
+        /// </summary>
+        /// <param name="type"> The type of data to get. </param>
+        /// <returns> A task that completes with the data of the given type from the pasteboard. </returns>
+        Task<byte[]> GetPasteboardDataAsync(PasteboardType type);
+
+        /// <summary>
+        /// Set the data of the given type to the pasteboard asynchronously.
+        /// </summary>
+        /// <param name="type"> The type of data to set. </param>
+        /// <param name="data"> The data to set. </param>
+        /// <returns> A task that completes when the pasteboard data has been set. </returns>
+        Task SetPasteboardDataAsync(PasteboardType type, byte[] data);
 
         /// <summary>
         /// Event to update the native integration.

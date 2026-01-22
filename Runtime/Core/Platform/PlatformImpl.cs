@@ -1,4 +1,6 @@
 using System;
+using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Unity.AppUI.Core
@@ -321,11 +323,49 @@ namespace Unity.AppUI.Core
 
         public virtual Color GetSystemColor(SystemColorType colorType) => Color.clear;
 
-        public virtual bool HasPasteboardData(PasteboardType type) => false;
+        public virtual bool HasPasteboardData(PasteboardType type)
+        {
+            if (type == PasteboardType.Text)
+            {
+                var str = GUIUtility.systemCopyBuffer;
+                return !string.IsNullOrEmpty(str);
+            }
 
-        public virtual byte[] GetPasteboardData(PasteboardType type) => Array.Empty<byte>();
+            return false;
+        }
 
-        public virtual void SetPasteboardData(PasteboardType type, byte[] data) { }
+        public virtual byte[] GetPasteboardData(PasteboardType type)
+        {
+            if (type == PasteboardType.Text)
+            {
+                var str = GUIUtility.systemCopyBuffer;
+                return Encoding.UTF8.GetBytes(str);
+            }
+
+            return Array.Empty<byte>();
+        }
+
+        public virtual void SetPasteboardData(PasteboardType type, byte[] data)
+        {
+            if (type == PasteboardType.Text)
+                GUIUtility.systemCopyBuffer = Encoding.UTF8.GetString(data);
+        }
+
+        public virtual Task<bool> HasPasteboardDataAsync(PasteboardType type)
+        {
+            return Task.FromResult(HasPasteboardData(type));
+        }
+
+        public virtual Task<byte[]> GetPasteboardDataAsync(PasteboardType type)
+        {
+            return Task.FromResult(GetPasteboardData(type));
+        }
+
+        public virtual Task SetPasteboardDataAsync(PasteboardType type, byte[] data)
+        {
+            SetPasteboardData(type, data);
+            return Task.CompletedTask;
+        }
 
         public virtual int layoutDirection => m_LastLayoutDirection;
 

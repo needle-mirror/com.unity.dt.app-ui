@@ -92,6 +92,10 @@
     border-color: var(--appui-alias-field-border-color-focus);
 }
 
+.appui-colorfield--inline-picker-opened .appui-colorfield__color-picker-icon {
+    --unity-image-tint-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
 .appui-colorfield.keyboard-focus {
     /* converted from : outline-width: var(--appui-alias-control-outline-width); */
     --outline-width: var(--appui-alias-control-outline-width);

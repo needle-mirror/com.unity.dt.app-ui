@@ -185,6 +185,9 @@ namespace Unity.AppUI.UI
             var result = new PositionResult();
             result.finalPlacement = options.favoritePlacement;
 
+            if (element.panel == null || anchor.panel == null || container.panel == null)
+                return result;
+
             if (container == null)
                 return result;
 

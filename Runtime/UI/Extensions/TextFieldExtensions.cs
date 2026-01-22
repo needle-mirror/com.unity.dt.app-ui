@@ -1,4 +1,6 @@
 using System;
+using System.Text;
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -64,7 +66,7 @@ namespace Unity.AppUI.UI
             var readOnly = textField.isReadOnly;
             var cursorIndex = textSelection.cursorIndex;
             var selectIndex = textSelection.selectIndex;
-            var text = textField.value;
+            var text = textField.value ?? string.Empty;
 
             evt.menuBuilder.SetPlacement(PopoverPlacement.InsideTopStart);
             evt.menuBuilder.SetOffset((int)evt.localPosition.y);
@@ -75,67 +77,106 @@ namespace Unity.AppUI.UI
 
             evt.menuBuilder.shown += OnMenuShown;
 
-            evt.menuBuilder.AddAction(TextActions.Cut, menuItem =>
+            if (!readOnly)
             {
-                menuItem.label = TextActions.CutLabel;
-                menuItem.SetEnabled(hasSelection);
-                menuItem.clickable.clicked += () =>
+                evt.menuBuilder.AddAction(TextActions.Cut, menuItem =>
                 {
-                    var clipboardContent = text.Substring(Math.Min(cursorIndex, selectIndex), Math.Abs(cursorIndex - selectIndex));
-                    GUIUtility.systemCopyBuffer = clipboardContent;
-                    // remove the text in the input field
-                    var start = Math.Min(cursorIndex, selectIndex);
-                    textField.value = text.Remove(start, Math.Abs(cursorIndex - selectIndex));
-                    textSelection.cursorIndex = start;
-                    textSelection.selectIndex = start;
-                    textField.Focus();
-                };
-            });
+                    menuItem.label = TextActions.CutLabel;
+                    menuItem.SetEnabled(hasSelection);
+                    menuItem.clickable.activeChanged += OnCut;
+                });
+            }
 
             evt.menuBuilder.AddAction(TextActions.Copy, menuItem =>
             {
                 menuItem.label = TextActions.CopyLabel;
                 menuItem.SetEnabled(hasSelection);
-                menuItem.clickable.clicked += () =>
-                {
-                    var clipboardContent = text.Substring(Math.Min(cursorIndex, selectIndex), Math.Abs(cursorIndex - selectIndex));
-                    GUIUtility.systemCopyBuffer = clipboardContent;
-                    textSelection.cursorIndex = cursorIndex;
-                    textSelection.selectIndex = selectIndex;
-                    textField.Focus();
-                };
+                menuItem.clickable.activeChanged += OnCopy;
             });
 
-            evt.menuBuilder.AddAction(TextActions.Paste, menuItem =>
+            if (!readOnly)
             {
-                var clipboardContent = GUIUtility.systemCopyBuffer;
-                menuItem.label = TextActions.PasteLabel;
-                menuItem.SetEnabled(!readOnly && !string.IsNullOrEmpty(clipboardContent));
-                menuItem.clickable.clicked += () =>
+                evt.menuBuilder.AddAction(TextActions.Paste, menuItem =>
                 {
-                    // remove the selected text in the input field
-                    if (hasSelection)
+                    menuItem.label = TextActions.PasteLabel;
+                    menuItem.SetEnabled(false); // Disabled until clipboard access is confirmed
+                    menuItem.clickable.activeChanged += OnPaste;
+                    // Check clipboard access asynchronously and enable if available
+                    menuItem.schedule.Execute(async () =>
                     {
-                        var startIndex = Math.Min(cursorIndex, selectIndex);
-                        var length = Math.Abs(cursorIndex - selectIndex);
-                        text = text.Remove(startIndex, length);
-                    }
-                    // insert the text in the input field
-                    var insertIndex = Math.Min(cursorIndex, selectIndex);
-                    text = text.Insert(insertIndex, clipboardContent);
-                    var end = insertIndex + clipboardContent.Length;
-                    if (textField.maxLength > 0 && text.Length > textField.maxLength)
-                    {
-                        // If the new text exceeds the max length, truncate it
-                        text = text[..textField.maxLength];
-                        end = text.Length;
-                    }
-                    textField.value = text;
-                    textSelection.cursorIndex = end;
-                    textSelection.selectIndex = end;
-                    textField.Focus();
-                };
-            });
+                        try
+                        {
+                            var hasAccessToClipboard = await Platform.HasPasteboardDataAsync(PasteboardType.Text);
+                            menuItem.SetEnabled(hasAccessToClipboard);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogWarning($"Failed to check clipboard access: {ex.Message}");
+                        }
+                    });
+                });
+            }
+
+            return;
+
+            async void OnCut(bool active)
+            {
+                if (!active)
+                    return;
+                var clipboardContent = text.Substring(Math.Min(cursorIndex, selectIndex), Math.Abs(cursorIndex - selectIndex));
+                await Platform.SetPasteboardDataAsync(PasteboardType.Text, Encoding.UTF8.GetBytes(clipboardContent));
+                // remove the text in the input field
+                var start = Math.Min(cursorIndex, selectIndex);
+                textField.value = text.Remove(start, Math.Abs(cursorIndex - selectIndex));
+                textSelection.cursorIndex = start;
+                textSelection.selectIndex = start;
+                textField.Focus();
+            }
+
+            async void OnCopy(bool active)
+            {
+                if (!active)
+                    return;
+                var clipboardContent = text.Substring(Math.Min(cursorIndex, selectIndex), Math.Abs(cursorIndex - selectIndex));
+                await Platform.SetPasteboardDataAsync(PasteboardType.Text, Encoding.UTF8.GetBytes(clipboardContent));
+                textSelection.cursorIndex = cursorIndex;
+                textSelection.selectIndex = selectIndex;
+                textField.Focus();
+            }
+
+            async void OnPaste(bool active)
+            {
+                if (!active)
+                    return;
+
+                var clipboardData = await Platform.GetPasteboardDataAsync(PasteboardType.Text);
+                var clipboardContent = Encoding.UTF8.GetString(clipboardData);
+
+                if (string.IsNullOrEmpty(clipboardContent))
+                    return;
+
+                // remove the selected text in the input field
+                if (hasSelection)
+                {
+                    var startIndex = Math.Min(cursorIndex, selectIndex);
+                    var length = Math.Abs(cursorIndex - selectIndex);
+                    text = text.Remove(startIndex, length);
+                }
+                // insert the text in the input field
+                var insertIndex = Math.Min(cursorIndex, selectIndex);
+                text = text.Insert(insertIndex, clipboardContent);
+                var end = insertIndex + clipboardContent.Length;
+                if (textField.maxLength > 0 && text.Length > textField.maxLength)
+                {
+                    // If the new text exceeds the max length, truncate it
+                    text = text[..textField.maxLength];
+                    end = text.Length;
+                }
+                textField.value = text;
+                textSelection.cursorIndex = end;
+                textSelection.selectIndex = end;
+                textField.Focus();
+            }
         }
 
         static void OnMenuShown(MenuBuilder builder)

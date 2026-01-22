@@ -371,7 +371,7 @@ namespace Unity.AppUI.UI
             AddToClassList(ussClassName);
 
             focusable = false;
-            pickingMode = PickingMode.Ignore;
+            //pickingMode = PickingMode.Ignore;
 
             m_Toolbar = new ColorToolbar { name = toolbarUssClassName, focusable = false, pickingMode = PickingMode.Ignore };
             m_Toolbar.AddToClassList(toolbarUssClassName);

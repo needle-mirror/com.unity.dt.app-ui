@@ -77,6 +77,8 @@ namespace Unity.AppUI.UI
 
         Size m_Size;
 
+        BoundsInt m_LastValue;
+
         BoundsInt m_Value;
 
         Func<BoundsInt, bool> m_ValidateValue;
@@ -238,11 +240,13 @@ namespace Unity.AppUI.UI
             get => m_Value;
             set
             {
-                if (m_Value == value)
+                if (m_LastValue == m_Value && m_Value == value)
                     return;
-                using var evt = ChangeEvent<BoundsInt>.GetPooled(m_Value, value);
-                evt.target = this;
+
+                var previousValue = m_LastValue;
                 SetValueWithoutNotify(value);
+                using var evt = ChangeEvent<BoundsInt>.GetPooled(previousValue, m_Value);
+                evt.target = this;
                 SendEvent(evt);
 
 #if ENABLE_RUNTIME_DATA_BINDINGS

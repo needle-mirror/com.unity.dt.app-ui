@@ -1,3 +1,5 @@
+using Unity.AppUI.Core;
+using UnityEngine;
 using UnityEngine.UIElements;
 #if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
@@ -48,6 +50,10 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId helpMessageProperty = new BindingId(nameof(helpMessage));
 
         internal static readonly BindingId helpVariantProperty = new BindingId(nameof(helpVariant));
+
+#if ENABLE_VALUEFIELD_INTERFACE
+        internal static readonly BindingId draggableProperty = new BindingId(nameof(draggable));
+#endif
 
 #endif
 
@@ -103,6 +109,13 @@ namespace Unity.AppUI.UI
         /// </summary>
         public const string withHelpTextUssClassName = ussClassName + "--with-help-text";
 
+        /// <summary>
+        /// The InputLabel dragging styling class.
+        /// </summary>
+        public const string draggingUssClassName = ussClassName + "--dragging";
+
+        readonly VisualElement m_LabelContainer;
+
         readonly FieldLabel m_FieldLabel;
 
         readonly VisualElement m_Container;
@@ -112,6 +125,12 @@ namespace Unity.AppUI.UI
         Direction m_Direction = Direction.Horizontal;
 
         Align m_InputAlignment = Align.Stretch;
+
+#if ENABLE_VALUEFIELD_INTERFACE
+        bool m_Draggable;
+
+        Draggable m_DraggableManipulator;
+#endif
 
         /// <summary>
         /// The content container.
@@ -341,6 +360,86 @@ namespace Unity.AppUI.UI
             }
         }
 
+#if ENABLE_VALUEFIELD_INTERFACE
+        /// <summary>
+        /// Whether the label is draggable to increment/decrement the value of child input fields.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool draggable
+        {
+            get => m_Draggable;
+            set
+            {
+                var changed = m_Draggable != value;
+                m_Draggable = value;
+                EnableInClassList(draggingUssClassName, m_Draggable);
+
+                if (m_Draggable)
+                {
+                    if (m_DraggableManipulator == null)
+                    {
+                        m_DraggableManipulator = new Draggable(null, OnDrag, OnDragEnd, OnDragStart)
+                        {
+                            dragDirection = Draggable.DragDirection.Horizontal
+                        };
+                        m_DraggableManipulator.activators.Add(new ManipulatorActivationFilter
+                        {
+                            button = MouseButton.LeftMouse,
+                            modifiers = EventModifiers.Shift
+                        });
+                        m_DraggableManipulator.activators.Add(new ManipulatorActivationFilter
+                        {
+                            button = MouseButton.LeftMouse,
+                            modifiers = EventModifiers.Alt
+                        });
+                        m_DraggableManipulator.activators.Add(new ManipulatorActivationFilter
+                        {
+                            button = MouseButton.LeftMouse,
+                            modifiers = EventModifiers.Shift | EventModifiers.Alt
+                        });
+                        m_LabelContainer.AddManipulator(m_DraggableManipulator);
+                    }
+                }
+                else
+                {
+                    if (m_DraggableManipulator != null)
+                    {
+                        m_LabelContainer.RemoveManipulator(m_DraggableManipulator);
+                        m_DraggableManipulator = null;
+                    }
+                }
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in draggableProperty);
+#endif
+            }
+        }
+
+        void OnDragStart(Draggable d)
+        {
+            var s = d.shiftKey ? DeltaSpeed.Fast : d.altKey ? DeltaSpeed.Slow : DeltaSpeed.Normal;
+            this.ProvideContext(new DragContext(DragPhase.Started, Vector3.zero, s));
+        }
+
+        void OnDrag(Draggable d)
+        {
+            var s = d.shiftKey ? DeltaSpeed.Fast : d.altKey ? DeltaSpeed.Slow : DeltaSpeed.Normal;
+            this.ProvideContext(new DragContext(DragPhase.Dragging, d.deltaPos, s));
+        }
+
+        void OnDragEnd(Draggable d)
+        {
+            var s = d.shiftKey ? DeltaSpeed.Fast : d.altKey ? DeltaSpeed.Slow : DeltaSpeed.Normal;
+            this.ProvideContext(new DragContext(DragPhase.Ended, Vector3.zero, s));
+        }
+#endif
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -357,19 +456,21 @@ namespace Unity.AppUI.UI
         public InputLabel(string label)
         {
             AddToClassList(ussClassName);
+            focusable = true;
+            delegatesFocus = true;
             pickingMode = PickingMode.Position;
 
-            var labelContainer = new VisualElement { name = labelContainerUssClassName, pickingMode = PickingMode.Ignore };
-            labelContainer.AddToClassList(labelContainerUssClassName);
-            hierarchy.Add(labelContainer);
+            m_LabelContainer = new VisualElement { name = labelContainerUssClassName, pickingMode = PickingMode.Position };
+            m_LabelContainer.AddToClassList(labelContainerUssClassName);
+            hierarchy.Add(m_LabelContainer);
 
             m_FieldLabel = new FieldLabel(label) { name = fieldLabelUssClassName, pickingMode = PickingMode.Ignore };
             m_FieldLabel.AddToClassList(fieldLabelUssClassName);
-            labelContainer.hierarchy.Add(m_FieldLabel);
+            m_LabelContainer.hierarchy.Add(m_FieldLabel);
 
             var cell = new HelpText { pickingMode = PickingMode.Ignore };
             cell.AddToClassList(helpTextUssClassName);
-            labelContainer.hierarchy.Add(cell);
+            m_LabelContainer.hierarchy.Add(cell);
 
             var inputContainer = new VisualElement { name = inputContainerUssClassName, pickingMode = PickingMode.Ignore };
             inputContainer.AddToClassList(inputContainerUssClassName);
@@ -396,6 +497,9 @@ namespace Unity.AppUI.UI
             required = false;
             helpMessage = null;
             helpVariant = HelpTextVariant.Destructive;
+#if ENABLE_VALUEFIELD_INTERFACE
+            draggable = false;
+#endif
         }
 
 #if ENABLE_UXML_TRAITS
@@ -465,6 +569,14 @@ namespace Unity.AppUI.UI
                 defaultValue = "(Required)",
             };
 
+#if ENABLE_VALUEFIELD_INTERFACE
+            readonly UxmlBoolAttributeDescription m_Draggable = new UxmlBoolAttributeDescription
+            {
+                name = "draggable",
+                defaultValue = false,
+            };
+#endif
+
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
             /// </summary>
@@ -508,6 +620,12 @@ namespace Unity.AppUI.UI
                 var requiredText = string.Empty;
                 if (m_RequiredText.TryGetValueFromBag(bag, cc, ref requiredText))
                     element.requiredText = requiredText;
+
+#if ENABLE_VALUEFIELD_INTERFACE
+                var draggable = false;
+                if (m_Draggable.TryGetValueFromBag(bag, cc, ref draggable))
+                    element.draggable = draggable;
+#endif
             }
         }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -150,6 +151,24 @@ namespace Unity.AppUI.UI
             };
             currentMenu.Add(item);
             bindItemFunc?.Invoke(item);
+            return this;
+        }
+
+        /// <summary>
+        /// Add an Action menu item to the current menu.
+        /// </summary>
+        /// <param name="actionId"> A unique identifier for the action. </param>
+        /// <param name="bindItemTaskFunc"> A callback to bind the action. </param>
+        /// <returns> The MenuBuilder instance. </returns>
+        public async Task<MenuBuilder> AddActionAsync(int actionId, Func<MenuItem,Task> bindItemTaskFunc)
+        {
+            var item = new MenuItem
+            {
+                userData = actionId,
+            };
+            currentMenu.Add(item);
+            if (bindItemTaskFunc != null)
+                await bindItemTaskFunc.Invoke(item);
             return this;
         }
 

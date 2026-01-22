@@ -70,6 +70,8 @@ namespace Unity.AppUI.UI
 
         Size m_Size;
 
+        Rect m_LastValue;
+
         Rect m_Value;
 
         readonly FloatField m_WField;
@@ -185,6 +187,7 @@ namespace Unity.AppUI.UI
         public void SetValueWithoutNotify(Rect newValue)
         {
             m_Value = newValue;
+            m_LastValue = m_Value;
             m_XField.SetValueWithoutNotify(m_Value.x);
             m_YField.SetValueWithoutNotify(m_Value.y);
             m_HField.SetValueWithoutNotify(m_Value.height);
@@ -206,11 +209,13 @@ namespace Unity.AppUI.UI
             get => m_Value;
             set
             {
-                if (m_Value == value)
+                if (m_LastValue == m_Value && m_Value == value)
                     return;
-                using var evt = ChangeEvent<Rect>.GetPooled(m_Value, value);
-                evt.target = this;
+
+                var previousValue = m_LastValue;
                 SetValueWithoutNotify(value);
+                using var evt = ChangeEvent<Rect>.GetPooled(previousValue, m_Value);
+                evt.target = this;
                 SendEvent(evt);
 
 #if ENABLE_RUNTIME_DATA_BINDINGS

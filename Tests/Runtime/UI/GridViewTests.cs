@@ -6,6 +6,9 @@ using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+using Unity.Properties;
+#endif
 
 namespace Unity.AppUI.Tests.UI
 {
@@ -126,5 +129,199 @@ namespace Unity.AppUI.Tests.UI
             m_Panel = null;
             m_TestUI.rootVisualElement.Clear();
         }
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [UnityTest, Order(30)]
+        public IEnumerator DataBinding_ColumnCount()
+        {
+            var dataSource = ScriptableObject.CreateInstance<GridViewDataSource>();
+            dataSource.columnCountValue = 2;
+
+            var gridView = new GridView
+            {
+                makeItem = () => new Text(),
+                bindItem = (e, i) => ((Text)e).text = i.ToString(),
+                itemsSource = Enumerable.Range(0, 10).ToList(),
+                style = { height = 400 }
+            };
+
+            m_TestUI.rootVisualElement.Add(gridView);
+            gridView.StretchToParentSize();
+
+            // Set data source
+            gridView.dataSource = dataSource;
+
+            // Bind columnCount to data source
+            var binding = new DataBinding
+            {
+                dataSourcePath = new PropertyPath(nameof(GridViewDataSource.columnCountValue)),
+                bindingMode = BindingMode.ToTarget
+            };
+            gridView.SetBinding(nameof(gridView.columnCount), binding);
+
+            yield return null;
+
+            // Verify initial binding
+            Assert.AreEqual(2, gridView.columnCount);
+
+            // Change data source value
+            dataSource.columnCountValue = 3;
+            yield return null;
+
+            // Verify binding updated the property
+            Assert.AreEqual(3, gridView.columnCount);
+
+            m_TestUI.rootVisualElement.Clear();
+            Object.Destroy(dataSource);
+        }
+
+        [UnityTest, Order(31)]
+        public IEnumerator DataBinding_SelectedIndex()
+        {
+            var dataSource = ScriptableObject.CreateInstance<GridViewDataSource>();
+            dataSource.selectedIndexValue = 0;
+
+            var gridView = new GridView
+            {
+                makeItem = () => new Text(),
+                bindItem = (e, i) => ((Text)e).text = i.ToString(),
+                itemsSource = Enumerable.Range(0, 50).ToList(),
+                style = { height = 400 }
+            };
+
+            m_TestUI.rootVisualElement.Add(gridView);
+            gridView.StretchToParentSize();
+
+            // Set data source
+            gridView.dataSource = dataSource;
+
+            // Bind selectedIndex bidirectionally
+            var binding = new DataBinding
+            {
+                dataSourcePath = new PropertyPath(nameof(GridViewDataSource.selectedIndexValue)),
+                bindingMode = BindingMode.TwoWay
+            };
+            gridView.SetBinding(nameof(gridView.selectedIndex), binding);
+
+            yield return null;
+
+            // Verify initial binding
+            Assert.AreEqual(0, gridView.selectedIndex);
+
+            // Change data source value
+            dataSource.selectedIndexValue = 10;
+            yield return null;
+
+            // Verify binding updated the property
+            Assert.AreEqual(10, gridView.selectedIndex);
+
+            // Change UI and verify data source updates
+            gridView.selectedIndex = 20;
+            yield return null;
+
+            Assert.AreEqual(20, dataSource.selectedIndexValue);
+
+            m_TestUI.rootVisualElement.Clear();
+            Object.Destroy(dataSource);
+        }
+
+        [UnityTest, Order(32)]
+        public IEnumerator DataBinding_SelectionCount_ReadOnly()
+        {
+            var dataSource = ScriptableObject.CreateInstance<GridViewDataSource>();
+
+            var gridView = new GridView
+            {
+                makeItem = () => new Text(),
+                bindItem = (e, i) => ((Text)e).text = i.ToString(),
+                itemsSource = Enumerable.Range(0, 50).ToList(),
+                selectionType = SelectionType.Multiple,
+                style = { height = 400 }
+            };
+
+            m_TestUI.rootVisualElement.Add(gridView);
+            gridView.StretchToParentSize();
+
+            // Set data source
+            gridView.dataSource = dataSource;
+
+            // Bind selectionCount (read-only property)
+            var binding = new DataBinding
+            {
+                dataSourcePath = new PropertyPath(nameof(GridViewDataSource.selectionCountValue)),
+                bindingMode = BindingMode.ToTarget
+            };
+            gridView.SetBinding(nameof(gridView.selectionCount), binding);
+
+            yield return null;
+
+            // Initial value should be 0
+            Assert.AreEqual(0, gridView.selectionCount);
+
+            // Add selection
+            gridView.AddToSelection(5);
+            yield return null;
+
+            // Verify read-only binding reflects the change
+            Assert.AreEqual(1, gridView.selectionCount);
+
+            // Add more selections
+            gridView.AddToSelection(10);
+            gridView.AddToSelection(15);
+            yield return null;
+
+            Assert.AreEqual(3, gridView.selectionCount);
+
+            m_TestUI.rootVisualElement.Clear();
+            Object.Destroy(dataSource);
+        }
+
+        [UnityTest, Order(33)]
+        public IEnumerator DataBinding_ItemWidth_ReadOnly()
+        {
+            var dataSource = ScriptableObject.CreateInstance<GridViewDataSource>();
+
+            var gridView = new GridView
+            {
+                makeItem = () => new Text(),
+                bindItem = (e, i) => ((Text)e).text = i.ToString(),
+                itemsSource = Enumerable.Range(0, 10).ToList(),
+                columnCount = 2,
+                style = { height = 400, width = 400 }
+            };
+
+            m_TestUI.rootVisualElement.Add(gridView);
+            gridView.StretchToParentSize();
+
+            // Set data source
+            gridView.dataSource = dataSource;
+
+            // Bind itemWidth (read-only property)
+            var binding = new DataBinding
+            {
+                dataSourcePath = new PropertyPath(nameof(GridViewDataSource.itemWidthValue)),
+                bindingMode = BindingMode.ToTarget
+            };
+            gridView.SetBinding(nameof(gridView.itemWidth), binding);
+
+            yield return null;
+
+            // Verify initial value
+            Assert.Greater(gridView.itemWidth, 0);
+
+            var initialWidth = gridView.itemWidth;
+
+            // Change columnCount which affects itemWidth
+            gridView.columnCount = 4;
+            yield return null;
+
+            // Verify width changed
+            Assert.AreNotEqual(initialWidth, gridView.itemWidth);
+            Assert.IsTrue(gridView.itemWidth < initialWidth);
+
+            m_TestUI.rootVisualElement.Clear();
+            Object.Destroy(dataSource);
+        }
+#endif
     }
 }

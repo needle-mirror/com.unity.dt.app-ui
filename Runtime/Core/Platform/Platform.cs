@@ -1,6 +1,7 @@
 // #define APPUI_PLATFORM_DISABLED
 using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Unity.AppUI.Core
@@ -30,7 +31,9 @@ namespace Unity.AppUI.Core
 #else // APPUI_PLATFORM_DISABLED
             try
             {
-#if (UNITY_IOS && !UNITY_EDITOR)
+#if (UNITY_WEBGL && !UNITY_EDITOR)
+                s_Impl = new WebGLPlatformImpl();
+#elif (UNITY_IOS && !UNITY_EDITOR)
                 s_Impl = new IOSPlatformImpl();
 #elif (UNITY_ANDROID && !UNITY_EDITOR)
                 s_Impl = new AndroidPlatformImpl();
@@ -234,6 +237,28 @@ namespace Unity.AppUI.Core
         /// <param name="type"> The type of data to set.</param>
         /// <param name="data"> The data to set.</param>
         public static void SetPasteboardData(PasteboardType type, byte[] data) => s_Impl.SetPasteboardData(type, data);
+
+        /// <summary>
+        /// Whether the current platform's pasteboard has data for the given type asynchronously.
+        /// </summary>
+        /// <param name="type"> The type of data to check for.</param>
+        /// <returns> A task that completes with true if the pasteboard has data for the given type, otherwise false.</returns>
+        public static Task<bool> HasPasteboardDataAsync(PasteboardType type) => s_Impl.HasPasteboardDataAsync(type);
+
+        /// <summary>
+        /// Get the pasteboard data asynchronously.
+        /// </summary>
+        /// <param name="type"> The type of data to get.</param>
+        /// <returns> A task that completes with the pasteboard data.</returns>
+        public static Task<byte[]> GetPasteboardDataAsync(PasteboardType type) => s_Impl.GetPasteboardDataAsync(type);
+
+        /// <summary>
+        /// Set the pasteboard data asynchronously.
+        /// </summary>
+        /// <param name="type"> The type of data to set.</param>
+        /// <param name="data"> The data to set.</param>
+        /// <returns> A task that completes when the pasteboard data has been set.</returns>
+        public static Task SetPasteboardDataAsync(PasteboardType type, byte[] data) => s_Impl.SetPasteboardDataAsync(type, data);
 
         /// <summary>
         /// Handle an native message coming from a native App UI plugin.

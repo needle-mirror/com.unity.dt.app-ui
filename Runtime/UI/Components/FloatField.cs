@@ -74,8 +74,31 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="NumericalField{T}.GetIncrementFactor"/>
         protected override float GetIncrementFactor(float baseValue)
         {
-            return 0.001f * (Mathf.Approximately(baseValue, 0) ? 1f : baseValue);
+            // Use log scale for better increment across different magnitudes
+            var absValue = Mathf.Abs(baseValue);
+            if (absValue < 0.001f || Mathf.Approximately(absValue, 0f))
+                return 0.001f;
+
+            // Calculate the order of magnitude
+            var magnitude = Mathf.Pow(10f, Mathf.Floor(Mathf.Log10(absValue)));
+            return magnitude * 0.01f;
         }
+
+#if ENABLE_VALUEFIELD_INTERFACE
+        /// <inheritdoc/>
+        public override void ApplyInputDeviceDelta(Vector3 delta, DeltaSpeed speed, float startValue)
+        {
+            var previousValue = m_Value;
+            var sensitivity = UINumericFieldsUtils.CalculateFloatDragSensitivity(startValue);
+            var acceleration = UINumericFieldsUtils.Acceleration(speed == DeltaSpeed.Fast, speed == DeltaSpeed.Slow);
+            var v = (double)previousValue;
+            v += UINumericFieldsUtils.NiceDelta(delta, acceleration) * sensitivity;
+            v = UINumericFieldsUtils.RoundBasedOnMinimumDifference(v, sensitivity);
+            var newValue = UINumericFieldsUtils.ClampToFloat(v);
+            SetValueWithoutNotify(newValue);
+            TrySendChangingEvent(previousValue, newValue);
+        }
+#endif
 
 #if ENABLE_UXML_TRAITS
 

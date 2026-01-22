@@ -186,16 +186,19 @@
     right: auto;
 }
 
-.appui-touchslider:hover {
+.appui-touchslider:hover,
+.appui-inputlabel:hover .appui-touchslider {
     background-color: var(--appui-alias-field-background-color-hover);
     border-color: var(--appui-alias-control-border-color-hover);
 }
 
-.appui-touchslider:hover > .appui-touchslider__progress {
+.appui-touchslider:hover > .appui-touchslider__progress,
+.appui-inputlabel:hover .appui-touchslider > .appui-touchslider__progress {
     background-color: var(--appui-base-300);
 }
 
-.appui-touchslider.is-focused {
+.appui-touchslider.is-focused,
+.appui-inputlabel:hover > .appui-touchslider.is-focused {
     background-color: var(--appui-alias-field-background-color-focus);
     border-color: var(--appui-accent-100);
 }
@@ -231,7 +234,8 @@
     border-color: var(--appui-destructive-100);
 }
 
-.appui-touchslider:disabled /*.appui-touchslider.is-disabled*/ {
+.appui-touchslider:disabled /*.appui-touchslider.is-disabled*/,
+.appui-inputlabel:hover > .appui-touchslider:disabled /*.appui-inputlabel:hover .appui-touchslider.is-disabled*/ {
     background-color: var(--appui-alias-field-background-color-disabled);
     border-color: var(--appui-alias-control-border-color-disabled);
     cursor: var(--appui-alias-control-cursor-disabled);

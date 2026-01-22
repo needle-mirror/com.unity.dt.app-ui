@@ -41,6 +41,11 @@ namespace Unity.AppUI.UI
         public bool active { get; private set; }
 
         /// <summary>
+        /// The event is invoked when the active state changes.
+        /// </summary>
+        public event Action<bool> activeChanged;
+
+        /// <summary>
         /// <para>The duration of a long press in milliseconds.</para>
         /// <para>
         /// The default value is -1.
@@ -480,11 +485,13 @@ namespace Unity.AppUI.UI
                 m_DeferLongPress.ExecuteLater(longPressDuration);
             }
             active = true;
+            activeChanged?.Invoke(active);
         }
 
         void Deactivate(int pointerId)
         {
             active = false;
+            activeChanged?.Invoke(active);
 
             if (target.HasPointerCapture(pointerId))
                 target.ReleasePointer(pointerId);
