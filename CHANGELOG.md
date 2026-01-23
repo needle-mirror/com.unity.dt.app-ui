@@ -4,13 +4,11 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.1.4] - 2026-01-23
+## [2.1.5] - 2026-01-23
 
 ### Fixed
 
-- Composite Numerical fields (such as Vector fields, Bounds fields, etc) previous value returned in the ChangeEvent is now the correct one.
-- Fixed applying anchored popup positions only if the computed values are different than the existing ones to avoid floating point precision issues in the layout.
-- App UI Icons StyleSheet Asset now has a StyleSheet icon in the Project window when creating the StyleSheet Asset.
+- Fixed the usage of obsolete InstanceId API.
 
 ## [2.2.0-pre.4] - 2026-01-23
 
@@ -23,6 +21,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added support of system theme in WebGL. Use `Platform.darkMode` or register your callback on the `Platform.darkModeChanged` event to make changes in your application based on the current system theme.
 - Added support of drag-to-increment-value feature in `InputLabel` UI element.
 - Added support of system clipboard in WebGL platform for text fields.
+
+### Fixed
+
+- Composite Numerical fields (such as Vector fields, Bounds fields, etc) previous value returned in the ChangeEvent is now the correct one.
+- Fixed applying anchored popup positions only if the computed values are different than the existing ones to avoid floating point precision issues in the layout.
+- App UI Icons StyleSheet Asset now has a StyleSheet icon in the Project window when creating the StyleSheet Asset.
+
+## [2.1.4] - 2026-01-23
 
 ### Fixed
 
