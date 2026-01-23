@@ -409,19 +409,28 @@ namespace Unity.AppUI.UI
 
             var movableElement = GetMovableElement();
             var result = AnchorPopupUtils.ComputePosition(movableElement, m_Anchor, containerView, new PositionOptions(placement, offset, crossOffset, shouldFlip));
-            movableElement.style.left = result.left;
-            movableElement.style.top = result.top;
-            movableElement.style.marginLeft = result.marginLeft;
-            movableElement.style.marginTop = result.marginTop;
+
+            if (!Mathf.Approximately(movableElement.resolvedStyle.left, result.left))
+                movableElement.style.left = result.left;
+            if (!Mathf.Approximately(movableElement.resolvedStyle.top, result.top))
+                movableElement.style.top = result.top;
+            if (!Mathf.Approximately(movableElement.resolvedStyle.marginLeft, result.marginLeft))
+                movableElement.style.marginLeft = result.marginLeft;
+            if (!Mathf.Approximately(movableElement.resolvedStyle.marginTop, result.marginTop))
+                movableElement.style.marginTop = result.marginTop;
             if (view is IPlaceableElement placeableElement)
             {
                 placeableElement.placement = result.finalPlacement;
                 if (placeableElement.tipElement is { } tip)
                 {
-                    tip.style.bottom = result.tipBottom < 0 ? StyleKeyword.Auto : result.tipBottom;
-                    tip.style.top = result.tipTop < 0 ? StyleKeyword.Auto : result.tipTop;
-                    tip.style.left = result.tipLeft < 0 ? StyleKeyword.Auto : result.tipLeft;
-                    tip.style.right = result.tipRight < 0 ? StyleKeyword.Auto : result.tipRight;
+                    if (!Mathf.Approximately(tip.resolvedStyle.bottom, result.tipBottom))
+                        tip.style.bottom = result.tipBottom < 0 ? StyleKeyword.Auto : result.tipBottom;
+                    if (!Mathf.Approximately(tip.resolvedStyle.top, result.tipTop))
+                        tip.style.top = result.tipTop < 0 ? StyleKeyword.Auto : result.tipTop;
+                    if (!Mathf.Approximately(tip.resolvedStyle.left, result.tipLeft))
+                        tip.style.left = result.tipLeft < 0 ? StyleKeyword.Auto : result.tipLeft;
+                    if (!Mathf.Approximately(tip.resolvedStyle.right, result.tipRight))
+                        tip.style.right = result.tipRight < 0 ? StyleKeyword.Auto : result.tipRight;
                 }
             }
             m_CurrentPlacement = result.finalPlacement;

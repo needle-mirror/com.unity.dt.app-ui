@@ -10,16 +10,11 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [2.1.3] - 2025-12-09
+## [2.1.4] - 2026-01-23
 
 ### Fixed
 
-- Fixed the AppUI settings assets search and auto-assignation before building a project.
-- Fixed columns size and added more info in Storybook window.
-- Fixed `VisualElementExtensions.IsOnScreen` method which gave wrong results in world-space panels.
-- Fixed code path activation for native plugins depending on target platform
-
-### Added
-
-- Added support of CoreCLR for the migration from Mono scripting backend for Unity 6.5+
+- Composite Numerical fields (such as Vector fields, Bounds fields, etc) previous value returned in the ChangeEvent is now the correct one.
+- Fixed applying anchored popup positions only if the computed values are different than the existing ones to avoid floating point precision issues in the layout.
+- App UI Icons StyleSheet Asset now has a StyleSheet icon in the Project window when creating the StyleSheet Asset.
 

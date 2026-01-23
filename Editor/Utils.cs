@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using Unity.AppUI.Core;
 using UnityEngine;
@@ -50,6 +51,14 @@ namespace Unity.AppUI.Editor
             }
 
             return paths;
+        }
+
+        static MethodInfo s_FindTextureByTypeMethod;
+
+        internal static Texture2D FindTextureByType(System.Type type)
+        {
+            s_FindTextureByTypeMethod ??= typeof(EditorGUIUtility).GetMethod("FindTextureByType", BindingFlags.NonPublic | BindingFlags.Static);
+            return s_FindTextureByTypeMethod?.Invoke(null, new object[] { type }) as Texture2D;
         }
     }
 }

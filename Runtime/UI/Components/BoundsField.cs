@@ -77,6 +77,8 @@ namespace Unity.AppUI.UI
 
         Size m_Size;
 
+        Bounds m_LastValue;
+
         Bounds m_Value;
 
         Func<Bounds, bool> m_ValidateValue;
@@ -215,6 +217,7 @@ namespace Unity.AppUI.UI
         public void SetValueWithoutNotify(Bounds newValue)
         {
             m_Value = newValue;
+            m_LastValue = m_Value;
             m_CXField.SetValueWithoutNotify(m_Value.center.x);
             m_CYField.SetValueWithoutNotify(m_Value.center.y);
             m_CZField.SetValueWithoutNotify(m_Value.center.z);
@@ -238,11 +241,13 @@ namespace Unity.AppUI.UI
             get => m_Value;
             set
             {
-                if (m_Value == value)
+                if (m_LastValue == m_Value && m_Value == value)
                     return;
-                using var evt = ChangeEvent<Bounds>.GetPooled(m_Value, value);
-                evt.target = this;
+
+                var previousValue = m_LastValue;
                 SetValueWithoutNotify(value);
+                using var evt = ChangeEvent<Bounds>.GetPooled(previousValue, m_Value);
+                evt.target = this;
                 SendEvent(evt);
 
 #if ENABLE_RUNTIME_DATA_BINDINGS
