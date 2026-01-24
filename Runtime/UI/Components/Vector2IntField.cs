@@ -165,9 +165,11 @@ namespace Unity.AppUI.UI
             {
                 if (m_LastValue == m_Value && m_Value == value)
                     return;
-                using var evt = ChangeEvent<Vector2Int>.GetPooled(m_Value, value);
-                evt.target = this;
+
+                var previousValue = m_LastValue;
                 SetValueWithoutNotify(value);
+                using var evt = ChangeEvent<Vector2Int>.GetPooled(previousValue, m_Value);
+                evt.target = this;
                 SendEvent(evt);
             }
         }

@@ -124,17 +124,17 @@ namespace Unity.AppUI.Navigation.Editor
                 NavigationCodeGenerator.GenerateCode(graph);
         }
 
-        /// <summary>
-        /// Called when an asset is opened.
-        /// </summary>
-        /// <param name="instanceID"> The instance ID of the asset being opened. </param>
-        /// <param name="line"> The line number where the asset is being opened. </param>
-        /// <returns> True if the asset was opened, false otherwise. </returns>
         [OnOpenAsset(1, OnOpenAssetAttributeMode.Execute)]
 #if ENABLE_INSTANCE_ID
         static bool OnOpenAsset(InstanceID instanceID, int line)
         {
             var asset = EditorUtility.InstanceIDToObject(instanceID) as NavGraphViewAsset;
+            return OnOpenAsset(asset);
+        }
+#elif ENABLE_ENTITY_ID
+        static bool OnOpenAsset(EntityId entityId, int line)
+        {
+            var asset = EditorUtility.EntityIdToObject(entityId) as NavGraphViewAsset;
             return OnOpenAsset(asset);
         }
 #else

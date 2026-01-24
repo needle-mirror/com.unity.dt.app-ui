@@ -2,7 +2,6 @@ using System;
 using Unity.AppUI.Core;
 using Unity.AppUI.UI;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.Samples
@@ -46,14 +45,29 @@ namespace Unity.AppUI.Samples
         void OnGeometryChanged(GeometryChangedEvent evt)
         {
             var size = m_Dot.parent.contentRect.size;
-            m_Dot.transform.position = new Vector3(size.x / 2f, size.y / 2f, 0f);
+            var position = new Vector3(size.x / 2f, size.y / 2f, 0f);
+#if UNITY_6000_2_OR_NEWER
+            m_Dot.style.translate = position;
+#else
+            m_Dot.transform.position = position;
+#endif
         }
 
         void OnMagnify(PinchGestureEvent evt)
         {
-            var scale = evt.gesture.deltaMagnification * dotScaleFactor + m_Dot.transform.scale.x;
+#if UNITY_6000_2_OR_NEWER
+            var currentScale = m_Dot.resolvedStyle.scale.value;
+#else
+            var currentScale = m_Dot.transform.scale;
+#endif
+            var scale = evt.gesture.deltaMagnification * dotScaleFactor + currentScale.x;
             scale = Mathf.Clamp(scale, dotMinSize, dotMaxSize);
-            m_Dot.transform.scale = new Vector3(scale, scale, 1f);
+            var finalScale = new Vector3(scale, scale, 1f);
+#if UNITY_6000_2_OR_NEWER
+            m_Dot.style.scale = finalScale;
+#else
+            m_Dot.transform.scale = finalScale;
+#endif
         }
 
         void OnWheel(WheelEvent evt)
@@ -62,10 +76,19 @@ namespace Unity.AppUI.Samples
                 return;
 
             var size = m_Dot.parent.contentRect.size;
-            var x = Mathf.Clamp(m_Dot.transform.position.x + evt.delta.x * dotMoveFactor, 0f, size.x);
-            var y = Mathf.Clamp(m_Dot.transform.position.y + evt.delta.y * dotMoveFactor, 0f, size.y);
-            m_Dot.transform.position = new Vector3(x, y, 0f);
-
+#if UNITY_6000_2_OR_NEWER
+            var currentPosition = m_Dot.resolvedStyle.translate;
+#else
+            var currentPosition = m_Dot.transform.position;
+#endif
+            var x = Mathf.Clamp(currentPosition.x + evt.delta.x * dotMoveFactor, 0f, size.x);
+            var y = Mathf.Clamp(currentPosition.y + evt.delta.y * dotMoveFactor, 0f, size.y);
+            var newPosition = new Vector3(x, y, 0f);
+#if UNITY_6000_2_OR_NEWER
+            m_Dot.style.translate = newPosition;
+#else
+            m_Dot.transform.position = newPosition;
+#endif
             m_Offset.x += evt.delta.x;
             m_Offset.y += evt.delta.y;
         }

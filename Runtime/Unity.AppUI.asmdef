@@ -99,6 +99,21 @@
             "name": "Unity",
             "expression": "7000.0.0a1",
             "define": "FOCUSABLE_AS_VISUALELEMENT"
+        },
+        {
+            "name": "Unity",
+            "expression": "2023.1.0a1",
+            "define": "ENABLE_UITK_TEXT_SELECTION"
+        },
+        {
+          "name": "Unity",
+          "expression": "6000.3.0a1",
+          "define": "ENABLE_ENTITY_ID"
+        },
+        {
+          "name": "Unity",
+          "expression": "2022.1.0a1",
+          "define": "ENABLE_VALUEFIELD_INTERFACE"
         }
     ],
     "noEngineReferences": false

@@ -301,10 +301,15 @@ namespace Unity.AppUI.UI
                         new PositionOptions(dir == Dir.Ltr ? PopoverPlacement.EndTop : PopoverPlacement.StartTop,
                             -4,
                             -8));
-                popoverElement.style.left = pos.left;
-                popoverElement.style.top = pos.top;
-                popoverElement.style.marginLeft = pos.marginLeft;
-                popoverElement.style.marginTop = pos.marginTop;
+                if (!Mathf.Approximately(popoverElement.resolvedStyle.left, pos.left))
+                    popoverElement.style.left = pos.left;
+                if (!Mathf.Approximately(popoverElement.resolvedStyle.top, pos.top))
+                    popoverElement.style.top = pos.top;
+                if (!Mathf.Approximately(popoverElement.resolvedStyle.marginLeft, pos.marginLeft))
+                    popoverElement.style.marginLeft = pos.marginLeft;
+                if (!Mathf.Approximately(popoverElement.resolvedStyle.marginTop, pos.marginTop))
+                    popoverElement.style.marginTop = pos.marginTop;
+
                 popoverElement.visible = true;
                 popoverElement.style.opacity = 1f;
                 popoverElement.schedule.Execute(() =>

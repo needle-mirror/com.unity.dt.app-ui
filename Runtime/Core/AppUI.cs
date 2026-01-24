@@ -181,8 +181,6 @@ namespace Unity.AppUI.Core
                 if (s_Manager.m_Settings.hideFlags == HideFlags.HideAndDontSave)
                     Object.DestroyImmediate(s_Manager.m_Settings);
                 s_Manager.m_Settings = newSettings;
-                EditorBuildSettings.AddConfigObject(AppUISettings.configName,
-                    s_Manager.m_Settings, true);
                 // here we can apply new settings on managers
                 s_Manager.ApplySettings();
             }
@@ -238,7 +236,13 @@ namespace Unity.AppUI.Core
 
         static void OnProjectChange()
         {
-            if (EditorUtility.InstanceIDToObject(settings.GetInstanceID()) == null)
+            var settingsObj =
+#if ENABLE_ENTITY_ID
+                EditorUtility.EntityIdToObject(settings.GetEntityId());
+#else
+                EditorUtility.InstanceIDToObject(settings.GetInstanceID());
+#endif
+            if (!settingsObj)
             {
                 var newSettings = ScriptableObject.CreateInstance<AppUISettings>();
                 newSettings.hideFlags = HideFlags.HideAndDontSave;
@@ -313,28 +317,8 @@ namespace Unity.AppUI.Core
         /// <exception cref="ArgumentNullException">Thrown when the value is null.</exception>
         public static AppUISettings settings
         {
-            get
-            {
-                return s_Manager.settings;
-            }
-            internal set
-            {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
-
-                if (s_Manager.settings == value)
-                    return;
-
-#if UNITY_EDITOR
-                if (!string.IsNullOrEmpty(AssetDatabase.GetAssetPath(value)))
-                {
-                    EditorBuildSettings.AddConfigObject(AppUISettings.configName,
-                        value, true);
-                }
-#endif
-
-                s_Manager.settings = value;
-            }
+            get => s_Manager.settings;
+            internal set => s_Manager.settings = value;
         }
     }
 }

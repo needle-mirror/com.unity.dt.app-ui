@@ -70,6 +70,8 @@ namespace Unity.AppUI.UI
 
         Size m_Size;
 
+        RectInt m_LastValue;
+
         RectInt m_Value;
 
         readonly IntField m_WField;
@@ -185,6 +187,7 @@ namespace Unity.AppUI.UI
         public void SetValueWithoutNotify(RectInt newValue)
         {
             m_Value = newValue;
+            m_LastValue = m_Value;
             m_XField.SetValueWithoutNotify(m_Value.x);
             m_YField.SetValueWithoutNotify(m_Value.y);
             m_HField.SetValueWithoutNotify(m_Value.height);
@@ -206,11 +209,13 @@ namespace Unity.AppUI.UI
             get => m_Value;
             set
             {
-                if (m_Value.Equals(value))
+                if (m_LastValue.Equals(m_Value) && m_Value.Equals(value))
                     return;
-                using var evt = ChangeEvent<RectInt>.GetPooled(m_Value, value);
-                evt.target = this;
+
+                var previousValue = m_LastValue;
                 SetValueWithoutNotify(value);
+                using var evt = ChangeEvent<RectInt>.GetPooled(previousValue, m_Value);
+                evt.target = this;
                 SendEvent(evt);
 
 #if ENABLE_RUNTIME_DATA_BINDINGS
