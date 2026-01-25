@@ -17,7 +17,7 @@ namespace Unity.AppUI.Navigation.Editor
         VisualElement m_GraphViewPane;
 
         NavGraphViewAsset m_LastGraphAsset;
-        
+
         bool m_FollowNavigation = false;
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Unity.AppUI.Navigation.Editor
             m_GraphViewPane = new VisualElement();
             m_GraphViewPane.AddToClassList("graph-view-pane");
             root.Add(m_GraphViewPane);
-            
+
             var graphView = new NavigationGraphView();
             graphView.StretchToParentSize();
             m_GraphViewPane.Add(graphView);
@@ -52,7 +52,7 @@ namespace Unity.AppUI.Navigation.Editor
             var breadcrumbs = new VisualElement();
             breadcrumbs.AddToClassList("breadcrumbs");
             m_GraphViewPane.Add(breadcrumbs);
-            
+
             var generateCodeButton = new Button(OnGenerateCodeClicked)
             {
                 text = "Generate Code"
@@ -69,7 +69,7 @@ namespace Unity.AppUI.Navigation.Editor
             });
             followNavigationToggle.value = m_FollowNavigation;
             m_GraphViewPane.Add(followNavigationToggle);
-            
+
             graphView.graphChanged += (graph) =>
             {
                 breadcrumbs.Clear();
@@ -93,7 +93,7 @@ namespace Unity.AppUI.Navigation.Editor
                             graphView.SetGraph(((Label)evt.target).userData as NavGraph);
                         });
                     }
-                    
+
                     breadcrumbs.Insert(0, label);
                     currentGraph = currentGraph.parent;
                     breadcrumbs.Insert(0, new Label(" > "));
@@ -101,9 +101,9 @@ namespace Unity.AppUI.Navigation.Editor
                 }
                 breadcrumbs.Insert(0, new Label(" ⌂ "));
             };
-            
+
             m_GraphViewPane.SetEnabled(false);
-            
+
             // load last graph
             if (m_LastGraphAsset)
             {
@@ -124,28 +124,39 @@ namespace Unity.AppUI.Navigation.Editor
                 NavigationCodeGenerator.GenerateCode(graph);
         }
 
-        /// <summary>
-        /// Called when an asset is opened.
-        /// </summary>
-        /// <param name="instanceID"> The instance ID of the asset being opened. </param>
-        /// <param name="line"> The line number where the asset is being opened. </param>
-        /// <returns> True if the asset was opened, false otherwise. </returns>
         [OnOpenAsset(1, OnOpenAssetAttributeMode.Execute)]
+#if ENABLE_INSTANCE_ID
+        static bool OnOpenAsset(InstanceID instanceID, int line)
+        {
+            var asset = EditorUtility.InstanceIDToObject(instanceID) as NavGraphViewAsset;
+            return OnOpenAsset(asset);
+        }
+#elif ENABLE_ENTITY_ID
+        static bool OnOpenAsset(EntityId entityId, int line)
+        {
+            var asset = EditorUtility.EntityIdToObject(entityId) as NavGraphViewAsset;
+            return OnOpenAsset(asset);
+        }
+#else
         static bool OnOpenAsset(int instanceID, int line)
         {
             var asset = EditorUtility.InstanceIDToObject(instanceID) as NavGraphViewAsset;
-            if (asset != null)
-            {
-                Init();
-                var graphView = s_Instance.rootVisualElement.Q<NavigationGraphView>();
-                graphView.SetGraphAsset(asset);
-                s_Instance.m_GraphViewPane.SetEnabled(true);
-                s_Instance.m_LastGraphAsset = asset;
-                graphView.FrameAll();
-                return true;
-            }
+            return OnOpenAsset(asset);
+        }
+#endif
 
-            return false;
+        static bool OnOpenAsset(NavGraphViewAsset asset)
+        {
+            if (!asset)
+                return false;
+
+            Init();
+            var graphView = s_Instance.rootVisualElement.Q<NavigationGraphView>();
+            graphView.SetGraphAsset(asset);
+            s_Instance.m_GraphViewPane.SetEnabled(true);
+            s_Instance.m_LastGraphAsset = asset;
+            graphView.FrameAll();
+            return true;
         }
     }
 }

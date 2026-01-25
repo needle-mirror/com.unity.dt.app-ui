@@ -225,7 +225,14 @@ namespace Unity.AppUI.Core
 
         static void OnProjectChange()
         {
-            if (EditorUtility.InstanceIDToObject(settings.GetInstanceID()) == null)
+            var settingsObj =
+#if ENABLE_ENTITY_ID
+                EditorUtility.EntityIdToObject(settings.GetEntityId());
+#else
+                EditorUtility.InstanceIDToObject(settings.GetInstanceID());
+#endif
+
+            if (!settingsObj)
             {
                 var newSettings = ScriptableObject.CreateInstance<AppUISettings>();
                 newSettings.hideFlags = HideFlags.HideAndDontSave;

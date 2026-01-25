@@ -231,9 +231,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 950c3db52f70e4876b018c8f67cd99af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveFactor: 20
+  m_Name:
+  m_EditorClassIdentifier:
+  moveFactor: 0.2
   scaleFactor: 2
   uiDocument: {fileID: 628462114}
 --- !u!1 &628462113
@@ -263,8 +263,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_PanelSettings: {fileID: 11400000, guid: 0b5ae042505c6456b99c728de0c6fb5d, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 8aa525f875516412c864602ede166821, type: 3}
