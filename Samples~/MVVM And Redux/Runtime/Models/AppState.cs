@@ -16,9 +16,10 @@ namespace Unity.AppUI.Samples.MVVMRedux
 
         public override string ToString()
         {
+            var todosString = todos == null ? "null" : todos.Length == 0 ? "[]" : todos.Select(todo => todo.ToString()).Aggregate((a, b) => $"        {a},\n        {b}");
             return @$"{{
     searchInput: {searchInput},
-    todos: {(todos != null ? todos.Select(todo => todo.ToString()).Aggregate((a, b) => $"        {a},\n        {b}") : "null")}
+    todos: {todosString}
 }}";
         }
     }

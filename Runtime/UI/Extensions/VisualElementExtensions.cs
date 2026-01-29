@@ -216,6 +216,31 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// Check if a <see cref="VisualElement"/> is or has an ancestor of a given type.
+        /// </summary>
+        /// <param name="element"> The <see cref="VisualElement"/> object.</param>
+        /// <param name="includeSelf"> If true, the element itself will be included in the search.</param>
+        /// <typeparam name="T"> The type of the ancestor to search for.</typeparam>
+        /// <returns> True if the element is or has an ancestor of the given type, false otherwise.</returns>
+        public static bool HasAncestorOfType<T>(this VisualElement element, bool includeSelf = false) where T : VisualElement
+        {
+            if (element == null)
+                return false;
+
+            if (!includeSelf)
+                element = element.parent;
+
+            while (element != null)
+            {
+                if (element is T)
+                    return true;
+                element = element.parent;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Check if a <see cref="VisualElement"/> has multiple ancestors of a given type.
         /// </summary>
         /// <param name="element"> The <see cref="VisualElement"/> object.</param>

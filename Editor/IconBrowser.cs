@@ -28,6 +28,7 @@ namespace Unity.AppUI.Editor
         {
             var window = GetWindow<IconBrowser>();
             window.titleContent = new GUIContent("App UI - Icon Browser");
+            window.minSize = new Vector2(740, 380);
             window.Show();
         }
 
@@ -455,7 +456,6 @@ namespace Unity.AppUI.Editor
                     filteredIcons.AddRange(k_RequiredIcons.Where(icn => icn.name.ToLowerInvariant().Contains(search)));
                 gridView.itemsSource = filteredIcons;
             }
-            searchBar.SetEnabled(gridView.itemsSource is { Count: > 0 });
             gridView.SetEnabled(gridView.itemsSource is { Count: > 0 });
 
             var footer = rootVisualElement.Q("footer");
