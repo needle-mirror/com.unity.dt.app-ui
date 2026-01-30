@@ -5,10 +5,14 @@ namespace Unity.AppUI.Core
     /// <summary>
     /// The settings for the App UI system.
     /// </summary>
+    [HelpURL("https://docs.unity3d.com/Packages/com.unity.dt.app-ui@" + version + "/api/Unity.AppUI.Core.AppUISettings.html")]
     [CreateAssetMenu(menuName = "App UI/App UI Settings", fileName = "App UI Settings")]
     public class AppUISettings : ScriptableObject
     {
         internal const string configName = "com.unity.dt.app-ui";
+
+        // [POSTVERSION.WriteVersion(accessibility="internal",fieldName="version",packageName="com.unity.dt.app-ui",excludePatch=true)]
+        internal const string version = "2.1";
 
         /// <summary>
         /// Enable this options to correct the scale of UIDocuments,

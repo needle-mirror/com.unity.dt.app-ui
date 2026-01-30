@@ -84,6 +84,7 @@
 /* Action History Pane */
 .dev-tools-action-history__pane {
     flex-direction: column;
+    min-width: 160px;
 }
 
 .dev-tools-action-history__search-field {

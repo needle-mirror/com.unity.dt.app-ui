@@ -600,6 +600,7 @@ namespace Unity.AppUI.Editor
                     paddingLeft = 8,
                     paddingTop = 8,
                     paddingRight = 8,
+                    minHeight = 52,
                 }
             };
             var inspectorTitle = new Label("Properties")

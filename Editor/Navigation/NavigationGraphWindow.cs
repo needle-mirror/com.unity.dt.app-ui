@@ -29,6 +29,7 @@ namespace Unity.AppUI.Navigation.Editor
             if (s_Instance == null)
             {
                 s_Instance = GetWindow<NavigationGraphWindow>();
+                s_Instance.minSize = new Vector2(480, 340);
                 s_Instance.titleContent = new GUIContent("Navigation Graph");
             }
         }
