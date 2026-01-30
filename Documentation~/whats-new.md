@@ -10,10 +10,9 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [1.3.4] - 2026-01-25
+## [1.3.5] - 2026-01-30
 
 ### Fixed
 
-- Fixed the usage of obsolete InstanceId API.
-- Fixed the trackpad sample.
+- Fixed the help url in the inspector for App UI Settings assets.
 
