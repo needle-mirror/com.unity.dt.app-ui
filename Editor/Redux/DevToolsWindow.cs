@@ -17,6 +17,7 @@ namespace Unity.AppUI.Editor.Redux.DevTools
         {
             var window = CreateWindow<DevToolsWindow>();
             window.titleContent = new UnityEngine.GUIContent("DevTools");
+            window.minSize = new Vector2(740, 320);
             window.Show();
         }
 

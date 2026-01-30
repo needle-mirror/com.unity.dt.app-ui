@@ -11,6 +11,7 @@ using Avatar = Unity.AppUI.UI.Avatar;
 using Button = Unity.AppUI.UI.Button;
 using Toggle = Unity.AppUI.UI.Toggle;
 using Dropdown = Unity.AppUI.UI.Dropdown;
+using MaskField = Unity.AppUI.UI.MaskField;
 
 namespace Unity.AppUI.Samples
 {

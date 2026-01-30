@@ -10,13 +10,14 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [2.0.3] - 2026-01-24
+## [2.0.4] - 2026-01-30
 
 ### Fixed
 
-- Composite Numerical fields (such as Vector fields, Bounds fields, etc) previous value returned in the ChangeEvent is now the correct one.
-- Fixed the use of obsolete API in Trackpad sample
-- Fixed applying anchored popup positions only if the computed values are different than the existing ones to avoid floating point precision issues in the layout.
-- Fixed the usage of obsolete InstanceId API.
-- App UI Icons StyleSheet Asset now has a StyleSheet icon in the Project window when creating the StyleSheet Asset.
+- Fixed type name conflict for MaskField in the UI Kit sample.
+- Fixed the help url in the inspector for App UI Settings assets.
+- Fixed the search bar in the Icon Browser remaining enabled when filtering yields no results
+- Set minimum window sizes for IconBrowser, NavigationGraphWindow, and DevToolsWindow to prevent layout issues when resized too small
+- Fixed overlapping scrollbar arrow icons that appeared when resizing the Properties section in the App UI Storybook window
+- Fixed exception thrown inside the MVVM & Redux sample.
 

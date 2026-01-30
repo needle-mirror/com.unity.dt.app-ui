@@ -55,7 +55,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
             var result = new List<Todo>();
             foreach (var todo in Todos)
             {
-                if (todo.text.Contains(input))
+                if (string.IsNullOrEmpty(input) || todo.text.Contains(input))
                 {
                     result.Add(todo);
                 }
