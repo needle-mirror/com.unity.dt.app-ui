@@ -15,22 +15,22 @@ namespace Unity.AppUI.UI
     public partial class Toggle : BaseVisualElement, IInputElement<bool>, IPressable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId labelProperty = nameof(label);
-        
+
         internal static readonly BindingId invalidProperty = nameof(invalid);
-        
+
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
-        
+
 #endif
-        
+
         /// <summary>
         /// The Toggle main styling class.
         /// </summary>
         public const string ussClassName = "appui-toggle";
-        
+
         /// <summary>
         /// The Toggle size styling class.
         /// </summary>
@@ -129,7 +129,7 @@ namespace Unity.AppUI.UI
                 this.AddManipulator(m_Clickable);
             }
         }
-        
+
         /// <summary>
         /// The Toggle label.
         /// </summary>
@@ -147,7 +147,7 @@ namespace Unity.AppUI.UI
                 var changed = m_Label.text != value;
                 m_Label.text = value;
                 m_Label.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
@@ -171,7 +171,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(Styles.invalidUssClassName) != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
@@ -193,7 +193,7 @@ namespace Unity.AppUI.UI
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
@@ -232,7 +232,7 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
 #endif
@@ -253,7 +253,7 @@ namespace Unity.AppUI.UI
         {
             value = !value;
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace Unity.AppUI.UI
 
             }
         }
-        
+
 #endif
     }
 }

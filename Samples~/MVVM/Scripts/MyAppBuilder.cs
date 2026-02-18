@@ -15,9 +15,9 @@ namespace Unity.AppUI.Samples.MVVM
         {
             base.OnConfiguringApp(builder);
             Debug.Log("MyAppBuilder.OnConfiguringApp");
-            
+
             // Add services here
-            
+
             // Add ViewModels and Views as services
             builder.services.AddSingleton<MainViewModel>();
             builder.services.AddSingleton<MainPage>();

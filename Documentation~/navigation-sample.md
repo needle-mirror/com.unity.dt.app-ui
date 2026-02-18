@@ -23,16 +23,16 @@ go to **Samples** and select **Navigation**. Click **Install** to install the sa
 To open the sample, in your Project panel go to
 **Assets > Samples > App UI > Navigation > Scenes**. Then open the **NavigationSample** scene.
 
-The scene contains an empty [UIDocument](xref:UnityEngine.UIElements.UIDocument) which will be populated 
+The scene contains an empty [UIDocument](xref:UnityEngine.UIElements.UIDocument) which will be populated
 with the Navigation UI elements at runtime.
 
-Before going to Play Mode, we suggest to open the Navigation graph that is used by this sample. it will give you 
+Before going to Play Mode, we suggest to open the Navigation graph that is used by this sample. it will give you
 the opportunity to familiarize yourself with the graph and the different nodes.
 
-To open the graph, just double-click on the **NavigationSample** asset located in 
+To open the graph, just double-click on the **NavigationSample** asset located in
 the **Assets > Samples > App UI > Navigation > Resources > Navigation** folder.
 
-You should see the following graph: 
+You should see the following graph:
 
 <p align="center">
   <img src="images/navigation-graph.png" alt="Navigation Graph">
@@ -41,6 +41,6 @@ You should see the following graph:
 > [!NOTE]
 > If you want more information about the Navigation graph, see the [Navigation](xref:navigation) documentation.
 
-Now, you can enable **Follow Navigation** in 
-the **Navigation Graph** window to see the navigation in 
+Now, you can enable **Follow Navigation** in
+the **Navigation Graph** window to see the navigation in
 action while in Play Mode!

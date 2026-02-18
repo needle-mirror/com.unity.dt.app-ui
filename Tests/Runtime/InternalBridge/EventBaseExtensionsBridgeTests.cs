@@ -16,13 +16,13 @@ namespace Unity.AppUI.Tests.Bridge
                 base.Init();
                 LocalInit();
             }
-            
+
             void LocalInit()
             {
                 this.SetPropagation(EventBaseExtensionsBridge.EventPropagation.TricklesDown);
             }
         }
-        
+
         [Test]
         public void CanGetAndSetPropagation()
         {

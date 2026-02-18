@@ -17,15 +17,15 @@ namespace Unity.AppUI.UI
     public partial class PageIndicator : BaseVisualElement, INotifyValueChanged<int>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId directionProperty = nameof(direction);
-        
+
         internal static readonly BindingId countProperty = nameof(count);
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
 #endif
-        
+
         /// <summary>
         /// The PageIndicator main styling class.
         /// </summary>
@@ -78,7 +78,7 @@ namespace Unity.AppUI.UI
                     return;
 
                 BuildDots(value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in countProperty);
 #endif
@@ -93,7 +93,7 @@ namespace Unity.AppUI.UI
 #endif
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif 
+#endif
         public int value
         {
             get => m_Value;
@@ -111,7 +111,7 @@ namespace Unity.AppUI.UI
                     evt.target = this;
                     SendEvent(evt);
                 }
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
 #endif
@@ -136,7 +136,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetDirectionUssClassName(m_Direction));
                 m_Direction = value;
                 AddToClassList(GetDirectionUssClassName(m_Direction));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
@@ -182,7 +182,7 @@ namespace Unity.AppUI.UI
 
             if (handled)
             {
-                
+
                 evt.StopPropagation();
             }
         }
@@ -192,7 +192,7 @@ namespace Unity.AppUI.UI
             if (evt.target is VisualElement dot && dot.hierarchy.parent == this)
             {
                 value = hierarchy.IndexOf(dot);
-                
+
                 evt.StopPropagation();
             }
         }
@@ -333,7 +333,7 @@ namespace Unity.AppUI.UI
                     el.SetValueWithoutNotify(defaultValue);
             }
         }
-        
+
 #endif
     }
 }

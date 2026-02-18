@@ -3,7 +3,7 @@
     --appui-radio__button-size-sm: var(--appui-sizing-200);
     --appui-radio__button-size-md: var(--appui-sizing-250);
     --appui-radio__button-size-lg: var(--appui-sizing-300);
-    
+
     --appui-radio__checkmark-size-sm: var(--appui-sizing-75);
     --appui-radio__checkmark-size-md: var(--appui-sizing-100);
     --appui-radio__checkmark-size-lg: var(--appui-sizing-150);

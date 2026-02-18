@@ -4,7 +4,13 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.3.5] - 2026-01-30
+## [1.3.6] - 2026-02-18
+
+### Fixed
+
+- Fixed overlapping scrollbar arrow icons that appeared when resizing the Properties section in the App UI Storybook window
+
+## [1.3.5] - 2026-01-31
 
 ### Fixed
 

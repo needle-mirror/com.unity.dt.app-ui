@@ -9,9 +9,9 @@ namespace Unity.AppUI.Samples.MVVMRedux
     public class MainPage : VisualElement
     {
         readonly MainViewModel m_ViewModel;
-        
+
         ListView m_TodoListView;
-        
+
         SearchBar m_SearchTextField;
 
         Text m_NothingFoundLabel;
@@ -48,7 +48,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
             {
                 m_TodoListView.itemsSource = m_ViewModel.todosSearchResults;
             }
-            
+
             var hasResults = m_TodoListView.itemsSource is {Count: > 0};
             m_NothingFoundLabel.EnableInClassList(Styles.hiddenUssClassName, hasResults);
         }
@@ -57,7 +57,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
         {
             var template = MVVMReduxAppBuilder.instance.mainUITemplate;
             template.CloneTree(this);
-            
+
             m_SearchTextField = this.Q<SearchBar>();
             m_TodoListView = this.Q<ListView>();
             m_TodoListView.selectionType = SelectionType.None;
@@ -67,7 +67,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
             m_TodoListView.unbindItem = UnbindItem;
             m_NothingFoundLabel = this.Q<Text>("nothingFound");
             m_AddButton = this.Q<Button>("addButton");
-            
+
             m_SearchTextField.RegisterValueChangingCallback(OnSearchTextChanged);
             m_AddButton.clicked += OnAddButtonClicked;
         }

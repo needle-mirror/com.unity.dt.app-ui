@@ -37,7 +37,7 @@ namespace Unity.AppUI.UI
         {
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
         }
-        
+
         /// <inheritdoc cref="NumericalField{T}.ParseRawValueToString"/>
         protected override string ParseRawValueToString(double val)
         {

@@ -19,15 +19,15 @@ namespace Unity.AppUI.MVVM
         readonly Predicate<T?>? m_CanExecute;
 
         readonly Func<T?, Task>? m_Execute;
-        
+
         readonly Func<T?, CancellationToken, Task>? m_CancellableExecute;
-        
+
         readonly AsyncRelayCommandOptions m_Options;
 
         CancellationTokenSource? m_CancellableTokenSource;
 
         Task? m_ExecutionTask;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
         /// </summary>
@@ -37,7 +37,7 @@ namespace Unity.AppUI.MVVM
         {
             m_Execute = execute ?? throw new ArgumentNullException(nameof(execute));
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
         /// </summary>
@@ -49,7 +49,7 @@ namespace Unity.AppUI.MVVM
             m_Execute = execute ?? throw new ArgumentNullException(nameof(execute));
             m_Options = options;
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
         /// </summary>
@@ -59,7 +59,7 @@ namespace Unity.AppUI.MVVM
         {
             m_CancellableExecute = cancellableExecute ?? throw new ArgumentNullException(nameof(cancellableExecute));
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
         /// </summary>
@@ -71,7 +71,7 @@ namespace Unity.AppUI.MVVM
             m_CancellableExecute = cancellableExecute ?? throw new ArgumentNullException(nameof(cancellableExecute));
             m_Options = options;
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
         /// </summary>
@@ -83,7 +83,7 @@ namespace Unity.AppUI.MVVM
             m_Execute = execute ?? throw new ArgumentNullException(nameof(execute));
             m_CanExecute = canExecute ?? throw new ArgumentNullException(nameof(canExecute));
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
         /// </summary>
@@ -97,7 +97,7 @@ namespace Unity.AppUI.MVVM
             m_CanExecute = canExecute ?? throw new ArgumentNullException(nameof(canExecute));
             m_Options = options;
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
         /// </summary>
@@ -109,7 +109,7 @@ namespace Unity.AppUI.MVVM
             m_CancellableExecute = cancellableExecute ?? throw new ArgumentNullException(nameof(cancellableExecute));
             m_CanExecute = canExecute ?? throw new ArgumentNullException(nameof(canExecute));
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncRelayCommand{T}"/> class.
         /// </summary>
@@ -132,7 +132,7 @@ namespace Unity.AppUI.MVVM
         public Task ExecuteAsync(T? parameter)
         {
             Task task;
-            
+
             if (!CanExecute(parameter))
                 throw new InvalidOperationException("ExecuteAsync should not be called when CanExecute returns false.");
 
@@ -181,7 +181,7 @@ namespace Unity.AppUI.MVVM
         {
             if (!RelayCommand<T>.TryGetCommandArg(parameter, out var result))
                 throw new InvalidOperationException("");
-            
+
             Execute(result);
         }
 
@@ -248,7 +248,7 @@ namespace Unity.AppUI.MVVM
                         }
                     }
                 }
-                
+
                 MonitorTask(this, value!);
             }
         }
@@ -303,7 +303,7 @@ namespace Unity.AppUI.MVVM
         {
             if (!CanExecute(parameter))
                 return;
-            
+
             ExecuteAsync(parameter);
         }
 

@@ -11,11 +11,11 @@ namespace Unity.AppUI.Navigation
         [SerializeField]
         [HideInInspector]
         Vector2 m_Position;
-        
+
         [SerializeField]
         [HideInInspector]
         string m_Guid;
-        
+
         /// <summary>
         /// The GUID of this NavGraphViewNode.
         /// </summary>
@@ -24,7 +24,7 @@ namespace Unity.AppUI.Navigation
             get => m_Guid;
             set => m_Guid = value;
         }
-        
+
         /// <summary>
         /// The position of this NavGraphViewNode in the graph view.
         /// </summary>
@@ -33,7 +33,7 @@ namespace Unity.AppUI.Navigation
             get => m_Position;
             set => m_Position = value;
         }
-        
+
         void OnEnable()
         {
             if (string.IsNullOrEmpty(m_Guid))

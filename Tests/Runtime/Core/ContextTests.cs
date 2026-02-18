@@ -24,11 +24,11 @@ namespace Unity.AppUI.Tests.Core
             var element = new VisualElement();
             var context = new TestContext();
             element.ProvideContext(context);
-            
+
             Assert.AreEqual(element.GetSelfContext<TestContext>(), context);
-            
+
             Assert.IsTrue(element.IsContextProvider<TestContext>());
-            
+
             Assert.AreEqual(context, element.GetContext<TestContext>());
         }
 
@@ -45,16 +45,16 @@ namespace Unity.AppUI.Tests.Core
             // ReSharper disable once ExpressionIsAlwaysNull
             Assert.Throws<ArgumentNullException>(() => el.GetSelfContext<TestContext>());
         }
-        
+
         [Test]
         public void GetContextWithNullElementThrows()
         {
             VisualElement el = null;
-            
+
             // ReSharper disable once ExpressionIsAlwaysNull
             Assert.Throws<ArgumentNullException>(() => el.GetContext<TestContext>());
         }
-        
+
         [Test]
         public void GetContextWithNullContextSucceed()
         {
@@ -63,17 +63,17 @@ namespace Unity.AppUI.Tests.Core
             Assert.IsFalse(el.IsContextProvider<TestContext>());
             Assert.IsNull(el.GetSelfContext<TestContext>());
         }
-        
+
         [Test]
         public void UseContextWithNullElementThrows()
         {
             VisualElement el = null;
-            
+
             // ReSharper disable once ExpressionIsAlwaysNull
             Assert.Throws<ArgumentNullException>(() => el.RegisterContextChangedCallback<TestContext>(null));
             Assert.Throws<ArgumentNullException>(() => el.UnregisterContextChangedCallback<TestContext>(null));
         }
-        
+
         [Test]
         public void UseContextWithNullCallbackThrows()
         {
@@ -81,21 +81,21 @@ namespace Unity.AppUI.Tests.Core
             Assert.Throws<ArgumentNullException>(() => el.RegisterContextChangedCallback<TestContext>(null));
             Assert.Throws<ArgumentNullException>(() => el.UnregisterContextChangedCallback<TestContext>(null));
         }
-        
+
         [Test]
         public void SendContextChangedEventWithNullElementThrows()
         {
             // ReSharper disable once ExpressionIsAlwaysNull
             Assert.Throws<ArgumentNullException>(() => VisualElementExtensions.SendContextChangedEvent<TestContext>(null));
         }
-        
+
         [Test]
         public void UnregisterToNotRegisteredContextSucceed()
         {
             var el = new VisualElement();
-            
+
             void OnContextChanged(ContextChangedEvent<TestContext> evt) { }
-            
+
             Assert.DoesNotThrow(() => el.UnregisterContextChangedCallback<TestContext>(OnContextChanged));
         }
 
@@ -105,10 +105,10 @@ namespace Unity.AppUI.Tests.Core
             var parent = new VisualElement();
             var child = new VisualElement();
             var context = new TestContext();
-            
+
             parent.ProvideContext(context);
             parent.Add(child);
-            
+
             Assert.AreEqual(context, child.GetContext<TestContext>());
         }
 
@@ -118,19 +118,19 @@ namespace Unity.AppUI.Tests.Core
             var parent = new VisualElement();
             var child = new VisualElement();
             var context = new TestRecordContext(1);
-            
+
             parent.ProvideContext(context);
             parent.Add(child);
-            
+
             Assert.AreEqual(context, child.GetContext<TestRecordContext>());
-            
+
             var context2 = new TestRecordContext(1);
             Assert.AreEqual(context2, child.GetContext<TestRecordContext>());
-            
+
             parent.ProvideContext(context2);
-            
+
             Assert.AreEqual(context2, child.GetContext<TestRecordContext>());
-            
+
             Assert.AreEqual(context, context2);
         }
 
@@ -143,12 +143,12 @@ namespace Unity.AppUI.Tests.Core
                 yield return null;
             }
             m_TestUI = Utils.ConstructTestUI();
-            
+
             var parent = new VisualElement();
             var context = new TestContext();
             parent.ProvideContext(context);
             m_TestUI.rootVisualElement.Add(parent);
-            
+
             var child = new TestElement
             {
                 referenceContext = context
@@ -157,61 +157,61 @@ namespace Unity.AppUI.Tests.Core
             var subChild = new VisualElement();
 
             parent.Add(child);
-            
+
             child.Add(subChild);
-            
+
             var subContext = new TestContext();
             subChild.ProvideContext(subContext);
 
             yield return new WaitUntilOrTimeOut(() => child.contextReceived);
-            
+
             Assert.IsTrue(child.contextReceived);
-            
+
             var received = 0;
             void OnContextReceived(ContextChangedEvent<TestContext> evt)
             {
                 received++;
             }
-            
+
             child.RegisterContextChangedCallback<TestContext>(OnContextReceived);
-            
-            // try a second time to make sure the callback is not called twice 
+
+            // try a second time to make sure the callback is not called twice
             child.RegisterContextChangedCallback<TestContext>(OnContextReceived);
-            
+
             yield return new WaitUntilOrTimeOut(() => received > 0);
-            
+
             Assert.AreEqual(1, received);
-            
+
             // try to change the context
             var newContext = new TestContext();
             parent.ProvideContext(newContext);
-            
+
             yield return new WaitUntilOrTimeOut(() => received > 1);
-            
+
             Assert.AreEqual(2, received);
-            
+
             // try to change the context again but this time unregister the callback
             child.UnregisterContextChangedCallback<TestContext>(OnContextReceived);
-            
+
             newContext = new TestContext();
             parent.ProvideContext(newContext);
-            
+
             yield return new WaitUntilOrTimeOut(() => received > 2, false, TimeSpan.FromMilliseconds(500));
-            
+
             Assert.AreEqual(2, received);
-            
+
             parent.ProvideContext<TestContext>(null);
-            
+
             // register to a context change on an element that is already attached to a panel
             var otherElement = new VisualElement();
             subChild.Add(otherElement);
 
             yield return new WaitUntilOrTimeOut(() => otherElement.panel != null);
-            
+
             otherElement.RegisterContextChangedCallback<TestContext>(OnContextReceived);
-            
+
             yield return new WaitUntilOrTimeOut(() => received > 2);
-            
+
             Assert.AreEqual(3, received);
         }
 
@@ -219,19 +219,19 @@ namespace Unity.AppUI.Tests.Core
         public IEnumerator CanProvideAndListenToContextChanges()
         {
             m_TestUI.rootVisualElement.Clear();
-            
+
             yield return null;
-            
+
             var element = new ProviderTestElement();
             Assert.AreEqual(1, element.received, "The element should have received one context change event");
-            
+
             m_TestUI.rootVisualElement.Add(element);
-            
+
             yield return null;
-            
+
             Assert.AreEqual(1, element.received, "The element should have received one context change events");
         }
-        
+
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
@@ -246,9 +246,9 @@ namespace Unity.AppUI.Tests.Core
 #pragma warning restore CS0618
             }
         }
-        
+
         class TestContext : IContext {}
-        
+
         record TestRecordContext(int value) : IContext
         {
             public int value { get; } = value;
@@ -257,9 +257,9 @@ namespace Unity.AppUI.Tests.Core
         class TestElement : VisualElement
         {
             internal TestContext referenceContext { get; set; }
-            
+
             internal bool contextReceived { get; private set; }
-            
+
             public TestElement()
             {
                 this.RegisterContextChangedCallback<TestContext>(OnContextReceived);
@@ -274,11 +274,11 @@ namespace Unity.AppUI.Tests.Core
         class ProviderTestElement : VisualElement
         {
             public int received { get; private set; }
-            
+
             public ProviderTestElement()
             {
                 this.RegisterContextChangedCallback<TestContext>(OnContextReceived);
-                
+
                 this.ProvideContext(new TestContext());
             }
 

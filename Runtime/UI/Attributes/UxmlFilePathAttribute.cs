@@ -12,7 +12,7 @@ namespace Unity.AppUI.UI
         /// The path to the UXML file
         /// </summary>
         public string filePath { get; }
-        
+
         /// <summary>
         /// Constructor
         /// </summary>

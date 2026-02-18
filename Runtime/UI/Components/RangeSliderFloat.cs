@@ -18,9 +18,9 @@ namespace Unity.AppUI.UI
     public partial class RangeSliderFloat : RangeSliderBase<Vector2, float>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId incrementFactorProperty = new BindingId(nameof(incrementFactor));
-        
+
 #endif
 
         /// <summary>
@@ -39,16 +39,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = !Mathf.Approximately(m_IncrementFactor, value);
                 m_IncrementFactor = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in incrementFactorProperty);
 #endif
             }
         }
-        
+
         const float k_DefaultIncrementFactor = 0.1f;
-        
+
         float m_IncrementFactor;
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Unity.AppUI.UI
             minValueOverride = 0;
             maxValueOverride = 100;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("low-value")]
 #endif
@@ -72,7 +72,7 @@ namespace Unity.AppUI.UI
             get => lowValue;
             set => lowValue = value;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("high-value")]
 #endif
@@ -81,7 +81,7 @@ namespace Unity.AppUI.UI
             get => highValue;
             set => highValue = value;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("min-value")]
 #endif
@@ -90,7 +90,7 @@ namespace Unity.AppUI.UI
             get => minValue;
             set => minValue = value;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("max-value")]
 #endif
@@ -99,7 +99,7 @@ namespace Unity.AppUI.UI
             get => maxValue;
             set => maxValue = value;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("format-string")]
 #endif
@@ -151,7 +151,7 @@ namespace Unity.AppUI.UI
         {
             return val - incrementFactor;
         }
-        
+
         /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.minValue"/>
         public override float minValue
         {
@@ -160,7 +160,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.maxValue"/>
-        public override float maxValue 
+        public override float maxValue
         {
             get => m_Value.y;
             set => this.value = new Vector2(m_Value.x, value);
@@ -197,7 +197,7 @@ namespace Unity.AppUI.UI
         }
 
 #if ENABLE_UXML_TRAITS
-        
+
         /// <summary>
         /// Factory class to instantiate a <see cref="RangeSliderFloat"/> using the data read from a UXML file.
         /// </summary>
@@ -225,7 +225,7 @@ namespace Unity.AppUI.UI
                 name = "min-value",
                 defaultValue = 0
             };
-            
+
             readonly UxmlFloatAttributeDescription m_MaxValue = new UxmlFloatAttributeDescription
             {
                 name = "max-value",

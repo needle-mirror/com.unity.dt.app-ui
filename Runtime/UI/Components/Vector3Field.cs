@@ -16,17 +16,17 @@ namespace Unity.AppUI.UI
     public partial class Vector3Field : BaseVisualElement, IInputElement<Vector3>, ISizeableElement, INotifyValueChanging<Vector3>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
-        
+
         internal static readonly BindingId invalidProperty = new BindingId(nameof(invalid));
-        
+
         internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
-        
+
         internal static readonly BindingId validateValueProperty = new BindingId(nameof(validateValue));
-        
+
 #endif
-        
+
         /// <summary>
         /// The Vector3Field main styling class.
         /// </summary>
@@ -105,7 +105,7 @@ namespace Unity.AppUI.UI
 
             size = Size.M;
             SetValueWithoutNotify(Vector3.zero);
-            
+
             m_XField.RegisterValueChangingCallback(OnXFieldChanging);
             m_YField.RegisterValueChangingCallback(OnYFieldChanging);
             m_ZField.RegisterValueChangingCallback(OnZFieldChanging);
@@ -208,7 +208,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
-        public Func<Vector3, bool> validateValue 
+        public Func<Vector3, bool> validateValue
         {
             get => m_ValidateValue;
             set
@@ -216,31 +216,31 @@ namespace Unity.AppUI.UI
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
 #endif
             }
         }
-        
+
         void OnXFieldChanging(ChangingEvent<float> evt)
         {
-            
+
             evt.StopPropagation();
             TrySendChangingEvent(new Vector3(evt.newValue, m_Value.y, m_Value.z));
         }
-        
+
         void OnYFieldChanging(ChangingEvent<float> evt)
         {
-            
+
             evt.StopPropagation();
             TrySendChangingEvent(new Vector3(m_Value.x, evt.newValue, m_Value.z));
         }
-        
+
         void OnZFieldChanging(ChangingEvent<float> evt)
         {
-            
+
             evt.StopPropagation();
             TrySendChangingEvent(new Vector3(m_Value.x, m_Value.y, evt.newValue));
         }
@@ -249,11 +249,11 @@ namespace Unity.AppUI.UI
         {
             var previousValue = m_Value;
             m_Value = newVector;
-            
+
             if (m_Value != previousValue)
             {
                 if (validateValue != null) invalid = !validateValue(m_Value);
-                
+
                 using var changeEvent = ChangingEvent<Vector3>.GetPooled();
                 changeEvent.target = this;
                 changeEvent.previousValue = previousValue;
@@ -276,7 +276,7 @@ namespace Unity.AppUI.UI
         {
             value = new Vector3(evt.newValue, value.y, value.z);
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace Unity.AppUI.UI
                 element.size = m_Size.GetValueFromBag(bag, cc);
             }
         }
-        
+
 #endif
     }
 }

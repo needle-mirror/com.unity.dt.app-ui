@@ -18,17 +18,17 @@ namespace Unity.AppUI.UI
     public partial class ColorSwatch : BaseVisualElement, INotifyValueChanged<Gradient>, ISizeableElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId colorProperty = nameof(color);
-        
+
         internal static readonly BindingId roundProperty = nameof(round);
-        
+
 #endif
-        
+
         const int k_MaxGradientSteps = 16;
 
         /// <summary>
@@ -83,26 +83,26 @@ namespace Unity.AppUI.UI
         static readonly int k_Width = Shader.PropertyToID("_Width");
 
         static readonly int k_Height = Shader.PropertyToID("_Height");
-        
+
         static readonly int k_IsFixed = Shader.PropertyToID("_IsFixed");
 
         static readonly int k_ColorCount = Shader.PropertyToID("_ColorCount");
 
         static readonly int k_AlphaCount = Shader.PropertyToID("_AlphaCount");
-        
+
         static readonly int k_Colors = Shader.PropertyToID("_Colors");
-        
+
         static readonly int k_Alphas = Shader.PropertyToID("_Alphas");
 
         static readonly Color[] k_ColorsVector = new Color[k_MaxGradientSteps];
-        
+
         static readonly Vector4[] k_AlphasVectors = new Vector4[k_MaxGradientSteps];
-        
+
         static readonly GradientColorKey[] k_DefaultColorKeys = new[]
         {
             new GradientColorKey(Color.black, 0),
         };
-        
+
         static readonly GradientAlphaKey[] k_DefaultAlphaKeys = new[]
         {
             new GradientAlphaKey(1, 0),
@@ -126,12 +126,12 @@ namespace Unity.AppUI.UI
             {
                 if (m_Value == null && value == null)
                     return;
-                
+
                 using var evt = ChangeEvent<Gradient>.GetPooled(m_Value, value);
                 SetValueWithoutNotify(value);
                 evt.target = this;
                 SendEvent(evt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
                 NotifyPropertyChanged(in colorProperty);
@@ -161,7 +161,7 @@ namespace Unity.AppUI.UI
                     new GradientAlphaKey(value.a, 0)
                 });
                 this.value = g;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in colorProperty);
 #endif
@@ -186,7 +186,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -210,7 +210,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(roundUssClassName) != value;
                 EnableInClassList(roundUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in roundProperty);
@@ -299,13 +299,13 @@ namespace Unity.AppUI.UI
         {
             if (evt.customStyle.TryGetValue(k_UssCheckerColor1, out var checkerColor1))
                 m_CheckerColor1 = checkerColor1;
-                    
+
             if (evt.customStyle.TryGetValue(k_UssCheckerColor2, out var checkerColor2))
                 m_CheckerColor2 = checkerColor2;
-                    
+
             if (evt.customStyle.TryGetValue(k_UssCheckerSize, out var checkerSize))
                 m_CheckerSize = checkerSize;
-                
+
             GenerateTextures();
         }
 
@@ -317,7 +317,7 @@ namespace Unity.AppUI.UI
                 if (!s_Material)
                     return;
             }
-            
+
             var rect = paddingRect;
 
             if (!rect.IsValid())
@@ -340,7 +340,7 @@ namespace Unity.AppUI.UI
                 m_RT = RenderTexture.GetTemporary((int)texSize.x, (int)texSize.y, 24);
                 m_RT.Create();
             }
-            
+
             var colorCount = Mathf.Min(m_Value?.colorKeys?.Length ?? k_DefaultColorKeys.Length, k_MaxGradientSteps);
             var alphaCount = Mathf.Min(m_Value?.alphaKeys?.Length ?? k_DefaultAlphaKeys.Length, k_MaxGradientSteps);
 
@@ -353,7 +353,7 @@ namespace Unity.AppUI.UI
                     colorKeys[i].color.b,
                     colorKeys[i].time);
             }
-            
+
             var alphaKeys = m_Value?.alphaKeys ?? k_DefaultAlphaKeys;
             for (var i = 0; i < alphaCount; i++)
             {
@@ -363,7 +363,7 @@ namespace Unity.AppUI.UI
                     0,
                     0);
             }
-            
+
             s_Material.SetInt(k_ColorCount, colorCount);
             s_Material.SetInt(k_AlphaCount, alphaCount);
             s_Material.SetColorArray(k_Colors, k_ColorsVector);

@@ -11,14 +11,14 @@ namespace Unity.AppUI.Tests.Bridge
         public void CanGetAndSetIsHandledByDraggable()
         {
             var evt = UnityEngine.UIElements.PointerMoveEvent.GetPooled();
-            
+
             Assert.IsFalse(evt.GetIsHandledByDraggable());
-            
+
             Assert.DoesNotThrow(() =>
             {
                 evt.SetIsHandledByDraggable(true);
             });
-            
+
             Assert.IsTrue(evt.GetIsHandledByDraggable());
         }
     }

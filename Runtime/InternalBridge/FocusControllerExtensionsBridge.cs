@@ -34,7 +34,7 @@ namespace Unity.AppUI.Bridge
             return k_FocusNextInDirection.Invoke(controller, new object[] { direction }) as Focusable;
         }
 #endif
-        
+
 #endif
     }
 }

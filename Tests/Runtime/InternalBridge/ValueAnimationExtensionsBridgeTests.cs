@@ -14,11 +14,11 @@ namespace Unity.AppUI.Tests.Bridge
             var animation = element.experimental.animation
                 .Start(0f, 1f, 100, (_, _) => { })
                 .KeepAlive();
-            
+
             Assert.IsFalse(animation.IsRecycled());
-            
+
             animation.Recycle();
-            
+
             Assert.IsTrue(animation.IsRecycled());
         }
     }

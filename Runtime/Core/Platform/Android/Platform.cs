@@ -14,7 +14,7 @@ namespace Unity.AppUI.Core
         static class AndroidAppUI
         {
             static AndroidJavaObject s_AppUiActivity;
-            
+
             static bool s_IsCustomAppUiActivity;
 
             static AndroidAppUI()
@@ -24,14 +24,14 @@ namespace Unity.AppUI.Core
 
                 using var unityPlayerClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
                 s_AppUiActivity = unityPlayerClass.GetStatic<AndroidJavaObject>("currentActivity");
-                
+
                 // check if the app is running with our custom AppUIActivity
                 s_IsCustomAppUiActivity = true;
-                try 
+                try
                 {
                     s_AppUiActivity.Call<float>("ScaledDensity");
-                } 
-                catch (System.Exception e) 
+                }
+                catch (System.Exception e)
                 {
                     s_IsCustomAppUiActivity = false;
                     Debug.LogWarning("This Android app is not running with our custom AppUIActivity. " +
@@ -58,7 +58,7 @@ namespace Unity.AppUI.Core
             {
                 if (!s_IsCustomAppUiActivity)
                     return;
-                
+
                 s_AppUiActivity.Call("RunHapticFeedback", (int)feedbackType);
             }
 
@@ -66,7 +66,7 @@ namespace Unity.AppUI.Core
             {
                 if (!s_IsCustomAppUiActivity)
                     return;
-                
+
                 scaledDensity = s_AppUiActivity.Call<float>("ScaledDensity");
                 density = s_AppUiActivity.Call<float>("Density");
                 densityDPI = s_AppUiActivity.Call<int>("DensityDpi");

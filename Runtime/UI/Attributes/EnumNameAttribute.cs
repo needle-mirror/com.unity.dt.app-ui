@@ -6,9 +6,9 @@ namespace Unity.AppUI.UI
     class EnumNameAttribute : Attribute
     {
         public Type enumType { get; }
-        
+
         public string Name { get; set; }
-        
+
         public EnumNameAttribute(string Name, Type enumType)
         {
             this.enumType = enumType;

@@ -9,14 +9,14 @@
 }
 
 .dnd-list-container {
-    flex-direction: row; 
-    flex-grow: 1; 
-    align-items: center; 
+    flex-direction: row;
+    flex-grow: 1;
+    align-items: center;
     padding: var(--appui-alias-control-gap-md);
 }
 
 .dnd-gridview-container {
-    height: 100%; 
+    height: 100%;
     flex-grow: 1;
     border-radius: var(--appui-alias-control-border-radius);
     background-color: var(--appui-base-50);

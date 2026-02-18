@@ -7,11 +7,11 @@ namespace Unity.AppUI.Samples.MVVMRedux
     public class TodoItemView : VisualElement
     {
         object m_DataContext;
-        
+
         Checkbox m_Checkbox;
-        
+
         ActionButton m_DeleteButton;
-        
+
         ActionButton m_EditButton;
 
         public object dataContext
@@ -26,12 +26,12 @@ namespace Unity.AppUI.Samples.MVVMRedux
 
         void BindDataContext()
         {
-            // clear 
+            // clear
             m_Checkbox.UnregisterValueChangedCallback(OnToggled);
             m_Checkbox.label = "";
             m_DeleteButton.clickable.clicked -= OnDeleteButtonClicked;
             m_EditButton.clickable.clicked -= OnEditButtonClicked;
-            
+
             if (m_DataContext == null)
                 return;
 
@@ -75,7 +75,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
         }
 
         TodoItemViewModel viewModel => (TodoItemViewModel) dataContext;
-        
+
         public TodoItemView()
         {
             InitializeComponents();
@@ -85,7 +85,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
         {
             var visualTree = MVVMReduxAppBuilder.instance.todoItemTemplate;
             visualTree.CloneTree(this);
-            
+
             m_Checkbox = this.Q<Checkbox>("checkbox");
             m_DeleteButton = this.Q<ActionButton>("deleteButton");
             m_EditButton = this.Q<ActionButton>("editButton");

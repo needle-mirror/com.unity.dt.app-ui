@@ -15,19 +15,19 @@ namespace Unity.AppUI.UI
     public partial class IconButton : ExVisualElement, ISizeableElement, IPressable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId iconProperty = new BindingId(nameof(icon));
-        
+
         internal static readonly BindingId primaryProperty = new BindingId(nameof(primary));
-        
+
         internal static readonly BindingId quietProperty = new BindingId(nameof(quiet));
-        
+
         internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
-        
+
         internal static readonly BindingId variantProperty = new BindingId(nameof(variant));
-        
+
 #endif
-        
+
         /// <summary>
         /// The IconButton main styling class.
         /// </summary>
@@ -161,7 +161,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(primaryUssClassName) != value;
                 EnableInClassList(primaryUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in primaryProperty);
@@ -185,7 +185,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(quietUssClassName) != value;
                 EnableInClassList(quietUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in quietProperty);
@@ -210,7 +210,7 @@ namespace Unity.AppUI.UI
                 var changed = m_Icon.iconName != value;
                 m_Icon.iconName = value;
                 m_Container.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Icon.iconName));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in iconProperty);
@@ -234,7 +234,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_Icon.variant != value;
                 m_Icon.variant = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
@@ -267,15 +267,15 @@ namespace Unity.AppUI.UI
                     _ => IconSize.M
                 };
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
 #endif
             }
         }
-        
-        
+
+
 #if ENABLE_UXML_TRAITS
         /// <summary>
         /// Factory class to instantiate a <see cref="IconButton"/> using the data read from a UXML file.
@@ -287,13 +287,13 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new class UxmlTraits : ExVisualElement.UxmlTraits
         {
-            
+
             readonly UxmlStringAttributeDescription m_Icon = new UxmlStringAttributeDescription
             {
                 name = "icon",
                 defaultValue = null
             };
-            
+
             readonly UxmlEnumAttributeDescription<IconVariant> m_Variant = new UxmlEnumAttributeDescription<IconVariant>
             {
                 name = "variant",
@@ -337,7 +337,7 @@ namespace Unity.AppUI.UI
 
             }
         }
-        
+
 #endif
     }
 }

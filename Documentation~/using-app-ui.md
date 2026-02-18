@@ -9,7 +9,7 @@ uid: using-app-ui
 
 Once you have installed App UI Unity Package, you can start using it in your Unity projects.
 
-App UI Unity Package consists mainly of a set of [UI Toolkit](xref:UIElements) components. 
+App UI Unity Package consists mainly of a set of [UI Toolkit](xref:UIElements) components.
 If you are not familiar with UI Toolkit, we recommend you to read the [UI Toolkit documentation](xref:UIElements)
 and the overall [Unity Documentation](https://docs.unity3d.com/Manual/index.html) before using App UI.
 
@@ -34,7 +34,7 @@ For more information about themes, see the [Theming documentation page](xref:the
 
 ### Themes for UI Builder
 
-Theses themes are designed to be used with the UI Builder, they are the combination styling related contexts (color scheme and scale). 
+Theses themes are designed to be used with the UI Builder, they are the combination styling related contexts (color scheme and scale).
 
 - `App UI - Dark - Large.tss`
 - `App UI - Dark - Medium.tss`
@@ -52,7 +52,7 @@ Theses themes are designed to be used with the UI Builder, they are the combinat
 ## Root Panel Element
 
 App UI components are designed to be used inside a [`Panel`](xref:Unity.AppUI.UI.Panel) component.
-The [`Panel`](xref:Unity.AppUI.UI.Panel) component is a [`VisualElement`](xref:UnityEngine.UIElements.VisualElement) that provides an initial context to the [UIDocument](xref:UnityEngine.UIElements.UIDocument) which will be propagated to its children. Having a context is vital for App UI components to be displayed correctly, as they provide information such as the current theme (color scheme), the language, layout direction, etc. 
+The [`Panel`](xref:Unity.AppUI.UI.Panel) component is a [`VisualElement`](xref:UnityEngine.UIElements.VisualElement) that provides an initial context to the [UIDocument](xref:UnityEngine.UIElements.UIDocument) which will be propagated to its children. Having a context is vital for App UI components to be displayed correctly, as they provide information such as the current theme (color scheme), the language, layout direction, etc.
 
 In addition to the context, the [`Panel`](xref:Unity.AppUI.UI.Panel) component also provides a layering system to handle popups, notifications, and tooltips (they will appear in the same [UIDocument](xref:UnityEngine.UIElements.UIDocument) as overlays).
 
@@ -71,7 +71,7 @@ Here is how to use the [`Panel`](xref:Unity.AppUI.UI.Panel) component in a [`UI 
 ## App UI Components
 
 App UI components are defined as [`VisualElement`](xref:UnityEngine.UIElements.VisualElement) in [UI Toolkit](xref:UIElements).
-You can find them in the `Unity.AppUI.UI` namespace. 
+You can find them in the `Unity.AppUI.UI` namespace.
 
 If you are working directly by editing UXML files, we recommend to define the `appui` namespace inside.
 

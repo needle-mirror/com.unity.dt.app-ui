@@ -17,11 +17,11 @@ namespace Unity.AppUI.UI
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
         internal static readonly BindingId invalidProperty = nameof(invalid);
-        
+
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
 #endif
         /// <summary>
@@ -78,7 +78,7 @@ namespace Unity.AppUI.UI
         Size m_Size;
 
         Bounds m_Value;
-        
+
         Func<Bounds, bool> m_ValidateValue;
 
         readonly FloatField m_CXField;
@@ -161,7 +161,7 @@ namespace Unity.AppUI.UI
             m_SXField.RegisterValueChangedCallback(OnSXFieldChanged);
             m_SYField.RegisterValueChangedCallback(OnSYFieldChanged);
             m_SZField.RegisterValueChangedCallback(OnSZFieldChanged);
-            
+
             m_CXField.RegisterValueChangingCallback(OnCXFieldChanging);
             m_CYField.RegisterValueChangingCallback(OnCYFieldChanging);
             m_CZField.RegisterValueChangingCallback(OnCZFieldChanging);
@@ -200,7 +200,7 @@ namespace Unity.AppUI.UI
                 m_SXField.size = m_Size;
                 m_SYField.size = m_Size;
                 m_SZField.size = m_Size;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -244,7 +244,7 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
 #endif
@@ -274,7 +274,7 @@ namespace Unity.AppUI.UI
                 m_SXField.EnableInClassList(Styles.invalidUssClassName, value);
                 m_SYField.EnableInClassList(Styles.invalidUssClassName, value);
                 m_SZField.EnableInClassList(Styles.invalidUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
@@ -295,9 +295,9 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
-                if (validateValue != null) 
+                if (validateValue != null)
                     invalid = !validateValue(m_Value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
@@ -334,7 +334,7 @@ namespace Unity.AppUI.UI
         {
             value = new Bounds(value.center, new Vector3(value.size.x, value.size.y, evt.newValue));
         }
-        
+
         void OnCZFieldChanging(ChangingEvent<float> evt)
         {
             evt.StopPropagation();
@@ -376,16 +376,16 @@ namespace Unity.AppUI.UI
             var val = new Bounds(value.center, new Vector3(value.size.x, value.size.y, evt.newValue));
             TrySendChangingEvent(val);
         }
-        
+
         void TrySendChangingEvent(Bounds newVal)
         {
             var previousValue = m_Value;
             m_Value = newVal;
-            
+
             if (m_Value != previousValue)
             {
                 if (validateValue != null) invalid = !validateValue(m_Value);
-                
+
                 using var changeEvent = ChangingEvent<Bounds>.GetPooled();
                 changeEvent.target = this;
                 changeEvent.previousValue = previousValue;
@@ -393,7 +393,7 @@ namespace Unity.AppUI.UI
                 SendEvent(changeEvent);
             }
         }
-        
+
 #if ENABLE_UXML_TRAITS
         /// <summary>
         /// Class to instantiate a <see cref="BoundsField"/> using the data read from a UXML file.

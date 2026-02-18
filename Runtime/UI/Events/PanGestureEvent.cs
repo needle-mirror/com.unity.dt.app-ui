@@ -14,7 +14,7 @@ namespace Unity.AppUI.UI
         /// The pan gesture.
         /// </summary>
         public PanGesture gesture { get; set; }
-        
+
         /// <summary>
         /// Resets all event members to their initial values.
         /// </summary>

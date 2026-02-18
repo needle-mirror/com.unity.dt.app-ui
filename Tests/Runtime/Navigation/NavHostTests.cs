@@ -19,7 +19,7 @@ namespace Unity.AppUI.Tests.Navigation
             {
                 if (destination.showBottomNavBar)
                 {
-                    
+
                 }
             }
 
@@ -27,7 +27,7 @@ namespace Unity.AppUI.Tests.Navigation
             {
                 if (destination.showAppBar)
                 {
-                    
+
                 }
             }
 
@@ -35,20 +35,20 @@ namespace Unity.AppUI.Tests.Navigation
             {
                 if (destination.showDrawer)
                 {
-                    
+
                 }
             }
         }
-        
+
         UIDocument m_Document;
-        
+
         [SetUp]
         public void SetUp()
         {
             TearDown();
             m_Document = Utils.ConstructTestUI();
         }
-        
+
         [TearDown]
         public void TearDown()
         {
@@ -62,27 +62,27 @@ namespace Unity.AppUI.Tests.Navigation
             var panel = new Panel();
             m_Document.rootVisualElement.Add(panel);
             panel.StretchToParentSize();
-            
+
             var host = new NavHost();
             host.navController.SetGraph(Utils.navGraphTestAsset);
             host.visualController = new TestableVisualController();
             host.StretchToParentSize();
             panel.Add(host);
-            
+
             yield return null;
 
             var currentScreen = m_Document.rootVisualElement.Q<NavigationScreen>();
-            
+
             Assert.IsNotNull(currentScreen);
-            
+
             var controller = currentScreen.FindNavController();
-            
+
             Assert.IsNotNull(controller);
-            
+
             Assert.AreEqual("start", controller.currentDestination.name);
-            
+
             Assert.AreEqual(Utils.navGraphTestAsset, controller.graphAsset);
-            
+
             Assert.DoesNotThrow(() =>
             {
                 controller.Navigate("start_to_other", new[]
@@ -92,18 +92,18 @@ namespace Unity.AppUI.Tests.Navigation
             });
 
             yield return new WaitForSeconds(0.5f);
-            
+
             Assert.AreEqual("other", controller.currentDestination.name);
-            
+
             Assert.DoesNotThrow(() =>
             {
                 controller.PopBackStack();
             });
-            
+
             yield return new WaitForSeconds(0.5f);
-            
+
             Assert.AreEqual("start", controller.currentDestination.name);
-            
+
             Assert.DoesNotThrow(() =>
             {
                 controller.Navigate("other", new[]
@@ -111,20 +111,20 @@ namespace Unity.AppUI.Tests.Navigation
                     new Argument("username", "test")
                 });
             });
-            
+
             yield return new WaitForSeconds(0.5f);
-            
+
             Assert.AreEqual("other", controller.currentDestination.name);
 
             Assert.IsFalse(controller.Navigate(null, new NavOptions(), null));
-            
+
             Assert.DoesNotThrow(() =>
             {
                 controller.PopBackStack("start", false, true);
             });
-            
+
             yield return new WaitForSeconds(0.5f);
-            
+
             Assert.AreEqual("start", controller.currentDestination.name);
         }
     }

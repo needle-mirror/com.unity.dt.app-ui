@@ -18,13 +18,13 @@ namespace Unity.AppUI.UI
     public partial class RangeSliderInt : RangeSliderBase<Vector2Int, int>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId incrementFactorProperty = new BindingId(nameof(incrementFactor));
-        
+
 #endif
-        
+
         const int k_DefaultIncrementFactor = 1;
-        
+
         int m_IncrementFactor = k_DefaultIncrementFactor;
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_IncrementFactor != value;
                 m_IncrementFactor = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in incrementFactorProperty);
@@ -63,7 +63,7 @@ namespace Unity.AppUI.UI
             minValueOverride = 0;
             maxValueOverride = 100;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("low-value")]
 #endif
@@ -72,7 +72,7 @@ namespace Unity.AppUI.UI
             get => lowValue;
             set => lowValue = value;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("high-value")]
 #endif
@@ -81,7 +81,7 @@ namespace Unity.AppUI.UI
             get => highValue;
             set => highValue = value;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("min-value")]
 #endif
@@ -90,7 +90,7 @@ namespace Unity.AppUI.UI
             get => minValue;
             set => minValue = value;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("max-value")]
 #endif
@@ -99,7 +99,7 @@ namespace Unity.AppUI.UI
             get => maxValue;
             set => maxValue = value;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("format-string")]
 #endif
@@ -127,7 +127,7 @@ namespace Unity.AppUI.UI
             if (UINumericFieldsUtils.IsPercentFormatString(formatString))
                 Debug.LogWarning("Percent format string is not supported for integer values.\n" +
                     "Please use a RangeSliderFloat instead.");
-            
+
             return val.ToString(formatString, CultureInfo.InvariantCulture.NumberFormat);
         }
 
@@ -154,16 +154,16 @@ namespace Unity.AppUI.UI
         {
             return val - incrementFactor;
         }
-        
+
         /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.minValue"/>
-        public override int minValue 
+        public override int minValue
         {
             get => m_Value.x;
             set => this.value = new Vector2Int(value, m_Value.y);
         }
 
         /// <inheritdoc cref="RangeSliderBase{TRangeType,TValueType}.maxValue"/>
-        public override int maxValue 
+        public override int maxValue
         {
             get => m_Value.y;
             set => this.value = new Vector2Int(m_Value.x, value);
@@ -228,7 +228,7 @@ namespace Unity.AppUI.UI
                 name = "min-value",
                 defaultValue = 0
             };
-            
+
             readonly UxmlIntAttributeDescription m_MaxValue = new UxmlIntAttributeDescription
             {
                 name = "max-value",
@@ -251,7 +251,7 @@ namespace Unity.AppUI.UI
                 el.value = new Vector2Int(m_MinValue.GetValueFromBag(bag, cc), m_MaxValue.GetValueFromBag(bag, cc));
             }
         }
-        
+
 #endif
     }
 }

@@ -14,26 +14,26 @@ namespace Unity.AppUI.UI
     [UxmlElement]
 #endif
     public abstract partial class Progress : BaseVisualElement, ISizeableElement
-    {       
+    {
 #if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
-        
+
         internal static readonly BindingId bufferValueProperty = new BindingId(nameof(bufferValue));
-        
+
         internal static readonly BindingId bufferOpacityProperty = new BindingId(nameof(bufferOpacity));
-        
+
         internal static readonly BindingId colorOverrideProperty = new BindingId(nameof(colorOverride));
-        
+
         internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
-        
+
         internal static readonly BindingId variantProperty = new BindingId(nameof(variant));
-        
+
 #endif
-        
+
         static readonly Vertex[] k_Vertices = new Vertex[4];
         static readonly ushort[] k_Indices = { 0, 1, 2, 2, 3, 0 };
-        
+
         static Progress()
         {
             k_Vertices[0].tint = Color.white;
@@ -68,7 +68,7 @@ namespace Unity.AppUI.UI
         /// The Progress image styling class.
         /// </summary>
         public const string imageUssClassName = ussClassName + "__image";
-        
+
         /// <summary>
         /// The Progress container styling class.
         /// </summary>
@@ -141,7 +141,7 @@ namespace Unity.AppUI.UI
             m_Image = new Image { name = imageUssClassName, pickingMode = PickingMode.Ignore };
             m_Image.AddToClassList(imageUssClassName);
             hierarchy.Add(m_Image);
-            
+
             m_Container = new VisualElement { name = containerUssClassName, pickingMode = PickingMode.Ignore };
             m_Container.AddToClassList(containerUssClassName);
             hierarchy.Add(m_Container);
@@ -157,7 +157,7 @@ namespace Unity.AppUI.UI
             RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
             RegisterCallback<CustomStyleResolvedEvent>(OnStylesResolved);
         }
-        
+
         void OnAttachedToPanel(AttachToPanelEvent evt)
         {
             if (evt.destinationPanel != null)
@@ -181,7 +181,7 @@ namespace Unity.AppUI.UI
             {
                 if (s_Handler == null)
                     s_Handler = new Handler(AppUI.Core.AppUI.mainLooper, HandleMessage);
-                
+
                 return s_Handler;
             }
         }
@@ -203,7 +203,7 @@ namespace Unity.AppUI.UI
             var msg = Message.Obtain(null, k_ProgressGenerateTexturesMsgId, this);
             HandleMessage(msg);
             msg.Recycle();
-            
+
             var left = paddingRect.xMin;
             var right = paddingRect.xMax;
             var top = paddingRect.yMin;
@@ -213,7 +213,7 @@ namespace Unity.AppUI.UI
             k_Vertices[1].position = new Vector3(left, top, Vertex.nearZ);
             k_Vertices[2].position = new Vector3(right, top, Vertex.nearZ);
             k_Vertices[3].position = new Vector3(right, bottom, Vertex.nearZ);
-            
+
             var mwd = mgc.Allocate(k_Vertices.Length, k_Indices.Length, m_RT);
 
 #if !UNITY_2023_1_OR_NEWER
@@ -250,7 +250,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -276,7 +276,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetVariantUssClassName(m_Variant));
                 m_Variant = value;
                 AddToClassList(GetVariantUssClassName(m_Variant));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
@@ -301,7 +301,7 @@ namespace Unity.AppUI.UI
                 var changed = m_BufferOpacity != value;
                 m_BufferOpacity = value;
                 MarkContentDirtyRepaint();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in bufferOpacityProperty);
@@ -326,7 +326,7 @@ namespace Unity.AppUI.UI
                 var changed = colorOverride != value;
                 m_ColorFromCode = value;
                 MarkContentDirtyRepaint();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in colorOverrideProperty);
@@ -352,7 +352,7 @@ namespace Unity.AppUI.UI
                     return;
                 m_Value = value;
                 MarkContentDirtyRepaint();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
 #endif
@@ -377,7 +377,7 @@ namespace Unity.AppUI.UI
                     return;
                 m_BufferValue = value;
                 MarkContentDirtyRepaint();
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in bufferValueProperty);
 #endif
@@ -393,7 +393,7 @@ namespace Unity.AppUI.UI
             }
 
             m_RT = null;
-            
+
             m_Update?.Pause();
             m_Update = null;
         }
@@ -412,7 +412,7 @@ namespace Unity.AppUI.UI
         /// Generates the textures for the progress.
         /// </summary>
         protected virtual void GenerateTextures() { }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -478,7 +478,7 @@ namespace Unity.AppUI.UI
                     element.colorOverride = color;
             }
         }
-        
+
 #endif
     }
 }

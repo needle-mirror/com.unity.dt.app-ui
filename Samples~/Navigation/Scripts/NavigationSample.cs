@@ -8,9 +8,9 @@ namespace Unity.AppUI.Samples.Navigation
     public class NavigationSample : MonoBehaviour
     {
         public UIDocument uiDocument;
-        
+
         public NavGraphViewAsset graphAsset;
-        
+
         void Start()
         {
             var navHost = new NavHost();
@@ -23,7 +23,7 @@ namespace Unity.AppUI.Samples.Navigation
             };
             uiDocument.rootVisualElement.Add(panel);
             panel.StretchToParentSize();
-            
+
             panel.Add(navHost);
             navHost.StretchToParentSize();
         }

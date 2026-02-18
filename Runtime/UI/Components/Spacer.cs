@@ -14,38 +14,38 @@ namespace Unity.AppUI.UI
         /// No spacing.
         /// </summary>
         Null,
-        
+
         /// <summary>
         /// Extra small spacing.
         /// </summary>
         XS,
-        
+
         /// <summary>
         /// Small spacing.
         /// </summary>
         S,
-        
+
         /// <summary>
         /// Medium spacing.
         /// </summary>
         M,
-        
+
         /// <summary>
         /// Large spacing.
         /// </summary>
         L,
-        
+
         /// <summary>
         /// Extra large spacing.
         /// </summary>
         XL,
-        
+
         /// <summary>
         /// The spacer will expand to fill the remaining space using flex-grow.
         /// </summary>
-        Expand        
+        Expand
     }
-    
+
     /// <summary>
     /// Spacer visual element.
     /// </summary>
@@ -55,18 +55,18 @@ namespace Unity.AppUI.UI
     public partial class Spacer : BaseVisualElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId spacingProperty = nameof(spacing);
-        
+
 #endif
-        
+
         const SpacerSpacing k_DefaultSpacing = SpacerSpacing.M;
-        
+
         /// <summary>
         /// The spacer's main USS class name.
         /// </summary>
         public const string ussClassName = "appui-spacer";
-        
+
         /// <summary>
         /// The spacer's spacing USS class name.
         /// </summary>
@@ -81,9 +81,9 @@ namespace Unity.AppUI.UI
         public Spacer()
         {
             pickingMode = PickingMode.Ignore;
-            
+
             AddToClassList(ussClassName);
-            
+
             spacing = k_DefaultSpacing;
         }
 
@@ -105,19 +105,19 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSpacingUssClassName(m_Spacing));
                 m_Spacing = value;
                 AddToClassList(GetSpacingUssClassName(m_Spacing));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in spacingProperty);
 #endif
             }
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <inheritdoc cref="UnityEngine.UIElements.UxmlFactory{Spacer,UxmlTraits}"/>
         public new class UxmlFactory : UxmlFactory<Spacer, UxmlTraits> { }
-        
+
         /// <inheritdoc cref="UnityEngine.UIElements.VisualElement.UxmlTraits"/>
         public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
@@ -127,16 +127,16 @@ namespace Unity.AppUI.UI
                     name = "spacing",
                     defaultValue = k_DefaultSpacing
                 };
-            
+
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                
+
                 var element = (Spacer)ve;
                 element.spacing = m_Spacing.GetValueFromBag(bag, cc);
             }
         }
-        
+
 #endif
     }
 }

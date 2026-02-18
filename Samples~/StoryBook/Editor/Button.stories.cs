@@ -14,7 +14,7 @@ namespace Unity.AppUI.Editor
         {
             m_Stories.Add(new StoryBookStory("Primary", () => new Button
             {
-                variant = ButtonVariant.Accent, 
+                variant = ButtonVariant.Accent,
                 title = "Primary Style Button"
             }));
         }

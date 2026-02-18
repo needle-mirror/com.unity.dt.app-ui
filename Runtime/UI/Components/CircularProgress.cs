@@ -21,9 +21,9 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId innerRadiusProperty = nameof(innerRadius);
-        
+
 #endif
-        
+
         static Material s_Material;
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_InnerRadius != value;
                 m_InnerRadius = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in innerRadiusProperty);
@@ -83,7 +83,7 @@ namespace Unity.AppUI.UI
         public CircularProgress()
         {
             AddToClassList(ussClassName);
-            
+
             innerRadius = k_DefaultInnerRadius;
         }
 
@@ -98,7 +98,7 @@ namespace Unity.AppUI.UI
                 if (!s_Material)
                     return;
             }
-            
+
             var rect = contentRect;
 
             if (!rect.IsValid())

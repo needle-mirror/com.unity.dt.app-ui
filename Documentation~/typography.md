@@ -15,7 +15,7 @@ Font assets are included in the App UI Unity Package and are automatically loade
 
 ## Usage
 
-App UI provide a set of UI components to display text. 
+App UI provide a set of UI components to display text.
 All these components are based on the [LocalizedTextElement](xref:Unity.AppUI.UI.LocalizedTextElement) component,
 which gives you the ability to localize them. See the [Localization](xref:localization) page for more information.
 
@@ -29,7 +29,7 @@ The [Text](xref:Unity.AppUI.UI.Text) component is used to display general purpos
 
 ### Heading
 
-The [Heading](xref:Unity.AppUI.UI.Heading) component is used to display headings. 
+The [Heading](xref:Unity.AppUI.UI.Heading) component is used to display headings.
 It is a variant of the [Text](#text) component that uses a larger font size.
 
 ```xml

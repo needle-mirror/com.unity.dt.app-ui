@@ -17,6 +17,6 @@ namespace Unity.AppUI.Tests.UI
             @"<appui:Checkbox label=""Checkbox"" size=""M"" />",
             @"<appui:Checkbox label=""Checkbox"" size=""M"" value=""Checked"" emphasized=""true"" invalid=""false"" />",
         };
-        
+
     }
 }

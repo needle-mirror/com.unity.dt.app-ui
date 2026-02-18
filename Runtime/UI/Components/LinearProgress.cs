@@ -64,7 +64,7 @@ namespace Unity.AppUI.UI
                 if (!s_Material)
                     return;
             }
-            
+
             var rect = contentRect;
 
             if (!rect.IsValid())
@@ -123,7 +123,7 @@ namespace Unity.AppUI.UI
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="LinearProgress"/>.
         /// </summary>
         public new class UxmlTraits : Progress.UxmlTraits { }
-        
+
 #endif
     }
 }

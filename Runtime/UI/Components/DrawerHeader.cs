@@ -14,21 +14,21 @@ namespace Unity.AppUI.UI
         /// The DrawerHeader's USS class name.
         /// </summary>
         public const string ussClassName = "appui-drawer-header";
-        
+
         /// <summary>
         /// The DrawerHeader's title USS class name.
         /// </summary>
         public const string titleUssClassName = ussClassName + "__title";
-        
+
         /// <summary>
         /// The DrawerHeader's container USS class name.
         /// </summary>
         public const string containerUssClassName = ussClassName + "__container";
-        
+
         LocalizedTextElement m_Title;
 
         VisualElement m_Container;
-        
+
         /// <summary>
         /// The DrawerHeader's title.
         /// </summary>
@@ -49,11 +49,11 @@ namespace Unity.AppUI.UI
         public DrawerHeader()
         {
             AddToClassList(ussClassName);
-            
+
             m_Title = new LocalizedTextElement();
             m_Title.AddToClassList(titleUssClassName);
             hierarchy.Add(m_Title);
-            
+
             m_Container = new VisualElement();
             m_Container.AddToClassList(containerUssClassName);
             hierarchy.Add(m_Container);

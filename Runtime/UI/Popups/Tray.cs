@@ -186,10 +186,10 @@ namespace Unity.AppUI.UI
         public static Tray Build(VisualElement referenceView, VisualElement content)
         {
             var panel = referenceView as Panel ?? referenceView.GetFirstAncestorOfType<Panel>();
-            
+
             if (panel == null)
                 throw new ArgumentException("The reference view must be attached to a panel.", nameof(referenceView));
-            
+
             var parentView = panel.popupContainer;
             return new Tray(parentView, new TrayVisualElement(content))
                 .SetLastFocusedElement(referenceView);
@@ -248,7 +248,7 @@ namespace Unity.AppUI.UI
             public const string trayUssClassName = ussClassName + "__tray";
 
             public const string containerUssClassName = ussClassName + "__container";
-            
+
             /// <summary>
             /// Event triggered when the user has dragged almost completely the tray out of the screen.
             /// </summary>
@@ -261,9 +261,9 @@ namespace Unity.AppUI.UI
             readonly Draggable m_Draggable;
 
             readonly VisualElement m_HandleZone;
-            
+
             bool m_OnHandleZone;
-            
+
             public bool showHandle
             {
                 get => !m_HandleZone.ClassListContains(Styles.hiddenUssClassName);
@@ -300,9 +300,9 @@ namespace Unity.AppUI.UI
                 m_HandleZone.Add(handle);
                 trayElement.hierarchy.Add(m_HandleZone);
                 trayElement.hierarchy.Add(m_Container);
-                
+
                 m_Container.hierarchy.Add(content);
-                
+
                 position = TrayPosition.Bottom;
                 showHandle = true;
             }
@@ -316,7 +316,7 @@ namespace Unity.AppUI.UI
             {
                 if (!m_OnHandleZone)
                     return;
-                
+
                 var minPos = m_Position switch
                 {
                     TrayPosition.Left => -trayElement.layout.width,
@@ -326,7 +326,7 @@ namespace Unity.AppUI.UI
                 };
 
                 const float maxPos = 0f;
-                
+
                 var currentPos = m_Position switch
                 {
                     TrayPosition.Left => trayElement.layout.xMin,
@@ -334,7 +334,7 @@ namespace Unity.AppUI.UI
                     TrayPosition.Bottom => layout.height - trayElement.layout.yMax,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                
+
                 var newPos = m_Position switch
                 {
                     TrayPosition.Left => Mathf.Clamp(currentPos + draggable.deltaPos.x, minPos, maxPos),
@@ -363,7 +363,7 @@ namespace Unity.AppUI.UI
             {
                 if (!m_OnHandleZone)
                     return;
-                
+
                 var fromValue = m_Position switch
                 {
                     TrayPosition.Left => trayElement.layout.xMin,
@@ -371,7 +371,7 @@ namespace Unity.AppUI.UI
                     TrayPosition.Bottom => layout.height - trayElement.layout.yMax,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                
+
                 var shouldCollapse = m_Position switch
                 {
                     TrayPosition.Left => fromValue < -trayElement.layout.width * .25f,
@@ -379,7 +379,7 @@ namespace Unity.AppUI.UI
                     TrayPosition.Bottom => fromValue < -trayElement.layout.height * .25f,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                
+
                 var toValue = m_Position switch
                 {
                     TrayPosition.Left when shouldCollapse => -trayElement.layout.width,
@@ -390,7 +390,7 @@ namespace Unity.AppUI.UI
                     TrayPosition.Bottom => 0,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                
+
                 Action<VisualElement, float> interpolation = m_Position switch
                 {
                     TrayPosition.Left => (element, f) => element.style.left = f,
@@ -398,7 +398,7 @@ namespace Unity.AppUI.UI
                     TrayPosition.Bottom => (element, f) => element.style.bottom = f,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-                
+
                 trayElement.experimental.animation.Start(fromValue, toValue, transitionDurationMs, interpolation)
                     .Ease(Easing.OutQuad)
                     .OnCompleted(() =>
@@ -457,7 +457,7 @@ namespace Unity.AppUI.UI
                         default:
                             throw new ArgumentOutOfRangeException(nameof(position), position, "Unknown Tray position");
                     }
-                    
+
                     m_Draggable.dragDirection = m_Position switch
                     {
                         TrayPosition.Left => Draggable.DragDirection.Horizontal,

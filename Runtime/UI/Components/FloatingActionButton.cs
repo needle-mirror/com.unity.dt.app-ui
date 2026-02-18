@@ -16,36 +16,36 @@ namespace Unity.AppUI.UI
     public partial class FloatingActionButton : ExVisualElement, IPressable
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
-        
+
         internal static readonly BindingId elevationProperty = new BindingId(nameof(elevation));
-        
+
         internal static readonly BindingId accentProperty = new BindingId(nameof(accent));
-        
+
 #endif
-        
+
         /// <summary>
         /// The Floating Action Button's USS class name.
         /// </summary>
         public const string ussClassName = "appui-fab";
-        
+
         /// <summary>
         /// The Floating Action Button's elevation USS class name.
         /// </summary>
         public const string elevationUssClassName = Styles.elevationUssClassName;
-        
+
         /// <summary>
         /// The Floating Action Button's size USS class name.
         /// </summary>
         [EnumName("GetSizeUssClassName", typeof(Size))]
         public const string sizeUssClassName = ussClassName + "--size-";
-        
+
         /// <summary>
         /// The Floating Action Button's accent USS class name.
         /// </summary>
         public const string accentUssClassName = ussClassName + "--accent";
-        
+
         Pressable m_Clickable;
 
         int m_Elevation;
@@ -68,7 +68,7 @@ namespace Unity.AppUI.UI
                 this.AddManipulator(m_Clickable);
             }
         }
-        
+
         /// <summary>
         /// Event fired when the button is clicked.
         /// </summary>
@@ -88,22 +88,22 @@ namespace Unity.AppUI.UI
         [UxmlAttribute]
 #endif
         public int elevation
-        { 
+        {
             get => m_Elevation;
             set
             {
                 var changed = m_Elevation != value;
-                RemoveFromClassList(MemoryUtils.Concatenate(elevationUssClassName, m_Elevation.ToString())); 
+                RemoveFromClassList(MemoryUtils.Concatenate(elevationUssClassName, m_Elevation.ToString()));
                 m_Elevation = value;
                 AddToClassList(MemoryUtils.Concatenate(elevationUssClassName, m_Elevation.ToString()));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in elevationProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The accent variant of this element.
         /// </summary>
@@ -120,14 +120,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(accentUssClassName) != value;
                 EnableInClassList(accentUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in accentProperty);
 #endif
             }
         }
-        
+
         /// <summary>
         /// The size of this element.
         /// </summary>
@@ -146,7 +146,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -163,7 +163,7 @@ namespace Unity.AppUI.UI
         /// Default constructor.
         /// </summary>
         public FloatingActionButton() : this(null) { }
-        
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -171,7 +171,7 @@ namespace Unity.AppUI.UI
         public FloatingActionButton(Action clickAction)
         {
             AddToClassList(ussClassName);
-            
+
             clickable = new Pressable(clickAction);
             pickingMode = PickingMode.Position;
             focusable = true;
@@ -180,7 +180,7 @@ namespace Unity.AppUI.UI
             passMask = Passes.Clear | Passes.OutsetShadows;
             elevation = 12;
             size = Size.M;
-            
+
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocus, OnPointerFocus));
         }
 
@@ -193,9 +193,9 @@ namespace Unity.AppUI.UI
         {
             passMask = Passes.Clear | Passes.OutsetShadows | Passes.Outline;
         }
-        
+
 #if ENABLE_UXML_TRAITS
-        
+
         /// <summary>
         /// Defines the UxmlFactory for the <see cref="FloatingActionButton"/>.
         /// </summary>
@@ -211,14 +211,14 @@ namespace Unity.AppUI.UI
                 name = "size",
                 defaultValue = Size.M,
             };
-            
+
             readonly UxmlIntAttributeDescription m_Elevation = new UxmlIntAttributeDescription
             {
                 name = "elevation",
                 defaultValue = 12,
             };
-            
-                        
+
+
             readonly UxmlBoolAttributeDescription m_Accent = new UxmlBoolAttributeDescription
             {
                 name = "accent",
@@ -239,11 +239,11 @@ namespace Unity.AppUI.UI
                 element.size = m_Size.GetValueFromBag(bag, cc);
                 element.elevation = m_Elevation.GetValueFromBag(bag, cc);
                 element.accent = m_Accent.GetValueFromBag(bag, cc);
-                
+
 
             }
         }
-        
+
 #endif
     }
 }

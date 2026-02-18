@@ -17,31 +17,31 @@ namespace Unity.AppUI.UI
         /// The Dropdown item main styling class.
         /// </summary>
         public const string ussClassName = "appui-dropdown-item";
-        
+
         /// <summary>
         /// The Dropdown item label styling class.
         /// </summary>
         public const string labelUssClassName = ussClassName + "__label";
-        
+
         /// <summary>
         /// The Dropdown item icon styling class.
         /// </summary>
         public const string iconUssClassName = ussClassName + "__icon";
-        
+
         /// <summary>
         /// The Dropdown item checkmark styling class.
         /// </summary>
         public const string checkmarkUssClassName = ussClassName + "__checkmark";
-        
+
         /// <summary>
         /// The Dropdown item label.
         /// </summary>
         public LocalizedTextElement labelElement { get; }
 
         readonly Icon m_IconElement;
-        
+
         readonly Icon m_CheckmarkElement;
-        
+
         /// <summary>
         /// The Dropdown label text.
         /// </summary>
@@ -71,15 +71,15 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
             pickingMode = PickingMode.Position;
-            
+
             m_CheckmarkElement = new Icon
             {
-                pickingMode = PickingMode.Ignore, 
+                pickingMode = PickingMode.Ignore,
                 iconName = MenuItem.checkmarkIconName
             };
             m_CheckmarkElement.AddToClassList(checkmarkUssClassName);
             Add(m_CheckmarkElement);
-            
+
             m_IconElement = new Icon
             {
                 pickingMode = PickingMode.Ignore
@@ -89,7 +89,7 @@ namespace Unity.AppUI.UI
 
             labelElement = new LocalizedTextElement
             {
-                name = labelUssClassName, 
+                name = labelUssClassName,
                 pickingMode = PickingMode.Ignore
             };
             labelElement.AddToClassList(labelUssClassName);
@@ -99,7 +99,7 @@ namespace Unity.AppUI.UI
             labelElement.text = null;
         }
     }
-    
+
     /// <summary>
     /// Dropdown UI element.
     /// </summary>
@@ -109,16 +109,16 @@ namespace Unity.AppUI.UI
     public partial class Dropdown : Picker<DropdownItem, DropdownItem>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly new BindingId bindTitleProperty = new BindingId(nameof(bindTitle));
-        
+
 #endif
-        
+
         /// <summary>
         /// The Dropdown main styling class.
         /// </summary>
         public new const string ussClassName = "appui-dropdown";
-        
+
         Action<DropdownItem, IEnumerable<int>> m_CustomBindTitle;
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace Unity.AppUI.UI
             {
                 m_CustomBindTitle = value;
                 base.bindTitle = BindTitle;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in Picker<DropdownItem,DropdownItem>.bindTitleProperty);
                 NotifyPropertyChanged(in bindTitleProperty);
@@ -156,9 +156,9 @@ namespace Unity.AppUI.UI
         /// <param name="bindTitleFunc">The binding function used to populate display data for the title.</param>
         /// <param name="defaultIndices">The selected index by default.</param>
         public Dropdown(
-            IList items, 
-            Action<DropdownItem, int> bindItemFunc = null, 
-            Action<DropdownItem, IEnumerable<int>> bindTitleFunc = null, 
+            IList items,
+            Action<DropdownItem, int> bindItemFunc = null,
+            Action<DropdownItem, IEnumerable<int>> bindTitleFunc = null,
             int[] defaultIndices = null)
             : base(items, null, null, null, null, null, defaultIndices)
         {
@@ -169,7 +169,7 @@ namespace Unity.AppUI.UI
             bindItem = bindItemFunc;
             bindTitle = bindTitleFunc;
         }
-        
+
         void BindTitle(DropdownItem item, IEnumerable<int> indices)
         {
             if (bindTitle != null)
@@ -189,7 +189,7 @@ namespace Unity.AppUI.UI
                     ApplyMultiSelectionMessage(item.labelElement, m_Value.Count);
             }
         }
-        
+
         /// <summary>
         /// Apply the Picker localized multi selection message.
         /// </summary>
@@ -210,7 +210,7 @@ namespace Unity.AppUI.UI
             element.text = $"{selectionCount} item{(selectionCount > 1 ? "s" : "")} selected";
 #endif
         }
-        
+
         static DropdownItem MakeTitle()
         {
             return new DropdownItem();
@@ -232,7 +232,7 @@ namespace Unity.AppUI.UI
         /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Dropdown"/>.
         /// </summary>
         public new class UxmlTraits : Picker<DropdownItem,DropdownItem>.UxmlTraits { }
-        
+
 #endif
     }
 }

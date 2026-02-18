@@ -23,12 +23,12 @@ namespace Unity.AppUI.UI
         Action m_DragCanceled;
 
         Vector3 m_StartPosition;
-        
+
         /// <summary>
         /// Whether the drag is currently active.
         /// </summary>
         public bool isActive { get; private set; }
-        
+
         /// <summary>
         /// Delegate that will be called when a drag should be accepted during <see cref="PointerDownEvent"/>.
         /// </summary>
@@ -36,7 +36,7 @@ namespace Unity.AppUI.UI
         /// If this delegate is not set (or set to null), the drag will be accepted by default.
         /// </remarks>
         public Func<Vector2, bool> acceptStartDrag { get; set; }
-        
+
         /// <summary>
         /// Delegate that will be called when a drag should be accepted when the dragger wants to become
         /// active during <see cref="PointerMoveEvent"/>.
@@ -64,7 +64,7 @@ namespace Unity.AppUI.UI
             m_Dragging = dragging;
             m_DragEnded = dragEnded;
             m_DragCanceled = dragCanceled;
-            
+
             if (s_VisualElement == null)
                 CreateVisualElement();
         }
@@ -80,7 +80,7 @@ namespace Unity.AppUI.UI
             target.RegisterCallback<PointerCaptureOutEvent>(OnPointerCaptureOut);
             target.RegisterCallback<KeyDownEvent>(OnKeyDown);
         }
-        
+
         /// <inheritdoc cref="Manipulator.UnregisterCallbacksFromTarget"/>
         protected override void UnregisterCallbacksFromTarget()
         {
@@ -109,7 +109,7 @@ namespace Unity.AppUI.UI
         {
             if (m_PointerId != evt.pointerId)
                 return;
-            
+
             if (m_PointerId != -1)
             {
                 if (!isActive)
@@ -125,10 +125,10 @@ namespace Unity.AppUI.UI
                                 target.CaptureMouse();
 #endif
                         }
-                        
+
                         isActive = true;
                         m_DragStarted?.Invoke(evt);
-                        
+
                         var panel = target.GetFirstAncestorOfType<Panel>();
                         if (panel != null && s_VisualElement.parent != panel.tooltipContainer)
                             panel.tooltipContainer.Add(s_VisualElement);
@@ -144,7 +144,7 @@ namespace Unity.AppUI.UI
                             target.CaptureMouse();
 #endif
                     }
-                    
+
                     m_Dragging?.Invoke(evt);
                     var elementPosition = s_VisualElement.parent.WorldToLocal(evt.position);
                     s_VisualElement.style.left = elementPosition.x;
@@ -157,10 +157,10 @@ namespace Unity.AppUI.UI
         {
             if (m_PointerId != evt.pointerId)
                 return;
-            
+
             if (s_VisualElement.parent != null)
                 s_VisualElement.RemoveFromHierarchy();
-            
+
             if (target.HasPointerCapture(evt.pointerId))
                 target.ReleasePointer(evt.pointerId);
 
@@ -187,10 +187,10 @@ namespace Unity.AppUI.UI
         {
             if (m_PointerId == -1)
                 return;
-            
+
             if (evt.keyCode == KeyCode.Escape)
             {
-                
+
                 evt.StopImmediatePropagation();
                 Cancel();
             }
@@ -203,13 +203,13 @@ namespace Unity.AppUI.UI
         {
             if (target.HasPointerCapture(m_PointerId))
                 target.ReleasePointer(m_PointerId);
-            
+
             if (isActive)
             {
                 isActive = false;
                 m_DragCanceled?.Invoke();
             }
-            
+
             m_PointerId = -1;
         }
 

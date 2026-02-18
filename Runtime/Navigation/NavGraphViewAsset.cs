@@ -19,7 +19,7 @@ namespace Unity.AppUI.Navigation
         [Tooltip("The nodes of this navigation graph.")]
         [SerializeField]
         List<NavGraphViewNode> m_Nodes;
-        
+
         /// <summary>
         /// The nodes of this navigation graph.
         /// </summary>
@@ -41,7 +41,7 @@ namespace Unity.AppUI.Navigation
             }
 #endif
         }
-        
+
         /// <summary>
         /// Remove a component from this navigation graph. The component will be destroyed.
         /// </summary>
@@ -65,7 +65,7 @@ namespace Unity.AppUI.Navigation
                     .Where(n => n is NavDestination dest && dest.actions
                         .Contains(action))
                     .Cast<NavDestination>().ToList();
-                
+
                 foreach (var destination in destinations)
                 {
                     destination.actions.Remove(action);
@@ -78,7 +78,7 @@ namespace Unity.AppUI.Navigation
                     .Where(n => n is NavAction a && a.destination == node)
                     .Cast<NavAction>()
                     .ToList();
-                
+
                 foreach (var act in actions)
                 {
                     act.destination = null;
@@ -100,12 +100,12 @@ namespace Unity.AppUI.Navigation
         {
             if (m_Nodes != null)
                 return;
-            
+
             m_Nodes = new List<NavGraphViewNode>();
         }
-        
+
 #if UNITY_EDITOR
-        
+
         void Awake()
         {
             Init();
@@ -120,7 +120,7 @@ namespace Unity.AppUI.Navigation
         {
             Init();
         }
-        
+
         void OnDestroy()
         {
             EditorApplication.update -= DelayedInit;
@@ -141,14 +141,14 @@ namespace Unity.AppUI.Navigation
                 EditorApplication.update += DelayedInit;
             }
         }
-        
+
         void DelayedInit()
         {
             if (!AssetDatabase.Contains(this))
                 return;
-            
+
             EditorApplication.update -= DelayedInit;
-            
+
             var g = CreateInstance<NavGraph>();
             g.name = "nav_graph";
             AddNode(g);
@@ -164,7 +164,7 @@ namespace Unity.AppUI.Navigation
             {
                 if (m_Nodes == null)
                     return null;
-                
+
                 foreach (var component in m_Nodes)
                 {
                     if (component is NavGraph graph && graph.parent == null)
@@ -201,7 +201,7 @@ namespace Unity.AppUI.Navigation
                         break;
                     }
                 }
-                
+
                 if (foundAction != null)
                 {
                     action = foundAction;
@@ -222,7 +222,7 @@ namespace Unity.AppUI.Navigation
         {
             if (string.IsNullOrEmpty(route))
                 return null;
-            
+
             foreach (var component in m_Nodes)
             {
                 if (component.name == route)
@@ -251,7 +251,7 @@ namespace Unity.AppUI.Navigation
 
             if (!from)
                 return rootGraph.FindStartDestination().name == to.name;
-            
+
             if (from == to)
                 return false;
 

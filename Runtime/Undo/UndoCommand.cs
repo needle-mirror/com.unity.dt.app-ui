@@ -11,22 +11,22 @@ namespace Unity.AppUI.Undo
         /// The unique identifier of the command type.
         /// </summary>
         public abstract string id { get; }
-        
+
         /// <summary>
         /// The memory size of the command.
         /// </summary>
         public abstract ulong memorySize { get; }
-        
+
         /// <summary>
         /// The name of the command.
         /// </summary>
         public string name { get; }
-        
+
         /// <summary>
         /// Whether the command is obsolete.
         /// </summary>
         public bool isObsolete { get; set; }
-        
+
         /// <summary>
         /// Creates a new undo command.
         /// </summary>
@@ -40,17 +40,17 @@ namespace Unity.AppUI.Undo
         /// Undoes the command.
         /// </summary>
         public abstract void Undo();
-        
+
         /// <summary>
         /// Redoes the command.
         /// </summary>
         public abstract void Redo();
-        
+
         /// <summary>
         /// Called when the command is flushed.
         /// </summary>
         public abstract void OnFlush();
-        
+
         /// <summary>
         /// Merges the command with another command.
         /// </summary>
@@ -68,7 +68,7 @@ namespace Unity.AppUI.Undo
     public class MacroCommand : UndoCommand
     {
         readonly List<UndoCommand> m_Commands = new List<UndoCommand>();
-        
+
         /// <summary>
         /// Creates a new macro command.
         /// </summary>
@@ -127,7 +127,7 @@ namespace Unity.AppUI.Undo
                 command.Redo();
             }
         }
-        
+
         /// <summary>
         /// This will call <see cref="UndoCommand.OnFlush"/> on all the commands contained in the macro command.
         /// </summary>
@@ -137,10 +137,10 @@ namespace Unity.AppUI.Undo
             {
                 m_Commands[i].OnFlush();
             }
-            
+
             m_Commands.Clear();
         }
-        
+
         /// <summary>
         /// Get the command at the specified index.
         /// </summary>

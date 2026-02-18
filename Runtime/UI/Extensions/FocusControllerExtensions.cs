@@ -21,7 +21,7 @@ namespace Unity.AppUI.UI
 
 #if UNITY_2023_2_OR_NEWER
             var r = FocusNextInDirectionEx(controller, controller.focusedElement, direction);
-#else 
+#else
             var r = controller.FocusNextInDirection(direction);
 #endif
             return r;
@@ -42,7 +42,7 @@ namespace Unity.AppUI.UI
 
 #if UNITY_2023_2_OR_NEWER
             var r = controller.FocusNextInDirection(currentlyFocusedElement, direction);
-#else 
+#else
             var r = controller.FocusNextInDirectionEx(direction);
 #endif
             return r;

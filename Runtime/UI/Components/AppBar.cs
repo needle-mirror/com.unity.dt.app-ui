@@ -12,19 +12,19 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
-    public partial class AppBar : ExVisualElement    
+    public partial class AppBar : ExVisualElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId stretchProperty = nameof(stretch);
-        
+
         internal static readonly BindingId compactProperty = nameof(compact);
-        
+
         internal static readonly BindingId expandedHeightProperty = nameof(expandedHeight);
-        
+
         internal static readonly BindingId elevationProperty = nameof(elevation);
-        
+
         internal static readonly BindingId showBackButtonProperty = nameof(showBackButton);
-        
+
         internal static readonly BindingId showDrawerButtonProperty = nameof(showDrawerButton);
 #endif
         /// <summary>
@@ -36,17 +36,17 @@ namespace Unity.AppUI.UI
         /// USS class name of the AppBar's elevation.
         /// </summary>
         public const string elevationUssClassName = Styles.elevationUssClassName;
-        
+
         /// <summary>
         /// USS class name of the AppBar's bar.
         /// </summary>
         public const string barUssClassName = ussClassName + "__bar";
-        
+
         /// <summary>
         /// USS class name of the AppBar's bottom element.
         /// </summary>
         public const string bottomUssClassName = ussClassName + "__bottom";
-        
+
         /// <summary>
         /// USS class name of the AppBar's bottom border element.
         /// </summary>
@@ -56,69 +56,69 @@ namespace Unity.AppUI.UI
         /// USS class name of the AppBar's compact title.
         /// </summary>
         public const string compactTitleUssClassName = ussClassName + "__compact-title";
-        
+
         /// <summary>
         /// USS class name of the AppBar's large title.
         /// </summary>
         public const string largeTitleUssClassName = ussClassName + "__large-title";
-        
+
         /// <summary>
         /// USS class name of the AppBar's action container.
         /// </summary>
         public const string actionContainerUssClassName = ussClassName + "__action-container";
-        
+
         /// <summary>
         /// USS class name of the AppBar's back button.
         /// </summary>
         public const string backButtonUssClassName = ussClassName + "__back-button";
-        
+
         /// <summary>
         /// USS class name of the AppBar's drawer button.
         /// </summary>
         public const string drawerButtonUssClassName = ussClassName + "__drawer-button";
-        
+
         /// <summary>
         /// USS class name of the AppBar's flexible space.
         /// </summary>
         public const string flexibleSpaceUssClassName = ussClassName + "__flexible-space";
-        
+
         /// <summary>
         /// USS class name of the AppBar's stretch variant.
         /// </summary>
         public const string stretchUssClassName = ussClassName + "--stretch";
-        
+
         /// <summary>
         /// USS class name of the AppBar's compact variant.
         /// </summary>
         public const string compactUssClassName = ussClassName + "--compact";
-        
+
         /// <summary>
         /// Event triggered when the AppBar is being stretched. The float parameter is the stretch ratio (0.0 to 1.0).
         /// </summary>
         public event Action<float> stretchTriggered;
-        
+
         /// <summary>
         /// Event triggered when the AppBar's back button is pressed.
         /// </summary>
         public event Action backButtonTriggered;
-        
+
         /// <summary>
         /// Event triggered when the AppBar's drawer button is pressed.
         /// </summary>
         public event Action drawerButtonTriggered;
-        
+
         readonly ActionButton m_BackButton;
-        
+
         readonly ActionButton m_DrawerButton;
-        
+
         readonly LocalizedTextElement m_CompactTitle;
-        
+
         readonly LocalizedTextElement m_LargeTitle;
-        
+
         readonly VisualElement m_ActionContainer;
-        
+
         float m_ExpandedHeight;
-        
+
         VisualElement m_BottomElement;
 
         VisualElement m_BottomBorderElement;
@@ -154,7 +154,7 @@ namespace Unity.AppUI.UI
             get => !m_BackButton.ClassListContains(Styles.hiddenUssClassName);
             set => m_BackButton.EnableInClassList(Styles.hiddenUssClassName, !value);
         }
-        
+
         /// <summary>
         /// Display or hide the AppBar's drawer button.
         /// </summary>
@@ -190,7 +190,7 @@ namespace Unity.AppUI.UI
                 RefreshFromScrollChanges();
             }
         }
-        
+
         /// <summary>
         /// The compactness of the AppBar.
         /// Set to true to make it compact. Set to false to use the default size.
@@ -229,7 +229,7 @@ namespace Unity.AppUI.UI
                 AddToClassList(MemoryUtils.Concatenate(elevationUssClassName, m_Elevation.ToString()));
             }
         }
-        
+
         /// <summary>
         /// The height of the AppBar when it is expanded.
         /// See <see cref="stretch"/>.
@@ -243,7 +243,7 @@ namespace Unity.AppUI.UI
                 RefreshFromScrollChanges();
             }
         }
-        
+
         /// <summary>
         /// The flexible space element.
         /// </summary>
@@ -266,7 +266,7 @@ namespace Unity.AppUI.UI
             var bar = new VisualElement { name = barUssClassName, pickingMode = PickingMode.Ignore };
             bar.AddToClassList(barUssClassName);
             hierarchy.Add(bar);
-            
+
             m_CompactTitle = new LocalizedTextElement
             {
                 name = compactTitleUssClassName,
@@ -274,7 +274,7 @@ namespace Unity.AppUI.UI
             };
             m_CompactTitle.AddToClassList(compactTitleUssClassName);
             bar.Add(m_CompactTitle);
-            
+
             m_BackButton = new ActionButton
             {
                 name = backButtonUssClassName,
@@ -284,7 +284,7 @@ namespace Unity.AppUI.UI
             m_BackButton.AddToClassList(backButtonUssClassName);
             m_BackButton.clickable.clicked += () => backButtonTriggered?.Invoke();
             bar.Add(m_BackButton);
-            
+
             m_DrawerButton = new ActionButton
             {
                 name = drawerButtonUssClassName,
@@ -294,7 +294,7 @@ namespace Unity.AppUI.UI
             m_DrawerButton.AddToClassList(drawerButtonUssClassName);
             m_DrawerButton.clickable.clicked += () => drawerButtonTriggered?.Invoke();
             bar.Add(m_DrawerButton);
-            
+
             m_ActionContainer = new VisualElement
             {
                 name = actionContainerUssClassName,
@@ -310,7 +310,7 @@ namespace Unity.AppUI.UI
             };
             m_FlexibleSpace.AddToClassList(flexibleSpaceUssClassName);
             hierarchy.Add(m_FlexibleSpace);
-            
+
             m_LargeTitle = new LocalizedTextElement
             {
                 name = largeTitleUssClassName,
@@ -326,7 +326,7 @@ namespace Unity.AppUI.UI
             };
             m_BottomElement.AddToClassList(bottomUssClassName);
             hierarchy.Add(m_BottomElement);
-            
+
             m_BottomBorderElement = new VisualElement
             {
                 name = bottomBorderUssClassName,
@@ -334,7 +334,7 @@ namespace Unity.AppUI.UI
             };
             m_BottomBorderElement.AddToClassList(bottomBorderUssClassName);
             hierarchy.Add(m_BottomBorderElement);
-            
+
             showBackButton = false;
             showDrawerButton = false;
             scrollOffset = 0;
@@ -359,12 +359,12 @@ namespace Unity.AppUI.UI
                 UnregisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
             }
         }
-        
+
         void OnDetachFromPanel(DetachFromPanelEvent evt)
         {
             UnregisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
         }
-        
+
         void OnCustomStyleResolved(CustomStyleResolvedEvent evt)
         {
             RefreshFromScrollChanges();
@@ -404,7 +404,7 @@ namespace Unity.AppUI.UI
             m_BottomBorderElement.style.opacity = 1 - delta;
             m_CompactTitle.style.opacity = Mathf.Clamp01(Mathf.InverseLerp(0.65f, 0, delta));
             m_LargeTitle.style.opacity = Mathf.Clamp01(Mathf.InverseLerp(0.5f, 1f, delta));
-            
+
             if (newStretch)
                 stretchTriggered?.Invoke(delta);
         }
@@ -420,33 +420,33 @@ namespace Unity.AppUI.UI
         public new class UxmlTraits : ExVisualElement.UxmlTraits
         {
             readonly UxmlBoolAttributeDescription m_Stretch = new UxmlBoolAttributeDescription { name = "stretch" };
-            
+
             readonly UxmlFloatAttributeDescription m_ExpandedHeight = new UxmlFloatAttributeDescription
             {
                 name = "expanded-height",
                 defaultValue = 128
             };
-            
+
             readonly UxmlBoolAttributeDescription m_Compat = new UxmlBoolAttributeDescription { name = "compact" };
-            
+
             readonly UxmlIntAttributeDescription m_Elevation = new UxmlIntAttributeDescription
             {
                 name = "elevation",
                 defaultValue = 0
             };
-            
+
             readonly UxmlBoolAttributeDescription m_ShowBackButton = new UxmlBoolAttributeDescription
             {
                 name = "show-back-button",
                 defaultValue = false
             };
-            
+
             readonly UxmlBoolAttributeDescription m_ShowDrawerButton = new UxmlBoolAttributeDescription
             {
                 name = "show-drawer-button",
                 defaultValue = false
             };
-            
+
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
             /// </summary>
@@ -456,7 +456,7 @@ namespace Unity.AppUI.UI
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {
                 base.Init(ve, bag, cc);
-                
+
                 var appBar = (AppBar)ve;
                 appBar.stretch = m_Stretch.GetValueFromBag(bag, cc);
                 appBar.expandedHeight = m_ExpandedHeight.GetValueFromBag(bag, cc);

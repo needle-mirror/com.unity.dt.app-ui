@@ -83,12 +83,12 @@ namespace Unity.AppUI.UI
         /// The styling class used to set a "selected" pseudo-state on a element.
         /// </summary>
         public const string selectedUssClassName = "is-selected";
-        
+
         /// <summary>
         /// The styling class used to set an "active" pseudo-state on a element.
         /// </summary>
         public const string activeUssClassName = "is-active";
-        
+
         /// <summary>
         /// The styling class used to set a "hover" pseudo-state on a element.
         /// </summary>
@@ -98,7 +98,7 @@ namespace Unity.AppUI.UI
         /// The styling class used to set an element's elevation.
         /// </summary>
         public const string elevationUssClassName = "appui-elevation-";
-        
+
         /// <summary>
         /// The styling class used to set a ":last-child" pseudo-state on a element.
         /// </summary>
@@ -108,7 +108,7 @@ namespace Unity.AppUI.UI
         /// The styling class used to set a "focus" pseudo-state on a element.
         /// </summary>
         public const string focusedUssClassName = "is-focused";
-        
+
         /// <summary>
         /// The styling class used to set a "required" pseudo-state on a element.
         /// </summary>
@@ -118,7 +118,7 @@ namespace Unity.AppUI.UI
         /// Used in popups to hide the arrow/tip.
         /// </summary>
         public const string noArrowUssClassName = "no-arrow";
-        
+
         /// <summary>
         /// The styling class prefix used to set a cursor.
         /// </summary>

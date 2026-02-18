@@ -13,7 +13,7 @@ namespace Unity.AppUI.UI
         {
             if (!shouldCrossSnap)
                 return;
-            
+
             if (elementRect.width < screenRect.width)
             {
                 if (result.left + result.marginLeft < screenRect.xMin)
@@ -33,7 +33,7 @@ namespace Unity.AppUI.UI
         {
             if (!shouldCrossSnap)
                 return;
-            
+
             if (elementRect.height < screenRect.height)
             {
                 if (result.top + result.marginTop < screenRect.yMin)
@@ -55,9 +55,9 @@ namespace Unity.AppUI.UI
             var topSideTop = anchorRect.yMin - elementRect.height;
             var bottomSideSpace = screenRect.height - anchorRect.yMax;
             var topSideSpace = anchorRect.yMin;
-                    
-            if (options.shouldFlip && 
-                bottomSideTop + elementRect.height + options.offset > screenRect.height && 
+
+            if (options.shouldFlip &&
+                bottomSideTop + elementRect.height + options.offset > screenRect.height &&
                 bottomSideSpace < topSideSpace)
             {
                 result.top = topSideTop;
@@ -78,16 +78,16 @@ namespace Unity.AppUI.UI
                 result.marginTop = options.offset;
             }
         }
-        
+
         static void ComputePositionTop(Rect screenRect, Rect elementRect, Rect anchorRect, PositionOptions options, ref PositionResult result)
         {
             var bottomSideTop = anchorRect.yMax;
             var topSideTop = anchorRect.yMin - elementRect.height;
             var bottomSideSpace = screenRect.height - anchorRect.yMax;
             var topSideSpace = anchorRect.yMin - elementRect.yMin;
-                    
-            if (options.shouldFlip && 
-                topSideTop - options.offset < screenRect.yMin && 
+
+            if (options.shouldFlip &&
+                topSideTop - options.offset < screenRect.yMin &&
                 topSideSpace < bottomSideSpace)
             {
                 result.top = bottomSideTop;
@@ -108,16 +108,16 @@ namespace Unity.AppUI.UI
                 result.marginTop = -options.offset;
             }
         }
-        
+
         static void ComputePositionLeft(Rect screenRect, Rect elementRect, Rect anchorRect, PositionOptions options, ref PositionResult result)
         {
             var leftSideLeft = anchorRect.xMin - elementRect.width;
             var rightSideLeft = anchorRect.xMax;
             var leftSideSpace = anchorRect.xMin - screenRect.xMin;
             var rightSideSpace = screenRect.width - anchorRect.xMax;
-                    
-            if (options.shouldFlip && 
-                leftSideLeft - options.offset < screenRect.xMin && 
+
+            if (options.shouldFlip &&
+                leftSideLeft - options.offset < screenRect.xMin &&
                 leftSideSpace < rightSideSpace)
             {
                 result.left = rightSideLeft;
@@ -139,16 +139,16 @@ namespace Unity.AppUI.UI
                 result.marginLeft = -options.offset;
             }
         }
-        
+
         static void ComputePositionRight(Rect screenRect, Rect elementRect, Rect anchorRect, PositionOptions options, ref PositionResult result)
         {
             var leftSideLeft = anchorRect.xMin - elementRect.width;
             var rightSideLeft = anchorRect.xMax;
             var leftSideSpace = anchorRect.xMin - screenRect.xMin;
             var rightSideSpace = screenRect.width - anchorRect.xMax;
-                    
-            if (options.shouldFlip && 
-                rightSideLeft + elementRect.width + options.offset > screenRect.xMax && 
+
+            if (options.shouldFlip &&
+                rightSideLeft + elementRect.width + options.offset > screenRect.xMax &&
                 rightSideSpace < leftSideSpace)
             {
                 result.left = leftSideLeft;
@@ -303,7 +303,7 @@ namespace Unity.AppUI.UI
                     result.marginTop = -options.offset;
                     result.left = anchorRect.xMin;
                     result.marginLeft = options.crossOffset;
-                    break; 
+                    break;
                 case PopoverPlacement.InsideBottomEnd:
                     result.top = anchorRect.yMax - elementRect.height;
                     result.marginTop = -options.offset;
@@ -390,9 +390,9 @@ namespace Unity.AppUI.UI
                 default:
                     break;
             }
-            
+
             return result;
         }
-    
+
     }
 }

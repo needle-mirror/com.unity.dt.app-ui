@@ -16,18 +16,18 @@ namespace Unity.AppUI.UI
         /// Default variant.
         /// </summary>
         Default,
-        
+
         /// <summary>
         /// Primary variant.
         /// </summary>
         Accent,
-        
+
         /// <summary>
         /// Quiet variant.
         /// </summary>
         Destructive,
     }
-    
+
     /// <summary>
     /// Button UI element.
     /// </summary>
@@ -38,15 +38,15 @@ namespace Unity.AppUI.UI
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId variantProperty = nameof(variant);
-        
+
         internal static readonly BindingId quietProperty = nameof(quiet);
-        
+
         internal static readonly BindingId titleProperty = nameof(title);
-        
+
         internal static readonly BindingId subtitleProperty = nameof(subtitle);
-        
+
         internal static readonly BindingId leadingIconProperty = nameof(leadingIcon);
-        
+
         internal static readonly BindingId trailingIconProperty = nameof(trailingIcon);
 
         internal static readonly BindingId sizeProperty = nameof(size);
@@ -66,7 +66,7 @@ namespace Unity.AppUI.UI
         /// The Button quiet mode styling class.
         /// </summary>
         public const string quietUssClassName = ussClassName + "--quiet";
-        
+
         /// <summary>
         /// The Button leading container styling class.
         /// </summary>
@@ -252,7 +252,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetVariantUssClassName(m_Variant));
                 m_Variant = value;
                 AddToClassList(GetVariantUssClassName(m_Variant));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
@@ -276,7 +276,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = quiet != value;
                 EnableInClassList(quietUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in quietProperty);
@@ -302,7 +302,7 @@ namespace Unity.AppUI.UI
                 m_Title.text = value;
                 m_TitleContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Title.text));
                 EnableInClassList(iconOnlyUssClassName, string.IsNullOrEmpty(m_Title.text));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in titleProperty);
@@ -327,7 +327,7 @@ namespace Unity.AppUI.UI
                 var changed = m_Subtitle.text != value;
                 m_Subtitle.text = value;
                 m_Subtitle.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Subtitle.text));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in subtitleProperty);
@@ -352,7 +352,7 @@ namespace Unity.AppUI.UI
                 var changed = m_LeadingIcon.iconName != value;
                 m_LeadingIcon.iconName = value;
                 m_LeadingContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_LeadingIcon.iconName));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in leadingIconProperty);
@@ -377,7 +377,7 @@ namespace Unity.AppUI.UI
                 var changed = m_TrailingIcon.iconName != value;
                 m_TrailingIcon.iconName = value;
                 m_TrailingContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_TrailingIcon.iconName));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in trailingIconProperty);
@@ -411,14 +411,14 @@ namespace Unity.AppUI.UI
                 };
                 m_TrailingIcon.size = m_LeadingIcon.size;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
 #endif
             }
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -431,7 +431,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new class UxmlTraits : ExVisualElement.UxmlTraits
         {
-            
+
             readonly UxmlStringAttributeDescription m_LeadingIcon = new UxmlStringAttributeDescription
             {
                 name = "leading-icon",

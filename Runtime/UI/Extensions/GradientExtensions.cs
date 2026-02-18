@@ -22,7 +22,7 @@ namespace Unity.AppUI.UI
                 throw new ArgumentOutOfRangeException(nameof(value), "Cannot parse a null string to a Gradient.");
 
             v = default;
-            
+
             var index = value.IndexOf(":");
             if (index == -1)
                 return false;
@@ -43,7 +43,7 @@ namespace Unity.AppUI.UI
             {
                 if (item.Length < 3)
                     return false;
-                
+
                 var valueList = item.Trim().Substring(1, item.Length - 2); // Remove brackets
                 var colorKeys = valueList.Split(',');
                 if (colorKeys.Length is <= 0 or > 2)
@@ -64,7 +64,7 @@ namespace Unity.AppUI.UI
             {
                 if (item.Length < 3)
                     return false;
-                
+
                 var valueList = item.Trim().Substring(1, item.Length - 2); // Remove brackets
                 var alphaKeys = valueList.Split(',');
                 if (alphaKeys.Length is <= 0 or > 2)
@@ -81,7 +81,7 @@ namespace Unity.AppUI.UI
 
             var gradient = new Gradient { mode = gradientMode};
             gradient.SetKeys(gradientColorKeys.ToArray(), gradientAlphaKeys.ToArray());
-            
+
             v = gradient;
             return true;
         }

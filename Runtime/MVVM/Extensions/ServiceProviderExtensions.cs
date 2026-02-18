@@ -23,10 +23,10 @@ namespace Unity.AppUI.MVVM
         {
             if (serviceProvider == null)
                 throw new ArgumentNullException(nameof(serviceProvider));
-            
+
             return serviceProvider.GetService(typeof(T)) as T;
         }
-        
+
         /// <summary>
         /// Gets a service from the service provider. Throws an exception if the service is not found.
         /// </summary>
@@ -41,7 +41,7 @@ namespace Unity.AppUI.MVVM
                 throw new ArgumentNullException(nameof(serviceProvider));
 
             var service = serviceProvider.GetService<T>();
-            
+
             Debug.Assert(service != null, "Service type not found in the service provider.");
 
             return service;

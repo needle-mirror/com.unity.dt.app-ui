@@ -44,7 +44,7 @@ MainPage {
 }
 
 .mvvm-redux-addbutton {
-    
+
 }
 
 TodoItemView.unity-list-view__item {

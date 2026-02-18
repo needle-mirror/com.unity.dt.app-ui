@@ -8,17 +8,17 @@ namespace Unity.AppUI.MVVM
     public class AppBuilder
     {
         readonly AppUIServiceCollection m_Services = new AppUIServiceCollection();
-        
+
         /// <summary>
         /// The services of the application.
         /// </summary>
         public IServiceCollection services => m_Services;
-        
+
         /// <summary>
         /// Private constructor to prevent instantiation.
         /// </summary>
         AppBuilder() { }
-        
+
         /// <summary>
         /// Instantiates a new AppBuilder with the default services according to the given App type.
         /// </summary>
@@ -45,7 +45,7 @@ namespace Unity.AppUI.MVVM
             app.Initialize(serviceProvider, host);
             return app;
         }
-        
+
         void SetupDefaults()
         {
             // todo do some initialization here

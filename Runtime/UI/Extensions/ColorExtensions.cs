@@ -17,7 +17,7 @@ namespace Unity.AppUI.UI
         {
             if (string.IsNullOrEmpty(hexColor))
                 return false;
-            
+
             var allHexDigits = true;
             foreach (var hexColorChar in hexColor)
             {
@@ -27,7 +27,7 @@ namespace Unity.AppUI.UI
                     break;
                 }
             }
-            
+
             return allHexDigits && hexColor is { Length: 3 or 4 or 6 or 8 };
         }
 

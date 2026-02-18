@@ -15,7 +15,7 @@ namespace Unity.AppUI.UI
         /// Extra-extra-small
         /// </summary>
         XXS,
-        
+
         /// <summary>
         /// Extra-small
         /// </summary>
@@ -61,13 +61,13 @@ namespace Unity.AppUI.UI
     public sealed partial class Text : LocalizedTextElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId primaryProperty = nameof(primary);
-        
+
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
 #endif
-        
+
         /// <summary>
         /// The Text main styling class.
         /// </summary>
@@ -99,9 +99,9 @@ namespace Unity.AppUI.UI
         public Text(string text)
         {
             AddToClassList(ussClassName);
-            
+
             pickingMode = PickingMode.Position; // tooltip support
-            
+
             this.text = text;
             size = TextSize.M;
             primary = true;
@@ -123,7 +123,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(primaryUssClassName) != value;
                 EnableInClassList(primaryUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in primaryProperty);
@@ -149,14 +149,14 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
 #endif
             }
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new class UxmlTraits : LocalizedTextElement.UxmlTraits
         {
-            
+
             readonly UxmlBoolAttributeDescription m_Primary = new UxmlBoolAttributeDescription
             {
                 name = "primary",
@@ -198,7 +198,7 @@ namespace Unity.AppUI.UI
 
             }
         }
-        
+
 #endif
     }
 }

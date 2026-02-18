@@ -52,7 +52,7 @@ namespace Unity.AppUI.Tests.UI
             yield return new WaitForSeconds(0.1f);
             m_SetupDone = true;
         }
-        
+
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
@@ -65,10 +65,10 @@ namespace Unity.AppUI.Tests.UI
             SceneManager.UnloadScene(SceneManager.GetActiveScene());
 #pragma warning restore CS0618
         }
-        
+
         [TestCaseSource(typeof(AnchorPopupTestsArgs))]
         public void CanComputePosition(
-            PositionOptions options, 
+            PositionOptions options,
             PositionResult result)
         {
             var computed = AnchorPopupUtils.ComputePosition(m_Element, m_Trigger, m_Panel, options);
@@ -82,7 +82,7 @@ namespace Unity.AppUI.Tests.UI
             computed.tipLeft = result.tipLeft;
             computed.tipTop = result.tipTop;
         }
-        
+
         public class AnchorPopupTestsArgs : IEnumerable
         {
             public IEnumerator GetEnumerator()
@@ -100,7 +100,7 @@ namespace Unity.AppUI.Tests.UI
                 yield return new object[] { new PositionOptions { favoritePlacement = PopoverPlacement.LeftBottom }, result };
                 yield return new object[] { new PositionOptions { favoritePlacement = PopoverPlacement.RightTop }, result };
                 yield return new object[] { new PositionOptions { favoritePlacement = PopoverPlacement.RightBottom }, result };
-                
+
                 yield return new object[] { new PositionOptions { favoritePlacement = PopoverPlacement.Start }, result };
                 yield return new object[] { new PositionOptions { favoritePlacement = PopoverPlacement.End }, result };
                 yield return new object[] { new PositionOptions { favoritePlacement = PopoverPlacement.StartTop }, result };
@@ -111,11 +111,11 @@ namespace Unity.AppUI.Tests.UI
                 yield return new object[] { new PositionOptions { favoritePlacement = PopoverPlacement.TopEnd }, result };
                 yield return new object[] { new PositionOptions { favoritePlacement = PopoverPlacement.BottomStart }, result };
                 yield return new object[] { new PositionOptions { favoritePlacement = PopoverPlacement.BottomEnd }, result };
-                
+
                 yield return new object[] { new PositionOptions { favoritePlacement = PopoverPlacement.Bottom, crossSnap = true }, result };
-                
+
                 yield return new object[] { new PositionOptions { favoritePlacement = PopoverPlacement.Left, crossSnap = true }, result };
-                
+
             }
         }
     }

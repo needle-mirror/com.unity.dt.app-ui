@@ -57,13 +57,13 @@ namespace Unity.AppUI.UI
     public sealed partial class Heading : LocalizedTextElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId primaryProperty = new BindingId(nameof(primary));
-        
+
         internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
-        
+
 #endif
-        
+
         /// <summary>
         /// The Heading main styling class.
         /// </summary>
@@ -120,7 +120,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(primaryUssClassName) != value;
                 EnableInClassList(primaryUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in primaryProperty);
@@ -146,14 +146,14 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
 #endif
             }
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new class UxmlTraits : LocalizedTextElement.UxmlTraits
         {
-            
+
             readonly UxmlBoolAttributeDescription m_Primary = new UxmlBoolAttributeDescription
             {
                 name = "primary",
@@ -195,7 +195,7 @@ namespace Unity.AppUI.UI
 
             }
         }
-        
+
 #endif
     }
 }

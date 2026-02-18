@@ -48,7 +48,7 @@ namespace Unity.AppUI.UI
         {
             evt.StopPropagation();
         }
-        
+
         /// <summary>
         /// Invoke the click event.
         /// </summary>
@@ -84,7 +84,7 @@ namespace Unity.AppUI.UI
                 target.SetPseudoStates(pseudoStates | PseudoStates.Active);
             }
         }
-        
+
         /// <summary>
         /// Force the remove of active pseudo state on the target element.
         /// </summary>

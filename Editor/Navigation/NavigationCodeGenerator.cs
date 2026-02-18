@@ -18,12 +18,12 @@ namespace Unity.AppUI.Navigation.Editor
         {
             var path = AssetDatabase.GetAssetPath(asset);
             var codePath = path.Replace(".asset", "");
-            
+
             var output = EditorUtility.SaveFilePanel("Save generated code", Path.GetDirectoryName(codePath), Path.GetFileName(codePath), "cs");
 
             if (string.IsNullOrEmpty(output))
                 return;
-            
+
             using (var streamWriter = new StreamWriter(output, false))
             {
                 streamWriter.WriteLine("// This file is auto-generated. Do not edit it directly.");
@@ -42,7 +42,7 @@ namespace Unity.AppUI.Navigation.Editor
                     streamWriter.WriteLine("        public const string " + GetVariableName(action.name) + " = \"" + action.name + "\";");
                 }
                 streamWriter.WriteLine("    }");
-                
+
                 streamWriter.WriteLine("    public static partial class Destinations");
                 streamWriter.WriteLine("    {");
                 foreach (var destination in asset.nodes.Where(n => n is NavDestination).Cast<NavDestination>())
@@ -50,7 +50,7 @@ namespace Unity.AppUI.Navigation.Editor
                     streamWriter.WriteLine("        public const string " + GetVariableName(destination.name) + " = \"" + destination.name + "\";");
                 }
                 streamWriter.WriteLine("    }");
-                
+
                 streamWriter.WriteLine("    public static partial class Graphs");
                 streamWriter.WriteLine("    {");
                 foreach (var graph in asset.nodes.Where(n => n is NavGraph).Cast<NavGraph>())
@@ -58,10 +58,10 @@ namespace Unity.AppUI.Navigation.Editor
                     streamWriter.WriteLine("        public const string " + GetVariableName(graph.name) + " = \"" + graph.name + "\";");
                 }
                 streamWriter.WriteLine("    }");
-                
+
                 streamWriter.WriteLine("}");
             }
-            
+
             AssetDatabase.Refresh();
             Debug.Log("Generated code for navigation graph " + asset.name + " at " + output);
         }

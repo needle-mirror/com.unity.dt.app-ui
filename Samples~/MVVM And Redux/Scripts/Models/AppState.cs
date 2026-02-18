@@ -8,11 +8,11 @@ namespace Unity.AppUI.Samples.MVVMRedux
     {
         [SerializeField]
         public Todo[] todos;
-        
+
         [SerializeField]
         public string searchInput;
     }
-    
+
     public class Reducers
     {
         public static AppState CreateTodoReducer(AppState state, Redux.Action<string> action)
@@ -28,7 +28,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
             newTodos[^1] = newTodo;
             return state with {todos = newTodos};
         }
-        
+
         public static AppState DeleteTodoReducer(AppState state, Redux.Action<string> action)
         {
             var newTodos = new Todo[state.todos.Length - 1];
@@ -43,7 +43,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
             }
             return state with {todos = newTodos};
         }
-        
+
         public static AppState CompleteTodoReducer(AppState state, Redux.Action<(string id, bool completed)> action)
         {
             var newTodos = new Todo[state.todos.Length];
@@ -67,7 +67,7 @@ namespace Unity.AppUI.Samples.MVVMRedux
             }
             return state with {todos = newTodos};
         }
-        
+
         public static AppState EditTodoReducer(AppState state, Redux.Action<(string id, string text)> action)
         {
             var newTodos = new Todo[state.todos.Length];
@@ -91,13 +91,13 @@ namespace Unity.AppUI.Samples.MVVMRedux
             }
             return state with {todos = newTodos};
         }
-        
+
         public static AppState SetSearchInputReducer(AppState state, Redux.Action<string> action)
         {
             return state with {searchInput = action.payload};
         }
     }
-    
+
     public static class Actions
     {
         public const string createTodo = "app/CreateTodo";

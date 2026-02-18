@@ -22,7 +22,7 @@ namespace Unity.AppUI.Tests.UI
             @"<appui:GridView />",
             @"<appui:GridView item-height=""100"" show-border=""false"" selection-type=""Multiple"" allow-no-selection=""true"" prevent-scroll-with-modifiers=""true""  />",
         };
-        
+
         [UnityTest, Order(10)]
         public IEnumerator CanConstructGridView()
         {
@@ -32,15 +32,15 @@ namespace Unity.AppUI.Tests.UI
                 Assert.Ignore("Can't run this test outside of the editor");
                 yield break;
             }
-            
+
             GridView gridView = null;
-            
+
             Assert.DoesNotThrow(() =>
             {
                 gridView = new GridView(itemsSource: new List<int>() {1, 2, 3, 4, 5}, makeItem: () => new Text(),
                     bindItem: (e, i) => ((Text) e).text = i.ToString());
             });
-            
+
             Assert.DoesNotThrow(() =>
             {
                 gridView = new GridView
@@ -58,43 +58,43 @@ namespace Unity.AppUI.Tests.UI
                 gridView.itemsSource = Enumerable.Range(1,1000).ToList();
 
             });
-            
+
             Assert.NotNull(gridView);
-            
+
             m_TestUI.rootVisualElement.Clear();
             m_Panel = new Panel();
             m_Panel.Add(gridView);
             m_TestUI.rootVisualElement.Add(m_Panel);
             gridView.StretchToParentSize();
             m_Panel.StretchToParentSize();
-            
+
             yield return null;
-            
+
             gridView.selectedIndex = 500;
-            
+
             yield return null;
-            
+
             Assert.AreEqual(500, gridView.selectedIndex);
-            
+
             gridView.ScrollToItem(500);
-            
+
             yield return new WaitForSeconds(0.2f);
 
             gridView.scrollView.verticalScroller.value = gridView.scrollView.verticalScroller.lowValue;
-            
+
             yield return new WaitForSeconds(0.2f);
-            
+
             gridView.scrollView.verticalScroller.value = gridView.scrollView.verticalScroller.highValue;
-            
+
             yield return new WaitForSeconds(0.2f);
 
             gridView.selectionType = SelectionType.None;
-            
+
             yield return null;
-            
+
             Assert.AreEqual(SelectionType.None, gridView.selectionType);
             Assert.AreEqual(-1, gridView.selectedIndex);
-            
+
             m_Panel = null;
             m_TestUI.rootVisualElement.Clear();
         }

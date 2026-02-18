@@ -9,7 +9,7 @@ namespace Unity.AppUI.Tests.UI
         protected override void OnCanBuildPopupTested()
         {
             base.OnCanBuildPopupTested();
-            
+
             var anchorPopup = (AnchorPopup<T>)popup;
             anchorPopup.SetOffset(10);
             Assert.AreEqual(10, anchorPopup.offset);

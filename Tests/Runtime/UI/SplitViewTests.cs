@@ -9,7 +9,7 @@ namespace Unity.AppUI.Tests.UI
     class SplitViewTests : VisualElementTests<SplitView>
     {
         protected override string mainUssClassName => SplitView.ussClassName;
-        
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:SplitView>

@@ -16,17 +16,17 @@ namespace Unity.AppUI.Navigation
         /// The NavigationScreen main styling class.
         /// </summary>
         public const string ussClassName = "appui-navigation-screen";
-        
+
         /// <summary>
         /// The NavigationScreen container styling class.
         /// </summary>
         public const string containerUssClassName = ussClassName + "__container";
-        
+
         /// <summary>
         /// The NavigationScreen with app bar styling class.
         /// </summary>
         public const string withAppBarUssClassName = ussClassName + "--with-appbar";
-        
+
         /// <summary>
         /// The NavigationScreen with compact app bar styling class.
         /// </summary>
@@ -36,7 +36,7 @@ namespace Unity.AppUI.Navigation
         /// Child elements are added to this element.
         /// </summary>
         public override VisualElement contentContainer => scrollView.contentContainer;
-        
+
         /// <summary>
         /// The <see cref="ScrollView"/> that will be used to display the content of the screen.
         /// </summary>
@@ -63,9 +63,9 @@ namespace Unity.AppUI.Navigation
         /// <param name="args"> The arguments associated with this screen. </param>
         protected virtual void OnEnter(NavController controller, NavDestination destination, Argument[] args)
         {
-            
+
         }
-        
+
         /// <summary>
         /// Called when the screen is popped from a <see cref="NavHost"/>.
         /// </summary>
@@ -77,9 +77,9 @@ namespace Unity.AppUI.Navigation
         /// </remarks>
         protected virtual void OnExit(NavController controller, NavDestination destination, Argument[] args)
         {
-            
+
         }
-        
+
         /// <summary>
         /// Implement this method to setup the <see cref="BottomNavBar"/> of this screen specifically.
         /// </summary>
@@ -90,7 +90,7 @@ namespace Unity.AppUI.Navigation
         /// </remarks>
         protected internal virtual void SetupBottomNavBar(BottomNavBar bottomNavBar)
         {
-            
+
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Unity.AppUI.Navigation
         /// </remarks>
         protected internal virtual void SetupAppBar(AppBar appBar)
         {
-            
+
         }
 
         /// <summary>
@@ -116,14 +116,14 @@ namespace Unity.AppUI.Navigation
         /// </remarks>
         protected internal virtual void SetupDrawer(Drawer drawer)
         {
-            
+
         }
-        
+
         internal void InvokeOnEnter(NavController controller, NavDestination destination, Argument[] args)
         {
             OnEnter(controller, destination, args);
         }
-        
+
         internal void InvokeOnExit(NavController controller, NavDestination destination, Argument[] args)
         {
             OnExit(controller, destination, args);

@@ -25,7 +25,7 @@ namespace Unity.AppUI.Tests.MVVM
         protected override void OnConfiguringApp(AppBuilder builder)
         {
             base.OnConfiguringApp(builder);
-            
+
             builder.services.AddSingleton<MainPage>();
         }
     }

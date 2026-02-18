@@ -5,7 +5,7 @@
 
 .appui-date-picker-pane__years-container {
     display: flex;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
 }
 
 .appui--ltr .appui-date-picker-pane__years-container {

@@ -29,7 +29,7 @@ namespace Unity.AppUI.Samples.Navigation
             }).ExecuteLater(3000);
         }
     }
-    
+
     [Preserve]
     class HomeScreen : NavigationScreen
     {
@@ -39,7 +39,7 @@ namespace Unity.AppUI.Samples.Navigation
             text.AddToClassList("text-content");
             Add(text);
             var btn = new Unity.AppUI.UI.Button { title = "Go to Profile Page" };
-            btn.clicked += () => 
+            btn.clicked += () =>
             {
                 this.FindNavController().Navigate(Actions.go_to_profile, new Argument("toto", "tata"));
             };
@@ -47,7 +47,7 @@ namespace Unity.AppUI.Samples.Navigation
 
         }
     }
-    
+
     [Preserve]
     class ItemsScreen : NavigationScreen
     {
@@ -63,7 +63,7 @@ namespace Unity.AppUI.Samples.Navigation
                 {
                     this.FindNavController()
                         .Navigate(
-                            Actions.items_to_item_details, 
+                            Actions.items_to_item_details,
                             new Argument("item", itemName));
                 });
                 item.AddManipulator(clickable);
@@ -71,7 +71,7 @@ namespace Unity.AppUI.Samples.Navigation
             }
         }
     }
-    
+
     [Preserve]
     class ItemDetailScreen : NavigationScreen
     {
@@ -91,7 +91,7 @@ namespace Unity.AppUI.Samples.Navigation
             }
         }
     }
-    
+
     [Preserve]
     class LoginScreen : NavigationScreen
     {
@@ -103,7 +103,7 @@ namespace Unity.AppUI.Samples.Navigation
             var passwordField = new Unity.AppUI.UI.TextField { placeholder = "Password" };
             Add(passwordField);
             var loginButton = new Unity.AppUI.UI.Button { title = "Login" };
-            loginButton.clicked += () => 
+            loginButton.clicked += () =>
             {
                 PlayerPrefs.SetInt("loggedIn", 1);
                 this.FindNavController().Navigate(Actions.go_to_home);
@@ -112,20 +112,20 @@ namespace Unity.AppUI.Samples.Navigation
             var signUpMessage = new Unity.AppUI.UI.Link("Don't have an account? Sign up");
             signUpMessage.AddToClassList("signup-message");
             Add(signUpMessage);
-            signUpMessage.clickable.clicked += () => 
+            signUpMessage.clickable.clicked += () =>
             {
                 this.FindNavController().Navigate(Actions.login_to_signup);
             };
             var forgotPasswordMessage = new Unity.AppUI.UI.Link("Forgot password?");
             forgotPasswordMessage.AddToClassList("forgot-password-message");
             Add(forgotPasswordMessage);
-            forgotPasswordMessage.clickable.clicked += () => 
+            forgotPasswordMessage.clickable.clicked += () =>
             {
                 this.FindNavController().Navigate(Actions.login_to_forgot_password);
             };
         }
     }
-    
+
     [Preserve]
     class SignupScreen : NavigationScreen
     {
@@ -137,7 +137,7 @@ namespace Unity.AppUI.Samples.Navigation
             var passwordField = new Unity.AppUI.UI.TextField { placeholder = "Password" };
             Add(passwordField);
             var signupButton = new Unity.AppUI.UI.Button { title = "Signup" };
-            signupButton.clicked += () => 
+            signupButton.clicked += () =>
             {
                 PlayerPrefs.SetInt("loggedIn", 1);
                 this.FindNavController().Navigate(Actions.go_to_home);
@@ -146,13 +146,13 @@ namespace Unity.AppUI.Samples.Navigation
             var loginMessage = new Unity.AppUI.UI.Link("Already have an account? Login");
             loginMessage.AddToClassList("login-message");
             Add(loginMessage);
-            loginMessage.clickable.clicked += () => 
+            loginMessage.clickable.clicked += () =>
             {
                 this.FindNavController().PopBackStack();
             };
         }
     }
-    
+
     [Preserve]
     class ForgotPasswordScreen : NavigationScreen
     {
@@ -162,7 +162,7 @@ namespace Unity.AppUI.Samples.Navigation
             var usernameField = new Unity.AppUI.UI.TextField { placeholder = "Username" };
             Add(usernameField);
             var sendButton = new Unity.AppUI.UI.Button { title = "Send" };
-            sendButton.clicked += () => 
+            sendButton.clicked += () =>
             {
                 this.FindNavController().Navigate(Actions.fp_to_confirm_code);
             };
@@ -170,7 +170,7 @@ namespace Unity.AppUI.Samples.Navigation
             var backToLoginMessage = new Unity.AppUI.UI.Link("Back to Login");
             backToLoginMessage.AddToClassList("back-to-login-message");
             Add(backToLoginMessage);
-            backToLoginMessage.clickable.clicked += () => 
+            backToLoginMessage.clickable.clicked += () =>
             {
                 this.FindNavController().PopBackStack();
             };
@@ -184,7 +184,7 @@ namespace Unity.AppUI.Samples.Navigation
         {
             Add(new Heading("Code sent!"));
             Add(new Text("Please check your email for the confirmation code."));
-            
+
             var backToLoginButton = new UI.Button { title = "Back to Login" };
             backToLoginButton.clicked += () =>
             {
@@ -193,34 +193,34 @@ namespace Unity.AppUI.Samples.Navigation
             Add(backToLoginButton);
         }
     }
-    
+
     [Preserve]
     class ProfileScreen : NavigationScreen
     {
         public ProfileScreen()
         {
             var settingsButton = new SettingRow("Settings", "");
-            settingsButton.clickable.clicked += () => 
+            settingsButton.clickable.clicked += () =>
             {
                 this.FindNavController().Navigate(Actions.profile_to_settings);
             };
             Add(settingsButton);
             var logoutButton = new Unity.AppUI.UI.Button { title = "Logout" };
-            logoutButton.clicked += () => 
+            logoutButton.clicked += () =>
             {
                 PlayerPrefs.SetInt("loggedIn", 0);
                 this.FindNavController().Navigate(Actions.go_to_login);
             };
             Add(logoutButton);
         }
-        
+
         protected override void OnEnter(NavController controller, NavDestination destination, Argument[] args)
         {
             if (args is {Length: > 0})
-                Debug.Log("Entered Profile Screen with arguments: " + 
+                Debug.Log("Entered Profile Screen with arguments: " +
                 args.Select(a => a.name + " = " + a.value).Aggregate((a, b) => a + ", " + b));
         }
-        
+
         protected override void OnExit(NavController controller, NavDestination destination, Argument[] args)
         {
             Debug.Log("Exited Profile Screen");
@@ -230,7 +230,7 @@ namespace Unity.AppUI.Samples.Navigation
     class SettingRow : VisualElement
     {
         Text m_Value;
-        
+
         public Pressable clickable { get; }
 
         public string value
@@ -238,12 +238,12 @@ namespace Unity.AppUI.Samples.Navigation
             get => m_Value.text;
             set => m_Value.text = value;
         }
-        
+
         public SettingRow(string title, string value)
         {
             clickable = new Pressable();
             this.AddManipulator(clickable);
-            
+
             AddToClassList("setting-row");
             var titleLabel = new Unity.AppUI.UI.Text(title) { pickingMode = PickingMode.Ignore };
             titleLabel.AddToClassList("setting-row-title");
@@ -256,35 +256,35 @@ namespace Unity.AppUI.Samples.Navigation
             Add(chevronIcon);
         }
     }
-    
+
     [Preserve]
     class SettingsScreen : NavigationScreen
     {
         SettingRow m_ThemeSettingRow;
-        
+
         public SettingsScreen()
         {
             m_ThemeSettingRow = new SettingRow("Theme", "");
             m_ThemeSettingRow.AddToClassList("theme-setting-row");
             Add(m_ThemeSettingRow);
         }
-        
+
         protected override void OnEnter(NavController controller, NavDestination destination, Argument[] args)
         {
             var theme = this.GetContext<ThemeContext>().theme;
             m_ThemeSettingRow.value = theme;
-            m_ThemeSettingRow.clickable.clicked += () => 
+            m_ThemeSettingRow.clickable.clicked += () =>
             {
                 this.FindNavController().Navigate(Actions.settings_to_theme, new Argument("currentTheme", theme));
             };
         }
     }
-    
+
     [Preserve]
     class ThemeSettingScreen : NavigationScreen
     {
         readonly RadioGroup m_RadioGroup;
-        
+
         public ThemeSettingScreen()
         {
             m_RadioGroup = new RadioGroup();
@@ -321,19 +321,19 @@ namespace Unity.AppUI.Samples.Navigation
         {
             if (!destination.showBottomNavBar)
                 return;
-            
+
             var homeButton = new BottomNavBarItem("info", "Home", () => navController.Navigate(Actions.go_to_home))
             {
                 isSelected = destination.name == Destinations.home
             };
             bottomNavBar.Add(homeButton);
-            
+
             var itemsButton = new BottomNavBarItem("list", "Items", () => navController.Navigate(Actions.go_to_items))
             {
                 isSelected = destination.name == Destinations.items
             };
             bottomNavBar.Add(itemsButton);
-            
+
             var profileButton = new BottomNavBarItem("users", "Profile", () => navController.Navigate(Actions.go_to_profile))
             {
                 isSelected = destination.name == Destinations.profile
@@ -345,7 +345,7 @@ namespace Unity.AppUI.Samples.Navigation
         {
             if (!destination.showAppBar)
                 return;
-            
+
             appBar.title = destination.label;
             appBar.stretch = true;
             appBar.expandedHeight = 92;
@@ -362,7 +362,7 @@ namespace Unity.AppUI.Samples.Navigation
 
             var homeButton = new MenuItem
             {
-                icon = "info", 
+                icon = "info",
                 label = "Home",
                 active = destination.name == Destinations.home
             };
@@ -372,10 +372,10 @@ namespace Unity.AppUI.Samples.Navigation
                 drawer.Close();
             };
             drawer.Add(homeButton);
-            
+
             var itemsButton = new MenuItem
             {
-                icon = "list", 
+                icon = "list",
                 label = "Items",
                 active = destination.name == Destinations.items
             };
@@ -385,10 +385,10 @@ namespace Unity.AppUI.Samples.Navigation
                 drawer.Close();
             };
             drawer.Add(itemsButton);
-            
+
             var profileButton = new MenuItem
             {
-                icon = "users", 
+                icon = "users",
                 label = "Profile",
                 active = destination.name == Destinations.profile
             };

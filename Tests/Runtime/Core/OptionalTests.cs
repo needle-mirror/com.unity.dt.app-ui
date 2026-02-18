@@ -109,21 +109,21 @@ namespace Unity.AppUI.Tests.Core
     class OptionalEnumTests
     {
         Type enumType => typeof(Dir);
-        
+
         [Test]
         public void OptionalEnumConverter_Equals_ShouldReturnTrue_WhenBothAreNone()
         {
             var actual = OptionalEnum<Dir>.none.Equals(OptionalEnum<Dir>.none);
             Assert.IsTrue(actual);
         }
-        
+
         [Test]
         public void OptionalEnumConverter_Equals_ShouldReturnFalse_WhenOneIsNone()
         {
             var actual = OptionalEnum<Dir>.none.Equals(new OptionalEnum<Dir>(Dir.Ltr));
             Assert.IsFalse(actual);
         }
-        
+
         [Test]
         public void OptionalEnumConverter_Equals_ShouldReturnTrue_WhenBothAreEqual()
         {
@@ -132,7 +132,7 @@ namespace Unity.AppUI.Tests.Core
             actual = new OptionalEnum<Dir>(Dir.Ltr) == (new OptionalEnum<Dir>(Dir.Ltr));
             Assert.IsTrue(actual);
         }
-        
+
         [Test]
         public void OptionalEnumConverter_Equals_ShouldReturnFalse_WhenBothAreNotEqual()
         {
@@ -141,7 +141,7 @@ namespace Unity.AppUI.Tests.Core
             actual = new OptionalEnum<Dir>(Dir.Ltr) == new OptionalEnum<Dir>(Dir.Rtl);
             Assert.IsFalse(actual);
         }
-        
+
         [Test]
         public void OptionalEnumConverter_Equals_ShouldReturnTrue_WhenOtherCanBeCastToOptional()
         {
@@ -152,35 +152,35 @@ namespace Unity.AppUI.Tests.Core
             actual = new OptionalEnum<Dir>(Dir.Ltr) != Dir.Ltr;
             Assert.IsFalse(actual);
         }
-        
+
         [Test]
         public void OptionalEnumConverter_Equals_ShouldReturnFalse_WhenOtherCannotBeCastToOptional()
         {
             var actual = new OptionalEnum<Dir>(Dir.Ltr).Equals("Ltr");
             Assert.IsFalse(actual);
         }
-        
+
         [Test]
         public void OptionalEnumConverter_Equals_ShouldReturnFalse_WhenOtherIsNull()
         {
             var actual = new OptionalEnum<Dir>(Dir.Ltr).Equals(null);
             Assert.IsFalse(actual);
         }
-        
+
         [Test]
         public void OptionalEnumConverter_IsSet_ShouldReturnTrue_WhenValueIsSet()
         {
             var actual = new OptionalEnum<Dir>(Dir.Ltr).IsSet;
             Assert.IsTrue(actual);
         }
-        
+
         [Test]
         public void OptionalEnumConverter_IsSet_ShouldReturnFalse_WhenValueIsNotSet()
         {
             var actual = OptionalEnum<Dir>.none.IsSet;
             Assert.IsFalse(actual);
         }
-        
+
         [Test]
         public void OptionalEnumConverter_Value_ShouldReturnValue_WhenValueIsSet()
         {
@@ -188,7 +188,7 @@ namespace Unity.AppUI.Tests.Core
             var actual = new OptionalEnum<Dir>(expected).Value;
             Assert.AreEqual(expected, actual);
         }
-        
+
         [Test]
         public void OptionalEnumConverter_GetHashCode_ShouldReturnSameHashCode_WhenValuesAreEqual()
         {

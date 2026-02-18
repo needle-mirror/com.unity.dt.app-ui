@@ -7,17 +7,17 @@ namespace Unity.AppUI.Core
     /// <summary>
     /// Implementation of a weak reference table.
     /// </summary>
-    class WeakReferenceTable<TKey,TValue> 
+    class WeakReferenceTable<TKey,TValue>
         where TKey : class
         where TValue : new()
     {
         readonly Dictionary<WeakReference, TValue> m_WeakReferenceTable = new Dictionary<WeakReference, TValue>();
-        
+
         /// <summary>
         /// Default constructor.
         /// </summary>
         public WeakReferenceTable() { }
-        
+
         /// <summary>
         /// Try to get the value associated with the given key.
         /// </summary>
@@ -27,18 +27,18 @@ namespace Unity.AppUI.Core
         public bool TryGetValue(TKey key, out TValue value)
         {
             var keysToRemove = new List<WeakReference>();
-            
+
             foreach (var kvp in m_WeakReferenceTable)
             {
                 if (!kvp.Key.IsAlive)
                     keysToRemove.Add(kvp.Key);
             }
-            
+
             foreach (var keyToRemove in keysToRemove)
             {
                 m_WeakReferenceTable.Remove(keyToRemove);
             }
-            
+
             foreach (var kvp in m_WeakReferenceTable)
             {
                 if (kvp.Key.Target is TKey target && target == key)
@@ -51,7 +51,7 @@ namespace Unity.AppUI.Core
             value = default;
             return false;
         }
-        
+
         /// <summary>
         /// Get the value associated with the given key or create a new one if the key is not found.
         /// </summary>
@@ -62,7 +62,7 @@ namespace Unity.AppUI.Core
             TValue value;
             if (TryGetValue(key, out value))
                 return value;
-            
+
             value = new TValue();
             var weakReference = new WeakReference(key);
             m_WeakReferenceTable.Add(weakReference, value);

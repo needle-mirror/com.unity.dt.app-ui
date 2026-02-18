@@ -9,7 +9,7 @@ namespace Unity.AppUI.Tests.UI
     class ContextProviderTests : VisualElementTests<ContextProvider>
     {
         protected override string mainUssClassName => ContextProvider.ussClassName;
-        
+
         protected override IEnumerable<Story> stories
         {
             get

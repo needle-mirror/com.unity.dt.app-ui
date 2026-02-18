@@ -22,7 +22,7 @@ namespace Unity.AppUI.Tests.UI
     class RangeSliderIntTests : VisualElementTests<RangeSliderInt>
     {
         protected override string mainUssClassName => RangeSliderInt.ussClassName;
-        
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"appui:RangeSliderInt />",

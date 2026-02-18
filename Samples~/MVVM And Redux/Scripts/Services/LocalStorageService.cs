@@ -12,11 +12,11 @@ namespace Unity.AppUI.Samples.MVVMRedux
                 var json = PlayerPrefs.GetString(key);
                 return JsonUtility.FromJson<T>(json);
             }
-            
+
             SetValue(key, defaultValue);
             return defaultValue;
         }
-        
+
         public void SetValue<T>(string key, T value)
         {
             var json = JsonUtility.ToJson(value);

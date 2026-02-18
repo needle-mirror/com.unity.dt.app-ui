@@ -4,7 +4,7 @@ uid: custom-typography
 
 # Custom Typography
 
-The App UI package provides a way to customize the typography of your application. 
+The App UI package provides a way to customize the typography of your application.
 
 By default, App UI uses [Inter](https://rsms.me/inter/) as the main font. The available font weights are `Regular` and `SemiBold`.
 

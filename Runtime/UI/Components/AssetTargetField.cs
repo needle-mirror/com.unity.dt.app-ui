@@ -16,11 +16,11 @@ namespace Unity.AppUI.UI
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
         internal static readonly BindingId valueProperty = nameof(value);
-        
+
         internal static readonly BindingId invalidProperty = nameof(invalid);
-        
+
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
 #endif
         const string k_DefaultIconName = "scene";
@@ -164,7 +164,7 @@ namespace Unity.AppUI.UI
             set => EnableInClassList(Styles.invalidUssClassName, value);
         }
 
-        public Func<AssetReference, bool> validateValue 
+        public Func<AssetReference, bool> validateValue
         {
             get => m_ValidateValue;
             set
@@ -172,7 +172,7 @@ namespace Unity.AppUI.UI
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(this.value) ?? false;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
@@ -209,7 +209,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new class UxmlTraits : BaseVisualElement.UxmlTraits
         {
-            
+
             readonly UxmlBoolAttributeDescription m_Invalid = new UxmlBoolAttributeDescription
             {
                 name = "invalid",

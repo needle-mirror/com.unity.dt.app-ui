@@ -4,7 +4,7 @@ uid: native-integration
 
 # Native Integration
 
-App UI supports communication with the operating system through [native plugins](xref:NativePlugins). 
+App UI supports communication with the operating system through [native plugins](xref:NativePlugins).
 For now plugins have been developed for the following platforms:
 - [Android](xref:AndroidNativePlugins)
 - [iOS](xref:PluginsForIOS)
@@ -14,7 +14,7 @@ For now plugins have been developed for the following platforms:
 ## Screen Informations
 
 Thanks to the [Screen](xref:UnityEngine.Screen) class from Unity, you can get information about the screen size and orientation.
-However we found that the relationship between the [dpi](xref:UnityEngine.Screen.dpi) and 
+However we found that the relationship between the [dpi](xref:UnityEngine.Screen.dpi) and
 the [UI Toolkit PanelSettings](xref:UnityEngine.UIElements.PanelSettings) is different from a platform to another.
 
 We provide a [mainScreenScale](xref:Unity.AppUI.Core.Platform.mainScreenScale) property which gives an accurate scale factor

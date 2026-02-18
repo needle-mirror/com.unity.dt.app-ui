@@ -2,7 +2,7 @@ using System;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.Bridge
-{ 
+{
     static class EventBaseExtensionsBridge
     {
 #if APPUI_USE_INTERNAL_API_BRIDGE
@@ -17,7 +17,7 @@ namespace Unity.AppUI.Bridge
             SkipDisabledElements = EventBase.EventPropagation.SkipDisabledElements,
             BubblesOrTricklesDown = Bubbles | TricklesDown,
         }
-#else 
+#else
         [Flags]
         internal enum EventPropagation
         {
@@ -39,9 +39,9 @@ namespace Unity.AppUI.Bridge
         {
             return (EventPropagation)evt.propagation;
         }
-    
+
 #else // REFLECTION
-    
+
 #if UNITY_2023_2_OR_NEWER
         [Flags]
         internal enum EventPropagation
@@ -52,7 +52,7 @@ namespace Unity.AppUI.Bridge
             SkipDisabledElements = 4,
             BubblesOrTricklesDown = Bubbles | TricklesDown,
         }
-#else 
+#else
         [Flags]
         internal enum EventPropagation
         {
@@ -64,9 +64,9 @@ namespace Unity.AppUI.Bridge
             IgnoreCompositeRoots = 16,
         }
 #endif
-        
-        static readonly System.Reflection.PropertyInfo k_Propagation = 
-            typeof(EventBase).GetProperty("propagation", 
+
+        static readonly System.Reflection.PropertyInfo k_Propagation =
+            typeof(EventBase).GetProperty("propagation",
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
         internal static void SetPropagation(this EventBase evt, EventPropagation propagation)
@@ -78,8 +78,8 @@ namespace Unity.AppUI.Bridge
         {
             return (EventPropagation)((int)k_Propagation.GetValue(evt));
         }
-    
+
 #endif
-        
+
     }
 }

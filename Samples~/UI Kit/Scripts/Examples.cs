@@ -16,7 +16,7 @@ namespace Unity.AppUI.Samples
     public class Examples : MonoBehaviour
     {
         public UIDocument uiDocument;
-        
+
         public Texture2D avatarPicture;
 
         const int DELETE_ACTION = 99;
@@ -30,7 +30,7 @@ namespace Unity.AppUI.Samples
                 SetupDataBinding(uiDocument.rootVisualElement, avatarPicture);
         }
 
-        void Update() 
+        void Update()
         {
             if (uiDocument)
             {
@@ -62,7 +62,7 @@ namespace Unity.AppUI.Samples
                 }
 
             };
-            
+
             var themeSwitcher = root.Q<RadioGroup>("theme-switcher");
             var scaleSwitcher = root.Q<RadioGroup>("scale-switcher");
             var dirSwitcher = root.Q<RadioGroup>("dir-switcher");
@@ -114,7 +114,7 @@ namespace Unity.AppUI.Samples
                 }
                 PlayerPrefs.SetInt("scale", scaleSwitcher.value);
             }
-            
+
             void SetDir()
             {
                 switch (dirSwitcher.value)
@@ -142,7 +142,7 @@ namespace Unity.AppUI.Samples
                 scaleSwitcher.SetValueWithoutNotify(PlayerPrefs.GetInt("scale", 1));
                 SetScale();
             }
-            
+
             if (dirSwitcher != null)
             {
                 dirSwitcher.RegisterValueChangedCallback(_ => SetDir());
@@ -224,21 +224,21 @@ namespace Unity.AppUI.Samples
             dropdown1.bindItem = (item, i) => item.label = dropdownSrc[i];
             dropdown1.sourceItems = dropdownSrc;
             dropdown1.SetValueWithoutNotify(new []{ 0 });
-            
+
             var dropdown2 = root.Q<Dropdown>("dropdown2");
             dropdown2.bindItem = (item, i) => item.label = dropdownSrc[i];
             dropdown2.sourceItems = dropdownSrc;
             dropdown2.SetValueWithoutNotify(new []{ 1 });
-            
+
             var dropdown3 = root.Q<Dropdown>("dropdown3");
             dropdown3.bindItem = (item, i) => item.label = dropdownSrc[i];
             dropdown3.sourceItems = dropdownSrc;
             dropdown3.SetValueWithoutNotify(new []{ 1, 2 });
 
-            var img = avatarPicture ? avatarPicture : 
-#if UNITY_EDITOR 
+            var img = avatarPicture ? avatarPicture :
+#if UNITY_EDITOR
                 UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.unity.dt.app-ui/PackageResources/Images/example-avatar-pic.png")
-#else 
+#else
                 null
 #endif
                     ;
@@ -260,10 +260,10 @@ namespace Unity.AppUI.Samples
                     new GradientAlphaKey(1, 1)
                 }
             );
-            
+
             root.Q<ActionButton>("menu-action-code").clickable.clickedWithEventInfo += (evt =>
                 OpenMenu((VisualElement)evt.target));
-            
+
             var gridViewDefault = root.Q<GridView>("grid-view-default");
             gridViewDefault.columnCount = 3;
             gridViewDefault.itemHeight = 50;
@@ -326,7 +326,7 @@ namespace Unity.AppUI.Samples
                         break;
                 }
             });
-            
+
             var badge1 = root.Q<Badge>("badge-1");
             var badge2 = root.Q<Badge>("badge-2");
             var badge3 = root.Q<Badge>("badge-3");
@@ -407,7 +407,7 @@ namespace Unity.AppUI.Samples
 
             var swipeViewD = root.Q<SwipeView>("swipeview-distance");
             swipeViewD.beingSwiped += OnBeingSwiped;
-            
+
             root.Q<Chip>("filled-chip-ornament").ornament = new Image
             {
                 image = img,
@@ -435,7 +435,7 @@ namespace Unity.AppUI.Samples
                 {
                     var text = new Text($"A{i}");
                     item.Add(text);
-                    // random color 
+                    // random color
                     var color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
                     item.backgroundColor = color;
                     // text color in contrast with background color
@@ -509,17 +509,17 @@ namespace Unity.AppUI.Samples
             {
                 Debug.Log($"RangeSliderFloat Changed: {evt.newValue}");
             });
-            
+
             root.Q<RangeSliderFloat>("rsfm").RegisterValueChangingCallback(evt =>
             {
                 Debug.Log($"RangeSliderFloat Changing: {evt.newValue}");
             });
-            
+
             root.Q<SliderFloat>("sfm").RegisterValueChangedCallback(evt =>
             {
                 Debug.Log($"SliderFloat Changed: {evt.newValue}");
             });
-            
+
             root.Q<SliderFloat>("sfm").RegisterValueChangingCallback(evt =>
             {
                 Debug.Log($"SliderFloat Changing: {evt.newValue}");

@@ -18,13 +18,13 @@ namespace Unity.AppUI.UI
     public partial class SliderFloat : SliderBase<float>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId incrementFactorProperty = new BindingId(nameof(incrementFactor));
-        
+
 #endif
-        
+
         const float k_DefaultIncrement = 0.1f;
-        
+
         float m_IncrementFactor = k_DefaultIncrement;
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = !Mathf.Approximately(m_IncrementFactor, value);
                 m_IncrementFactor = Mathf.Max(0.0001f, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in incrementFactorProperty);
@@ -63,7 +63,7 @@ namespace Unity.AppUI.UI
             highValueOverride = 100f;
             valueOverride = 0;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("low-value")]
 #endif
@@ -72,7 +72,7 @@ namespace Unity.AppUI.UI
             get => lowValue;
             set => lowValue = value;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("high-value")]
 #endif
@@ -81,7 +81,7 @@ namespace Unity.AppUI.UI
             get => highValue;
             set => highValue = value;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("value")]
 #endif
@@ -90,7 +90,7 @@ namespace Unity.AppUI.UI
             get => value;
             set => this.value = value;
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("format-string")]
 #endif
@@ -184,7 +184,7 @@ namespace Unity.AppUI.UI
                 el.value = m_Value.GetValueFromBag(bag, cc);
             }
         }
-        
+
 #endif
     }
 }

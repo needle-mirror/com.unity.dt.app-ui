@@ -15,18 +15,18 @@ namespace Unity.AppUI.Tests.UI
         public void VisualElementExtensions_GetContext_ShouldReturnContextFromApplication()
         {
             var v = new Panel();
-            
+
             LangContext langContext = default;
             ThemeContext themeContext = default;
             ScaleContext scaleContext = default;
-            
+
             Assert.DoesNotThrow(() =>
             {
                 langContext = v.GetContext<LangContext>();
                 themeContext = v.GetContext<ThemeContext>();
                 scaleContext = v.GetContext<ScaleContext>();
             });
-            
+
             Assert.AreEqual(v.lang, langContext.lang);
             Assert.AreEqual(v.theme, themeContext.theme);
             Assert.AreEqual(v.scale, scaleContext.scale);
@@ -43,7 +43,7 @@ namespace Unity.AppUI.Tests.UI
             var overrideElement = new VisualElement();
             overrideElement.ProvideContext(new LangContext(lang));
             overrideElement.ProvideContext(new ThemeContext(theme));
-           
+
             Assert.AreEqual(lang, overrideElement.GetSelfContext<LangContext>().lang);
             Assert.AreEqual(theme, overrideElement.GetSelfContext<ThemeContext>().theme);
             v.Add(overrideElement);
@@ -51,7 +51,7 @@ namespace Unity.AppUI.Tests.UI
             LangContext langContext = default;
             ThemeContext themeContext = default;
             ScaleContext scaleContext = default;
-            
+
             Assert.DoesNotThrow(() =>
             {
                 langContext = overrideElement.GetContext<LangContext>();

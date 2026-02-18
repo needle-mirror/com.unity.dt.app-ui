@@ -13,13 +13,13 @@ namespace Unity.AppUI.UI
     public class ColorToolbar : BaseVisualElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId previousColorPropertyKey = new BindingId(nameof(previousColor));
-        
+
         internal static readonly BindingId currentColorPropertyKey = new BindingId(nameof(currentColor));
-        
+
 #endif
-        
+
         /// <summary>
         /// The main Uss class name of this element.
         /// </summary>
@@ -73,9 +73,9 @@ namespace Unity.AppUI.UI
             {
                 if (m_PreviousColorSwatch.color == value)
                     return;
-                
+
                 m_PreviousColorSwatch.color = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in previousColorPropertyKey);
 #endif
@@ -92,12 +92,12 @@ namespace Unity.AppUI.UI
         {
             get => m_CurrentColorSwatch.color;
             set
-            { 
+            {
                 if (m_CurrentColorSwatch.color == value)
                     return;
-                
+
                 m_CurrentColorSwatch.color = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in currentColorPropertyKey);
 #endif

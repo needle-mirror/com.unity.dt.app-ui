@@ -18,7 +18,7 @@ namespace Unity.AppUI.Editor
         public override void Setup(VisualElement element)
         {
             element.parent.style.alignItems = Align.Stretch;
-            
+
             ((Drawer)element).anchor = DrawerAnchor.Left;
             ((Drawer)element).elevation = 2;
             ((Drawer)element).swipeable = true;
@@ -28,8 +28,8 @@ namespace Unity.AppUI.Editor
 
         public DrawerComponent()
         {
-            
-            
+
+
         }
     }
 }

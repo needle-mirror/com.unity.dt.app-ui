@@ -17,12 +17,12 @@ namespace Unity.AppUI.UI
         /// Extra extra small
         /// </summary>
         XXS,
-        
+
         /// <summary>
         /// Extra small
         /// </summary>
         XS,
-        
+
         /// <summary>
         /// Small
         /// </summary>
@@ -49,27 +49,27 @@ namespace Unity.AppUI.UI
         /// Regular
         /// </summary>
         Regular = 1,
-        
+
         /// <summary>
         /// Bold
         /// </summary>
         Bold,
-        
+
         /// <summary>
         /// DuoTone
         /// </summary>
         DuoTone,
-        
+
         /// <summary>
         /// Light
         /// </summary>
         Light,
-        
+
         /// <summary>
         /// Fill
         /// </summary>
         Fill,
-        
+
         /// <summary>
         /// Thin
         /// </summary>
@@ -85,17 +85,17 @@ namespace Unity.AppUI.UI
     public partial class Icon : Image
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId iconNameProperty = new BindingId(nameof(iconName));
-        
+
         internal static readonly BindingId primaryProperty = new BindingId(nameof(primary));
-        
+
         internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
-        
+
         internal static readonly BindingId variantProperty = new BindingId(nameof(variant));
-        
+
 #endif
-        
+
         /// <summary>
         /// The Icon main styling class.
         /// </summary>
@@ -151,7 +151,7 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(primaryUssClassName) != value;
                 EnableInClassList(primaryUssClassName, value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in primaryProperty);
@@ -177,7 +177,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -205,7 +205,7 @@ namespace Unity.AppUI.UI
                 m_IconName = value;
                 AddToClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName, "--", m_Variant.ToLowerCase()));
                 AddToClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in iconNameProperty);
@@ -233,14 +233,14 @@ namespace Unity.AppUI.UI
                 m_Variant = value;
                 AddToClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName, "--", m_Variant.ToLowerCase()));
                 AddToClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
 #endif
-            } 
+            }
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new class UxmlTraits : Image.UxmlTraits
         {
-            
+
             readonly UxmlStringAttributeDescription m_IconName = new UxmlStringAttributeDescription
             {
                 name = "icon-name",
@@ -265,7 +265,7 @@ namespace Unity.AppUI.UI
                 name = "primary",
                 defaultValue = true,
             };
-            
+
             readonly UxmlEnumAttributeDescription<IconVariant> m_Variant = new UxmlEnumAttributeDescription<IconVariant>
             {
                 name = "variant",
@@ -297,7 +297,7 @@ namespace Unity.AppUI.UI
 
             }
         }
-        
+
 #endif
     }
 }

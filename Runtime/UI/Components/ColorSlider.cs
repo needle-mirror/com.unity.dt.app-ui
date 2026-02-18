@@ -17,17 +17,17 @@ namespace Unity.AppUI.UI
     public sealed partial class ColorSlider : BaseSlider<float,float>
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId sizeProperty = nameof(size);
-        
+
         internal static readonly BindingId colorValueProperty = nameof(colorValue);
-        
+
         internal static readonly BindingId colorRangeProperty = nameof(colorRange);
-        
+
         internal static readonly BindingId incrementFactorProperty = nameof(incrementFactor);
-        
+
 #endif
-        
+
         /// <summary>
         /// The ColorSlider main styling class.
         /// </summary>
@@ -37,7 +37,7 @@ namespace Unity.AppUI.UI
         /// The ColorSlider thumb container styling class.
         /// </summary>
         public const string thumbContainerUssClassName = ussClassName + "__thumbcontainer";
-        
+
         /// <summary>
         /// The ColorSlider thumb container container styling class.
         /// </summary>
@@ -76,7 +76,7 @@ namespace Unity.AppUI.UI
         readonly ExVisualElement m_Thumb;
 
         readonly VisualElement m_ThumbContainer;
-        
+
         readonly VisualElement m_ThumbContainerContainer;
 
         readonly VisualElement m_ThumbContent;
@@ -84,7 +84,7 @@ namespace Unity.AppUI.UI
         Size m_Size;
 
         float m_IncrementFactor;
-        
+
         const float k_DefaultIncrement = 0.01f;
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Unity.AppUI.UI
                 var changed = !m_TrackSwatch.value?.Equals(value) ?? value != null;
                 m_TrackSwatch.value = value;
                 SetValueWithoutNotify(this.value);
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in colorRangeProperty);
@@ -138,7 +138,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -162,14 +162,14 @@ namespace Unity.AppUI.UI
             {
                 var changed = !Mathf.Approximately(m_IncrementFactor, value);
                 m_IncrementFactor = value;
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in incrementFactorProperty);
 #endif
             }
         }
-        
+
 #if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("low-value")]
         [HideInInspector]
@@ -178,7 +178,7 @@ namespace Unity.AppUI.UI
             get => lowValue;
             set => lowValue = value;
         }
-        
+
         [UxmlAttribute("high-value")]
         [HideInInspector]
         float highValueAttributeOverride
@@ -186,7 +186,7 @@ namespace Unity.AppUI.UI
             get => highValue;
             set => highValue = value;
         }
-        
+
         [UxmlAttribute("value")]
         [Range(0, 1)]
         float valueAttributeOverride
@@ -233,7 +233,7 @@ namespace Unity.AppUI.UI
             };
             m_ThumbContent.AddToClassList(thumbContentUssClassName);
             m_ThumbContent.style.backgroundColor = Color.clear;
-            
+
             m_ThumbContainerContainer = new VisualElement
             {
                 name = thumbContainerContainerUssClassName,
@@ -281,11 +281,11 @@ namespace Unity.AppUI.UI
             RegisterCallback<KeyDownEvent>(OnKeyDown);
         }
 
-        /// <inheritdoc cref="BaseSlider{T,TU}.InvokeValueChangedCallbacks"/> 
+        /// <inheritdoc cref="BaseSlider{T,TU}.InvokeValueChangedCallbacks"/>
         protected override void InvokeValueChangedCallbacks()
         {
             base.InvokeValueChangedCallbacks();
-            
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in colorValueProperty);
 #endif
@@ -323,7 +323,7 @@ namespace Unity.AppUI.UI
                 if (handled)
                 {
                     evt.StopPropagation();
-                    
+
 
                     if (!Mathf.Approximately(newValue, previousValue))
                     {
@@ -352,7 +352,7 @@ namespace Unity.AppUI.UI
         public override void SetValueWithoutNotify(float newValue)
         {
             newValue = Clamp(newValue, lowValue, highValue);
-            
+
             m_Value = newValue;
 
             if (validateValue != null) invalid = !validateValue(m_Value);
@@ -389,7 +389,7 @@ namespace Unity.AppUI.UI
         {
             return Clamp(val + incrementFactor, lowValue, highValue);
         }
-        
+
         /// <inheritdoc cref="BaseSlider{TValueType,TValueType}.Clamp"/>
         protected override float Clamp(float v, float lowBound, float highBound)
         {
@@ -401,7 +401,7 @@ namespace Unity.AppUI.UI
             m_ThumbContent.style.backgroundColor = colorRange.Evaluate(m_Value);
             m_ThumbContainer.style.left = new StyleLength(new Length(m_Value * 100f, LengthUnit.Percent));
         }
-        
+
 #if ENABLE_UXML_TRAITS
 
         /// <summary>

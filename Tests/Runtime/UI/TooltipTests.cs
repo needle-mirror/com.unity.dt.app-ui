@@ -11,13 +11,13 @@ namespace Unity.AppUI.Tests.UI
         {
             return Tooltip.Build(GetReferenceElement());
         }
-        
+
         protected override bool shouldContainView => false;
-        
+
         protected override void OnCanBuildPopupTested()
         {
             base.OnCanBuildPopupTested();
-            
+
             Assert.IsNotNull(popup);
             Assert.IsNull(popup.anchor);
             Assert.AreEqual(0, popup.offset);

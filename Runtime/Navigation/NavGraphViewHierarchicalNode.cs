@@ -11,7 +11,7 @@ namespace Unity.AppUI.Navigation
     {
         [SerializeField]
         NavGraph m_Parent;
-        
+
         [SerializeField]
         List<NavAction> m_Actions = new List<NavAction>();
 
@@ -26,7 +26,7 @@ namespace Unity.AppUI.Navigation
             get => m_Parent;
             set => m_Parent = value;
         }
-        
+
         /// <summary>
         /// The actions associated with this NavGraphViewHierarchicalNode.
         /// </summary>

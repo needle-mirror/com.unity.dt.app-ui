@@ -26,8 +26,8 @@ namespace Unity.AppUI.Editor
             appBar.showDrawerButton = true;
             appBar.expandedHeight = 92;
             appBar.AddAction(new ActionButton { icon = "info", quiet = true } );
-            
-            
+
+
             var scrollView = new ScrollView
             {
                 style =
@@ -61,18 +61,18 @@ namespace Unity.AppUI.Editor
                 item.style.unityTextAlign = TextAnchor.MiddleLeft;
                 scrollView.Add(item);
             }
-            
+
             scrollView.verticalScroller.valueChanged += (evt) =>
             {
                 appBar.scrollOffset = scrollView.verticalScroller.value;
             };
-            
+
             appBar.RegisterCallback<GeometryChangedEvent>(evt =>
             {
                 var h = evt.newRect.height;
                 scrollView.style.paddingTop = h;
             });
-            
+
             return root;
         }
 
@@ -92,9 +92,9 @@ namespace Unity.AppUI.Editor
             var btn = new UI.Button();
             btn.title = "Button";
             btnContainer.Add(btn);
-            
+
             appBar.bottom.Add(btnContainer);
-            
+
             return root;
         }
 
@@ -104,7 +104,7 @@ namespace Unity.AppUI.Editor
             var appBar = root.Q<AppBar>();
             appBar.title = "Compact";
             appBar.compact = true;
-            
+
             return root;
         }
 
@@ -114,7 +114,7 @@ namespace Unity.AppUI.Editor
             var appBar = root.Q<AppBar>();
             appBar.stretch = false;
             appBar.title = "Compact No Stretch";
-            
+
             return root;
         }
 

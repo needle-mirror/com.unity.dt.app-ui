@@ -4,7 +4,7 @@
     --appui-avatar-group--spacing-md: -12px;
     --appui-avatar-group--spacing-lg: -8px;
     --appui-avatar-group--spacing-default: 0;
-    
+
     --appui-avatar-group-padding-sm: 16px;
     --appui-avatar-group-padding-md: 12px;
     --appui-avatar-group-padding-lg: 8px;

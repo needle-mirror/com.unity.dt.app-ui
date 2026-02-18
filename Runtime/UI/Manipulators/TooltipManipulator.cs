@@ -18,7 +18,7 @@ namespace Unity.AppUI.UI
         IVisualElementScheduledItem m_ScheduledItem;
 
         Tooltip m_Tooltip;
-        
+
         /// <summary>
         /// If true, this manipulator will force the picked tooltip to be displayed, no matter the context.
         /// </summary>
@@ -27,7 +27,7 @@ namespace Unity.AppUI.UI
         /// but you still want to display tooltips.
         /// </remarks>
         public bool force { get; set; }
-        
+
         protected override void RegisterCallbacksOnTarget()
         {
             m_Tooltip = Tooltip.Build(target);
@@ -42,12 +42,12 @@ namespace Unity.AppUI.UI
             target.UnregisterCallback<PointerMoveEvent>(OnPointerMoved);
             target.panel?.visualTree.UnregisterCallback<PointerDownEvent>(OnClick, TrickleDown.TrickleDown);
         }
-        
+
         void OnClick(PointerDownEvent evt)
         {
             HideTooltip();
         }
-        
+
         void OnPointerMoved(PointerMoveEvent evt)
         {
             // 0 - If the pointer has been captured, nothing to do
@@ -56,7 +56,7 @@ namespace Unity.AppUI.UI
                 HideTooltip();
                 return;
             }
-            
+
             // 1 - pick tooltip below cursor
             var pickedElement = target.panel?.Pick(evt.position);
             if (pickedElement == null)
@@ -73,7 +73,7 @@ namespace Unity.AppUI.UI
 
             // 3 - New tooltip to display, hide the visual tooltip first
             HideTooltip();
-            
+
             var hasTooltip = false;
             m_Tooltip.SetContent(null);
             m_Tooltip.SetText(null);

@@ -16,15 +16,15 @@ namespace Unity.AppUI.UI
     public partial class Divider : BaseVisualElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS
-        
+
         internal static readonly BindingId directionProperty = new BindingId(nameof(direction));
-        
+
         internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
-        
+
         internal static readonly BindingId spacingProperty = new BindingId(nameof(spacing));
-        
+
 #endif
-        
+
         /// <summary>
         /// The Divider main styling class.
         /// </summary>
@@ -100,7 +100,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetDirectionUssClassName(m_Direction));
                 m_Direction = value;
                 AddToClassList(GetDirectionUssClassName(m_Direction));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
@@ -126,7 +126,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
@@ -152,7 +152,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSpacingUssClassName(m_Spacing));
                 m_Spacing = value;
                 AddToClassList(GetSpacingUssClassName(m_Spacing));
-                
+
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in spacingProperty);

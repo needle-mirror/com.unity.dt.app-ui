@@ -12,7 +12,7 @@
     align-items: stretch;
     position: relative;
     flex-shrink: 0;
-    
+
     transition: border-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
 }
 
