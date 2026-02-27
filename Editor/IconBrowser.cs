@@ -10,6 +10,8 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
+using HelpBox = UnityEngine.UIElements.HelpBox;
+using HelpBoxMessageType = UnityEngine.UIElements.HelpBoxMessageType;
 using Object = UnityEngine.Object;
 using Toggle = UnityEngine.UIElements.Toggle;
 
@@ -585,6 +587,7 @@ namespace Unity.AppUI.Editor
             new IconEntry { name = "caret-up", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretUp.png" },
 
             new IconEntry { name = "check", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Check.png" },
+            new IconEntry { name = "check-circle", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CheckCircle.png" },
             new IconEntry { name = "check", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Check.png" },
             new IconEntry { name = "color-picker", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ColorPicker.png" },
 
@@ -612,6 +615,7 @@ namespace Unity.AppUI.Editor
             new IconEntry { name = "warning", variant = k_FillVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/Warning.png" },
             new IconEntry { name = "warning", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Warning.png" },
             new IconEntry { name = "x", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/X.png" },
+            new IconEntry { name = "x-circle", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/XCircle.png" },
         };
 
         struct IconEntry

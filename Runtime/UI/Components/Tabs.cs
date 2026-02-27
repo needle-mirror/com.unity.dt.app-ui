@@ -470,23 +470,32 @@ namespace Unity.AppUI.UI
 
         void RefreshIndicator()
         {
+            var item = m_Items.Count > m_Value && m_Value >= 0 ? m_Items[m_Value] : null;
+            if (item == null)
+            {
+                m_Indicator.style.left = 0;
+                m_Indicator.style.width = 0;
+                m_Indicator.style.top = 0;
+                m_Indicator.style.height = 0;
+                return;
+            }
             switch (direction)
             {
                 case Direction.Horizontal:
-                    var x = m_Items[m_Value].layout.x - m_ScrollView.scrollOffset.x;
+                    var x = item.layout.x - m_ScrollView.scrollOffset.x;
                     if (!Mathf.Approximately(x, m_Indicator.resolvedStyle.left))
                         m_Indicator.style.left = x;
-                    if (!Mathf.Approximately(m_Items[m_Value].layout.width, m_Indicator.resolvedStyle.width))
-                        m_Indicator.style.width = m_Items[m_Value].layout.width;
+                    if (!Mathf.Approximately(item.layout.width, m_Indicator.resolvedStyle.width))
+                        m_Indicator.style.width = item.layout.width;
                     m_Indicator.style.height = StyleKeyword.Null;
                     m_Indicator.style.top = StyleKeyword.Null;
                     break;
                 case Direction.Vertical:
-                    var y = m_Items[m_Value].layout.y - m_ScrollView.scrollOffset.y;
+                    var y = item.layout.y - m_ScrollView.scrollOffset.y;
                     if (!Mathf.Approximately(y, m_Indicator.resolvedStyle.top))
                         m_Indicator.style.top = y;
-                    if (!Mathf.Approximately(m_Items[m_Value].layout.height, m_Indicator.resolvedStyle.scale.value.y))
-                        m_Indicator.style.height = m_Items[m_Value].layout.height;
+                    if (!Mathf.Approximately(item.layout.height, m_Indicator.resolvedStyle.scale.value.y))
+                        m_Indicator.style.height = item.layout.height;
                     m_Indicator.style.left = StyleKeyword.Null;
                     m_Indicator.style.width = StyleKeyword.Null;
                     break;

@@ -186,15 +186,8 @@ namespace Unity.AppUI.UI
             return (T)this;
         }
 
-        /// <summary>
-        /// Implement this method to know if the popup should call
-        /// <see cref="AnimateViewIn"/> and <see cref="AnimateViewOut"/> methods or not.
-        /// </summary>
-        /// <returns>`True` if you want to animate the popup, `False` otherwise.</returns>
-        protected override bool ShouldAnimate()
-        {
-            return true;
-        }
+        /// <inheritdoc />
+        protected override bool ShouldAnimate() => base.ShouldAnimate();
 
         /// <inheritdoc cref="Popup.AnimateViewIn"/>
         protected override void AnimateViewIn()

@@ -12,6 +12,7 @@
     --appui-icon-caret-double-right-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDoubleRight.png");
     --appui-icon-caret-up-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretUp.png");
     --appui-icon-check-bold: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Check.png");
+    --appui-icon-check-circle-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CheckCircle.png");
     --appui-icon-check-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Check.png");
     --appui-icon-color-picker-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ColorPicker.png");
     --appui-icon-delete-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Delete.png");
@@ -31,7 +32,8 @@
     --appui-icon-warning-fill: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/Warning.png");
     --appui-icon-warning-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Warning.png");
     --appui-icon-x-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/X.png");
-/* Additional icons */
+    --appui-icon-x-circle-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/XCircle.png");
+    /* Additional icons */
 }
 
 .appui-icon--calendar--regular {
@@ -68,6 +70,10 @@
 
 .appui-icon--check--bold {
     --unity-image: var(--appui-icon-check-bold);
+}
+
+.appui-icon--check-circle--regular {
+    --unity-image: var(--appui-icon-check-circle-regular);
 }
 
 .appui-icon--check--regular {
@@ -144,4 +150,8 @@
 
 .appui-icon--x--regular {
     --unity-image: var(--appui-icon-x-regular);
+}
+
+.appui-icon--x-circle--regular {
+    --unity-image: var(--appui-icon-x-circle-regular);
 }

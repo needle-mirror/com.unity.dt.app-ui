@@ -71,7 +71,7 @@ namespace Unity.AppUI.UI
             return originalValue + delta;
         }
 
-        /// <inheritdoc cref="NumericalField{T}.GetIncrementFactor"/>
+        /// <inheritdoc/>
         protected override float GetIncrementFactor(double baseValue)
         {
             // Use log scale for better increment across different magnitudes

@@ -9,6 +9,8 @@ using UnityEditor.UIElements;
 using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
+using HelpBox = UnityEngine.UIElements.HelpBox;
+using HelpBoxMessageType = UnityEngine.UIElements.HelpBoxMessageType;
 using TextField = UnityEngine.UIElements.TextField;
 using Toggle = UnityEngine.UIElements.Toggle;
 using Toolbar = UnityEditor.UIElements.Toolbar;

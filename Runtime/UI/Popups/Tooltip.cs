@@ -77,11 +77,8 @@ namespace Unity.AppUI.UI
             return this;
         }
 
-        /// <inheritdoc cref="Popup.ShouldAnimate"/>
-        protected override bool ShouldAnimate()
-        {
-            return true;
-        }
+        /// <inheritdoc />
+        protected override bool ShouldAnimate() => base.ShouldAnimate();
 
         /// <inheritdoc />
         protected override void AnimateViewOut(DismissType reason)

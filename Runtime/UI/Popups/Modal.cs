@@ -156,7 +156,7 @@ namespace Unity.AppUI.UI
         protected override bool ShouldDismiss(DismissType reason) => outsideClickDismissEnabled || base.ShouldDismiss(reason);
 
         /// <inheritdoc />
-        protected override bool ShouldAnimate() => true;
+        protected override bool ShouldAnimate() => base.ShouldAnimate();
 
         /// <inheritdoc />
         protected override void AnimateViewIn()

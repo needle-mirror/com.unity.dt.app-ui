@@ -1,0 +1,579 @@
+/* ============================================================================
+   Custom Theme Example - Complete Implementation
+
+   This file demonstrates a fully-featured custom theme implementation using
+   App UI's theming system. It includes:
+
+   - Complete color palette override
+   - Semantic color assignments
+   - Custom component styles
+   - BEM naming conventions
+   - Design token usage
+   - Scale-aware styling
+
+   To use this theme:
+   1. Create a corresponding .tss file that imports this .uss
+   2. Reference the .tss file in your PanelSettings
+   3. Apply the theme at runtime or via UI
+
+   Theme Name: appui--corporatebrand
+   ============================================================================ */
+
+/* Import the base palette to access all color definitions */
+@import url("App UI - Palette.uss");
+
+/* ============================================================================
+   THEME DEFINITION - Corporate Brand Theme
+   ============================================================================ */
+
+.appui--corporatebrand {
+    /* ========================================================================
+       PRIMARY COLOR PALETTE - Brand Blue
+       25-step density scale from darkest to lightest
+       ======================================================================== */
+
+    --appui-primary-100: #0B1F3F;      /* Darkest - Deep Navy */
+    --appui-primary-200: #102A52;      /* Very Dark Navy */
+    --appui-primary-300: #153666;      /* Dark Navy */
+    --appui-primary-400: #1A427A;      /* Navy */
+    --appui-primary-500: #1F4E8E;      /* Medium Navy */
+    --appui-primary-600: #245AA2;      /* Bright Navy */
+    --appui-primary-700: #2966B6;      /* Light Navy */
+    --appui-primary-800: #2E72CA;      /* Lighter Navy */
+    --appui-primary-900: #3380DE;      /* Bright Blue */
+    --appui-primary-1000: #548CEE;     /* Light Blue */
+    --appui-primary-1100: #7599F3;     /* Lighter Blue */
+    --appui-primary-1200: #96A8F8;     /* Very Light Blue */
+    --appui-primary-1300: #F0F5FF;     /* Lightest - Almost White */
+
+    /* ========================================================================
+       ACCENT PALETTE - Corporate Gold
+       Used for highlights, CTAs, and interactive elements
+       ======================================================================== */
+
+    --appui-accent-300: #D4A017;       /* Darkest Gold */
+    --appui-accent-200: #E6B84A;       /* Dark Gold */
+    --appui-accent-100: #F0C66F;       /* Medium Gold */
+    --appui-accent-50: #F5D99F;        /* Light Gold */
+    --appui-accent-25: #FADCC3;        /* Lightest Gold */
+
+    /* ========================================================================
+       SEMANTIC COLORS - Status Indicators
+       ======================================================================== */
+
+    /* Success / Positive - Green */
+    --appui-positive-300: #17A745;
+    --appui-positive-200: #28C755;
+    --appui-positive-100: #5CE17D;
+    --appui-positive-50: #8EE5A0;
+    --appui-positive-25: #C5F0D1;
+
+    /* Warning - Orange */
+    --appui-warning-300: #D39E00;
+    --appui-warning-200: #E8B61F;
+    --appui-warning-100: #F4D761;
+    --appui-warning-50: #FAE8A0;
+    --appui-warning-25: #FFEFCC;
+
+    /* Error / Destructive - Red */
+    --appui-destructive-300: #DC3545;
+    --appui-destructive-200: #E74C5C;
+    --appui-destructive-100: #FF6B7A;
+    --appui-destructive-50: #FF9199;
+    --appui-destructive-25: #FFCCCF;
+
+    /* ========================================================================
+       BASE COLORS - Neutral Palette
+       Used for backgrounds, borders, and text
+       ======================================================================== */
+
+    --appui-base-500: #1F4E8E;         /* Primary blue for interactive elements */
+    --appui-base-400: #2966B6;
+    --appui-base-300: #3380DE;
+    --appui-base-200: #548CEE;
+    --appui-base-100: #7599F3;
+
+    /* ========================================================================
+       BACKGROUND COLORS - Dark Mode Backgrounds
+       ======================================================================== */
+
+    --appui-backgrounds-300: #1A1A2A;  /* Darkest background */
+    --appui-backgrounds-200: #232339;  /* Dark background - panels */
+    --appui-backgrounds-100: #2A2A3A;  /* Default background - main area */
+    --appui-backgrounds-50: #333349;   /* Light background - sections */
+    --appui-backgrounds-25: #3C3C52;   /* Lightest background - hover states */
+
+    /* ========================================================================
+       FOREGROUND COLORS - Text & Icons
+       ======================================================================== */
+
+    --appui-foregrounds-200: #F5F5F5;  /* Brightest text - primary */
+    --appui-foregrounds-100: #E8E8E8;  /* Default text color */
+    --appui-foregrounds-50: #CCCCCC;   /* Secondary text color */
+    --appui-foregrounds-25: #A0A0A0;   /* Tertiary text color - disabled */
+
+    /* ========================================================================
+       COMPONENT SEMANTIC TOKENS
+       Aliases for consistent component styling
+       ======================================================================== */
+
+    /* Text / Typography */
+    --appui-text-primary: var(--appui-foregrounds-200);
+    --appui-text-secondary: var(--appui-foregrounds-50);
+    --appui-text-tertiary: var(--appui-foregrounds-25);
+    --appui-text-disabled: #707070;
+
+    /* Borders & Dividers */
+    --appui-border-color-default: var(--appui-primary-300);
+    --appui-border-color-light: var(--appui-primary-200);
+    --appui-border-color-dark: var(--appui-primary-400);
+
+    /* Interactive */
+    --appui-interactive-default: var(--appui-primary-400);
+    --appui-interactive-hover: var(--appui-primary-500);
+    --appui-interactive-active: var(--appui-primary-600);
+    --appui-interactive-disabled: var(--appui-primary-100);
+}
+
+/* ============================================================================
+   GLOBAL COMPONENT STYLES
+   BEM (Block, Element, Modifier) naming convention
+   ============================================================================ */
+
+/* ========================================================================
+   HEADER COMPONENT - .appui-header
+   ======================================================================== */
+
+.appui-header {
+    padding: var(--appui-spacing-300);
+    background-color: var(--appui-primary-300);
+    border-bottom: 2px solid var(--appui-accent-300);
+    min-height: 60px;
+}
+
+.appui-header__title {
+    font-size: 24px;
+    -unity-font: var(--appui-font-weights-200);
+    color: var(--appui-foregrounds-200);
+    margin-bottom: 0;
+}
+
+.appui-header__subtitle {
+    font-size: 12px;
+    color: var(--appui-foregrounds-50);
+    margin-top: var(--appui-spacing-75);
+}
+
+.appui-header--compact {
+    padding: var(--appui-spacing-200);
+    min-height: 48px;
+}
+
+.appui-header--compact .appui-header__title {
+    font-size: 18px;
+}
+
+/* ========================================================================
+   CARD COMPONENT - .appui-card
+   ======================================================================== */
+
+.appui-card {
+    padding: var(--appui-spacing-300);
+    margin-bottom: var(--appui-spacing-200);
+    background-color: var(--appui-backgrounds-100);
+    border: 1px solid var(--appui-primary-200);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.appui-card:hover {
+    border-color: var(--appui-accent-300);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.appui-card__header {
+    margin-bottom: var(--appui-spacing-200);
+    padding-bottom: var(--appui-spacing-200);
+    border-bottom: 1px solid var(--appui-primary-200);
+}
+
+.appui-card__title {
+    font-size: 16px;
+    -unity-font: var(--appui-font-weights-200);
+    color: var(--appui-primary-400);
+    margin: 0 0 var(--appui-spacing-100) 0;
+}
+
+.appui-card__subtitle {
+    font-size: 12px;
+    color: var(--appui-foregrounds-50);
+    margin: 0;
+}
+
+.appui-card__content {
+    font-size: 13px;
+    color: var(--appui-foregrounds-100);
+    line-height: 1.5;
+}
+
+.appui-card__footer {
+    margin-top: var(--appui-spacing-200);
+    padding-top: var(--appui-spacing-200);
+    border-top: 1px solid var(--appui-primary-200);
+}
+
+/* Modifiers */
+.appui-card--elevated {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    border: none;
+}
+
+.appui-card--featured {
+    border-left: 4px solid var(--appui-accent-300);
+    background: linear-gradient(90deg,
+        rgba(212, 160, 23, 0.05) 0%,
+        transparent 100%);
+}
+
+.appui-card--compact {
+    padding: var(--appui-spacing-200);
+    margin-bottom: var(--appui-spacing-100);
+}
+
+.appui-card--compact .appui-card__title {
+    font-size: 14px;
+}
+
+.appui-card--success {
+    border-left: 4px solid var(--appui-positive-300);
+}
+
+.appui-card--warning {
+    border-left: 4px solid var(--appui-warning-300);
+}
+
+.appui-card--error {
+    border-left: 4px solid var(--appui-destructive-300);
+}
+
+/* ========================================================================
+   SECTION COMPONENT - .appui-section
+   Container for grouped content
+   ======================================================================== */
+
+.appui-section {
+    padding: var(--appui-spacing-300);
+    margin-bottom: var(--appui-spacing-300);
+    background-color: var(--appui-backgrounds-50);
+    border-radius: 6px;
+}
+
+.appui-section__header {
+    margin-bottom: var(--appui-spacing-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.appui-section__title {
+    font-size: 18px;
+    -unity-font: var(--appui-font-weights-200);
+    color: var(--appui-primary-400);
+    margin: 0;
+}
+
+.appui-section__subtitle {
+    font-size: 11px;
+    color: var(--appui-foregrounds-50);
+    margin-top: var(--appui-spacing-50);
+}
+
+.appui-section__content {
+    color: var(--appui-foregrounds-100);
+}
+
+.appui-section__divider {
+    height: 1px;
+    background-color: var(--appui-primary-200);
+    margin: var(--appui-spacing-200) 0;
+}
+
+/* Modifiers */
+.appui-section--highlight {
+    background-color: var(--appui-primary-300);
+}
+
+.appui-section--highlight .appui-section__title {
+    color: var(--appui-accent-300);
+}
+
+/* ========================================================================
+   ACTION BAR COMPONENT - .appui-action-bar
+   Toolbar with actions
+   ======================================================================== */
+
+.appui-action-bar {
+    padding: var(--appui-spacing-200);
+    background-color: var(--appui-backgrounds-100);
+    border-top: 1px solid var(--appui-primary-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--appui-spacing-200);
+    flex-direction: row;
+}
+
+.appui-action-bar__left {
+    display: flex;
+    gap: var(--appui-spacing-100);
+    flex-direction: row;
+}
+
+.appui-action-bar__right {
+    display: flex;
+    gap: var(--appui-spacing-100);
+    flex-direction: row;
+}
+
+.appui-action-bar__divider {
+    width: 1px;
+    height: 32px;
+    background-color: var(--appui-primary-200);
+}
+
+/* ========================================================================
+   BADGE COMPONENT - .appui-badge
+   Status indicators
+   ======================================================================== */
+
+.appui-badge {
+    padding: var(--appui-spacing-75) var(--appui-spacing-150);
+    background-color: var(--appui-primary-300);
+    border-radius: 12px;
+    font-size: 11px;
+    -unity-font: var(--appui-font-weights-200);
+    color: var(--appui-foregrounds-200);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.appui-badge--success {
+    background-color: var(--appui-positive-300);
+}
+
+.appui-badge--warning {
+    background-color: var(--appui-warning-300);
+}
+
+.appui-badge--error {
+    background-color: var(--appui-destructive-300);
+}
+
+.appui-badge--accent {
+    background-color: var(--appui-accent-300);
+}
+
+/* ========================================================================
+   EMPTY STATE COMPONENT - .appui-empty-state
+   Placeholder for empty content
+   ======================================================================== */
+
+.appui-empty-state {
+    padding: var(--appui-spacing-500);
+    text-align: center;
+    color: var(--appui-foregrounds-50);
+}
+
+.appui-empty-state__icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--appui-spacing-300);
+    opacity: 0.5;
+}
+
+.appui-empty-state__title {
+    font-size: 16px;
+    -unity-font: var(--appui-font-weights-200);
+    color: var(--appui-foregrounds-100);
+    margin-bottom: var(--appui-spacing-100);
+}
+
+.appui-empty-state__message {
+    font-size: 12px;
+    color: var(--appui-foregrounds-50);
+    margin-bottom: var(--appui-spacing-200);
+}
+
+/* ========================================================================
+   FORM COMPONENT OVERRIDES - .appui-form-*
+   ======================================================================== */
+
+.appui-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--appui-spacing-200);
+}
+
+.appui-form__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--appui-spacing-100);
+}
+
+.appui-form__label {
+    font-size: 13px;
+    -unity-font: var(--appui-font-weights-200);
+    color: var(--appui-foregrounds-200);
+}
+
+.appui-form__label--required::after {
+    content: " *";
+    color: var(--appui-destructive-300);
+}
+
+.appui-form__hint {
+    font-size: 11px;
+    color: var(--appui-foregrounds-50);
+    margin-top: var(--appui-spacing-50);
+}
+
+.appui-form__error {
+    font-size: 11px;
+    color: var(--appui-destructive-300);
+    margin-top: var(--appui-spacing-50);
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   Helper classes for common styling patterns
+   ============================================================================ */
+
+.appui-text-center {
+    text-align: center;
+}
+
+.appui-text-right {
+    text-align: right;
+}
+
+.appui-text-muted {
+    color: var(--appui-foregrounds-50);
+}
+
+.appui-text-success {
+    color: var(--appui-positive-300);
+}
+
+.appui-text-warning {
+    color: var(--appui-warning-300);
+}
+
+.appui-text-error {
+    color: var(--appui-destructive-300);
+}
+
+.appui-text-accent {
+    color: var(--appui-accent-300);
+}
+
+.appui-bg-primary {
+    background-color: var(--appui-backgrounds-100);
+}
+
+.appui-bg-secondary {
+    background-color: var(--appui-backgrounds-50);
+}
+
+.appui-border-top {
+    border-top: 1px solid var(--appui-primary-200);
+    padding-top: var(--appui-spacing-200);
+}
+
+.appui-border-bottom {
+    border-bottom: 1px solid var(--appui-primary-200);
+    padding-bottom: var(--appui-spacing-200);
+}
+
+.appui-shadow-sm {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.appui-shadow-md {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.appui-shadow-lg {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.appui-rounded-sm {
+    border-radius: 4px;
+}
+
+.appui-rounded-md {
+    border-radius: 8px;
+}
+
+.appui-rounded-lg {
+    border-radius: 12px;
+}
+
+/* ============================================================================
+   RESPONSIVE UTILITIES
+   Applied when using small/large scale contexts
+   ============================================================================ */
+
+/* These classes can be combined with scale contexts */
+.appui-spacing-compact {
+    padding: var(--appui-spacing-150) !important;
+    gap: var(--appui-spacing-100) !important;
+}
+
+.appui-spacing-comfortable {
+    padding: var(--appui-spacing-300) !important;
+    gap: var(--appui-spacing-200) !important;
+}
+
+.appui-text-sm {
+    font-size: 12px;
+}
+
+.appui-text-md {
+    font-size: 14px;
+}
+
+.appui-text-lg {
+    font-size: 16px;
+}
+
+.appui-text-xl {
+    font-size: 20px;
+    -unity-font: var(--appui-font-weights-200);
+}
+
+/* ============================================================================
+   ICONS
+   Custom icon registrations for this theme
+   ============================================================================ */
+
+/* Example: Register custom icons if available */
+.appui-icon--logo--regular {
+    --unity-image: url("Assets/Icons/logo.png");
+}
+
+.appui-icon--success--regular {
+    --unity-image: url("Assets/Icons/success.png");
+}
+
+.appui-icon--warning--regular {
+    --unity-image: url("Assets/Icons/warning.png");
+}
+
+.appui-icon--error--regular {
+    --unity-image: url("Assets/Icons/error.png");
+}
+
+/* ============================================================================
+   END OF CUSTOM THEME
+   ============================================================================ */

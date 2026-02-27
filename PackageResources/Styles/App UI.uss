@@ -37,6 +37,7 @@
 @import "./Components/NumericalField.uss";
 @import "./Components/GridView.uss";
 @import "./Components/Heading.uss";
+@import "./Components/HelpBox.uss";
 @import "./Components/HelpText.uss";
 @import "./Components/Icon.uss";
 @import "./Components/InputLabel.uss";

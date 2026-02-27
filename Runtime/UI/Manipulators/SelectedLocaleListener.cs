@@ -15,7 +15,7 @@ namespace Unity.AppUI.UI
     /// When the Localization Package's selected locale changes, the context will be updated with the new language.
     /// </para>
     /// </summary>
-    /// <seealso cref="VisualElementExtensions.ProvideContext{T}"/>
+    /// <seealso cref="VisualElementExtensions.ProvideContext{T}(VisualElement,T)"/>
     public class SelectedLocaleListener : Manipulator
     {
         readonly Action<Locale> m_OnSelectedLocaleChanged;

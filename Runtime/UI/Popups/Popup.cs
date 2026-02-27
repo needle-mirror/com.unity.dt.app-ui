@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -18,17 +19,30 @@ namespace Unity.AppUI.UI
         /// </summary>
         protected readonly Action m_InvokeShownAction;
 
+        /// <summary>
+        /// The sorting order of the popup.
+        /// Popups with higher sorting order will be displayed on top of popups with lower sorting order.
+        /// </summary>
+        protected internal int m_SortingOrder;
+
+        /// <summary>
+        /// Whether animation is disabled when displaying the popup.
+        /// </summary>
+        protected bool m_DisableAnimation;
+
         Handler m_Handler;
 
         readonly Action m_PrepareAnimateViewInAction;
 
         readonly Action m_OnLayoutReadyToAnimateInAction;
 
-        IVisualElementScheduledItem m_ScheduledPrepareAnimateViewIn;
+        readonly Action m_ShowViewWithoutAnimationAction;
 
-        IVisualElementScheduledItem m_ScheduledAnimateViewIn;
+        IVisualElementScheduledItem m_LayoutReadyToAnimateInPostAction;
 
-        IVisualElementScheduledItem m_ScheduledLayoutReadyToAnimateIn;
+        IVisualElementScheduledItem m_PrepareAnimateViewInPostAction;
+
+        IVisualElementScheduledItem m_ShowViewPostAction;
 
         /// <summary>
         /// Default constructor.
@@ -50,6 +64,7 @@ namespace Unity.AppUI.UI
             m_InvokeShownAction = new Action(InvokeShownEventHandlersInternal);
             m_PrepareAnimateViewInAction = new Action(PrepareAnimateViewInInternal);
             m_OnLayoutReadyToAnimateInAction = new Action(OnLayoutReadyToAnimateInInternal);
+            m_ShowViewWithoutAnimationAction = new Action(ShowViewWithoutAnimationInternal);
 
             view.userData = this;
         }
@@ -96,6 +111,11 @@ namespace Unity.AppUI.UI
         /// </remarks>
         /// <seealso cref="VisualElementExtensions.GetExclusiveRootElement"/>
         public VisualElement rootView => containerView?.GetExclusiveRootElement();
+
+        /// <summary>
+        /// Whether the popup animation is disabled when displaying the popup.
+        /// </summary>
+        public bool disableAnimation => m_DisableAnimation;
 
         /// <summary>
         /// Dismiss the <see cref="Popup"/>.
@@ -145,7 +165,7 @@ namespace Unity.AppUI.UI
         /// <exception cref="InvalidOperationException">Unable to find a suitable parent for the popup.</exception>
         protected virtual void ShowView()
         {
-            m_ScheduledLayoutReadyToAnimateIn?.Pause();
+            m_ShowViewPostAction?.Pause();
 
             if (view.panel == null) // not added into the visual tree yet
             {
@@ -156,24 +176,27 @@ namespace Unity.AppUI.UI
 
                 // set invisible in order to calculate layout before displaying the element (avoid flickering)
                 view.visible = false;
-                // add the view to the container
-                containerView.Add(view);
+                // add the view to the container, depending on the sorting order if there are other popups already in the container
+                var insertIndex = 0;
+                for (var i = containerView.childCount - 1; i >= 0; i--)
+                {
+                    if (containerView[i].userData is Popup popup && popup.m_SortingOrder <= m_SortingOrder)
+                    {
+                        insertIndex = i + 1;
+                        break;
+                    }
+                }
+                containerView.Insert(insertIndex, view);
             }
 
             view.RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
             view.RegisterCallback<KeyDownEvent>(OnViewKeyDown);
 
-            if (ShouldAnimate())
-            {
-                m_ScheduledLayoutReadyToAnimateIn = view.schedule.Execute(m_OnLayoutReadyToAnimateInAction);
-            }
-            else
-            {
-                // be sure its visible
-                view.visible = true;
-                view.AddToClassList(Styles.openUssClassName);
-                m_InvokeShownAction();
-            }
+            var shouldAnimate = ShouldAnimate();
+            view.EnableInClassList(Styles.animatedClassName, shouldAnimate);
+
+            var postAction = shouldAnimate ? m_OnLayoutReadyToAnimateInAction : m_ShowViewWithoutAnimationAction;
+            m_ShowViewPostAction = view.schedule.Execute(postAction);
         }
 
         /// <summary>
@@ -196,7 +219,8 @@ namespace Unity.AppUI.UI
         protected virtual bool ShouldAnimate()
         {
             // todo we can check here if any Accessibility flags is currently in use that should prevent animations.
-            return false;
+            const bool accessibilityAcceptsAnimation = true;
+            return accessibilityAcceptsAnimation && !m_DisableAnimation;
         }
 
         /// <summary>
@@ -230,20 +254,29 @@ namespace Unity.AppUI.UI
             }
         }
 
+        void ShowViewWithoutAnimationInternal()
+        {
+            view.visible = true;
+            view.AddToClassList(Styles.openUssClassName);
+            // wait before calling the shown event handlers to be sure the popup is visible,
+            // this is mandatory for the element to be Focused in the InvokeShownEventHandlers method if needed.
+            m_ShowViewPostAction = view.schedule.Execute(m_InvokeShownAction);
+        }
+
         void OnLayoutReadyToAnimateInInternal()
         {
-            m_ScheduledPrepareAnimateViewIn?.Pause();
+            m_LayoutReadyToAnimateInPostAction?.Pause();
             OnLayoutReadyToAnimateIn();
             // delay the animation preparation to the next frame in case OnLayoutReadyToAnimateIn overrides the layout
-            m_ScheduledPrepareAnimateViewIn = view.schedule.Execute(m_PrepareAnimateViewInAction);
+            m_LayoutReadyToAnimateInPostAction = view.schedule.Execute(m_PrepareAnimateViewInAction);
         }
 
         void PrepareAnimateViewInInternal()
         {
-            m_ScheduledAnimateViewIn?.Pause();
+            m_PrepareAnimateViewInPostAction?.Pause();
             PrepareAnimateViewIn();
             // delay the animation to the next frame in case PrepareAnimateViewIn overrides the layout
-            m_ScheduledAnimateViewIn = view.schedule.Execute(AnimateViewIn);
+            m_PrepareAnimateViewInPostAction = view.schedule.Execute(AnimateViewIn);
         }
 
         void InvokeShownEventHandlersInternal()
@@ -282,7 +315,8 @@ namespace Unity.AppUI.UI
         /// <param name="reason">The reason why the popup should be dismissed.</param>
         protected virtual void HideView(DismissType reason)
         {
-            m_ScheduledPrepareAnimateViewIn?.Pause();
+            m_ShowViewPostAction?.Pause();
+            m_LayoutReadyToAnimateInPostAction?.Pause();
             view.UnregisterCallback<KeyDownEvent>(OnViewKeyDown);
 
             if (ShouldAnimate())
@@ -373,6 +407,12 @@ namespace Unity.AppUI.UI
         public event Action<T, DismissType> dismissed;
 
         /// <summary>
+        /// The sorting order of the popup.
+        /// Popups with higher sorting order will be displayed on top of popups with lower sorting order.
+        /// </summary>
+        public int sortingOrder => m_SortingOrder;
+
+        /// <summary>
         /// Set the container view where the popup will be displayed.
         /// </summary>
         /// <param name="element"> The container view.</param>
@@ -417,6 +457,54 @@ namespace Unity.AppUI.UI
         {
             m_LastFocusedElement = focusable;
             return (T)this;
+        }
+
+        /// <summary>
+        /// Set the sorting order of the popup.
+        /// Popups with higher sorting order will be displayed on top of popups with lower sorting order.
+        /// </summary>
+        /// <param name="newValue"> The new sorting order value.</param>
+        /// <returns> The popup of type <typeparamref name="T"/>.</returns>
+        public T SetSortingOrder(int newValue)
+        {
+            m_SortingOrder = newValue;
+            if (view.panel != null)
+            {
+                Debug.LogWarning("Changing the sorting order of a popup that is already " +
+                    "part of the visual tree can lead to unexpected behavior.");
+                RefreshOrder();
+            }
+            return (T)this;
+        }
+
+        /// <summary>
+        /// Set whether the popup animation is disabled when displaying the popup.
+        /// </summary>
+        /// <param name="disable"> `True` to disable the animation, `False` otherwise.</param>
+        /// <returns> The popup of type <typeparamref name="T"/>.</returns>
+        public T SetDisableAnimation(bool disable)
+        {
+            m_DisableAnimation = disable;
+            return (T)this;
+        }
+
+        void RefreshOrder()
+        {
+            // in the container, each popup element's userData contains a reference to its Popup instance, so we can re-order elements.
+            var elements = new List<VisualElement>(containerView.Children());
+            elements.Sort((a, b) =>
+            {
+                var popupA = a.userData as Popup;
+                var popupB = b.userData as Popup;
+                if (popupA == null || popupB == null)
+                    return 0;
+                return popupA.m_SortingOrder.CompareTo(popupB.m_SortingOrder);
+            });
+
+            foreach (var element in elements)
+            {
+                element.BringToFront();
+            }
         }
 
         /// <summary>

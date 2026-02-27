@@ -186,29 +186,32 @@ namespace Unity.AppUI.UI
         /// <param name="pointerId"> The pointer id of the pointer.</param>
         protected override void ProcessUpEvent(EventBase evt, Vector2 localPosition, int pointerId)
         {
-            isDown = false;
-            deltaPos = Vector2.zero;
-            deltaStartPos = Vector2.zero;
-            this.localPosition = localPosition;
-            switch (evt)
+            if (isDown)
             {
-                case PointerUpEvent pue:
-                    position = pue.position;
-                    ctrlKey = pue.ctrlKey;
-                    shiftKey = pue.shiftKey;
-                    altKey = pue.altKey;
-                    actionKey = pue.actionKey;
-                    break;
-                case MouseUpEvent mue:
-                    position = mue.mousePosition;
-                    ctrlKey = mue.ctrlKey;
-                    shiftKey = mue.shiftKey;
-                    altKey = mue.altKey;
-                    actionKey = mue.actionKey;
-                    break;
-            }
+                isDown = false;
+                deltaPos = Vector2.zero;
+                deltaStartPos = Vector2.zero;
+                this.localPosition = localPosition;
+                switch (evt)
+                {
+                    case PointerUpEvent pue:
+                        position = pue.position;
+                        ctrlKey = pue.ctrlKey;
+                        shiftKey = pue.shiftKey;
+                        altKey = pue.altKey;
+                        actionKey = pue.actionKey;
+                        break;
+                    case MouseUpEvent mue:
+                        position = mue.mousePosition;
+                        ctrlKey = mue.ctrlKey;
+                        shiftKey = mue.shiftKey;
+                        altKey = mue.altKey;
+                        actionKey = mue.actionKey;
+                        break;
+                }
 
-            m_UpHandler?.Invoke(this);
+                m_UpHandler?.Invoke(this);
+            }
             base.ProcessUpEvent(evt, localPosition, pointerId);
         }
 

@@ -147,6 +147,11 @@ namespace Unity.AppUI.UI
         /// </summary>
         public OutsideClickStrategy outsideClickStrategy { get; protected set; } = OutsideClickStrategy.Bounds;
 
+        /// <summary>
+        /// `True` if the click outside the popup that would trigger its dismissal should also stop the event propagation, `False` otherwise.
+        /// </summary>
+        public bool outsideClickDismissStopsEventPropagation { get; protected set; } = false;
+
         /// <inheritdoc />
         internal override bool focusOutDismissable => outsideClickDismissEnabled;
 
@@ -283,6 +288,17 @@ namespace Unity.AppUI.UI
             return (T)this;
         }
 
+        /// <summary>
+        /// Set whether the click outside the popup that would trigger its dismissal should also stop the event propagation.
+        /// </summary>
+        /// <param name="stopPropagation"> `True` to stop event propagation, `False` otherwise.</param>
+        /// <returns> The popup of type <typeparamref name="T"/>.</returns>
+        public T SetOutsideClickDismissStopsEventPropagation(bool stopPropagation)
+        {
+            outsideClickDismissStopsEventPropagation = stopPropagation;
+            return (T)this;
+        }
+
         /// <inheritdoc />
         protected override void OnLayoutReadyToAnimateIn()
         {
@@ -404,7 +420,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         protected void RefreshPosition()
         {
-            if (m_Anchor == null || !view.visible)
+            if (m_Anchor == null || view.parent == null || !view.localBound.IsValid())
                 return;
 
             var movableElement = GetMovableElement();

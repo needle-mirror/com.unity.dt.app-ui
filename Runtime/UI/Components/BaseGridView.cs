@@ -37,6 +37,8 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId makeItemProperty = new BindingId(nameof(makeItem));
 
+        internal static readonly BindingId destroyItemProperty = new BindingId(nameof(destroyItem));
+
         internal static readonly BindingId bindItemProperty = new BindingId(nameof(bindItem));
 
         internal static readonly BindingId itemWidthProperty = new BindingId(nameof(itemWidth));
@@ -115,6 +117,8 @@ namespace Unity.AppUI.UI
         IList m_ItemsSource;
 
         Func<VisualElement> m_MakeItem;
+
+        Action<VisualElement> m_DestroyItem;
 
         int m_RangeSelectionOrigin = -1;
 
@@ -495,6 +499,27 @@ namespace Unity.AppUI.UI
 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in makeItemProperty);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Callback for destroying a VisualElement when it is no longer needed.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Action<VisualElement> destroyItem
+        {
+            get { return m_DestroyItem; }
+            set
+            {
+                if (m_DestroyItem == value)
+                    return;
+                m_DestroyItem = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                NotifyPropertyChanged(in destroyItemProperty);
 #endif
             }
         }

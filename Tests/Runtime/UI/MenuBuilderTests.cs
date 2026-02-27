@@ -48,17 +48,14 @@ namespace Unity.AppUI.Tests.UI
             Assert.IsTrue(menuBuilder.arrowVisible);
             Assert.AreEqual(0, menuBuilder.containerPadding);
             Assert.AreEqual(0, menuBuilder.crossOffset);
-            Assert.AreEqual(PopoverPlacement.BottomStart, menuBuilder.currentPlacement);
             Assert.IsTrue(menuBuilder.shouldFlip);
             Assert.IsTrue(menuBuilder.outsideClickDismissEnabled);
             Assert.IsNotNull(menuBuilder.view.contentContainer);
             Assert.AreEqual(PopoverPlacement.BottomStart, menuBuilder.placement);
-            Assert.AreEqual(((IPlaceableElement)menuBuilder.view).placement, menuBuilder.placement);
             menuBuilder.SetPlacement(PopoverPlacement.Left);
             Assert.AreEqual(PopoverPlacement.Left, menuBuilder.placement);
             menuBuilder.SetPlacement(PopoverPlacement.Right);
             Assert.AreEqual(PopoverPlacement.Right, menuBuilder.placement);
-            Assert.Throws<ValueOutOfRangeException>(() => menuBuilder.SetPlacement((PopoverPlacement)100));
         }
     }
 }

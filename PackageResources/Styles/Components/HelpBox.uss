@@ -1,0 +1,107 @@
+/* HelpBox */
+
+.appui-helpbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    padding: var(--appui-alias-control-gap-md) var(--appui-alias-control-gap-lg);
+    border-radius: var(--appui-alias-control-border-radius);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-foregrounds-25);
+    background-color: var(--appui-backgrounds-100);
+}
+
+.appui--rtl .appui-helpbox {
+    flex-direction: row-reverse;
+}
+
+/* Semantic variants */
+
+.appui-helpbox--default {
+    border-color: var(--appui-foregrounds-25);
+}
+
+.appui-helpbox--confirmation {
+    border-color: var(--appui-alias-semantic-positive);
+}
+
+.appui-helpbox--information {
+    border-color: var(--appui-alias-semantic-informative);
+}
+
+.appui-helpbox--destructive {
+    border-color: var(--appui-alias-semantic-destructive);
+}
+
+.appui-helpbox--error {
+    border-color: var(--appui-alias-semantic-destructive);
+}
+
+.appui-helpbox--warning {
+    border-color: var(--appui-alias-semantic-warning);
+}
+
+/* Icon */
+
+.appui-helpbox__icon {
+    width: var(--appui-sizing-400);
+    height: var(--appui-sizing-400);
+    flex-shrink: 0;
+    margin-right: var(--appui-alias-control-gap-md);
+    margin-left: 0;
+    align-self: flex-start;
+    --unity-image-tint-color: var(--appui-foregrounds-100);
+}
+
+.appui--rtl .appui-helpbox__icon {
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-md);
+}
+
+.appui-helpbox--confirmation > .appui-helpbox__icon {
+    --unity-image-tint-color: var(--appui-alias-semantic-positive);
+}
+
+.appui-helpbox--information > .appui-helpbox__icon {
+    --unity-image-tint-color: var(--appui-alias-semantic-informative);
+}
+
+.appui-helpbox--destructive > .appui-helpbox__icon {
+    --unity-image-tint-color: var(--appui-alias-semantic-destructive);
+}
+
+.appui-helpbox--error > .appui-helpbox__icon {
+    --unity-image-tint-color: var(--appui-alias-semantic-destructive);
+}
+
+.appui-helpbox--warning > .appui-helpbox__icon {
+    --unity-image-tint-color: var(--appui-alias-semantic-warning);
+}
+
+/* Message */
+
+.appui-helpbox__message {
+    flex-shrink: 1;
+    flex-grow: 1;
+    font-size: var(--appui-font-sizes-body-md);
+    white-space: normal;
+    color: var(--appui-foregrounds-100);
+    -unity-text-align: middle-left;
+}
+
+.appui--rtl .appui-helpbox__message {
+    -unity-text-align: middle-right;
+}
+
+.appui-helpbox--size-s > .appui-helpbox__message {
+    font-size: var(--appui-font-sizes-body-sm);
+}
+
+.appui-helpbox--size-m > .appui-helpbox__message {
+    font-size: var(--appui-font-sizes-body-md);
+}
+
+.appui-helpbox--size-l > .appui-helpbox__message {
+    font-size: var(--appui-font-sizes-body-lg);
+}

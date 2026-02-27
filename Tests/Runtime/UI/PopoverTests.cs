@@ -35,13 +35,10 @@ namespace Unity.AppUI.Tests.UI
             Assert.IsNotNull(popover.view.contentContainer);
 
             Assert.AreEqual(PopoverPlacement.Bottom, popover.placement);
-            Assert.AreEqual(((IPlaceableElement)popover.view).placement, popover.placement);
             popover.SetPlacement(PopoverPlacement.Left);
             Assert.AreEqual(PopoverPlacement.Left, popover.placement);
             popover.SetPlacement(PopoverPlacement.Right);
             Assert.AreEqual(PopoverPlacement.Right, popover.placement);
-
-            Assert.Throws<ValueOutOfRangeException>(() => popover.SetPlacement((PopoverPlacement)100));
         }
     }
 }

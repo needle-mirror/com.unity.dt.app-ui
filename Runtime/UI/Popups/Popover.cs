@@ -374,18 +374,12 @@ namespace Unity.AppUI.UI
 
             var insideAnchor = anchor?.worldBound.Contains((Vector2)evt.position) ?? false;
             var insideLastFocusedElement = (m_LastFocusedElement as VisualElement)?.worldBound.Contains((Vector2)evt.position) ?? false;
-            if (insideAnchor || insideLastFocusedElement)
+            if (insideAnchor || insideLastFocusedElement || outsideClickDismissStopsEventPropagation)
             {
                 // prevent reopening the same popover again...
                 evt.StopImmediatePropagation();
             }
             Dismiss(DismissType.OutOfBounds);
-        }
-
-        /// <inheritdoc cref="Popup.ShouldAnimate"/>
-        protected override bool ShouldAnimate()
-        {
-            return true;
         }
 
         /// <inheritdoc />
@@ -441,6 +435,9 @@ namespace Unity.AppUI.UI
         }
 
         /// <inheritdoc />
+        protected override bool ShouldAnimate() => base.ShouldAnimate();
+
+        /// <inheritdoc />
         protected override void InvokeShownEventHandlers()
         {
             base.InvokeShownEventHandlers();
@@ -456,7 +453,10 @@ namespace Unity.AppUI.UI
             base.HideView(reason);
         }
 
-        internal void EnsureEventHandlersRegistered()
+        /// <summary>
+        /// Ensure that the event handlers are registered. This is useful when the popover is used in a smir and the root view can change.
+        /// </summary>
+        public void EnsureEventHandlersRegistered()
         {
             if (rootView == null)
                 return;

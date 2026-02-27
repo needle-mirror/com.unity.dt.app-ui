@@ -39,5 +39,7 @@
   * [Redux](xref:redux-sample)
   * [MVVM with Redux](xref:mvvm-redux-sample)
   * [Undo/Redo](xref:undo-redo-sample)
+* Tools
+  * [Claude Code Plugin](xref:claude-plugin)
 * Help
   * [FAQ](xref:faq)

@@ -977,7 +977,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Popover" class="example-subtitle" />
                     <ui:VisualElement class="example-section example-section-fullwidth">
-                        <appui:DialogTrigger type="Popover" placement="Top">
+                        <appui:DialogTrigger type="Popover" placement="Top" disable-animation="true">
                             <appui:ActionButton label="Click here!" />
                             <appui:Dialog title="Hello">
                                 <appui:Text text="Lorem ipsum..." />
@@ -1396,6 +1396,29 @@
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:Heading text="Disabled header" enabled="false" />
+                    </ui:VisualElement>
+
+                    <!-- HelpBox -->
+                    <appui:Heading text="HELPBOX" class="example-title" />
+                    <appui:Text text="Default (no icon)" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:HelpBox message="This is a help box with no icon." variant="Default" icon-name="" />
+                    </ui:VisualElement>
+                    <appui:Text text="Information" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:HelpBox message="This is an informational message." variant="Information" icon-name="info" />
+                    </ui:VisualElement>
+                    <appui:Text text="Warning" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:HelpBox message="This is a warning message." variant="Warning" icon-name="warning" />
+                    </ui:VisualElement>
+                    <appui:Text text="Error" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:HelpBox message="This is an error message." variant="Error" icon-name="x-circle" />
+                    </ui:VisualElement>
+                    <appui:Text text="Multi-line message" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:HelpBox message="First line of the message.&#xA;Second line of the message.&#xA;Third line of the message." variant="Information" icon-name="info" />
                     </ui:VisualElement>
 
                     <!-- Icon -->

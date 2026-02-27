@@ -68,12 +68,6 @@ namespace Unity.AppUI.UI
             return true;
         }
 
-        /// <inheritdoc cref="Popup.ShouldAnimate"/>
-        protected override bool ShouldAnimate()
-        {
-            return true;
-        }
-
         /// <inheritdoc />
         protected override void OnLayoutReadyToAnimateIn()
         {
@@ -100,6 +94,9 @@ namespace Unity.AppUI.UI
                     throw new ArgumentOutOfRangeException(nameof(tray.position), tray.position, "Unknown Tray position");
             }
         }
+
+        /// <inheritdoc />
+        protected override bool ShouldAnimate() => base.ShouldAnimate();
 
         /// <inheritdoc cref="Popup.AnimateViewIn"/>
         protected override void AnimateViewIn()

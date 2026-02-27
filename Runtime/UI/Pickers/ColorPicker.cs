@@ -169,6 +169,16 @@ namespace Unity.AppUI.UI
         /// </summary>
         public const string hdrUssClassName = ussClassName + "--hdr";
 
+        /// <summary>
+        /// Event triggered when the eye dropper tool is shown.
+        /// </summary>
+        public event Action<ColorPicker> eyeDropperShown;
+
+        /// <summary>
+        /// Event triggered when the eye dropper tool is dismissed.
+        /// </summary>
+        public event Action<ColorPicker> eyeDropperDismissed;
+
         readonly ColorSlider m_AlphaSlider;
 
         readonly ColorToolbar m_Toolbar;
@@ -655,7 +665,11 @@ namespace Unity.AppUI.UI
             SetValueWithoutNotify(Color.clear);
         }
 
-        internal void OnEyeDropperClicked(EventBase evt)
+        /// <summary>
+        /// Callback for when the eye dropper button is clicked. Starts the eye dropper tool.
+        /// </summary>
+        /// <param name="evt">The event that triggered the callback.</param>
+        public void OnEyeDropperClicked(EventBase evt)
         {
             if (AppUI.Core.AppUI.gameObject)
             {
@@ -683,6 +697,7 @@ namespace Unity.AppUI.UI
             yield return new WaitForEndOfFrame();
             overlay.StartEyedropper(mousePosition);
             overlay.RegisterValueChangedCallback(OnOverlayValueChanged);
+            eyeDropperShown?.Invoke(this);
         }
 
         void OnOverlayValueChanged(ChangeEvent<Color> evt)
@@ -690,6 +705,7 @@ namespace Unity.AppUI.UI
             var overlay = (EyeDropperOverlay) evt.target;
             overlay.UnregisterValueChangedCallback(OnOverlayValueChanged);
             overlay.RemoveFromHierarchy();
+            eyeDropperDismissed?.Invoke(this);
             value = evt.newValue;
             schedule.Execute(Focus);
         }

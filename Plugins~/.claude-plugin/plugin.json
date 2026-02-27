@@ -1,0 +1,8 @@
+{
+  "name": "app-ui",
+  "description": "Expert assistant for developing UI in Unity using App UI framework",
+  "version": "1.0.0",
+  "author": {
+    "name": "Unity Technologies"
+  }
+}

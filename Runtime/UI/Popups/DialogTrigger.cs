@@ -130,6 +130,8 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId resizeDirectionProperty = new BindingId(nameof(resizeDirection));
 
+        internal static readonly BindingId disableAnimationProperty = new BindingId(nameof(disableAnimation));
+
 #endif
 
         string m_AnchorName = null;
@@ -653,6 +655,32 @@ namespace Unity.AppUI.UI
             }
         }
 
+        bool m_DisableAnimation;
+
+        /// <summary>
+        /// Whether to disable the opening and closing animation of the dialog.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool disableAnimation
+        {
+            get => m_DisableAnimation;
+            set
+            {
+                var changed = m_DisableAnimation != value;
+                m_DisableAnimation = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in disableAnimationProperty);
+#endif
+            }
+        }
+
         /// <summary>
         /// The content container of the DialogTrigger.
         /// </summary>
@@ -708,11 +736,13 @@ namespace Unity.AppUI.UI
             {
                 case PopupPresentationType.Modal:
                     Modal.Build(trigger, dialog)
+                        .SetDisableAnimation(disableAnimation)
                         .SetOutsideClickDismiss(outsideClickDismissEnabled)
                         .Show();
                     break;
                 case PopupPresentationType.Popover:
                     Popover.Build(trigger, dialog)
+                        .SetDisableAnimation(disableAnimation)
                         .SetPlacement(placement)
                         .SetShouldFlip(shouldFlip)
                         .SetOffset(offset)
@@ -728,15 +758,22 @@ namespace Unity.AppUI.UI
                     break;
                 case PopupPresentationType.Tray:
                     Tray.Build(trigger, dialog)
+                        .SetDisableAnimation(disableAnimation)
                         .SetPosition(trayPosition)
                         .SetTransitionDuration(transitionDuration)
                         .Show();
                     break;
                 case PopupPresentationType.FullScreen:
-                    Modal.Build(trigger, dialog).SetFullScreenMode(ModalFullScreenMode.FullScreen).Show();
+                    Modal.Build(trigger, dialog)
+                        .SetDisableAnimation(disableAnimation)
+                        .SetFullScreenMode(ModalFullScreenMode.FullScreen)
+                        .Show();
                     break;
                 case PopupPresentationType.FullScreenTakeOver:
-                    Modal.Build(trigger, dialog).SetFullScreenMode(ModalFullScreenMode.FullScreenTakeOver).Show();
+                    Modal.Build(trigger, dialog)
+                        .SetDisableAnimation(disableAnimation)
+                        .SetFullScreenMode(ModalFullScreenMode.FullScreenTakeOver)
+                        .Show();
                     break;
                 default:
                     throw new ValueOutOfRangeException(nameof(type), type);
@@ -853,6 +890,12 @@ namespace Unity.AppUI.UI
                 defaultValue = Draggable.DragDirection.Vertical
             };
 
+            readonly UxmlBoolAttributeDescription m_DisableAnimation = new UxmlBoolAttributeDescription
+            {
+                name = "disable-animation",
+                defaultValue = false
+            };
+
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
             /// </summary>
@@ -880,6 +923,7 @@ namespace Unity.AppUI.UI
                 el.modalBackdrop = m_ModalBackdrop.GetValueFromBag(bag, cc);
                 el.resizable = m_Resizable.GetValueFromBag(bag, cc);
                 el.resizeDirection = m_ResizeDirection.GetValueFromBag(bag, cc);
+                el.disableAnimation = m_DisableAnimation.GetValueFromBag(bag, cc);
             }
         }
 

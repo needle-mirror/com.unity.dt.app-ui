@@ -280,12 +280,6 @@ namespace Unity.AppUI.UI
             return this;
         }
 
-        /// <inheritdoc cref="Popup.ShouldAnimate"/>
-        protected override bool ShouldAnimate()
-        {
-            return true;
-        }
-
         /// <inheritdoc cref="Popup.GetFocusableElement"/>
         protected override VisualElement GetFocusableElement()
         {
@@ -297,6 +291,9 @@ namespace Unity.AppUI.UI
         {
             return popover.popoverElement;
         }
+
+        /// <inheritdoc />
+        protected override bool ShouldAnimate() => base.ShouldAnimate();
 
         /// <inheritdoc />
         protected override void InvokeShownEventHandlers()

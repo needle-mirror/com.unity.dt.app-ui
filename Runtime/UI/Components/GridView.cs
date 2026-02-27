@@ -204,6 +204,15 @@ namespace Unity.AppUI.UI
 
             foreach (var recycledRow in rowPool)
             {
+                var oldColumnCount = recycledRow.childCount;
+                for (var indexInRow = oldColumnCount -1; indexInRow >= 0; indexInRow--)
+                {
+                    var item = recycledRow.ElementAt(indexInRow);
+                    var itemIndex = recycledRow.indices[indexInRow];
+                    if (itemIndex != RecycledRow.kUndefinedIndex)
+                        unbindItem?.Invoke(item, itemIndex);
+                    destroyItem?.Invoke(item);
+                }
                 recycledRow.Clear();
             }
 
@@ -464,6 +473,14 @@ namespace Unity.AppUI.UI
                     for (var i = 0; i < removeCount; i++)
                     {
                         var lastIndex = rowPool.Count - 1;
+                        for (var indexInRow = columnCount - 1; indexInRow >= 0; indexInRow--)
+                        {
+                            var item = rowPool[lastIndex].ElementAt(indexInRow);
+                            var itemIndex = rowPool[lastIndex].indices[indexInRow];
+                            if (itemIndex != RecycledRow.kUndefinedIndex)
+                                unbindItem?.Invoke(item, itemIndex);
+                            destroyItem?.Invoke(item);
+                        }
                         rowPool[lastIndex].Clear();
                         scrollView.Remove(rowPool[lastIndex]);
                         rowPool.RemoveAt(lastIndex);

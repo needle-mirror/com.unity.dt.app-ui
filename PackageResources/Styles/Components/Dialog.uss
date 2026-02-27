@@ -51,11 +51,14 @@
     opacity: 0.0001;
 }
 
-.appui-modal.is-open {
-    opacity: 1;
+.appui-modal.is-open.with-animations {
     transition-property: opacity;
     transition-duration: var(--appui-animation-duration-150);
     transition-timing-function: var(--appui-animation-easing-ease-out);
+}
+
+.appui-modal.is-open {
+    opacity: 1;
 }
 
 .appui-modal--fullscreen-takeover {
@@ -82,12 +85,15 @@
     translate: 0 -12px;
 }
 
-.is-open .appui-modal__content {
-    scale: 1;
-    translate: 0 0;
+.is-open.with-animations .appui-modal__content {
     transition-property: scale, translate;
     transition-duration: var(--appui-animation-duration-150);
     transition-timing-function: var(--appui-animation-easing-ease-out);
+}
+
+.is-open .appui-modal__content {
+    scale: 1;
+    translate: 0 0;
 }
 
 .appui-modal--fullscreen > .appui-modal__content,

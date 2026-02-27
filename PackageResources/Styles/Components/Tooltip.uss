@@ -11,11 +11,14 @@
     opacity: 0.0001;
 }
 
-.appui-tooltip.is-open {
-    opacity: 1;
+.appui-tooltip.is-open.with-animations {
     transition-property: opacity;
     transition-duration: var(--appui-animation-duration-150);
     transition-timing-function: var(--appui-animation-easing-ease-out);
+}
+
+.appui-tooltip.is-open {
+    opacity: 1;
 }
 
 .appui-tooltip__container {
@@ -33,11 +36,14 @@
     scale: 0.96;
 }
 
-.is-open .appui-tooltip__container {
-    scale: 1;
+.is-open.with-animations .appui-tooltip__container {
     transition-property: scale;
     transition-duration: var(--appui-animation-duration-150);
     transition-timing-function: var(--appui-animation-easing-ease-out);
+}
+
+.is-open .appui-tooltip__container {
+    scale: 1;
 }
 
 .appui-tooltip__content {

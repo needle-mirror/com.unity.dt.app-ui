@@ -294,7 +294,10 @@ namespace Unity.AppUI.UI
         {
             // DragContext is sent only when the pointer has moved.
             var context = evt.context;
-            if (context == null || context.phase == DragPhase.Ended)
+            if (context == null)
+                return;
+
+            if (context.phase == DragPhase.Ended)
             {
                 // Drag ended, reset state
                 StopDragging();

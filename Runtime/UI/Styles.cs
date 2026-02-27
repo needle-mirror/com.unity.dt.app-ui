@@ -85,6 +85,11 @@ namespace Unity.AppUI.UI
         public const string openUssClassName = "is-open";
 
         /// <summary>
+        /// The styling class used to qualify an element as animated.
+        /// </summary>
+        public const string animatedClassName = "with-animations";
+
+        /// <summary>
         /// The styling class used to start animating in an element.
         /// </summary>
         public const string animateInUssClassName = "animate-in";

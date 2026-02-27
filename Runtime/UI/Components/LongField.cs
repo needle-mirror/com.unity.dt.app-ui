@@ -71,7 +71,7 @@ namespace Unity.AppUI.UI
             return originalValue + (Mathf.Approximately(0, delta) ? 0 : Math.Sign(delta));
         }
 
-        /// <inheritdoc cref="NumericalField{T}.GetIncrementFactor"/>
+        /// <inheritdoc/>
         protected override float GetIncrementFactor(long baseValue)
         {
             return Math.Abs(baseValue) > 100 ? (float)Math.Ceiling(baseValue * 0.1f) : 1;

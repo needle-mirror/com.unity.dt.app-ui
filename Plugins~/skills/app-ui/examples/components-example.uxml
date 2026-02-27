@@ -1,0 +1,115 @@
+<!-- App UI Components Example UXML -->
+<UXML xmlns="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI">
+
+    <!-- Root Panel - Required for App UI context and layering -->
+    <appui:Panel name="root-panel" style="flex-grow: 1;">
+
+        <!-- BUTTONS AND ACTIONS -->
+        <VisualElement name="buttons-section" style="margin: 16px;">
+            <appui:Heading text="Buttons" />
+
+            <!-- Basic Button -->
+            <appui:Button name="primary-btn" title="Primary Button" primary="true" />
+            <appui:Button name="secondary-btn" title="Secondary Button" />
+
+            <!-- Icon Button -->
+            <appui:IconButton name="add-btn" icon="add" />
+            <appui:IconButton name="delete-btn" icon="delete" />
+
+            <!-- Action Button (can be toggled) -->
+            <appui:ActionButton name="edit-btn" icon="edit" label="Edit" />
+
+            <!-- Action Group (toggle group) -->
+            <appui:ActionGroup name="view-mode-group" selection-type="Single">
+                <appui:ActionButton icon="grid-view" label="Grid" />
+                <appui:ActionButton icon="list-view" label="List" />
+            </appui:ActionGroup>
+        </VisualElement>
+
+        <!-- INPUT COMPONENTS -->
+        <VisualElement name="inputs-section" style="margin: 16px;">
+            <appui:Heading text="Inputs" />
+
+            <!-- Text Inputs -->
+            <appui:TextField name="name-field" label="Name" placeholder="Enter your name" />
+            <appui:TextArea name="description-field" label="Description" />
+
+            <!-- Boolean Inputs -->
+            <appui:Checkbox name="agree-checkbox" label="I agree to terms" />
+            <appui:Toggle name="notifications-toggle" label="Enable notifications" />
+
+            <!-- Selection Inputs -->
+            <appui:Dropdown name="country-dropdown" label="Country" />
+
+            <appui:RadioGroup name="priority-group">
+                <appui:Radio key="low" label="Low" />
+                <appui:Radio key="medium" label="Medium" />
+                <appui:Radio key="high" label="High" />
+            </appui:RadioGroup>
+
+            <!-- Numeric Inputs -->
+            <appui:SliderFloat name="volume-slider" label="Volume" low-value="0" high-value="100" value="50" />
+            <appui:SliderInt name="quantity-slider" label="Quantity" low-value="1" high-value="10" value="1" />
+
+            <!-- Color Input -->
+            <appui:ColorField name="color-field" label="Color" />
+        </VisualElement>
+
+        <!-- LAYOUT COMPONENTS -->
+        <VisualElement name="layout-section" style="margin: 16px;">
+            <appui:Heading text="Layout" />
+
+            <!-- Split View -->
+            <appui:SplitView name="split-view" direction="Horizontal" style="height: 200px;">
+                <appui:Pane name="left-pane" style="width: 200px;">
+                    <appui:Text text="Left Pane" />
+                </appui:Pane>
+                <appui:Pane name="right-pane" stretch="true">
+                    <appui:Text text="Right Pane" />
+                </appui:Pane>
+            </appui:SplitView>
+
+            <!-- Page View with indicator -->
+            <appui:PageView name="page-view" style="height: 150px;">
+                <VisualElement style="background-color: #3498db; flex-grow: 1;">
+                    <appui:Text text="Page 1" style="color: white;" />
+                </VisualElement>
+                <VisualElement style="background-color: #e74c3c; flex-grow: 1;">
+                    <appui:Text text="Page 2" style="color: white;" />
+                </VisualElement>
+                <VisualElement style="background-color: #2ecc71; flex-grow: 1;">
+                    <appui:Text text="Page 3" style="color: white;" />
+                </VisualElement>
+            </appui:PageView>
+        </VisualElement>
+
+        <!-- TYPOGRAPHY -->
+        <VisualElement name="typography-section" style="margin: 16px;">
+            <appui:Heading text="Typography" size="XL" />
+            <appui:Heading text="Large Heading" size="L" />
+            <appui:Heading text="Medium Heading" size="M" />
+            <appui:Heading text="Small Heading" size="S" />
+            <appui:Text text="Regular text content goes here." />
+        </VisualElement>
+
+        <!-- ICONS -->
+        <VisualElement name="icons-section" style="margin: 16px; flex-direction: row;">
+            <appui:Icon name="info" />
+            <appui:Icon name="warning" />
+            <appui:Icon name="error" />
+            <appui:Icon name="check" />
+            <appui:Icon name="close" />
+        </VisualElement>
+
+        <!-- DIALOGS (shown programmatically, but structure for reference) -->
+        <appui:Dialog name="example-dialog" title="Dialog Title" style="display: none;">
+            <appui:Text text="Dialog content goes here." />
+        </appui:Dialog>
+
+        <appui:AlertDialog name="alert-dialog" title="Alert" style="display: none;">
+            <appui:Text text="Are you sure you want to proceed?" />
+        </appui:AlertDialog>
+
+    </appui:Panel>
+
+</UXML>

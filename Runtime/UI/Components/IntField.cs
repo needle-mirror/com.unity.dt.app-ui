@@ -71,7 +71,7 @@ namespace Unity.AppUI.UI
             return originalValue + (Mathf.Approximately(0, delta) ? 0 : Mathf.RoundToInt(delta));
         }
 
-        /// <inheritdoc cref="NumericalField{T}.GetIncrementFactor"/>
+        /// <inheritdoc/>
         protected override float GetIncrementFactor(int baseValue)
         {
             var absValue = Math.Abs(baseValue);

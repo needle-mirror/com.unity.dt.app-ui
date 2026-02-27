@@ -1,1 +1,91 @@
-{"name":"com.unity.dt.app-ui","displayName":"App UI","version":"2.2.0-pre.5","unity":"2021.3","category":"UI","keywords":["app","ui","components","runtime","framework","navigation","dependency-injection","mvvm","undostack","redux","state-management","dark-theme","data-binding","cloud","unity","app-ui"],"description":"App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.","dependencies":{"com.unity.modules.androidjni":"1.0.0","com.unity.modules.uielements":"1.0.0","com.unity.modules.physics":"1.0.0","com.unity.modules.screencapture":"1.0.0"},"samples":[{"displayName":"Drag And Drop","description":"Example of drag and drop system using App UI DropZone component and Dragger/DropTarget manipulators","path":"Samples~/Drag And Drop"},{"displayName":"UI Kit","description":"Every component in a single page","path":"Samples~/UI Kit"},{"displayName":"StoryBook","description":"StoryBookJS-like window in the Editor","path":"Samples~/StoryBook"},{"displayName":"Navigation","description":"Navigation system","path":"Samples~/Navigation"},{"displayName":"MVVM","description":"Example that showcases the MVVM pattern with dependency injection","path":"Samples~/MVVM"},{"displayName":"Redux","description":"Example of state management with Redux","path":"Samples~/Redux"},{"displayName":"MVVM And Redux","description":"Example that showcases the MVVM pattern with dependency injection and state management with Redux","path":"Samples~/MVVM And Redux"},{"displayName":"UndoRedo","description":"Example of undo/redo system","path":"Samples~/UndoRedo"},{"displayName":"Trackpad","description":"Example of Trackpad gesture recognition","path":"Samples~/Trackpad"}],"repository":{"revision":"ece950166b27b61bdb09e517b545b549cf35c304","type":"git","url":"https://github.com/Unity-Technologies/unity-app-ui.git"},"documentationUrl":"https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.2/manual/index.html","_upm":{"changelog":"### Fixed\n\n- Fixed the help url in the inspector for App UI Settings assets.\n- Fixed the search bar in the Icon Browser remaining enabled when filtering yields no results\n- Set minimum window sizes for IconBrowser, NavigationGraphWindow, and DevToolsWindow to prevent layout issues when resized too small\n- Fixed the use of obsolete API in Trackpad sample\n- Fixed overlapping scrollbar arrow icons that appeared when resizing the Properties section in the App UI Storybook window\n- Fixed exception thrown inside the MVVM & Redux sample."}}
+{
+  "name": "com.unity.dt.app-ui",
+  "displayName": "App UI",
+  "version": "2.2.0-pre.6",
+  "unity": "2021.3",
+  "category": "UI",
+  "keywords": [
+    "app",
+    "ui",
+    "components",
+    "runtime",
+    "framework",
+    "navigation",
+    "dependency-injection",
+    "mvvm",
+    "undostack",
+    "redux",
+    "state-management",
+    "dark-theme",
+    "data-binding",
+    "cloud",
+    "unity",
+    "app-ui"
+  ],
+  "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
+  "dependencies": {
+    "com.unity.modules.androidjni": "1.0.0",
+    "com.unity.modules.uielements": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.screencapture": "1.0.0"
+  },
+  "samples": [
+    {
+      "displayName": "Drag And Drop",
+      "description": "Example of drag and drop system using App UI DropZone component and Dragger/DropTarget manipulators",
+      "path": "Samples~/Drag And Drop"
+    },
+    {
+      "displayName": "UI Kit",
+      "description": "Every component in a single page",
+      "path": "Samples~/UI Kit"
+    },
+    {
+      "displayName": "StoryBook",
+      "description": "StoryBookJS-like window in the Editor",
+      "path": "Samples~/StoryBook"
+    },
+    {
+      "displayName": "Navigation",
+      "description": "Navigation system",
+      "path": "Samples~/Navigation"
+    },
+    {
+      "displayName": "MVVM",
+      "description": "Example that showcases the MVVM pattern with dependency injection",
+      "path": "Samples~/MVVM"
+    },
+    {
+      "displayName": "Redux",
+      "description": "Example of state management with Redux",
+      "path": "Samples~/Redux"
+    },
+    {
+      "displayName": "MVVM And Redux",
+      "description": "Example that showcases the MVVM pattern with dependency injection and state management with Redux",
+      "path": "Samples~/MVVM And Redux"
+    },
+    {
+      "displayName": "UndoRedo",
+      "description": "Example of undo/redo system",
+      "path": "Samples~/UndoRedo"
+    },
+    {
+      "displayName": "Trackpad",
+      "description": "Example of Trackpad gesture recognition",
+      "path": "Samples~/Trackpad"
+    }
+  ],
+  "_upm": {
+    "changelog": "### Added\n\n- Add `destroyItem` callback to BaseGridView and fix doc comments\n- Added HelpBox UI element\n- Added `disableAnimation` property on Popup elements in order to force disable display animation for a given Popup UI Element.\n- Added SortingOrder proeprty in Popups. This enable the possibility to insert popups in behind others exisiting ones.\n- UxmlCloneTreeGenerator now collects UxmlElementNameAttribute bindings from inherited base classes, respecting C# shadowing rules.\n- Added `check-circle` and `x-circle` icons as part of the minimal icons set\n\n### Fixed\n\n- Fixed UpHandler calls in Draggable manipulator.\n- Fixed exception thrown on Tabs element when refreshing the indicator with an out of range value.\n- Fixed sending ChangeEvent in numerical fields as soon as they are attached to a panel if their value has been changed already even without notification."
+  },
+  "upmCi": {
+    "footprint": "d4ee5164029ee13f3d5c467c3b3d89907dcbd3ba"
+  },
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.2/manual/index.html",
+  "repository": {
+    "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
+    "type": "git",
+    "revision": "307325a422962cc7ac7c7d6d389cfef7da0a1806"
+  }
+}

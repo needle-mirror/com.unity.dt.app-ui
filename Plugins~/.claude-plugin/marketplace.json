@@ -1,0 +1,13 @@
+{
+  "name": "unity-app-ui",
+  "owner": {
+    "name": "Unity Technologies"
+  },
+  "plugins": [
+    {
+      "name": "app-ui",
+      "source": "./",
+      "description": "Expert assistant for developing UI in Unity using App UI framework"
+    }
+  ]
+}
