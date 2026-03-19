@@ -715,6 +715,24 @@ namespace Unity.AppUI.Editor
             return path;
         }
 
+        static void HandleAction(string pathName)
+        {
+            System.IO.File.WriteAllText(pathName, GetStyleSheetContent(Array.Empty<IconEntry>()));
+            AssetDatabase.Refresh();
+
+            var obj = AssetDatabase.LoadAssetAtPath<StyleSheet>(pathName);
+            Selection.activeObject = obj;
+        }
+
+#if ENABLE_ENTITY_ID
+        class IconBrowserActions : AssetCreationEndAction
+        {
+            public override void Action(EntityId entityId, string pathName, string resourceFile)
+            {
+                HandleAction(pathName);
+            }
+        }
+#else
         class IconBrowserActions : EndNameEditAction
         {
 #if ENABLE_INSTANCE_ID
@@ -728,15 +746,8 @@ namespace Unity.AppUI.Editor
                 HandleAction(pathName);
             }
 #endif
-
-            static void HandleAction(string pathName)
-            {
-                System.IO.File.WriteAllText(pathName, GetStyleSheetContent(Array.Empty<IconEntry>()));
-                AssetDatabase.Refresh();
-
-                var obj = AssetDatabase.LoadAssetAtPath<StyleSheet>(pathName);
-                Selection.activeObject = obj;
-            }
         }
+#endif
+
     }
 }
