@@ -174,7 +174,7 @@ namespace Unity.AppUI.Editor
             if (selectedIndices.Count > 0)
             {
                 if (
-#if ENABLE_INSTANCE_ID
+#if ENABLE_ENTITY_ID
                     EditorDialog.DisplayDecisionDialog
 #else
                     EditorUtility.DisplayDialog
@@ -366,8 +366,8 @@ namespace Unity.AppUI.Editor
         [UnityEditor.MenuItem("Assets/Create/App UI/Icons Style Sheet Asset")]
         static void CreateIconsStyleSheetAsset()
         {
-#if ENABLE_INSTANCE_ID
-            var instanceId = InstanceID.None;
+#if ENABLE_ENTITY_ID
+            var instanceId = EntityId.None;
 #else
             var instanceId = 0;
 #endif
@@ -391,7 +391,7 @@ namespace Unity.AppUI.Editor
             var adbPath = ToAdbPath(outPath);
             if (string.IsNullOrEmpty(adbPath))
             {
-#if ENABLE_INSTANCE_ID
+#if ENABLE_ENTITY_ID
                 EditorDialog.DisplayAlertDialog
 #else
                 EditorUtility.DisplayDialog
@@ -735,17 +735,10 @@ namespace Unity.AppUI.Editor
 #else
         class IconBrowserActions : EndNameEditAction
         {
-#if ENABLE_INSTANCE_ID
-            public override void Action(InstanceID instanceId, string pathName, string resourceFile)
-            {
-                HandleAction(pathName);
-            }
-#else
             public override void Action(int instanceId, string pathName, string resourceFile)
             {
                 HandleAction(pathName);
             }
-#endif
         }
 #endif
 

@@ -126,13 +126,7 @@ namespace Unity.AppUI.Navigation.Editor
         }
 
         [OnOpenAsset(1, OnOpenAssetAttributeMode.Execute)]
-#if ENABLE_INSTANCE_ID
-        static bool OnOpenAsset(InstanceID instanceID, int line)
-        {
-            var asset = EditorUtility.InstanceIDToObject(instanceID) as NavGraphViewAsset;
-            return OnOpenAsset(asset);
-        }
-#elif ENABLE_ENTITY_ID
+#if ENABLE_ENTITY_ID
         static bool OnOpenAsset(EntityId entityId, int line)
         {
             var asset = EditorUtility.EntityIdToObject(entityId) as NavGraphViewAsset;

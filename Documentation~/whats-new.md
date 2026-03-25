@@ -10,9 +10,9 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [2.1.7] - 2026-03-19
+## [2.1.8] - 2026-03-25
 
-### Fixed
+### Added
 
-- Fixed the use of deprecated EndNameEditAction in IconBrowser
+- Added support of Unity 6000.6
 

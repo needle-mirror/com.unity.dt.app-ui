@@ -31,11 +31,6 @@
         },
         {
             "name": "Unity",
-            "expression": "7000.0.0a1",
-            "define": "ENABLE_INSTANCE_ID"
-        },
-        {
-            "name": "Unity",
             "expression": "6000.4.0a1",
             "define": "ENABLE_ENTITY_ID"
         },
