@@ -1,0 +1,27 @@
+[
+    {
+        "id": "app-ui",
+        "displayName": "App UI",
+        "description": "Expert assistant for developing UI in Unity using App UI framework. Use when creating components, styling, MVVM architecture, navigation, or any UI-related tasks. Trigger this skill whenever the user mentions App UI, Unity UI Toolkit components like Panel/Button/TextField, UXML layouts with appui namespace, USS styling with appui variables, overlays (popover, modal, toast, menu), or building any Unity user interface. Also trigger when the user asks to create a form, dialog, settings screen, dashboard, or any visual component in Unity."
+    },
+    {
+        "id": "app-ui-mvvm",
+        "displayName": "App UI - MVVM",
+        "description": "Expert for App UI MVVM pattern and dependency injection - ObservableObject, RelayCommand, AppBuilder, service registration, and DI. Use this skill whenever the user wants to create a ViewModel, bind data to UI elements, set up dependency injection, register services, implement commands for button actions, use [ObservableProperty] or [RelayCommand] attributes, create an AppBuilder, or structure their Unity App UI project with the MVVM architecture pattern. Also trigger when the user asks about data binding in UXML, property change notifications, or service lifetimes (transient, singleton, scoped)."
+    },
+    {
+        "id": "app-ui-navigation",
+        "displayName": "App UI - Navigation",
+        "description": "Expert for App UI navigation system - NavGraph, NavHost, NavController, destinations, and visual controllers (AppBar, Drawer, BottomNavBar). Use this skill whenever the user wants to add screens or pages to their Unity app, create a navigation graph, set up a bottom tab bar, implement a side drawer or hamburger menu, add an app bar or toolbar, navigate between views, pass data between screens, manage back stack behavior, create a multi-screen flow (onboarding, login, settings), or implement any kind of screen-to-screen navigation in App UI. Also trigger when the user mentions NavigationScreen, NavigationRail, NavAction, or asks about deep linking or nested navigation."
+    },
+    {
+        "id": "app-ui-redux",
+        "displayName": "App UI - Redux",
+        "description": "Expert for App UI Redux state management - Store, Slices, Reducers, Actions, AsyncThunks, middleware, and Redux DevTools. Use this skill whenever the user wants to manage global state, create a Redux store, define actions and reducers, dispatch events, subscribe to state changes, implement async data fetching with thunks, add middleware for logging or analytics, use the Redux DevTools window, or architect a predictable state management layer in their Unity App UI project. Also trigger when the user mentions ActionCreator, StoreFactory, PartitionedState, or asks about centralized state, immutable records, or state slices."
+    },
+    {
+        "id": "app-ui-theming",
+        "displayName": "App UI - Theming",
+        "description": "Expert for App UI theming and styling - USS variables, custom themes, dark/light mode, scale factors, and BEM conventions. Use this skill whenever the user wants to change colors, create a branded theme, customize fonts or typography, adjust spacing, implement dark/light mode switching, toggle between themes at runtime, set up responsive scaling (small/medium/large), register custom icons, style components with USS variables, apply BEM naming conventions, create a .tss or .uss file, or configure PanelSettings for theming. Also trigger when the user mentions design tokens, appui-- prefix, ThemeContext, ScaleContext, or asks about color palettes and USS variable overrides."
+    }
+]

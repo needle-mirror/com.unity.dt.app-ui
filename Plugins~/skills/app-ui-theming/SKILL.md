@@ -1,6 +1,6 @@
 ---
 name: app-ui-theming
-description: Expert for App UI theming and styling - USS variables, custom themes, dark/light mode, scale factors, and BEM conventions.
+description: "Expert for App UI theming and styling - USS variables, custom themes, dark/light mode, scale factors, and BEM conventions. Use this skill whenever the user wants to change colors, create a branded theme, customize fonts or typography, adjust spacing, implement dark/light mode switching, toggle between themes at runtime, set up responsive scaling (small/medium/large), register custom icons, style components with USS variables, apply BEM naming conventions, create a .tss or .uss file, or configure PanelSettings for theming. Also trigger when the user mentions design tokens, appui-- prefix, ThemeContext, ScaleContext, or asks about color palettes and USS variable overrides."
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 
@@ -11,17 +11,6 @@ Master the App UI theming system to customize colors, typography, spacing, and c
 ## Overview
 
 App UI provides a powerful theming system based on USS (Unity Style Sheet) variables and design tokens. This allows you to create cohesive visual experiences across your applications while maintaining consistency through a comprehensive design system.
-
-## When to Use This Skill
-
-Use this expert when you need to:
-- Create custom themes for your application
-- Override default colors, typography, or spacing
-- Implement dark/light mode switching
-- Configure scale factors for responsive UI
-- Register custom icons or fonts
-- Apply BEM naming conventions to custom styles
-- Understand USS design tokens and variables
 
 ## Key Concepts
 
@@ -283,6 +272,4 @@ App UI uses a 25-step color density scale (25, 50, 75... up to 1300) allowing:
 
 ## Reference Documentation
 
-For detailed information, see:
-- [reference.md](reference.md) - Complete theming API and variable reference
-- [examples/](examples/) - Custom theme examples and templates
+Consult [reference.md](reference.md) when you need the full list of USS design token variables (all color, spacing, and typography tokens), exact ThemeContext/ScaleContext API signatures, complete custom theme examples, high-DPI icon registration details, or PanelSettings configuration steps. See [examples/](examples/) for complete custom theme USS templates.

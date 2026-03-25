@@ -185,14 +185,14 @@ namespace Unity.AppUI.Editor
 
             if (selectedIndices.Count > 0)
             {
-                if (
-#if ENABLE_INSTANCE_ID
-                    EditorDialog.DisplayDecisionDialog
+#if ENABLE_ENTITY_ID
+                var confirm = EditorDialog.DisplayDecisionDialog("Delete selected icons",
+                    "Are you sure you want to delete the selected icons from the stylesheet?", "Yes", "No", DialogIconType.Warning);
 #else
-                    EditorUtility.DisplayDialog
+                var confirm = EditorUtility.DisplayDialog("Delete selected icons",
+                    "Are you sure you want to delete the selected icons from the stylesheet?", "Yes", "No");
 #endif
-                        ("Delete selected icons",
-                        "Are you sure you want to delete the selected icons from the stylesheet?", "Yes", "No"))
+                if (confirm)
                 {
                     var source = gridView.itemsSource.Cast<IconEntry>().ToList();
                     var toDelete = selectedIndices.Select(i => source[i])
@@ -378,8 +378,8 @@ namespace Unity.AppUI.Editor
         [UnityEditor.MenuItem("Assets/Create/App UI/Icons Style Sheet Asset")]
         static void CreateIconsStyleSheetAsset()
         {
-#if ENABLE_INSTANCE_ID
-            var instanceId = InstanceID.None;
+#if ENABLE_ENTITY_ID
+            var instanceId = EntityId.None;
 #else
             var instanceId = 0;
 #endif
@@ -403,13 +403,13 @@ namespace Unity.AppUI.Editor
             var adbPath = ToAdbPath(outPath);
             if (string.IsNullOrEmpty(adbPath))
             {
-#if ENABLE_INSTANCE_ID
-                EditorDialog.DisplayAlertDialog
+#if ENABLE_ENTITY_ID
+                EditorDialog.DisplayAlertDialog("Invalid path",
+                    "The selected path must be inside the Assets or Packages folder", "OK", DialogIconType.Error);
 #else
-                EditorUtility.DisplayDialog
-#endif
-                ("Invalid path",
+                EditorUtility.DisplayDialog("Invalid path",
                     "The selected path must be inside the Assets or Packages folder", "OK");
+#endif
                 return;
             }
 
@@ -752,17 +752,10 @@ namespace Unity.AppUI.Editor
 #else
         class IconBrowserActions : EndNameEditAction
         {
-#if ENABLE_INSTANCE_ID
-            public override void Action(InstanceID instanceId, string pathName, string resourceFile)
-            {
-                HandleAction(pathName);
-            }
-#else
             public override void Action(int instanceId, string pathName, string resourceFile)
             {
                 HandleAction(pathName);
             }
-#endif
         }
 #endif
     }

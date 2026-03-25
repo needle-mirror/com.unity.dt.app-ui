@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Unity.AppUI.Core
@@ -66,17 +67,12 @@ namespace Unity.AppUI.Core
         /// <summary>
         /// Enable this option to automatically override the AndroidManifest.xml file with the one provided by the App UI system.
         /// </summary>
+        [Obsolete("App UI doesn't provide a custom Android manifest anymore. " +
+            "It will apply the relevant changes to the existing manifest during the build process. " +
+            "This setting has no effect.")]
         public bool autoOverrideAndroidManifest
         {
-            get => m_AutoOverrideAndroidManifest;
-            set
-            {
-                if (m_AutoOverrideAndroidManifest == value)
-                    return;
-
-                m_AutoOverrideAndroidManifest = value;
-                OnChange();
-            }
+            get; set;
         }
 
         /// <summary>
@@ -141,11 +137,6 @@ namespace Unity.AppUI.Core
         [SerializeField]
         // ReSharper disable once InconsistentNaming
         float m_EditorUpdateFrequency = 60;
-
-        [Tooltip("Enable this option to automatically override the AndroidManifest.xml file with the one provided by the App UI system.")]
-        [SerializeField]
-        // ReSharper disable once InconsistentNaming
-        bool m_AutoOverrideAndroidManifest = true;
 
         [Tooltip("Enable this option to enable gesture recognition on macOS.")]
         [SerializeField]

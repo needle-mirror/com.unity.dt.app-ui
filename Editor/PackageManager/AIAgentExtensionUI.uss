@@ -1,0 +1,50 @@
+.ai-agent-extension {
+    margin: 8px 8px 0 8px;
+    border-color: var(--unity-colors-helpbox-border);
+    border-radius: 3px;
+    border-width: 1px;
+}
+
+.ai-agent-extension__title {
+    -unity-font-style: bold;
+}
+
+.ai-agent-extension__path-label {
+    -unity-font-style: italic;
+}
+
+.ai-agent-extension__row {
+    flex-direction: row;
+    align-items: center;
+    padding: 4px 0;
+}
+
+.ai-agent-extension__row-expander {
+    flex-grow: 1;
+}
+
+.ai-agent-extension__install-all-button,
+.ai-agent-extension__remove-all-button {
+    height: 24px;
+    padding: 0 8px;
+}
+
+.ai-agent-extension__skill-name {
+    -unity-font-style: bold;
+}
+
+.ai-agent-extension__skill-info {
+    flex-direction: column;
+}
+
+.ai-agent-extension__skill-info-header {
+    flex-direction: row;
+}
+
+.ai-agent-extension__skill-description {
+    white-space: normal;
+}
+
+.unity-foldout__content {
+    padding: 4px 8px 0 0;
+}

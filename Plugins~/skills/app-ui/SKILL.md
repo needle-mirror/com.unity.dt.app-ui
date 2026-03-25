@@ -1,6 +1,6 @@
 ---
 name: app-ui
-description: Expert assistant for developing UI in Unity using App UI framework. Use when creating components, styling, MVVM architecture, navigation, or any UI-related tasks.
+description: "Expert assistant for developing UI in Unity using App UI framework. Use when creating components, styling, MVVM architecture, navigation, or any UI-related tasks. Trigger this skill whenever the user mentions App UI, Unity UI Toolkit components like Panel/Button/TextField, UXML layouts with appui namespace, USS styling with appui variables, overlays (popover, modal, toast, menu), or building any Unity user interface. Also trigger when the user asks to create a form, dialog, settings screen, dashboard, or any visual component in Unity."
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 
@@ -37,7 +37,7 @@ using Unity.AppUI.UI;
 
 ### 1. Always Start with Panel
 
-The Panel component is mandatory - it provides context (theme, language, layout direction) and the layering system:
+The Panel component is mandatory -- it provides context (theme, language, layout direction) and the layering system for overlays. Without Panel as the root, contexts and overlays will not work.
 
 ```xml
 <appui:Panel>
@@ -83,57 +83,7 @@ button.clickable.clicked += () => Debug.Log("Clicked");
 <appui:SplitView direction="Horizontal" />
 ```
 
-### 4. MVVM Architecture
-
-**Observable ViewModel:**
-```csharp
-[ObservableObject]
-public partial class MyViewModel
-{
-    [ObservableProperty]
-    private string _name;
-
-    [RelayCommand]
-    void Submit()
-    {
-        // Handle submit
-    }
-}
-```
-
-**App Builder Pattern:**
-```csharp
-public class MyAppBuilder : UIToolkitAppBuilder<MyApp>
-{
-    protected override void OnConfiguringApp(AppBuilder builder)
-    {
-        base.OnConfiguringApp(builder);
-        builder.services.AddTransient<MainPage>();
-        builder.services.AddTransient<MainViewModel>();
-    }
-}
-```
-
-### 5. Redux State Management
-
-```csharp
-// Define state
-public record CounterState { public int Count { get; init; } }
-
-// Create store with slices
-var store = StoreFactory.CreateStore(new[] {
-    StoreFactory.CreateSlice("counter", new CounterState(), builder => {
-        builder.AddCase(Actions.Increment, (state, action) =>
-            state with { Count = state.Count + 1 });
-    })
-});
-
-// Subscribe and dispatch
-store.Subscribe<CounterState>("counter", state => Debug.Log(state.Count));
-store.Dispatch(Actions.Increment.Invoke());
-```
-
-### 6. Overlays and Popups
+### 4. Overlays and Popups
 
 ```csharp
 // Popover
@@ -157,49 +107,9 @@ MenuBuilder.Build(anchor)
     .Show();
 ```
 
-### 7. Navigation
+### 5. Localization
 
 ```csharp
-// Setup NavHost with visual controller
-var navHost = new NavHost();
-navHost.visualController = new MyNavController();
-
-// Navigate
-navController.Navigate("destinationName");
-```
-
-### 8. Styling with USS
-
-**BEM naming convention:**
-```css
-.appui-button {
-    padding: 0 var(--appui-spacing-100);
-}
-```
-
-**Custom themes:**
-```css
-.appui--myTheme {
-    --appui-primary-100: #E3F2FD;
-}
-```
-
-### 9. Custom Icons
-
-```css
-.appui-icon--myicon--regular {
-    --unity-image: url("path/to/icon.png");
-}
-```
-
-```xml
-<appui:Icon name="myicon" variant="Regular" />
-```
-
-### 10. Localization
-
-```csharp
-// Get localized string
 var ctx = element.GetContext<LangContext>();
 var text = await ctx.GetLocalizedStringAsync("@tableName:entryKey");
 ```
@@ -221,17 +131,13 @@ var text = await ctx.GetLocalizedStringAsync("@tableName:entryKey");
 
 ## Reference Documentation
 
-For detailed information, see:
-- [reference.md](reference.md) - Complete API patterns
-- [examples/](examples/) - Code examples
+Consult [reference.md](reference.md) when you need exact API signatures, component property tables, context system details, or platform integration methods beyond what's covered above. See [examples/](examples/) for complete working code samples.
 
-## Related Skills
+## Specialized Skills
 
-This skill serves as the general-purpose entry point for App UI development, covering the fundamentals of all aspects of the framework. For specialized guidance on particular topics, consider enabling the corresponding skill:
+This skill covers App UI fundamentals -- components, overlays, and general patterns. For tasks that go deeper into specific areas, also consult the corresponding specialized skill:
 
-- **app-ui-navigation** - Deep dive into navigation system (NavGraph, NavHost, visual controllers)
-- **app-ui-redux** - Redux state management (Store, Slices, AsyncThunks)
-- **app-ui-mvvm** - MVVM pattern and dependency injection (ObservableObject, AppBuilder, DI)
-- **app-ui-theming** - Theming and styling (custom themes, USS variables, dark/light mode)
-
-If the user needs detailed help with any of these topics, suggest they enable the corresponding skill for more comprehensive guidance. These skills provide deeper patterns, more examples, and specialized expertise.
+- **app-ui-navigation** - Consult for NavGraph, NavHost, NavController, screen navigation, AppBar/Drawer/BottomNavBar/NavigationRail setup, back stack management, and nested graphs.
+- **app-ui-redux** - Consult for Redux Store, Slices, Reducers, ActionCreators, AsyncThunks, middleware, subscriptions, and Redux DevTools.
+- **app-ui-mvvm** - Consult for ObservableObject, ObservableProperty, RelayCommand, AppBuilder, service registration, dependency injection, and data binding.
+- **app-ui-theming** - Consult for custom themes, USS variables/design tokens, dark/light mode, scale factors, BEM conventions, custom icons, and custom typography.

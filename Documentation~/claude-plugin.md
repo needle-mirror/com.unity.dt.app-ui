@@ -17,11 +17,27 @@ App UI includes a Claude Code plugin that provides AI-assisted development for b
 1. **Claude Code CLI** - Install Claude Code following the [official installation guide](https://code.claude.com/docs/en/quickstart)
 2. **App UI Package** - Ensure you have the App UI package installed in your Unity project
 
-### Installing the Plugin
+### Installing Skills via Package Manager (Recommended)
 
-The Claude Code plugin is located in the `Plugins~` folder of the App UI package. There are two ways to install it:
+App UI includes a Package Manager extension that lets you install AI Agent skills directly from the Unity Editor.
 
-#### Option 1: Add as a Marketplace (Recommended)
+1. Open **Window > Package Manager** in Unity
+2. Select the **App UI** package
+3. In the package detail pane, expand the **AI Agent Skills** foldout
+4. Click **Install All** to install every available skill, or click **Install** next to individual skills
+
+The extension copies skill files into your `.claude/skills` directory. It walks up from your project root looking for an existing `.claude` folder; if none is found, it defaults to `<project-root>/.claude/skills`.
+
+> [!NOTE]
+> If no `.claude` folder exists in or above your project, skills are installed relative to the project root. A warning is displayed if the resolved path falls under your home directory (`~/.claude/skills`). Consider creating a `.claude` folder in your project to keep skills project-scoped.
+
+The extension also detects when installed skills are **outdated** (the package contains newer files) and offers an **Update** button. You can remove individual skills or use **Remove All** to uninstall them.
+
+### Installing the Plugin (CLI)
+
+The Claude Code plugin is located in the `Plugins~` folder of the App UI package. There are two ways to install it via the CLI:
+
+#### Option 1: Add as a Marketplace
 
 This method allows you to install and manage the plugin through Claude Code's plugin system.
 
@@ -182,7 +198,16 @@ Packages/com.unity.dt.app-ui/Plugins~/skills/
 
 ## Troubleshooting
 
-### Plugin not found
+### AI Agent Skills foldout not visible in Package Manager
+
+The foldout only appears for packages that contain both a `Plugins~/skills` directory and a `Plugins~/skills.json` manifest. Verify these exist:
+
+```bash
+ls ./Packages/com.unity.dt.app-ui/Plugins~/skills/
+ls ./Packages/com.unity.dt.app-ui/Plugins~/skills.json
+```
+
+### Plugin not found (CLI)
 
 If Claude cannot find the plugin, verify the path:
 
@@ -214,9 +239,11 @@ Then restart Claude Code and reinstall the plugin.
 
 Run `/plugin` in Claude Code and check the **Errors** tab to see any plugin loading issues.
 
-### Updating the plugin
+### Updating skills
 
-When you update the App UI package, the plugin is automatically updated. If you added it as a marketplace, you can refresh by running:
+When you update the App UI package, skills installed via the **Package Manager extension** can be updated by reopening the AI Agent Skills foldout — outdated skills will show an **Update** button. You can also click **Update All** to update every skill at once.
+
+If you installed the plugin via the CLI as a marketplace, you can refresh by running:
 
 ```
 /plugin marketplace update unity-app-ui

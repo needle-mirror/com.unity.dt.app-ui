@@ -18,7 +18,6 @@ namespace Unity.AppUI.Editor
             public static readonly GUIContent autoScaleUIContent = new GUIContent("Auto Scale UI", "Enable this options to correct the scale of UIDocuments, depending on the target platform and screen dpi.");
             public static readonly GUIContent useCustomEditorUpdateFrequencyContent = new GUIContent("Use Custom Loop Frequency", "Enable this option to override the default update loop frequency (the default frequency is the one used by the Editor loop).");
             public static readonly GUIContent editorUpdateFrequencyContent = new GUIContent("Update Loop Frequency", "Configure how frequently you want to run the main App UI process loop (to handle queued messages for examples). Default is 60Hz.");
-            public static readonly GUIContent autoOverrideAndroidManifestContent = new GUIContent("Auto Override Android Manifest", "");
             public static readonly GUIContent enableMacOSGestureRecognitionContent = new GUIContent("Enable Gesture Recognition", "");
             public static readonly GUIContent includeShadersInPlayerBuildContent = new GUIContent("Include Shaders in Player Build", "");
 
@@ -27,10 +26,8 @@ namespace Unity.AppUI.Editor
 
             public static readonly GUIContent editorGroup = new GUIContent("Editor");
             public static readonly GUIContent runtimeGroup = new GUIContent("Runtime");
-            public static readonly GUIContent androidGroup = new GUIContent("Android");
             public static readonly GUIContent macOSGroup = new GUIContent("MacOS");
 
-            public static readonly GUIContent androidManifestOverrideWarning = new GUIContent("In order to get all features working properly on Android, you need to override the default Android manifest file with the one provided by App UI.");
             public static readonly GUIContent macOSGestureRecognitionWarning = new GUIContent("Enabling gesture recognition on MacOS will allow you to use gestures such as pinch, pan, and rotate. However, some gestures are synthesized as mouse events and can't be avoided, such as the Pan gesture.");
         }
 
@@ -161,21 +158,6 @@ namespace Unity.AppUI.Editor
 
                 EditorGUILayout.Space();
 
-                EditorGUILayout.LabelField(Styles.androidGroup, EditorStyles.boldLabel);
-
-                EditorGUI.indentLevel++;
-
-                EditorGUILayout.HelpBox(Styles.androidManifestOverrideWarning.text, MessageType.Warning);
-
-                using (new EditorGUI.DisabledScope(m_EditorOnly.boolValue))
-                {
-                    EditorGUILayout.PropertyField(m_AutoOverrideAndroidManifest, Styles.autoOverrideAndroidManifestContent);
-                }
-
-                EditorGUI.indentLevel--;
-
-                EditorGUILayout.Space();
-
                 EditorGUILayout.LabelField(Styles.macOSGroup, EditorStyles.boldLabel);
 
                 EditorGUI.indentLevel++;
@@ -270,7 +252,6 @@ namespace Unity.AppUI.Editor
             m_AutoScaleUI = m_SettingsObject.FindProperty("m_AutoCorrectUiScale");
             m_UseCustomEditorUpdateFrequency = m_SettingsObject.FindProperty("m_UseCustomEditorUpdateFrequency");
             m_EditorUpdateFrequency = m_SettingsObject.FindProperty("m_EditorUpdateFrequency");
-            m_AutoOverrideAndroidManifest = m_SettingsObject.FindProperty("m_AutoOverrideAndroidManifest");
             m_EnableMacOSGestureRecognition = m_SettingsObject.FindProperty("m_EnableMacOSGestureRecognition");
             m_IncludeShadersInPlayerBuild = m_SettingsObject.FindProperty("m_IncludeShadersInPlayerBuild");
         }
@@ -294,7 +275,6 @@ namespace Unity.AppUI.Editor
         [NonSerialized] SerializedProperty m_AutoScaleUI;
         [NonSerialized] SerializedProperty m_UseCustomEditorUpdateFrequency;
         [NonSerialized] SerializedProperty m_EditorUpdateFrequency;
-        [NonSerialized] SerializedProperty m_AutoOverrideAndroidManifest;
         [NonSerialized] SerializedProperty m_EnableMacOSGestureRecognition;
         [NonSerialized] SerializedProperty m_IncludeShadersInPlayerBuild;
 

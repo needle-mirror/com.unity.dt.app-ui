@@ -73,9 +73,6 @@ namespace Unity.AppUI.Editor
 
             if (Core.AppUI.settings.includeShadersInPlayerBuild)
                 EnsureShadersAreEmbedded();
-
-            if (report.summary.platform == BuildTarget.Android && Core.AppUI.settings.autoOverrideAndroidManifest)
-                BuildAndroidManifest();
         }
 
         static void EnsureAppUISettingsArePreloaded()
@@ -103,79 +100,6 @@ namespace Unity.AppUI.Editor
                         "the Project Settings (Edit > Project Settings > App UI).");
                 }
             }
-        }
-
-        static void BuildAndroidManifest()
-        {
-            const string androidNamespace = "http://schemas.android.com/apk/res/android";
-            var manifest = Path.Combine(Application.dataPath, "Plugins", "Android", "AndroidManifest.xml");
-            if (!File.Exists(manifest))
-            {
-                if (!Directory.Exists(Path.GetDirectoryName(manifest)))
-                    Directory.CreateDirectory(Path.GetDirectoryName(manifest)!);
-
-                var content = AssetDatabase.LoadAssetAtPath<TextAsset>(
-                    "Packages/com.unity.dt.app-ui/Runtime/Core/Platform/Android/Plugins/Android/AndroidManifest.xml");
-
-                File.WriteAllText(manifest, content.text);
-            }
-
-            var doc = new XmlDocument();
-            doc.Load(manifest);
-
-            var nsManager = new XmlNamespaceManager(doc.NameTable);
-            nsManager.AddNamespace("android", androidNamespace);
-            var manifestNode = (XmlElement)doc.SelectSingleNode("/manifest");
-            var activity = (XmlElement)doc.SelectSingleNode("/manifest/application/activity");
-
-            var isGameActivity =
-#if UNITY_2023_2_OR_NEWER
-                PlayerSettings.Android.applicationEntry.HasFlag(AndroidApplicationEntry.GameActivity)
-#else
-                false
-#endif
-            ;
-
-            // ReSharper disable ConditionIsAlwaysTrueOrFalse
-
-            var activityName = isGameActivity ? "com.unity3d.player.appui.AppUIGameActivity" : "com.unity3d.player.appui.AppUIActivity";
-            var themeName = isGameActivity ? "@style/BaseUnityGameActivityTheme" : "@style/UnityThemeSelector";
-
-            activity!.SetAttribute("name", androidNamespace, activityName);
-            activity!.SetAttribute("theme", androidNamespace, themeName);
-
-            var libName = doc.SelectSingleNode("/manifest/application/activity/meta-data[@android:name='android.app.lib_name']", nsManager) as XmlElement;
-
-            if (isGameActivity)
-            {
-                if (libName == null)
-                {
-                    libName = doc.CreateElement("meta-data");
-                    libName.SetAttribute("name", androidNamespace, "android.app.lib_name");
-                    libName.SetAttribute("value", androidNamespace, "game");
-                    activity.AppendChild(libName);
-                }
-                else
-                {
-                    libName.SetAttribute("value", androidNamespace, "game");
-                }
-            }
-            else if (libName != null)
-            {
-                activity.RemoveChild(libName);
-            }
-
-            // ReSharper restore ConditionIsAlwaysTrueOrFalse
-
-            var vibratePermission = doc.SelectSingleNode("/manifest/uses-permission[@android:name='android.permission.VIBRATE']", nsManager) as XmlElement;
-            if (vibratePermission == null)
-            {
-                vibratePermission = doc.CreateElement("uses-permission");
-                vibratePermission.SetAttribute("name", androidNamespace, "android.permission.VIBRATE");
-                manifestNode!.AppendChild(vibratePermission);
-            }
-
-            doc.Save(manifest);
         }
 
         /// <summary>

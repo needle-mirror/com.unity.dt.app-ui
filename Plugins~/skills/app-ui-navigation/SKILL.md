@@ -1,24 +1,12 @@
 ---
 name: app-ui-navigation
-description: Expert for App UI navigation system - NavGraph, NavHost, NavController, destinations, and visual controllers (AppBar, Drawer, BottomNavBar).
+description: "Expert for App UI navigation system - NavGraph, NavHost, NavController, destinations, and visual controllers (AppBar, Drawer, BottomNavBar). Use this skill whenever the user wants to add screens or pages to their Unity app, create a navigation graph, set up a bottom tab bar, implement a side drawer or hamburger menu, add an app bar or toolbar, navigate between views, pass data between screens, manage back stack behavior, create a multi-screen flow (onboarding, login, settings), or implement any kind of screen-to-screen navigation in App UI. Also trigger when the user mentions NavigationScreen, NavigationRail, NavAction, or asks about deep linking or nested navigation."
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 
 # App UI Navigation Expert
 
 Expert assistant for implementing navigation systems in Unity using the App UI framework. Specializes in NavGraph construction, NavHost setup, NavController usage, and visual navigation component control.
-
-## When to Use This Skill
-
-- Creating navigation graphs with destinations and actions
-- Setting up NavHost with visual controllers
-- Implementing custom navigation visual controllers
-- Configuring AppBar, Drawer, BottomNavBar, and NavigationRail components
-- Managing back stack and navigation state
-- Creating nested navigation graphs
-- Handling global vs local navigation actions
-- Implementing NavigationScreen subclasses
-- Generating code from navigation graphs
 
 ## Core Concepts
 
@@ -325,6 +313,4 @@ navController.Navigate(Destinations.Home);
 
 ## Reference Documentation
 
-For detailed information, see:
-- [reference.md](reference.md) - Complete API reference with all methods and properties
-- [examples/](examples/) - Working code examples
+Consult [reference.md](reference.md) when you need exact API signatures for NavGraph, NavDestination, NavAction, NavController, or NavHost, full property lists, lifecycle event details, or advanced patterns like nested graph resolution and custom destination templates. See [examples/](examples/) for complete working code samples.

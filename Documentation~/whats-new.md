@@ -10,20 +10,19 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [2.2.0-pre.6] - 2026-02-27
+## [2.2.0-pre.7] - 2026-03-25
+
+### Removed
+
+- Removed Android Activity (AppUIActivity, AppUIGameActivity) and AndroidManifest.xml from the App UI package. The Android platform integration now operates without a custom Activity or manifest.
 
 ### Added
 
-- Add `destroyItem` callback to BaseGridView and fix doc comments
-- Added HelpBox UI element
-- Added `disableAnimation` property on Popup elements in order to force disable display animation for a given Popup UI Element.
-- Added SortingOrder proeprty in Popups. This enable the possibility to insert popups in behind others exisiting ones.
-- UxmlCloneTreeGenerator now collects UxmlElementNameAttribute bindings from inherited base classes, respecting C# shadowing rules.
-- Added `check-circle` and `x-circle` icons as part of the minimal icons set
+- Added **AI Agent Skills** pane in **Unity Package Manager UI**: You can now install/remove App UI skills for AI Agents in your workspace from the Package Manager window.
+- Added support of Unity 6000.6
 
-### Fixed
+### Changed
 
-- Fixed UpHandler calls in Draggable manipulator.
-- Fixed exception thrown on Tabs element when refreshing the indicator with an out of range value.
-- Fixed sending ChangeEvent in numerical fields as soon as they are attached to a panel if their value has been changed already even without notification.
+- Streamlined AI skill content by removing duplicated sections from the main skill, consolidating reference documentation pointers, and fixing a Task/TodoItem naming conflict in the MVVM example
+- Improved AI skill descriptions with richer trigger phrases for more reliable skill activation
 

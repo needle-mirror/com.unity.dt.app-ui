@@ -4,7 +4,35 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.2.0-pre.6] - 2026-02-27
+## [2.2.0-pre.7] - 2026-03-25
+
+### Removed
+
+- Removed Android Activity (AppUIActivity, AppUIGameActivity) and AndroidManifest.xml from the App UI package. The Android platform integration now operates without a custom Activity or manifest.
+
+### Added
+
+- Added **AI Agent Skills** pane in **Unity Package Manager UI**: You can now install/remove App UI skills for AI Agents in your workspace from the Package Manager window.
+- Added support of Unity 6000.6
+
+### Changed
+
+- Streamlined AI skill content by removing duplicated sections from the main skill, consolidating reference documentation pointers, and fixing a Task/TodoItem naming conflict in the MVVM example
+- Improved AI skill descriptions with richer trigger phrases for more reliable skill activation
+
+## [2.1.8] - 2026-03-25
+
+### Added
+
+- Added support of Unity 6000.6
+
+## [2.1.7] - 2026-03-20
+
+### Fixed
+
+- Fixed the use of deprecated EndNameEditAction in IconBrowser
+
+## [2.2.0-pre.6] - 2026-03-02
 
 ### Added
 

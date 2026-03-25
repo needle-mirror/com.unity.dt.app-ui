@@ -1,6 +1,6 @@
 ---
 name: app-ui-redux
-description: Expert for App UI Redux state management - Store, Slices, Reducers, Actions, AsyncThunks, middleware, and Redux DevTools.
+description: "Expert for App UI Redux state management - Store, Slices, Reducers, Actions, AsyncThunks, middleware, and Redux DevTools. Use this skill whenever the user wants to manage global state, create a Redux store, define actions and reducers, dispatch events, subscribe to state changes, implement async data fetching with thunks, add middleware for logging or analytics, use the Redux DevTools window, or architect a predictable state management layer in their Unity App UI project. Also trigger when the user mentions ActionCreator, StoreFactory, PartitionedState, or asks about centralized state, immutable records, or state slices."
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 
@@ -402,9 +402,6 @@ YourProject/
 **Issue: Subscriptions memory leaks**
 - Solution: Always dispose subscriptions in OnDestroy/OnDisable
 
-## See Also
+## Reference Documentation
 
-- [reference.md](reference.md) - Complete API reference
-- [examples/redux-store.cs](examples/redux-store.cs) - Full working example
-- State Management Documentation
-- Redux DevTools Guide
+Consult [reference.md](reference.md) when you need exact API signatures for Store, StoreFactory, ActionCreator, AsyncThunkCreator, or Middleware types, full property/method lists, or advanced patterns like custom enhancers and thunk cancellation. See [examples/redux-store.cs](examples/redux-store.cs) for a complete multi-slice store with async operations.

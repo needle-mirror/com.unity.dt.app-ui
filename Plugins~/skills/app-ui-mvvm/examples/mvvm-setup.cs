@@ -19,7 +19,7 @@ namespace MyApp.MVVM.Example
         public string Email { get; set; }
     }
 
-    public class Task
+    public class TodoItem
     {
         public int Id { get; set; }
         public string Title { get; set; }
@@ -56,28 +56,28 @@ namespace MyApp.MVVM.Example
 
     public interface ITaskService
     {
-        Task<System.Collections.Generic.List<Task>> GetTasksAsync();
-        Task AddTaskAsync(Task task);
+        Task<System.Collections.Generic.List<TodoItem>> GetTasksAsync();
+        Task AddTaskAsync(TodoItem task);
         Task CompleteTaskAsync(int taskId);
     }
 
     public class TaskService : ITaskService
     {
-        private readonly System.Collections.Generic.List<Task> _tasks = new();
+        private readonly System.Collections.Generic.List<TodoItem> _tasks = new();
 
         public TaskService()
         {
-            _tasks.Add(new Task { Id = 1, Title = "Learn MVVM", IsComplete = false });
-            _tasks.Add(new Task { Id = 2, Title = "Build App UI", IsComplete = false });
+            _tasks.Add(new TodoItem { Id = 1, Title = "Learn MVVM", IsComplete = false });
+            _tasks.Add(new TodoItem { Id = 2, Title = "Build App UI", IsComplete = false });
         }
 
-        public async Task<System.Collections.Generic.List<Task>> GetTasksAsync()
+        public async Task<System.Collections.Generic.List<TodoItem>> GetTasksAsync()
         {
             await Task.Delay(300); // Simulate network call
             return _tasks;
         }
 
-        public async Task AddTaskAsync(Task task)
+        public async Task AddTaskAsync(TodoItem task)
         {
             await Task.Delay(200);
             task.Id = _tasks.Count + 1;
@@ -254,7 +254,7 @@ namespace MyApp.MVVM.Example
             IsLoading = true;
             try
             {
-                var task = new Task { Title = NewTaskTitle };
+                var task = new TodoItem { Title = NewTaskTitle };
                 await TaskService.AddTaskAsync(task);
                 NewTaskTitle = "";
                 await LoadTasksAsync();
@@ -284,13 +284,13 @@ namespace MyApp.MVVM.Example
     /// </summary>
     public class TaskItemViewModel
     {
-        public Task Model { get; }
+        public TodoItem Model { get; }
         public ITaskService TaskService { get; }
 
         [ObservableProperty]
         private bool _isComplete;
 
-        public TaskItemViewModel(Task task, ITaskService taskService)
+        public TaskItemViewModel(TodoItem task, ITaskService taskService)
         {
             Model = task;
             TaskService = taskService;

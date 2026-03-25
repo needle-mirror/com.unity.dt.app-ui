@@ -1,6 +1,6 @@
 ---
 name: app-ui-mvvm
-description: Expert for App UI MVVM pattern and dependency injection - ObservableObject, RelayCommand, AppBuilder, service registration, and DI.
+description: "Expert for App UI MVVM pattern and dependency injection - ObservableObject, RelayCommand, AppBuilder, service registration, and DI. Use this skill whenever the user wants to create a ViewModel, bind data to UI elements, set up dependency injection, register services, implement commands for button actions, use [ObservableProperty] or [RelayCommand] attributes, create an AppBuilder, or structure their Unity App UI project with the MVVM architecture pattern. Also trigger when the user asks about data binding in UXML, property change notifications, or service lifetimes (transient, singleton, scoped)."
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 
@@ -203,9 +203,6 @@ ViewModels expose observable properties and commands that bind to UI elements:
 - **Data Binding**: Automatic UI updates from ViewModel changes
 - **Commands**: User action handling via RelayCommand
 
-## Learning Resources
+## Reference Documentation
 
-- Official MVVM Documentation: Unity App UI MVVM Pattern Guide
-- Dependency Injection Guide: Service registration and resolution patterns
-- Command Patterns: RelayCommand and AsyncRelayCommand usage
-- Sample Projects: Reference implementations in the package samples
+Consult [reference.md](reference.md) when you need exact API signatures for ObservableObject, RelayCommand, AppBuilder, or service container methods, full attribute parameter lists, advanced DI patterns like scoped lifetimes, or details on IDependencyInjectionListener and [CreateProperty]. See [examples/](examples/) for complete MVVM app setups with multiple ViewModels and services.
