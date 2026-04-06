@@ -10,9 +10,9 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [2.1.8] - 2026-03-25
+## [2.1.9] - 2026-04-06
 
-### Added
+### Fixed
 
-- Added support of Unity 6000.6
+- Added missing `[CreateProperty]` attribute on `clickable` property across all pressable components to fix runtime data binding for `clickable.command` path (UUM-138492)
 

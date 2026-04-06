@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -77,15 +77,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Added support of Unity 6000.6"
+    "changelog": "### Fixed\n\n- Added missing `[CreateProperty]` attribute on `clickable` property across all pressable components to fix runtime data binding for `clickable.command` path (UUM-138492)"
   },
   "upmCi": {
-    "footprint": "86094592e04d474be25089c565c65f85c8d7ea76"
+    "footprint": "f03356107240c0c37ef57370e65d646cc829d610"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.1/manual/index.html",
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "74c38f2eb40aff00d9f842695f414a17b9284da7"
+    "revision": "8e7182b5818ecc92430a0c1b6de02ff15ae1924d"
   }
 }

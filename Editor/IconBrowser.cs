@@ -10,6 +10,8 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
+using HelpBox = UnityEngine.UIElements.HelpBox;
+using HelpBoxMessageType = UnityEngine.UIElements.HelpBoxMessageType;
 using Object = UnityEngine.Object;
 using Toggle = UnityEngine.UIElements.Toggle;
 
@@ -63,6 +65,16 @@ namespace Unity.AppUI.Editor
                 allowSceneObjects = false,
             };
             root.Add(objectField);
+
+            // Restore last used stylesheet
+            var lastUsedStyleSheet = IconBrowserSettings.instance.LastUsedStyleSheet;
+            if (lastUsedStyleSheet)
+            {
+                objectField.SetValueWithoutNotify(lastUsedStyleSheet);
+                styleSheetAsset = lastUsedStyleSheet;
+                tempContent = System.IO.File.ReadAllText(GetStyleSheetPath(lastUsedStyleSheet));
+            }
+
             var generateButton = new Button(OnGenerateButtonClicked)
             {
                 text = "Create a new App UI Icons style sheet"
@@ -173,14 +185,14 @@ namespace Unity.AppUI.Editor
 
             if (selectedIndices.Count > 0)
             {
-                if (
 #if ENABLE_ENTITY_ID
-                    EditorDialog.DisplayDecisionDialog
+                var confirm = EditorDialog.DisplayDecisionDialog("Delete selected icons",
+                    "Are you sure you want to delete the selected icons from the stylesheet?", "Yes", "No", DialogIconType.Warning);
 #else
-                    EditorUtility.DisplayDialog
+                var confirm = EditorUtility.DisplayDialog("Delete selected icons",
+                    "Are you sure you want to delete the selected icons from the stylesheet?", "Yes", "No");
 #endif
-                        ("Delete selected icons",
-                        "Are you sure you want to delete the selected icons from the stylesheet?", "Yes", "No"))
+                if (confirm)
                 {
                     var source = gridView.itemsSource.Cast<IconEntry>().ToList();
                     var toDelete = selectedIndices.Select(i => source[i])
@@ -392,12 +404,12 @@ namespace Unity.AppUI.Editor
             if (string.IsNullOrEmpty(adbPath))
             {
 #if ENABLE_ENTITY_ID
-                EditorDialog.DisplayAlertDialog
+                EditorDialog.DisplayAlertDialog("Invalid path",
+                    "The selected path must be inside the Assets or Packages folder", "OK", DialogIconType.Error);
 #else
-                EditorUtility.DisplayDialog
-#endif
-                ("Invalid path",
+                EditorUtility.DisplayDialog("Invalid path",
                     "The selected path must be inside the Assets or Packages folder", "OK");
+#endif
                 return;
             }
 
@@ -406,6 +418,7 @@ namespace Unity.AppUI.Editor
             AssetDatabase.Refresh();
 
             styleSheetAsset = AssetDatabase.LoadAssetAtPath<StyleSheet>(adbPath);
+            IconBrowserSettings.instance.LastUsedStyleSheet = styleSheetAsset;
             tempContent = System.IO.File.ReadAllText(outPath);
             RefreshUI();
         }
@@ -413,6 +426,7 @@ namespace Unity.AppUI.Editor
         void OnSelectedStyleSheetChanged(ChangeEvent<Object> evt)
         {
             styleSheetAsset = evt.newValue as StyleSheet;
+            IconBrowserSettings.instance.LastUsedStyleSheet = styleSheetAsset;
             tempContent = styleSheetAsset ? System.IO.File.ReadAllText(GetStyleSheetPath(styleSheetAsset)) : string.Empty;
             RefreshUI();
         }
@@ -478,6 +492,7 @@ namespace Unity.AppUI.Editor
             AssetDatabase.Refresh();
 
             styleSheetAsset = AssetDatabase.LoadAssetAtPath<StyleSheet>(path);
+            IconBrowserSettings.instance.LastUsedStyleSheet = styleSheetAsset;
             tempContent = System.IO.File.ReadAllText(path);
             RefreshUI();
         }
@@ -572,6 +587,7 @@ namespace Unity.AppUI.Editor
             new IconEntry { name = "caret-up", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretUp.png" },
 
             new IconEntry { name = "check", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Check.png" },
+            new IconEntry { name = "check-circle", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CheckCircle.png" },
             new IconEntry { name = "check", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Check.png" },
             new IconEntry { name = "color-picker", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ColorPicker.png" },
 
@@ -599,6 +615,7 @@ namespace Unity.AppUI.Editor
             new IconEntry { name = "warning", variant = k_FillVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/Warning.png" },
             new IconEntry { name = "warning", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Warning.png" },
             new IconEntry { name = "x", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/X.png" },
+            new IconEntry { name = "x-circle", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/XCircle.png" },
         };
 
         struct IconEntry
@@ -741,6 +758,5 @@ namespace Unity.AppUI.Editor
             }
         }
 #endif
-
     }
 }

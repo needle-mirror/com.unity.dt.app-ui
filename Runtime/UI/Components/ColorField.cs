@@ -307,8 +307,11 @@ namespace Unity.AppUI.UI
         public override VisualElement contentContainer => null;
 
         /// <summary>
-        /// Clickable Manipulator for this AssetTargetField.
+        /// Clickable Manipulator for this ColorField.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Pressable clickable
         {
             get => m_Clickable;
