@@ -310,8 +310,11 @@ namespace Unity.AppUI.UI
         public override VisualElement contentContainer => null;
 
         /// <summary>
-        /// Clickable Manipulator for this AssetTargetField.
+        /// Clickable Manipulator for this ColorField.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -725,6 +728,7 @@ namespace Unity.AppUI.UI
                 m_Popover = Popover.Build(owner, m_Picker);
                 m_Popover.SetAnchor(owner);
                 m_Popover.SetArrowVisible(false);
+                m_Popover.SetMovable(true);
                 m_Popover.SetLastFocusedElement(owner);
                 m_Popover.SetPlacement(PopoverPlacement.End);
                 m_Popover.SetShouldFlip(true);

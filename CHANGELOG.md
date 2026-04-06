@@ -4,6 +4,26 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.2.0-pre.8] - 2026-04-06
+
+### Added
+
+- Added `sizeModifier` callback property to `ResizeHandle` to allow custom size adjustments during resize.
+- Added `UxmlTraits` support for `ResizeHandle` component.
+- Added `SetPosition` and `SetSize` methods to `Popover` for programmatic positioning and sizing.
+- Added `movable` property to `Popover` UI elements.
+- Added `movable` property to `DialogTrigger` to support movable popovers via UXML.
+
+### Changed
+
+- `AnchorPopup.RefreshPosition` is now `public` instead of `protected`.
+- `ColorField` popover is now movable by default.
+- Default `resizeDirection` for `DialogTrigger` changed from `Vertical` to `Free`.
+
+### Fixed
+
+- Added missing `[CreateProperty]` attribute on `clickable` property across all pressable components to fix runtime data binding for `clickable.command` path (UUM-138492)
+
 ## [2.2.0-pre.7] - 2026-03-25
 
 ### Removed

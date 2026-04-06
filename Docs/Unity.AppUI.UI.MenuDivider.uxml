@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.MenuDivider" class="main">
+        <engine:Label text="MenuDivider" class="title" />
+        <engine:Label text="A horizontal line that separates menu items into distinct groups" class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Navigation" class="shield-value navigation" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="MenuDivider is a specialized version of the Divider component designed specifically for use within Menu elements. It creates a visual separation between menu items, helping to organize actions into logical groups." class="paragraph" />
+<engine:Label text="Menu dividers inherit all properties from the base Divider component, including direction, size, and spacing, but are styled specifically for menu contexts with appropriate margins and appearance." class="paragraph" />
+<engine:Label text="Use dividers to separate different types of actions or to create visual breaks between related groups of menu items. This improves menu scanability and helps users quickly locate the action they need." class="paragraph" />
+<engine:Label text="Note: MenuDivider is always horizontal and is non-interactive (picking mode set to ignore)." class="paragraph note" />
+
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="direction" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Direction" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Direction.Horizontal" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="size" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Size" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Size.M" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="spacing" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Spacing" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Spacing.M" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic Menu with Dividers" class="paragraph" />
+<engine:Label text="Using dividers to separate logical groups of actions" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;ui:Menu&gt;&#10;    &lt;ui:MenuItem label=&quot;New&quot; icon=&quot;file&quot; /&gt;&#10;    &lt;ui:MenuItem label=&quot;Open&quot; icon=&quot;folder-open&quot; /&gt;&#10;    &lt;ui:MenuDivider /&gt;&#10;    &lt;ui:MenuItem label=&quot;Save&quot; icon=&quot;save&quot; /&gt;&#10;    &lt;ui:MenuItem label=&quot;Save As&quot; /&gt;&#10;    &lt;ui:MenuDivider /&gt;&#10;    &lt;ui:MenuItem label=&quot;Exit&quot; icon=&quot;exit&quot; /&gt;&#10;&lt;/ui:Menu&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Dividers Between Sections" class="paragraph" />
+<engine:Label text="Using dividers to separate major sections in a complex menu" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;ui:Menu&gt;&#10;    &lt;ui:MenuSection title=&quot;Edit&quot;&gt;&#10;        &lt;ui:MenuItem label=&quot;Undo&quot; shortcut=&quot;Ctrl+Z&quot; /&gt;&#10;        &lt;ui:MenuItem label=&quot;Redo&quot; shortcut=&quot;Ctrl+Y&quot; /&gt;&#10;    &lt;/ui:MenuSection&gt;&#10;    &lt;ui:MenuDivider /&gt;&#10;    &lt;ui:MenuSection title=&quot;Selection&quot;&gt;&#10;        &lt;ui:MenuItem label=&quot;Select All&quot; shortcut=&quot;Ctrl+A&quot; /&gt;&#10;        &lt;ui:MenuItem label=&quot;Deselect&quot; /&gt;&#10;    &lt;/ui:MenuSection&gt;&#10;    &lt;ui:MenuDivider /&gt;&#10;    &lt;ui:MenuSection title=&quot;View&quot;&gt;&#10;        &lt;ui:MenuItem label=&quot;Zoom In&quot; shortcut=&quot;Ctrl++&quot; /&gt;&#10;        &lt;ui:MenuItem label=&quot;Zoom Out&quot; shortcut=&quot;Ctrl+-&quot; /&gt;&#10;    &lt;/ui:MenuSection&gt;&#10;&lt;/ui:Menu&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Creating Dividers Programmatically" class="paragraph" />
+<engine:Label text="Building menus with dividers in code, including custom styling" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var menu = new Menu();&#10;&#10;// Add file operations&#10;menu.Add(new MenuItem { label = &quot;New&quot;, icon = &quot;file&quot; });&#10;menu.Add(new MenuItem { label = &quot;Open&quot;, icon = &quot;folder-open&quot; });&#10;&#10;// Add divider&#10;menu.Add(new MenuDivider());&#10;&#10;// Add edit operations&#10;menu.Add(new MenuItem { label = &quot;Cut&quot;, icon = &quot;scissors&quot; });&#10;menu.Add(new MenuItem { label = &quot;Copy&quot;, icon = &quot;copy&quot; });&#10;menu.Add(new MenuItem { label = &quot;Paste&quot;, icon = &quot;clipboard&quot; });&#10;&#10;// Add another divider with custom styling&#10;var divider = new MenuDivider {&#10;    size = Size.S,&#10;    spacing = Spacing.L&#10;};&#10;menu.Add(divider);" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Subtle vs Prominent Dividers" class="paragraph" />
+<engine:Label text="Using different divider styles to create varying levels of visual separation" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;ui:Menu&gt;&#10;    &lt;ui:MenuItem label=&quot;Common Action 1&quot; /&gt;&#10;    &lt;ui:MenuItem label=&quot;Common Action 2&quot; /&gt;&#10;    &lt;!-- Subtle divider for minor separation --&gt;&#10;    &lt;ui:MenuDivider size=&quot;XS&quot; spacing=&quot;S&quot; /&gt;&#10;    &lt;ui:MenuItem label=&quot;Less Common Action 1&quot; /&gt;&#10;    &lt;ui:MenuItem label=&quot;Less Common Action 2&quot; /&gt;&#10;    &lt;!-- Prominent divider for major separation --&gt;&#10;    &lt;ui:MenuDivider size=&quot;M&quot; spacing=&quot;L&quot; /&gt;&#10;    &lt;ui:MenuItem label=&quot;Destructive Action&quot; icon=&quot;trash&quot; /&gt;&#10;&lt;/ui:Menu&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

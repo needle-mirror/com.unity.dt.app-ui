@@ -248,6 +248,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Gets or sets the clickable behavior for the header of the <see cref="TreeViewItem"/>.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Pressable clickable
         {
             get => m_Clickable;

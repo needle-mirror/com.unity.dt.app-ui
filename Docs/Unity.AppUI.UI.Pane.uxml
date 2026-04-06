@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.Pane" class="main">
+        <engine:Label text="Pane" class="title" />
+        <engine:Label text="A resizable container element designed to be used as a child of SplitView." class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Layout" class="shield-value layout" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="The Pane component is a specialized container designed exclusively for use within a SplitView. It represents an individual resizable panel that users can adjust by dragging splitters between adjacent panes." class="paragraph" />
+<engine:Label text="Key features:" class="paragraph feature-list" />
+<engine:Label text="• Flexible sizing with stretch factor control&#10;• Automatic compact mode when resized below threshold&#10;• Persistent state saving and restoration&#10;• Minimum size constraints via USS&#10;• Non-interactive by default (picking mode set to ignore)" class="paragraph" />
+<engine:Label text="Panes can be configured to either maintain a fixed size or stretch to fill available space. The compact mode feature allows panes to automatically collapse when they become too narrow, providing a better user experience for complex layouts." class="paragraph" />
+<engine:Label text="NOTE: Panes must be direct children of a SplitView component. Using Pane outside of a SplitView is not supported." class="paragraph note" />
+
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="compactThreshold" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="float" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="16f" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="stretchFactor" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="float" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="0" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="stretch" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic pane in a split view:" class="paragraph" />
+<engine:Label text="Creating a split view with fixed and flexible panes" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;SplitView&gt;&#10;    &lt;Pane style=&quot;min-width: 200px;&quot;&gt;&#10;        &lt;Text text=&quot;Fixed width pane&quot; /&gt;&#10;    &lt;/Pane&gt;&#10;    &lt;Pane stretch-factor=&quot;1&quot;&gt;&#10;        &lt;Text text=&quot;Flexible pane that fills remaining space&quot; /&gt;&#10;    &lt;/Pane&gt;&#10;&lt;/SplitView&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Using compact mode:" class="paragraph" />
+<engine:Label text="Creating a collapsible sidebar that enters compact mode when small" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;SplitView&gt;&#10;    &lt;Pane compact-threshold=&quot;50&quot; style=&quot;min-width: 50px;&quot;&gt;&#10;        &lt;Icon name=&quot;menu&quot; /&gt;&#10;    &lt;/Pane&gt;&#10;    &lt;Pane stretch-factor=&quot;1&quot;&gt;&#10;        &lt;Text text=&quot;Main content&quot; /&gt;&#10;    &lt;/Pane&gt;&#10;&lt;/SplitView&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Proportional sizing with stretch factors:" class="paragraph" />
+<engine:Label text="Creating panes with proportional sizing" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;SplitView&gt;&#10;    &lt;Pane stretch-factor=&quot;1&quot;&gt;&#10;        &lt;Text text=&quot;Takes 1/3 of space&quot; /&gt;&#10;    &lt;/Pane&gt;&#10;    &lt;Pane stretch-factor=&quot;2&quot;&gt;&#10;        &lt;Text text=&quot;Takes 2/3 of space&quot; /&gt;&#10;    &lt;/Pane&gt;&#10;&lt;/SplitView&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Saving and restoring pane state:" class="paragraph" />
+<engine:Label text="Persisting pane state across sessions" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="// Save pane state&#10;var state = pane.SaveState();&#10;PlayerPrefs.SetString(&quot;paneState&quot;, JsonUtility.ToJson(state));&#10;&#10;// Restore pane state later&#10;var stateJson = PlayerPrefs.GetString(&quot;paneState&quot;);&#10;var restoredState = JsonUtility.FromJson&lt;Pane.State&gt;(stateJson);&#10;pane.RestoreState(restoredState);" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Reacting to compact mode changes:" class="paragraph" />
+<engine:Label text="Handling compact mode state changes" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var pane = new Pane();&#10;pane.compactChanged += (p) =&gt;&#10;{&#10;    if (p.compact)&#10;    {&#10;        // Pane entered compact mode - show icon-only view&#10;        Debug.Log(&quot;Pane collapsed&quot;);&#10;    }&#10;    else&#10;    {&#10;        // Pane expanded - show full content&#10;        Debug.Log(&quot;Pane expanded&quot;);&#10;    }&#10;};&#10;&#10;splitView.AddPane(pane);" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

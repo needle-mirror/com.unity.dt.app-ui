@@ -1,196 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <engine:UXML
-  xmlns:engine="UnityEngine.UIElements"
-  xmlns:appui="Unity.AppUI.UI"
-  xmlns:navigation="Unity.AppUI.Navigation"
->
-  <engine:VisualElement name="Unity.AppUI.UI.ColorSlider" class="main">
-    <engine:Label text="Color Slider" class="title" />
-    <engine:Label
-      text="A slider component for selecting a color value from a gradient range"
-      class="subtitle"
-    />
-    <engine:Label text="input" class="category" />
-    <engine:VisualElement class="content">
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="overview">
-          <engine:Label
-            text="The ColorSlider component enables users to select a color value by dragging a thumb along a track that displays a gradient. It extends the SliderFloat component and provides a visual way to pick colors from a defined color range."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="The slider displays a gradient track that can be customized to show different color transitions. Users can interact with the thumb to select any color value within the defined gradient range."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="Typical use cases include:"
-            class="parapgraph list-intro"
-          />
-          <engine:Label
-            text="- Color opacity/alpha selection
-- Color temperature adjustment
-- Color intensity control
-- Gradient-based value selection"
-            class="parapgraph"
-          />
-          <engine:Label
-            text="The component supports both mouse/touch input and keyboard navigation for precise color selection."
-            class="parapgraph note"
-          />
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.ColorSlider" class="main">
+        <engine:Label text="Color Slider" class="title" />
+        <engine:Label text="A slider component for selecting a color value from a gradient range" class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Input" class="shield-value input" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
         </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="props">
-          <engine:VisualElement class="prop">
-            <engine:Label text="colorValue" class="prop-name" />
-            <engine:Label text="Color" class="prop-type" />
-            <engine:Label text="Color.clear" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="False" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The currently selected color value based on the slider's position in the gradient range."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Get the current color value:"
-                  class="parapgraph"
-                />
-                <engine:Label
-                  text="Reading the current color value"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='var color = colorSlider.colorValue;
-Debug.Log($"Selected color: {color}");'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="colorRange" class="prop-name" />
-            <engine:Label text="Gradient" class="prop-type" />
-            <engine:Label
-              text="Red gradient with alpha 0-1"
-              class="prop-value"
-            />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="Defines the gradient used to display the color range in the slider's track."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Create a custom gradient for the color range:"
-                  class="parapgraph"
-                />
-                <engine:Label
-                  text="Setting up a blue to red gradient"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="var gradient = new Gradient();
-gradient.SetKeys(
-    new GradientColorKey[] {
-        new(Color.blue, 0),
-        new(Color.red, 1)
-    },
-    new GradientAlphaKey[] {
-        new(1, 0),
-        new(1, 1)
-    }
-);
-colorSlider.colorRange = gradient;"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="examples">
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Basic color slider with default settings:"
-              class="parapgraph"
-            />
-            <engine:Label
-              text="Creating a basic color slider"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='&lt;UXML&gt;
-&lt;ColorSlider name="opacity-slider" /&gt;
-&lt;/UXML&gt;
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="The ColorSlider component enables users to select a color value by dragging a thumb along a track that displays a gradient. It extends the SliderFloat component and provides a visual way to pick colors from a defined color range." class="paragraph" />
+<engine:Label text="The slider displays a gradient track that can be customized to show different color transitions. Users can interact with the thumb to select any color value within the defined gradient range." class="paragraph" />
+<engine:Label text="Typical use cases include:" class="paragraph list-intro" />
+<engine:Label text="- Color opacity/alpha selection&#10;- Color temperature adjustment&#10;- Color intensity control&#10;- Gradient-based value selection" class="paragraph" />
+<engine:Label text="The component supports both mouse/touch input and keyboard navigation for precise color selection." class="paragraph note" />
 
-&lt;C#&gt;
-var slider = new ColorSlider();
-container.Add(slider);'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Color slider with custom gradient and value display:"
-              class="parapgraph"
-            />
-            <engine:Label
-              text="Creating a color slider with custom appearance and behavior"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='&lt;UXML&gt;
-&lt;ColorSlider
-    display-value-label="On"
-    track="On"
-    show-marks="true"
-    show-marks-label="true"
-    color-range="Fixed:[(0,#FF0000FF),(1,#00FF00FF)]+[(0,1),(1,1)]"
-/&gt;
-&lt;/UXML&gt;'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Color slider for alpha selection:"
-              class="parapgraph"
-            />
-            <engine:Label
-              text="Setting up a slider for opacity/alpha selection"
-              class="scenario-description"
-            />
-            <engine:Label
-              text="var slider = new ColorSlider();
-var gradient = new Gradient();
-gradient.SetKeys(
-    new GradientColorKey[] {
-        new(Color.white, 0),
-        new(Color.white, 1)
-    },
-    new GradientAlphaKey[] {
-        new(0, 0),
-        new(1, 1)
-    }
-);
-slider.colorRange = gradient;
-slider.displayValueLabel = ValueDisplayMode.Auto;
-slider.showMarks = true;
-container.Add(slider);"
-              class="code"
-            />
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="colorValue" class="prop-name-value" selectable="true" />
     </engine:VisualElement>
-  </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Color" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Color.clear" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="colorRange" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Gradient" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Red gradient with alpha 0-1" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic color slider with default settings:" class="paragraph" />
+<engine:Label text="Creating a basic color slider" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;UXML&gt;&#10;&lt;ColorSlider name=&quot;opacity-slider&quot; /&gt;&#10;&lt;/UXML&gt;&#10;&#10;&lt;C#&gt;&#10;var slider = new ColorSlider();&#10;container.Add(slider);" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Color slider with custom gradient and value display:" class="paragraph" />
+<engine:Label text="Creating a color slider with custom appearance and behavior" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;UXML&gt;&#10;&lt;ColorSlider&#10;    display-value-label=&quot;On&quot;&#10;    track=&quot;On&quot;&#10;    show-marks=&quot;true&quot;&#10;    show-marks-label=&quot;true&quot;&#10;    color-range=&quot;Fixed:[(0,#FF0000FF),(1,#00FF00FF)]+[(0,1),(1,1)]&quot;&#10;/&gt;&#10;&lt;/UXML&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Color slider for alpha selection:" class="paragraph" />
+<engine:Label text="Setting up a slider for opacity/alpha selection" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var slider = new ColorSlider();&#10;var gradient = new Gradient();&#10;gradient.SetKeys(&#10;    new GradientColorKey[] {&#10;        new(Color.white, 0),&#10;        new(Color.white, 1)&#10;    },&#10;    new GradientAlphaKey[] {&#10;        new(0, 0),&#10;        new(1, 1)&#10;    }&#10;);&#10;slider.colorRange = gradient;&#10;slider.displayValueLabel = ValueDisplayMode.Auto;&#10;slider.showMarks = true;&#10;container.Add(slider);" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
 </engine:UXML>

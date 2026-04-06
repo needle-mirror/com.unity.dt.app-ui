@@ -1,53 +1,57 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
 :root {
-     --appui-positive-300: var(--appui-color-green-1000);
-     --appui-positive-200: var(--appui-color-green-900);
-     --appui-positive-100: var(--appui-color-green-800);
-     --appui-positive-50: var(--appui-color-green-700);
-     --appui-positive-25: var(--appui-color-green-600);
-     --appui-warning-300: var(--appui-color-orange-1000);
-     --appui-warning-200: var(--appui-color-orange-900);
-     --appui-warning-100: var(--appui-color-orange-800);
-     --appui-warning-50: var(--appui-color-orange-700);
-     --appui-warning-25: var(--appui-color-orange-600);
-     --appui-destructive-300: var(--appui-color-red-1000);
-     --appui-destructive-200: var(--appui-color-red-900);
-     --appui-destructive-100: var(--appui-color-red-800);
-     --appui-destructive-50: var(--appui-color-red-700);
-     --appui-destructive-25: var(--appui-color-red-600);
-     --appui-accent-300: var(--appui-color-blue-1000);
-     --appui-accent-200: var(--appui-color-blue-900);
-     --appui-accent-100: var(--appui-color-blue-800);
-     --appui-accent-50: var(--appui-color-blue-700);
-     --appui-accent-25: var(--appui-color-blue-600);
-     --appui-primary-1300: var(--appui-color-white);
-     --appui-primary-1200: var(--appui-color-dark-gray-1500);
-     --appui-primary-1100: var(--appui-color-dark-gray-1400);
-     --appui-primary-1000: var(--appui-color-dark-gray-1300);
-     --appui-primary-900: var(--appui-color-dark-gray-1200);
-     --appui-primary-800: var(--appui-color-dark-gray-1000);
-     --appui-primary-700: var(--appui-color-dark-gray-900);
-     --appui-primary-600: var(--appui-color-dark-gray-800);
-     --appui-primary-500: var(--appui-color-dark-gray-700);
-     --appui-primary-400: var(--appui-color-dark-gray-600);
-     --appui-primary-300: var(--appui-color-dark-gray-500);
-     --appui-primary-200: var(--appui-color-dark-gray-400);
-     --appui-primary-100: var(--appui-color-dark-gray-300);
-     --appui-primary-50: var(--appui-color-dark-gray-200);
-     --appui-primary-25: var(--appui-color-dark-gray-100);
-     --appui-primary-15: var(--appui-color-black);
-     --appui-base-500: var(--appui-primary-700);
-     --appui-base-400: var(--appui-primary-600);
-     --appui-base-300: var(--appui-primary-500);
-     --appui-base-200: var(--appui-primary-400);
-     --appui-base-100: var(--appui-primary-300);
-     --appui-base-50: var(--appui-primary-200);
-     --appui-base-25: var(--appui-primary-100);
-     --appui-foregrounds-200: var(--appui-primary-1100);
-     --appui-foregrounds-100: var(--appui-primary-1000);
-     --appui-foregrounds-50: var(--appui-primary-900);
-     --appui-foregrounds-25: var(--appui-primary-700);
-     --appui-backgrounds-300: var(--appui-primary-300);
-     --appui-backgrounds-200: var(--appui-primary-200);
-     --appui-backgrounds-100: var(--appui-primary-100);
-     --appui-backgrounds-50: var(--appui-primary-50);
+  --appui-primary-15: var(--appui-color-black);
+  --appui-primary-25: var(--appui-color-dark-gray-100);
+  --appui-primary-50: var(--appui-color-dark-gray-200);
+  --appui-primary-100: var(--appui-color-dark-gray-300);
+  --appui-primary-200: var(--appui-color-dark-gray-400);
+  --appui-primary-300: var(--appui-color-dark-gray-500);
+  --appui-primary-400: var(--appui-color-dark-gray-600);
+  --appui-primary-500: var(--appui-color-dark-gray-700);
+  --appui-primary-600: var(--appui-color-dark-gray-800);
+  --appui-primary-700: var(--appui-color-dark-gray-900);
+  --appui-primary-800: var(--appui-color-dark-gray-1000);
+  --appui-primary-900: var(--appui-color-dark-gray-1200);
+  --appui-primary-1000: var(--appui-color-dark-gray-1300);
+  --appui-primary-1100: var(--appui-color-dark-gray-1400);
+  --appui-primary-1200: var(--appui-color-dark-gray-1500);
+  --appui-primary-1300: var(--appui-color-white);
+  --appui-accent-25: var(--appui-color-blue-600); /** Active / Focus */
+  --appui-accent-50: var(--appui-color-blue-700); /** Hover */
+  --appui-accent-100: var(--appui-color-blue-800);
+  --appui-accent-200: var(--appui-color-blue-900);
+  --appui-accent-300: var(--appui-color-blue-1000);
+  --appui-destructive-25: var(--appui-color-red-600); /** Active / Focus */
+  --appui-destructive-50: var(--appui-color-red-700); /** Hover */
+  --appui-destructive-100: var(--appui-color-red-800);
+  --appui-destructive-200: var(--appui-color-red-900);
+  --appui-destructive-300: var(--appui-color-red-1000);
+  --appui-warning-25: var(--appui-color-orange-600); /** Active / Focus */
+  --appui-warning-50: var(--appui-color-orange-700); /** Hover */
+  --appui-warning-100: var(--appui-color-orange-800);
+  --appui-warning-200: var(--appui-color-orange-900);
+  --appui-warning-300: var(--appui-color-orange-1000);
+  --appui-positive-25: var(--appui-color-green-600); /** Active / Focus */
+  --appui-positive-50: var(--appui-color-green-700); /** Hover */
+  --appui-positive-100: var(--appui-color-green-800);
+  --appui-positive-200: var(--appui-color-green-900);
+  --appui-positive-300: var(--appui-color-green-1000);
+  --appui-backgrounds-50: var(--appui-primary-50); /** Canvas */
+  --appui-backgrounds-100: var(--appui-primary-100); /** App Background */
+  --appui-backgrounds-200: var(--appui-primary-200); /** Subtle */
+  --appui-backgrounds-300: var(--appui-primary-300); /** Borders */
+  --appui-foregrounds-25: var(--appui-primary-700); /** Disabled Text */
+  --appui-foregrounds-50: var(--appui-primary-900); /** Placeholder / Secondary */
+  --appui-foregrounds-100: var(--appui-primary-1000); /** Primary Text / Icon / Element */
+  --appui-foregrounds-200: var(--appui-primary-1100); /** High Contrast / Text on Hover */
+  --appui-base-25: var(--appui-primary-100);
+  --appui-base-50: var(--appui-primary-200); /** UI Element Pressed */
+  --appui-base-100: var(--appui-primary-300); /** UI Element */
+  --appui-base-200: var(--appui-primary-400); /** UI Element Hover */
+  --appui-base-300: var(--appui-primary-500); /** UI Element Active / Selected */
+  --appui-base-400: var(--appui-primary-600); /** UI Element Border */
+  --appui-base-500: var(--appui-primary-700); /** UI Element Border Hover */
 }

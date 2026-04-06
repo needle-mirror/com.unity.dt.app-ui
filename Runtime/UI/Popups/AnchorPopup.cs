@@ -304,6 +304,12 @@ namespace Unity.AppUI.UI
         {
             base.OnLayoutReadyToAnimateIn();
             RefreshPosition();
+        }
+
+        /// <inheritdoc />
+        protected override void InvokeShownEventHandlers()
+        {
+            base.InvokeShownEventHandlers();
             contentView?.RegisterCallback(m_OnContentGeometryChangedAction);
         }
 
@@ -418,7 +424,7 @@ namespace Unity.AppUI.UI
         /// Recompute the position of the popup based on the anchor's position and size, but also others properties such
         /// as the <see cref="offset"/>, <see cref="crossOffset"/>, <see cref="shouldFlip"/> and <see cref="placement"/>.
         /// </summary>
-        protected void RefreshPosition()
+        public void RefreshPosition()
         {
             if (m_Anchor == null || view.parent == null || !view.localBound.IsValid())
                 return;

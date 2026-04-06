@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.StackView" class="main">
+        <engine:Label text="StackView" class="title" />
+        <engine:Label text="A container that manages a stack of items with animated transitions between them, similar to a stack of cards." class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Layout" class="shield-value layout" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="The StackView component provides a sophisticated navigation container that manages a stack of visual elements with smooth animated transitions. It follows a last-in-first-out (LIFO) pattern, where only the topmost item is visible and active at any time." class="paragraph" />
+<engine:Label text="Key features:" class="paragraph feature-list" />
+<engine:Label text="• Stack-based navigation with push, pop, and replace operations&#10;• Customizable animation descriptions for each transition type&#10;• Lifecycle events for items (activating, activated, deactivating, deactivated, removed)&#10;• Support for both StackViewItem and regular VisualElement children&#10;• Depth tracking and empty state detection&#10;• Non-blocking animations with busy state checking" class="paragraph" />
+<engine:Label text="StackView is ideal for implementing wizard-style interfaces, slideshow presentations, or any UI flow that requires sequential navigation with the ability to go back to previous states." class="paragraph" />
+<engine:Label text="NOTE: Each item in the stack can be either a StackViewItem or any VisualElement, which will be automatically wrapped in a StackViewItem." class="paragraph note" />
+
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="currentItem" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="StackViewItem" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="depth" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="int" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="0" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="isEmpty" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="true" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="isBusy" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="initialItem" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="VisualElement" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="pushEnterAnimation" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="AnimationDescription" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="default(AnimationDescription)" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="pushExitAnimation" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="AnimationDescription" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="default(AnimationDescription)" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="popEnterAnimation" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="AnimationDescription" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="default(AnimationDescription)" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="popExitAnimation" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="AnimationDescription" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="default(AnimationDescription)" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="replaceEnterAnimation" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="AnimationDescription" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="default(AnimationDescription)" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="replaceExitAnimation" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="AnimationDescription" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="default(AnimationDescription)" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic stack view with navigation:" class="paragraph" />
+<engine:Label text="Creating a simple two-page navigation with stack view" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var stackView = new StackView();&#10;&#10;// Push first item&#10;var page1 = new Box();&#10;page1.Add(new Text { text = &quot;Page 1&quot; });&#10;var nextButton = new Button { text = &quot;Next&quot; };&#10;page1.Add(nextButton);&#10;&#10;stackView.Push(page1);&#10;&#10;// Push second item when button clicked&#10;nextButton.clicked += () =&gt;&#10;{&#10;    var page2 = new Box();&#10;    page2.Add(new Text { text = &quot;Page 2&quot; });&#10;    var backButton = new Button { text = &quot;Back&quot; };&#10;    page2.Add(backButton);&#10;&#10;    stackView.Push(page2);&#10;&#10;    // Pop back to first item&#10;    backButton.clicked += () =&gt; stackView.Pop();&#10;};" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Wizard interface with replace functionality:" class="paragraph" />
+<engine:Label text="Implementing a wizard with skip functionality" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var stackView = new StackView();&#10;&#10;// Initial welcome screen&#10;var welcomePage = CreateWelcomePage();&#10;stackView.initialItem = welcomePage;&#10;&#10;void CreateStep(int stepNumber)&#10;{&#10;    var stepPage = new Box();&#10;    stepPage.Add(new Text { text = $&quot;Step {stepNumber}&quot; });&#10;&#10;    var nextButton = new Button { text = &quot;Next&quot; };&#10;    var skipButton = new Button { text = &quot;Skip to End&quot; };&#10;&#10;    stepPage.Add(nextButton);&#10;    stepPage.Add(skipButton);&#10;&#10;    nextButton.clicked += () =&gt; CreateStep(stepNumber + 1);&#10;    skipButton.clicked += () =&gt;&#10;    {&#10;        // Replace all items with final page&#10;        stackView.Replace(null, CreateFinalPage());&#10;    };&#10;&#10;    stackView.Push(stepPage);&#10;}" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Using lifecycle events:" class="paragraph" />
+<engine:Label text="Handling item lifecycle events" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var item = new StackViewItem(new Text { text = &quot;Content&quot; });&#10;&#10;item.activating += () =&gt;&#10;{&#10;    Debug.Log(&quot;Item is about to become active&quot;);&#10;    // Prepare item, load data, etc.&#10;};&#10;&#10;item.activated += () =&gt;&#10;{&#10;    Debug.Log(&quot;Item is now active&quot;);&#10;    // Start animations, play sounds, etc.&#10;};&#10;&#10;item.deactivating += () =&gt;&#10;{&#10;    Debug.Log(&quot;Item is about to be deactivated&quot;);&#10;    // Save state, pause operations, etc.&#10;};&#10;&#10;item.deactivated += () =&gt;&#10;{&#10;    Debug.Log(&quot;Item is now inactive&quot;);&#10;};&#10;&#10;item.removed += () =&gt;&#10;{&#10;    Debug.Log(&quot;Item has been removed from stack&quot;);&#10;    // Clean up resources&#10;};&#10;&#10;stackView.Push(item);" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Custom slide animations:" class="paragraph" />
+<engine:Label text="Creating iOS-style slide navigation animations" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var stackView = new StackView();&#10;&#10;// Configure slide-left animation for push&#10;stackView.pushEnterAnimation = new AnimationDescription&#10;{&#10;    durationMs = 300,&#10;    easing = Easing.OutQuad,&#10;    callback = (element, t) =&gt;&#10;    {&#10;        var offset = 100 * (1 - t);&#10;        element.style.translate = new Translate(new Length(offset, LengthUnit.Percent), 0);&#10;        element.style.opacity = t;&#10;    }&#10;};&#10;&#10;stackView.pushExitAnimation = new AnimationDescription&#10;{&#10;    durationMs = 300,&#10;    easing = Easing.InQuad,&#10;    callback = (element, t) =&gt;&#10;    {&#10;        var offset = -50 * t;&#10;        element.style.translate = new Translate(new Length(offset, LengthUnit.Percent), 0);&#10;        element.style.opacity = 1 - t * 0.5f;&#10;    }&#10;};&#10;&#10;// Configure slide-right animation for pop&#10;stackView.popExitAnimation = new AnimationDescription&#10;{&#10;    durationMs = 300,&#10;    easing = Easing.InQuad,&#10;    callback = (element, t) =&gt;&#10;    {&#10;        var offset = 100 * t;&#10;        element.style.translate = new Translate(new Length(offset, LengthUnit.Percent), 0);&#10;        element.style.opacity = 1 - t;&#10;    }&#10;};&#10;&#10;stackView.popEnterAnimation = new AnimationDescription&#10;{&#10;    durationMs = 300,&#10;    easing = Easing.OutQuad,&#10;    callback = (element, t) =&gt;&#10;    {&#10;        var offset = -50 * (1 - t);&#10;        element.style.translate = new Translate(new Length(offset, LengthUnit.Percent), 0);&#10;        element.style.opacity = 0.5f + t * 0.5f;&#10;    }&#10;};" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Clearing the stack:" class="paragraph" />
+<engine:Label text="Resetting the stack to start fresh" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="// Clear all items and reset to initial state&#10;stackView.ClearStack();&#10;&#10;// Then push a new initial item&#10;stackView.Push(homeScreen);" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

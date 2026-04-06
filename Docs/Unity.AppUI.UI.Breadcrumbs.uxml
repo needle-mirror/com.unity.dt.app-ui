@@ -1,146 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <engine:UXML
-  xmlns:engine="UnityEngine.UIElements"
-  xmlns:appui="Unity.AppUI.UI"
-  xmlns:navigation="Unity.AppUI.Navigation"
->
-  <engine:VisualElement name="Unity.AppUI.UI.Breadcrumbs" class="main">
-    <engine:Label text="Breadcrumbs" class="title" />
-    <engine:Label
-      text="A navigation component that helps users track their location within an application's hierarchy"
-      class="subtitle"
-    />
-    <engine:Label text="navigation" class="category" />
-    <engine:VisualElement class="content">
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="overview">
-          <engine:Label
-            text="Breadcrumbs are a navigation pattern that shows users their current location in an application's hierarchy. They provide a trail of links that allows users to quickly move up to a parent level or previously viewed location."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="The component consists of three main parts:"
-            class="parapgraph note"
-          />
-          <engine:Label
-            text="- BreadcrumbItem: Clickable links representing each level in the hierarchy
-- BreadcrumbSeparator: Visual separator (default '/') between items
-- The current page/location is indicated by a BreadcrumbItem with isCurrent=true"
-            class="parapgraph"
-          />
-          <engine:Label
-            text="Breadcrumbs are particularly useful in:"
-            class="parapgraph tip"
-          />
-          <engine:Label
-            text="- Applications with hierarchical navigation
-- Complex folder structures
-- Multi-step processes
-- Any interface where users need to understand and navigate their current location"
-            class="parapgraph"
-          />
-        </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="props">
-          <engine:VisualElement class="prop">
-            <engine:Label text="isCurrent" class="prop-name" />
-            <engine:Label text="bool" class="prop-type" />
-            <engine:Label text="false" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="Indicates whether this BreadcrumbItem represents the current location in the navigation hierarchy. When true, the item receives the --current USS class modifier and typically appears differently styled to indicate the current location."
-                class="parapgraph"
-              />
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.Breadcrumbs" class="main">
+        <engine:Label text="Breadcrumbs" class="title" />
+        <engine:Label text="A navigation component that helps users track their location within an application&apos;s hierarchy" class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Navigation" class="shield-value navigation" />
             </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Setting the current item in UXML:"
-                  class="parapgraph"
-                />
-                <engine:Label
-                  text="Marking a breadcrumb item as current in UXML"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='&lt;BreadcrumbItem text="Current Page" is-current="true" /&gt;'
-                  class="code"
-                />
-              </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
             </engine:VisualElement>
-          </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
         </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="examples">
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Basic Breadcrumbs Implementation"
-              class="parapgraph"
-            />
-            <engine:Label
-              text="A basic breadcrumbs navigation showing three levels deep with the current location"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='&lt;UXML xmlns:ui="Unity.AppUI.UI"&gt;
-    &lt;ui:Breadcrumbs&gt;
-        &lt;ui:BreadcrumbItem text="Home" href="/" /&gt;
-        &lt;ui:BreadcrumbSeparator /&gt;
-        &lt;ui:BreadcrumbItem text="Projects" href="/projects" /&gt;
-        &lt;ui:BreadcrumbSeparator /&gt;
-        &lt;ui:BreadcrumbItem text="Project Alpha" is-current="true" /&gt;
-    &lt;/ui:Breadcrumbs&gt;
-&lt;/UXML&gt;'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Creating Breadcrumbs in C#"
-              class="parapgraph"
-            />
-            <engine:Label
-              text="Programmatically creating a breadcrumbs navigation with three levels"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='var breadcrumbs = new Breadcrumbs();
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="Breadcrumbs are a navigation pattern that shows users their current location in an application&apos;s hierarchy. They provide a trail of links that allows users to quickly move up to a parent level or previously viewed location." class="paragraph" />
+<engine:Label text="The component consists of three main parts:" class="paragraph note" />
+<engine:Label text="- BreadcrumbItem: Clickable links representing each level in the hierarchy&#10;- BreadcrumbSeparator: Visual separator (default &apos;/&apos;) between items&#10;- The current page/location is indicated by a BreadcrumbItem with isCurrent=true" class="paragraph" />
+<engine:Label text="Breadcrumbs are particularly useful in:" class="paragraph tip" />
+<engine:Label text="- Applications with hierarchical navigation&#10;- Complex folder structures&#10;- Multi-step processes&#10;- Any interface where users need to understand and navigate their current location" class="paragraph" />
 
-var homeItem = new BreadcrumbItem { text = "Home", href = "/" };
-var projectsItem = new BreadcrumbItem { text = "Projects", href = "/projects" };
-var currentItem = new BreadcrumbItem { text = "Project Alpha", isCurrent = true };
+                </engine:VisualElement>
+            </engine:VisualElement>
 
-breadcrumbs.Add(homeItem);
-breadcrumbs.Add(new BreadcrumbSeparator());
-breadcrumbs.Add(projectsItem);
-breadcrumbs.Add(new BreadcrumbSeparator());
-breadcrumbs.Add(currentItem);'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label text="Custom Separator" class="parapgraph" />
-            <engine:Label
-              text="Using a custom separator character instead of the default '/'"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='&lt;UXML xmlns:ui="Unity.AppUI.UI"&gt;
-    &lt;ui:Breadcrumbs&gt;
-        &lt;ui:BreadcrumbItem text="Home" /&gt;
-        &lt;ui:BreadcrumbSeparator text="&gt;" /&gt;
-        &lt;ui:BreadcrumbItem text="Settings" is-current="true" /&gt;
-    &lt;/ui:Breadcrumbs&gt;
-&lt;/UXML&gt;'
-              class="code"
-            />
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="isCurrent" class="prop-name-value" selectable="true" />
     </engine:VisualElement>
-  </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic Breadcrumbs Implementation" class="paragraph" />
+<engine:Label text="A basic breadcrumbs navigation showing three levels deep with the current location" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;UXML xmlns:ui=&quot;Unity.AppUI.UI&quot;&gt;&#10;    &lt;ui:Breadcrumbs&gt;&#10;        &lt;ui:BreadcrumbItem text=&quot;Home&quot; url=&quot;/&quot; /&gt;&#10;        &lt;ui:BreadcrumbSeparator /&gt;&#10;        &lt;ui:BreadcrumbItem text=&quot;Projects&quot; url=&quot;/projects&quot; /&gt;&#10;        &lt;ui:BreadcrumbSeparator /&gt;&#10;        &lt;ui:BreadcrumbItem text=&quot;Project Alpha&quot; is-current=&quot;true&quot; /&gt;&#10;    &lt;/ui:Breadcrumbs&gt;&#10;&lt;/UXML&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Creating Breadcrumbs in C#" class="paragraph" />
+<engine:Label text="Programmatically creating a breadcrumbs navigation with three levels" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var breadcrumbs = new Breadcrumbs();&#10;&#10;var homeItem = new BreadcrumbItem { text = &quot;Home&quot;, url = &quot;/&quot; };&#10;var projectsItem = new BreadcrumbItem { text = &quot;Projects&quot;, url = &quot;/projects&quot; };&#10;var currentItem = new BreadcrumbItem { text = &quot;Project Alpha&quot;, isCurrent = true };&#10;&#10;breadcrumbs.Add(homeItem);&#10;breadcrumbs.Add(new BreadcrumbSeparator());&#10;breadcrumbs.Add(projectsItem);&#10;breadcrumbs.Add(new BreadcrumbSeparator());&#10;breadcrumbs.Add(currentItem);" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Custom Separator" class="paragraph" />
+<engine:Label text="Using a custom separator character instead of the default &apos;/&apos;" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;UXML xmlns:ui=&quot;Unity.AppUI.UI&quot;&gt;&#10;    &lt;ui:Breadcrumbs&gt;&#10;        &lt;ui:BreadcrumbItem text=&quot;Home&quot; /&gt;&#10;        &lt;ui:BreadcrumbSeparator text=&quot;&gt;&quot; /&gt;&#10;        &lt;ui:BreadcrumbItem text=&quot;Settings&quot; is-current=&quot;true&quot; /&gt;&#10;    &lt;/ui:Breadcrumbs&gt;&#10;&lt;/UXML&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
 </engine:UXML>

@@ -106,6 +106,13 @@ namespace Unity.AppUI.UI
         public VisualElement target { get; set; }
 
         /// <summary>
+        /// Optional callback invoked during resize to modify the size before it is applied to the target.
+        /// The first parameter is the computed new size, the second is the original size at drag start.
+        /// The callback must return the adjusted size to apply.
+        /// </summary>
+        public Func<Vector2, Vector2, Vector2> sizeModifier { get; set; }
+
+        /// <summary>
         /// Default Constructor.
         /// </summary>
         public ResizeHandle()
@@ -157,10 +164,21 @@ namespace Unity.AppUI.UI
             }
 
             var deltaFromStart = draggable.startPosition - draggable.position;
-            if ((draggable.dragDirection & Draggable.DragDirection.Vertical) != 0)
-                target.style.height = m_StartSize.y - deltaFromStart.y;
-            if ((draggable.dragDirection & Draggable.DragDirection.Horizontal) != 0)
-                target.style.width = m_StartSize.x - deltaFromStart.x;
+            var newSize = new Vector2(m_StartSize.x - deltaFromStart.x, m_StartSize.y - deltaFromStart.y);
+
+            if (sizeModifier != null)
+            {
+                newSize = sizeModifier.Invoke(newSize, m_StartSize);
+                target.style.width = newSize.x;
+                target.style.height = newSize.y;
+            }
+            else
+            {
+                if ((draggable.dragDirection & Draggable.DragDirection.Vertical) != 0)
+                    target.style.height = newSize.y;
+                if ((draggable.dragDirection & Draggable.DragDirection.Horizontal) != 0)
+                    target.style.width = newSize.x;
+            }
         }
 
         void OnUp(Draggable draggable)
@@ -175,6 +193,41 @@ namespace Unity.AppUI.UI
         /// Factory class to instantiate a <see cref="ResizeHandle"/> using the data read from a UXML file.
         /// </summary>
         public new class UxmlFactory : UxmlFactory<ResizeHandle, UxmlTraits> { }
+
+        /// <summary>
+        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ResizeHandle"/>.
+        /// </summary>
+        public new class UxmlTraits : VisualElement.UxmlTraits
+        {
+            readonly UxmlEnumAttributeDescription<Draggable.DragDirection> m_DragDirection =
+                new UxmlEnumAttributeDescription<Draggable.DragDirection>
+                {
+                    name = "drag-direction",
+                    defaultValue = Draggable.DragDirection.Vertical,
+                };
+
+            readonly UxmlFloatAttributeDescription m_Threshold =
+                new UxmlFloatAttributeDescription
+                {
+                    name = "threshold",
+                    defaultValue = 1f,
+                };
+
+            /// <summary>
+            /// Initializes the VisualElement from the UXML attributes.
+            /// </summary>
+            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
+            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
+            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
+            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
+            {
+                base.Init(ve, bag, cc);
+
+                var el = (ResizeHandle)ve;
+                el.dragDirection = m_DragDirection.GetValueFromBag(bag, cc);
+                el.threshold = m_Threshold.GetValueFromBag(bag, cc);
+            }
+        }
 
 #endif
     }

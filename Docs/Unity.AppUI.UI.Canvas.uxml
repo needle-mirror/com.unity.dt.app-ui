@@ -1,263 +1,251 @@
 <?xml version="1.0" encoding="utf-8"?>
 <engine:UXML
-  xmlns:engine="UnityEngine.UIElements"
-  xmlns:appui="Unity.AppUI.UI"
-  xmlns:navigation="Unity.AppUI.Navigation"
->
-  <engine:VisualElement name="Unity.AppUI.UI.Canvas" class="main">
-    <engine:Label text="Canvas" class="title" />
-    <engine:Label
-      text="A scrollable and zoomable container that provides infinite canvas functionality."
-      class="subtitle"
-    />
-    <engine:Label text="layout" class="category" />
-    <engine:VisualElement class="content">
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="overview">
-          <engine:Label
-            text="The Canvas component provides a scrollable and zoomable container that can host any UI elements. It's particularly useful for creating infinite canvas experiences like design tools, diagrams, or large content areas that need pan and zoom capabilities."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="Key features include:"
-            class="parapgraph features-list"
-          />
-          <engine:Label
-            text="• Smooth pan and zoom interactions
-• Customizable control schemes (Editor or Modern)
-• Configurable zoom limits and speeds
-• Frame-to-fit functionality
-• Grid background with customizable appearance
-• Space bar pan mode"
-            class="parapgraph"
-          />
-          <engine:Label
-            text="The Canvas supports two control schemes:"
-            class="parapgraph control-schemes"
-          />
-          <engine:Label
-            text="1. Modern (default): Similar to modern design tools like Figma or Sketch
-2. Editor: Matches Unity Editor's viewport controls"
-            class="parapgraph"
-          />
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.Canvas" class="main">
+        <engine:Label text="Canvas" class="title" />
+        <engine:Label text="A scrollable and zoomable container that provides infinite canvas functionality." class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Layout" class="shield-value layout" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
         </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="props">
-          <engine:VisualElement class="prop">
-            <engine:Label text="scrollOffset" class="prop-name" />
-            <engine:Label text="Vector2" class="prop-type" />
-            <engine:Label text="Vector2.zero" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="False" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The current scroll position of the canvas in local coordinates. Modify this property to programmatically pan the canvas."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Center the canvas view on a specific point"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="canvas.scrollOffset = new Vector2(100, 100);"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="zoom" class="prop-name" />
-            <engine:Label text="float" class="prop-type" />
-            <engine:Label text="1.0f" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The current zoom level of the canvas. Values greater than 1 zoom in, values between 0 and 1 zoom out."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Zoom in to 200%"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="canvas.zoom = 2.0f; // Double the zoom level"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="controlScheme" class="prop-name" />
-            <engine:Label text="CanvasControlScheme" class="prop-type" />
-            <engine:Label
-              text="CanvasControlScheme.Modern"
-              class="prop-value"
-            />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="Defines how the canvas responds to user input. Choose between Modern (like Figma) or Editor (like Unity) control schemes."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Switch to Unity Editor-style controls"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="canvas.controlScheme = CanvasControlScheme.Editor;"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="minZoom" class="prop-name" />
-            <engine:Label text="float" class="prop-type" />
-            <engine:Label text="0.1f" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The minimum allowed zoom level. Prevents users from zooming out beyond this value."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Set minimum zoom limit"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="canvas.minZoom = 0.5f; // Limit minimum zoom to 50%"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="maxZoom" class="prop-name" />
-            <engine:Label text="float" class="prop-type" />
-            <engine:Label text="100.0f" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The maximum allowed zoom level. Prevents users from zooming in beyond this value."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Set maximum zoom limit"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="canvas.maxZoom = 4.0f; // Limit maximum zoom to 400%"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="useSpaceBar" class="prop-name" />
-            <engine:Label text="bool" class="prop-type" />
-            <engine:Label text="true" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="When enabled, holding the space bar temporarily switches to pan mode, similar to many graphics applications."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Disable temporary pan mode"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="canvas.useSpaceBar = false; // Disable space bar pan mode"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="examples">
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Basic Canvas Setup"
-              class="parapgraph example-title"
-            />
-            <engine:Label
-              text="Create a basic canvas with some content"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='&lt;Canvas class="my-canvas"&gt;
-    &lt;Button text="Zoom Content" /&gt;
-    &lt;Label text="Pan me around!" /&gt;
-&lt;/Canvas&gt;'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Frame Content Programmatically"
-              class="parapgraph example-title"
-            />
-            <engine:Label
-              text="Automatically adjust zoom and position to frame content"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='// Frame all content to fit the view
-canvas.FrameAll();
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="The Canvas component provides a scrollable and zoomable container that can host any UI elements. It&apos;s particularly useful for creating infinite canvas experiences like design tools, diagrams, or large content areas that need pan and zoom capabilities." class="paragraph" />
+<engine:Label text="Key features include:" class="paragraph features-list" />
+<engine:Label text="• Smooth pan and zoom interactions&#10;• Customizable control schemes (Editor or Modern)&#10;• Configurable zoom limits and speeds&#10;• Frame-to-fit functionality&#10;• Grid background with customizable appearance&#10;• Space bar pan mode" class="paragraph" />
+<engine:Label text="The Canvas supports two control schemes:" class="paragraph control-schemes" />
+<engine:Label text="1. Modern (default): Similar to modern design tools like Figma or Sketch&#10;2. Editor: Matches Unity Editor&apos;s viewport controls" class="paragraph" />
 
-// Frame a specific element
-var element = canvas.Q&lt;VisualElement&gt;("my-element");
-canvas.FrameElement(element);'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Custom Control Configuration"
-              class="parapgraph example-title"
-            />
-            <engine:Label
-              text="Configure canvas controls for optimal user experience"
-              class="scenario-description"
-            />
-            <engine:Label
-              text="canvas.controlScheme = CanvasControlScheme.Modern;
-canvas.zoomSpeed = 0.1f;
-canvas.scrollSpeed = 1.5f;
-canvas.useSpaceBar = true;
-canvas.minZoom = 0.25f;
-canvas.maxZoom = 4.0f;"
-              class="code"
-            />
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="scrollOffset" class="prop-name-value" selectable="true" />
     </engine:VisualElement>
-  </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Vector2" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Vector2.zero" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="zoom" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="float" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="1.0f" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="controlScheme" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="CanvasControlScheme" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="CanvasControlScheme.Modern" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="minZoom" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="float" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="0.1f" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="maxZoom" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="float" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="100.0f" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="useSpaceBar" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="true" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="scrollSpeed" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="float" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="2.0f" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="zoomSpeed" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="float" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="0.075f" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="zoomMultiplier" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="float" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="2.0f" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="panMultiplier" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="float" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="3.0f" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="dampingEffectDuration" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="int" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="750" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="frameMargin" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="float" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="12.0f" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="primaryManipulator" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="CanvasManipulator" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="CanvasManipulator.None" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="frameContainer" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Optional&lt;Rect&gt;" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Optional&lt;Rect&gt;.none" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="grabMode" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="GrabMode" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="GrabMode.None" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic Canvas Setup" class="paragraph example-title" />
+<engine:Label text="Create a basic canvas with some content" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;Canvas class=&quot;my-canvas&quot;&gt;&#10;    &lt;Button text=&quot;Zoom Content&quot; /&gt;&#10;    &lt;Label text=&quot;Pan me around!&quot; /&gt;&#10;&lt;/Canvas&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Frame Content Programmatically" class="paragraph example-title" />
+<engine:Label text="Automatically adjust zoom and position to frame content" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="// Frame all content to fit the view&#10;canvas.FrameAll();&#10;&#10;// Frame a specific element&#10;var element = canvas.Q&lt;VisualElement&gt;(&quot;my-element&quot;);&#10;canvas.FrameElement(element);" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Custom Control Configuration" class="paragraph example-title" />
+<engine:Label text="Configure canvas controls for optimal user experience" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="canvas.controlScheme = CanvasControlScheme.Modern;&#10;canvas.zoomSpeed = 0.1f;&#10;canvas.scrollSpeed = 1.5f;&#10;canvas.useSpaceBar = true;&#10;canvas.minZoom = 0.25f;&#10;canvas.maxZoom = 4.0f;" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
 </engine:UXML>

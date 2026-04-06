@@ -126,6 +126,8 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId placementProperty = new BindingId(nameof(placement));
 
+        internal static readonly BindingId movableProperty = new BindingId(nameof(movable));
+
         internal static readonly BindingId resizableProperty = new BindingId(nameof(resizable));
 
         internal static readonly BindingId resizeDirectionProperty = new BindingId(nameof(resizeDirection));
@@ -597,6 +599,35 @@ namespace Unity.AppUI.UI
             }
         }
 
+        bool m_Movable;
+
+        /// <summary>
+        /// Whether the dialog is movable by dragging.
+        /// </summary>
+        /// <remarks>
+        /// This is only useful for presentations using popups of type <see cref="Popover"/>.
+        /// </remarks>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool movable
+        {
+            get => m_Movable;
+            set
+            {
+                var changed = m_Movable != value;
+                m_Movable = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in movableProperty);
+#endif
+            }
+        }
+
         bool m_Resizable;
 
         /// <summary>
@@ -626,7 +657,7 @@ namespace Unity.AppUI.UI
             }
         }
 
-        Draggable.DragDirection m_ResizeDirection = Draggable.DragDirection.Vertical;
+        Draggable.DragDirection m_ResizeDirection = Draggable.DragDirection.Free;
 
         /// <summary>
         /// Which direction the dialog can be resized.
@@ -752,6 +783,7 @@ namespace Unity.AppUI.UI
                         .SetOutsideClickDismiss(outsideClickDismissEnabled)
                         .SetModalBackdrop(modalBackdrop)
                         .SetKeyboardDismiss(keyboardDismissEnabled)
+                        .SetMovable(movable)
                         .SetResizable(resizable)
                         .SetResizeDirection(resizeDirection)
                         .Show();
@@ -878,6 +910,12 @@ namespace Unity.AppUI.UI
                 defaultValue = 150
             };
 
+            readonly UxmlBoolAttributeDescription m_Movable = new UxmlBoolAttributeDescription
+            {
+                name = "movable",
+                defaultValue = false
+            };
+
             readonly UxmlBoolAttributeDescription m_Resizable = new UxmlBoolAttributeDescription
             {
                 name = "resizable",
@@ -887,7 +925,7 @@ namespace Unity.AppUI.UI
             readonly UxmlEnumAttributeDescription<Draggable.DragDirection> m_ResizeDirection = new UxmlEnumAttributeDescription<Draggable.DragDirection>
             {
                 name = "resize-direction",
-                defaultValue = Draggable.DragDirection.Vertical
+                defaultValue = Draggable.DragDirection.Free
             };
 
             readonly UxmlBoolAttributeDescription m_DisableAnimation = new UxmlBoolAttributeDescription
@@ -921,6 +959,7 @@ namespace Unity.AppUI.UI
                 el.keyboardDismissEnabled = m_KeyboardDismissEnabled.GetValueFromBag(bag, cc);
                 el.outsideClickDismissEnabled = m_OutsideClickDismissEnabled.GetValueFromBag(bag, cc);
                 el.modalBackdrop = m_ModalBackdrop.GetValueFromBag(bag, cc);
+                el.movable = m_Movable.GetValueFromBag(bag, cc);
                 el.resizable = m_Resizable.GetValueFromBag(bag, cc);
                 el.resizeDirection = m_ResizeDirection.GetValueFromBag(bag, cc);
                 el.disableAnimation = m_DisableAnimation.GetValueFromBag(bag, cc);

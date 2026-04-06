@@ -57,6 +57,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The clickable manipulator used by this button.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Pressable clickable
         {
             get => m_Clickable;

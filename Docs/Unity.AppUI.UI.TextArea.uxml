@@ -1,295 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
 <engine:UXML
-  xmlns:engine="UnityEngine.UIElements"
-  xmlns:appui="Unity.AppUI.UI"
-  xmlns:navigation="Unity.AppUI.Navigation"
->
-  <engine:VisualElement name="Unity.AppUI.UI.TextArea" class="main">
-    <engine:Label text="TextArea" class="title" />
-    <engine:Label
-      text="A multi-line text input field that allows users to enter and edit longer text content"
-      class="subtitle"
-    />
-    <engine:Label text="input" class="category" />
-    <engine:VisualElement class="content">
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="overview">
-          <engine:Label
-            text="TextArea is a versatile input component that enables users to enter and edit multiple lines of text. It's particularly useful for collecting longer form responses, comments, or any scenario requiring multi-line text input."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="The component features a resizable input area, placeholder text support, and various customization options like auto-resize and validation capabilities."
-            class="parapgraph note"
-          />
-          <engine:Label
-            text="Key features include:"
-            class="parapgraph highlight"
-          />
-          <engine:Label
-            text="• Resizable text area with drag handle
-• Auto-resize capability based on content
-• Placeholder text support
-• Read-only mode
-• Maximum length restriction
-• Input validation
-• Submit on Enter functionality
-• Keyboard focus management"
-            class="parapgraph"
-          />
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.TextArea" class="main">
+        <engine:Label text="TextArea" class="title" />
+        <engine:Label text="A multi-line text input field that allows users to enter and edit longer text content" class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Input" class="shield-value input" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
         </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="props">
-          <engine:VisualElement class="prop">
-            <engine:Label text="value" class="prop-name" />
-            <engine:Label text="string" class="prop-type" />
-            <engine:Label text="null" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The text content of the TextArea. This property represents the current value entered by the user or set programmatically."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Setting initial text content via UXML"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='&lt;TextArea value="Initial text content" /&gt;'
-                  class="code"
-                />
-              </engine:VisualElement>
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Setting text content via code"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='textArea.value = "New text content";'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="placeholder" class="prop-name" />
-            <engine:Label text="string" class="prop-type" />
-            <engine:Label text="string.Empty" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The placeholder text displayed when the TextArea is empty. This provides a hint to users about what kind of content should be entered."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Setting placeholder text via UXML"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='&lt;TextArea placeholder="Enter your comments here..." /&gt;'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="isReadOnly" class="prop-name" />
-            <engine:Label text="bool" class="prop-type" />
-            <engine:Label text="false" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="When set to true, makes the TextArea read-only, preventing user input while still allowing text selection."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Creating a read-only TextArea"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='&lt;TextArea is-read-only="true" value="This text cannot be edited" /&gt;'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="maxLength" class="prop-name" />
-            <engine:Label text="int" class="prop-type" />
-            <engine:Label text="-1" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="Specifies the maximum number of characters that can be entered in the TextArea. Set to -1 for unlimited length."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Limiting input to 100 characters"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='&lt;TextArea max-length="100" /&gt;'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="autoResize" class="prop-name" />
-            <engine:Label text="bool" class="prop-type" />
-            <engine:Label text="false" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="When enabled, the TextArea will automatically grow in height to accommodate its content. Note that it will only grow, not shrink, unless autoShrink is also enabled."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Creating an auto-resizing TextArea"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='&lt;TextArea auto-resize="true" /&gt;'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="autoShrink" class="prop-name" />
-            <engine:Label text="bool" class="prop-type" />
-            <engine:Label text="false" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="When enabled along with autoResize, allows the TextArea to both grow and shrink based on its content."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Creating a TextArea that both grows and shrinks"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='&lt;TextArea auto-resize="true" auto-shrink="true" /&gt;'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="submitOnEnter" class="prop-name" />
-            <engine:Label text="bool" class="prop-type" />
-            <engine:Label text="false" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="When enabled, triggers the submitted event when the user presses Enter. Can be combined with submitModifiers for more control."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Handling text submission on Enter key"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='textArea.submitOnEnter = true;
-textArea.submitted += () =&gt; Debug.Log("Text submitted!");'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="examples">
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Basic TextArea with placeholder"
-              class="parapgraph"
-            />
-            <engine:Label
-              text="Creates a simple TextArea with placeholder text and fixed dimensions"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='&lt;TextArea placeholder="Enter your message here..." style="height: 100px; width: 300px;" /&gt;'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Auto-resizing TextArea with validation"
-              class="parapgraph"
-            />
-            <engine:Label
-              text="Creates a TextArea that automatically resizes and validates input length"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='var textArea = new TextArea {
-    autoResize = true,
-    autoShrink = true,
-    placeholder = "Enter at least 10 characters",
-    style = { minHeight = 50, width = 300 }
-};
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="TextArea is a versatile input component that enables users to enter and edit multiple lines of text. It&apos;s particularly useful for collecting longer form responses, comments, or any scenario requiring multi-line text input." class="paragraph" />
+<engine:Label text="The component features a resizable input area, placeholder text support, and various customization options like auto-resize and validation capabilities." class="paragraph note" />
+<engine:Label text="Key features include:" class="paragraph highlight" />
+<engine:Label text="• Resizable text area with drag handle&#10;• Auto-resize capability based on content&#10;• Placeholder text support&#10;• Read-only mode&#10;• Maximum length restriction&#10;• Input validation&#10;• Submit on Enter functionality&#10;• Keyboard focus management" class="paragraph" />
 
-textArea.validateValue = (value) =&gt; value.Length &gt;= 10;
-textArea.RegisterValueChangedCallback(evt =&gt; {
-    Debug.Log($"Text is valid: {!textArea.invalid}");
-});'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Comment box with submission handling"
-              class="parapgraph"
-            />
-            <engine:Label
-              text="Creates a comment box that submits on Shift+Enter with character limit"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='&lt;TextArea
-    placeholder="Write your comment..."
-    submit-on-enter="true"
-    submit-modifiers="Shift"
-    max-length="500"
-    style="min-height: 100px; width: 100%" /&gt;'
-              class="code"
-            />
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="value" class="prop-name-value" selectable="true" />
     </engine:VisualElement>
-  </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="placeholder" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string.Empty" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="isReadOnly" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="maxLength" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="int" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="-1" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="autoResize" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="autoShrink" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="submitOnEnter" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="submitModifiers" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="EventModifiers" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="EventModifiers.None" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="validateValue" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Func&lt;string, bool&gt;" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="invalid" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic TextArea with placeholder" class="paragraph" />
+<engine:Label text="Creates a simple TextArea with placeholder text and fixed dimensions" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;TextArea placeholder=&quot;Enter your message here...&quot; style=&quot;height: 100px; width: 300px;&quot; /&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Auto-resizing TextArea with validation" class="paragraph" />
+<engine:Label text="Creates a TextArea that automatically resizes and validates input length" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var textArea = new TextArea {&#10;    autoResize = true,&#10;    autoShrink = true,&#10;    placeholder = &quot;Enter at least 10 characters&quot;,&#10;    style = { minHeight = 50, width = 300 }&#10;};&#10;&#10;textArea.validateValue = (value) =&gt; value.Length &gt;= 10;&#10;textArea.RegisterValueChangedCallback(evt =&gt; {&#10;    Debug.Log($&quot;Text is valid: {!textArea.invalid}&quot;);&#10;});" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Comment box with submission handling" class="paragraph" />
+<engine:Label text="Creates a comment box that submits on Shift+Enter with character limit" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;TextArea&#10;    placeholder=&quot;Write your comment...&quot;&#10;    submit-on-enter=&quot;true&quot;&#10;    submit-modifiers=&quot;Shift&quot;&#10;    max-length=&quot;500&quot;&#10;    style=&quot;min-height: 100px; width: 100%&quot; /&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
 </engine:UXML>

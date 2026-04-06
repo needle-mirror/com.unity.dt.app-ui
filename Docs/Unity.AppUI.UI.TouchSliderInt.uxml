@@ -1,337 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
 <engine:UXML
-  xmlns:engine="UnityEngine.UIElements"
-  xmlns:appui="Unity.AppUI.UI"
-  xmlns:navigation="Unity.AppUI.Navigation"
->
-  <engine:VisualElement name="Unity.AppUI.UI.TouchSliderInt" class="main">
-    <engine:Label text="TouchSliderInt" class="title" />
-    <engine:Label
-      text="A touch-optimized slider component for selecting integer values within a specified range."
-      class="subtitle"
-    />
-    <engine:Label text="input" class="category" />
-    <engine:VisualElement class="content">
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="overview">
-          <engine:Label
-            text="TouchSliderInt is a user interface control that allows users to select an integer value from a continuous range by dragging a thumb along a track. It is specifically designed for touch interactions while maintaining full keyboard and mouse support."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="The slider provides visual feedback through a progress bar that fills according to the current value. It supports both horizontal and vertical orientations, and automatically adapts to RTL (Right-to-Left) layouts."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="The component includes a label that can display units or descriptions, and a value display that shows the current selection. Users can directly edit the value through a text input field that appears when clicking on the value display."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="For performance reasons, it's recommended to set appropriate step values to limit the number of possible values in very large ranges."
-            class="parapgraph"
-          />
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.TouchSliderInt" class="main">
+        <engine:Label text="TouchSliderInt" class="title" />
+        <engine:Label text="A touch-optimized slider component for selecting integer values within a specified range." class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Input" class="shield-value input" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
         </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="props">
-          <engine:VisualElement class="prop">
-            <engine:Label text="value" class="prop-name" />
-            <engine:Label text="int" class="prop-type" />
-            <engine:Label text="0" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The current value of the slider. This value is always clamped between lowValue and highValue."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Setting and reading the slider value"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='var slider = new TouchSliderInt();
-slider.value = 42; // Sets the value to 42
-Debug.Log($"Current value: {slider.value}"); // Reads the current value'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="lowValue" class="prop-name" />
-            <engine:Label text="int" class="prop-type" />
-            <engine:Label text="0" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The minimum value that can be selected on the slider."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Setting the range of valid values"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="var slider = new TouchSliderInt();
-slider.lowValue = -100;
-slider.highValue = 100;"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="highValue" class="prop-name" />
-            <engine:Label text="int" class="prop-type" />
-            <engine:Label text="1" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The maximum value that can be selected on the slider."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Creating a percentage slider"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='var percentageSlider = new TouchSliderInt();
-percentageSlider.lowValue = 0;
-percentageSlider.highValue = 100;
-percentageSlider.label = "%";'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="step" class="prop-name" />
-            <engine:Label text="int" class="prop-type" />
-            <engine:Label text="1" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The increment or decrement value when the user interacts with the slider using arrow keys."
-                class="parapgraph"
-              />
-              <engine:Label
-                text="Use larger step values for better performance when dealing with large ranges."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Creating a slider with custom step value"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="var slider = new TouchSliderInt();
-slider.step = 5; // Values will change by increments of 5"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="shiftStep" class="prop-name" />
-            <engine:Label text="int" class="prop-type" />
-            <engine:Label text="10" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The increment or decrement value when the user holds the Shift key while using arrow keys."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Customizing the shift-key step value"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="var slider = new TouchSliderInt();
-slider.shiftStep = 20; // Values will change by increments of 20 when using Shift+Arrow keys"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="orientation" class="prop-name" />
-            <engine:Label text="Direction" class="prop-type" />
-            <engine:Label text="Direction.Horizontal" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="Determines whether the slider is rendered horizontally or vertically. In vertical orientation, the slider fills from bottom to top."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Creating a vertical slider"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="var slider = new TouchSliderInt();
-slider.orientation = Direction.Vertical;"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="label" class="prop-name" />
-            <engine:Label text="string" class="prop-type" />
-            <engine:Label text="null" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="A text label displayed next to the slider value, useful for showing units or descriptions."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Adding a unit label to the slider"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="var slider = new TouchSliderInt();
-slider.label = &quot;px&quot;; // Will display the unit 'px' next to the value"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="size" class="prop-name" />
-            <engine:Label text="Size" class="prop-type" />
-            <engine:Label text="Size.M" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="Controls the visual size of the slider component."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Creating a large slider"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="var slider = new TouchSliderInt();
-slider.size = Size.L;"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="examples">
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Basic usage of TouchSliderInt in UXML:"
-              class="parapgraph"
-            />
-            <engine:Label
-              text="Creating an age selector slider in UXML"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='&lt;TouchSliderInt name="ageSlider"
-             low-value="0"
-             high-value="100"
-             value="25"
-             label="years"
-             step="1"
-             shift-step="5"
-             size="M" /&gt;'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Creating and configuring TouchSliderInt in C#:"
-              class="parapgraph"
-            />
-            <engine:Label
-              text="Creating a volume control slider programmatically"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='var volumeSlider = new TouchSliderInt
-{
-    lowValue = 0,
-    highValue = 100,
-    value = 50,
-    label = "%",
-    step = 5,
-    shiftStep = 10,
-    size = Size.M
-};
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="TouchSliderInt is a user interface control that allows users to select an integer value from a continuous range by dragging a thumb along a track. It is specifically designed for touch interactions while maintaining full keyboard and mouse support." class="paragraph" />
+<engine:Label text="The slider provides visual feedback through a progress bar that fills according to the current value. It supports both horizontal and vertical orientations, and automatically adapts to RTL (Right-to-Left) layouts." class="paragraph" />
+<engine:Label text="The component includes a label that can display units or descriptions, and a value display that shows the current selection. Users can directly edit the value through a text input field that appears when clicking on the value display." class="paragraph" />
+<engine:Label text="For performance reasons, it&apos;s recommended to set appropriate step values to limit the number of possible values in very large ranges." class="paragraph" />
 
-// Add value change listener
-volumeSlider.RegisterValueChangedCallback(evt =&gt;
-{
-    Debug.Log($"Volume changed from {evt.previousValue} to {evt.newValue}");
-});'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Creating a vertical slider with custom styling:"
-              class="parapgraph"
-            />
-            <engine:Label
-              text="Creating a height measurement slider"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='var heightSlider = new TouchSliderInt
-{
-    orientation = Direction.Vertical,
-    lowValue = 0,
-    highValue = 200,
-    value = 170,
-    label = "cm",
-    step = 1,
-    shiftStep = 10
-};
+                </engine:VisualElement>
+            </engine:VisualElement>
 
-// Add custom styling
-heightSlider.AddToClassList("custom-slider");'
-              class="code"
-            />
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="value" class="prop-name-value" selectable="true" />
     </engine:VisualElement>
-  </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="int" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="0" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="lowValue" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="int" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="0" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="highValue" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="int" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="1" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="step" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="int" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="1" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="shiftStep" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="int" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="10" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="orientation" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Direction" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Direction.Horizontal" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="label" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="size" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Size" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Size.M" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="formatString" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic usage of TouchSliderInt in UXML:" class="paragraph" />
+<engine:Label text="Creating an age selector slider in UXML" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;TouchSliderInt name=&quot;ageSlider&quot;&#10;             low-value=&quot;0&quot;&#10;             high-value=&quot;100&quot;&#10;             value=&quot;25&quot;&#10;             label=&quot;years&quot;&#10;             step=&quot;1&quot;&#10;             shift-step=&quot;5&quot;&#10;             size=&quot;M&quot; /&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Creating and configuring TouchSliderInt in C#:" class="paragraph" />
+<engine:Label text="Creating a volume control slider programmatically" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var volumeSlider = new TouchSliderInt&#10;{&#10;    lowValue = 0,&#10;    highValue = 100,&#10;    value = 50,&#10;    label = &quot;%&quot;,&#10;    step = 5,&#10;    shiftStep = 10,&#10;    size = Size.M&#10;};&#10;&#10;// Add value change listener&#10;volumeSlider.RegisterValueChangedCallback(evt =&gt;&#10;{&#10;    Debug.Log($&quot;Volume changed from {evt.previousValue} to {evt.newValue}&quot;);&#10;});" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Creating a vertical slider with custom styling:" class="paragraph" />
+<engine:Label text="Creating a height measurement slider" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var heightSlider = new TouchSliderInt&#10;{&#10;    orientation = Direction.Vertical,&#10;    lowValue = 0,&#10;    highValue = 200,&#10;    value = 170,&#10;    label = &quot;cm&quot;,&#10;    step = 1,&#10;    shiftStep = 10&#10;};&#10;&#10;// Add custom styling&#10;heightSlider.AddToClassList(&quot;custom-slider&quot;);" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
 </engine:UXML>

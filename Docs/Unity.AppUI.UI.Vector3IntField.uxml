@@ -1,227 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
 <engine:UXML
-  xmlns:engine="UnityEngine.UIElements"
-  xmlns:appui="Unity.AppUI.UI"
-  xmlns:navigation="Unity.AppUI.Navigation"
->
-  <engine:VisualElement name="Unity.AppUI.UI.Vector3IntField" class="main">
-    <engine:Label text="Vector3IntField" class="title" />
-    <engine:Label
-      text="A field component that allows users to input and edit 3D integer vectors with X, Y, and Z coordinates."
-      class="subtitle"
-    />
-    <engine:Label text="input" class="category" />
-    <engine:VisualElement class="content">
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="overview">
-          <engine:Label
-            text="The Vector3IntField is a specialized input component designed for editing 3D integer vectors. It provides three numeric fields for X, Y, and Z coordinates, allowing precise control over 3D integer positions or dimensions."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="Each coordinate field supports direct numeric input, validation, and formatting options. The component is particularly useful in scenarios involving grid-based positioning, voxel coordinates, or any 3D integer-based data entry."
-            class="parapgraph info"
-          />
-          <engine:Label
-            text="The field supports various features including:"
-            class="parapgraph info"
-          />
-          <engine:Label
-            text="• Individual editing of X, Y, and Z coordinates
-• Value validation
-• Custom formatting
-• Different size variants
-• Invalid state indication"
-            class="parapgraph"
-          />
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.Vector3IntField" class="main">
+        <engine:Label text="Vector3IntField" class="title" />
+        <engine:Label text="A field component that allows users to input and edit 3D integer vectors with X, Y, and Z coordinates." class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Input" class="shield-value input" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
         </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="props">
-          <engine:VisualElement class="prop">
-            <engine:Label text="value" class="prop-name" />
-            <engine:Label text="Vector3Int" class="prop-type" />
-            <engine:Label text="Vector3Int.zero" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The current value of the Vector3IntField. Represents a 3D vector with integer X, Y, and Z components."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Setting the vector value programmatically"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="vector3IntField.value = new Vector3Int(1, 2, 3);"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="size" class="prop-name" />
-            <engine:Label text="Size" class="prop-type" />
-            <engine:Label text="Size.M" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="Controls the size variant of the field. Available options are defined in the Size enum."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Creating a small-sized vector field in UXML"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='&lt;ui:Vector3IntField size="S" /&gt;'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="invalid" class="prop-name" />
-            <engine:Label text="bool" class="prop-type" />
-            <engine:Label text="false" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="Indicates whether the current value is invalid according to the validation rules."
-                class="parapgraph warning"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Setting up validation to ensure vector magnitude is less than 10"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="vector3IntField.validateValue = (v) =&gt; v.magnitude &lt; 10;"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="formatString" class="prop-name" />
-            <engine:Label text="string" class="prop-type" />
-            <engine:Label text="null" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The format string used to format the numeric values in each coordinate field."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Formatting numbers with leading zeros up to 3 digits"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='vector3IntField.formatString = "D3";'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="formatFunction" class="prop-name" />
-            <engine:Label text="FormatFunction&lt;int&gt;" class="prop-type" />
-            <engine:Label text="null" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="False" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="A custom function to format the coordinate values. Takes precedence over formatString when both are set."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Custom formatting to always show the sign"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='vector3IntField.formatFunction = (value) =&gt; $"{value:+#;-#;0}";'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="examples">
-          <engine:VisualElement class="example">
-            <engine:Label text="Basic usage in UXML:" class="parapgraph" />
-            <engine:Label
-              text="Creating a basic vector field with default values"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='&lt;ui:Vector3IntField name="position-field" size="M" value="0,0,0" /&gt;'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Setting up validation and handling value changes:"
-              class="parapgraph"
-            />
-            <engine:Label
-              text="Complex example showing validation and event handling"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='var vector3IntField = new Vector3IntField();
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="The Vector3IntField is a specialized input component designed for editing 3D integer vectors. It provides three numeric fields for X, Y, and Z coordinates, allowing precise control over 3D integer positions or dimensions." class="paragraph" />
+<engine:Label text="Each coordinate field supports direct numeric input, validation, and formatting options. The component is particularly useful in scenarios involving grid-based positioning, voxel coordinates, or any 3D integer-based data entry." class="paragraph info" />
+<engine:Label text="The field supports various features including:" class="paragraph info" />
+<engine:Label text="• Individual editing of X, Y, and Z coordinates&#10;• Value validation&#10;• Custom formatting&#10;• Different size variants&#10;• Invalid state indication" class="paragraph" />
 
-// Set up validation
-vector3IntField.validateValue = (v) =&gt;
-    v.x &gt;= 0 &amp;&amp; v.y &gt;= 0 &amp;&amp; v.z &gt;= 0;
+                </engine:VisualElement>
+            </engine:VisualElement>
 
-// Handle value changes
-vector3IntField.RegisterValueChangedCallback(evt =&gt; {
-    Debug.Log($"New value: {evt.newValue}");
-});'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Custom formatting with units:"
-              class="parapgraph"
-            />
-            <engine:Label
-              text="Adding pixel units to the coordinate values"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='var vector3IntField = new Vector3IntField();
-vector3IntField.formatFunction = (value) =&gt;
-    $"{value}px";
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
 
-// Set initial value
-vector3IntField.value = new Vector3Int(100, 200, 300);'
-              class="code"
-            />
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="value" class="prop-name-value" selectable="true" />
     </engine:VisualElement>
-  </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Vector3Int" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Vector3Int.zero" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="size" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Size" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Size.M" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="invalid" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="formatString" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="formatFunction" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="FormatFunction&lt;int&gt;" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="validateValue" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Func&lt;Vector3Int, bool&gt;" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic usage in UXML:" class="paragraph" />
+<engine:Label text="Creating a basic vector field with default values" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;ui:Vector3IntField name=&quot;position-field&quot; size=&quot;M&quot; value=&quot;0,0,0&quot; /&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Setting up validation and handling value changes:" class="paragraph" />
+<engine:Label text="Complex example showing validation and event handling" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var vector3IntField = new Vector3IntField();&#10;&#10;// Set up validation&#10;vector3IntField.validateValue = (v) =&gt; &#10;    v.x &gt;= 0 &amp;&amp; v.y &gt;= 0 &amp;&amp; v.z &gt;= 0;&#10;&#10;// Handle value changes&#10;vector3IntField.RegisterValueChangedCallback(evt =&gt; {&#10;    Debug.Log($&quot;New value: {evt.newValue}&quot;);&#10;});" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Custom formatting with units:" class="paragraph" />
+<engine:Label text="Adding pixel units to the coordinate values" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var vector3IntField = new Vector3IntField();&#10;vector3IntField.formatFunction = (value) =&gt; &#10;    $&quot;{value}px&quot;;&#10;&#10;// Set initial value&#10;vector3IntField.value = new Vector3Int(100, 200, 300);" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
 </engine:UXML>

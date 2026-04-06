@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.MenuItem" class="main">
+        <engine:Label text="MenuItem" class="title" />
+        <engine:Label text="An interactive item within a menu that triggers actions or displays sub-menus" class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Navigation" class="shield-value navigation" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="MenuItem is an interactive element designed to be used within Menu components. Each item can display a label, icon, keyboard shortcut, and optional checkmark for selection state." class="paragraph" />
+<engine:Label text="Menu items can be configured in several ways: as standard action items that trigger events when clicked, as selectable items with checkmarks to indicate state, or as parent items that open sub-menus when activated." class="paragraph" />
+<engine:Label text="The component supports full keyboard navigation with Up/Down arrow keys to move between items, and Left/Right arrow keys to navigate into or out of sub-menus (respecting text direction)." class="paragraph" />
+<engine:Label text="When a MenuItem has a sub-menu attached, a small caret icon appears automatically as a visual indicator. The sub-menu opens on click or hover, and can be navigated with keyboard controls." class="paragraph note" />
+
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="label" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="icon" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="shortcut" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="selectable" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="value" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="active" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="subMenu" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Menu" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="hasSubMenu" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="clickable" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Pressable" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="new Pressable(OnClick)" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic Menu Items" class="paragraph" />
+<engine:Label text="Standard menu items with labels, icons, and shortcuts" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;ui:Menu&gt;&#10;    &lt;ui:MenuItem label=&quot;New&quot; icon=&quot;file&quot; shortcut=&quot;Ctrl+N&quot; /&gt;&#10;    &lt;ui:MenuItem label=&quot;Open&quot; icon=&quot;folder-open&quot; shortcut=&quot;Ctrl+O&quot; /&gt;&#10;    &lt;ui:MenuItem label=&quot;Recent Files&quot; icon=&quot;clock&quot; /&gt;&#10;&lt;/ui:Menu&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Selectable Menu Items" class="paragraph" />
+<engine:Label text="Toggle menu items for editor preferences" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;ui:Menu&gt;&#10;    &lt;ui:MenuItem label=&quot;Word Wrap&quot; selectable=&quot;true&quot; value=&quot;true&quot; /&gt;&#10;    &lt;ui:MenuItem label=&quot;Show Line Numbers&quot; selectable=&quot;true&quot; value=&quot;false&quot; /&gt;&#10;    &lt;ui:MenuItem label=&quot;Show Minimap&quot; selectable=&quot;true&quot; value=&quot;true&quot; /&gt;&#10;&lt;/ui:Menu&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Menu with Sub-menus" class="paragraph" />
+<engine:Label text="Creating nested menus for hierarchical actions" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var menu = new Menu();&#10;&#10;// Create a parent item with sub-menu&#10;var viewItem = new MenuItem { label = &quot;View&quot;, icon = &quot;eye&quot; };&#10;var viewSubMenu = new Menu();&#10;viewSubMenu.Add(new MenuItem { label = &quot;Zoom In&quot;, shortcut = &quot;Ctrl++&quot; });&#10;viewSubMenu.Add(new MenuItem { label = &quot;Zoom Out&quot;, shortcut = &quot;Ctrl+-&quot; });&#10;viewSubMenu.Add(new MenuDivider());&#10;viewSubMenu.Add(new MenuItem { label = &quot;Reset Zoom&quot;, shortcut = &quot;Ctrl+0&quot; });&#10;viewItem.subMenu = viewSubMenu;&#10;&#10;menu.Add(viewItem);" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Handling Menu Item Actions" class="paragraph" />
+<engine:Label text="Responding to menu item interactions and state changes" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var menu = new Menu();&#10;&#10;// Create item and handle selection&#10;var saveItem = new MenuItem { label = &quot;Save&quot;, icon = &quot;save&quot;, shortcut = &quot;Ctrl+S&quot; };&#10;saveItem.RegisterCallback&lt;ActionTriggeredEvent&gt;(evt =&gt; {&#10;    SaveDocument();&#10;    Debug.Log(&quot;Document saved&quot;);&#10;});&#10;&#10;// Create toggleable item and handle state changes&#10;var gridItem = new MenuItem { label = &quot;Show Grid&quot;, selectable = true };&#10;gridItem.RegisterValueChangedCallback(evt =&gt; {&#10;    SetGridVisible(evt.newValue);&#10;    Debug.Log($&quot;Grid visibility: {evt.newValue}&quot;);&#10;});&#10;&#10;menu.Add(saveItem);&#10;menu.Add(gridItem);" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

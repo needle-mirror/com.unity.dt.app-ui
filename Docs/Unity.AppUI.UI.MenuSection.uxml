@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.MenuSection" class="main">
+        <engine:Label text="MenuSection" class="title" />
+        <engine:Label text="A labeled section within a menu that groups related menu items" class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Navigation" class="shield-value navigation" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="MenuSection is a container element designed to organize menu items into logical groups with optional section headings. This helps users understand the relationship between different menu items and improves menu scanability." class="paragraph" />
+<engine:Label text="Each section can display a title at the top, followed by any number of menu items. Sections are commonly used in larger menus to create visual hierarchy and group related functionality." class="paragraph" />
+<engine:Label text="Sections have picking mode set to ignore by default, making them non-interactive containers. The title is automatically hidden when not set or empty." class="paragraph" />
+<engine:Label text="Tip: Combine MenuSection with MenuDivider to create clear visual separation between different functional areas of your menu." class="paragraph tip" />
+
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="title" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic Menu Section" class="paragraph" />
+<engine:Label text="Organizing menu items into logical sections" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;ui:Menu&gt;&#10;    &lt;ui:MenuSection title=&quot;Edit&quot;&gt;&#10;        &lt;ui:MenuItem label=&quot;Undo&quot; icon=&quot;undo&quot; shortcut=&quot;Ctrl+Z&quot; /&gt;&#10;        &lt;ui:MenuItem label=&quot;Redo&quot; icon=&quot;redo&quot; shortcut=&quot;Ctrl+Y&quot; /&gt;&#10;    &lt;/ui:MenuSection&gt;&#10;    &lt;ui:MenuDivider /&gt;&#10;    &lt;ui:MenuSection title=&quot;Clipboard&quot;&gt;&#10;        &lt;ui:MenuItem label=&quot;Cut&quot; icon=&quot;scissors&quot; shortcut=&quot;Ctrl+X&quot; /&gt;&#10;        &lt;ui:MenuItem label=&quot;Copy&quot; icon=&quot;copy&quot; shortcut=&quot;Ctrl+C&quot; /&gt;&#10;        &lt;ui:MenuItem label=&quot;Paste&quot; icon=&quot;clipboard&quot; shortcut=&quot;Ctrl+V&quot; /&gt;&#10;    &lt;/ui:MenuSection&gt;&#10;&lt;/ui:Menu&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Section Without Title" class="paragraph" />
+<engine:Label text="Using sections for structure without always showing titles" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;ui:Menu&gt;&#10;    &lt;ui:MenuSection&gt;&#10;        &lt;ui:MenuItem label=&quot;New Window&quot; /&gt;&#10;        &lt;ui:MenuItem label=&quot;New Tab&quot; /&gt;&#10;    &lt;/ui:MenuSection&gt;&#10;    &lt;ui:MenuDivider /&gt;&#10;    &lt;ui:MenuSection title=&quot;Tools&quot;&gt;&#10;        &lt;ui:MenuItem label=&quot;Settings&quot; icon=&quot;settings&quot; /&gt;&#10;        &lt;ui:MenuItem label=&quot;Extensions&quot; icon=&quot;puzzle&quot; /&gt;&#10;    &lt;/ui:MenuSection&gt;&#10;&lt;/ui:Menu&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Creating Sections Programmatically" class="paragraph" />
+<engine:Label text="Building a structured menu with sections in code" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var menu = new Menu();&#10;&#10;// Create first section&#10;var editSection = new MenuSection { title = &quot;Edit&quot; };&#10;editSection.Add(new MenuItem { label = &quot;Undo&quot;, shortcut = &quot;Ctrl+Z&quot; });&#10;editSection.Add(new MenuItem { label = &quot;Redo&quot;, shortcut = &quot;Ctrl+Y&quot; });&#10;menu.Add(editSection);&#10;&#10;// Add separator&#10;menu.Add(new MenuDivider());&#10;&#10;// Create second section&#10;var viewSection = new MenuSection { title = &quot;View&quot; };&#10;viewSection.Add(new MenuItem { label = &quot;Zoom In&quot;, shortcut = &quot;Ctrl++&quot; });&#10;viewSection.Add(new MenuItem { label = &quot;Zoom Out&quot;, shortcut = &quot;Ctrl+-&quot; });&#10;viewSection.Add(new MenuItem { label = &quot;Full Screen&quot;, shortcut = &quot;F11&quot; });&#10;menu.Add(viewSection);" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Complex Menu Structure" class="paragraph" />
+<engine:Label text="Building a menu with dynamic content and multiple section types" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var menu = new Menu();&#10;&#10;// Recent files section&#10;var recentSection = new MenuSection { title = &quot;Recent Files&quot; };&#10;for (int i = 0; i &lt; 5; i++)&#10;{&#10;    recentSection.Add(new MenuItem {&#10;        label = $&quot;Document_{i}.txt&quot;,&#10;        icon = &quot;file&quot;&#10;    });&#10;}&#10;menu.Add(recentSection);&#10;&#10;menu.Add(new MenuDivider());&#10;&#10;// Settings section with toggles&#10;var settingsSection = new MenuSection { title = &quot;Settings&quot; };&#10;settingsSection.Add(new MenuItem {&#10;    label = &quot;Auto-Save&quot;,&#10;    selectable = true,&#10;    value = true&#10;});&#10;settingsSection.Add(new MenuItem {&#10;    label = &quot;Show Tooltips&quot;,&#10;    selectable = true,&#10;    value = true&#10;});&#10;menu.Add(settingsSection);" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

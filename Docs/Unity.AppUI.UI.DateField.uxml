@@ -1,267 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <engine:UXML
-  xmlns:engine="UnityEngine.UIElements"
-  xmlns:appui="Unity.AppUI.UI"
-  xmlns:navigation="Unity.AppUI.Navigation"
->
-  <engine:VisualElement name="Unity.AppUI.UI.DateField" class="main">
-    <engine:Label text="DateField" class="title" />
-    <engine:Label
-      text="A form input control that allows users to select a date through text input or a calendar picker interface."
-      class="subtitle"
-    />
-    <engine:Label text="input" class="category" />
-    <engine:VisualElement class="content">
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="overview">
-          <engine:Label
-            text="The DateField component combines a text input with a calendar picker to provide users with flexible date selection capabilities. Users can either type the date directly in a standardized format or click the calendar icon to visually select a date from a popup calendar interface."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="The component supports different sizes to fit various layout needs and includes validation capabilities to ensure date inputs meet specific requirements."
-            class="parapgraph"
-          />
-          <engine:Label text="Key features:" class="parapgraph features-list" />
-          <engine:Label
-            text="• Direct text input with format validation
-• Calendar picker interface
-• Keyboard navigation support
-• Customizable date formatting
-• Size variants
-• Value validation"
-            class="parapgraph"
-          />
-          <engine:Label
-            text="NOTE: The DateField component follows a standardized date format by default (yyyy-MM-dd) but can be customized using the formatString property."
-            class="parapgraph note"
-          />
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.DateField" class="main">
+        <engine:Label text="DateField" class="title" />
+        <engine:Label text="A form input control that allows users to select a date through text input or a calendar picker interface." class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Input" class="shield-value input" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
         </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="props">
-          <engine:VisualElement class="prop">
-            <engine:Label text="size" class="prop-name" />
-            <engine:Label text="Size" class="prop-type" />
-            <engine:Label text="Size.M" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="Controls the size variant of the DateField. Available options are defined in the Size enum."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Different size variants can be set in UXML:"
-                  class="parapgraph"
-                />
-                <engine:Label
-                  text="Small size variant"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='&lt;DateField size="S" /&gt;'
-                  class="code"
-                />
-                <engine:Label
-                  text="Medium size variant (default)"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='&lt;DateField size="M" /&gt;'
-                  class="code"
-                />
-                <engine:Label
-                  text="Large size variant"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='&lt;DateField size="L" /&gt;'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="invalid" class="prop-name" />
-            <engine:Label text="bool" class="prop-type" />
-            <engine:Label text="false" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="Indicates whether the current value is invalid. This can be set manually or will be updated automatically when using the validateValue function."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Manually setting invalid state"
-                  class="scenario-description"
-                />
-                <engine:Label text="dateField.invalid = true;" class="code" />
-                <engine:Label
-                  text="Using validation function to automatically set invalid state"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="dateField.validateValue = (date) =&gt; date &gt; Date.now;"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="value" class="prop-name" />
-            <engine:Label text="Date" class="prop-type" />
-            <engine:Label text="Date.now" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The current selected date value. Can be set programmatically or will update when user selects a date."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Setting date programmatically"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="dateField.value = new Date(2024, 1, 1);"
-                  class="code"
-                />
-                <engine:Label
-                  text="Handling date change events"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='dateField.RegisterValueChangedCallback(evt =&gt; {
-    Debug.Log($"Date changed from {evt.previousValue} to {evt.newValue}");
-});'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="formatString" class="prop-name" />
-            <engine:Label text="string" class="prop-type" />
-            <engine:Label text="yyyy-MM-dd" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The format string used to display the date in the text input. Uses standard DateTime format strings."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Using US date format"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='dateField.formatString = "MM/dd/yyyy";'
-                  class="code"
-                />
-                <engine:Label
-                  text="Using European date format"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='dateField.formatString = "dd.MM.yyyy";'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="validateValue" class="prop-name" />
-            <engine:Label text="Func&lt;Date, bool&gt;" class="prop-type" />
-            <engine:Label text="null" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="False" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="A function that validates the current date value. Should return true if the date is valid, false otherwise."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Validating that only future dates are allowed"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="dateField.validateValue = (date) =&gt; {
-    var now = Date.now;
-    return date &gt;= now; // Only allow future dates
-};"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="examples">
-          <engine:VisualElement class="example">
-            <engine:Label text="Basic usage in UXML:" class="parapgraph" />
-            <engine:Label
-              text='&lt;DateField name="birthDate" /&gt;'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Customized DateField with validation:"
-              class="parapgraph"
-            />
-            <engine:Label
-              text='var dateField = new DateField {
-    formatString = "MM/dd/yyyy",
-    size = Size.L
-};
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="The DateField component combines a text input with a calendar picker to provide users with flexible date selection capabilities. Users can either type the date directly in a standardized format or click the calendar icon to visually select a date from a popup calendar interface." class="paragraph" />
+<engine:Label text="The component supports different sizes to fit various layout needs and includes validation capabilities to ensure date inputs meet specific requirements." class="paragraph" />
+<engine:Label text="Key features:" class="paragraph features-list" />
+<engine:Label text="• Direct text input with format validation&#10;• Calendar picker interface&#10;• Keyboard navigation support&#10;• Customizable date formatting&#10;• Size variants&#10;• Value validation" class="paragraph" />
+<engine:Label text="NOTE: The DateField component follows a standardized date format by default (yyyy-MM-dd) but can be customized using the formatString property." class="paragraph note" />
 
-dateField.validateValue = (date) =&gt; {
-    var now = Date.now;
-    var minAge = new Date(now.Year - 18, now.Month, now.Day);
-    return date &lt;= minAge; // Validate age &gt;= 18
-};
+                </engine:VisualElement>
+            </engine:VisualElement>
 
-dateField.RegisterValueChangedCallback(evt =&gt; {
-    Debug.Log($"Selected date: {evt.newValue}");
-});'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Complete UXML example with various properties:"
-              class="parapgraph"
-            />
-            <engine:Label
-              text='&lt;DateField
-    name="appointmentDate"
-    size="M"
-    format-string="yyyy-MM-dd"
-    value="2024-01-01"
-    class="appointment-picker" /&gt;'
-              class="code"
-            />
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="size" class="prop-name-value" selectable="true" />
     </engine:VisualElement>
-  </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Size" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Size.M" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="invalid" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="value" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Date" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Date.now" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="formatString" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="yyyy-MM-dd" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="validateValue" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Func&lt;Date, bool&gt;" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic usage in UXML:" class="paragraph" />
+<appui:CodeBlock show-lines="true" code="&lt;DateField name=&quot;birthDate&quot; /&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Customized DateField with validation:" class="paragraph" />
+<appui:CodeBlock show-lines="true" code="var dateField = new DateField {&#10;    formatString = &quot;MM/dd/yyyy&quot;,&#10;    size = Size.L&#10;};&#10;&#10;dateField.validateValue = (date) =&gt; {&#10;    var now = Date.now;&#10;    var minAge = new Date(now.Year - 18, now.Month, now.Day);&#10;    return date &lt;= minAge; // Validate age &gt;= 18&#10;};&#10;&#10;dateField.RegisterValueChangedCallback(evt =&gt; {&#10;    Debug.Log($&quot;Selected date: {evt.newValue}&quot;);&#10;});" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Complete UXML example with various properties:" class="paragraph" />
+<appui:CodeBlock show-lines="true" code="&lt;DateField&#10;    name=&quot;appointmentDate&quot;&#10;    size=&quot;M&quot;&#10;    format-string=&quot;yyyy-MM-dd&quot;&#10;    value=&quot;2024-01-01&quot;&#10;    class=&quot;appointment-picker&quot; /&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
 </engine:UXML>

@@ -81,9 +81,8 @@
     overflow: hidden;
 }
 
-.appui-popover__container > .appui-popover__resize-handle {
+.appui-resize-handle {
     position: absolute;
-    display: none;
     width: var(--appui-sizing-200);
     height: var(--appui-sizing-200);
     bottom: 0;
@@ -93,9 +92,13 @@
     -unity-background-image-tint-color: var(--appui-foregrounds-50);
 }
 
-.appui-popover__resize-handle:hover,
-.appui-popover__resize-handle:active {
+.appui-resize-handle:hover,
+.appui-resize-handle:active {
     -unity-background-image-tint-color: var(--appui-foregrounds-100);
+}
+
+.appui-popover__container > .appui-popover__resize-handle {
+    display: none;
 }
 
 .appui-popover--resizable > .appui-popover__popover > .appui-popover__container > .appui-popover__resize-handle {

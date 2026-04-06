@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.Panel" class="main">
+        <engine:Label text="Panel" class="title" />
+        <engine:Label text="The root UI container that provides layered architecture for the main interface, popups, notifications, and tooltips." class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Layout" class="shield-value layout" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="The Panel component is the foundational element of any App UI runtime application. It establishes a hierarchical layer system that organizes different UI contexts, ensuring proper z-ordering and isolation between the main interface, popup elements, notifications, and tooltips." class="paragraph" />
+<engine:Label text="Key features:" class="paragraph feature-list" />
+<engine:Label text="• Four distinct UI layers: main container, popup container, notification container, and tooltip container&#10;• Global context providers for theme, scale, language, and layout direction&#10;• Automatic DPI scaling support for different displays&#10;• Integrated tooltip management system&#10;• RTL (Right-to-Left) layout support&#10;• Localization integration with Unity Localization package" class="paragraph" />
+<engine:Label text="The Panel automatically manages contexts that are inherited by all child elements, making it easy to apply consistent theming, scaling, and localization throughout your application." class="paragraph" />
+<engine:Label text="NOTE: Each application should have one root Panel element. Additional Panel elements can be nested but will not act as root panels." class="paragraph note" />
+
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="lang" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="&quot;en&quot;" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="scale" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="&quot;medium&quot;" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="theme" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="&quot;dark&quot;" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="layoutDirection" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Dir" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Dir.Ltr" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="preferredTooltipPlacement" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="PopoverPlacement" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Tooltip.defaultPlacement" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="tooltipDelayMs" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="int" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="TooltipManipulator.defaultDelayMs" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="forceUseTooltipSystem" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic panel setup:" class="paragraph" />
+<engine:Label text="Creating a basic application with a Panel root" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;Panel&gt;&#10;    &lt;Box&gt;&#10;        &lt;Heading&gt;Welcome to App UI&lt;/Heading&gt;&#10;        &lt;Text text=&quot;Main content goes here&quot; /&gt;&#10;    &lt;/Box&gt;&#10;&lt;/Panel&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Panel with custom theme and scale:" class="paragraph" />
+<engine:Label text="Configuring panel appearance and scale" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;Panel theme=&quot;light&quot; scale=&quot;large&quot; lang=&quot;en&quot;&gt;&#10;    &lt;Box&gt;&#10;        &lt;Text text=&quot;This panel uses a light theme with large scale&quot; /&gt;&#10;    &lt;/Box&gt;&#10;&lt;/Panel&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Accessing panel layers programmatically:" class="paragraph" />
+<engine:Label text="Using panel utility methods to access UI layers" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="// Get the panel from any element in the hierarchy&#10;var notificationLayer = Panel.FindNotificationLayer(myElement);&#10;var popupLayer = Panel.FindPopupLayer(myElement);&#10;var tooltipLayer = Panel.FindTooltipLayer(myElement);&#10;&#10;// Add a notification to the notification layer&#10;var snackbar = new Snackbar(&quot;Operation completed&quot;);&#10;notificationLayer.Add(snackbar);&#10;snackbar.Show();" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="RTL layout support:" class="paragraph" />
+<engine:Label text="Setting up a panel for right-to-left languages" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;Panel layout-direction=&quot;Rtl&quot; lang=&quot;ar&quot; theme=&quot;dark&quot;&gt;&#10;    &lt;Box&gt;&#10;        &lt;Text text=&quot;مرحبا بكم في واجهة المستخدم&quot; /&gt;&#10;    &lt;/Box&gt;&#10;&lt;/Panel&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

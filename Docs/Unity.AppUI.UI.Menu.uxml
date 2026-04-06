@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.Menu" class="main">
+        <engine:Label text="Menu" class="title" />
+        <engine:Label text="A container for menu items organized in a vertical list" class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Navigation" class="shield-value navigation" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="The Menu component is a container that displays a vertical list of menu items, sections, and dividers. It provides a structured way to present actions, navigation options, or selectable items to users." class="paragraph" />
+<engine:Label text="Menus are commonly used in context menus, dropdown menus, navigation sidebars, and command palettes. They support keyboard navigation, nested sub-menus, and scrolling for long lists of items." class="paragraph" />
+<engine:Label text="The Menu component automatically handles focus management and keyboard navigation (Up/Down arrows) between menu items, making it fully keyboard accessible." class="paragraph" />
+<engine:Label text="Note: Menu has picking mode set to ignore by default, but is focusable to support keyboard navigation." class="paragraph note" />
+
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic Menu Structure" class="paragraph" />
+<engine:Label text="Creating a simple file menu with items and a divider" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;ui:Menu&gt;&#10;    &lt;ui:MenuItem label=&quot;New File&quot; icon=&quot;file&quot; /&gt;&#10;    &lt;ui:MenuItem label=&quot;Open&quot; icon=&quot;folder-open&quot; shortcut=&quot;Ctrl+O&quot; /&gt;&#10;    &lt;ui:MenuItem label=&quot;Save&quot; icon=&quot;save&quot; shortcut=&quot;Ctrl+S&quot; /&gt;&#10;    &lt;ui:MenuDivider /&gt;&#10;    &lt;ui:MenuItem label=&quot;Exit&quot; icon=&quot;exit&quot; /&gt;&#10;&lt;/ui:Menu&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Menu with Sections" class="paragraph" />
+<engine:Label text="Organizing menu items into titled sections" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="&lt;ui:Menu&gt;&#10;    &lt;ui:MenuSection title=&quot;Edit&quot;&gt;&#10;        &lt;ui:MenuItem label=&quot;Undo&quot; shortcut=&quot;Ctrl+Z&quot; /&gt;&#10;        &lt;ui:MenuItem label=&quot;Redo&quot; shortcut=&quot;Ctrl+Y&quot; /&gt;&#10;    &lt;/ui:MenuSection&gt;&#10;    &lt;ui:MenuDivider /&gt;&#10;    &lt;ui:MenuSection title=&quot;Selection&quot;&gt;&#10;        &lt;ui:MenuItem label=&quot;Select All&quot; shortcut=&quot;Ctrl+A&quot; /&gt;&#10;        &lt;ui:MenuItem label=&quot;Deselect&quot; /&gt;&#10;    &lt;/ui:MenuSection&gt;&#10;&lt;/ui:Menu&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Creating a Menu programmatically" class="paragraph" />
+<engine:Label text="Building a menu with code and managing sub-menus" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="var menu = new Menu();&#10;&#10;// Add regular items&#10;menu.Add(new MenuItem { label = &quot;Cut&quot;, icon = &quot;scissors&quot;, shortcut = &quot;Ctrl+X&quot; });&#10;menu.Add(new MenuItem { label = &quot;Copy&quot;, icon = &quot;copy&quot;, shortcut = &quot;Ctrl+C&quot; });&#10;menu.Add(new MenuItem { label = &quot;Paste&quot;, icon = &quot;clipboard&quot;, shortcut = &quot;Ctrl+V&quot; });&#10;&#10;// Add a divider&#10;menu.Add(new MenuDivider());&#10;&#10;// Add a selectable item&#10;var item = new MenuItem { label = &quot;Show Grid&quot;, selectable = true, value = true };&#10;menu.Add(item);&#10;&#10;// Close all sub-menus when needed&#10;menu.CloseSubMenus();" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

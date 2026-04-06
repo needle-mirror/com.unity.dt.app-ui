@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "2.2.0-pre.7",
+  "version": "2.2.0-pre.8",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -77,15 +77,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Removed\n\n- Removed Android Activity (AppUIActivity, AppUIGameActivity) and AndroidManifest.xml from the App UI package. The Android platform integration now operates without a custom Activity or manifest.\n\n### Added\n\n- Added **AI Agent Skills** pane in **Unity Package Manager UI**: You can now install/remove App UI skills for AI Agents in your workspace from the Package Manager window.\n- Added support of Unity 6000.6\n\n### Changed\n\n- Streamlined AI skill content by removing duplicated sections from the main skill, consolidating reference documentation pointers, and fixing a Task/TodoItem naming conflict in the MVVM example\n- Improved AI skill descriptions with richer trigger phrases for more reliable skill activation"
+    "changelog": "### Added\n\n- Added `sizeModifier` callback property to `ResizeHandle` to allow custom size adjustments during resize.\n- Added `UxmlTraits` support for `ResizeHandle` component.\n- Added `SetPosition` and `SetSize` methods to `Popover` for programmatic positioning and sizing.\n- Added `movable` property to `Popover` UI elements.\n- Added `movable` property to `DialogTrigger` to support movable popovers via UXML.\n\n### Changed\n\n- `AnchorPopup.RefreshPosition` is now `public` instead of `protected`.\n- `ColorField` popover is now movable by default.\n- Default `resizeDirection` for `DialogTrigger` changed from `Vertical` to `Free`.\n\n### Fixed\n\n- Added missing `[CreateProperty]` attribute on `clickable` property across all pressable components to fix runtime data binding for `clickable.command` path (UUM-138492)"
   },
   "upmCi": {
-    "footprint": "ac56579cbbe2d59be2f9cc9059ebcd79b95f2342"
+    "footprint": "97abc29329c8cf0d2687b663a6969b7c7d47ebed"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.2/manual/index.html",
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "e278d0e479e2d63220d2f41c459814ae26de069b"
+    "revision": "17925a19f1dc440971640f81f81feee835b0deee"
   }
 }

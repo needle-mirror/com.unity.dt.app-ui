@@ -277,6 +277,10 @@ namespace Unity.AppUI.UI
     /// </summary>
     public sealed class Popover : AnchorPopup<Popover>
     {
+        bool m_HasBeenManuallyMoved;
+
+        bool m_HasBeenManuallyResized;
+
         /// <summary>
         /// Enable or disable the blocking of outside click events.
         /// </summary>
@@ -284,6 +288,18 @@ namespace Unity.AppUI.UI
         {
             get => popover.modalBackdrop;
             set => popover.modalBackdrop = value;
+        }
+
+        /// <summary>
+        /// `True` if the popup is movable by dragging, `False` otherwise. Default is `False`.
+        /// </summary>
+        /// <remarks>
+        /// When the Popup is set to movable, it can be dragged by clicking and dragging the popover element.
+        /// </remarks>
+        public bool movable
+        {
+            get => popover.movable;
+            set => popover.movable = value;
         }
 
         /// <summary>
@@ -308,6 +324,17 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// Optional callback invoked during resize to modify the size before it is applied to the target.
+        /// The first parameter is the computed new size, the second is the original size at drag start.
+        /// The callback must return the adjusted size to apply.
+        /// </summary>
+        public Func<Vector2, Vector2, Vector2> resizeSizeModifier
+        {
+            get => popover.resizeHandle.sizeModifier;
+            set => popover.resizeHandle.sizeModifier = value;
+        }
+
+        /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="referenceView">The view used as context provider for the Popover.</param>
@@ -315,9 +342,22 @@ namespace Unity.AppUI.UI
         /// <param name="contentView">The content that will appear inside this popup.</param>
         Popover(VisualElement referenceView, PopoverVisualElement popover, VisualElement contentView)
             : base(referenceView, popover, contentView)
-        { }
+        {
+            popover.moveStarted += OnMoveStarted;
+            popover.resizeHandle.resizeStarted += OnResizeStarted;
+        }
 
         PopoverVisualElement popover => (PopoverVisualElement)view;
+
+        void OnMoveStarted()
+        {
+            m_HasBeenManuallyMoved = true;
+        }
+
+        void OnResizeStarted(ResizeHandle handle)
+        {
+            m_HasBeenManuallyResized = true;
+        }
 
         /// <summary>
         /// Build a new <see cref="Popover"/> instance.
@@ -385,7 +425,7 @@ namespace Unity.AppUI.UI
         /// <inheritdoc />
         protected override bool ShouldRefreshPosition()
         {
-            return !resizable;
+            return !m_HasBeenManuallyMoved && !m_HasBeenManuallyResized;
         }
 
         /// <summary>
@@ -400,6 +440,20 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// Set the popup as movable by dragging.
+        /// </summary>
+        /// <param name="isMovable"> `True` to activate the feature, `False` otherwise.</param>
+        /// <returns> The popover instance.</returns>
+        /// <seealso cref="movable"/>
+        public Popover SetMovable(bool isMovable)
+        {
+            if (!isMovable || !movable)
+                m_HasBeenManuallyMoved = false;
+            movable = isMovable;
+            return this;
+        }
+
+        /// <summary>
         /// Set the popup as resizable.
         /// </summary>
         /// <param name="isResizable"> `True` to activate the feature, `False` otherwise.</param>
@@ -407,6 +461,8 @@ namespace Unity.AppUI.UI
         /// <seealso cref="resizable"/>
         public Popover SetResizable(bool isResizable)
         {
+            if (!isResizable || !resizable)
+                m_HasBeenManuallyResized = false;
             resizable = isResizable;
             return this;
         }
@@ -419,6 +475,59 @@ namespace Unity.AppUI.UI
         public Popover SetResizeDirection(Draggable.DragDirection direction)
         {
             resizeDirection = direction;
+            return this;
+        }
+
+        /// <summary>
+        /// Set a callback to modify the size during resize before it is applied to the target.
+        /// </summary>
+        /// <param name="modifier"> A function that receives the computed new size and the original size at drag start,
+        /// and returns the adjusted size. Pass <c>null</c> to remove any previously set modifier.</param>
+        /// <returns> The popover instance.</returns>
+        /// <seealso cref="resizeSizeModifier"/>
+        public Popover SetResizeSizeModifier(Func<Vector2, Vector2, Vector2> modifier)
+        {
+            resizeSizeModifier = modifier;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the position of the popover programmatically.
+        /// </summary>
+        /// <remarks>
+        /// This method only works when <see cref="movable"/> is <c>true</c>.
+        /// The position is clamped to the container bounds.
+        /// Calling this method sets the manual move flag, which prevents automatic position refresh.
+        /// </remarks>
+        /// <param name="position"> The desired position (left, top) in pixels.</param>
+        /// <returns> The popover instance.</returns>
+        public Popover SetPosition(Vector2 position)
+        {
+            if (!movable)
+                return this;
+
+            m_HasBeenManuallyMoved = true;
+            popover.SetPosition(position);
+            return this;
+        }
+
+        /// <summary>
+        /// Set the size of the popover content programmatically.
+        /// </summary>
+        /// <remarks>
+        /// This method only works when <see cref="resizable"/> is <c>true</c>.
+        /// The size is clamped so the popover fits within the container bounds.
+        /// Calling this method sets the manual resize flag, which prevents automatic position refresh.
+        /// </remarks>
+        /// <param name="size"> The desired size (width, height) in pixels.</param>
+        /// <returns> The popover instance.</returns>
+        public Popover SetSize(Vector2 size)
+        {
+            if (!resizable)
+                return this;
+
+            m_HasBeenManuallyResized = true;
+            popover.SetSize(size);
             return this;
         }
 
@@ -497,9 +606,24 @@ namespace Unity.AppUI.UI
 
             public const string resizableUssClassName = ussClassName + "--resizable";
 
+            public const string movableUssClassName = ussClassName + "--movable";
+
             readonly VisualElement m_ContentContainer;
 
+            readonly VisualElement m_ResizeContent;
+
             PopoverPlacement m_Placement = PopoverPlacement.Top;
+
+            Dragger m_Dragger;
+
+            Vector2 m_DragStartLeft;
+
+            Vector2 m_DragStartPointer;
+
+            /// <summary>
+            /// Event invoked when the user starts moving the popover by dragging.
+            /// </summary>
+            public event Action moveStarted;
 
             /// <summary>
             /// The resize handle of the popover.
@@ -553,6 +677,10 @@ namespace Unity.AppUI.UI
 
                 m_ContentContainer.Add(content);
 
+                // Reset any inline size styles from a previous resize so the layout is determined by stylesheets
+                content.style.width = StyleKeyword.Null;
+                content.style.height = StyleKeyword.Null;
+
                 resizeHandle = new ResizeHandle(content)
                 {
                     name = resizeHandleUssClassName,
@@ -562,7 +690,11 @@ namespace Unity.AppUI.UI
                 resizeHandle.AddToClassList(resizeHandleUssClassName);
                 m_ContentContainer.hierarchy.Add(resizeHandle);
 
+                m_ResizeContent = content;
+                popoverElement.RegisterCallback<GeometryChangedEvent>(OnPopoverGeometryChanged);
+
                 resizable = false;
+                movable = false;
 
                 // auto-set delegate focus if there are focusable elements in the content
                 foreach (var element in m_ContentContainer.Query().Build())
@@ -624,6 +756,170 @@ namespace Unity.AppUI.UI
             {
                 get => ClassListContains(resizableUssClassName);
                 set => EnableInClassList(resizableUssClassName, value);
+            }
+
+            /// <summary>
+            /// Whether the popover is movable by dragging.
+            /// </summary>
+            public bool movable
+            {
+                get => ClassListContains(movableUssClassName);
+                set
+                {
+                    var changed = movable != value;
+                    EnableInClassList(movableUssClassName, value);
+                    if (!changed)
+                        return;
+
+                    if (value)
+                    {
+                        m_Dragger = new Dragger(OnDragStarted, OnDragging, OnDragEnded, OnDragCanceled);
+                        popoverElement.pickingMode = PickingMode.Position;
+                        popoverElement.AddManipulator(m_Dragger);
+                    }
+                    else if (m_Dragger != null)
+                    {
+                        popoverElement.RemoveManipulator(m_Dragger);
+                        popoverElement.pickingMode = PickingMode.Ignore;
+                        m_Dragger = null;
+                    }
+                }
+            }
+
+            void OnDragStarted(PointerMoveEvent evt)
+            {
+                m_DragStartLeft = new Vector2(popoverElement.resolvedStyle.left, popoverElement.resolvedStyle.top);
+                m_DragStartPointer = (Vector2)evt.position;
+                moveStarted?.Invoke();
+            }
+
+            void OnDragging(PointerMoveEvent evt)
+            {
+                var delta = (Vector2)evt.position - m_DragStartPointer;
+                var newLeft = m_DragStartLeft.x + delta.x;
+                var newTop = m_DragStartLeft.y + delta.y;
+
+                ClampToContainerBounds(ref newLeft, ref newTop);
+
+                popoverElement.style.left = newLeft;
+                popoverElement.style.top = newTop;
+            }
+
+            void OnDragEnded(PointerUpEvent evt)
+            {
+                // drag ended, nothing special to do
+            }
+
+            void OnDragCanceled()
+            {
+                popoverElement.style.left = m_DragStartLeft.x;
+                popoverElement.style.top = m_DragStartLeft.y;
+            }
+
+            void ClampToContainerBounds(ref float left, ref float top)
+            {
+                var container = parent;
+                if (container == null)
+                    return;
+
+                var containerBounds = container.contentRect;
+                var popoverWidth = popoverElement.resolvedStyle.width;
+                var popoverHeight = popoverElement.resolvedStyle.height;
+
+                if (float.IsNaN(popoverWidth) || float.IsNaN(popoverHeight))
+                    return;
+
+                var minLeft = containerBounds.xMin;
+                var maxLeft = containerBounds.xMax - popoverWidth;
+                var minTop = containerBounds.yMin;
+                var maxTop = containerBounds.yMax - popoverHeight;
+
+                left = Mathf.Clamp(left, minLeft, Mathf.Max(minLeft, maxLeft));
+                top = Mathf.Clamp(top, minTop, Mathf.Max(minTop, maxTop));
+            }
+
+            /// <summary>
+            /// Set the position of the popover element, clamped to the container bounds.
+            /// </summary>
+            /// <param name="position"> The desired position (left, top) in pixels.</param>
+            public void SetPosition(Vector2 position)
+            {
+                var left = position.x;
+                var top = position.y;
+                ClampToContainerBounds(ref left, ref top);
+                popoverElement.style.left = left;
+                popoverElement.style.top = top;
+            }
+
+            /// <summary>
+            /// Set the size of the resize content element, clamped so the popover fits within the container.
+            /// </summary>
+            /// <param name="size"> The desired size (width, height) in pixels.</param>
+            public void SetSize(Vector2 size)
+            {
+                if (m_ResizeContent == null)
+                    return;
+
+                var container = parent;
+                if (container == null)
+                {
+                    m_ResizeContent.style.width = size.x;
+                    m_ResizeContent.style.height = size.y;
+                    return;
+                }
+
+                m_ResizeContent.style.width = size.x;
+                m_ResizeContent.style.height = size.y;
+
+                // Clamping will be handled by OnPopoverGeometryChanged when the layout updates
+            }
+
+            void OnPopoverGeometryChanged(GeometryChangedEvent evt)
+            {
+                var container = parent;
+                if (container == null || m_ResizeContent == null)
+                    return;
+
+                var containerBounds = container.contentRect;
+                var popoverLeft = popoverElement.resolvedStyle.left;
+                var popoverTop = popoverElement.resolvedStyle.top;
+                var popoverWidth = evt.newRect.width;
+                var popoverHeight = evt.newRect.height;
+
+                if (float.IsNaN(popoverWidth) || float.IsNaN(popoverHeight) ||
+                    float.IsNaN(popoverLeft) || float.IsNaN(popoverTop))
+                    return;
+
+                // Clamp the content size so the popover fits within the container
+                var maxWidth = containerBounds.width - popoverLeft;
+                var maxHeight = containerBounds.height - popoverTop;
+
+                var needClampW = popoverWidth > maxWidth && maxWidth > 0;
+                var needClampH = popoverHeight > maxHeight && maxHeight > 0;
+
+                if (!needClampW && !needClampH)
+                    return;
+
+                var contentWidth = m_ResizeContent.resolvedStyle.width;
+                var contentHeight = m_ResizeContent.resolvedStyle.height;
+                var clampedWidth = needClampW ? contentWidth - (popoverWidth - maxWidth) : contentWidth;
+                var clampedHeight = needClampH ? contentHeight - (popoverHeight - maxHeight) : contentHeight;
+
+                if (resizeHandle.sizeModifier != null)
+                {
+                    var currentSize = new Vector2(contentWidth, contentHeight);
+                    var clampedSize = new Vector2(clampedWidth, clampedHeight);
+                    var adjusted = resizeHandle.sizeModifier.Invoke(clampedSize, currentSize);
+                    m_ResizeContent.style.width = adjusted.x;
+                    m_ResizeContent.style.height = adjusted.y;
+                }
+                else
+                {
+                    if (needClampW)
+                        m_ResizeContent.style.width = clampedWidth;
+                    if (needClampH)
+                        m_ResizeContent.style.height = clampedHeight;
+                }
             }
 
             void RefreshPlacement()

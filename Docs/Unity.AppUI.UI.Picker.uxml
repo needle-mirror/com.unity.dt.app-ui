@@ -1,291 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
 <engine:UXML
-  xmlns:engine="UnityEngine.UIElements"
-  xmlns:appui="Unity.AppUI.UI"
-  xmlns:navigation="Unity.AppUI.Navigation"
->
-  <engine:VisualElement name="Unity.AppUI.UI.Picker" class="main">
-    <engine:Label text="Picker" class="title" />
-    <engine:Label
-      text="A customizable UI component for selecting one or multiple items from a list"
-      class="subtitle"
-    />
-    <engine:Label text="input" class="category" />
-    <engine:VisualElement class="content">
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="overview">
-          <engine:Label
-            text="The Picker component provides a flexible way to present users with a list of selectable options. It supports both single and multiple selection modes, making it suitable for various use cases."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="When clicked, the Picker displays a menu containing the available options. Users can select items from this menu, and the selection is reflected in the Picker's title area."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="The component is highly customizable through its various properties and can be styled using USS classes. It supports both keyboard navigation and mouse interaction."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="NOTE: The Picker is an abstract base class. For implementation, use concrete classes like Dropdown that inherit from Picker."
-            class="parapgraph note"
-          />
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.Picker" class="main">
+        <engine:Label text="Picker" class="title" />
+        <engine:Label text="A customizable UI component for selecting one or multiple items from a list" class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Input" class="shield-value input" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
         </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="props">
-          <engine:VisualElement class="prop">
-            <engine:Label text="closeOnSelection" class="prop-name" />
-            <engine:Label text="bool" class="prop-type" />
-            <engine:Label text="true" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="Determines whether the picker menu should automatically close when an item is selected."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Keep the picker menu open for multiple selections"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="picker.closeOnSelection = false;
-// Menu will stay open after selection, allowing multiple selections without reopening"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="defaultMessage" class="prop-name" />
-            <engine:Label text="string" class="prop-type" />
-            <engine:Label text='"Select"' class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The message displayed in the picker when no item is selected."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Customize the default placeholder message"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='picker.defaultMessage = "Choose an option...";
-// Changes the default placeholder text'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="selectionType" class="prop-name" />
-            <engine:Label text="PickerSelectionType" class="prop-type" />
-            <engine:Label
-              text="PickerSelectionType.Single"
-              class="prop-value"
-            />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="Defines whether the picker allows single or multiple selection."
-                class="parapgraph"
-              />
-              <engine:Label text="Available values:" class="parapgraph note" />
-              <engine:Label
-                text="- Single: Only one item can be selected at a time"
-                class="parapgraph note"
-              />
-              <engine:Label
-                text="- Multiple: Multiple items can be selected simultaneously"
-                class="parapgraph note"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Enable multiple selection mode"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="picker.selectionType = PickerSelectionType.Multiple;
-// Enables multi-select mode"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="size" class="prop-name" />
-            <engine:Label text="Size" class="prop-type" />
-            <engine:Label text="Size.M" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="Controls the size of the picker component."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Change the picker size to large"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="picker.size = Size.L;
-// Makes the picker larger"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="emphasized" class="prop-name" />
-            <engine:Label text="bool" class="prop-type" />
-            <engine:Label text="false" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="When true, applies an emphasized visual style to the picker."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Enable emphasized mode for stronger visual presence"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="picker.emphasized = true;
-// Applies emphasized styling"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="sourceItems" class="prop-name" />
-            <engine:Label text="IList" class="prop-type" />
-            <engine:Label text="null" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="False" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The collection of items to display in the picker menu."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Set the items to be displayed in the picker"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='var items = new List&lt;string&gt; { "Option 1", "Option 2", "Option 3" };
-picker.sourceItems = items;'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="value" class="prop-name" />
-            <engine:Label text="IEnumerable&lt;int&gt;" class="prop-type" />
-            <engine:Label text="Empty collection" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="False" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="Gets or sets the currently selected item indices."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Set multiple selected items"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text="// Select the first and third items in a multi-select picker
-picker.value = new[] { 0, 2 };"
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="examples">
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Create a basic single-select picker with string items"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='// Create a basic single-select picker
-var picker = new Dropdown();
-picker.sourceItems = new List&lt;string&gt; { "Small", "Medium", "Large" };
-picker.defaultMessage = "Select size...";
-picker.selectedIndex = 1; // Select "Medium" by default'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Create a multi-select picker with custom item binding"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='// Create a multi-select picker with custom binding
-var picker = new Dropdown();
-var items = new List&lt;string&gt; { "Red", "Green", "Blue" };
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="The Picker component provides a flexible way to present users with a list of selectable options. It supports both single and multiple selection modes, making it suitable for various use cases." class="paragraph" />
+<engine:Label text="When clicked, the Picker displays a menu containing the available options. Users can select items from this menu, and the selection is reflected in the Picker&apos;s title area." class="paragraph" />
+<engine:Label text="The component is highly customizable through its various properties and can be styled using USS classes. It supports both keyboard navigation and mouse interaction." class="paragraph" />
+<engine:Label text="NOTE: The Picker is an abstract base class. For implementation, use concrete classes like Dropdown that inherit from Picker." class="paragraph note" />
 
-picker.sourceItems = items;
-picker.selectionType = PickerSelectionType.Multiple;
-picker.bindItem = (item, index) =&gt; {
-    item.label = items[index];
-};
-picker.value = new[] { 0, 2 }; // Select "Red" and "Blue"'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Create a picker with validation and change event handling"
-              class="scenario-description"
-            />
-            <engine:Label
-              text='// Create a picker with validation
-var picker = new Dropdown();
-picker.sourceItems = new List&lt;string&gt; { "Option 1", "Option 2", "Option 3" };
-picker.validateValue = (values) =&gt; {
-    // Require at least one selection
-    return values.Any();
-};
-picker.RegisterValueChangedCallback(evt =&gt; {
-    Debug.Log($"Selection changed: {string.Join(", ", evt.newValue)}");
-});'
-              class="code"
-            />
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="closeOnSelection" class="prop-name-value" selectable="true" />
     </engine:VisualElement>
-  </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="true" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="defaultMessage" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="&quot;Select&quot;" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="selectionType" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="PickerSelectionType" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="PickerSelectionType.Single" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="size" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Size" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Size.M" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="emphasized" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="sourceItems" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="IList" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="defaultValue" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="int[]" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="selectedIndex" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="int" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="-1" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="value" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="IEnumerable&lt;int&gt;" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Empty collection" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="invalid" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="validateValue" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Func&lt;IEnumerable&lt;int&gt;, bool&gt;" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Create a basic single-select picker with string items" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="// Create a basic single-select picker&#10;var picker = new Dropdown();&#10;picker.sourceItems = new List&lt;string&gt; { &quot;Small&quot;, &quot;Medium&quot;, &quot;Large&quot; };&#10;picker.defaultMessage = &quot;Select size...&quot;;&#10;picker.selectedIndex = 1; // Select &quot;Medium&quot; by default" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Create a multi-select picker with custom item binding" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="// Create a multi-select picker with custom binding&#10;var picker = new Dropdown();&#10;var items = new List&lt;string&gt; { &quot;Red&quot;, &quot;Green&quot;, &quot;Blue&quot; };&#10;&#10;picker.sourceItems = items;&#10;picker.selectionType = PickerSelectionType.Multiple;&#10;picker.bindItem = (item, index) =&gt; {&#10;    item.label = items[index];&#10;};&#10;picker.value = new[] { 0, 2 }; // Select &quot;Red&quot; and &quot;Blue&quot;" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Create a picker with validation and change event handling" class="scenario-description" />
+<appui:CodeBlock show-lines="true" code="// Create a picker with validation&#10;var picker = new Dropdown();&#10;picker.sourceItems = new List&lt;string&gt; { &quot;Option 1&quot;, &quot;Option 2&quot;, &quot;Option 3&quot; };&#10;picker.validateValue = (values) =&gt; {&#10;    // Require at least one selection&#10;    return values.Any();&#10;};&#10;picker.RegisterValueChangedCallback(evt =&gt; {&#10;    Debug.Log($&quot;Selection changed: {string.Join(&quot;, &quot;, evt.newValue)}&quot;);&#10;});" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
 </engine:UXML>

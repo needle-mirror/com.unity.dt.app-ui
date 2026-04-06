@@ -1,201 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
 <engine:UXML
-  xmlns:engine="UnityEngine.UIElements"
-  xmlns:appui="Unity.AppUI.UI"
-  xmlns:navigation="Unity.AppUI.Navigation"
->
-  <engine:VisualElement name="Unity.AppUI.UI.SearchBar" class="main">
-    <engine:Label text="SearchBar" class="title" />
-    <engine:Label
-      text="A search input field with a magnifying glass icon that allows users to enter search queries."
-      class="subtitle"
-    />
-    <engine:Label text="input" class="category" />
-    <engine:VisualElement class="content">
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="overview">
-          <engine:Label
-            text="The SearchBar component is a specialized TextField that provides a dedicated interface for search functionality. It comes with a built-in magnifying glass icon and placeholder text, making it instantly recognizable as a search input."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="By default, the SearchBar displays a magnifying glass icon on the left side and includes a 'Search...' placeholder text, providing clear affordance for its purpose."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="The SearchBar inherits from TextField, which means it includes all TextField functionality including validation, size variants, and read-only states."
-            class="parapgraph"
-          />
-          <engine:Label
-            text="SearchBars are commonly used in:"
-            class="parapgraph"
-          />
-          <engine:Label
-            text="- Navigation menus to filter items
-- Data tables to search through records
-- Document libraries to find specific files
-- Any interface where users need to search through content"
-            class="parapgraph"
-          />
+        xmlns:engine="UnityEngine.UIElements"
+        xmlns:appui="Unity.AppUI.UI"
+        xmlns:navigation="Unity.AppUI.Navigation">
+    <engine:VisualElement name="Unity.AppUI.UI.SearchBar" class="main">
+        <engine:Label text="SearchBar" class="title" />
+        <engine:Label text="A search input field with a magnifying glass icon that allows users to enter search queries." class="subtitle" />
+        <engine:VisualElement class="shields">
+            <engine:VisualElement class="shield">
+                <engine:Label text="Type" class="shield-label" />
+                <engine:Label text="Input" class="shield-value input" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="C#" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
+            <engine:VisualElement class="shield">
+                <engine:Label text="UXML" class="shield-label" />
+                <engine:Label text="Supported" class="shield-value positive" />
+            </engine:VisualElement>
         </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="props">
-          <engine:VisualElement class="prop">
-            <engine:Label text="leadingIconName" class="prop-name" />
-            <engine:Label text="string" class="prop-type" />
-            <engine:Label text="magnifying-glass" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The name of the icon displayed on the left side of the search bar. By default, it shows a magnifying glass icon."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Customizing the leading icon"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='&lt;SearchBar leading-icon-name="search-alt" /&gt;'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="placeholder" class="prop-name" />
-            <engine:Label text="string" class="prop-type" />
-            <engine:Label text="Search..." class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The placeholder text displayed when the search bar is empty."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Customizing the placeholder text"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='&lt;SearchBar placeholder="Search files..." /&gt;'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-          <engine:VisualElement class="prop">
-            <engine:Label text="size" class="prop-name" />
-            <engine:Label text="Size" class="prop-type" />
-            <engine:Label text="Size.M" class="prop-value" />
-            <engine:Label text="True" class="prop-code-support support" />
-            <engine:Label text="True" class="prop-uxml-support support" />
-            <engine:VisualElement class="prop-description">
-              <engine:Label
-                text="The size variant of the search bar. Available options are S (Small), M (Medium), and L (Large)."
-                class="parapgraph"
-              />
-            </engine:VisualElement>
-            <engine:VisualElement class="prop-examples">
-              <engine:VisualElement class="example">
-                <engine:Label
-                  text="Different size variants"
-                  class="scenario-description"
-                />
-                <engine:Label
-                  text='&lt;SearchBar size="S" /&gt;
-&lt;SearchBar size="M" /&gt;
-&lt;SearchBar size="L" /&gt;'
-                  class="code"
-                />
-              </engine:VisualElement>
-            </engine:VisualElement>
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
-      <engine:VisualElement class="section">
-        <engine:VisualElement class="examples">
-          <engine:VisualElement class="example">
-            <engine:Label text="Basic Usage" class="parapgraph" />
-            <engine:Label
-              text='// Creating a basic search bar
-var searchBar = new SearchBar();
-searchBar.RegisterValueChangedCallback(evt =&gt; {
-    Debug.Log($"Search query: {evt.newValue}");
-});'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label text="Search with Validation" class="parapgraph" />
-            <engine:Label
-              text='var searchBar = new SearchBar();
-// Add validation to ensure minimum search length
-searchBar.validateValue = (value) =&gt; value.Length &gt;= 3;
-searchBar.placeholder = "Enter at least 3 characters...";'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label text="UXML Usage" class="parapgraph" />
-            <engine:Label
-              text='&lt;ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI"&gt;
-    &lt;appui:SearchBar size="M"
-                     placeholder="Search documents..."
-                     leading-icon-name="magnifying-glass" /&gt;
-&lt;/ui:UXML&gt;'
-              class="code"
-            />
-          </engine:VisualElement>
-          <engine:VisualElement class="example">
-            <engine:Label
-              text="Complete Search Implementation"
-              class="parapgraph"
-            />
-            <engine:Label
-              text='public class SearchableList : VisualElement
-{
-    private SearchBar searchBar;
-    private ListView listView;
-    private List&lt;string&gt; allItems;
+        <engine:VisualElement class="content">
+            <engine:VisualElement class="section" name="Overview">
+                <engine:VisualElement class="overview">
+                    <engine:Label text="The SearchBar component is a specialized TextField that provides a dedicated interface for search functionality. It comes with a built-in magnifying glass icon and placeholder text, making it instantly recognizable as a search input." class="paragraph" />
+<engine:Label text="By default, the SearchBar displays a magnifying glass icon on the left side and includes a &apos;Search...&apos; placeholder text, providing clear affordance for its purpose." class="paragraph" />
+<engine:Label text="The SearchBar inherits from TextField, which means it includes all TextField functionality including validation, size variants, and read-only states." class="paragraph" />
+<engine:Label text="SearchBars are commonly used in:" class="paragraph" />
+<engine:Label text="- Navigation menus to filter items&#10;- Data tables to search through records&#10;- Document libraries to find specific files&#10;- Any interface where users need to search through content" class="paragraph" />
 
-    public SearchableList()
-    {
-        // Create and configure search bar
-        searchBar = new SearchBar();
-        searchBar.placeholder = "Search items...";
-        searchBar.size = Size.M;
+                </engine:VisualElement>
+            </engine:VisualElement>
 
-        // Handle search input
-        searchBar.RegisterValueChangedCallback(OnSearchQueryChanged);
+            <engine:VisualElement class="section" name="Anatomy">
+                <engine:VisualElement class="anatomy">
+                    <engine:Label text="Anatomy" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
 
-        // Add to visual hierarchy
-        Add(searchBar);
-
-        // Initialize list view...
-    }
-
-    private void OnSearchQueryChanged(ChangeEvent&lt;string&gt; evt)
-    {
-        var query = evt.newValue.ToLower();
-        var filteredItems = allItems
-            .Where(item =&gt; item.ToLower().Contains(query))
-            .ToList();
-        listView.itemsSource = filteredItems;
-    }
-}'
-              class="code"
-            />
-          </engine:VisualElement>
-        </engine:VisualElement>
-      </engine:VisualElement>
+            <engine:VisualElement class="section" name="API Reference">
+                <engine:Label text="API Reference" class="section-label" />
+                <engine:VisualElement class="table">
+                    <engine:VisualElement class="table-header">
+                        <engine:Label text="Name" class="table-header--name" />
+                        <engine:Label text="Type" class="table-header--type" />
+                        <engine:Label text="Default" class="table-header--default" />
+                    </engine:VisualElement>
+                    <engine:VisualElement class="table-body">
+                        <engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="value" class="prop-name-value" selectable="true" />
     </engine:VisualElement>
-  </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="placeholder" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Search..." class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="leadingIconName" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="magnifying-glass" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="trailingIconName" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="string" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="size" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Size" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Size.M" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="isReadOnly" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="maxLength" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="int" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="-1" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="invalid" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="bool" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="false" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="validateValue" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="Func&lt;string, bool&gt;" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="null" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+<engine:VisualElement class="table-row">
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="submitModifiers" class="prop-name-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="EventModifiers" class="prop-type-value" selectable="true" />
+    </engine:VisualElement>
+    <engine:VisualElement class="table-cell">
+        <engine:Label text="EventModifiers.None" class="prop-default-value" selectable="true" />
+    </engine:VisualElement>
+</engine:VisualElement>
+                    </engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Examples">
+                <engine:Label text="Examples" class="section-label" />
+                <engine:VisualElement class="examples">
+                    <engine:VisualElement class="example">
+    <engine:Label text="Basic Usage" class="paragraph" />
+<appui:CodeBlock show-lines="true" code="// Creating a basic search bar&#10;var searchBar = new SearchBar();&#10;searchBar.RegisterValueChangedCallback(evt =&gt; {&#10;    Debug.Log($&quot;Search query: {evt.newValue}&quot;);&#10;});" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Search with Validation" class="paragraph" />
+<appui:CodeBlock show-lines="true" code="var searchBar = new SearchBar();&#10;// Add validation to ensure minimum search length&#10;searchBar.validateValue = (value) =&gt; value.Length &gt;= 3;&#10;searchBar.placeholder = &quot;Enter at least 3 characters...&quot;;" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="UXML Usage" class="paragraph" />
+<appui:CodeBlock show-lines="true" code="&lt;ui:UXML xmlns:ui=&quot;UnityEngine.UIElements&quot; xmlns:appui=&quot;Unity.AppUI.UI&quot;&gt;&#10;    &lt;appui:SearchBar size=&quot;M&quot;&#10;                     placeholder=&quot;Search documents...&quot;&#10;                     leading-icon-name=&quot;magnifying-glass&quot; /&gt;&#10;&lt;/ui:UXML&gt;" format="XML" class="pre code" />
+
+</engine:VisualElement>
+<engine:VisualElement class="example">
+    <engine:Label text="Complete Search Implementation" class="paragraph" />
+<appui:CodeBlock show-lines="true" code="public class SearchableList : VisualElement&#10;{&#10;    private SearchBar searchBar;&#10;    private ListView listView;&#10;    private List&lt;string&gt; allItems;&#10;    &#10;    public SearchableList()&#10;    {&#10;        // Create and configure search bar&#10;        searchBar = new SearchBar();&#10;        searchBar.placeholder = &quot;Search items...&quot;;&#10;        searchBar.size = Size.M;&#10;        &#10;        // Handle search input&#10;        searchBar.RegisterValueChangedCallback(OnSearchQueryChanged);&#10;        &#10;        // Add to visual hierarchy&#10;        Add(searchBar);&#10;        &#10;        // Initialize list view...&#10;    }&#10;    &#10;    private void OnSearchQueryChanged(ChangeEvent&lt;string&gt; evt)&#10;    {&#10;        var query = evt.newValue.ToLower();&#10;        var filteredItems = allItems&#10;            .Where(item =&gt; item.ToLower().Contains(query))&#10;            .ToList();&#10;        listView.itemsSource = filteredItems;&#10;    }&#10;}" format="CSharp" class="pre code" />
+
+</engine:VisualElement>
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+            <engine:VisualElement class="section" name="Accessibility">
+                <engine:VisualElement class="accessibility">
+                    <engine:Label text="Accessibility" class="section-label" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
 </engine:UXML>
