@@ -4,16 +4,94 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.0.4] - 2026-01-30
+## [2.0.5] - 2026-04-07
 
 ### Fixed
 
-- Fixed type name conflict for MaskField in the UI Kit sample.
-- Fixed the help url in the inspector for App UI Settings assets.
-- Fixed the search bar in the Icon Browser remaining enabled when filtering yields no results
-- Set minimum window sizes for IconBrowser, NavigationGraphWindow, and DevToolsWindow to prevent layout issues when resized too small
+- Added missing `[CreateProperty]` attribute on `clickable` property across all pressable components to fix runtime data binding for `clickable.command` path (UUM-138492)
+
+## [2.1.9] - 2026-04-07
+
+### Fixed
+
+- Added missing `[CreateProperty]` attribute on `clickable` property across all pressable components to fix runtime data binding for `clickable.command` path (UUM-138492)
+
+## [2.2.0-pre.8] - 2026-04-06
+
+### Added
+
+- Added `sizeModifier` callback property to `ResizeHandle` to allow custom size adjustments during resize.
+- Added `UxmlTraits` support for `ResizeHandle` component.
+- Added `SetPosition` and `SetSize` methods to `Popover` for programmatic positioning and sizing.
+- Added `movable` property to `Popover` UI elements.
+- Added `movable` property to `DialogTrigger` to support movable popovers via UXML.
+
+### Changed
+
+- `AnchorPopup.RefreshPosition` is now `public` instead of `protected`.
+- `ColorField` popover is now movable by default.
+- Default `resizeDirection` for `DialogTrigger` changed from `Vertical` to `Free`.
+
+### Fixed
+
+- Added missing `[CreateProperty]` attribute on `clickable` property across all pressable components to fix runtime data binding for `clickable.command` path (UUM-138492)
+
+## [2.2.0-pre.7] - 2026-03-25
+
+### Removed
+
+- Removed Android Activity (AppUIActivity, AppUIGameActivity) and AndroidManifest.xml from the App UI package. The Android platform integration now operates without a custom Activity or manifest.
+
+### Added
+
+- Added **AI Agent Skills** pane in **Unity Package Manager UI**: You can now install/remove App UI skills for AI Agents in your workspace from the Package Manager window.
+- Added support of Unity 6000.6
+
+### Changed
+
+- Streamlined AI skill content by removing duplicated sections from the main skill, consolidating reference documentation pointers, and fixing a Task/TodoItem naming conflict in the MVVM example
+- Improved AI skill descriptions with richer trigger phrases for more reliable skill activation
+
+## [2.1.8] - 2026-03-25
+
+### Added
+
+- Added support of Unity 6000.6
+
+## [2.1.7] - 2026-03-20
+
+### Fixed
+
+- Fixed the use of deprecated EndNameEditAction in IconBrowser
+
+## [2.2.0-pre.6] - 2026-03-02
+
+### Added
+
+- Add `destroyItem` callback to BaseGridView and fix doc comments
+- Added HelpBox UI element
+- Added `disableAnimation` property on Popup elements in order to force disable display animation for a given Popup UI Element.
+- Added SortingOrder proeprty in Popups. This enable the possibility to insert popups in behind others exisiting ones.
+- UxmlCloneTreeGenerator now collects UxmlElementNameAttribute bindings from inherited base classes, respecting C# shadowing rules.
+- Added `check-circle` and `x-circle` icons as part of the minimal icons set
+
+### Fixed
+
+- Fixed UpHandler calls in Draggable manipulator.
+- Fixed exception thrown on Tabs element when refreshing the indicator with an out of range value.
+- Fixed sending ChangeEvent in numerical fields as soon as they are attached to a panel if their value has been changed already even without notification.
+
+## [1.3.6] - 2026-02-18
+
+### Fixed
+
 - Fixed overlapping scrollbar arrow icons that appeared when resizing the Properties section in the App UI Storybook window
-- Fixed exception thrown inside the MVVM & Redux sample.
+
+## [1.3.5] - 2026-01-31
+
+### Fixed
+
+- Fixed the help url in the inspector for App UI Settings assets.
 
 ## [2.2.0-pre.5] - 2026-01-30
 
@@ -35,6 +113,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed the search bar in the Icon Browser remaining enabled when filtering yields no results
 - Set minimum window sizes for IconBrowser, NavigationGraphWindow, and DevToolsWindow to prevent layout issues when resized too small
 - Fixed the use of obsolete API in Trackpad sample
+- Fixed overlapping scrollbar arrow icons that appeared when resizing the Properties section in the App UI Storybook window
+- Fixed exception thrown inside the MVVM & Redux sample.
+
+## [2.0.4] - 2026-01-30
+
+### Fixed
+
+- Fixed type name conflict for MaskField in the UI Kit sample.
+- Fixed the help url in the inspector for App UI Settings assets.
+- Fixed the search bar in the Icon Browser remaining enabled when filtering yields no results
+- Set minimum window sizes for IconBrowser, NavigationGraphWindow, and DevToolsWindow to prevent layout issues when resized too small
 - Fixed overlapping scrollbar arrow icons that appeared when resizing the Properties section in the App UI Storybook window
 - Fixed exception thrown inside the MVVM & Redux sample.
 

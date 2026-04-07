@@ -49,6 +49,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Clickable Manipulator for this PickerItem.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -314,6 +317,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Clickable Manipulator for this Picker.
         /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
         public Pressable clickable
         {
             get => m_Clickable;
