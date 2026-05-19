@@ -8,7 +8,7 @@ const BrowserClipboard = {
          * Read text from clipboard.
          * @param {function(string|null, Error|null): void} callback - Called with data (string) on success, or error (Error object) on failure.
          */
-        readFromClipboard: function(callback) {
+        readTextFromClipboard: function(callback) {
             // Try modern Clipboard API first
             if (navigator.clipboard && navigator.clipboard.readText) {
                 navigator.clipboard
@@ -29,7 +29,7 @@ const BrowserClipboard = {
          * @param {string} text - The text to copy to clipboard.
          * @param {function(boolean): void} callback - Called with true on success, false on failure.
          */
-        copyToClipboard: function(text, callback) {
+        copyTextToClipboard: function(text, callback) {
             // Fallback to execCommand
             const fallBack = function() {
                 const textArea = document.createElement('textarea');
@@ -93,6 +93,72 @@ const BrowserClipboard = {
                 callback(true);
             }
         },
+        /**
+         * Check if clipboard contains text data by attempting to read it.
+         * @param {function(boolean): void} callback - Called with true if clipboard has text data, false otherwise.
+         */
+        checkClipboardHasTextData: function(callback) {
+            if (navigator.clipboard && navigator.clipboard.readText) {
+                navigator.clipboard.readText()
+                    .then(function(data) { callback(data !== null && data.length > 0); })
+                    .catch(function() { callback(false); });
+            } else {
+                callback(false);
+            }
+        },
+        /**
+         * Check if clipboard contains an image (image/png).
+         * @param {function(boolean): void} callback - Called with true if clipboard has image data, false otherwise.
+         */
+        checkClipboardHasImage: function(callback) {
+            if (navigator.clipboard && navigator.clipboard.read) {
+                navigator.clipboard.read()
+                    .then(function(items) {
+                        for (var i = 0; i < items.length; i++) {
+                            if (items[i].types.indexOf('image/png') !== -1) {
+                                callback(true);
+                                return;
+                            }
+                        }
+                        callback(false);
+                    })
+                    .catch(function() { callback(false); });
+            } else {
+                callback(false);
+            }
+        },
+        /**
+         * Read image (image/png) from clipboard.
+         * @param {function(Uint8Array|null, Error|null): void} callback - Called with image data on success, or error on failure.
+         */
+        readImageFromClipboard: function(callback) {
+            if (navigator.clipboard && navigator.clipboard.read) {
+                navigator.clipboard.read()
+                    .then(function(items) {
+                        for (var i = 0; i < items.length; i++) {
+                            if (items[i].types.indexOf('image/png') !== -1) {
+                                items[i].getType('image/png')
+                                    .then(function(blob) {
+                                        return blob.arrayBuffer();
+                                    })
+                                    .then(function(buffer) {
+                                        callback(new Uint8Array(buffer), null);
+                                    })
+                                    .catch(function(err) {
+                                        callback(null, err);
+                                    });
+                                return;
+                            }
+                        }
+                        callback(null, new Error('No image/png found in clipboard'));
+                    })
+                    .catch(function(err) {
+                        callback(null, err);
+                    });
+            } else {
+                callback(null, new Error('NOT_SUPPORTED'));
+            }
+        },
     },
 
     /**
@@ -100,12 +166,12 @@ const BrowserClipboard = {
      * @param {number} textPtr - Pointer to UTF8 string in WASM memory.
      * @param {number} callback - WASM table entry index. Called with 1 on success, 0 on failure.
      */
-    WebGL_PrepareCopyToClipboard: function(textPtr, callback) {
+    WebGL_PrepareCopyTextToClipboard: function(textPtr, callback) {
         const text = UTF8ToString(textPtr);
         const callbackEntry = getWasmTableEntry(callback);
         const listener = function(event) {
             document.removeEventListener('pointerup', listener);
-            browserClipboard.copyToClipboard(text, success => {
+            browserClipboard.copyTextToClipboard(text, success => {
                 callbackEntry(success ? 1 : 0);
             });
         };
@@ -117,10 +183,10 @@ const BrowserClipboard = {
      * @param {number} textPtr - Pointer to UTF8 string in WASM memory.
      * @param {number} callback - WASM table entry index. Called with 1 on success, 0 on failure.
      */
-    WebGL_CopyToClipboard: function(textPtr, callback) {
+    WebGL_CopyTextToClipboard: function(textPtr, callback) {
         const text = UTF8ToString(textPtr);
         const callbackEntry = getWasmTableEntry(callback);
-        browserClipboard.copyToClipboard(text, success => {
+        browserClipboard.copyTextToClipboard(text, success => {
             callbackEntry(success ? 1 : 0);
         });
     },
@@ -129,11 +195,11 @@ const BrowserClipboard = {
      * Prepare to read text from clipboard on next user gesture.
      * @param {number} callback - WASM table entry index. Called with data pointer and length on success.
      */
-    WebGL_PrepareReadFromClipboard: function(callback) {
+    WebGL_PrepareReadTextFromClipboard: function(callback) {
         const callBackEntry = getWasmTableEntry(callback);
         const listener = function(event) {
             document.removeEventListener('pointerup', listener);
-            browserClipboard.readFromClipboard((data, error) => {
+            browserClipboard.readTextFromClipboard((data, error) => {
                 if (error || data === null) {
                     callBackEntry(0, 0);
                     return;
@@ -152,9 +218,9 @@ const BrowserClipboard = {
      * Read text from clipboard.
      * @param {number} callback - WASM table entry index. Called with dataPtr (pointer to UTF8 string) and length.
      */
-    WebGL_ReadFromClipboard: function(callback) {
+    WebGL_ReadTextFromClipboard: function(callback) {
         const callBackEntry = getWasmTableEntry(callback);
-        browserClipboard.readFromClipboard((data, error) => {
+        browserClipboard.readTextFromClipboard((data, error) => {
             if (error || data === null) {
                 callBackEntry(0, 0);
                 return;
@@ -168,7 +234,7 @@ const BrowserClipboard = {
     },
 
     /**
-     * Free clipboard data allocated by WebGL_ReadFromClipboard or WebGL_PrepareReadFromClipboard.
+     * Free clipboard data allocated by WebGL_ReadTextFromClipboard or WebGL_PrepareReadTextFromClipboard.
      * @param {number} dataPtr - Pointer to the data to free.
      */
     WebGL_FreeClipboardData: function(dataPtr) {
@@ -188,6 +254,46 @@ const BrowserClipboard = {
         const callBackEntry = getWasmTableEntry(callback);
         browserClipboard.checkClipboardAccess(hasAccess => {
             callBackEntry(hasAccess ? 1 : 0);
+        });
+    },
+
+    /**
+     * Check if clipboard contains text data by attempting to read it.
+     * @param {number} callback - WASM table entry index. Called with 1 if clipboard has text data, 0 otherwise.
+     */
+    WebGL_CheckClipboardHasTextData: function(callback) {
+        const callBackEntry = getWasmTableEntry(callback);
+        browserClipboard.checkClipboardHasTextData(function(hasData) {
+            callBackEntry(hasData ? 1 : 0);
+        });
+    },
+
+    /**
+     * Check if clipboard contains image (image/png) data.
+     * @param {number} callback - WASM table entry index. Called with 1 if clipboard has image data, 0 otherwise.
+     */
+    WebGL_CheckClipboardHasImageData: function(callback) {
+        const callBackEntry = getWasmTableEntry(callback);
+        browserClipboard.checkClipboardHasImage(function(hasImage) {
+            callBackEntry(hasImage ? 1 : 0);
+        });
+    },
+
+    /**
+     * Read image (image/png) from clipboard.
+     * @param {number} callback - WASM table entry index. Called with dataPtr (pointer to bytes) and length.
+     */
+    WebGL_ReadImageFromClipboard: function(callback) {
+        const callBackEntry = getWasmTableEntry(callback);
+        browserClipboard.readImageFromClipboard(function(data, error) {
+            if (error || data === null) {
+                callBackEntry(0, 0);
+                return;
+            }
+            var dataPtr = _malloc(data.length);
+            HEAPU8.set(data, dataPtr);
+            callBackEntry(dataPtr, data.length);
+            // Memory is freed by C# via WebGL_FreeClipboardData after copying
         });
     }
 };

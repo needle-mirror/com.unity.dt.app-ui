@@ -284,9 +284,15 @@ namespace Unity.AppUI.UI
                 return;
             }
 
-            var popoverElement = MenuBuilder.CreateMenuPopoverVisualElement(subMenu).popoverElement;
-
             var popover = GetFirstAncestorOfType<Popover.PopoverVisualElement>();
+            if (popover == null)
+            {
+                Debug.LogWarning("MenuItem.OpenSubMenu: No PopoverVisualElement ancestor found. " +
+                    "Use MenuTrigger or MenuBuilder.Build() to display menus with submenus.");
+                return;
+            }
+
+            var popoverElement = MenuBuilder.CreateMenuPopoverVisualElement(subMenu).popoverElement;
             popover.popoverElement.parent.hierarchy.Add(popoverElement);
             popoverElement.visible = false;
             popoverElement.style.opacity = 0.00001f;

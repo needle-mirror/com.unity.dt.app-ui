@@ -1,0 +1,40 @@
+/* ReactionPicker */
+.appui-reaction-picker {
+    height: 360px;
+    width: 275px;
+}
+
+.appui-reaction__tabs {
+    flex-shrink: 0;
+}
+
+.appui-reaction__search-field {
+    margin: var(--appui-alias-control-gap-lg);
+    flex-shrink: 0;
+}
+
+.appui-reaction-picker__grid {
+    flex: 1;
+}
+
+.appui-reaction-picker__grid .unity-scroller--vertical{
+    position: absolute;
+    right: 0;
+    left: auto;
+    top: 0;
+    bottom: 0;
+}
+
+.appui--rtl .appui-reaction-picker__grid .unity-scroller--vertical{
+    left: 0;
+    right: auto;
+}
+
+.appui-reaction-picker__grid .unity-scroll-view__content-viewport {
+    margin: 0 var(--appui-alias-control-gap-lg);
+}
+
+.appui-reaction-picker__grid .appui-actionbutton__label {
+    font-size: var(--appui-font-sizes-body-xxl);
+    translate: 0 2px;
+}

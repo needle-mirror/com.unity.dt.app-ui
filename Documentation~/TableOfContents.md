@@ -11,6 +11,7 @@
     * [Input Values](xref:handle-input-values)
   * [Layouts](xref:layouts)
   * [Typography](xref:typography)
+    * [Syntax Highlighting](xref:syntax-highlighting)
   * [Iconography](xref:iconography)
   * [Contexts](xref:contexts)
   * [Overlays](xref:overlays)

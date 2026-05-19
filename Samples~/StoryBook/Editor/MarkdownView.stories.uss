@@ -1,0 +1,48 @@
+/* ---------------------------------------------------------------------- *
+ *  MarkdownView story — story-only styles, no hardcoded values.            *
+ * ---------------------------------------------------------------------- */
+
+.appui-markdown-story__scroll {
+    flex-grow: 1;
+    align-self: stretch;
+}
+
+.appui-markdown-story__scroll > .unity-scroll-view__content-container > .appui-markdown-view {
+    flex-grow: 1;
+}
+
+/* ---- Live editor split ---------------------------------------------- */
+.appui-markdown-story__live {
+    flex-grow: 1;
+    align-self: stretch;
+    flex-direction: row;
+}
+
+.appui-markdown-story__live-pane {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.appui-markdown-story__live-pane--right {
+    border-left-width: 1px;
+    border-left-color: var(--appui-alias-control-border-color-default);
+    margin-left: var(--appui-alias-control-gap-md);
+    padding-left: var(--appui-alias-control-gap-md);
+}
+
+.appui-markdown-story__live-label {
+    margin-bottom: var(--appui-alias-control-gap-sm);
+}
+
+.appui-markdown-story__live-input {
+    flex-grow: 1;
+    align-self: stretch;
+}
+
+.appui-markdown-story__live-output {
+    flex-grow: 1;
+    align-self: stretch;
+}

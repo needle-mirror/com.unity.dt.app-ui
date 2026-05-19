@@ -3,6 +3,7 @@
 */
 .appui {
 /* Required icons */
+    --appui-icon-arrow-up-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ArrowUp.png");
     --appui-icon-calendar-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Calendar.png");
     --appui-icon-caret-down-fill: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/CaretDown.png");
     --appui-icon-caret-down-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDown.png");
@@ -15,6 +16,7 @@
     --appui-icon-check-circle-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CheckCircle.png");
     --appui-icon-check-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Check.png");
     --appui-icon-color-picker-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ColorPicker.png");
+    --appui-icon-copy-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Copy.png");
     --appui-icon-delete-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Delete.png");
     --appui-icon-dots-three-bold: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThree.png");
     --appui-icon-dots-three-vertical-bold: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThreeVertical.png");
@@ -24,16 +26,26 @@
     --appui-icon-menu-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Menu.png");
     --appui-icon-minus-bold: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Minus.png");
     --appui-icon-minus-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Minus.png");
+    --appui-icon-paper-plane-tilt-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/PaperPlaneTilt.png");
+    --appui-icon-paperclip-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Paperclip.png");
+    --appui-icon-pen-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Pen.png");
     --appui-icon-plus-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Plus.png");
     --appui-icon-resize-handle-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ResizeHandle.png");
     --appui-icon-scene-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Scene.png");
+    --appui-icon-smiley-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Smiley.png");
     --appui-icon-sub-menu-indicator-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/SubMenuIndicator.png");
+    --appui-icon-thumbs-down-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ThumbsDown.png");
+    --appui-icon-thumbs-up-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ThumbsUp.png");
     --appui-icon-users-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Users.png");
     --appui-icon-warning-fill: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/Warning.png");
     --appui-icon-warning-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Warning.png");
     --appui-icon-x-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/X.png");
     --appui-icon-x-circle-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/XCircle.png");
     /* Additional icons */
+}
+
+.appui-icon--arrow-up--regular {
+    --unity-image: var(--appui-icon-arrow-up-regular);
 }
 
 .appui-icon--calendar--regular {
@@ -84,6 +96,10 @@
     --unity-image: var(--appui-icon-color-picker-regular);
 }
 
+.appui-icon--copy--regular {
+    --unity-image: var(--appui-icon-copy-regular);
+}
+
 .appui-icon--delete--regular {
     --unity-image: var(--appui-icon-delete-regular);
 }
@@ -120,6 +136,18 @@
     --unity-image: var(--appui-icon-minus-regular);
 }
 
+.appui-icon--paper-plane-tilt--regular {
+    --unity-image: var(--appui-icon-paper-plane-tilt-regular);
+}
+
+.appui-icon--paperclip--regular {
+    --unity-image: var(--appui-icon-paperclip-regular);
+}
+
+.appui-icon--pen--regular {
+    --unity-image: var(--appui-icon-pen-regular);
+}
+
 .appui-icon--plus--regular {
     --unity-image: var(--appui-icon-plus-regular);
 }
@@ -132,8 +160,20 @@
     --unity-image: var(--appui-icon-scene-regular);
 }
 
+.appui-icon--smiley--regular {
+    --unity-image: var(--appui-icon-smiley-regular);
+}
+
 .appui-icon--sub-menu-indicator--regular {
     --unity-image: var(--appui-icon-sub-menu-indicator-regular);
+}
+
+.appui-icon--thumbs-down--regular {
+    --unity-image: var(--appui-icon-thumbs-down-regular);
+}
+
+.appui-icon--thumbs-up--regular {
+    --unity-image: var(--appui-icon-thumbs-up-regular);
 }
 
 .appui-icon--users--regular {

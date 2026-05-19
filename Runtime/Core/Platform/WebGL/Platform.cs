@@ -15,6 +15,7 @@ namespace Unity.AppUI.Core
         delegate void CopyCallbackDelegate(int success);
         delegate void ReadCallbackDelegate(IntPtr dataPtr, uint length);
         delegate void CheckAccessCallbackDelegate(int hasAccess);
+        delegate void CheckHasDataCallbackDelegate(int hasData);
         delegate void ThemeChangedDelegate(int isDarkColorScheme);
         delegate void DevicePixelRatioChangedDelegate(float devicePixelRatio);
 
@@ -38,16 +39,25 @@ namespace Unity.AppUI.Core
 
         // P/Invoke declarations
         [DllImport("__Internal")]
-        static extern void WebGL_PrepareCopyToClipboard(string text, IntPtr callback);
+        static extern void WebGL_PrepareCopyTextToClipboard(string text, IntPtr callback);
 
         [DllImport("__Internal")]
-        static extern void WebGL_PrepareReadFromClipboard(IntPtr callback);
+        static extern void WebGL_PrepareReadTextFromClipboard(IntPtr callback);
 
         [DllImport("__Internal")]
         static extern void WebGL_CheckClipboardAccess(IntPtr callback);
 
         [DllImport("__Internal")]
+        static extern void WebGL_CheckClipboardHasTextData(IntPtr callback);
+
+        [DllImport("__Internal")]
         static extern void WebGL_FreeClipboardData(IntPtr dataPtr);
+
+        [DllImport("__Internal")]
+        static extern void WebGL_CheckClipboardHasImageData(IntPtr callback);
+
+        [DllImport("__Internal")]
+        static extern void WebGL_ReadImageFromClipboard(IntPtr callback);
 
         [DllImport("__Internal")]
         static extern void WebGL_RegisterCallbackPreferredColorSchemeChanged(IntPtr callback);
@@ -77,16 +87,25 @@ namespace Unity.AppUI.Core
         static readonly CopyCallbackDelegate s_CopyCallback = OnCopyComplete;
         static readonly ReadCallbackDelegate s_ReadCallback = OnReadComplete;
         static readonly CheckAccessCallbackDelegate s_CheckAccessCallback = OnCheckAccessComplete;
+        static readonly CheckHasDataCallbackDelegate s_CheckHasDataCallback = OnCheckHasDataComplete;
+        static readonly CheckHasDataCallbackDelegate s_CheckHasImageDataCallback = OnCheckHasImageDataComplete;
+        static readonly ReadCallbackDelegate s_ReadImageCallback = OnReadImageComplete;
 
         // Cached function pointers derived from the delegates
         static readonly IntPtr s_CopyCallbackPtr = Marshal.GetFunctionPointerForDelegate(s_CopyCallback);
         static readonly IntPtr s_ReadCallbackPtr = Marshal.GetFunctionPointerForDelegate(s_ReadCallback);
         static readonly IntPtr s_CheckAccessCallbackPtr = Marshal.GetFunctionPointerForDelegate(s_CheckAccessCallback);
+        static readonly IntPtr s_CheckHasDataCallbackPtr = Marshal.GetFunctionPointerForDelegate(s_CheckHasDataCallback);
+        static readonly IntPtr s_CheckHasImageDataCallbackPtr = Marshal.GetFunctionPointerForDelegate(s_CheckHasImageDataCallback);
+        static readonly IntPtr s_ReadImageCallbackPtr = Marshal.GetFunctionPointerForDelegate(s_ReadImageCallback);
 
         // Instance-scoped queues for async operations (handles overlapping requests)
         readonly Queue<TaskCompletionSource<bool>> m_CopyQueue = new Queue<TaskCompletionSource<bool>>();
         readonly Queue<TaskCompletionSource<byte[]>> m_ReadQueue = new Queue<TaskCompletionSource<byte[]>>();
         readonly Queue<TaskCompletionSource<bool>> m_CheckAccessQueue = new Queue<TaskCompletionSource<bool>>();
+        readonly Queue<TaskCompletionSource<bool>> m_CheckHasDataQueue = new Queue<TaskCompletionSource<bool>>();
+        readonly Queue<TaskCompletionSource<bool>> m_CheckHasImageDataQueue = new Queue<TaskCompletionSource<bool>>();
+        readonly Queue<TaskCompletionSource<byte[]>> m_ReadImageQueue = new Queue<TaskCompletionSource<byte[]>>();
 
         PluginConfigData m_ConfigData;
 
@@ -194,6 +213,58 @@ namespace Unity.AppUI.Core
             }
         }
 
+        [MonoPInvokeCallback(typeof(CheckHasDataCallbackDelegate))]
+        static void OnCheckHasDataComplete(int hasData)
+        {
+            if (s_Instance != null && s_Instance.m_CheckHasDataQueue.Count > 0)
+            {
+                var tcs = s_Instance.m_CheckHasDataQueue.Dequeue();
+                tcs.TrySetResult(hasData == 1);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(CheckHasDataCallbackDelegate))]
+        static void OnCheckHasImageDataComplete(int hasData)
+        {
+            if (s_Instance != null && s_Instance.m_CheckHasImageDataQueue.Count > 0)
+            {
+                var tcs = s_Instance.m_CheckHasImageDataQueue.Dequeue();
+                tcs.TrySetResult(hasData == 1);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(ReadCallbackDelegate))]
+        static void OnReadImageComplete(IntPtr dataPtr, uint length)
+        {
+            if (s_Instance != null && s_Instance.m_ReadImageQueue.Count > 0)
+            {
+                var tcs = s_Instance.m_ReadImageQueue.Dequeue();
+                try
+                {
+                    if (dataPtr != IntPtr.Zero && length > 0)
+                    {
+                        byte[] data = new byte[length];
+                        Marshal.Copy(dataPtr, data, 0, (int)length);
+                        tcs.TrySetResult(data);
+                    }
+                    else
+                    {
+                        tcs.TrySetResult(Array.Empty<byte>());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                    tcs.TrySetResult(Array.Empty<byte>());
+                }
+                finally
+                {
+                    if (dataPtr != IntPtr.Zero)
+                        WebGL_FreeClipboardData(dataPtr);
+                }
+            }
+        }
+
         protected override void PollDarkMode() { /* No-op, handled via callback */ }
 
         protected override void PollScaleFactor() { /* No-op, handled via callback */ }
@@ -243,7 +314,7 @@ namespace Unity.AppUI.Core
                     var tcs = new TaskCompletionSource<bool>();
                     m_CopyQueue.Enqueue(tcs);
                     string text = Encoding.UTF8.GetString(data);
-                    WebGL_PrepareCopyToClipboard(text, s_CopyCallbackPtr);
+                    WebGL_PrepareCopyTextToClipboard(text, s_CopyCallbackPtr);
                 }
                 catch (Exception ex)
                 {
@@ -252,11 +323,8 @@ namespace Unity.AppUI.Core
             }
         }
 
-        public override Task<bool> HasPasteboardDataAsync(PasteboardType type)
+        public override Task<bool> HasPasteboardAccessAsync()
         {
-            if (type != PasteboardType.Text)
-                return Task.FromResult(false);
-
             var tcs = new TaskCompletionSource<bool>();
             try
             {
@@ -271,16 +339,53 @@ namespace Unity.AppUI.Core
             }
         }
 
+        public override Task<bool> HasPasteboardDataAsync(PasteboardType type)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            try
+            {
+                if (type == PasteboardType.Text)
+                {
+                    m_CheckHasDataQueue.Enqueue(tcs);
+                    WebGL_CheckClipboardHasTextData(s_CheckHasDataCallbackPtr);
+                }
+                else if (type == PasteboardType.PNG)
+                {
+                    m_CheckHasImageDataQueue.Enqueue(tcs);
+                    WebGL_CheckClipboardHasImageData(s_CheckHasImageDataCallbackPtr);
+                }
+                else
+                {
+                    return Task.FromResult(false);
+                }
+                return tcs.Task;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"Failed to check clipboard data: {ex.Message}");
+                return Task.FromResult(false);
+            }
+        }
+
         public override Task<byte[]> GetPasteboardDataAsync(PasteboardType type)
         {
-            if (type != PasteboardType.Text)
-                return Task.FromResult(Array.Empty<byte>());
-
             var tcs = new TaskCompletionSource<byte[]>();
             try
             {
-                m_ReadQueue.Enqueue(tcs);
-                WebGL_PrepareReadFromClipboard(s_ReadCallbackPtr);
+                if (type == PasteboardType.Text)
+                {
+                    m_ReadQueue.Enqueue(tcs);
+                    WebGL_PrepareReadTextFromClipboard(s_ReadCallbackPtr);
+                }
+                else if (type == PasteboardType.PNG)
+                {
+                    m_ReadImageQueue.Enqueue(tcs);
+                    WebGL_ReadImageFromClipboard(s_ReadImageCallbackPtr);
+                }
+                else
+                {
+                    return Task.FromResult(Array.Empty<byte>());
+                }
                 return tcs.Task;
             }
             catch (Exception ex)
@@ -303,7 +408,7 @@ namespace Unity.AppUI.Core
 
                 m_CopyQueue.Enqueue(tcs);
                 string text = Encoding.UTF8.GetString(data);
-                WebGL_PrepareCopyToClipboard(text, s_CopyCallbackPtr);
+                WebGL_PrepareCopyTextToClipboard(text, s_CopyCallbackPtr);
                 return tcs.Task;
             }
             catch (Exception ex)

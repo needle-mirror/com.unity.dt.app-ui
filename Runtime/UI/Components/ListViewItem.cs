@@ -101,7 +101,11 @@ namespace Unity.AppUI.UI
         public Texture thumbnail
         {
             get => m_Thumbnail.image;
-            set => m_Thumbnail.image = value;
+            set
+            {
+                m_Thumbnail.image = value;
+                m_Thumbnail.EnableInClassList(Styles.hiddenUssClassName, !value);
+            }
         }
 
         /// <summary>
@@ -194,6 +198,7 @@ namespace Unity.AppUI.UI
             trailingContainer.Add(optionsButton);
 
             isLoading = false;
+            thumbnail = null;
             size = Size.M;
         }
     }

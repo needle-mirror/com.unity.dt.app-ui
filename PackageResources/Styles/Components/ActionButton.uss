@@ -11,6 +11,9 @@
     justify-content: center;
     align-items: center;
     padding: 0 var(--appui-spacing-100);
+    transition-property: background-color, border-color;
+    transition-duration: var(--appui-animation-duration-100);
+    transition-timing-function: var(--appui-animation-easing-ease-out);
 }
 
 .appui--rtl .appui-actionbutton {
@@ -29,6 +32,9 @@
 .appui-actionbutton__label {
     color: var(--appui-alias-actions-foreground-color-default);
     -unity-font-definition: var(--appui-font-weights-200); /*font-weight: var(--appui-global-font-weight-semi-bold);*/
+    transition-property: color;
+    transition-duration: var(--appui-animation-duration-100);
+    transition-timing-function: var(--appui-animation-easing-ease-out);
 }
 
 .appui--ltr .appui-actionbutton--icon-and-label > .appui-actionbutton__label {
@@ -51,6 +57,9 @@
 .appui-icon.appui-actionbutton__trailing-icon {
     color: var(--appui-alias-actions-foreground-color-default);
     --unity-image-tint-color: var(--appui-alias-actions-foreground-color-default);
+    transition-property: color;
+    transition-duration: var(--appui-animation-duration-100);
+    transition-timing-function: var(--appui-animation-easing-ease-out);
 }
 
 .appui-actionbutton.keyboard-focus {
@@ -87,18 +96,18 @@
     --unity-image-tint-color: var(--appui-alias-actions-foreground-color-active);
 }
 
-.is-selected.appui-actionbutton {
+.appui-actionbutton.is-selected {
     background-color: var(--appui-alias-actions-selected-background-color-default);
     border-color: var(--appui-alias-actions-border-color-selected);
 }
 
-.is-selected.appui-actionbutton--accent {
+.appui-actionbutton--accent.is-selected {
     background-color: var(--appui-alias-actions-accent-background-color-default);
     border-color: var(--appui-alias-actions-border-color-selected);
 }
 
-.is-selected.appui-actionbutton .appui-actionbutton__label,
-.is-selected.appui-actionbutton .appui-icon {
+.appui-actionbutton.is-selected .appui-actionbutton__label,
+.appui-actionbutton.is-selected .appui-icon {
     color: var(--appui-alias-actions-accent-foreground-color-default);
     --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default);
 }
@@ -114,7 +123,7 @@
     border-color: var(--appui-alias-actions-border-color-disabled);
 }
 
-.is-selected.appui-actionbutton:disabled {
+.appui-actionbutton.is-selected:disabled {
     background-color: var(--appui-alias-actions-background-color-disabled);
     border-color: var(--appui-alias-actions-border-color-disabled);
 }
@@ -122,9 +131,9 @@
 .appui-actionbutton:disabled,
 .appui-actionbutton:disabled > .appui-actionbutton__label,
 .appui-actionbutton:disabled > .appui-actionbutton__icon,
-.is-selected.appui-actionbutton:disabled,
-.is-selected.appui-actionbutton:disabled > .appui-actionbutton__label,
-.is-selected.appui-actionbutton:disabled > .appui-actionbutton__icon {
+.appui-actionbutton.is-selected:disabled,
+.appui-actionbutton.is-selected:disabled > .appui-actionbutton__label,
+.appui-actionbutton.is-selected:disabled > .appui-actionbutton__icon {
     color: var(--appui-alias-actions-foreground-color-disabled);
     --unity-image-tint-color: var(--appui-alias-actions-foreground-color-disabled);
 }
@@ -135,8 +144,8 @@
     border-color: var(--appui-alias-actions-border-color-disabled);
 }
 
-.is-selected.appui-actionbutton.is-hovered:disabled,
-.is-selected.appui-actionbutton--quiet.is-hovered:disabled {
+.appui-actionbutton.is-selected.is-hovered:disabled,
+.appui-actionbutton--quiet.is-selected.is-hovered:disabled {
     background-color: var(--appui-alias-actions-background-color-disabled);
     border-color: var(--appui-alias-actions-border-color-disabled);
 }

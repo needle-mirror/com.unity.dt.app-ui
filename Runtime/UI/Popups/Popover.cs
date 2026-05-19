@@ -303,6 +303,16 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// `True` if the popup has been manually moved by dragging, `False` otherwise.
+        /// </summary>
+        public bool hasBeenManuallyMoved => m_HasBeenManuallyMoved;
+
+        /// <summary>
+        /// `True` if the popup has been manually resized by dragging, `False` otherwise.
+        /// </summary>
+        public bool hasBeenManuallyResized => m_HasBeenManuallyResized;
+
+        /// <summary>
         /// `True` if the popup is resizable, `False` otherwise. Default is `False`.
         /// </summary>
         /// <remarks>

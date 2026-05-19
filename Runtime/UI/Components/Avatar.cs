@@ -48,6 +48,12 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId srcProperty = nameof(src);
 
         internal static readonly BindingId variantProperty = nameof(variant);
+
+        internal static readonly BindingId labelProperty = nameof(label);
+
+        internal static readonly BindingId labelColorProperty = nameof(labelColor);
+
+        internal static readonly BindingId autoLabelColorProperty = nameof(autoLabelColor);
 #endif
 
         /// <summary>
@@ -78,13 +84,17 @@ namespace Unity.AppUI.UI
 
         Size m_Size = Size.M;
 
-        readonly ExVisualElement m_Container;
+        readonly TextElement m_Container;
 
         Optional<Color> m_BackgroundColor;
 
         Optional<Color> m_OutlineColor;
 
         Optional<float> m_OutlineWidth;
+
+        Optional<Color> m_LabelColor;
+
+        bool m_AutoLabelColor;
 
         AvatarVariant m_Variant;
 
@@ -180,6 +190,7 @@ namespace Unity.AppUI.UI
                 m_BackgroundColor = value;
                 m_Container.style.backgroundColor = m_BackgroundColor.IsSet ?
                     m_BackgroundColor.Value : new StyleColor(StyleKeyword.Null);
+                UpdateLabelColor();
             }
         }
 
@@ -241,6 +252,78 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// The text label displayed inside the Avatar container.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public string label
+        {
+            get => m_Container.text;
+            set
+            {
+                var changed = m_Container.text != value;
+                m_Container.text = value;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelProperty);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// The color of the label text. When set, takes precedence over <see cref="autoLabelColor"/>.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public Optional<Color> labelColor
+        {
+            get => m_LabelColor;
+            set
+            {
+                var changed = !m_LabelColor.Equals(value);
+                m_LabelColor = value;
+                UpdateLabelColor();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelColorProperty);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// When <c>true</c> and <see cref="labelColor"/> is not set, automatically computes
+        /// the label color based on the luminance of <see cref="backgroundColor"/>.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool autoLabelColor
+        {
+            get => m_AutoLabelColor;
+            set
+            {
+                var changed = m_AutoLabelColor != value;
+                m_AutoLabelColor = value;
+                UpdateLabelColor();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in autoLabelColorProperty);
+#endif
+            }
+        }
+
+        /// <summary>
         /// Default constructor.
         /// </summary>
         public Avatar()
@@ -249,7 +332,7 @@ namespace Unity.AppUI.UI
             pickingMode = PickingMode.Position;
             focusable = false;
 
-            m_Container = new ExVisualElement { name = containerUssClassName, pickingMode = PickingMode.Ignore };
+            m_Container = new TextElement { name = containerUssClassName, pickingMode = PickingMode.Ignore };
             m_Container.AddToClassList(containerUssClassName);
             hierarchy.Add(m_Container);
 
@@ -259,6 +342,8 @@ namespace Unity.AppUI.UI
             outlineColor = Optional<Color>.none;
             outlineWidth = 2;
             src = new Background();
+            labelColor = Optional<Color>.none;
+            autoLabelColor = false;
 
             this.RegisterContextChangedCallback<AvatarVariantContext>(OnVariantContextChanged);
             this.RegisterContextChangedCallback<SizeContext>(OnSizeContextChanged);
@@ -274,6 +359,24 @@ namespace Unity.AppUI.UI
         {
             if (evt.context != null)
                 variant = evt.context.variant;
+        }
+
+        void UpdateLabelColor()
+        {
+            if (m_LabelColor.IsSet)
+            {
+                m_Container.style.color = m_LabelColor.Value;
+            }
+            else if (m_AutoLabelColor && m_BackgroundColor.IsSet)
+            {
+                var bg = m_BackgroundColor.Value;
+                var luminance = 0.2126f * bg.r + 0.7152f * bg.g + 0.0722f * bg.b;
+                m_Container.style.color = luminance > 0.5f ? Color.black : Color.white;
+            }
+            else
+            {
+                m_Container.style.color = new StyleColor(StyleKeyword.Null);
+            }
         }
 
 #if ENABLE_UXML_TRAITS
@@ -324,6 +427,24 @@ namespace Unity.AppUI.UI
                 defaultValue = 2
             };
 
+            readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
+            {
+                name = "label",
+                defaultValue = null
+            };
+
+            readonly UxmlColorAttributeDescription m_LabelColor = new UxmlColorAttributeDescription
+            {
+                name = "label-color",
+                defaultValue = Color.white
+            };
+
+            readonly UxmlBoolAttributeDescription m_AutoLabelColor = new UxmlBoolAttributeDescription
+            {
+                name = "auto-label-color",
+                defaultValue = false
+            };
+
             /// <summary>
             /// Initializes the VisualElement from the UXML attributes.
             /// </summary>
@@ -346,6 +467,13 @@ namespace Unity.AppUI.UI
                 if (m_Src.TryGetValueFromBag(bag, cc, ref src))
                     element.src = BackgroundExtensions.FromObject(Resources.Load(src));
                 element.outlineWidth = m_OutlineWidth.GetValueFromBag(bag, cc);
+                string labelValue = null;
+                if (m_Label.TryGetValueFromBag(bag, cc, ref labelValue))
+                    element.label = labelValue;
+                var labelColor = Color.white;
+                if (m_LabelColor.TryGetValueFromBag(bag, cc, ref labelColor))
+                    element.labelColor = labelColor;
+                element.autoLabelColor = m_AutoLabelColor.GetValueFromBag(bag, cc);
             }
         }
 #endif

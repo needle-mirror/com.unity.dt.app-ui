@@ -1,0 +1,267 @@
+/* ThreadMessage */
+.appui-thread-message {
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: column;
+    border-radius: var(--appui-alias-control-border-radius);
+    transition: background-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-200);
+    margin: var(--appui-alias-control-gap-lg) 0;
+}
+
+.appui-thread-message__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: var(--appui-alias-control-gap-sm);
+}
+
+.appui--rtl .appui-thread-message__header {
+    flex-direction: row-reverse;
+}
+
+.appui-thread-message__avatar {
+    flex-shrink: 0;
+    margin-right: var(--appui-alias-control-gap-sm);
+}
+
+.appui--rtl .appui-thread-message__avatar {
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-sm);
+}
+
+.appui-thread-message__meta {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.appui-thread-message__author-name {
+    font-size: var(--appui-font-sizes-body-md);
+    -unity-font-style: bold;
+    color: var(--appui-foregrounds-100);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.appui-thread-message__timestamp {
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-foregrounds-25);
+    white-space: nowrap;
+}
+
+.appui-thread-message__actions {
+    display: none;
+    flex-direction: row;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.appui--rtl .appui-thread-message__actions {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.appui-thread-message:hover > .appui-thread-message__header > .appui-thread-message__actions,
+.appui-thread-message--actions-open > .appui-thread-message__header > .appui-thread-message__actions {
+    display: flex;
+}
+
+.appui-thread-message__body {
+    display: flex;
+    flex-direction: column;
+    margin: var(--appui-alias-control-gap-sm) var(--appui-alias-control-gap-sm) var(--appui-alias-control-gap-sm) var(--appui-sizing-550);
+}
+
+.appui-thread-message__content {
+    font-size: var(--appui-font-sizes-body-md);
+    color: var(--appui-foregrounds-200);
+    white-space: normal;
+}
+
+.appui-thread-message__attachments {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+    padding: var(--appui-alias-control-gap-sm) 0 var(--appui-alias-control-gap-sm) var(--appui-sizing-550);
+}
+
+.appui-thread-message__reactions {
+    margin-bottom: var(--appui-alias-control-gap-sm);
+}
+
+.appui-thread-message__footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: -2px;
+    padding-left: var(--appui-sizing-550);
+}
+
+.appui--rtl .appui-thread-message__footer {
+    margin-left: 0;
+    margin-right: -2px;
+}
+
+.appui-thread-message__footer > .appui-actionbutton.is-selected {
+    background-color: rgba(0, 0, 0, 0);
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.appui-thread-message__footer > .appui-actionbutton.is-selected > .appui-actionbutton__label,
+.appui-thread-message__footer > .appui-actionbutton.is-selected > .appui-icon {
+    color: var(--appui-accent-100);
+    --unity-image-tint-color: var(--appui-accent-100);
+}
+
+.appui--rtl .appui-thread-message__footer {
+    flex-direction: row-reverse;
+}
+
+.appui-thread-message--draft > .appui-thread-message__body,
+.appui-thread-message--draft > .appui-thread-message__attachments,
+.appui-thread-message--draft > .appui-thread-message__footer,
+.appui-thread-message--sending > .appui-thread-message__body,
+.appui-thread-message--sending > .appui-thread-message__attachments,
+.appui-thread-message--sending > .appui-thread-message__footer {
+    display: none;
+}
+
+.appui-thread-message .appui-thread-composer {
+    padding: 0;
+}
+
+/* ThreadReaction */
+.appui-thread-reaction {
+    margin-right: var(--appui-alias-control-gap-sm);
+}
+
+.appui--rtl .appui-thread-reaction {
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-sm);
+}
+
+.appui-thread-reaction__emoji {
+    translate: 0 var(--appui-sizing-25);
+    margin-right: var(--appui-alias-control-gap-sm);
+    margin-left: 0;
+}
+
+.appui--rtl .appui-thread-reaction__emoji {
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-sm);
+}
+
+.appui-thread-reaction__count {
+    align-self: center;
+}
+
+/* ThreadReactionBar */
+.appui-thread-reaction-bar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-right: 0;
+}
+
+.appui--rtl .appui-thread-reaction-bar {
+    flex-direction: row-reverse;
+    margin-left: 0;
+    margin-right: var(--appui-alias-control-gap-md);
+}
+
+/* ThreadResolveMessage / ThreadUnresolveMessage */
+.appui-thread-resolve-message,
+.appui-thread-unresolve-message {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: var(--appui-alias-control-gap-sm) var(--appui-alias-control-gap-sm);
+    margin-left: var(--appui-alias-control-gap-md);
+    margin-right: 0;
+}
+
+.appui--rtl .appui-thread-resolve-message,
+.appui--rtl .appui-thread-unresolve-message {
+    flex-direction: row-reverse;
+    margin-right: var(--appui-alias-control-gap-md);
+    margin-left: 0;
+}
+
+.appui-thread-resolve-message__icon,
+.appui-thread-unresolve-message__icon {
+    flex-shrink: 0;
+    width: var(--appui-sizing-300);
+    height: var(--appui-sizing-300);
+    margin-right: var(--appui-alias-control-gap-md);
+}
+
+.appui--rtl .appui-thread-resolve-message__icon,
+.appui--rtl .appui-thread-unresolve-message__icon {
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-md);
+}
+
+.appui-thread-resolve-message__icon {
+    --unity-image-tint-color: var(--appui-positive-100);
+}
+
+.appui-thread-resolve-message__text,
+.appui-thread-unresolve-message__text {
+    font-size: var(--appui-font-sizes-body-sm);
+    color: var(--appui-foregrounds-50);
+    flex-grow: 1;
+    -unity-font-style: italic;
+}
+
+.appui-thread-resolve-message__timestamp,
+.appui-thread-unresolve-message__timestamp {
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-foregrounds-25);
+    flex-shrink: 0;
+}
+
+.appui--rtl .appui-thread-resolve-message__timestamp,
+.appui--rtl .appui-thread-unresolve-message__timestamp {
+    margin-left: 0;
+    margin-right: var(--appui-alias-control-gap-sm);
+}
+
+/* BaseThreadAttachment */
+.appui-thread-attachment {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: var(--appui-alias-control-gap-sm);
+    border-radius: var(--appui-alias-control-border-radius);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-foregrounds-25);
+    margin-bottom: var(--appui-alias-control-gap-sm);
+}
+
+.appui--rtl .appui-thread-attachment {
+    flex-direction: row-reverse;
+}
+
+.appui-thread-attachment__icon {
+    flex-shrink: 0;
+    width: var(--appui-sizing-300);
+    height: var(--appui-sizing-300);
+    margin-right: var(--appui-alias-control-gap-sm);
+}
+
+.appui--rtl .appui-thread-attachment__icon {
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-sm);
+}
+
+.appui-thread-attachment__name {
+    font-size: var(--appui-font-sizes-body-sm);
+    color: var(--appui-foregrounds-100);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -8,7 +8,8 @@
         "GUID:2e77701fe0ceda44fb763f03ee704c37",
         "GUID:84651a3751eca9349aac36a66bba901b",
         "GUID:75469ad4d38634e559750d17036d5f7c",
-        "GUID:1d0cfa0a4b984e0eb4f9a1d48aea0ce9"
+        "GUID:1d0cfa0a4b984e0eb4f9a1d48aea0ce9",
+        "GUID:28b0f5aedab614a1805e0c9db8369c81"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -44,6 +45,11 @@
             "name": "Unity",
             "expression": "2022.2.0a9",
             "define": "UITK_SELECTED_INDICES_CHANGED"
+        },
+        {
+          "name": "Unity",
+          "expression": "2023.2.0a1",
+          "define": "UITK_MAKE_NONE_ELEMENT"
         },
         {
             "name": "com.unity.localization",
@@ -114,6 +120,11 @@
           "name": "Unity",
           "expression": "2022.1.0a1",
           "define": "ENABLE_VALUEFIELD_INTERFACE"
+        },
+        {
+            "name": "Unity",
+            "expression": "6000.0.0a1",
+            "define": "APPUI_ENABLE_SYNTAX_HIGHLIGHTING"
         }
     ],
     "noEngineReferences": false

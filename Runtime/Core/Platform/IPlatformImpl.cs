@@ -156,6 +156,12 @@ namespace Unity.AppUI.Core
         Task SetPasteboardDataAsync(PasteboardType type, byte[] data);
 
         /// <summary>
+        /// Whether the platform has access to the pasteboard asynchronously.
+        /// </summary>
+        /// <returns> A task that completes with whether the platform has access to the pasteboard. </returns>
+        Task<bool> HasPasteboardAccessAsync();
+
+        /// <summary>
         /// Event to update the native integration.
         /// </summary>
         /// <remarks>

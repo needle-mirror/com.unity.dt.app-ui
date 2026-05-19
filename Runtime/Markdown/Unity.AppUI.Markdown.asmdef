@@ -1,0 +1,36 @@
+{
+    "name": "Unity.AppUI.Markdown",
+    "rootNamespace": "Unity.AppUI.Markdown",
+    "references": [
+        "GUID:2f101f87087d58f4ba92ca00188e763d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Markdig.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "APPUI_ENABLE_MARKDOWN"
+    ],
+    "versionDefines": [
+        {
+            "name": "Unity",
+            "expression": "[2021.3,2023.3.0a1)",
+            "define": "ENABLE_UXML_TRAITS"
+        },
+        {
+            "name": "Unity",
+            "expression": "2023.3.0a1",
+            "define": "ENABLE_UXML_SERIALIZED_DATA"
+        },
+        {
+            "name": "Unity",
+            "expression": "2023.2",
+            "define": "ENABLE_RUNTIME_DATA_BINDINGS"
+        }
+    ],
+    "noEngineReferences": false
+}

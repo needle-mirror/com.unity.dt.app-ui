@@ -11,11 +11,9 @@
     border-color: var(--appui-alias-field-border-color-default);
     cursor: var(--appui-alias-control-cursor-text);
     color: var(--appui-foregrounds-50);
-    width: 100%;
-    min-height: var(--appui-sizing-1350);
+    min-height: var(--appui-alias-control-sizing-md-height);
     height: var(--appui-sizing-1350);
     position: relative;
-    padding: 2px;
     flex-shrink: 0;
 }
 
@@ -73,7 +71,7 @@
     color: var(--appui-foregrounds-25);
     position: absolute;
     align-self: flex-start;
-    padding: var(--appui-sizing-60);
+    padding: var(--appui-sizing-100);
 }
 
 .appui-textarea:hover,

@@ -457,14 +457,12 @@ namespace Unity.AppUI.Samples
                 avatarGroup1.sourceItems = Enumerable.Range(0, 10).ToList();
                 avatarGroup1.bindItem = (item, i) =>
                 {
-                    var text = new Text($"A{i}");
-                    item.Add(text);
+                    item.label = $"A{i}";
+                    item.autoLabelColor = true;
                     // random color
+                    UnityEngine.Random.InitState(i);
                     var color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
                     item.backgroundColor = color;
-                    // text color in contrast with background color
-                    var grayscale = color.grayscale;
-                    text.style.color = grayscale > 0.5f ? Color.black : Color.white;
                 };
             });
 

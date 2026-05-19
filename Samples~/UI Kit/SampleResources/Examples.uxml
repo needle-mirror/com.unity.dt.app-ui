@@ -336,65 +336,47 @@
                     <appui:Heading text="AVATAR" class="example-title" />
                     <appui:Text text="Default" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Avatar text-color="#FFF" background-color="#4D70EE">
-                            <appui:Text text="MB" style="color: #fff;" />
-                        </appui:Avatar>
+                        <appui:Avatar background-color="#4D70EE" label="MB" auto-label-color="true" />
                     </ui:VisualElement>
                     <appui:Text text="Variants" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item">
-                                <appui:Avatar text-color="#FFF" background-color="#4D70EE" variant="Circular">
-                                    <appui:Text text="MB" style="color: #fff;" />
-                                </appui:Avatar>
+                                <appui:Avatar background-color="#4D70EE" variant="Circular" label="MB" auto-label-color="true" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
-                                <appui:Avatar text-color="#FFF" background-color="#4D70EE" variant="Rounded">
-                                    <appui:Text text="MB" style="color: #fff;" />
-                                </appui:Avatar>
+                                <appui:Avatar background-color="#4D70EE" variant="Rounded" label="MB" auto-label-color="true" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
-                                <appui:Avatar text-color="#FFF" background-color="#4D70EE" variant="Square">
-                                    <appui:Text text="MB" style="color: #fff;" />
-                                </appui:Avatar>
+                                <appui:Avatar background-color="#4D70EE" variant="Square" label="MB" auto-label-color="true" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <appui:Text text="Long Text" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Avatar text-color="#FFF" background-color="#4D70EE">
-                            <appui:Text text="This is a long text" style="color: #fff;" tooltip="This is a long text" />
-                        </appui:Avatar>
+                        <appui:Avatar background-color="#4D70EE" label="This is a long text" auto-label-color="true" tooltip="This is a long text" />
                     </ui:VisualElement>
                     <appui:Text text="Sizing" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item">
-                                <appui:Avatar size="S" text-color="#FFF" background-color="#4D70EE">
-                                    <appui:Text text="MB" style="color: #fff;" />
-                                </appui:Avatar>
+                                <appui:Avatar size="S" background-color="#4D70EE" label="MB" auto-label-color="true" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
-                                <appui:Avatar text-color="#FFF" background-color="#4D70EE">
-                                    <appui:Text text="MB" style="color: #fff;" />
-                                </appui:Avatar>
+                                <appui:Avatar background-color="#4D70EE" label="MB" auto-label-color="true" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
-                                <appui:Avatar size="L" text-color="#FFF" background-color="#4D70EE">
-                                    <appui:Text text="MB" style="color: #fff;" />
-                                </appui:Avatar>
+                                <appui:Avatar size="L" background-color="#4D70EE" label="MB" auto-label-color="true" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <appui:Text text="Outlined" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Avatar text-color="#FFF" background-color="#4D70EE" outline-color="#00FF00">
-                            <appui:Text text="MB" style="color: #fff;" />
-                        </appui:Avatar>
+                        <appui:Avatar background-color="#4D70EE" outline-color="#00FF00" label="MB" auto-label-color="true" />
                     </ui:VisualElement>
                     <appui:Text text="With Icon" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Avatar text-color="#FFF" background-color="#4D70EE">
+                        <appui:Avatar background-color="#4D70EE">
                             <appui:Icon icon-name="info" style="--unity-image-tint-color: #fff;" />
                         </appui:Avatar>
                     </ui:VisualElement>
@@ -404,9 +386,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Avatar outline-color="#4D70EE" background-color="#4D70EE" enabled="false">
-                            <appui:Text text="MB" style="color: #fff;" />
-                        </appui:Avatar>
+                        <appui:Avatar outline-color="#4D70EE" background-color="#4D70EE" enabled="false" label="MB" auto-label-color="true" />
                     </ui:VisualElement>
 
                     <!-- AvatarGroup -->
@@ -459,25 +439,33 @@
                     <appui:Text text="With content" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="badge-container-example">
-                            <appui:Badge content="10" />
+                            <appui:Badge>
+                                <ui:TextElement text="10" />
+                            </appui:Badge>
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <appui:Text text="Show Zero" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="badge-container-example">
-                            <appui:Badge content="0" show-zero="true" />
+                            <appui:Badge>
+                                <ui:TextElement text="0" />
+                            </appui:Badge>
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <appui:Text text="Max value" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="badge-container-example">
-                            <appui:Badge content="1000" max="99" show-zero="true" />
+                            <appui:Badge>
+                                <ui:TextElement text="99+" />
+                            </appui:Badge>
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <appui:Text text="Custom colors" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="badge-container-example">
-                            <appui:Badge background-color="#ffcc00" content="1000" color="#000" max="99" show-zero="true" />
+                            <appui:Badge background-color="#ffcc00" color="#000">
+                                <ui:TextElement text="99+" />
+                            </appui:Badge>
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <appui:Text text="Anchors" class="example-subtitle" />
@@ -977,7 +965,7 @@
                     </ui:VisualElement>
                     <appui:Text text="Popover" class="example-subtitle" />
                     <ui:VisualElement class="example-section example-section-fullwidth">
-                        <appui:DialogTrigger type="Popover" placement="Top" disable-animation="true">
+                        <appui:DialogTrigger type="Popover" placement="Top" movable="true" resizable="true">
                             <appui:ActionButton label="Click here!" />
                             <appui:Dialog title="Hello">
                                 <appui:Text text="Lorem ipsum..." />

@@ -1,0 +1,22 @@
+{
+    "name": "Unity.AppUI.TextMateLib",
+    "rootNamespace": "Unity.AppUI.TextMateLib",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "APPUI_ENABLE_SYNTAX_HIGHLIGHTING"
+    ],
+    "versionDefines": [
+        {
+            "name": "Unity",
+            "expression": "6000.0.0a1",
+            "define": "APPUI_ENABLE_SYNTAX_HIGHLIGHTING"
+        }
+    ],
+    "noEngineReferences": true
+}

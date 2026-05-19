@@ -367,6 +367,11 @@ namespace Unity.AppUI.Core
             return Task.CompletedTask;
         }
 
+        public virtual Task<bool> HasPasteboardAccessAsync()
+        {
+            return Task.FromResult(true);
+        }
+
         public virtual int layoutDirection => m_LastLayoutDirection;
 
         protected void InvokeLayoutDirectionChanged(int layoutDirection)

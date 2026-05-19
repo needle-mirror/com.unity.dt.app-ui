@@ -1,0 +1,224 @@
+/* ThreadComposer */
+.appui-thread-composer {
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: row;
+    padding: var(--appui-alias-control-gap-sm) var(--appui-alias-control-gap-lg) var(--appui-alias-control-gap-md) var(--appui-alias-control-gap-lg);
+}
+
+.appui-thread-composer__avatar-container {
+    display: none;
+    align-items: center;
+    flex-shrink: 0;
+    margin-top: var(--appui-spacing-50);
+    margin-right: var(--appui-alias-control-gap-sm);
+}
+
+.appui-thread-composer__textarea-container {
+    flex: 1;
+    position: relative;
+}
+
+.appui-thread-composer__input-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--appui-border-radius-lg);
+    background-color: var(--appui-alias-field-background-color-default);
+}
+
+.appui-thread-composer__input-box:hover {
+    background-color: var(--appui-alias-field-background-color-hover);
+}
+
+.appui-thread-composer:focus .appui-thread-composer__input-box {
+    background-color: var(--appui-alias-field-background-color-focus);
+}
+
+.appui-thread-composer__textarea.appui-textarea {
+    height: auto;
+    max-height: var(--appui-sizing-2000);
+    border-width: 0;
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+    margin: var(--appui-alias-control-gap-md);
+    min-width: var(--appui-sizing-300);
+}
+
+.appui-thread-composer__textarea .appui-textarea__resize-handle {
+    display: none;
+}
+
+.appui-thread-composer__toolbar-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--appui-alias-control-gap-md);
+}
+
+.appui--rtl .appui-thread-composer__toolbar-container {
+    flex-direction: row-reverse;
+}
+
+.appui-thread-composer__toolbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.appui--rtl .appui-thread-composer__toolbar {
+    flex-direction: row-reverse;
+}
+
+.appui-thread-composer__actionbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.appui--rtl .appui-thread-composer__actionbar {
+    flex-direction: row-reverse;
+}
+
+.appui-thread-composer__attach-btn {
+    margin-right: var(--appui-alias-control-gap-sm);
+    flex-shrink: 0;
+}
+
+.appui--rtl .appui-thread-composer__attach-btn {
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-sm);
+}
+
+.appui-thread-composer__attachments-scroll {
+    max-height: 200px;
+}
+
+.appui-thread-composer__attachments {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.appui-thread-composer__sending-progress {
+    display: none;
+    width: var(--appui-alias-control-sizing-sm-height);
+    height: var(--appui-alias-control-sizing-sm-height);
+    margin-left: var(--appui-alias-control-gap-md);
+}
+
+/* Character counter — sits between toolbar and actionbar inside the toolbar container */
+.appui-thread-composer__counter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+    margin-right: var(--appui-alias-control-gap-md);
+    color: var(--appui-foregrounds-100);
+    font-size: var(--appui-font-sizes-75);
+    -unity-font-style: normal;
+}
+
+.appui--rtl .appui-thread-composer__counter {
+    flex-direction: row-reverse;
+    margin-left: var(--appui-alias-control-gap-md);
+    margin-right: auto;
+}
+
+.appui-thread-composer__counter-current {
+    color: var(--appui-foregrounds-100);
+}
+
+.appui-thread-composer__counter-separator,
+.appui-thread-composer__counter-max {
+    color: var(--appui-foregrounds-50);
+}
+
+/* In the empty/inline layout the toolbar is hidden — hide the counter too. */
+.appui-thread-composer--empty .appui-thread-composer__counter {
+    display: none;
+}
+
+.appui-thread-composer__cancel-btn {
+    margin-right: var(--appui-alias-control-gap-sm);
+}
+
+.appui--rtl .appui-thread-composer__cancel-btn {
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-sm);
+}
+
+.appui-thread-composer__save-btn {
+    display: none;
+}
+
+.appui-thread-composer__cancel-btn {
+    display: none;
+}
+
+/* Sending state - Show progress */
+.appui-thread-composer--sending .appui-thread-composer__sending-progress {
+    display: flex;
+}
+
+/* Empty state - inline toolbar */
+.appui-thread-composer--empty .appui-thread-composer__input-box {
+    flex-direction: row;
+    align-items: center;
+}
+
+.appui-thread-composer--force-toolbar .appui-thread-composer__input-box {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.appui-thread-composer--empty .appui-thread-composer__textarea {
+    flex-grow: 1;
+}
+
+.appui-thread-composer--force-toolbar .appui-thread-composer__textarea {
+    flex-grow: 0;
+}
+
+.appui-thread-composer--empty .appui-thread-composer__toolbar-container {
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.appui-thread-composer--force-toolbar .appui-thread-composer__toolbar-container {
+    align-self: stretch;
+    flex-shrink: 0;
+}
+
+.appui-thread-composer--empty .appui-thread-composer__toolbar {
+    display: none;
+}
+
+.appui-thread-composer--force-toolbar .appui-thread-composer__toolbar {
+    display: flex;
+}
+
+/* Editing state - hide submit icon button (cancel + save shown via C#) */
+.appui-thread-composer--editing .appui-thread-composer__submit-btn {
+    display: none;
+}
+
+.appui-thread-composer--editing .appui-thread-composer__save-btn,
+.appui-thread-composer--editing .appui-thread-composer__cancel-btn {
+    display: flex;
+}
+
+/* Show Avatar */
+.appui-thread-composer--with-avatar .appui-thread-composer__avatar-container {
+    display: flex;
+}
+
+/* DropZone overlay */
+.appui-thread-composer__dropzone {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    bottom: -4px;
+    right: -4px;
+}

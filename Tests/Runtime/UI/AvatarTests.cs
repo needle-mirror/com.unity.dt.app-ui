@@ -13,7 +13,8 @@ namespace Unity.AppUI.Tests.UI
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:Avatar />",
-            @"<appui:Avatar size=""L"" variant=""Rounded"" background-color=""#FF0000"" outline-width=""3"" outline-color=""#00FF00"" />"
+            @"<appui:Avatar size=""L"" variant=""Rounded"" background-color=""#FF0000"" outline-width=""3"" outline-color=""#00FF00"" />",
+            @"<appui:Avatar label=""MB"" background-color=""#4D70EE"" auto-label-color=""true"" />"
         };
     }
 }

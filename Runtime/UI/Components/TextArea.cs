@@ -35,6 +35,8 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId submitModifiersProperty = nameof(submitModifiers);
 
+        internal static readonly BindingId submitActionKeyModifierProperty = nameof(submitActionKeyModifier);
+
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
 
         internal static readonly BindingId invalidProperty = nameof(invalid);
@@ -92,6 +94,8 @@ namespace Unity.AppUI.UI
         bool m_RequestTab;
 
         EventModifiers m_SubmitModifiers;
+
+        bool m_SubmitActionKeyModifier;
 
         bool m_SubmitOnEnter;
 
@@ -223,26 +227,60 @@ namespace Unity.AppUI.UI
                 focusController.FocusNextInDirectionEx(this, VisualElementFocusChangeDirection.right);
             }
 
-            if (submitOnEnter && evt.keyCode is KeyCode.Return or KeyCode.KeypadEnter && evt.modifiers == submitModifiers)
+            if (submitOnEnter && evt.keyCode is KeyCode.Return or KeyCode.KeypadEnter)
             {
-                evt.StopPropagation();
+                var isSubmit = submitActionKeyModifier ? evt.actionKey : evt.modifiers == submitModifiers;
+                if (isSubmit)
+                {
+                    evt.StopPropagation();
 #if !UNITY_2023_2_OR_NEWER
-                evt.PreventDefault();
+                    evt.PreventDefault();
 #endif
-                m_RequestSubmit = true;
-                return;
+                    submitted?.Invoke();
+
+                    // Clamp cursor indices after submit callback, which may have
+                    // cleared the text. Prevents UGUI's synthetic OnSubmit event
+                    // from crashing in TextEditingUtilities.Insert with a stale index.
+#if UNITY_2022_1_OR_NEWER
+                    var len = (m_InputField.value ?? string.Empty).Length;
+                    if (m_InputField.cursorIndex > len)
+                        m_InputField.cursorIndex = len;
+                    if (m_InputField.selectIndex > len)
+                        m_InputField.selectIndex = len;
+#endif
+                }
+                else
+                {
+                    // Insert newline explicitly and stop propagation to avoid
+                    // UIElements/UGUI cursor sync issues (ArgumentOutOfRangeException).
+                    var text = m_InputField.value ?? string.Empty;
+                    var cursor = m_InputField.cursorIndex;
+                    var select = m_InputField.selectIndex;
+                    int start = Math.Max(0, Math.Min(Math.Min(cursor, select), text.Length));
+                    int end = Math.Max(0, Math.Min(Math.Max(cursor, select), text.Length));
+
+                    var newText = text.Substring(0, start) + "\n" + text.Substring(end);
+                    var newCursor = start + 1;
+
+                    m_Value = newText;
+                    m_InputField.SetValueWithoutNotify(newText);
+                    RefreshUI();
+
+                    // Re-focus and restore cursor position on next frame to avoid
+                    // breaking the TextField's editing state.
+                    schedule.Execute(() =>
+                    {
+                        m_InputField.Focus();
+                        m_InputField.SelectRange(newCursor, newCursor);
+                    });
+
+                    evt.StopPropagation();
+#if !UNITY_2023_2_OR_NEWER
+                    evt.PreventDefault();
+#endif
+                }
             }
 
-            if (m_RequestSubmit && evt.keyCode == KeyCode.None)
-            {
-                evt.StopPropagation();
-#if !UNITY_2023_2_OR_NEWER
-                evt.PreventDefault();
-#endif
-                submitted?.Invoke();
-            }
-
-            m_RequestSubmit = false;
             m_RequestTab = false;
         }
 
@@ -263,6 +301,8 @@ namespace Unity.AppUI.UI
 
             if (currentHeight.keyword == StyleKeyword.Auto || !Mathf.Approximately(newHeight, currentHeight.value))
                 m_InputField.style.minHeight = newHeight;
+
+            AutoResize();
         }
 
         static void OnPlaceholderValueChanged(ChangeEvent<string> evt)
@@ -273,9 +313,6 @@ namespace Unity.AppUI.UI
         void OnInputValueChanged(ChangeEvent<string> e)
         {
             e.StopPropagation();
-
-            if (autoResize)
-                AutoResize();
 
             using var evt = ChangingEvent<string>.GetPooled();
             evt.target = this;
@@ -290,7 +327,7 @@ namespace Unity.AppUI.UI
 
         void AutoResize()
         {
-            if (panel == null || !contentRect.IsValid())
+            if (!autoResize || panel == null  || !contentRect.IsValid())
                 return;
 
             var width = m_InputField.resolvedStyle.width -
@@ -299,8 +336,12 @@ namespace Unity.AppUI.UI
                 m_InputField.resolvedStyle.paddingLeft -
                 m_InputField.resolvedStyle.paddingRight;
 
+            var text = m_InputField.text ?? string.Empty;
+            if (text.EndsWith("\n"))
+                text += "1";
+
             var textSize = m_InputField.MeasureTextSize(
-                m_InputField.text,
+                text,
                 width, MeasureMode.Exactly,
                 0, MeasureMode.Undefined);
 
@@ -569,6 +610,30 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// Whether the submit action should be triggered by using the Action key (Ctrl on Windows, Cmd on Mac) modifier.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public bool submitActionKeyModifier
+        {
+            get => m_SubmitActionKeyModifier;
+            set
+            {
+                var changed = m_SubmitActionKeyModifier != value;
+                m_SubmitActionKeyModifier = value;
+
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in submitActionKeyModifierProperty);
+#endif
+            }
+        }
+
+        /// <summary>
         /// The TextArea value.
         /// </summary>
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -626,6 +691,7 @@ namespace Unity.AppUI.UI
         void RefreshUI()
         {
             m_Placeholder.EnableInClassList(Styles.hiddenUssClassName, !string.IsNullOrEmpty(m_Value));
+            AutoResize();
         }
 
 #if ENABLE_UXML_TRAITS
@@ -676,6 +742,12 @@ namespace Unity.AppUI.UI
                 defaultValue = EventModifiers.None
             };
 
+            readonly UxmlBoolAttributeDescription m_SubmitActionKeyModifier = new()
+            {
+                name = "submit-action-key-modifier",
+                defaultValue = false
+            };
+
             readonly UxmlBoolAttributeDescription m_IsReadOnly = new()
             {
                 name = "is-read-only",
@@ -707,6 +779,7 @@ namespace Unity.AppUI.UI
 
                 el.submitOnEnter = m_SubmitOnEnter.GetValueFromBag(bag, cc);
                 el.submitModifiers = m_SubmitModifiers.GetValueFromBag(bag, cc);
+                el.submitActionKeyModifier = m_SubmitActionKeyModifier.GetValueFromBag(bag, cc);
                 el.isReadOnly = m_IsReadOnly.GetValueFromBag(bag, cc);
                 el.maxLength = m_MaxLength.GetValueFromBag(bag, cc);
             }

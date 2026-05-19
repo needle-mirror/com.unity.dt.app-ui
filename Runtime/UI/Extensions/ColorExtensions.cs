@@ -96,5 +96,30 @@ namespace Unity.AppUI.UI
                 Mathf.RoundToInt(color.b * 255)).ToArgb();
             return ArgbToRgbaHex(argb.ToString("X8"), alpha);
         }
+
+        /// <summary>
+        /// Converts a color from RGBA format (0xRRGGBBAA) to UITK hex format (#RRGGBB).
+        /// </summary>
+        /// <param name="rgbaColor">Color in RGBA format.</param>
+        /// <returns>Color string in #RRGGBB format.</returns>
+        public static string RawColorToHex(uint rgbaColor)
+        {
+            // Shift right by 8 to remove alpha and get RGB
+            return $"#{(rgbaColor >> 8):X6}";
+        }
+
+        /// <summary>
+        /// Converts a color from RGBA format (0xRRGGBBAA) to UnityEngine.Color.
+        /// </summary>
+        /// <param name="rgbaColor">Color in RGBA format.</param>
+        /// <returns>UnityEngine.Color instance.</returns>
+        public static Color RawColorToColor(uint rgbaColor)
+        {
+            var r = ((rgbaColor >> 24) & 0xFF) / 255f;
+            var g = ((rgbaColor >> 16) & 0xFF) / 255f;
+            var b = ((rgbaColor >> 8) & 0xFF) / 255f;
+            var a = (rgbaColor & 0xFF) / 255f;
+            return new Color(r, g, b, a);
+        }
     }
 }

@@ -17,7 +17,7 @@
 }
 
 .appui-avatar--circular {
-    border-radius: 1000px;
+    border-radius: 100%;
 }
 
 .appui-avatar--rounded {
@@ -47,17 +47,6 @@
     align-items: center;
     justify-content: center;
     position: relative;
-}
-
-.appui-avatar--circular .appui-avatar__container {
-    border-radius: 1000px;
-}
-
-.appui-avatar--rounded .appui-avatar__container {
-    border-radius: var(--appui-alias-control-border-radius);
-}
-
-.appui-avatar .appui-text {
     -unity-font-definition: var(--appui-font-weights-200);
     letter-spacing: -0.3px;
     overflow: hidden;
@@ -67,16 +56,24 @@
     -unity-text-align: middle-center;
 }
 
-.appui-avatar--size-s .appui-text {
-    font-size: var(--appui-font-sizes-50);
+.appui-avatar--circular .appui-avatar__container {
+    border-radius: 100%;
 }
 
-.appui-avatar--size-m .appui-text {
-    font-size: var(--appui-font-sizes-100);
+.appui-avatar--rounded .appui-avatar__container {
+    border-radius: var(--appui-alias-control-border-radius);
 }
 
-.appui-avatar--size-l .appui-text {
+.appui-avatar--size-s .appui-avatar__container {
+    font-size: var(--appui-font-sizes-75);
+}
+
+.appui-avatar--size-m .appui-avatar__container {
     font-size: var(--appui-font-sizes-200);
+}
+
+.appui-avatar--size-l .appui-avatar__container {
+    font-size: var(--appui-font-sizes-300);
 }
 
 .appui-avatar:disabled {

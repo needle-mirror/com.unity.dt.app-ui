@@ -43,6 +43,11 @@
             "name": "com.unity.localization",
             "expression": "",
             "define": "UNITY_LOCALIZATION_PRESENT"
+        },
+        {
+            "name": "Unity",
+            "expression": "6000.0.0a1",
+            "define": "APPUI_ENABLE_SYNTAX_HIGHLIGHTING"
         }
     ],
     "noEngineReferences": false

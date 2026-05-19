@@ -13,6 +13,9 @@
     border-color: var(--appui-alias-actions-border-color-default);
     color: var(--appui-foregrounds-100);
     flex-shrink: 0;
+    transition-property: background-color, border-color, color;
+    transition-duration: var(--appui-animation-duration-500);
+    transition-timing-function: var(--appui-animation-easing-ease-out);
 }
 
 .appui--rtl .appui-button {
@@ -61,11 +64,17 @@
 
 .appui-button__title {
     -unity-font-definition: var(--appui-font-weights-200); /* converted from : font-weight: var(--appui-global-font-weight-semi-bold); */
+    transition-property: color;
+    transition-duration: var(--appui-animation-duration-100);
+    transition-timing-function: var(--appui-animation-easing-ease-out);
 }
 
 .appui-button__subtitle {
     font-size: var(--appui-font-sizes-body-sm);
     color: var(--appui-foregrounds-50);
+    transition-property: color;
+    transition-duration: var(--appui-animation-duration-100);
+    transition-timing-function: var(--appui-animation-easing-ease-out);
 }
 
 .appui-button .appui-icon {

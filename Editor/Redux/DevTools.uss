@@ -6,7 +6,7 @@
     --record-on-icon: url("project:/Packages/com.unity.dt.app-ui/Editor/Editor Default Resources/Icons/d_Record On.png");
     --record-off-icon: url("project:/Packages/com.unity.dt.app-ui/Editor/Editor Default Resources/Icons/d_Record Off.png");
 
-    --mono-font: url("project:/Packages/com.unity.dt.app-ui/Editor/Editor Default Resources/Fonts/RobotoMono-Regular.ttf");
+    --appui-code-font-family: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Fonts/RobotoMono-Regular.ttf");
 }
 
 .editor-light {
@@ -105,7 +105,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 0 8px;
-    -unity-font-definition: var(--mono-font);
+    -unity-font-definition: var(--appui-code-font-family);
     opacity: 0.6;
 }
 
@@ -194,7 +194,7 @@
 .dev-tools-inspector__diff-pane {
     flex-grow: 1;
     background-color: var(--unity-colors-input_field-background);
-    -unity-font-definition: var(--mono-font);
+    -unity-font-definition: var(--appui-code-font-family);
 }
 
 .dev-tools-inspector__action-content,

@@ -100,6 +100,15 @@ namespace Unity.AppUI.Tests.Core
         }
 
         [UnityTest]
+        public IEnumerator HasPasteboardAccessAsyncWorks()
+        {
+            var hasAccessTask = Platform.HasPasteboardAccessAsync();
+            yield return new WaitUntil(() => hasAccessTask.IsCompleted);
+
+            Assert.IsTrue(hasAccessTask.Result);
+        }
+
+        [UnityTest]
         public IEnumerator AsyncMethodsReturnTasks()
         {
             var data = GetDataForType(PasteboardType.Text);

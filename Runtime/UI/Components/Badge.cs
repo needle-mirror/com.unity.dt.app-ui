@@ -95,11 +95,16 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId verticalAnchorProperty = nameof(verticalAnchor);
 
+        [Obsolete]
         internal static readonly BindingId contentProperty = nameof(content);
 
+        [Obsolete]
         internal static readonly BindingId maxProperty = nameof(max);
 
+        [Obsolete]
         internal static readonly BindingId showZeroProperty = nameof(showZero);
+
+        internal static readonly BindingId labelProperty = nameof(label);
 
 #endif
         /// <summary>
@@ -158,7 +163,7 @@ namespace Unity.AppUI.UI
 
         int m_Content;
 
-        readonly Text m_LabelElement;
+        readonly TextElement m_LabelElement;
 
         bool m_ShowZero;
 
@@ -171,7 +176,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The content container of the Badge.
         /// </summary>
-        public override VisualElement contentContainer => this;
+        public override VisualElement contentContainer => m_LabelElement;
 
         /// <summary>
         /// The background color of the Badge.
@@ -329,9 +334,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
-#if ENABLE_UXML_SERIALIZED_DATA
-        [UxmlAttribute]
-#endif
+        [Obsolete("content is deprecated and will be removed in a future release. Badge can now have any kind of content.")]
         public int content
         {
             get => m_Content;
@@ -353,9 +356,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
-#if ENABLE_UXML_SERIALIZED_DATA
-        [UxmlAttribute]
-#endif
+        [Obsolete("max is deprecated and will be removed in a future release. Badge can now have any kind of content.")]
         public int max
         {
             get => m_Max;
@@ -377,9 +378,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
 #endif
-#if ENABLE_UXML_SERIALIZED_DATA
-        [UxmlAttribute]
-#endif
+        [Obsolete("showZero is deprecated and will be removed in a future release. Badge can now have any kind of content. Use label to set textual content.")]
         public bool showZero
         {
             get => m_ShowZero;
@@ -391,6 +390,29 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in showZeroProperty);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// The textual content of the Badge.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+#if ENABLE_UXML_SERIALIZED_DATA
+        [UxmlAttribute]
+#endif
+        public string label
+        {
+            get => m_LabelElement.text;
+            set
+            {
+                var changed = m_LabelElement.text != value;
+                m_LabelElement.text = value;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in labelProperty);
 #endif
             }
         }
@@ -414,7 +436,7 @@ namespace Unity.AppUI.UI
             m_BadgeElement.AddToClassList(badgeUssClassName);
             hierarchy.Add(m_BadgeElement);
 
-            m_LabelElement = new Text { pickingMode = PickingMode.Ignore, name = labelUssClassName };
+            m_LabelElement = new TextElement { pickingMode = PickingMode.Ignore, name = labelUssClassName };
             m_LabelElement.AddToClassList(labelUssClassName);
             m_BadgeElement.Add(m_LabelElement);
 
@@ -424,9 +446,6 @@ namespace Unity.AppUI.UI
             overlapType = BadgeOverlapType.Rectangular;
             horizontalAnchor = HorizontalAnchor.Right;
             verticalAnchor = VerticalAnchor.Top;
-            showZero = false;
-            max = int.MaxValue;
-            content = 0;
         }
 
 #if ENABLE_UXML_TRAITS
@@ -470,28 +489,16 @@ namespace Unity.AppUI.UI
                 defaultValue = VerticalAnchor.Top
             };
 
-            readonly UxmlIntAttributeDescription m_Content = new UxmlIntAttributeDescription
-            {
-                name = "content",
-                defaultValue = 0
-            };
-
-            readonly UxmlIntAttributeDescription m_Max = new UxmlIntAttributeDescription
-            {
-                name = "max",
-                defaultValue = int.MaxValue
-            };
-
-            readonly UxmlBoolAttributeDescription m_ShowZero = new UxmlBoolAttributeDescription
-            {
-                name = "show-zero",
-                defaultValue = false
-            };
-
             readonly UxmlColorAttributeDescription m_Color = new UxmlColorAttributeDescription
             {
                 name = "color",
                 defaultValue = Color.white
+            };
+
+            readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
+            {
+                name = "label",
+                defaultValue = string.Empty
             };
 
             /// <summary>
@@ -517,9 +524,9 @@ namespace Unity.AppUI.UI
                 el.overlapType = m_OverlapType.GetValueFromBag(bag, cc);
                 el.horizontalAnchor = m_HorizontalAnchor.GetValueFromBag(bag, cc);
                 el.verticalAnchor = m_VerticalAnchor.GetValueFromBag(bag, cc);
-                el.content = m_Content.GetValueFromBag(bag, cc);
-                el.max = m_Max.GetValueFromBag(bag, cc);
-                el.showZero = m_ShowZero.GetValueFromBag(bag, cc);
+                var label = string.Empty;
+                if (m_Label.TryGetValueFromBag(bag, cc, ref label))
+                    el.label = label;
             }
         }
 #endif

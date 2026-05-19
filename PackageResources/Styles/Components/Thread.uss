@@ -1,0 +1,65 @@
+/* Thread */
+.appui-thread {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.appui-thread__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: var(--appui-alias-control-gap-md) var(--appui-alias-control-gap-lg);
+    border-bottom-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-control-border-color-default);
+    flex-shrink: 0;
+}
+
+.appui-thread__participants {
+    flex-shrink: 0;
+}
+
+.appui--rtl .appui-thread__participants {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.appui-thread__flex-spacer {
+    flex-grow: 1;
+}
+
+.appui-thread__actions {
+    display: none;
+    flex-direction: row;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.appui--rtl .appui-thread__actions {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.appui-thread__header > .appui-thread__resolve-btn.is-selected {
+    background-color: rgba(0, 0, 0, 0);
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.appui-thread__header > .appui-thread__resolve-btn.is-selected > .appui-actionbutton__label,
+.appui-thread__header > .appui-thread__resolve-btn.is-selected > .appui-icon {
+    color: var(--appui-positive-100);
+    --unity-image-tint-color: var(--appui-positive-100);
+}
+
+.appui-thread__replies {
+    flex: 1;
+}
+
+/* RepliesView is a ScrollView. Pad the scroll content container so replies
+   inherit the horizontal inset the previous ListView applied via its
+   per-item .unity-collection-view__item rule. */
+.appui-thread__replies .unity-scroll-view__content-container {
+    padding: 0 var(--appui-alias-control-gap-lg);
+}

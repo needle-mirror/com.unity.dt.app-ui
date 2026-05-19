@@ -1,0 +1,74 @@
+/* ---------------------------------------------------------------------- *
+ *  CodeBlock story — story-only styles, all values pulled from App UI     *
+ *  design tokens (--appui-spacing-*, --appui-alias-control-*).            *
+ *  No hardcoded numbers or colors.                                        *
+ * ---------------------------------------------------------------------- */
+
+.appui-codeblock-story {
+    flex-grow: 1;
+    align-self: stretch;
+    flex-direction: column;
+}
+
+.appui-codeblock-story__heading {
+    margin-bottom: var(--appui-alias-control-gap-md);
+}
+
+.appui-codeblock-story__scroll {
+    flex-grow: 1;
+    align-self: stretch;
+}
+
+/* ---- Live editor split ---------------------------------------------- */
+.appui-codeblock-story__live {
+    flex-grow: 1;
+    align-self: stretch;
+    flex-direction: row;
+}
+
+.appui-codeblock-story__live-pane {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.appui-codeblock-story__live-pane--right {
+    border-left-width: 1px;
+    border-left-color: var(--appui-alias-control-border-color-default);
+    margin-left: var(--appui-alias-control-gap-md);
+    padding-left: var(--appui-alias-control-gap-md);
+}
+
+.appui-codeblock-story__live-label {
+    margin-bottom: var(--appui-alias-control-gap-sm);
+}
+
+.appui-codeblock-story__live-toolbar {
+    flex-direction: row;
+    flex-shrink: 0;
+    margin-bottom: var(--appui-alias-control-gap-sm);
+}
+
+.appui-codeblock-story__live-toolbar > * {
+    margin-right: var(--appui-alias-control-gap-sm);
+}
+
+.appui-codeblock-story__live-input {
+    flex-grow: 1;
+    align-self: stretch;
+}
+
+.appui-codeblock-story__live-output {
+    flex-grow: 1;
+    align-self: stretch;
+}
+
+.appui-codeblock-story__live-preview--theme-dark {
+    --codeblock-theme: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Themes/dark-plus.tmTheme.json");
+}
+
+.appui-codeblock-story__live-preview--theme-light {
+    --codeblock-theme: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Themes/light-plus.tmTheme.json");
+}

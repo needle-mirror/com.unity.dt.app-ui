@@ -1,0 +1,117 @@
+/* Attachment */
+:root {
+    --appui-attachment-width: 180px;
+}
+
+.appui-attachment {
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: row;
+    align-items: center;
+    padding: var(--appui-alias-control-gap-md);
+    border-radius: var(--appui-alias-control-border-radius);
+    background-color: var(--appui-backgrounds-300);
+    margin: var(--appui-alias-control-gap-md) var(--appui-alias-control-gap-md) 0 0;
+    width: var(--appui-attachment-width);
+    cursor: var(--appui-alias-control-cursor-pointer);
+    transition: background-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-100);
+}
+
+.appui-attachment:hover,
+.appui-attachment.is-hovered {
+    background-color: var(--appui-primary-400);
+}
+
+.appui-attachment:active,
+.appui-attachment.is-active {
+    background-color: var(--appui-backgrounds-100);
+}
+
+.appui--rtl .appui-attachment {
+    flex-direction: row-reverse;
+}
+
+.appui-attachment__thumbnail {
+    flex-shrink: 0;
+    width: var(--appui-sizing-600);
+    height: var(--appui-sizing-600);
+    border-radius: var(--appui-alias-control-border-radius);
+    overflow: hidden;
+    margin-right: var(--appui-alias-control-gap-md);
+    background-color: var(--appui-backgrounds-200);
+}
+
+.appui--rtl .appui-attachment__thumbnail {
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-md);
+}
+
+.appui-attachment__icon {
+    display: none;
+    flex-shrink: 0;
+    margin-right: var(--appui-alias-control-gap-md);
+}
+
+.appui--rtl .appui-attachment__icon {
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-md);
+}
+
+.appui-attachment--compact {
+    width: auto;
+    height: var(--appui-alias-control-sizing-md-height);
+}
+
+.appui-attachment--compact .appui-attachment__info {
+    flex-direction: row;
+    align-items: center;
+}
+
+.appui-attachment--compact .appui-attachment__subtitle {
+    margin-left: var(--appui-alias-control-gap-md);
+}
+
+.appui--rtl .appui-attachment--compact .appui-attachment__subtitle {
+    margin-left: 0;
+    margin-right: var(--appui-alias-control-gap-md);
+}
+
+.appui-attachment--compact .appui-attachment__delete-btn {
+    align-self: center;
+}
+
+.appui-attachment__info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.appui-attachment__title {
+    font-size: var(--appui-font-sizes-body-sm);
+    color: var(--appui-foregrounds-100);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -unity-text-overflow-position: start;
+}
+
+.appui-attachment__subtitle {
+    font-size: var(--appui-font-sizes-body-xs);
+    color: var(--appui-foregrounds-50);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -unity-text-overflow-position: end;
+}
+
+.appui-attachment__delete-btn {
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-left: var(--appui-alias-control-gap-md);
+}
+
+.appui--rtl .appui-attachment__delete-btn {
+    margin-left: 0;
+    margin-right: var(--appui-alias-control-gap-md);
+}

@@ -576,6 +576,8 @@ namespace Unity.AppUI.Editor
 
         static readonly IconEntry[] k_RequiredIcons = new[]
         {
+            new IconEntry { name = "arrow-up", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ArrowUp.png" },
+
             new IconEntry { name = "calendar", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Calendar.png" },
 
             new IconEntry { name = "caret-down", variant = k_FillVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/CaretDown.png" },
@@ -590,6 +592,7 @@ namespace Unity.AppUI.Editor
             new IconEntry { name = "check-circle", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CheckCircle.png" },
             new IconEntry { name = "check", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Check.png" },
             new IconEntry { name = "color-picker", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ColorPicker.png" },
+            new IconEntry { name = "copy", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Copy.png" },
 
             new IconEntry { name = "delete", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Delete.png" },
             new IconEntry { name = "dots-three", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThree.png" },
@@ -603,12 +606,18 @@ namespace Unity.AppUI.Editor
             new IconEntry { name = "minus", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Minus.png" },
             new IconEntry { name = "minus", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Minus.png" },
 
+            new IconEntry { name = "paperclip", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Paperclip.png" },
+            new IconEntry { name = "pen", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Pen.png" },
             new IconEntry { name = "plus", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Plus.png" },
 
             new IconEntry { name = "resize-handle", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ResizeHandle.png" },
 
             new IconEntry { name = "scene", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Scene.png" },
+            new IconEntry { name = "smiley", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Smiley.png" },
             new IconEntry { name = "sub-menu-indicator", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/SubMenuIndicator.png" },
+
+            new IconEntry { name = "thumbs-down", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ThumbsDown.png" },
+            new IconEntry { name = "thumbs-up", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ThumbsUp.png" },
 
             new IconEntry { name = "users", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Users.png" },
 

@@ -46,6 +46,7 @@
   --appui-alias-control-gap-lg: var(--appui-spacing-150);
   --appui-alias-control-gap-xl: var(--appui-spacing-200);
   --appui-alias-control-border-radius: var(--appui-border-radius-md);
+  --appui-alias-actions-border-color-selected: var(--appui-alias-actions-selected-background-color-default);
   --appui-alias-actions-accent-foreground-color-default: var(--appui-color-white);
   --appui-alias-actions-accent-foreground-color-hover: var(--appui-color-white);
   --appui-alias-actions-accent-foreground-color-active: var(--appui-color-white);
@@ -65,6 +66,7 @@
   --appui-alias-actions-accent-background-color-hover: var(--appui-accent-50);
   --appui-alias-actions-accent-background-color-active: var(--appui-accent-25);
   --appui-alias-actions-accent-background-color-focus: var(--appui-accent-25);
+  --appui-alias-actions-quiet-border-color-selected: var(--appui-alias-actions-border-color-selected);
   --appui-alias-actions-destructive-default: var(--appui-destructive-100);
   --appui-alias-actions-destructive-hover: var(--appui-destructive-50);
   --appui-alias-actions-destructive-active: var(--appui-destructive-25);
@@ -111,7 +113,6 @@
   --appui-alias-actions-border-color-active: var(--appui-base-400);
   --appui-alias-actions-border-color-focus: var(--appui-base-400);
   --appui-alias-actions-border-color-disabled: var(--appui-base-300);
-  --appui-alias-actions-border-color-selected: var(--appui-base-400);
   --appui-alias-actions-quiet-background-color-focus: var(--appui-base-50);
   --appui-alias-actions-quiet-border-color-invalid: var(--appui-alias-actions-border-color-invalid);
   --appui-alias-text-callout: var(--appui-foregrounds-200);
@@ -144,5 +145,4 @@
   --appui-alias-actions-quiet-border-color-hover: var(--appui-alias-actions-border-color-hover);
   --appui-alias-actions-quiet-border-color-active: var(--appui-alias-actions-border-color-active);
   --appui-alias-actions-quiet-border-color-focus: var(--appui-alias-actions-border-color-focus);
-  --appui-alias-actions-quiet-border-color-selected: var(--appui-alias-actions-border-color-selected);
 }

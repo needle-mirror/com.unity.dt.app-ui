@@ -82,6 +82,8 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId sourceItemsProperty = nameof(sourceItems);
 
         internal static readonly BindingId bindItemProperty = nameof(bindItem);
+
+        internal static readonly BindingId makeItemProperty = nameof(makeItem);
 #endif
         /// <summary>
         /// The render surplus delegate.
@@ -121,6 +123,8 @@ namespace Unity.AppUI.UI
         IList m_SourceItems;
 
         Action<Avatar, int> m_BindItem;
+
+        Func<Avatar> m_MakeItem;
 
         Size m_Size;
 
@@ -308,6 +312,27 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// Method used to create an Avatar instance.
+        /// </summary>
+#if ENABLE_RUNTIME_DATA_BINDINGS
+        [CreateProperty]
+#endif
+        public Func<Avatar> makeItem
+        {
+            get => m_MakeItem;
+            set
+            {
+                var changed = m_MakeItem != value;
+                m_MakeItem = value;
+                Refresh();
+#if ENABLE_RUNTIME_DATA_BINDINGS
+                if (changed)
+                    NotifyPropertyChanged(in makeItemProperty);
+#endif
+            }
+        }
+
+        /// <summary>
         /// Defines the AvatarGroup constructor.
         /// </summary>
         public AvatarGroup()
@@ -327,29 +352,70 @@ namespace Unity.AppUI.UI
         public void Refresh()
         {
             var currentTotal = total;
-            Clear();
 
             if (m_SourceItems == null || currentTotal == 0)
+            {
+                Clear();
                 return;
+            }
 
-            if (currentTotal > max)
+            var displayCount = Mathf.Min(currentTotal, max);
+            var hasSurplus = currentTotal > max;
+
+            // Collect existing avatars and find the current surplus element.
+            var existingAvatars = new List<Avatar>();
+            VisualElement existingSurplus = null;
+            for (var c = childCount - 1; c >= 0; c--)
+            {
+                var child = ElementAt(c);
+                if (child is Avatar avatar)
+                    existingAvatars.Add(avatar);
+                else if (child.ClassListContains(surplusUssClassName))
+                    existingSurplus = child;
+            }
+
+            // Handle surplus element.
+            if (hasSurplus)
             {
                 var surplusCount = currentTotal - max;
-                var surplus = renderSurplus?.Invoke(surplusCount);
 
+                // Remove old surplus and create a new one since the count may have changed.
+                if (existingSurplus != null)
+                    Remove(existingSurplus);
+
+                var surplus = renderSurplus?.Invoke(surplusCount);
                 if (surplus != null)
                 {
                     surplus.AddToClassList(surplusUssClassName);
-                    Add(surplus);
+                    Insert(0, surplus);
                 }
             }
-
-            for (var i = Mathf.Min(currentTotal, max) - 1; i >= 0; i--)
+            else if (existingSurplus != null)
             {
-                var avatar = new Avatar();
-                bindItem?.Invoke(avatar, i);
+                Remove(existingSurplus);
+            }
 
+            // Remove excess avatars.
+            while (existingAvatars.Count > displayCount)
+            {
+                var avatarToRemove = existingAvatars[existingAvatars.Count - 1];
+                existingAvatars.RemoveAt(existingAvatars.Count - 1);
+                Remove(avatarToRemove);
+            }
+
+            // Add missing avatars.
+            while (existingAvatars.Count < displayCount)
+            {
+                var avatar = m_MakeItem?.Invoke() ?? new Avatar();
                 Add(avatar);
+                existingAvatars.Add(avatar);
+            }
+
+            // Rebind all visible avatars. Avatars are displayed in reverse order.
+            for (var i = 0; i < displayCount; i++)
+            {
+                var avatar = existingAvatars[displayCount - 1 - i];
+                bindItem?.Invoke(avatar, i);
             }
         }
 
@@ -364,7 +430,7 @@ namespace Unity.AppUI.UI
             {
                 backgroundColor = Color.gray
             };
-            avatar.Add(new Text($"+{surplus}"));
+            avatar.label = $"+{surplus}";
 
             return avatar;
         }

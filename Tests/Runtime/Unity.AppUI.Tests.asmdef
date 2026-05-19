@@ -11,14 +11,17 @@
         "GUID:da2b8d7ad5bc41c99b64ba50c2e1fb8b",
         "GUID:1d0cfa0a4b984e0eb4f9a1d48aea0ce9",
         "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
-        "GUID:84651a3751eca9349aac36a66bba901b"
+        "GUID:84651a3751eca9349aac36a66bba901b",
+        "GUID:28b0f5aedab614a1805e0c9db8369c81",
+        "GUID:a5a86f181c5e41f49b43345f8b0cfaf5"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "nunit.framework.dll"
+        "nunit.framework.dll",
+        "Markdig.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [
@@ -49,6 +52,11 @@
             "name": "Unity",
             "expression": "2022.1.0a1",
             "define": "ENABLE_VALUEFIELD_INTERFACE"
+        },
+        {
+            "name": "Unity",
+            "expression": "6000.0.0a1",
+            "define": "APPUI_ENABLE_SYNTAX_HIGHLIGHTING"
         }
     ],
     "noEngineReferences": false

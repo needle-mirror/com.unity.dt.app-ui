@@ -228,6 +228,12 @@ namespace Unity.AppUI.Editor
         /// The list of properties (used internally).
         /// </summary>
         protected readonly List<StoryBookComponentProperty> m_Properties = new List<StoryBookComponentProperty>();
+
+        /// <summary>
+        /// Add a property to the component.
+        /// </summary>
+        /// <param name="property"> The property to add. </param>
+        protected void AddProperty(StoryBookComponentProperty property) => m_Properties.Add(property);
     }
 
     /// <summary>
@@ -281,6 +287,19 @@ namespace Unity.AppUI.Editor
         /// The list of stories (used internally).
         /// </summary>
         protected readonly List<StoryBookStory> m_Stories = new List<StoryBookStory>();
+
+        /// <summary>
+        /// Add a story to the page.
+        /// </summary>
+        /// <param name="story"> The story to add. </param>
+        protected void AddStory(StoryBookStory story) => m_Stories.Add(story);
+
+        /// <summary>
+        /// Add a story to the page with a name and a function that creates the GUI of the story.
+        /// </summary>
+        /// <param name="name"> The name of the story. </param>
+        /// <param name="createGUI"> The function that creates the GUI of the story. </param>
+        protected void AddStory(string name, Func<VisualElement> createGUI) => AddStory(new StoryBookStory(name, createGUI));
     }
 
     /// <summary>

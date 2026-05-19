@@ -1,0 +1,149 @@
+/* CodeBlock — reusable code-block styles. Apply via classes only; no
+ * dedicated VisualElement type is required.
+ *
+ * Syntax highlighting is configured by two CustomStyleProperties resolved
+ * from USS:
+ *   --codeblock-grammar : TextMateGrammarAsset
+ *   --codeblock-theme   : TextMateThemeAsset
+ *
+ * The CodeBlock element adds an `appui-code-block--lang-<value>` class
+ * whenever its `language` property is set, so per-language grammar
+ * mappings can be expressed declaratively below.
+ *
+ * Background and foreground colors come from the active TextMate theme
+ * (set as inline styles by Refresh() so the rounded container shows the
+ * theme's background). When no theme is configured the rules below provide
+ * design-system fallbacks.
+ */
+
+:root {
+    --appui-code-font-family: url('../../Fonts/RobotoMono-Regular.ttf');
+}
+
+.appui-code-block {
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--appui-alias-control-border-radius);
+    border-width: 1px;
+    border-color: var(--appui-alias-control-border-color-default);
+    background-color: var(--appui-backgrounds-50);
+    margin-top: var(--appui-spacing-50);
+    margin-bottom: var(--appui-spacing-150);
+
+    /* Default theme — overridden by .appui--light below. */
+    --codeblock-theme: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Themes/dark-plus.tmTheme.json");
+}
+
+.appui--light .appui-code-block {
+    --codeblock-theme: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Themes/light-plus.tmTheme.json");
+}
+
+/* ---- Language → grammar mappings -------------------------------------- *
+ * Aliases are listed alongside canonical names so common LLM info strings  *
+ * (`cs`, `c#`, `csharp`) all pick the same grammar. Add new languages by   *
+ * shipping a *.tmLanguage.json grammar and adding a class entry here.      */
+
+.appui-code-block--lang-csharp,
+.appui-code-block--lang-cs,
+.appui-code-block--lang-c\# {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/csharp.tmLanguage.json");
+}
+
+.appui-code-block--lang-lua {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/lua.tmLanguage.json");
+}
+
+.appui-code-block--lang-css {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/css.tmLanguage.json");
+}
+
+.appui-code-block--lang-json,
+.appui-code-block--lang-json5,
+.appui-code-block--lang-jsonc {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/json.tmLanguage.json");
+}
+
+.appui-code-block--lang-xml {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/xml.tmLanguage.json");
+}
+
+.appui-code-block--lang-html {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/html.tmLanguage.json");
+}
+
+/* ---- Anatomy --------------------------------------------------------- */
+
+.appui-code-block__header {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    padding-top: var(--appui-spacing-50);
+    padding-bottom: var(--appui-spacing-50);
+    padding-left: var(--appui-spacing-100);
+    padding-right: var(--appui-spacing-50);
+    background-color: var(--appui-backgrounds-200);
+    border-bottom-width: 1px;
+    border-bottom-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui-code-block__language {
+    color: var(--appui-foregrounds-50);
+    font-size: var(--appui-font-sizes-100);
+    -unity-font-definition: var(--appui-font-weights-100);
+}
+
+.appui-code-block__header-spacer {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+}
+
+.appui-code-block__copy-btn {
+    flex-shrink: 0;
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: 125ms;
+    transition-timing-function: ease-out;
+}
+
+.appui-code-block.appui-code-block--hovered .appui-code-block__copy-btn {
+    opacity: 1;
+}
+
+.appui-code-block__scroll {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
+}
+
+.appui-code-block__viewport {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: var(--appui-spacing-125);
+}
+
+.appui-code-block__line-numbers {
+    display: none;
+    color: var(--appui-foregrounds-25);
+    font-size: var(--appui-font-sizes-100);
+    white-space: nowrap;
+    -unity-font-definition: var(--appui-code-font-family);
+    -unity-text-align: upper-right;
+    flex-shrink: 0;
+    padding-right: var(--appui-spacing-125);
+    margin-right: var(--appui-spacing-100);
+    border-right-width: 1px;
+    border-right-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui-code-block--with-line-numbers .appui-code-block__line-numbers {
+    display: flex;
+}
+
+.appui-code-block__body {
+    color: var(--appui-foregrounds-100);
+    font-size: var(--appui-font-sizes-100);
+    white-space: nowrap;
+    -unity-font-definition: var(--appui-code-font-family);
+    flex-grow: 1;
+}

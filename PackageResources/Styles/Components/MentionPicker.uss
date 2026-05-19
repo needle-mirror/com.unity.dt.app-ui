@@ -1,0 +1,14 @@
+/* MentionPicker */
+.appui-mention-picker {
+    max-height: 250px;
+}
+
+.appui-mention-picker__list {
+    flex: 1;
+    min-height: var(--appui-alias-control-sizing-md-height);
+}
+
+.appui-mention-picker__none {
+    padding: var(--appui-alias-control-gap-lg);
+    -unity-text-align: middle-left;
+}

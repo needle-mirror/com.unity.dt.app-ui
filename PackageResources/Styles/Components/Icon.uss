@@ -17,13 +17,13 @@
 }
 
 .appui-icon--size-xxs {
-    width: var(--appui-sizing-150);
-    height: var(--appui-sizing-150);
+    width: var(--appui-sizing-200);
+    height: var(--appui-sizing-200);
 }
 
 .appui-icon--size-xs {
-    width: var(--appui-sizing-200);
-    height: var(--appui-sizing-200);
+    width: var(--appui-sizing-250);
+    height: var(--appui-sizing-250);
 }
 
 .appui-icon--size-s {
@@ -32,11 +32,11 @@
 }
 
 .appui-icon--size-m {
-    width: var(--appui-sizing-400);
-    height: var(--appui-sizing-400);
+    width: var(--appui-sizing-350);
+    height: var(--appui-sizing-350);
 }
 
 .appui-icon--size-l {
-    width: var(--appui-sizing-500);
-    height: var(--appui-sizing-500);
+    width: var(--appui-sizing-400);
+    height: var(--appui-sizing-400);
 }

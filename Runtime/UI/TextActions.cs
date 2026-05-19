@@ -28,5 +28,23 @@ namespace Unity.AppUI.UI
 #else
             "Paste";
 #endif
+
+        public const int Edit = 14;
+
+        public const string EditLabel =
+#if UNITY_LOCALIZATION_PRESENT
+            "@UI:edit";
+#else
+            "Edit";
+#endif
+
+        public const int Delete = 15;
+
+        public const string DeleteLabel =
+#if UNITY_LOCALIZATION_PRESENT
+            "@UI:delete";
+#else
+            "Delete";
+#endif
     }
 }
