@@ -17,6 +17,7 @@ namespace Unity.AppUI.Redux
         struct SliceKeyValuePair
         {
             public string sliceName;
+            [NonSerialized]
             public object sliceState;
             public SliceKeyValuePair(string sliceName, object sliceState)
             {

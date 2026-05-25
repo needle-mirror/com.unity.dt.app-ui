@@ -10,9 +10,9 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [2.0.5] - 2026-04-07
+## [2.0.6] - 2026-05-25
 
 ### Fixed
 
-- Added missing `[CreateProperty]` attribute on `clickable` property across all pressable components to fix runtime data binding for `clickable.command` path (UUM-138492)
+- Fixed a NullReferenceException in MenuItem.OpenSubMenu when Menu/MenuItem are declared inline in UXML without a MenuTrigger or MenuBuilder.Build() wrapper.
 

@@ -76,6 +76,7 @@ namespace Unity.AppUI.Redux.DevTools
         /// Gets or sets the mapping of action IDs to their corresponding lifted actions.
         /// Index 0 always contains the initialization action.
         /// </summary>
+        [NonSerialized]
         public Dictionary<int, LiftedAction> actionsById;
 
         /// <summary>
@@ -88,12 +89,14 @@ namespace Unity.AppUI.Redux.DevTools
         /// Gets or sets the set of action IDs that are currently disabled/skipped.
         /// Skipped actions are temporarily removed from state computation.
         /// </summary>
+        [NonSerialized]
         public HashSet<int> skippedActionIds;
 
         /// <summary>
         /// Gets or sets the last confirmed application state.
         /// This represents the baseline state for computing future states.
         /// </summary>
+        [NonSerialized]
         public object committedState;
 
         /// <summary>
