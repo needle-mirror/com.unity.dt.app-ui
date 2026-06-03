@@ -168,7 +168,10 @@ namespace Unity.AppUI.Editor
                 var menu = new GenericMenu();
                 var gridView = rootVisualElement.Q<GridView>();
                 var selectedIndices = gridView.selectedIndices.ToList();
-                var canDelete = selectedIndices.Count > 0;
+                var source = gridView.itemsSource;
+                var canDelete = source != null && selectedIndices
+                    .Select(i => (IconEntry)source[i])
+                    .Any(ie => k_RequiredIcons.All(icn => icn.path != ie.path));
 
                 if (canDelete)
                     menu.AddItem(new GUIContent("Delete selected icons"), false, DeleteSelectedIcons);
@@ -311,7 +314,11 @@ namespace Unity.AppUI.Editor
                     typeof(Type),
                     typeof(Object),
                     typeof(bool),
+#if ENABLE_ENTITY_ID
+                    typeof(List<EntityId>),
+#else
                     typeof(List<int>),
+#endif
                     typeof(Action<Object>),
                     typeof(Action<Object>),
 #if UNITY_2022_1_OR_NEWER

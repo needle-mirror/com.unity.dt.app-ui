@@ -292,5 +292,115 @@ namespace Unity.AppUI.Tests.MVVM
             [Service]
             public ITestInterface dependency;
         }
+
+        [Test]
+        public void ServiceProvider_WithInstance_ReturnsSameInstance()
+        {
+            var services = new ServiceCollection();
+            var instance = new InstanceService();
+            services.AddSingleton<IInstanceService>(instance);
+
+            var provider = services.BuildServiceProvider();
+
+            var resolved1 = provider.GetService<IInstanceService>();
+            var resolved2 = provider.GetService<IInstanceService>();
+
+            Assert.AreSame(instance, resolved1);
+            Assert.AreSame(instance, resolved2);
+        }
+
+        [Test]
+        public void ServiceProvider_WithInstance_AcrossScopes_ReturnsSameInstance()
+        {
+            var services = new ServiceCollection();
+            var instance = new InstanceService();
+            services.AddSingleton<IInstanceService>(instance);
+
+            var provider = services.BuildServiceProvider();
+            var root = provider.GetService<IInstanceService>();
+
+            using var scope = provider.CreateScope();
+            var scoped = scope.ServiceProvider.GetService<IInstanceService>();
+
+            Assert.AreSame(instance, root);
+            Assert.AreSame(instance, scoped);
+        }
+
+        [Test]
+        public void ServiceProvider_WithInstance_DoesNotInvokeConstructor()
+        {
+            var services = new ServiceCollection();
+            // ThrowingService's only public ctor throws — registering an instance must bypass it.
+            var instance = ThrowingService.CreatePreBuilt();
+            services.AddSingleton<ThrowingService>(instance);
+
+            var provider = services.BuildServiceProvider();
+
+            Assert.DoesNotThrow(() => provider.GetService<ThrowingService>());
+            Assert.AreSame(instance, provider.GetService<ThrowingService>());
+        }
+
+        [Test]
+        public void ServiceProvider_WithInstance_AsDependency_InjectsIntoOtherServices()
+        {
+            var services = new ServiceCollection();
+            var instance = new InstanceService();
+            services.AddSingleton<IInstanceService>(instance);
+            services.AddSingleton<ConsumerOfInstance>();
+
+            var provider = services.BuildServiceProvider();
+            var consumer = provider.GetService<ConsumerOfInstance>();
+
+            Assert.IsNotNull(consumer);
+            Assert.AreSame(instance, consumer.dep);
+        }
+
+        [Test]
+        public void ServiceProvider_WithInstance_DoesNotRunFieldInjection()
+        {
+            var services = new ServiceCollection();
+            services.AddSingleton<ServiceWithValidConstructor>();
+            // Register a pre-built instance whose [Service] field should remain null.
+            var instance = new ServiceWithFieldInjection();
+            services.AddSingleton<ServiceWithFieldInjection>(instance);
+
+            var provider = services.BuildServiceProvider();
+            var resolved = provider.GetService<ServiceWithFieldInjection>();
+
+            Assert.AreSame(instance, resolved);
+            Assert.IsNull(resolved.dependency);
+        }
+
+        public interface IInstanceService { }
+
+        public class InstanceService : IInstanceService { }
+
+        public class ConsumerOfInstance
+        {
+            public IInstanceService dep { get; }
+
+            public ConsumerOfInstance(IInstanceService dep)
+            {
+                this.dep = dep;
+            }
+        }
+
+        public class ThrowingService
+        {
+            public ThrowingService()
+            {
+                throw new System.InvalidOperationException("Constructor must not be invoked for instance-registered services.");
+            }
+
+            ThrowingService(bool _) { }
+
+            public static ThrowingService CreatePreBuilt() => new ThrowingService(true);
+        }
+
+        public class ServiceWithFieldInjection
+        {
+            [Service]
+            public ServiceWithValidConstructor dependency;
+        }
     }
 }

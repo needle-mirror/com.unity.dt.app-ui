@@ -57,6 +57,11 @@
             "name": "Unity",
             "expression": "6000.0.0a1",
             "define": "APPUI_ENABLE_SYNTAX_HIGHLIGHTING"
+        },
+        {
+            "name": "Unity",
+            "expression": "6000.5.0a1",
+            "define": "ENABLE_PANEL_RENDERER"
         }
     ],
     "noEngineReferences": false

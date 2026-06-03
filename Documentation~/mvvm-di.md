@@ -176,6 +176,29 @@ public class MyAppBuilder : UIToolkitAppBuilder<MyApp>
 }
 ```
 
+### Register an existing instance
+
+When you already have a constructed object — for example a `ScriptableObject`, a Unity singleton, a handle returned by a factory, or a service whose constructor isn't DI-resolvable — you can register it directly as a singleton. The container returns this exact instance for every request.
+
+```cs
+public class MyAppBuilder : UIToolkitAppBuilder<MyApp>
+{
+    protected override void OnConfiguringApp(AppBuilder appBuilder)
+    {
+        base.OnConfiguringApp(appBuilder);
+
+        var logger = MyLogger.Shared;                       // built outside the container
+        appBuilder.services.AddSingleton<ILogger>(logger);  // registered as-is
+    }
+}
+```
+
+> [!NOTE]
+> Externally-supplied instances are returned **as-is** — the container does not apply
+> [Service](xref:Unity.AppUI.MVVM.ServiceAttribute) field or property injection on them, and the
+> instance's constructor is never invoked by the container. If you need post-registration wiring,
+> do it on the instance yourself before calling `AddSingleton(instance)`.
+
 ## Use Dependencies
 
 You have two ways to inject dependencies into your classes: constructor injection and property/field injection.

@@ -634,6 +634,7 @@ namespace Unity.AppUI.UI
 
         void RepopulateSplitters()
         {
+            var previousSplitterCount = splitterCount;
             var targetSplitterCount = Mathf.Max(0, paneCount - 1);
 
             for (var i = splitterCount - 1; i >= targetSplitterCount; i--)
@@ -655,6 +656,15 @@ namespace Unity.AppUI.UI
                 child.AddToClassList(itemUssClassName);
                 child.EnableInClassList(firstItemUssClassName, i == 0);
                 child.EnableInClassList(lastItemUssClassName, i == paneCount - 1);
+            }
+
+            if (previousSplitterCount != splitterCount)
+            {
+                using var evt = SplitViewSplitterCountChangedEvent.GetPooled();
+                evt.previousCount = previousSplitterCount;
+                evt.newCount = splitterCount;
+                evt.target = this;
+                SendEvent(evt);
             }
         }
 

@@ -7,6 +7,11 @@ namespace Unity.AppUI.Core
     /// <summary>
     /// A <see cref="MonoBehaviour"/> which allows to display a <see cref="UIDocument"/> in World-Space.
     /// </summary>
+#if UNITY_6000_2_OR_NEWER
+    [System.Obsolete("WorldSpaceUIDocument is deprecated. Use Unity's built-in World Space render mode " +
+        "in Panel Settings with a Panel Input Configuration component instead. " +
+        "See https://docs.unity3d.com/6000.2/Documentation/Manual/ui-systems/create-world-space-ui.html")]
+#endif
     [RequireComponent(typeof(UIDocument))]
     public class WorldSpaceUIDocument : MonoBehaviour
     {

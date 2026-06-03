@@ -133,5 +133,55 @@ namespace Unity.AppUI.Tests.MVVM
             Assert.AreEqual(1, services.Count);
             Assert.IsNotNull(services[0].condition);
         }
+
+        [Test]
+        public void ServiceCollection_AddSingletonInstance_StoresDescriptorWithInstance()
+        {
+            var services = new ServiceCollection();
+            var instance = new ServiceTest();
+
+            services.AddSingleton<IServiceTest>(instance);
+
+            Assert.AreEqual(1, services.Count);
+            var descriptor = services[0];
+            Assert.AreEqual(typeof(IServiceTest), descriptor.serviceType);
+            Assert.AreEqual(ServiceLifetime.Singleton, descriptor.lifetime);
+            Assert.AreSame(instance, descriptor.implementationInstance);
+            Assert.AreEqual(typeof(ServiceTest), descriptor.implementationType);
+        }
+
+        [Test]
+        public void ServiceCollection_AddSingleton_NullInstance_Throws()
+        {
+            var services = new ServiceCollection();
+
+            Assert.Throws<System.ArgumentNullException>(
+                () => services.AddSingleton<IServiceTest>((IServiceTest)null));
+            Assert.Throws<System.ArgumentNullException>(
+                () => services.AddSingleton(typeof(IServiceTest), (object)null));
+        }
+
+        [Test]
+        public void ServiceCollection_AddSingleton_InstanceTypeMismatch_Throws()
+        {
+            var services = new ServiceCollection();
+
+            // Object literal is not assignable to IServiceTest.
+            Assert.Throws<System.ArgumentException>(
+                () => services.AddSingleton(typeof(IServiceTest), new object()));
+        }
+
+        [Test]
+        public void ServiceDescriptor_InstanceWhen_PreservesInstance()
+        {
+            var instance = new ServiceTest();
+            var descriptor = ServiceDescriptor.Singleton(typeof(IServiceTest), instance);
+
+            var conditional = descriptor.When(ctx => true);
+
+            Assert.AreSame(instance, conditional.implementationInstance);
+            Assert.IsNotNull(conditional.condition);
+            Assert.AreEqual(ServiceLifetime.Singleton, conditional.lifetime);
+        }
     }
 }

@@ -12,6 +12,16 @@ namespace Unity.AppUI.Samples.MVVMRedux
 
         internal static MVVMReduxAppBuilder instance { get; private set; }
 
+        void Awake()
+        {
+#if ENABLE_PANEL_RENDERER
+            panelRenderer = GetComponent<PanelRenderer>();
+            if (panelRenderer)
+                return;
+#endif
+            uiDocument = GetComponent<UIDocument>();
+        }
+
         protected override void OnConfiguringApp(AppBuilder builder)
         {
             base.OnConfiguringApp(builder);

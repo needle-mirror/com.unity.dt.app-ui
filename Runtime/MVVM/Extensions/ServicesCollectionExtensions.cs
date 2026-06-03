@@ -91,6 +91,53 @@ namespace Unity.AppUI.MVVM
         }
 
         /// <summary>
+        /// Adds a singleton service of the type specified in <typeparamref name="TService"/> using the supplied
+        /// pre-constructed instance. The container returns this exact instance for every request and does not
+        /// apply <see cref="ServiceAttribute"/> field or property injection on it.
+        /// </summary>
+        /// <param name="serviceCollection"> The <see cref="IServiceCollection"/> to add the service to. </param>
+        /// <param name="instance"> The instance to register as a singleton. </param>
+        /// <typeparam name="TService"> The type of the service to add. </typeparam>
+        /// <returns> The <see cref="IServiceCollection"/> so that additional calls can be chained. </returns>
+        /// <exception cref="ArgumentNullException"> Thrown when <paramref name="serviceCollection"/> or <paramref name="instance"/> is null. </exception>
+        public static IServiceCollection AddSingleton<TService>(this IServiceCollection serviceCollection, TService instance)
+            where TService : class
+        {
+            if (serviceCollection == null)
+                throw new ArgumentNullException(nameof(serviceCollection));
+
+            if (instance == null)
+                throw new ArgumentNullException(nameof(instance));
+
+            return Add(serviceCollection, ServiceDescriptor.Singleton(typeof(TService), instance));
+        }
+
+        /// <summary>
+        /// Adds a singleton service of the type specified in <paramref name="serviceType"/> using the supplied
+        /// pre-constructed instance. The container returns this exact instance for every request and does not
+        /// apply <see cref="ServiceAttribute"/> field or property injection on it.
+        /// </summary>
+        /// <param name="serviceCollection"> The <see cref="IServiceCollection"/> to add the service to. </param>
+        /// <param name="serviceType"> The service type. </param>
+        /// <param name="instance"> The instance to register as a singleton. </param>
+        /// <returns> The <see cref="IServiceCollection"/> so that additional calls can be chained. </returns>
+        /// <exception cref="ArgumentNullException"> Thrown when <paramref name="serviceCollection"/>, <paramref name="serviceType"/>, or <paramref name="instance"/> is null. </exception>
+        /// <exception cref="ArgumentException"> Thrown when <paramref name="instance"/> is not assignable to <paramref name="serviceType"/>. </exception>
+        public static IServiceCollection AddSingleton(this IServiceCollection serviceCollection, Type serviceType, object instance)
+        {
+            if (serviceCollection == null)
+                throw new ArgumentNullException(nameof(serviceCollection));
+
+            if (serviceType == null)
+                throw new ArgumentNullException(nameof(serviceType));
+
+            if (instance == null)
+                throw new ArgumentNullException(nameof(instance));
+
+            return Add(serviceCollection, ServiceDescriptor.Singleton(serviceType, instance));
+        }
+
+        /// <summary>
         /// Adds a transient service of the type specified in <typeparamref name="TService"/> to the specified
         /// <see cref="IServiceCollection"/>.
         /// </summary>
@@ -538,6 +585,30 @@ namespace Unity.AppUI.MVVM
                 throw new ArgumentNullException(nameof(serviceCollection));
 
             var descriptor = ServiceDescriptor.Singleton(serviceType, implementationType).When(condition);
+            return Add(serviceCollection, descriptor);
+        }
+
+        /// <summary>
+        /// Adds a conditional singleton service to the collection from a pre-constructed instance.
+        /// </summary>
+        /// <param name="serviceCollection"> The service collection. </param>
+        /// <param name="serviceType"> The service type. </param>
+        /// <param name="instance"> The pre-constructed implementation instance. </param>
+        /// <param name="condition"> The condition for resolution. </param>
+        /// <returns> The service collection for chaining. </returns>
+        /// <exception cref="ArgumentNullException"> Thrown when <paramref name="serviceCollection"/>, <paramref name="serviceType"/>, or <paramref name="instance"/> is null. </exception>
+        public static IServiceCollection AddSingletonWhen(this IServiceCollection serviceCollection, Type serviceType, object instance, ContextMatch condition)
+        {
+            if (serviceCollection == null)
+                throw new ArgumentNullException(nameof(serviceCollection));
+
+            if (serviceType == null)
+                throw new ArgumentNullException(nameof(serviceType));
+
+            if (instance == null)
+                throw new ArgumentNullException(nameof(instance));
+
+            var descriptor = ServiceDescriptor.Singleton(serviceType, instance).When(condition);
             return Add(serviceCollection, descriptor);
         }
 

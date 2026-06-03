@@ -12,6 +12,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "Unity",
+            "expression": "6000.5.0a1",
+            "define": "ENABLE_PANEL_RENDERER"
+        }
+    ],
     "noEngineReferences": false
 }

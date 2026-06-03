@@ -71,6 +71,16 @@ namespace Unity.AppUI.MVVM
             if (desc == null)
                 throw new InvalidOperationException($"No service registered for type {serviceType.FullName}.");
 
+            // Cache key for singletons mirrors the resolution cache below.
+            var instanceCacheKey = desc.condition != null ? $"{serviceType.FullName}_{requestingType?.FullName}" : serviceType.FullName;
+
+            // Pre-supplied instance: bypass constructor discovery and member injection entirely.
+            if (desc.implementationInstance != null)
+            {
+                RootProvider.m_Singletons[instanceCacheKey] = desc.implementationInstance;
+                return () => desc.implementationInstance;
+            }
+
             var constructors = desc.implementationType.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
             if (constructors.Length == 0)
                 throw new InvalidOperationException(
