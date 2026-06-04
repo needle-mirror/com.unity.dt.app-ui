@@ -189,6 +189,18 @@ namespace Unity.AppUI.Tests
             return doc;
         }
 
+#if ENABLE_PANEL_RENDERER
+        internal static PanelRenderer ConstructTestUIPanelRenderer()
+        {
+            var obj = new GameObject("TestUIPanelRenderer");
+            obj.AddComponent<Camera>();
+            var pr = obj.AddComponent<PanelRenderer>();
+            pr.panelSettings = panelSettingsInstance;
+
+            return pr;
+        }
+#endif
+
         internal static VisualTreeAsset LoadUxmlTemplateFromString(string contents)
         {
             // ReSharper disable once RedundantAssignment

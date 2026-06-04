@@ -38,16 +38,17 @@
 .icon-entry__element {
     width: 100px;
     height: 100px;
-    background-color: var(--appui-backgrounds-50);
+    background-color: var(--appui-base-100);
     border-radius: 4px;
     align-items: center;
     justify-content: center;
     border-width: 1px;
-    border-color: var(--appui-backgrounds-50);
+    border-color: var(--appui-base-100);
 }
 
 .is-selected .icon-entry__element {
     border-color: var(--appui-accent-100);
+    background-color: var(--appui-alias-actions-selected-background-color-default);
 }
 
 .icon-entry__image {

@@ -4,23 +4,39 @@ using UnityEngine.UIElements;
 namespace Unity.AppUI.MVVM
 {
     /// <summary>
-    /// <para>A class used to host an app in a UIDocument.</para>
-    /// <para>This is a wrapper around a UIDocument that implements <see cref="IUIToolkitHost"/>.</para>
+    /// <para>A class used to host an app in a UI panel.</para>
+    /// <para>This is a wrapper around a UIDocument (or a root VisualElement) that implements <see cref="IUIToolkitHost"/>.</para>
     /// </summary>
     public sealed class UIToolkitHost : IUIToolkitHost
     {
         UIDocument m_Document;
 
+        VisualElement m_RootVisualElement;
+
         bool m_Disposed;
 
         /// <summary>
-        /// Default constructor. Creates a new instance of <see cref="UIToolkitHost"/> that hosts an app in the given UIDocument.
+        /// Creates a new instance of <see cref="UIToolkitHost"/> that hosts an app in the given UIDocument.
         /// </summary>
         /// <param name="uiDocument"> The UIDocument to host the app in. </param>
         public UIToolkitHost(UIDocument uiDocument)
         {
             m_Document = uiDocument;
         }
+
+#if ENABLE_PANEL_RENDERER
+        /// <summary>
+        /// Creates a new instance of <see cref="UIToolkitHost"/> that hosts an app
+        /// using the given root VisualElement directly (e.g. from a <see cref="PanelRenderer"/>).
+        /// </summary>
+        /// <param name="rootVisualElement"> The root VisualElement to host the app in. </param>
+        public UIToolkitHost(VisualElement rootVisualElement)
+        {
+            m_RootVisualElement = rootVisualElement;
+        }
+#endif
+
+        VisualElement rootElement => m_RootVisualElement ?? m_Document?.rootVisualElement;
 
         /// <summary>
         /// <para>Called when the app is being hosted.</para>
@@ -30,8 +46,8 @@ namespace Unity.AppUI.MVVM
         /// <param name="serviceProvider"> The service provider to use. </param>
         public void HostApplication(IUIToolkitApp app, IServiceProvider serviceProvider)
         {
-            m_Document.rootVisualElement?.Clear();
-            m_Document.rootVisualElement?.Add(app.rootVisualElement);
+            rootElement?.Clear();
+            rootElement?.Add(app.rootVisualElement);
         }
 
         /// <summary>
@@ -43,13 +59,15 @@ namespace Unity.AppUI.MVVM
         public bool TryFindElement<T>(out T element)
             where T : VisualElement
         {
-            if (m_Disposed || !m_Document)
-            {
-                element = null;
+            element = null;
+            if (m_Disposed)
                 return false;
-            }
 
-            element = m_Document.rootVisualElement.Q<T>();
+            var root = rootElement;
+            if (root == null)
+                return false;
+
+            element = root.Q<T>();
             return element != null;
         }
 
@@ -62,6 +80,7 @@ namespace Unity.AppUI.MVVM
                 return;
 
             m_Document = null;
+            m_RootVisualElement = null;
             m_Disposed = true;
         }
     }

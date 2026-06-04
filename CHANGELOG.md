@@ -4,7 +4,38 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.1.10] - 2026-05-21
+## [2.1.11] - 2026-06-04
+
+### Fixed
+
+- Improve Icon Browser selection visibility and tile contrast in light theme
+- Disable "Delete selected icons" context menu option in Icon Browser when only required icons are selected
+- Fixed iOS Simulator linker errors by shipping separate Device and Simulator native plugin binaries
+- Fix Icon Browser "Add icons" button not working on Unity 6000.4+ due to ObjectSelector.Show API change (List\<int\> to List\<EntityId\>)
+
+### Added
+
+- PanelRenderer support in UIToolkitAppBuilder<T> for hosting MVVM apps on Unity 6.5+
+
+## [2.2.0-pre.11] - 2026-06-04
+
+### Added
+
+- `IServiceCollection.AddSingleton<T>(T instance)` and `AddSingleton(Type, object)` overloads (plus matching `AddSingletonWhen(Type, object, ContextMatch)`) for registering pre-existing instances as singletons in the MVVM DI container. The supplied instance is returned as-is on every resolution; the container does not invoke a constructor or apply `[Service]` field/property injection on it.
+
+### Fixed
+
+- Disable "Delete selected icons" context menu option in Icon Browser when only required icons are selected
+- Fixed iOS Simulator linker errors by shipping separate Device and Simulator native plugin binaries (libAppUINativePlugin.a and libAppUITextMateLib.a with bundled oniguruma)
+- Fix Icon Browser "Add icons" button not working on Unity 6000.4+ due to ObjectSelector.Show API change (List\<int\> to List\<EntityId\>)
+
+## [2.0.6] - 2026-05-25
+
+### Fixed
+
+- Fixed a NullReferenceException in MenuItem.OpenSubMenu when Menu/MenuItem are declared inline in UXML without a MenuTrigger or MenuBuilder.Build() wrapper.
+
+## [2.1.10] - 2026-05-22
 
 ### Fixed
 
