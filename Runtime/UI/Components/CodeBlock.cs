@@ -337,7 +337,7 @@ namespace Unity.AppUI.UI
                     string highlighted = null;
                     using (var hl = new TextMateSyntaxHighlighter(m_Grammar, m_Theme))
                     {
-                        ApplyThemeColors(hl.theme);
+                        ApplyThemeColors(hl.defaultForeground, hl.defaultBackground);
                         try
                         {
                             highlighted = hl.Highlight(src);
@@ -368,9 +368,9 @@ namespace Unity.AppUI.UI
 
                 // Theme only (no grammar) → plain body, but still inherit the theme bg/fg
                 // so the codeblock visually matches the rest of the codeblocks in the doc.
-                using (var theme = Unity.AppUI.TextMateLib.Theme.LoadFromJson(m_Theme.jsonContent))
+                using (var theme = TextMateLib.Theme.LoadFromJson(m_Theme.jsonContent))
                 {
-                    ApplyThemeColors(theme);
+                    ApplyThemeColors(theme.GetDefaultForeground(), theme.GetDefaultBackground());
                 }
                 m_Body.text = src;
                 m_Body.enableRichText = false;
@@ -387,14 +387,14 @@ namespace Unity.AppUI.UI
         }
 
 #if APPUI_ENABLE_SYNTAX_HIGHLIGHTING
-        void ApplyThemeColors(Theme theme)
+        void ApplyThemeColors(uint foreground, uint background)
         {
-            var bg = ColorExtensions.RawColorToColor(theme.GetDefaultBackground());
+            var bg = ColorExtensions.RawColorToColor(background);
             if (bg.a <= 0f)
                 bg.a = 1f;
             style.backgroundColor = bg;
 
-            var fg = ColorExtensions.RawColorToColor(theme.GetDefaultForeground());
+            var fg = ColorExtensions.RawColorToColor(foreground);
             if (fg.a <= 0f)
                 fg.a = 1f;
             m_Body.style.color = fg;

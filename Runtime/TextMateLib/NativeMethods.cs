@@ -69,6 +69,20 @@ namespace Unity.AppUI.TextMateLib
             public int StoppedEarly;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct TextMateTokenizeMultiLinesResult2
+        {
+            public IntPtr LineResults; // TextMateTokenizeResult2**
+            public int LineCount;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct TextMateColorMap
+        {
+            public IntPtr Colors; // char**
+            public int ColorCount;
+        }
+
         // ============================================================================
         // Theme API
         // ============================================================================
@@ -137,6 +151,14 @@ namespace Unity.AppUI.TextMateLib
             string scopeName);
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int textmate_registry_set_theme(
+            IntPtr registry,
+            byte[] themeJsonContentUtf8);
+
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr textmate_registry_get_color_map(IntPtr registry);
+
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr textmate_get_initial_state();
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
@@ -174,6 +196,13 @@ namespace Unity.AppUI.TextMateLib
             IntPtr initialState);
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr textmate_tokenize_lines2_utf16(
+            IntPtr grammar,
+            IntPtr lines,
+            int lineCount,
+            IntPtr initialState);
+
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void textmate_free_tokenize_result(IntPtr result);
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
@@ -181,6 +210,12 @@ namespace Unity.AppUI.TextMateLib
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern void textmate_free_tokenize_lines_result(IntPtr result);
+
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void textmate_free_tokenize_lines_result2(IntPtr result);
+
+        [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern void textmate_free_color_map(IntPtr colorMap);
 
         [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         internal static extern IntPtr textmate_grammar_get_scope_name(IntPtr grammar);

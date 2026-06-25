@@ -3,12 +3,12 @@ using System;
 using System.Text;
 using Unity.AppUI.TextMateLib;
 using UnityEngine;
-using FontStyle = Unity.AppUI.TextMateLib.FontStyle;
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Converts source code to UITK rich text using TextMate grammars and themes.
+    /// Uses themed/encoded tokenization for optimal performance in static display.
     /// </summary>
     public class TextMateSyntaxHighlighter : IDisposable
     {
@@ -22,10 +22,13 @@ namespace Unity.AppUI.UI
         /// </summary>
         public Grammar grammar { get; }
 
-        /// <summary>
-        /// The TextMate theme used for colors and styles.
-        /// </summary>
-        public Theme theme { get; }
+        string[] m_ColorMap;
+
+        string m_DefaultForegroundHex;
+
+        uint m_DefaultForeground;
+
+        uint m_DefaultBackground;
 
         bool m_Disposed;
 
@@ -45,12 +48,34 @@ namespace Unity.AppUI.UI
 
             registry = new Registry();
             registry.AddGrammarFromJson(grammarAsset.jsonContent);
+            registry.SetThemeFromJson(themeAsset.jsonContent);
             grammar = registry.LoadGrammar(grammarAsset.scopeName);
-            theme = Theme.LoadFromJson(themeAsset.jsonContent);
+            m_ColorMap = registry.GetColorMap();
+            // The native color map can hold empty strings for unassigned default colors.
+            // Fall back so m_DefaultForegroundHex is never empty — an empty hex would emit a
+            // broken "<color=>" tag and break UITK rich-text parsing.
+            m_DefaultForegroundHex = m_ColorMap.Length > 1 && !string.IsNullOrEmpty(m_ColorMap[1])
+                ? m_ColorMap[1]
+                : "#FFFFFF";
+            m_DefaultForeground = HexToRgba(m_DefaultForegroundHex);
+            m_DefaultBackground = m_ColorMap.Length > 2 && !string.IsNullOrEmpty(m_ColorMap[2])
+                ? HexToRgba(m_ColorMap[2])
+                : 0x000000FF;
         }
 
         /// <summary>
+        /// Gets the default foreground color in RGBA format (0xRRGGBBAA).
+        /// </summary>
+        public uint defaultForeground => m_DefaultForeground;
+
+        /// <summary>
+        /// Gets the default background color in RGBA format (0xRRGGBBAA).
+        /// </summary>
+        public uint defaultBackground => m_DefaultBackground;
+
+        /// <summary>
         /// Highlights source code and returns UITK-compatible rich text.
+        /// Uses batch themed tokenization for optimal performance.
         /// </summary>
         /// <param name="sourceCode">The source code to highlight.</param>
         /// <returns>Rich text string with UITK color and style tags.</returns>
@@ -62,13 +87,12 @@ namespace Unity.AppUI.UI
                 return string.Empty;
 
             var lines = sourceCode.Split('\n');
+            var lineResults = grammar.TokenizeLines2(lines);
             var result = new StringBuilder();
-            var state = IntPtr.Zero;
 
             for (int i = 0; i < lines.Length; i++)
             {
-                var richLine = HighlightLine(lines[i], state, out state);
-                result.Append(richLine);
+                AppendHighlightedLine(result, lines[i], lineResults[i]);
 
                 if (i < lines.Length - 1)
                     result.Append('\n');
@@ -94,66 +118,106 @@ namespace Unity.AppUI.UI
                 return string.Empty;
             }
 
-            var tokenizeResult = grammar.TokenizeLine(line, prevState);
+            var tokenizeResult = grammar.TokenizeLine2(line, prevState);
             newState = tokenizeResult.StateStack;
 
             var sb = new StringBuilder();
+            AppendHighlightedLine(sb, line, tokenizeResult);
+            return sb.ToString();
+        }
 
-            foreach (var token in tokenizeResult.Tokens)
+        void AppendHighlightedLine(StringBuilder sb, string line, TokenizeResult2 lineResult)
+        {
+            var tokens = lineResult.Tokens;
+            for (int t = 0; t < tokens.Count; t++)
             {
-                sb.Append(TokenToRichText(token, line, theme));
+                var token = tokens[t];
+                int startIndex = token.StartIndex;
+                int endIndex = t + 1 < tokens.Count ? tokens[t + 1].StartIndex : line.Length;
+
+                // Guard against a negative start index from the native tokenizer (a bug or
+                // malformed grammar) which would otherwise throw when indexing the line.
+                if (startIndex < 0 || endIndex <= startIndex || startIndex >= line.Length)
+                    continue;
+
+                endIndex = Math.Min(endIndex, line.Length);
+
+                int fgId = token.ForegroundId;
+                // Fall back to the default when the slot is out of range or an empty string
+                // (an unassigned native color), so we never emit a broken "<color=>" tag.
+                var hexColor = fgId > 0 && fgId < m_ColorMap.Length && !string.IsNullOrEmpty(m_ColorMap[fgId])
+                    ? m_ColorMap[fgId]
+                    : m_DefaultForegroundHex;
+
+                int fontStyle = token.FontStyle;
+                bool bold = (fontStyle & 2) != 0;
+                bool italic = (fontStyle & 1) != 0;
+
+                if (bold)
+                    sb.Append("<b>");
+                if (italic)
+                    sb.Append("<i>");
+
+                sb.Append("<color=");
+                sb.Append(hexColor);
+                sb.Append('>');
+                AppendEscaped(sb, line, startIndex, endIndex);
+                sb.Append("</color>");
+
+                if (italic)
+                    sb.Append("</i>");
+                if (bold)
+                    sb.Append("</b>");
+            }
+        }
+
+        // Appends line[startIndex..endIndex) to the builder, escaping '<' and '>' for UITK
+        // rich text by inserting a zero-width space after each. Iterating the range directly
+        // avoids the per-token Substring + Replace allocations that caused GC spikes when
+        // displaying or scrolling highlighted code.
+        static void AppendEscaped(StringBuilder sb, string line, int startIndex, int endIndex)
+        {
+            for (int i = startIndex; i < endIndex; i++)
+            {
+                char c = line[i];
+                sb.Append(c);
+                if (c == '<' || c == '>')
+                    sb.Append('\u200B');
+            }
+        }
+
+        static uint HexToRgba(string hex)
+        {
+            if (string.IsNullOrEmpty(hex) || hex[0] != '#')
+                return 0xFFFFFFFF;
+
+            int digits = hex.Length - 1; // hex digits following '#'
+            if (digits != 6 && digits != 8)
+                return 0xFFFFFFFF;
+
+            // Parse the hex digits in place to avoid the Substring/concatenation allocations.
+            uint value = 0;
+            for (int i = 1; i < hex.Length; i++)
+            {
+                int d = HexDigit(hex[i]);
+                if (d < 0)
+                    return 0xFFFFFFFF;
+                value = (value << 4) | (uint)d;
             }
 
-            return sb.ToString();
+            // #RRGGBB carries no alpha channel; default it to fully opaque (0xFF).
+            if (digits == 6)
+                value = (value << 8) | 0xFFu;
+
+            return value;
         }
 
-        static string TokenToRichText(Token token, string line, Theme theme)
+        static int HexDigit(char c)
         {
-            var text = token.GetValue(line);
-
-            if (string.IsNullOrEmpty(text))
-                return string.Empty;
-
-            // Build scope path from token scopes (space-separated)
-            var scopePath = string.Join(" ", token.Scopes);
-
-            var defaultFg = theme.GetDefaultForeground();
-            var fgColor = theme.GetForeground(scopePath, defaultFg);
-            var fontStyle = theme.GetFontStyle(scopePath, FontStyle.None);
-
-            var sb = new StringBuilder();
-
-            // Open style tags
-            if ((fontStyle & FontStyle.Bold) != 0)
-                sb.Append("<b>");
-            if ((fontStyle & FontStyle.Italic) != 0)
-                sb.Append("<i>");
-
-            // Color tag with escaped text
-            sb.Append("<color=");
-            sb.Append(ColorExtensions.RawColorToHex(fgColor));
-            sb.Append('>');
-            sb.Append(EscapeRichText(text));
-            sb.Append("</color>");
-
-            // Close style tags (reverse order)
-            if ((fontStyle & FontStyle.Italic) != 0)
-                sb.Append("</i>");
-            if ((fontStyle & FontStyle.Bold) != 0)
-                sb.Append("</b>");
-
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// Escapes special characters in text to prevent rich text tag injection.
-        /// </summary>
-        /// <param name="text">The text to escape.</param>
-        /// <returns>Escaped text safe for rich text.</returns>
-        static string EscapeRichText(string text)
-        {
-            // Escape < and > to prevent tag injection
-            return text.Replace("<", "<\u200B").Replace(">", ">\u200B");
+            if (c >= '0' && c <= '9') return c - '0';
+            if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+            if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+            return -1;
         }
 
         void ThrowIfDisposed()
@@ -170,7 +234,6 @@ namespace Unity.AppUI.UI
             if (!m_Disposed)
             {
                 grammar?.Dispose();
-                theme?.Dispose();
                 registry?.Dispose();
                 m_Disposed = true;
             }
