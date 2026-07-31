@@ -4,18 +4,14 @@ using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// ReactionPicker UI element. Displays an emoji grid for selecting reactions.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class ReactionPicker : BaseVisualElement
     {
         /// <summary>
@@ -199,28 +195,5 @@ namespace Unity.AppUI.UI
                 s_ActionButtonPool?.Release(actionButton);
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Defines the UxmlFactory for the ReactionPicker.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<ReactionPicker, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ReactionPicker"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-            }
-        }
-#endif
     }
 }

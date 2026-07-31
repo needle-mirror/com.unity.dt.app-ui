@@ -1,19 +1,52 @@
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A link visual element.
+    /// A clickable text element that can navigate to a URL or trigger an action.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Link component is a fundamental navigation element that allows users to navigate to different URLs or
+    /// trigger actions within your application. Links are interactive text elements that can be clicked, focused,
+    /// and activated using keyboard navigation.
+    ///
+    /// Links can be styled with different text sizes to establish visual hierarchy and improve readability. They
+    /// inherit text localization capabilities and support keyboard focus management for better accessibility.
+    ///
+    /// Links should be visually distinguishable from regular text to indicate their interactive nature. Use
+    /// appropriate styling (like underlines or distinct colors) to make links recognizable.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Usage. Simple link with URL.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Link text="Click me" url="https://example.com" />
+    /// ]]></code>
+    /// <para>Size Variants. Links with different sizes.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <VerticalStack spacing="10">
+    ///     <Link text="Small Link" size="S" />
+    ///     <Link text="Medium Link" size="M" />
+    ///     <Link text="Large Link" size="L" />
+    /// </VerticalStack>
+    /// ]]></code>
+    /// <para>Custom Click Handler. Link with custom click behavior.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var link = new Link("Custom Action");
+    /// link.clickable.clicked += () => {
+    ///     // Custom action
+    ///     Debug.Log("Link clicked!");
+    /// };
+    /// ]]></code>
+    /// <para>Localized Link. Link using localized text.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Link text="@MyLocalizedText" url="https://example.com" />
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("actions")]
     public partial class Link : LocalizedTextElement, IPressable
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId sizeProperty = nameof(size);
 
@@ -21,7 +54,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId clickableProperty = nameof(clickable);
 
-#endif
 
         /// <summary>
         /// The Link's USS class name.
@@ -43,9 +75,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The clickable manipulator.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -58,22 +88,16 @@ namespace Unity.AppUI.UI
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The size of the link.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public TextSize size
         {
             get => m_Size;
@@ -84,22 +108,16 @@ namespace Unity.AppUI.UI
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The URL of the link.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string url
         {
             get => m_Url;
@@ -108,10 +126,8 @@ namespace Unity.AppUI.UI
                 var changed = m_Url != value;
                 m_Url = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in urlProperty);
-#endif
             }
         }
 
@@ -148,49 +164,5 @@ namespace Unity.AppUI.UI
             this.AddManipulator(new KeyboardFocusController());
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Defines the UxmlFactory for the Link.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Link, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the UXML traits for the Link.
-        /// </summary>
-        public new class UxmlTraits : LocalizedTextElement.UxmlTraits
-        {
-
-            readonly UxmlEnumAttributeDescription<TextSize> m_Size = new UxmlEnumAttributeDescription<TextSize>
-            {
-                name = "size",
-                defaultValue = TextSize.M,
-            };
-
-            readonly UxmlStringAttributeDescription m_Url = new UxmlStringAttributeDescription
-            {
-                name = "url",
-                defaultValue = null,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Link)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                string url = element.url;
-                if (m_Url.TryGetValueFromBag(bag, cc, ref url))
-                    element.url = url;
-            }
-        }
-
-#endif
     }
 }

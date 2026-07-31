@@ -14,17 +14,10 @@ namespace Unity.AppUI.UI
     /// </summary>
     public static class VisualElementExtensions
     {
-#if !UNITY_EDITOR && ENABLE_IL2CPP && !CONDITIONAL_WEAK_TABLE_IL2CPP
-        static readonly WeakReferenceTable<VisualElement, AdditionalData> k_AdditionalDataCache =
-            new WeakReferenceTable<VisualElement, AdditionalData>();
-
-        static readonly WeakReferenceTable<IPanel, VisualElement> k_PanelRootCache = new ();
-#else
         static readonly ConditionalWeakTable<VisualElement, AdditionalData> k_AdditionalDataCache =
             new ConditionalWeakTable<VisualElement, AdditionalData>();
 
         static readonly ConditionalWeakTable<IPanel, VisualElement> k_PanelRootCache = new ();
-#endif
 
         static bool TryGetValue(VisualElement key, out AdditionalData val)
         {

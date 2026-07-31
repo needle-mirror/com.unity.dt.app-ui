@@ -58,11 +58,7 @@ namespace Unity.AppUI.Editor.Redux.DevTools
 
         VisualElement m_ActionHistoryPane;
 
-#if UNITY_ENABLE_TABVIEW
         TabView m_InspectorTabView;
-#else
-        VisualElement m_InspectorTabView;
-#endif
 
         readonly List<IDisposableSubscription> m_Subscriptions = new();
 
@@ -125,9 +121,7 @@ namespace Unity.AppUI.Editor.Redux.DevTools
             m_TimeSlider = new SliderInt(0, 1)
             {
                 showInputField = true,
-#if UNITY_ENABLE_SLIDER_FILL
                 fill = true
-#endif
             };
             m_TimeSlider.AddToClassList("dev-tools__time-slider");
             m_TimeSlider.RegisterValueChangedCallback(OnTimeSliderValueChanged);
@@ -157,11 +151,7 @@ namespace Unity.AppUI.Editor.Redux.DevTools
             m_ActionHistoryListView = new ListView(null, 24, MakeActionItem, BindActionItem);
             m_ActionHistoryListView.unbindItem = UnbindActionItem;
             m_ActionHistoryListView.selectionType = SelectionType.Multiple;
-#if UITK_SELECTED_INDICES_CHANGED
             m_ActionHistoryListView.selectedIndicesChanged += OnActionHistorySelectionChanged;
-#else
-            m_ActionHistoryListView.onSelectedIndicesChange -= OnActionHistorySelectionChanged;
-#endif
             m_ActionHistoryListView.AddToClassList("dev-tools-action-history__list-view");
             m_ActionHistoryPane.Add(m_ActionHistoryListView);
 
@@ -169,26 +159,12 @@ namespace Unity.AppUI.Editor.Redux.DevTools
             m_InspectorPane.AddToClassList("dev-tools-inspector__pane");
             m_SplitView.Add(m_InspectorPane);
 
-#if UNITY_ENABLE_TABVIEW
             m_InspectorTabView = new TabView();
             m_InspectorTabView.Add(new Tab("Action"));
             m_InspectorTabView.Add(new Tab("State"));
             m_InspectorTabView.Add(new Tab("Diff"));
             m_InspectorTabView.AddToClassList("dev-tools-inspector__tab-view");
             m_InspectorTabView.activeTabChanged += OnTabChanged;
-#else
-            m_InspectorTabView = new VisualElement();
-            var actionButton = new Button() { text = "Action" };
-            actionButton.clickable.clickedWithEventInfo += OnTabChanged;
-            m_InspectorTabView.Add(actionButton);
-            var stateButton = new Button() { text = "State" };
-            stateButton.clickable.clickedWithEventInfo += OnTabChanged;
-            m_InspectorTabView.Add(stateButton);
-            var diffButton = new Button() { text = "Diff" };
-            diffButton.clickable.clickedWithEventInfo += OnTabChanged;
-            m_InspectorTabView.Add(diffButton);
-            m_InspectorTabView.AddToClassList("dev-tools-inspector__tab-view");
-#endif
             m_InspectorPane.Add(m_InspectorTabView);
 
             m_ActionInspectorPane = new ScrollView();
@@ -269,21 +245,11 @@ namespace Unity.AppUI.Editor.Redux.DevTools
             m_StoreMenu?.DropDown(m_StoreDropdown.worldBound);
         }
 
-#if UNITY_ENABLE_TABVIEW
         void OnTabChanged(Tab previousTab, Tab newTab)
         {
             EditorPrefs.SetString(k_SelectedTabKey, newTab.label);
             m_DevTools.Dispatch(new SelectInspectorTabAction(newTab.label));
         }
-#else
-        void OnTabChanged(EventBase evt)
-        {
-            if (evt.target is not Button {text: {} tabName})
-                return;
-            EditorPrefs.SetString(k_SelectedTabKey, tabName);
-            m_DevTools.Dispatch(new SelectInspectorTabAction(tabName));
-        }
-#endif
 
         void OnRecordToggled(ChangeEvent<bool> evt)
         {
@@ -603,15 +569,9 @@ namespace Unity.AppUI.Editor.Redux.DevTools
         {
             for (var i = 0; i < m_InspectorTabView.childCount; i++)
             {
-#if UNITY_ENABLE_TABVIEW
                 if (m_InspectorTabView[i] is Tab tab && tab.label == state.actionInspector.selectedTab)
                     m_InspectorTabView.activeTab = tab;
 
-#else
-                if (m_InspectorTabView[i] is Button btn)
-                    btn.EnableInClassList("dev-tools-inspector__tab-view-item--selected",
-                        btn.text == state.actionInspector.selectedTab);
-#endif
             }
 
             var liftedState = state.liftedState;

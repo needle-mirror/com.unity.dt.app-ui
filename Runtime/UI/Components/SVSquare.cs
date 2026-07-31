@@ -2,22 +2,57 @@ using System;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// <para>SVSquare UI element. It is a square that allows to select a color by selecting a point in a 2D space.</para>
-    /// <para>The X axis represents the Hue and the Y axis represents the Saturation.</para>
+    /// A highly interactive 2D color selector that allows users to pick colors by adjusting saturation and brightness
+    /// values.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The SVSquare is a specialized color selection component that enables users to choose colors by interacting with a
+    /// two-dimensional square area. The component visualizes color variations based on saturation (horizontal axis) and
+    /// brightness/value (vertical axis) while maintaining a constant hue.
+    ///
+    /// This component is particularly useful in color pickers, design tools, and any interface where precise color
+    /// selection is required. Users can interact with the SVSquare through mouse/touch input or keyboard controls for
+    /// fine-tuned adjustments.
+    ///
+    /// The SVSquare is typically used in conjunction with other color selection components like hue sliders to provide
+    /// a complete color picking experience.
+    /// </remarks>
+    /// <example>
+    /// <para>Here's how to create and configure an SVSquare component in UXML: Basic UXML configuration with initial values.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <SVSquare reference-hue="0.5" saturation="0.7" brightness="0.8" increment-factor="0.02" />
+    /// ]]></code>
+    /// <para>Example of creating and handling color selection events: Creating an SVSquare and handling color changes.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var svSquare = new SVSquare();
+    /// svSquare.RegisterCallback<ChangeEvent<Vector2>>(evt => {
+    ///     Color selectedColor = svSquare.selectedColor;
+    ///     Debug.Log($"New color selected: {selectedColor}");
+    /// });
+    ///
+    /// // Set initial color
+    /// svSquare.referenceHue = 0.33f; // Green hue
+    /// svSquare.value = new Vector2(0.8f, 0.9f); // High saturation and brightness
+    /// ]]></code>
+    /// <para>Example of implementing custom validation rules: Setting up custom validation rules.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// svSquare.validateValue = (Vector2 value) => {
+    ///     // Only allow values with saturation > 0.5
+    ///     return value.x > 0.5f;
+    /// };
+    ///
+    /// // The invalid property will automatically update based on the validation function
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class SVSquare : BaseVisualElement, IInputElement<Vector2>, INotifyValueChanging<Vector2>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId brightnessProperty = nameof(brightness);
 
@@ -37,7 +72,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
 
-#endif
 
         /// <summary>
         /// The SVSquare main styling class.
@@ -90,12 +124,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Selected brightness value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float brightness
         {
             get => m_Value.y;
@@ -105,20 +135,14 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The reference color (current hue with the maximum brightness and saturation).
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public Color referenceColor => Color.HSVToRGB(referenceHue, 1, 1);
 
         /// <summary>
         /// The current hue used to display the SV Square.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float referenceHue
         {
             get => m_RefHue;
@@ -129,26 +153,20 @@ namespace Unity.AppUI.UI
                 GenerateTextures();
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
                     NotifyPropertyChanged(in referenceHueProperty);
                     NotifyPropertyChanged(in referenceColorProperty);
                     NotifyPropertyChanged(in selectedColorProperty);
                 }
-#endif
             }
         }
 
         /// <summary>
         /// Selected saturation value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float saturation
         {
             get => m_Value.x;
@@ -158,17 +176,13 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The currently selected color.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public Color selectedColor => Color.HSVToRGB(referenceHue, saturation, brightness);
 
         /// <summary>
         /// The current value of the SV Square. The x component is the saturation and the y component is the brightness.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Vector2 value
         {
             get => m_Value;
@@ -184,24 +198,18 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(validValue);
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
                 NotifyPropertyChanged(in saturationProperty);
                 NotifyPropertyChanged(in brightnessProperty);
                 NotifyPropertyChanged(in selectedColorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The increment factor used when the user uses the keyboard to change the value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float incrementFactor
         {
             get => m_IncrementFactor;
@@ -210,22 +218,16 @@ namespace Unity.AppUI.UI
                 var changed = !Mathf.Approximately(m_IncrementFactor, value);
                 m_IncrementFactor = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in incrementFactorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The SVSquare invalid state.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -234,19 +236,15 @@ namespace Unity.AppUI.UI
                 var changed = invalid != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The SVSquare validation function.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<Vector2, bool> validateValue
         {
             get => m_ValidateValue;
@@ -255,10 +253,8 @@ namespace Unity.AppUI.UI
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
@@ -511,58 +507,5 @@ namespace Unity.AppUI.UI
             m_RT = null;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="SVSquare"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<SVSquare, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="SVSquare"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlFloatAttributeDescription m_Brightness = new UxmlFloatAttributeDescription
-            {
-                name = "brightness",
-                defaultValue = 1,
-                restriction = new UxmlValueBounds { min = "0", max = "1" }
-            };
-
-            readonly UxmlFloatAttributeDescription m_ReferenceHue = new UxmlFloatAttributeDescription
-            {
-                name = "reference-hue",
-                defaultValue = 0,
-                restriction = new UxmlValueBounds { min = "0", max = "1" }
-            };
-
-            readonly UxmlFloatAttributeDescription m_Saturation = new UxmlFloatAttributeDescription
-            {
-                name = "saturation",
-                defaultValue = 1,
-                restriction = new UxmlValueBounds { min = "0", max = "1" }
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var square = (SVSquare)ve;
-                square.referenceHue = m_ReferenceHue.GetValueFromBag(bag, cc);
-                var satBri = Vector2.one;
-                satBri.x = m_Saturation.GetValueFromBag(bag, cc);
-                satBri.y = m_Brightness.GetValueFromBag(bag, cc);
-                square.SetValueWithoutNotify(satBri);
-            }
-        }
-
-#endif
     }
 }

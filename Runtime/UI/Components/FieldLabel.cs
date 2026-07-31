@@ -1,7 +1,5 @@
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -29,12 +27,9 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A label for a field.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class FieldLabel : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId labelProperty = new BindingId(nameof(label));
 
@@ -46,7 +41,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId labelOverflowProperty = new BindingId(nameof(labelOverflow));
 
-#endif
 
         /// <summary>
         /// The FieldLabel main styling class.
@@ -93,12 +87,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Whether the field is required.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool required
         {
             get => ClassListContains(requiredUssClassName);
@@ -113,22 +103,16 @@ namespace Unity.AppUI.UI
                     _ => null
                 };
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in requiredProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The type of indicator to display when a field is required.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public IndicatorType indicatorType
         {
             get => m_IndicatorType;
@@ -139,22 +123,16 @@ namespace Unity.AppUI.UI
                 m_IndicatorType = value;
                 AddToClassList(GetIndicatorTypeUssClassName(m_IndicatorType));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in indicatorTypeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The text to display next to the label when the field is required and the indicator type is <see cref="IndicatorType.Text"/>.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string requiredText
         {
             get => m_RequiredText;
@@ -165,22 +143,16 @@ namespace Unity.AppUI.UI
                 if (m_IndicatorType == IndicatorType.Text)
                     m_RequiredLabelElement.text = m_RequiredText;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in requiredTextProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The text to display in the label.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string label
         {
             get => m_LabelElement.text;
@@ -189,22 +161,16 @@ namespace Unity.AppUI.UI
                 var changed = m_LabelElement.text != value;
                 m_LabelElement.text = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The text overflow mode.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public TextOverflow labelOverflow
         {
             get => m_LabelOverflow;
@@ -215,10 +181,8 @@ namespace Unity.AppUI.UI
                 m_LabelOverflow = value;
                 AddToClassList(GetLabelOverflowUssClassName(m_LabelOverflow));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelOverflowProperty);
-#endif
             }
         }
 
@@ -260,78 +224,5 @@ namespace Unity.AppUI.UI
             labelOverflow = TextOverflow.Ellipsis;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="FieldLabel"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<FieldLabel, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="FieldLabel"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlBoolAttributeDescription m_Required = new UxmlBoolAttributeDescription
-            {
-                name = "required",
-                defaultValue = false
-            };
-
-            readonly UxmlEnumAttributeDescription<IndicatorType> m_IndicatorType = new UxmlEnumAttributeDescription<IndicatorType>
-            {
-                name = "indicator-type",
-                defaultValue = IndicatorType.None
-            };
-
-            readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
-            {
-                name = "label",
-                defaultValue = string.Empty
-            };
-
-
-
-
-            readonly UxmlStringAttributeDescription m_RequiredText = new UxmlStringAttributeDescription
-            {
-                name = "required-text",
-                defaultValue = "(Required)"
-            };
-
-            readonly UxmlEnumAttributeDescription<TextOverflow> m_LabelOverflow = new UxmlEnumAttributeDescription<TextOverflow>
-            {
-                name = "label-overflow",
-                defaultValue = TextOverflow.Ellipsis
-            };
-
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var fieldLabel = (FieldLabel)ve;
-
-                var required = false;
-                if (m_Required.TryGetValueFromBag(bag, cc, ref required))
-                    fieldLabel.required = required;
-
-                var indicatorType = IndicatorType.None;
-                if (m_IndicatorType.TryGetValueFromBag(bag, cc, ref indicatorType))
-                    fieldLabel.indicatorType = indicatorType;
-
-                var label = string.Empty;
-                if (m_Label.TryGetValueFromBag(bag, cc, ref label))
-                    fieldLabel.label = label;
-
-                var requiredText = string.Empty;
-                if (m_RequiredText.TryGetValueFromBag(bag, cc, ref requiredText))
-                    fieldLabel.requiredText = requiredText;
-
-                var labelOverflow = TextOverflow.Ellipsis;
-                if (m_LabelOverflow.TryGetValueFromBag(bag, cc, ref labelOverflow))
-                    fieldLabel.labelOverflow = labelOverflow;
-            }
-        }
-#endif
     }
 }

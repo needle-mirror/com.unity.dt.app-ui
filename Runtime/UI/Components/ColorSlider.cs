@@ -1,27 +1,84 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A slider that allows the user to select a color value.
+    /// A slider component for selecting a color value from a gradient range.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The ColorSlider component enables users to select a color value by dragging a thumb along a track that
+    /// displays a gradient. It extends the SliderFloat component and provides a visual way to pick colors from a
+    /// defined color range.
+    ///
+    /// The slider displays a gradient track that can be customized to show different color transitions. Users
+    /// can interact with the thumb to select any color value within the defined gradient range.
+    ///
+    /// Typical use cases include:
+    /// - Color opacity/alpha selection
+    /// - Color temperature adjustment
+    /// - Color intensity control
+    /// - Gradient-based value selection
+    ///
+    /// The component supports both mouse/touch input and keyboard navigation for precise color selection.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic color slider with default settings:
+    /// Creating a basic color slider</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML>
+    /// <ColorSlider name="opacity-slider" />
+    /// </UXML>
+    ///
+    /// <C#>
+    /// var slider = new ColorSlider();
+    /// container.Add(slider);
+    /// ]]></code>
+    /// <para>Color slider with custom gradient and value display:
+    /// Creating a color slider with custom appearance and behavior</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML>
+    /// <ColorSlider
+    ///     display-value-label="On"
+    ///     track="On"
+    ///     show-marks="true"
+    ///     show-marks-label="true"
+    ///     color-range="Fixed:[(0,#FF0000FF),(1,#00FF00FF)]+[(0,1),(1,1)]"
+    /// />
+    /// </UXML>
+    /// ]]></code>
+    /// <para>Color slider for alpha selection:
+    /// Setting up a slider for opacity/alpha selection</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var slider = new ColorSlider();
+    /// var gradient = new Gradient();
+    /// gradient.SetKeys(
+    ///     new GradientColorKey[] {
+    ///         new(Color.white, 0),
+    ///         new(Color.white, 1)
+    ///     },
+    ///     new GradientAlphaKey[] {
+    ///         new(0, 0),
+    ///         new(1, 1)
+    ///     }
+    /// );
+    /// slider.colorRange = gradient;
+    /// slider.displayValueLabel = ValueDisplayMode.Auto;
+    /// slider.showMarks = true;
+    /// container.Add(slider);
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public sealed partial class ColorSlider : SliderFloat
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId colorValueProperty = nameof(colorValue);
 
         internal static readonly BindingId colorRangeProperty = nameof(colorRange);
 
-#endif
 
         /// <summary>
         /// The ColorSlider main styling class.
@@ -35,20 +92,14 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The currently selected color value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public Color colorValue => colorRange.Evaluate(m_Value);
 
         /// <summary>
         /// The current color range in the track.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Gradient colorRange
         {
             get => m_TrackSwatch.value;
@@ -58,10 +109,8 @@ namespace Unity.AppUI.UI
                 m_TrackSwatch.value = value;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in colorRangeProperty);
-#endif
             }
         }
 
@@ -99,9 +148,7 @@ namespace Unity.AppUI.UI
         protected override void InvokeValueChangedCallbacks()
         {
             base.InvokeValueChangedCallbacks();
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in colorValueProperty);
-#endif
         }
 
         /// <inheritdoc />
@@ -116,40 +163,5 @@ namespace Unity.AppUI.UI
             thumb.fill = colorValue;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Instantiates an <see cref="ColorSlider"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<ColorSlider, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ColorSlider"/>.
-        /// </summary>
-        public new class UxmlTraits : SliderFloat.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_ColorRange = new UxmlStringAttributeDescription
-            {
-                name = "color-range",
-                defaultValue = null,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (ColorSlider)ve;
-                var colorRange = m_ColorRange.GetValueFromBag(bag, cc);
-                if (!string.IsNullOrEmpty(colorRange) && GradientExtensions.TryParse(colorRange, out var gradient))
-                    el.colorRange = gradient;
-            }
-        }
-#endif
     }
 }

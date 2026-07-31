@@ -2,22 +2,73 @@ using System;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A color wheel that allows the user to select a color hue by rotating the wheel.
-    /// It is also possible to set the saturation and brightness and opacity of the wheel.
+    /// A customizable color wheel component for intuitive color selection in Unity UI applications.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The ColorWheel is an interactive component that enables users to select colors through a circular interface.
+    /// It provides a natural and intuitive way to choose colors by rotating around the color spectrum.
+    ///
+    /// The component visualizes colors in a circular arrangement, with a draggable thumb that users can move to
+    /// select different hues. The selected color is displayed in a swatch within the thumb indicator.
+    ///
+    /// In addition to hue selection through rotation, the ColorWheel supports customization of saturation,
+    /// brightness, and opacity. It also features a configurable checkerboard background pattern to better
+    /// visualize transparency.
+    ///
+    /// The inner radius should be kept between 0 and 0.5 (exclusive) to maintain proper wheel visualization and
+    /// interaction.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic ColorWheel Setup</para>
+    ///
+    /// <para>Basic UXML setup for a color wheel with default settings.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ColorWheel value="0.0" saturation="1.0" brightness="1.0" opacity="1.0" style="width: 200px; height: 200px;"/>
+    /// ]]></code>
+    /// <para>Custom ColorWheel with Modified Properties</para>
+    ///
+    /// <para>UXML setup for a color wheel with custom properties.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ColorWheel
+    ///     value="0.33"
+    ///     saturation="0.8"
+    ///     brightness="0.9"
+    ///     opacity="0.9"
+    ///     inner-radius="0.3"
+    ///     checker-size="8"
+    ///     style="width: 300px; height: 300px;"/>
+    /// ]]></code>
+    /// <para>Code Example: Creating and Configuring a ColorWheel</para>
+    ///
+    /// <para>Creating a ColorWheel in code with event handling.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var colorWheel = new ColorWheel
+    /// {
+    ///     style = { width = 250, height = 250 },
+    ///     value = 0.5f,  // Start at cyan
+    ///     saturation = 0.9f,
+    ///     brightness = 1.0f,
+    ///     opacity = 0.95f,
+    ///     innerRadius = 0.35f
+    /// };
+    ///
+    /// colorWheel.RegisterValueChangedCallback(evt =>
+    /// {
+    ///     Debug.Log($"Color changed to: {colorWheel.selectedColor}");
+    /// });
+    ///
+    /// parentElement.Add(colorWheel);
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class ColorWheel : BaseVisualElement, IInputElement<float>, INotifyValueChanging<float>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valuePropertyKey = new BindingId(nameof(value));
 
@@ -43,7 +94,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId validateValueProperty = new BindingId(nameof(validateValue));
 
-#endif
 
         const float k_InvTwoPI = 0.15915494309f;
 
@@ -168,12 +218,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The hue value of the color wheel.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float value
         {
             get => m_Value;
@@ -187,23 +233,17 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valuePropertyKey);
                 NotifyPropertyChanged(in selectedColorPropertyKey);
-#endif
             }
         }
 
         /// <summary>
         /// The opacity of the color wheel. Note that a checkerboard pattern is always drawn behind the color wheel.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Range(0,1)]
-#endif
         public float opacity
         {
             get => m_OpacityFromCode.IsSet ? m_OpacityFromCode.Value : m_OpacityFromStyle;
@@ -216,23 +256,17 @@ namespace Unity.AppUI.UI
                 if (changed)
                     GenerateTextures();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in opacityPropertyKey);
-#endif
             }
         }
 
         /// <summary>
         /// The brightness of the color wheel.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Range(0,1)]
-#endif
         public float brightness
         {
             get => m_BrightnessFromCode.IsSet ? m_BrightnessFromCode.Value : m_BrightnessFromStyle;
@@ -245,26 +279,20 @@ namespace Unity.AppUI.UI
                 if (changed)
                     GenerateTextures();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
                     NotifyPropertyChanged(in brightnessPropertyKey);
                     NotifyPropertyChanged(in selectedColorPropertyKey);
                 }
-#endif
             }
         }
 
         /// <summary>
         /// The saturation of the color wheel.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Range(0,1)]
-#endif
         public float saturation
         {
             get => m_SaturationFromCode.IsSet ? m_SaturationFromCode.Value : m_SaturationFromStyle;
@@ -277,26 +305,20 @@ namespace Unity.AppUI.UI
                 if (changed)
                     GenerateTextures();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
                     NotifyPropertyChanged(in saturationPropertyKey);
                     NotifyPropertyChanged(in selectedColorPropertyKey);
                 }
-#endif
             }
         }
 
         /// <summary>
         /// The inner radius of the color wheel.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Range(0,0.49999f)]
-#endif
         public float innerRadius
         {
             get => m_InnerRadiusFromCode.IsSet ? m_InnerRadiusFromCode.Value : m_InnerRadiusFromStyle;
@@ -309,23 +331,17 @@ namespace Unity.AppUI.UI
                 if (changed)
                     GenerateTextures();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in innerRadiusPropertyKey);
-#endif
             }
         }
 
         /// <summary>
         /// The size of the checkerboard pattern.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Min(0)]
-#endif
         public int checkerSize
         {
             get => m_CheckerSizeFromCode.IsSet ? m_CheckerSizeFromCode.Value : m_CheckerSizeFromStyle;
@@ -337,22 +353,16 @@ namespace Unity.AppUI.UI
                 if (changed)
                     GenerateTextures();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in checkerSizePropertyKey);
-#endif
             }
         }
 
         /// <summary>
         /// The first color of the checkerboard pattern.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Color checkerColor1
         {
             get => m_CheckerColor1FromCode.IsSet ? m_CheckerColor1FromCode.Value : m_CheckerColor1FromStyle;
@@ -364,22 +374,16 @@ namespace Unity.AppUI.UI
                 if (changed)
                     GenerateTextures();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in checkerColor1PropertyKey);
-#endif
             }
         }
 
         /// <summary>
         /// The second color of the checkerboard pattern.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Color checkerColor2
         {
             get => m_CheckerColor2FromCode.IsSet ? m_CheckerColor2FromCode.Value : m_CheckerColor2FromStyle;
@@ -391,31 +395,23 @@ namespace Unity.AppUI.UI
                 if (changed)
                     GenerateTextures();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in checkerColor2PropertyKey);
-#endif
             }
         }
 
         /// <summary>
         /// The currently selected color.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public Color selectedColor => Color.HSVToRGB(value, saturation, brightness);
 
         /// <summary>
         /// The factor by which the value is incremented when interacting with the wheel from the keyboard.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Min(0.00001f)]
-#endif
         public float incrementFactor
         {
             get => m_IncrementFactor;
@@ -426,21 +422,15 @@ namespace Unity.AppUI.UI
 
                 m_IncrementFactor = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in incrementFactorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The ColorWheel invalid state.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -449,19 +439,15 @@ namespace Unity.AppUI.UI
                 var changed = invalid != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The ColorWheel validation function.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<float, bool> validateValue
         {
             get => m_ValidateValue;
@@ -470,10 +456,8 @@ namespace Unity.AppUI.UI
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
@@ -790,49 +774,5 @@ namespace Unity.AppUI.UI
             m_RT = null;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Instantiates an <see cref="ColorWheel"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<ColorWheel, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ColorWheel"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlFloatAttributeDescription m_Value = new UxmlFloatAttributeDescription
-            {
-                name = "value",
-                defaultValue = 0
-            };
-
-            readonly UxmlFloatAttributeDescription m_IncrementFactor = new UxmlFloatAttributeDescription
-            {
-                name = "increment-factor",
-                defaultValue = k_DefaultIncrementFactor
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (ColorWheel)ve;
-                el.SetValueWithoutNotify(m_Value.GetValueFromBag(bag, cc));
-
-                var incrementFactor = k_DefaultIncrementFactor;
-                if (m_IncrementFactor.TryGetValueFromBag(bag, cc, ref incrementFactor))
-                    el.incrementFactor = incrementFactor;
-
-            }
-        }
-#endif
     }
 }

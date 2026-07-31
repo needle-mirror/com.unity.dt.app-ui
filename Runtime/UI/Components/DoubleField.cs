@@ -2,18 +2,34 @@ using System;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Double Field UI element.
+    /// A field component that allows users to input and edit double precision floating-point numbers.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Double Field component is a specialized input field designed for handling double precision floating-point
+    /// numbers. It provides a clean, user-friendly interface for entering and manipulating numerical values with
+    /// decimal points.
+    ///
+    /// This component extends the NumericalField base class and includes features such as value validation,
+    /// formatting options, and unit display. It's particularly useful in scenarios where precise decimal input is
+    /// required, such as scientific applications, financial calculations, or detailed parameter configurations.
+    ///
+    /// Double Fields should be used when decimal precision is crucial. For simpler whole number inputs, consider
+    /// using IntegerField instead.
+    ///
+    /// - Decimal number input with high precision
+    /// - Optional minimum and maximum value constraints
+    /// - Customizable value formatting
+    /// - Unit display support
+    /// - Keyboard navigation and input
+    /// - Value validation
+    /// </remarks>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class DoubleField : NumericalField<double>
     {
         /// <summary>
@@ -84,7 +100,6 @@ namespace Unity.AppUI.UI
             return (float)(magnitude * 0.01);
         }
 
-#if ENABLE_VALUEFIELD_INTERFACE
         /// <inheritdoc/>
         public override void ApplyInputDeviceDelta(Vector3 delta, DeltaSpeed speed, double startValue)
         {
@@ -98,19 +113,6 @@ namespace Unity.AppUI.UI
             SetValueWithoutNotify(newValue);
             TrySendChangingEvent(previousValue, newValue);
         }
-#endif
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="DoubleField"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<DoubleField, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="DoubleField"/>.
-        /// </summary>
-        public new class UxmlTraits : NumericalField<double>.UxmlTraits { }
-#endif
     }
 }

@@ -1,21 +1,101 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A Pane is a visual element that can be used as a child of a <see cref="SplitView"/>.
+    /// A resizable container element designed to be used as a child of SplitView.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Pane component is a specialized container designed exclusively for use within a SplitView. It
+    /// represents an individual resizable panel that users can adjust by dragging splitters between adjacent
+    /// panes.
+    ///
+    /// Key features:
+    /// - Flexible sizing with stretch factor control
+    /// - Automatic compact mode when resized below threshold
+    /// - Persistent state saving and restoration
+    /// - Minimum size constraints via USS
+    /// - Non-interactive by default (picking mode set to ignore)
+    ///
+    /// Panes can be configured to either maintain a fixed size or stretch to fill available space. The compact
+    /// mode feature allows panes to automatically collapse when they become too narrow, providing a better user
+    /// experience for complex layouts.
+    ///
+    /// NOTE: Panes must be direct children of a SplitView component. Using Pane outside of a SplitView is not
+    /// supported.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic pane in a split view — creating a split view with fixed and flexible panes.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <SplitView>
+    ///     <Pane style="min-width: 200px;">
+    ///         <Text text="Fixed width pane" />
+    ///     </Pane>
+    ///     <Pane stretch-factor="1">
+    ///         <Text text="Flexible pane that fills remaining space" />
+    ///     </Pane>
+    /// </SplitView>
+    /// ]]></code>
+    /// <para>Using compact mode — creating a collapsible sidebar that enters compact mode when small.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <SplitView>
+    ///     <Pane compact-threshold="50" style="min-width: 50px;">
+    ///         <Icon name="menu" />
+    ///     </Pane>
+    ///     <Pane stretch-factor="1">
+    ///         <Text text="Main content" />
+    ///     </Pane>
+    /// </SplitView>
+    /// ]]></code>
+    /// <para>Proportional sizing with stretch factors — creating panes with proportional sizing.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <SplitView>
+    ///     <Pane stretch-factor="1">
+    ///         <Text text="Takes 1/3 of space" />
+    ///     </Pane>
+    ///     <Pane stretch-factor="2">
+    ///         <Text text="Takes 2/3 of space" />
+    ///     </Pane>
+    /// </SplitView>
+    /// ]]></code>
+    /// <para>Saving and restoring pane state — persisting pane state across sessions.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Save pane state
+    /// var state = pane.SaveState();
+    /// PlayerPrefs.SetString("paneState", JsonUtility.ToJson(state));
+    ///
+    /// // Restore pane state later
+    /// var stateJson = PlayerPrefs.GetString("paneState");
+    /// var restoredState = JsonUtility.FromJson<Pane.State>(stateJson);
+    /// pane.RestoreState(restoredState);
+    /// ]]></code>
+    /// <para>Reacting to compact mode changes — handling compact mode state changes.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var pane = new Pane();
+    /// pane.compactChanged += (p) =>
+    /// {
+    ///     if (p.compact)
+    ///     {
+    ///         // Pane entered compact mode - show icon-only view
+    ///         Debug.Log("Pane collapsed");
+    ///     }
+    ///     else
+    ///     {
+    ///         // Pane expanded - show full content
+    ///         Debug.Log("Pane expanded");
+    ///     }
+    /// };
+    ///
+    /// splitView.AddPane(pane);
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class Pane : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId compactThresholdProperty = nameof(compactThreshold);
 
         internal static readonly BindingId compactProperty = nameof(compact);
@@ -23,7 +103,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId stretchFactorProperty = nameof(stretchFactor);
 
         internal static readonly BindingId stretchProperty = nameof(stretch);
-#endif
 
         static readonly EventCallback<GeometryChangedEvent> k_OnGeometryChanged = OnGeometryChanged;
 
@@ -54,35 +133,25 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// A threshold used to snap to compact mode when the pane is resized.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float compactThreshold
         {
             get => m_CompactThreshold;
             set
             {
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 var changed = Mathf.Approximately(m_CompactThreshold, value);
-#endif
                 m_CompactThreshold = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in compactThresholdProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Whether the pane is in compact mode or not.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         internal bool compact
         {
             get => m_Compact;
@@ -94,9 +163,7 @@ namespace Unity.AppUI.UI
                 if (changed)
                 {
                     compactChanged?.Invoke(this);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in compactProperty);
-#endif
                 }
             }
         }
@@ -104,40 +171,30 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The stretch factor of the pane.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float stretchFactor
         {
             get => resolvedStyle.flexGrow;
             set
             {
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 var changed = Mathf.Approximately(resolvedStyle.flexGrow, value);
                 var stretchChanged = stretch != (value > 0);
-#endif
 
                 style.flexGrow = value;
                 style.flexShrink = value > 0 ? 1 : 0;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in stretchFactorProperty);
                 if (stretchChanged)
                     NotifyPropertyChanged(in stretchProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Whether the pane can be stretched or not.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public bool stretch
         {
             get => stretchFactor > 0;
@@ -219,46 +276,5 @@ namespace Unity.AppUI.UI
             public float compactThreshold;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Pane"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Pane, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Pane"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlFloatAttributeDescription m_CompactThreshold = new UxmlFloatAttributeDescription
-            {
-                name = "compact-threshold",
-                defaultValue = defaultCompactThreshold
-            };
-
-            readonly UxmlFloatAttributeDescription m_StretchFactor = new UxmlFloatAttributeDescription
-            {
-                name = "stretch-factor",
-                defaultValue = 0
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                m_PickingMode.defaultValue = PickingMode.Ignore;
-                base.Init(ve, bag, cc);
-                var el = (Pane)ve;
-
-                el.compactThreshold = m_CompactThreshold.GetValueFromBag(bag, cc);
-                el.stretchFactor = m_StretchFactor.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

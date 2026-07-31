@@ -17,11 +17,6 @@
     "versionDefines": [
         {
             "name": "Unity",
-            "expression": "2023.2",
-            "define": "ENABLE_RUNTIME_DATA_BINDINGS"
-        },
-        {
-            "name": "Unity",
             "expression": "6000.5.0a1",
             "define": "ENABLE_PANEL_RENDERER"
         }

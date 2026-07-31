@@ -3,21 +3,57 @@ using System.Globalization;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// DateRange Field UI element.
+    /// A form input component that allows users to select a date range with a visual calendar picker.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// DateRangeField is a specialized input component designed for selecting a range of dates. It combines two
+    /// text inputs for direct date entry with a calendar picker interface for visual date selection.
+    ///
+    /// The component provides two ways to input dates:
+    /// 1. Direct text input: Users can type dates directly into the start and end date fields
+    /// 2. Calendar picker: Clicking the calendar icon opens a popover with a visual date range picker
+    ///
+    /// **Tip:** The field supports keyboard navigation, validation, and various date formatting options to ensure
+    /// proper date entry.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic usage in UXML — Creates a medium-sized date range field with MM/dd/yyyy format and initial date
+    /// range.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <DateRangeField name="bookingDates"
+    ///              size="M"
+    ///              format-string="MM/dd/yyyy"
+    ///              value="2023-12-25,2023-12-31" />
+    /// ]]></code>
+    /// <para>Complete C# example with validation and change handling — Creates a date range field that validates the
+    /// selection is between 2 and 14 days and logs changes.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var dateRangeField = new DateRangeField {
+    ///     size = Size.M,
+    ///     formatString = "MM/dd/yyyy",
+    ///     validateValue = range => {
+    ///         var minStay = 2;
+    ///         var maxStay = 14;
+    ///         var days = (range.end - range.start).Days;
+    ///         return days >= minStay && days <= maxStay;
+    ///     }
+    /// };
+    ///
+    /// dateRangeField.RegisterValueChangedCallback(evt => {
+    ///     var range = evt.newValue;
+    ///     Debug.Log($"Selected range: {range.start} to {range.end}");
+    /// });
+    /// ]]></code>
+    /// </example>
+    [VisualDocPage("inputs")]
     [UxmlElement]
-#endif
     public partial class DateRangeField : ExVisualElement, IInputElement<DateRange>, INotifyValueChanging<DateRange>, ISizeableElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId sizeProperty = nameof(size);
 
@@ -29,7 +65,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId formatStringProperty = nameof(formatString);
 
-#endif
 
         /// <summary>
         /// The DateField main styling class.
@@ -235,9 +270,7 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
             Focus();
         }
@@ -275,12 +308,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The DateField size.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -291,22 +320,16 @@ namespace Unity.AppUI.UI
                 m_Size = value;
                 AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The DateField invalid state.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -315,19 +338,15 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(Styles.invalidUssClassName) != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The DateField validation function.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<DateRange, bool> validateValue
         {
             get => m_ValidateValue;
@@ -336,10 +355,8 @@ namespace Unity.AppUI.UI
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
@@ -370,12 +387,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The DateField value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public DateRange value
         {
             get => m_Value;
@@ -389,21 +402,15 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The DateField string formatting.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string formatString
         {
             get => m_FormatString;
@@ -413,68 +420,10 @@ namespace Unity.AppUI.UI
                 m_FormatString = value;
                 SetFormattedString();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
-#endif
             }
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Class to instantiate a <see cref="DateRangeField"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<DateRangeField, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="DateRangeField"/>.
-        /// </summary>
-        public new class UxmlTraits : ExVisualElement.UxmlTraits
-        {
-            readonly UxmlBoolAttributeDescription m_Invalid = new UxmlBoolAttributeDescription
-            {
-                name = "invalid",
-                defaultValue = false
-            };
-
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            readonly UxmlStringAttributeDescription m_FormatString = new UxmlStringAttributeDescription
-            {
-                name = "format-string",
-                defaultValue = "yyyy-MM-dd"
-            };
-
-            readonly UxmlStringAttributeDescription m_Value = new UxmlStringAttributeDescription
-            {
-                name = "value",
-                defaultValue = new DateRange(Date.now, new Date(DateTime.Now.AddDays(1))).ToString()
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (DateRangeField)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                element.invalid = m_Invalid.GetValueFromBag(bag, cc);
-                element.formatString = m_FormatString.GetValueFromBag(bag, cc);
-                string dateRangeRaw = null;
-                if (m_Value.TryGetValueFromBag(bag, cc, ref dateRangeRaw) && !string.IsNullOrEmpty(dateRangeRaw) && DateRange.TryParse(dateRangeRaw, out var dateRange))
-                    element.value = dateRange;
-            }
-        }
-#endif
     }
 }

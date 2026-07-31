@@ -4,18 +4,62 @@ using UnityEngine.UIElements;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// LinearProgress UI element.
+    /// A progress indicator that displays progress linearly along a horizontal bar.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// Linear Progress indicators express an unspecified wait time or display the length of a process. They help
+    /// users visualize the progression of an operation or activity in your application.
+    ///
+    /// The component supports two variants: determinate and indeterminate. Use determinate progress indicators when
+    /// the wait time or completion percentage is known. For operations where the wait time is unknown, use the
+    /// indeterminate mode which displays a continuous animation.
+    ///
+    /// Note: Progress indicators inform users about the status of ongoing processes, such as loading an app,
+    /// submitting a form, or saving updates.
+    ///
+    /// The LinearProgress component inherits from the base Progress class and implements additional features
+    /// specific to linear representation of progress.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic indeterminate progress: Shows an animated progress bar for operations with unknown duration</para>
+    /// <code lang="xml"><![CDATA[
+    /// <LinearProgress variant="Indeterminate" />
+    /// ]]></code>
+    /// <para>Determinate progress with buffer: Shows a progress bar with both primary and buffer progress, useful for
+    /// media playback scenarios</para>
+    /// <code lang="xml"><![CDATA[
+    /// <LinearProgress
+    ///     variant="Determinate"
+    ///     value="0.4"
+    ///     bufferValue="0.6"
+    ///     size="M"
+    ///     roundedProgressCorners="true"
+    /// />
+    /// ]]></code>
+    /// <para>Programmatic usage example: Creating and configuring a progress bar through code</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var progress = new LinearProgress();
+    /// progress.variant = Variant.Determinate;
+    /// progress.value = 0.75f;
+    /// progress.size = Size.L;
+    /// progress.colorOverride = new Color(0.2f, 0.6f, 1f, 1f);
+    /// ]]></code>
+    /// <para>Styling with USS: Customizing the appearance using USS styles</para>
+    /// <code lang="csharp"><![CDATA[
+    /// .custom-progress {
+    ///     --progress-color: rgb(25, 118, 210);
+    ///     width: 200px;
+    ///     margin: 8px;
+    /// }
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("feedbacks")]
     public partial class LinearProgress : Progress
     {
         static readonly int k_Start = Shader.PropertyToID("_Start");
@@ -114,18 +158,5 @@ namespace Unity.AppUI.UI
             RenderTexture.active = prevRt;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="LinearProgress"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<LinearProgress, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="LinearProgress"/>.
-        /// </summary>
-        public new class UxmlTraits : Progress.UxmlTraits { }
-
-#endif
     }
 }

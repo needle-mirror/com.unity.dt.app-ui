@@ -2,21 +2,56 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Radio UI element.
+    /// A toggle control that allows users to select one option from a set of mutually exclusive choices.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Radio component is a form control that allows users to select a single option from a group of related
+    /// choices. Radio buttons are typically used when there are two or more mutually exclusive options, and only
+    /// one option can be selected at a time.
+    ///
+    /// Radio buttons should be used within a RadioGroup to manage the selection state and ensure that only one
+    /// option can be selected at a time.
+    ///
+    /// Radio buttons should always be used in groups of two or more options. For single boolean choices, consider
+    /// using a Checkbox instead.
+    ///
+    /// Radio buttons consist of a circular button and a label. When selected, the button displays a filled circle.
+    /// The control can be interacted with either by clicking the button or its associated label.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Radio Group.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <RadioGroup>
+    ///     <Radio key="small" label="Small" size="Size.S" />
+    ///     <Radio key="medium" label="Medium" size="Size.M" />
+    ///     <Radio key="large" label="Large" size="Size.L" />
+    /// </RadioGroup>
+    /// ]]></code>
+    /// <para>Radio Group with Validation.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var radioGroup = new RadioGroup();
+    /// radioGroup.validateValue = (value) => !string.IsNullOrEmpty(value);
+    ///
+    /// radioGroup.Add(new Radio { key = "option1", label = "Option 1" });
+    /// radioGroup.Add(new Radio { key = "option2", label = "Option 2" });
+    /// ]]></code>
+    /// <para>Emphasized Radio Buttons.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <RadioGroup>
+    ///     <Radio key="opt1" label="Important Choice 1" emphasized="true" />
+    ///     <Radio key="opt2" label="Important Choice 2" emphasized="true" />
+    /// </RadioGroup>
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class Radio : BaseVisualElement, IValidatableElement<bool>, IPressable
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId sizeProperty = nameof(size);
 
@@ -34,7 +69,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId clickableProperty = nameof(clickable);
 
-#endif
 
         /// <summary>
         /// The Radio main styling class.
@@ -121,9 +155,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Clickable Manipulator for this Radio.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -136,22 +168,16 @@ namespace Unity.AppUI.UI
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Radio key.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string key
         {
             get => m_Key;
@@ -161,22 +187,16 @@ namespace Unity.AppUI.UI
                 m_Key = value;
                 TryAddToGroup();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in keyProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Radio size.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -187,22 +207,16 @@ namespace Unity.AppUI.UI
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Radio emphasized mode.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool emphasized
         {
             get => ClassListContains(emphasizedUssClassName);
@@ -211,22 +225,16 @@ namespace Unity.AppUI.UI
                 var changed = emphasized != value;
                 EnableInClassList(emphasizedUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in emphasizedProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Radio label.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string label
         {
             get => m_Label.text;
@@ -237,22 +245,16 @@ namespace Unity.AppUI.UI
                 if (string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
                     key = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Radio invalid state.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -261,19 +263,15 @@ namespace Unity.AppUI.UI
                 var changed = invalid != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Radio validation function.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<bool, bool> validateValue
         {
             get => m_ValidateValue;
@@ -283,10 +281,8 @@ namespace Unity.AppUI.UI
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
@@ -304,12 +300,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Radio value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool value
         {
             get => m_Value;
@@ -322,9 +314,7 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
@@ -364,67 +354,5 @@ namespace Unity.AppUI.UI
             m_Group?.RemoveRadio(this);
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Radio"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Radio, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Radio"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlBoolAttributeDescription m_Emphasized = new UxmlBoolAttributeDescription
-            {
-                name = "emphasized",
-                defaultValue = false
-            };
-
-            readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
-            {
-                name = "label",
-                defaultValue = null
-            };
-
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            readonly UxmlBoolAttributeDescription m_Value = new UxmlBoolAttributeDescription
-            {
-                name = "value",
-                defaultValue = false
-            };
-
-            readonly UxmlStringAttributeDescription m_Key = new UxmlStringAttributeDescription
-            {
-                name = "key",
-                defaultValue = null
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Radio)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                element.emphasized = m_Emphasized.GetValueFromBag(bag, cc);
-                element.value = m_Value.GetValueFromBag(bag, cc);
-                element.label = m_Label.GetValueFromBag(bag, cc);
-                element.key = m_Key.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

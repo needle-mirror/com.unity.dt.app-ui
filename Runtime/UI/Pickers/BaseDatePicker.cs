@@ -4,21 +4,16 @@ using System.Runtime.CompilerServices;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A base date picker control.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class BaseDatePicker : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId displayModeProperty = new BindingId(nameof(displayMode));
 
@@ -28,7 +23,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId firstDayOfWeekProperty = new BindingId(nameof(firstDayOfWeek));
 
-#endif
 
         /// <summary>
         /// Represents the display mode of the date picker.
@@ -132,12 +126,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The current display mode of the date picker.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public DisplayMode displayMode
         {
             get => m_DisplayMode;
@@ -151,21 +141,15 @@ namespace Unity.AppUI.UI
                 AddToClassList(displayModeUssClassName + m_DisplayMode.ToString().ToLower());
                 RefreshUI();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in displayModeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The first day of the week displayed in the date picker.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public DayOfWeek firstDayOfWeek
         {
             get => m_FirstDayOfWeek;
@@ -176,10 +160,8 @@ namespace Unity.AppUI.UI
 
                 RefreshUI();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in firstDayOfWeekProperty);
-#endif
             }
         }
 
@@ -276,10 +258,8 @@ namespace Unity.AppUI.UI
             m_DisplayedYearAndMonth = new Vector2Int(date.Year, date.Month);
             RefreshUI();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in currentYearProperty);
             NotifyPropertyChanged(in currentMonthProperty);
-#endif
         }
 
         internal virtual void OnDaySelected(EventBase evt) { }
@@ -322,40 +302,5 @@ namespace Unity.AppUI.UI
             m_DayPicker.RefreshUI();
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="BaseDatePicker"/>.
-        /// </summary>
-        public new class UxmlTraits : VisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<DisplayMode> m_DisplayMode = new UxmlEnumAttributeDescription<DisplayMode>
-            {
-                name = "display-mode",
-                defaultValue = DisplayMode.Days
-            };
-
-            readonly UxmlEnumAttributeDescription<DayOfWeek> m_FirstDayOfWeek = new UxmlEnumAttributeDescription<DayOfWeek>
-            {
-                name = "first-day-of-week",
-                defaultValue = DayOfWeek.Sunday
-            };
-
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var datePicker = (BaseDatePicker)ve;
-
-                var displayMode = m_DisplayMode.GetValueFromBag(bag, cc);
-                if (m_DisplayMode.TryGetValueFromBag(bag, cc, ref displayMode))
-                    datePicker.displayMode = displayMode;
-
-                var firstDayOfWeek = m_FirstDayOfWeek.GetValueFromBag(bag, cc);
-                if (m_FirstDayOfWeek.TryGetValueFromBag(bag, cc, ref firstDayOfWeek))
-                    datePicker.firstDayOfWeek = firstDayOfWeek;
-            }
-        }
-#endif
     }
 }

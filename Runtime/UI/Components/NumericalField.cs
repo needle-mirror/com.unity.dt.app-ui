@@ -3,9 +3,7 @@ using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -13,21 +11,16 @@ namespace Unity.AppUI.UI
     /// Numerical Field UI element.
     /// </summary>
     /// <typeparam name="TValue">The type of the numerical value.</typeparam>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public abstract partial class NumericalField<TValue>
         : ExVisualElement,
             IInputElement<TValue>,
             ISizeableElement,
             INotifyValueChanging<TValue>,
             IFormattable<TValue>
-#if ENABLE_VALUEFIELD_INTERFACE
             , IValueField<TValue>
-#endif
         where TValue : struct, IComparable, IComparable<TValue>, IFormattable
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
 
@@ -47,11 +40,8 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId validateValueProperty = new BindingId(nameof(validateValue));
 
-#if ENABLE_VALUEFIELD_INTERFACE
         internal static readonly BindingId acceptDraggingProperty = new BindingId(nameof(acceptDragging));
-#endif
 
-#endif
 
         /// <summary>
         /// The NumericalField main styling class.
@@ -131,7 +121,6 @@ namespace Unity.AppUI.UI
 
         FormatFunction<TValue> m_FormatFunction;
 
-#if ENABLE_VALUEFIELD_INTERFACE
 
         /// <summary>
         /// The unit dragger.
@@ -157,12 +146,8 @@ namespace Unity.AppUI.UI
         /// Whether the field accepts dragging to change value.
         /// Setting this to true will enable drag context listening when the element is attached to a panel.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool acceptDragging
         {
             get => m_AcceptDragging;
@@ -171,23 +156,16 @@ namespace Unity.AppUI.UI
                 var changed = m_AcceptDragging != value;
                 m_AcceptDragging = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in acceptDraggingProperty);
-#endif
             }
         }
-#endif
 
         /// <summary>
         /// The format string of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string formatString
         {
             get => m_FormatString;
@@ -197,19 +175,15 @@ namespace Unity.AppUI.UI
                 m_FormatString = value;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The format function of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public FormatFunction<TValue> formatFunction
         {
             get => m_FormatFunction;
@@ -219,10 +193,8 @@ namespace Unity.AppUI.UI
                 m_FormatFunction = value;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatFunctionProperty);
-#endif
             }
         }
 
@@ -262,18 +234,15 @@ namespace Unity.AppUI.UI
             m_InputElement.RuntimeContextMenu();
             m_InputElement.RegisterValueChangedCallback(OnInputValueChanged);
 
-#if ENABLE_VALUEFIELD_INTERFACE
             m_UnitDragger = new FieldMouseDragger<TValue>(this);
             m_UnitDragger.SetDragZone(m_UnitElement);
             RegisterCallback<AttachToPanelEvent>(OnAttachedToPanel);
             RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
             acceptDragging = false;
-#endif
 
             size = Size.M;
         }
 
-#if ENABLE_VALUEFIELD_INTERFACE
 
         void OnAttachedToPanel(AttachToPanelEvent evt)
         {
@@ -345,7 +314,6 @@ namespace Unity.AppUI.UI
             MarkDirtyRepaint();
         }
 
-#endif
 
         /// <summary>
         /// Try to send a Changing event.
@@ -404,12 +372,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The unit of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string unit
         {
             get => m_UnitElement.text;
@@ -419,22 +383,16 @@ namespace Unity.AppUI.UI
                 m_UnitElement.text = value;
                 m_UnitElement.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_UnitElement.text));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in unitProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Minimum value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Optional<TValue> lowValue
         {
             get => m_LowValue;
@@ -444,22 +402,16 @@ namespace Unity.AppUI.UI
                 m_LowValue = value;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in lowValueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Maximum value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Optional<TValue> highValue
         {
             get => m_HighValue;
@@ -469,10 +421,8 @@ namespace Unity.AppUI.UI
                 m_HighValue = value;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in highValueProperty);
-#endif
             }
         }
 
@@ -484,12 +434,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -500,10 +446,8 @@ namespace Unity.AppUI.UI
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
@@ -527,12 +471,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public TValue value
         {
             get => string.IsNullOrEmpty(m_InputElement.value) && ParseStringToValue(m_InputElement.value, out var val) ? val : m_Value;
@@ -550,21 +490,15 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(val);
                 TrySendChangeEvent(previousValue, m_Value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The invalid state of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -573,19 +507,15 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(Styles.invalidUssClassName) != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Method to validate the value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<TValue, bool> validateValue
         {
             get => m_ValidateValue;
@@ -596,10 +526,8 @@ namespace Unity.AppUI.UI
                 if (m_ValidateValue != null)
                     invalid = !m_ValidateValue(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
@@ -612,9 +540,7 @@ namespace Unity.AppUI.UI
             var val = valueStr != m_InputElement.value && ParseStringToValue(m_InputElement.value, out var newValue) ? newValue : m_Value;
             value = val;
             SetValueWithoutNotify(val);
-#if UNITY_2022_1_OR_NEWER
             m_InputElement.cursorIndex = 0;
-#endif
         }
 
         void OnFocusedIn(FocusInEvent evt)
@@ -713,78 +639,5 @@ namespace Unity.AppUI.UI
         /// <returns>The increment factor.</returns>
         internal float InvokeGetIncrementFactor(TValue baseValue) => GetIncrementFactor(baseValue);
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="NumericalField{TValue}"/>.
-        /// </summary>
-        public new class UxmlTraits : ExVisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_HighValue = new UxmlStringAttributeDescription { name = "high-value", defaultValue = null };
-
-            readonly UxmlStringAttributeDescription m_LowValue = new UxmlStringAttributeDescription { name = "low-value", defaultValue = null };
-
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            readonly UxmlStringAttributeDescription m_Unit = new UxmlStringAttributeDescription
-            {
-                name = "unit",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_Value = new UxmlStringAttributeDescription { name = "value", defaultValue = "0" };
-
-            readonly UxmlStringAttributeDescription m_Format = new UxmlStringAttributeDescription { name = "format-string", defaultValue = null };
-
-#if ENABLE_VALUEFIELD_INTERFACE
-            readonly UxmlBoolAttributeDescription m_AcceptDragging = new UxmlBoolAttributeDescription
-            {
-                name = "accept-dragging",
-                defaultValue = false
-            };
-#endif
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (NumericalField<TValue>)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                element.unit = m_Unit.GetValueFromBag(bag, cc);
-
-                var strValue = m_Value.GetValueFromBag(bag, cc);
-                if (!string.IsNullOrEmpty(strValue) && element.ParseStringToValue(strValue, out var value))
-                    element.SetValueWithoutNotify(value);
-
-                var strLowValue = m_LowValue.GetValueFromBag(bag, cc);
-                if (!string.IsNullOrEmpty(strLowValue) && element.ParseStringToValue(strLowValue, out var lowValue))
-                    element.lowValue = lowValue;
-
-                var strHighValue = m_HighValue.GetValueFromBag(bag, cc);
-                if (!string.IsNullOrEmpty(strHighValue) && element.ParseStringToValue(strHighValue, out var highValue))
-                    element.highValue = highValue;
-
-                string formatStr = null;
-                if (m_Format.TryGetValueFromBag(bag, cc, ref formatStr) && !string.IsNullOrEmpty(formatStr))
-                    element.formatString = formatStr;
-
-#if ENABLE_VALUEFIELD_INTERFACE
-                var acceptDragging = m_AcceptDragging.GetValueFromBag(bag, cc);
-                element.acceptDragging = acceptDragging;
-#endif
-            }
-        }
-
-#endif
     }
 }

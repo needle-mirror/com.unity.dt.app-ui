@@ -1,21 +1,16 @@
 using System;
 using Unity.AppUI.Core;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Base class for Dialogs (<see cref="Dialog"/>, <see cref="AlertDialog"/>, etc).
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public abstract partial class BaseDialog : BaseVisualElement, ISizeableElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId titlePropertyKey = new BindingId(nameof(title));
 
@@ -23,7 +18,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId sizePropertyKey = new BindingId(nameof(size));
 
-#endif
 
         /// <summary>
         /// The Dialog main styling class.
@@ -136,12 +130,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Dialog title.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string title
         {
             get => m_Header.text;
@@ -151,10 +141,8 @@ namespace Unity.AppUI.UI
                 m_Header.text = value;
                 RefreshHeading();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in titlePropertyKey);
-#endif
             }
         }
 
@@ -178,12 +166,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Dialog description. This is the text displayed in the content container.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string description
         {
             get => m_Content.text;
@@ -192,22 +176,16 @@ namespace Unity.AppUI.UI
                 var changed = m_Content.text != value;
                 m_Content.text = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in descriptionPropertyKey);
-#endif
             }
         }
 
         /// <summary>
         /// The Dialog size.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -218,64 +196,91 @@ namespace Unity.AppUI.UI
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizePropertyKey);
-#endif
             }
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="BaseDialog"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            readonly UxmlStringAttributeDescription m_Title = new UxmlStringAttributeDescription
-            {
-                name = "title",
-                defaultValue = ""
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (BaseDialog)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                element.title = m_Title.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 
     /// <summary>
-    /// Dialog UI element.
+    /// A reusable dialog component that displays content in a modal window, often used for important information
+    /// or actions that require user attention.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Dialog component provides a way to present content in a focused modal window, temporarily interrupting
+    /// the user's workflow. It's commonly used for important notifications, gathering user input, or requiring
+    /// user decisions.
+    ///
+    /// Dialogs can contain various types of content including text, form elements, or custom components. They
+    /// appear as modal windows overlaying the main content and typically include a title, content area, and
+    /// optional action buttons.
+    ///
+    /// Note: For situations requiring specific user decisions or acknowledgments, consider using the
+    /// <see cref="AlertDialog"/> variant which provides pre-configured semantic variants and action buttons.
+    ///
+    /// A Dialog's visibility is typically controlled by a <see cref="Modal"/> component, which handles the
+    /// overlay and focus management.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Dialog Example</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var dialog = new Dialog
+    /// {
+    ///     title = "Welcome",
+    ///     description = "Welcome to our application! We hope you enjoy using it.",
+    ///     size = Size.M,
+    ///     dismissable = true
+    /// };
+    ///
+    /// // Add the dialog to a modal
+    /// var modal = new Modal();
+    /// modal.Add(dialog);
+    ///
+    /// // Add the modal to your UI hierarchy
+    /// rootElement.Add(modal);
+    /// ]]></code>
+    /// <para>UXML Dialog Definition</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML xmlns="UnityEngine.UIElements">
+    ///     <Modal>
+    ///         <ui:Dialog
+    ///             title="Settings"
+    ///             description="Configure your application settings below."
+    ///             size="M"
+    ///             dismissable="true">
+    ///             <!-- Add custom content here -->
+    ///         </ui:Dialog>
+    ///     </Modal>
+    /// </UXML>
+    /// ]]></code>
+    /// <para>Dialog with Custom Content</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var dialog = new Dialog();
+    /// dialog.title = "User Profile";
+    ///
+    /// // Add custom content
+    /// var customContent = new VisualElement();
+    /// customContent.Add(new TextField("Name:"));
+    /// customContent.Add(new TextField("Email:"));
+    ///
+    /// dialog.Add(customContent);
+    ///
+    /// // Add action buttons
+    /// var saveButton = new Button(() => Debug.Log("Save clicked")) { text = "Save" };
+    /// var cancelButton = new Button(() => Debug.Log("Cancel clicked")) { text = "Cancel" };
+    ///
+    /// dialog.actionContainer.Add(cancelButton);
+    /// dialog.actionContainer.Add(saveButton);
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class Dialog : BaseDialog, IDismissInvocator
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId dismissablePropertyKey = new BindingId(nameof(dismissable));
 
-#endif
 
         /// <summary>
         /// The Dialog close button styling class.
@@ -310,12 +315,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Set the <see cref="Dialog"/> dismissable by itself using a <see cref="closeButton"/>.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool dismissable
         {
             get => ClassListContains(dismissableUssClassName);
@@ -325,10 +326,8 @@ namespace Unity.AppUI.UI
                 EnableInClassList(dismissableUssClassName, value);
                 RefreshHeading();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in dismissablePropertyKey);
-#endif
             }
         }
 
@@ -346,38 +345,5 @@ namespace Unity.AppUI.UI
                 dismissRequested?.Invoke(DismissType.Manual);
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Dialog"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Dialog, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Dialog"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseDialog.UxmlTraits
-        {
-            readonly UxmlBoolAttributeDescription m_Dismissable = new UxmlBoolAttributeDescription
-            {
-                name = "dismissable",
-                defaultValue = false,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Dialog)ve;
-                element.dismissable = m_Dismissable.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

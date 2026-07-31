@@ -14,7 +14,7 @@ It is intended to use this package in runtime apps development.
 
 ## Requirements
 
-This Unity package supports **Unity version 2021.3 and later**.
+This Unity package supports **Unity version 6000.3 and later**.
 
 ## Setup
 

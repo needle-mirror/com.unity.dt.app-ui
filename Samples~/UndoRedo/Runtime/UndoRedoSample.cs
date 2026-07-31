@@ -112,11 +112,7 @@ namespace Unity.AppUI.Samples.UndoRedo
                 item.text = cmd?.name;
             };
 
-#if UNITY_2022_2_OR_NEWER
             historyListView.selectedIndicesChanged += (indices) =>
-#else
-            historyListView.onSelectedIndicesChange += (indices) =>
-#endif
             {
                 foreach (var index in indices)
                 {

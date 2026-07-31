@@ -1,9 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -49,20 +47,59 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// Heading UI element.
+    /// Display headings with various size options for content hierarchy.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Heading component is used to create hierarchical text elements in your UI. It supports different
+    /// size variations to establish visual hierarchy and improve content organization. Headings are essential
+    /// for creating scannable content and maintaining a clear document structure.
+    ///
+    /// Headings come with seven different size options, from XXS to XXL, allowing for flexible typography
+    /// hierarchy. By default, headings use the primary text color and medium (M) size.
+    ///
+    /// Note: Headings should be used in a hierarchical order to maintain proper document structure and
+    /// accessibility. Don't skip heading levels, and use them to create meaningful content sections.
+    /// </remarks>
+    /// <example>
+    /// <para>Here's an example of creating a typical page hierarchy using different heading sizes — creating a page
+    /// hierarchy with headings.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML>
+    ///   <Heading text="Welcome to Our App" size="XXL" />
+    ///   <Heading text="Getting Started" size="XL" />
+    ///   <Heading text="Quick Setup" size="L" primary="false" />
+    ///   <Heading text="Prerequisites" size="M" />
+    ///   <Heading text="Additional Notes" size="S" primary="false" />
+    /// </UXML>
+    /// ]]></code>
+    /// <para>Creating headings programmatically — creating and customizing headings in C#.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var container = new VisualElement();
+    ///
+    /// // Create main title
+    /// var mainTitle = new Heading("Documentation") {
+    ///     size = HeadingSize.XXL
+    /// };
+    ///
+    /// // Create section title
+    /// var sectionTitle = new Heading("API Reference") {
+    ///     size = HeadingSize.L,
+    ///     primary = false
+    /// };
+    ///
+    /// container.Add(mainTitle);
+    /// container.Add(sectionTitle);
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("typography")]
     public sealed partial class Heading : LocalizedTextElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId primaryProperty = new BindingId(nameof(primary));
 
         internal static readonly BindingId sizeProperty = new BindingId(nameof(size));
 
-#endif
 
         /// <summary>
         /// The Heading main styling class.
@@ -107,12 +144,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The primary variant of the Heading.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool primary
         {
             get => ClassListContains(primaryUssClassName);
@@ -121,22 +154,16 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(primaryUssClassName) != value;
                 EnableInClassList(primaryUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in primaryProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The size of the Heading.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public HeadingSize size
         {
             get => m_Size;
@@ -147,55 +174,10 @@ namespace Unity.AppUI.UI
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Heading"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Heading, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Heading"/>.
-        /// </summary>
-        public new class UxmlTraits : LocalizedTextElement.UxmlTraits
-        {
-
-            readonly UxmlBoolAttributeDescription m_Primary = new UxmlBoolAttributeDescription
-            {
-                name = "primary",
-                defaultValue = true,
-            };
-
-            readonly UxmlEnumAttributeDescription<HeadingSize> m_Size = new UxmlEnumAttributeDescription<HeadingSize>
-            {
-                name = "size",
-                defaultValue = HeadingSize.M,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Heading)ve;
-                element.primary = m_Primary.GetValueFromBag(bag, cc);
-                element.size = m_Size.GetValueFromBag(bag, cc);
-
-            }
-        }
-
-#endif
     }
 }

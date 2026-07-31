@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:appui="Unity.AppUI.UI"
+    xmlns:navigation="Unity.AppUI.Navigation"
+    xmlns:visualdoc="Unity.AppUI.VisualDoc"
+    class="visual-doc-view"
+>
+    <Style src="./VisualDocView.uss" />
+    <appui:AppBar
+        name="app-bar"
+        class="visual-doc-view__app-bar"
+        show-back-button="false"
+        show-drawer-button="false"
+        stretch="false"
+        picking-mode="Ignore"
+    />
+    <engine:VisualElement
+        name="main"
+        class="visual-doc-view__main"
+        picking-mode="Ignore"
+    >
+        <engine:VisualElement
+            name="sidebar"
+            class="visual-doc-view__sidebar"
+            picking-mode="Ignore"
+        />
+        <navigation:NavHost
+            name="content"
+            class="visual-doc-view__content"
+            picking-mode="Ignore"
+        />
+    </engine:VisualElement>
+    <appui:Drawer
+        name="nav-drawer"
+        class="visual-doc-view__nav-drawer"
+        swipe-area-width="16"
+    />
+    <engine:VisualElement name="search-results">
+
+    </engine:VisualElement>
+</engine:UXML>

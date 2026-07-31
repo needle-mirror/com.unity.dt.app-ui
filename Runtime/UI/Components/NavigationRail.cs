@@ -1,21 +1,65 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A Navigation Rail is a UI element that provides a set of navigation options to the user on the side of the screen.
+    /// A side navigation component that supports side-rail navigation patterns.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Navigation Rail is a responsive alternative to the bottom navigation bar, designed for larger screen
+    /// sizes. It provides easy access to top-level destinations in your app when using tablet and desktop
+    /// screens.
+    ///
+    /// The rail is typically displayed on the left or right edge of the screen, containing navigation
+    /// destinations represented by icons and labels. It can also include leading and trailing containers for
+    /// additional UI elements like logos or settings buttons.
+    ///
+    /// Navigation Rails are recommended for apps with 3-7 top-level destinations. Using more destinations can
+    /// create cluttered navigation that is difficult to scan.
+    ///
+    /// - Leading container: Optional area at the top for branding, profile, or global actions
+    /// - Main container: Houses the navigation destinations
+    /// - Trailing container: Optional area at the bottom for secondary actions
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Navigation Rail with items — A simple navigation rail with three destinations.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <NavigationRail>
+    ///     <NavigationRailItem icon="home" label="Home" selected="true" />
+    ///     <NavigationRailItem icon="favorite" label="Favorites" />
+    ///     <NavigationRailItem icon="settings" label="Settings" />
+    /// </NavigationRail>
+    /// ]]></code>
+    /// <para>Navigation Rail with custom containers — Navigation rail with custom leading and trailing content.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <NavigationRail>
+    ///     <Template name="leadingContainer">
+    ///         <Image class="logo" />
+    ///     </Template>
+    ///     <NavigationRailItem icon="dashboard" label="Dashboard" />
+    ///     <NavigationRailItem icon="person" label="Profile" />
+    ///     <Template name="trailingContainer">
+    ///         <Button text="Logout" />
+    ///     </Template>
+    /// </NavigationRail>
+    /// ]]></code>
+    /// <para>Right-aligned Navigation Rail with selected-only labels — A right-aligned navigation rail showing labels
+    /// only for selected items.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <NavigationRail anchor="End" labelType="Selected" groupAlignment="Center">
+    ///     <NavigationRailItem icon="mail" label="Mail" />
+    ///     <NavigationRailItem icon="chat" label="Chat" selected="true" />
+    ///     <NavigationRailItem icon="calendar" label="Calendar" />
+    /// </NavigationRail>
+    /// ]]></code>
+    /// </example>
+    [VisualDocPage("nav-components", id = "navigation-rail", displayName = "Navigation Rail")]
     [UxmlElement]
-#endif
     public partial class NavigationRail : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId anchorProperty = new BindingId(nameof(anchor));
 
@@ -23,7 +67,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId groupAlignmentProperty = new BindingId(nameof(groupAlignment));
 
-#endif
 
         /// <summary>
         /// The NavigationRail main styling class.
@@ -79,12 +122,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The anchor of the NavigationRail. The NavigationRail will be anchored to the left or right side of the screen.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public NavigationRailAnchor anchor
         {
             get => m_Anchor;
@@ -95,24 +134,18 @@ namespace Unity.AppUI.UI
                 m_Anchor = value;
                 AddToClassList(GetAnchorUssClassName(m_Anchor));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
                     NotifyPropertyChanged(in anchorProperty);
                 }
-#endif
             }
         }
 
         /// <summary>
         /// The label type of the NavigationRail.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public LabelType labelType
         {
             get => m_LabelType;
@@ -123,24 +156,18 @@ namespace Unity.AppUI.UI
                 m_LabelType = value;
                 AddToClassList(GetLabelTypeUssClassName(m_LabelType));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
                     NotifyPropertyChanged(in labelTypeProperty);
                 }
-#endif
             }
         }
 
         /// <summary>
         /// The alignment of the group of items.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public GroupAlignment groupAlignment
         {
             get => m_GroupAlignment;
@@ -151,12 +178,10 @@ namespace Unity.AppUI.UI
                 m_GroupAlignment = value;
                 AddToClassList(GetGroupAlignmentUssClassName(m_GroupAlignment));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
                     NotifyPropertyChanged(in groupAlignmentProperty);
                 }
-#endif
             }
         }
 
@@ -200,57 +225,6 @@ namespace Unity.AppUI.UI
             groupAlignment = GroupAlignment.Start;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="NavigationRail"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<NavigationRail, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="NavigationRail"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<NavigationRailAnchor> m_Anchor =
-                new UxmlEnumAttributeDescription<NavigationRailAnchor>()
-                {
-                    name = "anchor",
-                    defaultValue = NavigationRailAnchor.Start,
-                };
-
-            readonly UxmlEnumAttributeDescription<LabelType> m_LabelType =
-                new UxmlEnumAttributeDescription<LabelType>()
-                {
-                    name = "label-type",
-                    defaultValue = LabelType.All,
-                };
-
-            readonly UxmlEnumAttributeDescription<GroupAlignment> m_GroupAlignment =
-                new UxmlEnumAttributeDescription<GroupAlignment>()
-                {
-                    name = "group-alignment",
-                    defaultValue = GroupAlignment.Start,
-                };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (NavigationRail)ve;
-                el.anchor = m_Anchor.GetValueFromBag(bag, cc);
-                el.labelType = m_LabelType.GetValueFromBag(bag, cc);
-                el.groupAlignment = m_GroupAlignment.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 
     /// <summary>

@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -101,18 +99,87 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// Dropdown UI element.
+    /// A form control that lets users select a value from a list of options.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Dropdown component presents a list of options that users can choose from. It appears as a button that,
+    /// when clicked, shows a list of selectable options in a popup menu.
+    ///
+    /// Dropdowns are useful when you need to provide users with a set of predefined options while conserving screen
+    /// space. They're commonly used in forms, settings panels, and configuration interfaces.
+    ///
+    /// The component supports both single and multiple selection modes, making it versatile for different use cases.
+    ///
+    /// For the best user experience, consider the following guidelines:
+    /// - Use Dropdown when you have 3-10 options. For fewer options, consider using Radio Buttons or Toggle
+    ///   Buttons. For more options, consider using a searchable ComboBox.
+    /// - Order the options in a logical way (e.g., alphabetically, numerically, or by frequency of use)
+    /// - Use clear, concise labels for options
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Dropdown: Creating a simple dropdown with string options</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Create a basic dropdown with string items
+    /// var dropdown = new Dropdown();
+    /// var items = new List<string> { "Option 1", "Option 2", "Option 3" };
+    /// dropdown.sourceItems = items;
+    ///
+    /// // Add it to your UI
+    /// root.Add(dropdown);
+    /// ]]></code>
+    /// <para>Multiple Selection Dropdown: Creating a multiple selection dropdown with custom handling of selection changes</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var dropdown = new Dropdown {
+    ///     selectionType = PickerSelectionType.Multiple,
+    ///     closeOnSelection = false,
+    ///     defaultMessage = "Select options"
+    /// };
+    ///
+    /// var items = new List<string> { "Red", "Green", "Blue" };
+    /// dropdown.sourceItems = items;
+    ///
+    /// // Handle selection changes
+    /// dropdown.RegisterValueChangedCallback(evt => {
+    ///     var selectedIndices = evt.newValue;
+    ///     Debug.Log($"Selected {selectedIndices.Count()} items");
+    /// });
+    /// ]]></code>
+    /// <para>Custom Item Binding: Creating a dropdown with custom item binding and display</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var dropdown = new Dropdown();
+    ///
+    /// // Custom class for items
+    /// class ColorOption {
+    ///     public string Name { get; set; }
+    ///     public Color Color { get; set; }
+    /// }
+    ///
+    /// var items = new List<ColorOption> {
+    ///     new ColorOption { Name = "Red", Color = Color.red },
+    ///     new ColorOption { Name = "Green", Color = Color.green }
+    /// };
+    ///
+    /// dropdown.sourceItems = items;
+    /// dropdown.bindItem = (item, index) => {
+    ///     var colorOption = items[index] as ColorOption;
+    ///     item.label = colorOption.Name;
+    /// };
+    ///
+    /// dropdown.bindTitle = (item, indices) => {
+    ///     if (indices.Count() == 0)
+    ///         item.label = "Select a color";
+    ///     else
+    ///         item.label = (items[indices.First()] as ColorOption).Name;
+    /// };
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class Dropdown : Picker<DropdownItem, DropdownItem>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly new BindingId bindTitleProperty = new BindingId(nameof(bindTitle));
 
-#endif
 
         /// <summary>
         /// The Dropdown main styling class.
@@ -124,9 +191,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// A method that will be called to bind the title.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public new BindTitleFunc bindTitle
         {
             get => m_CustomBindTitle;
@@ -135,10 +200,8 @@ namespace Unity.AppUI.UI
                 m_CustomBindTitle = value;
                 base.bindTitle = BindTitle;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in Picker<DropdownItem,DropdownItem>.bindTitleProperty);
                 NotifyPropertyChanged(in bindTitleProperty);
-#endif
             }
         }
 
@@ -229,18 +292,5 @@ namespace Unity.AppUI.UI
             return new DropdownItem();
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Dropdown"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Dropdown, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Dropdown"/>.
-        /// </summary>
-        public new class UxmlTraits : Picker<DropdownItem,DropdownItem>.UxmlTraits { }
-
-#endif
     }
 }

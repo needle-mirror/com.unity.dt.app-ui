@@ -2,9 +2,7 @@ using System;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -77,14 +75,24 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// Icon UI component.
+    /// A versatile icon component that displays graphical symbols with customizable styles and sizes.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Icon component is a fundamental UI element that represents graphical symbols or pictograms in your
+    /// application. It extends the Image component and provides additional functionality for displaying icons
+    /// with various styles, sizes, and variants.
+    ///
+    /// Icons are essential for creating intuitive user interfaces, helping users quickly identify actions, states,
+    /// or categories within your application. The Icon component supports different variants (Regular, Bold,
+    /// DuoTone, Light, Fill, and Thin) and sizes (XXS to L) to accommodate various design needs.
+    ///
+    /// By default, Icons are non-focusable and ignore picking mode, making them ideal for decorative purposes
+    /// while maintaining optimal performance.
+    /// </remarks>
     [UxmlElement]
-#endif
+    [VisualDocPage("iconography", id = "icon-component", displayName = "Icon Component")]
     public partial class Icon : Image
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId iconNameProperty = new BindingId(nameof(iconName));
 
@@ -94,7 +102,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId variantProperty = new BindingId(nameof(variant));
 
-#endif
 
         /// <summary>
         /// The Icon main styling class.
@@ -138,12 +145,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The primary variant of the Icon.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool primary
         {
             get => ClassListContains(primaryUssClassName);
@@ -152,22 +155,16 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(primaryUssClassName) != value;
                 EnableInClassList(primaryUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in primaryProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The size of the Icon.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public IconSize size
         {
             get => m_Size;
@@ -178,22 +175,16 @@ namespace Unity.AppUI.UI
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The name of the Icon.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string iconName
         {
             get => m_IconName;
@@ -206,22 +197,16 @@ namespace Unity.AppUI.UI
                 AddToClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName, "--", m_Variant.ToLowerCase()));
                 AddToClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in iconNameProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The variant of the Icon.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public IconVariant variant
         {
             get => m_Variant;
@@ -234,70 +219,10 @@ namespace Unity.AppUI.UI
                 AddToClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName, "--", m_Variant.ToLowerCase()));
                 AddToClassList(MemoryUtils.Concatenate(ussClassName, "--", m_IconName));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
-#endif
             }
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Icon"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Icon, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Icon"/>.
-        /// </summary>
-        public new class UxmlTraits : Image.UxmlTraits
-        {
-
-            readonly UxmlStringAttributeDescription m_IconName = new UxmlStringAttributeDescription
-            {
-                name = "icon-name",
-                defaultValue = "info",
-            };
-
-            readonly UxmlBoolAttributeDescription m_Primary = new UxmlBoolAttributeDescription
-            {
-                name = "primary",
-                defaultValue = true,
-            };
-
-            readonly UxmlEnumAttributeDescription<IconVariant> m_Variant = new UxmlEnumAttributeDescription<IconVariant>
-            {
-                name = "variant",
-                defaultValue = IconVariant.Regular,
-            };
-
-            readonly UxmlEnumAttributeDescription<IconSize> m_Size = new UxmlEnumAttributeDescription<IconSize>
-            {
-                name = "size",
-                defaultValue = IconSize.M,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                m_PickingMode.defaultValue = PickingMode.Ignore;
-                base.Init(ve, bag, cc);
-
-                var element = (Icon)ve;
-                element.primary = m_Primary.GetValueFromBag(bag, cc);
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                element.iconName = m_IconName.GetValueFromBag(bag, cc);
-                element.variant = m_Variant.GetValueFromBag(bag, cc);
-
-            }
-        }
-
-#endif
     }
 }

@@ -3,9 +3,7 @@ using System.Windows.Input;
 using Unity.AppUI.Bridge;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -13,13 +11,9 @@ namespace Unity.AppUI.UI
     /// Pressable Manipulator, used on <see cref="Button"/> elements.
     /// </summary>
     public class Pressable : PointerManipulator
-#if ENABLE_RUNTIME_DATA_BINDINGS
         , INotifyBindablePropertyChanged
-#endif
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId commandProperty = nameof(command);
-#endif
         /// <summary>
         /// The event invoked when the element is pressed.
         /// </summary>
@@ -64,9 +58,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// A command to invoke when the Button is clicked.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public ICommand command
         {
             get => m_Command;
@@ -79,10 +71,8 @@ namespace Unity.AppUI.UI
                 if (m_Command != null)
                     m_Command.CanExecuteChanged += OnCommandCanExecuteChanged;
                 UpdateEnabledState();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in commandProperty);
-#endif
             }
         }
 
@@ -234,9 +224,6 @@ namespace Unity.AppUI.UI
             target.RegisterCallback<PointerUpEvent>(OnPointerUp);
             target.RegisterCallback<PointerCancelEvent>(OnPointerCancel);
             target.RegisterCallback<PointerCaptureOutEvent>(OnPointerCaptureOut);
-#if !UNITY_2023_1_OR_NEWER
-            target.RegisterCallback<MouseDownEvent>(OnMouseDown);
-#endif
             target.RegisterCallback<KeyDownEvent>(OnKeyDown);
             target.RegisterCallback<KeyUpEvent>(OnKeyUp);
         }
@@ -256,9 +243,6 @@ namespace Unity.AppUI.UI
             target.UnregisterCallback<PointerUpEvent>(OnPointerUp);
             target.UnregisterCallback<PointerCancelEvent>(OnPointerCancel);
             target.UnregisterCallback<PointerCaptureOutEvent>(OnPointerCaptureOut);
-#if !UNITY_2023_1_OR_NEWER
-            target.UnregisterCallback<MouseDownEvent>(OnMouseDown);
-#endif
             target.UnregisterCallback<KeyDownEvent>(OnKeyDown);
             target.UnregisterCallback<KeyUpEvent>(OnKeyUp);
         }
@@ -320,9 +304,7 @@ namespace Unity.AppUI.UI
                 return;
 
             if (evt.pointerId == PointerId.mousePointerId
-#if UNITY_6000_2_OR_NEWER
                 || evt.pointerId >= PointerId.trackedPointerIdBase
-#endif
                 )
                 AddHoveredState();
         }
@@ -354,16 +336,6 @@ namespace Unity.AppUI.UI
             Activate(evt.pointerId);
             ProcessDownEvent(evt, evt.localPosition, evt.pointerId);
             evt.StopPropagation();
-        }
-
-        void OnMouseDown(MouseDownEvent evt)
-        {
-            if (active)
-            {
-                if (!target.HasMouseCapture())
-                    target.CaptureMouse();
-                evt.StopPropagation();
-            }
         }
 
         void OnPointerMove(PointerMoveEvent evt)
@@ -466,10 +438,6 @@ namespace Unity.AppUI.UI
             if (!target.HasPointerCapture(pointerId))
             {
                 target.CapturePointer(pointerId);
-#if !UNITY_2023_1_OR_NEWER
-                if (pointerId == PointerId.mousePointerId)
-                    target.CaptureMouse();
-#endif
             }
 
             ForceActivePseudoState();
@@ -522,7 +490,6 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
         /// <summary>
         /// Event raised when a Bindable property changes.
         /// </summary>
@@ -532,6 +499,5 @@ namespace Unity.AppUI.UI
         {
             propertyChanged?.Invoke(this, new BindablePropertyChangedEventArgs(id));
         }
-#endif
     }
 }

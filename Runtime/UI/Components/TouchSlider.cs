@@ -4,9 +4,7 @@ using System.Globalization;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -14,19 +12,15 @@ namespace Unity.AppUI.UI
     /// Base class for TouchSlider UI elements (<see cref="TouchSliderFloat"/>, <see cref="TouchSliderInt"/>).
     /// </summary>
     /// <typeparam name="TValue">A comparable value type.</typeparam>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public abstract partial class TouchSlider<TValue> : BaseSlider<TValue, TValue>
         where TValue : unmanaged, IComparable, IEquatable<TValue>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId sizeProperty = nameof(size);
 
         internal static readonly BindingId labelProperty = nameof(label);
 
-#endif
 
         /// <summary>
         /// The TouchSlider main styling class.
@@ -163,12 +157,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Specify the size of the slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -184,12 +174,8 @@ namespace Unity.AppUI.UI
         /// <para>Specify a unit for the value encapsulated in this slider.</para>
         /// <para>This unit will be displayed next to value into the slider.</para>
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string label
         {
             get => m_LabelElement.text;
@@ -323,9 +309,7 @@ namespace Unity.AppUI.UI
                     ? Draggable.DragDirection.Horizontal
                     : Draggable.DragDirection.Vertical;
             RefreshUI();
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in orientationProperty);
-#endif
         }
 
         /// <inheritdoc />
@@ -339,45 +323,5 @@ namespace Unity.AppUI.UI
             return result;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TouchSlider{TValue}"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseSlider<TValue, TValue>.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription { name = "label" };
-
-            readonly UxmlStringAttributeDescription m_Format = new UxmlStringAttributeDescription { name = "format-string", defaultValue = null };
-
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (TouchSlider<TValue>)ve;
-                element.label = m_Label.GetValueFromBag(bag, cc);
-                element.size = m_Size.GetValueFromBag(bag, cc);
-
-                string formatStr = null;
-                if (m_Format.TryGetValueFromBag(bag, cc, ref formatStr) && !string.IsNullOrEmpty(formatStr))
-                    element.formatString = formatStr;
-
-
-            }
-        }
-
-#endif
     }
 }

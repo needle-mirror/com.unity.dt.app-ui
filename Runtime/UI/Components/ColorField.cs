@@ -2,9 +2,7 @@ using System;
 using Unity.AppUI.Bridge;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -41,14 +39,62 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// Color Field UI element.
+    /// A field that allows users to select and display colors.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The ColorField component provides an interface for users to view, select, and modify colors. It displays the
+    /// current color value through a color swatch and optionally shows the color's hex value. When clicked, it
+    /// opens a color picker that allows detailed color selection.
+    ///
+    /// The component supports two different color picker types: the default AppUI color picker and Unity's editor
+    /// color picker. The color picker provides multiple ways to select colors including a color wheel, RGB
+    /// sliders, HSV sliders, and hex input.
+    ///
+    /// Key features:
+    /// - Color visualization through a swatch
+    /// - Optional text display of color value
+    /// - Support for alpha channel
+    /// - HDR color support
+    /// - Multiple size variants
+    /// - Inline or popover color picker
+    /// </remarks>
+    /// <example>
+    /// <para>Basic ColorField with default settings. Creates a ColorField with medium size and all default settings.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ColorField />
+    /// ]]></code>
+    /// <para>ColorField with custom configuration. Creates a large ColorField with medium swatch, alpha support, HDR
+    /// colors, and inline picker.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ColorField
+    ///     size="L"
+    ///     swatch-size="M"
+    ///     show-alpha="true"
+    ///     hdr="true"
+    ///     inline-picker="true"
+    ///     show-text="true" />
+    /// ]]></code>
+    /// <para>Minimal ColorField showing only the swatch. Creates a minimal ColorField showing only the color swatch.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ColorField
+    ///     swatch-only="true"
+    ///     size="S"
+    ///     show-text="false" />
+    /// ]]></code>
+    /// <para>Code example showing how to handle color changes. Demonstrates how to create a ColorField, register for
+    /// value changes, and set its value programmatically.</para>
+    /// <code lang="csharp">
+    /// var colorField = new ColorField();
+    /// colorField.RegisterValueChangedCallback(evt => {
+    ///     Debug.Log($"Color changed from {evt.previousValue} to {evt.newValue}");
+    /// });
+    /// colorField.value = Color.blue;
+    /// </code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class ColorField : ExVisualElement, IInputElement<Color>, INotifyValueChanging<Color>, ISizeableElement, IPressable
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId sizeProperty = nameof(size);
 
@@ -76,7 +122,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId customPickerProperty = nameof(customPicker);
 
-#endif
 
         /// <summary>
         /// The ColorField main styling class.
@@ -312,9 +357,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Clickable Manipulator for this ColorField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -327,22 +370,16 @@ namespace Unity.AppUI.UI
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The ColorField color picker type.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public ColorPickerType colorPickerType
         {
             get => m_ColorPickerType;
@@ -351,22 +388,16 @@ namespace Unity.AppUI.UI
                 var changed = m_ColorPickerType != value;
                 m_ColorPickerType = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in colorPickerTypeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The ColorField size.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -378,22 +409,16 @@ namespace Unity.AppUI.UI
                 AddToClassList(GetSizeUssClassName(m_Size));
                 m_ColorPickerIcon.size = m_Size.ToIconSize();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The ColorField swatch size.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size swatchSize
         {
             get => m_SwatchElement.size;
@@ -402,22 +427,16 @@ namespace Unity.AppUI.UI
                 var changed = m_SwatchElement.size != value;
                 m_SwatchElement.size = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in swatchSizeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The ColorField type. When this is true, the ColorField will only show the swatch.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool swatchOnly
         {
             get => ClassListContains(swatchOnlyUssClassName);
@@ -426,22 +445,16 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(swatchOnlyUssClassName) != value;
                 EnableInClassList(swatchOnlyUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in swatchOnlyProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Whether to show the text label for the ColorField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool showText
         {
             get => ClassListContains(showTextUssClassName);
@@ -450,10 +463,8 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(showTextUssClassName) != value;
                 EnableInClassList(showTextUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in showTextProperty);
-#endif
             }
         }
 
@@ -461,12 +472,8 @@ namespace Unity.AppUI.UI
         /// The ColorPicker position relative to the ColorField. When this is true, the ColorPicker will be inlined
         /// instead of being displayed in a Popover.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool inlinePicker
         {
             get => m_InlinePicker;
@@ -474,10 +481,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_InlinePicker != value;
                 m_InlinePicker = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in inlinePickerProperty);
-#endif
             }
         }
 
@@ -546,9 +551,7 @@ namespace Unity.AppUI.UI
         /// colorField.customPicker = new CustomColorPicker();
         /// </code>
         /// </example>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public ICustomColorFieldPicker customPicker
         {
             get => m_CustomPicker;
@@ -556,22 +559,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_CustomPicker != value;
                 m_CustomPicker = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in customPickerProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The ColorField invalid state.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -580,19 +577,15 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(Styles.invalidUssClassName) != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The ColorField validation function.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<Color, bool> validateValue
         {
             get => m_ValidateValue;
@@ -601,10 +594,8 @@ namespace Unity.AppUI.UI
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
@@ -623,12 +614,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The ColorField value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Color value
         {
             get => m_Value;
@@ -642,21 +629,15 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Whether to show the alpha channel in the ColorPicker.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool showAlpha
         {
             get => m_ShowAlpha;
@@ -665,10 +646,8 @@ namespace Unity.AppUI.UI
                 var changed = m_ShowAlpha != value;
                 m_ShowAlpha = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in showAlphaProperty);
-#endif
 
                 if (!m_ShowAlpha)
                     this.value = new Color(m_Value.r, m_Value.g, m_Value.b, 1);
@@ -678,12 +657,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Whether to show the HDR colors in the ColorPicker.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool hdr
         {
             get => m_Hdr;
@@ -692,10 +667,8 @@ namespace Unity.AppUI.UI
                 var changed = m_Hdr != value;
                 m_Hdr = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in hdrProperty);
-#endif
             }
         }
 
@@ -778,95 +751,5 @@ namespace Unity.AppUI.UI
         }
 
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Class to instantiate a <see cref="ColorField"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<ColorField, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ColorField"/>.
-        /// </summary>
-        public new class UxmlTraits : ExVisualElement.UxmlTraits
-        {
-
-            readonly UxmlBoolAttributeDescription m_Invalid = new UxmlBoolAttributeDescription
-            {
-                name = "invalid",
-                defaultValue = false
-            };
-
-            readonly UxmlBoolAttributeDescription m_SwatchOnly = new UxmlBoolAttributeDescription
-            {
-                name = "swatch-only",
-                defaultValue = false
-            };
-
-            readonly UxmlBoolAttributeDescription m_ShowText = new UxmlBoolAttributeDescription
-            {
-                name = "show-text",
-                defaultValue = true
-            };
-
-            readonly UxmlBoolAttributeDescription m_InlinePicker = new UxmlBoolAttributeDescription
-            {
-                name = "inline-picker",
-                defaultValue = false
-            };
-
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            readonly UxmlEnumAttributeDescription<Size> m_SwatchSize = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "swatch-size",
-                defaultValue = Size.S,
-            };
-
-            readonly UxmlEnumAttributeDescription<ColorPickerType> m_ColorPickerType = new UxmlEnumAttributeDescription<ColorPickerType>
-            {
-                name = "color-picker-type",
-                defaultValue = ColorPickerType.Default,
-            };
-
-            readonly UxmlBoolAttributeDescription m_ShowAlpha = new UxmlBoolAttributeDescription
-            {
-                name = "show-alpha",
-                defaultValue = true
-            };
-
-            readonly UxmlBoolAttributeDescription m_Hdr = new UxmlBoolAttributeDescription
-            {
-                name = "hdr",
-                defaultValue = false
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (ColorField)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                element.swatchSize = m_SwatchSize.GetValueFromBag(bag, cc);
-                element.invalid = m_Invalid.GetValueFromBag(bag, cc);
-                element.swatchOnly = m_SwatchOnly.GetValueFromBag(bag, cc);
-                element.showText = m_ShowText.GetValueFromBag(bag, cc);
-                element.inlinePicker = m_InlinePicker.GetValueFromBag(bag, cc);
-                element.colorPickerType = m_ColorPickerType.GetValueFromBag(bag, cc);
-                element.showAlpha = m_ShowAlpha.GetValueFromBag(bag, cc);
-                element.hdr = m_Hdr.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

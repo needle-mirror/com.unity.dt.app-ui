@@ -1,8 +1,6 @@
 using System;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -38,14 +36,62 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// Accordion visual element.
+    /// A versatile container for organizing command buttons and tools in a horizontal or vertical layout.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Toolbar component provides a container for organizing and displaying a collection of controls,
+    /// buttons, or tools in a structured manner. It can be positioned at various locations in your application
+    /// and supports both horizontal and vertical orientations.
+    ///
+    /// Toolbars help maintain a consistent and accessible interface by grouping related actions together. They
+    /// can be either fixed in position or made draggable to allow users to customize their workspace layout.
+    ///
+    /// **Note:** The Toolbar's appearance and behavior can be customized using USS (Unity Style Sheets) classes,
+    /// making it adaptable to different visual themes and design requirements.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Toolbar Example — A basic horizontal toolbar with common file operations.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Toolbar dock-mode="Top" direction="Horizontal">
+    ///     <Button text="New" />
+    ///     <Button text="Open" />
+    ///     <Button text="Save" />
+    ///     <Separator />
+    ///     <Button text="Settings" />
+    /// </Toolbar>
+    /// ]]></code>
+    /// <para>Vertical Toolbar with Tool Options — A vertical toolbar commonly used in design applications.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Toolbar dock-mode="Left" direction="Vertical" draggable="true">
+    ///     <Button icon="brush" tooltip="Paint Tool" />
+    ///     <Button icon="eraser" tooltip="Eraser Tool" />
+    ///     <Button icon="select" tooltip="Selection Tool" />
+    ///     <Separator />
+    ///     <Button icon="settings" tooltip="Tool Settings" />
+    /// </Toolbar>
+    /// ]]></code>
+    /// <para>Programmatic Toolbar Creation — Creating and configuring a toolbar with buttons programmatically.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var toolbar = new Toolbar();
+    /// toolbar.dockMode = ToolbarDockMode.Top;
+    /// toolbar.direction = Direction.Horizontal;
+    /// toolbar.draggable = true;
+    ///
+    /// var newButton = new Button { text = "New" };
+    /// var openButton = new Button { text = "Open" };
+    /// var saveButton = new Button { text = "Save" };
+    ///
+    /// toolbar.Add(newButton);
+    /// toolbar.Add(openButton);
+    /// toolbar.Add(saveButton);
+    ///
+    /// parentElement.Add(toolbar);
+    /// ]]></code>
+    /// </example>
+    [VisualDocPage("layouts")]
     [UxmlElement]
-#endif
     public partial class Toolbar : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId dockModeProperty = new BindingId(nameof(dockMode));
 
@@ -53,7 +99,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId directionProperty = new BindingId(nameof(direction));
 
-#endif
 
 
         /// <summary>
@@ -108,12 +153,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The dock mode of the Toolbar.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public ToolbarDockMode dockMode
         {
             get => m_DockMode;
@@ -124,22 +165,16 @@ namespace Unity.AppUI.UI
                 m_DockMode = value;
                 AddToClassList(GetDockModeUssClassName(m_DockMode));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in dockModeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Whether the Toolbar is draggable.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool draggable
         {
             get => ClassListContains(draggableUssClassName);
@@ -148,22 +183,16 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(draggableUssClassName) != value;
                 EnableInClassList(draggableUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in draggableProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The direction of the Toolbar.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Direction direction
         {
             get => m_Direction;
@@ -174,10 +203,8 @@ namespace Unity.AppUI.UI
                 m_Direction = value;
                 AddToClassList(GetDirectionUssClassName(m_Direction));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
-#endif
             }
         }
 
@@ -220,36 +247,5 @@ namespace Unity.AppUI.UI
             direction = Direction.Horizontal;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// UXML Factory for Toolbar.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Toolbar, UxmlTraits> { }
-
-        /// <summary>
-        /// UXML Traits for Toolbar.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<ToolbarDockMode> m_DockMode = new UxmlEnumAttributeDescription<ToolbarDockMode> { name = "dock-mode", defaultValue = ToolbarDockMode.Floating };
-
-            readonly UxmlBoolAttributeDescription m_Draggable = new UxmlBoolAttributeDescription { name = "draggable", defaultValue = false };
-
-            readonly UxmlEnumAttributeDescription<Direction> m_Direction = new UxmlEnumAttributeDescription<Direction> { name = "direction", defaultValue = Direction.Horizontal };
-
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var toolbar = (Toolbar)ve;
-
-                toolbar.dockMode = m_DockMode.GetValueFromBag(bag, cc);
-                toolbar.draggable = m_Draggable.GetValueFromBag(bag, cc);
-                toolbar.direction = m_Direction.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

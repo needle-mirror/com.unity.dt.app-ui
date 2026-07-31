@@ -13,7 +13,8 @@
         "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
         "GUID:84651a3751eca9349aac36a66bba901b",
         "GUID:28b0f5aedab614a1805e0c9db8369c81",
-        "GUID:a5a86f181c5e41f49b43345f8b0cfaf5"
+        "GUID:a5a86f181c5e41f49b43345f8b0cfaf5",
+        "GUID:b5a2a0714d82449fb51fd2056880e65a"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -29,16 +30,6 @@
     ],
     "versionDefines": [
         {
-            "name": "Unity",
-            "expression": "2023.3.0a1",
-            "define": "ENABLE_UXML_SERIALIZED_DATA"
-        },
-        {
-            "name": "Unity",
-            "expression": "2023.2",
-            "define": "ENABLE_RUNTIME_DATA_BINDINGS"
-        },
-        {
             "name": "com.unity.localization",
             "expression": "",
             "define": "UNITY_LOCALIZATION_PRESENT"
@@ -47,11 +38,6 @@
             "name": "com.unity.test-framework",
             "expression": "1.4",
             "define": "TEST_FRAMEWORK_1_4_0_OR_NEWER"
-        },
-        {
-            "name": "Unity",
-            "expression": "2022.1.0a1",
-            "define": "ENABLE_VALUEFIELD_INTERFACE"
         },
         {
             "name": "Unity",

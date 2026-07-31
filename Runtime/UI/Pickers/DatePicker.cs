@@ -3,25 +3,69 @@ using System.Runtime.CompilerServices;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A date picker control.
+    /// A component for selecting dates with an intuitive calendar interface.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The DatePicker component provides an intuitive way to select dates through a calendar interface. It supports
+    /// various display modes including days, months, and years views, making it flexible for different date
+    /// selection needs.
+    ///
+    /// The component follows common date picker patterns found in modern applications, with navigation controls for
+    /// moving between months and years, and a clear visual hierarchy for date selection.
+    ///
+    /// Key features include:
+    /// - Three display modes: days, months, and years views
+    /// - Navigation between months and years
+    /// - Configurable first day of the week
+    /// - Localization support
+    /// - Keyboard navigation support
+    /// - Full UXML support
+    ///
+    /// NOTE: The DatePicker supports both programmatic and user interface-based date selection.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic usage in UXML. Create a simple date picker with default settings.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML xmlns:appui="Unity.AppUI.UI">
+    ///     <appui:DatePicker name="date-picker" />
+    /// </UXML>
+    /// ]]></code>
+    /// <para>Creating a pre-configured date picker in UXML. Create a date picker with custom initial date, first day of
+    /// week, and display mode.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML xmlns:appui="Unity.AppUI.UI">
+    ///     <appui:DatePicker
+    ///         name="custom-date-picker"
+    ///         value="2024-01-01"
+    ///         first-day-of-week="Monday"
+    ///         display-mode="Months" />
+    /// </UXML>
+    /// ]]></code>
+    /// <para>Creating and configuring a date picker in C#. Create a date picker, set its initial value, configure it, and
+    /// handle value changes.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var datePicker = new DatePicker();
+    /// datePicker.value = new Date(2024, 1, 1);
+    /// datePicker.firstDayOfWeek = DayOfWeek.Monday;
+    ///
+    /// // Register for value changes
+    /// datePicker.RegisterValueChangedCallback(evt => {
+    ///     Debug.Log($"Selected date: {evt.newValue}");
+    /// });
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class DatePicker : BaseDatePicker, INotifyValueChanged<Date>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
 
-#endif
         Date m_Value;
 
         /// <summary>
@@ -47,12 +91,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The current value of the date picker.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Date value
         {
             get => m_Value;
@@ -66,9 +106,7 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
@@ -86,34 +124,5 @@ namespace Unity.AppUI.UI
             return date == value;
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Class used to create instances of <see cref="DatePicker"/> from UXML.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<DatePicker, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="DatePicker"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseDatePicker.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_Value = new UxmlStringAttributeDescription
-            {
-                name = "value",
-                defaultValue = Date.now.ToString()
-            };
-
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var datePicker = (DatePicker)ve;
-
-                var value = m_Value.GetValueFromBag(bag, cc);
-                if (m_Value.TryGetValueFromBag(bag, cc, ref value) && DateTime.TryParse(value, out var date))
-                    datePicker.value = new Date(date);
-            }
-        }
-#endif
     }
 }

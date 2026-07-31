@@ -43,7 +43,7 @@ The `UxmlFilePathAttribute` supports two path types via the [UxmlFilePathType](x
 | Path Type | Description |
 |-----------|-------------|
 | `Resources` | Loads the UXML file from a Resources folder using `Resources.Load<VisualTreeAsset>()`. The path should be relative to the Resources folder, without the `.uxml` extension. |
-| `AssetDatabase` | In the Unity Editor, loads via `AssetDatabase.LoadAssetAtPath()`. At runtime, falls back to `Resources.Load()`. Use the full asset path including the `.uxml` extension. |
+| `AssetDatabase` | Loads via `AssetDatabase.LoadAssetAtPath()`. **Editor-only** — the generated `UxmlCloneTree` method is wrapped in `#if UNITY_EDITOR`, so it does not exist in player builds. Use this only for editor tooling, and use the full asset path including the `.uxml` extension. |
 
 #### Resources Example
 
@@ -63,7 +63,9 @@ public partial class MyElement : VisualElement
 
 #### AssetDatabase Example
 
-For editor-only tools or when you need the full asset path:
+For editor-only tools or when you need the full asset path. Because the generated
+method is wrapped in `#if UNITY_EDITOR`, guard the call site the same way if the
+element can also be instantiated in a player build:
 
 ```csharp
 // Full asset path with .uxml extension
@@ -72,7 +74,9 @@ public partial class MyElement : VisualElement
 {
     public MyElement()
     {
+#if UNITY_EDITOR
         UxmlCloneTree();
+#endif
     }
 }
 ```
@@ -144,11 +148,12 @@ The element type must derive from `VisualElement`.
 
 ### How It Works
 
-The source generator creates a `UxmlCloneTree()` method that:
+The source generator creates a `UxmlCloneTree(VisualElement parent = null)` method that:
 
 1. Loads the UXML template based on the `UxmlFilePathAttribute`
-2. Clones the template into the current element using `CloneTree(this)`
-3. Queries each decorated member using `this.Q<T>("elementName")` and assigns the result
+2. Resolves the clone target: the `parent` argument if one is passed, otherwise `this`
+3. Clones the template into the target using `CloneTree(target)`
+4. Queries each decorated member using `target.Q<T>("elementName")` and assigns the result
 
 Generated code example:
 
@@ -161,16 +166,49 @@ namespace MyApp.UI
     public partial class MyElement
     {
         [global::System.Runtime.CompilerServices.CompilerGenerated]
-        private void UxmlCloneTree()
+        private void UxmlCloneTree(global::UnityEngine.UIElements.VisualElement parent = null)
         {
+            var target = parent != null ? parent : this;
             var template = global::UnityEngine.Resources.Load<global::UnityEngine.UIElements.VisualTreeAsset>("UI/MyElement");
             if (template)
             {
-                template.CloneTree(this);
-                SubmitButton = this.Q<global::UnityEngine.UIElements.Button>("submitButton");
-                m_TitleLabel = this.Q<global::UnityEngine.UIElements.Label>("titleLabel");
-                m_InputField = this.Q<global::UnityEngine.UIElements.TextField>("inputField");
+                template.CloneTree(target);
+                SubmitButton = target.Q<global::UnityEngine.UIElements.Button>("submitButton");
+                m_TitleLabel = target.Q<global::UnityEngine.UIElements.Label>("titleLabel");
+                m_InputField = target.Q<global::UnityEngine.UIElements.TextField>("inputField");
             }
+        }
+    }
+}
+```
+
+### Cloning into a specific container
+
+By default `UxmlCloneTree()` clones into the element itself. Some elements, however,
+redirect their children into an inner container by overriding `contentContainer`, or
+build a fixed internal anatomy that authored content should not be mixed into. A prime
+example is [NavigationScreen](xref:Unity.AppUI.Navigation.NavigationScreen), whose
+`contentContainer` points at an inner `ScrollView`. For these elements, pass the target
+container to `UxmlCloneTree(parent)` so the UXML tree — and the resolved
+`[UxmlElementName]` bindings — land in the right place:
+
+```csharp
+using Unity.AppUI.Navigation;
+using Unity.AppUI.UI;
+using UnityEngine.UIElements;
+
+namespace MyApp.UI
+{
+    [UxmlFilePath("UI/HomeScreen", UxmlFilePathType.Resources)]
+    public partial class HomeScreen : NavigationScreen
+    {
+        [UxmlElementName("greeting")]
+        private Label m_Greeting;
+
+        public HomeScreen()
+        {
+            // Clone the UXML into the screen's scroll view instead of the screen root
+            UxmlCloneTree(scrollView);
         }
     }
 }

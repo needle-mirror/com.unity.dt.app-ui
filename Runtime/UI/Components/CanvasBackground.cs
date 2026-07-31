@@ -2,9 +2,7 @@ using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -13,7 +11,6 @@ namespace Unity.AppUI.UI
     /// </summary>
     public class CanvasBackground : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId thickLinesProperty = nameof(thickLines);
 
         internal static readonly BindingId lineColorProperty = nameof(lineColor);
@@ -35,7 +32,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId nextGridScaleFactorProperty = nameof(nextGridScaleFactor);
 
         internal static readonly BindingId drawPointsProperty = nameof(drawPoints);
-#endif
         /// <summary>
         /// The CanvasBackground main USS class name.
         /// </summary>
@@ -129,9 +125,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The number of thick lines.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         float thickLines
         {
             get => m_ThickLines;
@@ -140,18 +134,14 @@ namespace Unity.AppUI.UI
                 m_ThickLines = value;
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in thickLinesProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The color of the lines.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         Color lineColor
         {
             get => m_LineColor;
@@ -160,18 +150,14 @@ namespace Unity.AppUI.UI
                 m_LineColor = value;
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in lineColorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The color of the thick lines.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         Color thickLineColor
         {
             get => m_ThickLineColor;
@@ -180,18 +166,14 @@ namespace Unity.AppUI.UI
                 m_ThickLineColor = value;
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in thickLineColorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The color of the grid background.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         Color gridBackgroundColor
         {
             get => m_GridBackgroundColor;
@@ -201,18 +183,14 @@ namespace Unity.AppUI.UI
                 style.backgroundColor = m_GridBackgroundColor;
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in gridBackgroundColorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The thickness of the lines.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         float thickness
         {
             get => m_Thickness;
@@ -221,18 +199,14 @@ namespace Unity.AppUI.UI
                 m_Thickness = value;
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in thicknessProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The thickness of the thick lines.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         float thickLineThickness
         {
             get => m_ThickLineThickness;
@@ -241,18 +215,14 @@ namespace Unity.AppUI.UI
                 m_ThickLineThickness = value;
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in thickLineThicknessProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The scale factor to use for the grid.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public float scale
         {
             get => m_Scale;
@@ -261,18 +231,14 @@ namespace Unity.AppUI.UI
                 m_Scale = value;
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in scaleProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The offset of the grid.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Vector2 offset
         {
             get => m_Offset;
@@ -281,18 +247,14 @@ namespace Unity.AppUI.UI
                 m_Offset = value;
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in offsetProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The spacing between lines or points.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public float spacing
         {
             get => m_Spacing;
@@ -301,18 +263,14 @@ namespace Unity.AppUI.UI
                 m_Spacing = value;
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in spacingProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The scale factor to use for the next grid.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public float nextGridScaleFactor
         {
             get => m_NextGridScaleFactor;
@@ -321,18 +279,14 @@ namespace Unity.AppUI.UI
                 m_NextGridScaleFactor = value;
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in nextGridScaleFactorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Either draw points or lines.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public bool drawPoints
         {
             get => m_DrawPoints;
@@ -341,9 +295,7 @@ namespace Unity.AppUI.UI
                 m_DrawPoints = value;
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in drawPointsProperty);
-#endif
             }
         }
 
@@ -466,13 +418,7 @@ namespace Unity.AppUI.UI
 
             var mwd = context.Allocate(k_Vertices.Length, k_Indices.Length, m_RT);
 
-#if !UNITY_2023_1_OR_NEWER
-            // Since the texture may be stored in an atlas, the UV coordinates need to be
-            // adjusted. Simply rescale them in the provided uvRegion.
-            var uvRegion = mwd.uvRegion;
-#else
             var uvRegion = new Rect(0, 0, 1, 1);
-#endif
             k_Vertices[0].uv = new Vector2(0, 0) * uvRegion.size + uvRegion.min;
             k_Vertices[1].uv = new Vector2(0, 1) * uvRegion.size + uvRegion.min;
             k_Vertices[2].uv = new Vector2(1, 1) * uvRegion.size + uvRegion.min;

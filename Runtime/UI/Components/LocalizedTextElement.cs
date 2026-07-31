@@ -11,27 +11,78 @@ using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 using UnityEngine.ResourceManagement.AsyncOperations;
 #endif
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A localized text element.
+    /// A text element that supports localization and string formatting with variables.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// LocalizedTextElement is a specialized text component that enables seamless localization of text content
+    /// in your Unity application's UI. It extends BaseTextElement and provides built-in support for string
+    /// localization and dynamic text formatting using variables.
+    ///
+    /// This component is particularly useful when building applications that need to support multiple
+    /// languages and require dynamic text updates based on user interactions or application state.
+    ///
+    /// The component integrates with Unity's Localization system and supports both direct text display and
+    /// localized string references. When using localized strings, it automatically updates the displayed text
+    /// when the application's language changes.
+    ///
+    /// Note: To use the localization features, make sure you have the Unity Localization package installed in
+    /// your project. Without it, the component will function as a regular text element.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Usage with Plain Text.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML>
+    /// <ui:LocalizedTextElement text="Hello World" />
+    /// </UXML>
+    /// ]]></code>
+    /// <para>Using Localization Keys.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML>
+    /// <ui:LocalizedTextElement text="UI.Welcome" />
+    /// </UXML>
+    ///
+    /// // C#
+    /// var welcomeText = new LocalizedTextElement("UI.Welcome");
+    /// container.Add(welcomeText);
+    /// ]]></code>
+    /// <para>Dynamic Text with Variables.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Assuming the localized string is "Player {0} scored {1} points!"
+    /// var scoreText = new LocalizedTextElement("UI.ScoreMessage");
+    /// scoreText.variables = new object[] { "Player1", 100 };
+    /// container.Add(scoreText);
+    /// ]]></code>
+    /// <para>Complete Example with Styling.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML>
+    /// <ui:LocalizedTextElement
+    ///     text="UI.WelcomeMessage"
+    ///     class="title-text"
+    ///     style="font-size: 20px;" />
+    /// </UXML>
+    ///
+    /// // C#
+    /// var welcomeText = new LocalizedTextElement("UI.WelcomeMessage");
+    /// welcomeText.variables = new object[] { "User", DateTime.Now.ToString() };
+    /// welcomeText.AddToClassList("title-text");
+    /// welcomeText.style.fontSize = 20;
+    /// container.Add(welcomeText);
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("typography")]
     public partial class LocalizedTextElement : BaseTextElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId textProperty = new BindingId(nameof(text));
 
         internal static readonly BindingId variablesProperty = new BindingId(nameof(variables));
 
-#endif
 
         /// <summary>
         /// The main USS class name of this element.
@@ -66,9 +117,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The reference text to use when formatting the localized string. You can also use plain text for no translation.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public new string text
         {
             get => m_ReferenceText;
@@ -79,9 +128,7 @@ namespace Unity.AppUI.UI
                 {
                     m_ReferenceText = value;
                     _ = UpdateTextWithCurrentLocale();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in textProperty);
-#endif
                 }
             }
         }
@@ -96,21 +143,17 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("text")]
         string textOverride
         {
             get => this.text;
             set => this.text = value;
         }
-#endif
 
         /// <summary>
         /// The variables to use when formatting the localized string.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public IList<object> variables
         {
             get => m_Variables;
@@ -120,10 +163,8 @@ namespace Unity.AppUI.UI
                 m_Variables = value;
                 _ = UpdateTextWithCurrentLocale();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variablesProperty);
-#endif
             }
         }
 
@@ -144,33 +185,5 @@ namespace Unity.AppUI.UI
             localizedText = await ctx.GetLocalizedStringAsync(m_ReferenceText, m_Variables?.ToArray());
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Uxml factory for the <see cref="LocalizedTextElement"/>.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<LocalizedTextElement, UxmlTraits> { }
-
-        /// <summary>
-        /// Uxml traits for the <see cref="LocalizedTextElement"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseTextElement.UxmlTraits
-        {
-            /// <summary>
-            /// Initialize the <see cref="LocalizedTextElement"/> using the attribute bag.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize. </param>
-            /// <param name="bag"> The attribute bag. </param>
-            /// <param name="cc"> The creation context. </param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (LocalizedTextElement)ve;
-                element.text = ((TextElement)ve).text;
-            }
-        }
-
-#endif
     }
 }

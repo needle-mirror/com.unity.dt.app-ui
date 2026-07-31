@@ -2,18 +2,74 @@ using System;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// TouchSlider UI element for floating point values.
+    /// A touch-optimized slider component for selecting floating-point values with support for step increments and
+    /// custom formatting.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// TouchSliderFloat is a touch-optimized slider component that allows users to select a floating-point value
+    /// from a defined range. It supports both touch and keyboard interactions, making it suitable for touch devices
+    /// while maintaining accessibility.
+    ///
+    /// The component features a visual track with a progress indicator, customizable step increments, shift-key
+    /// modifier for larger steps, and support for value formatting. It can be oriented horizontally or vertically
+    /// and adapts to RTL (Right-to-Left) layouts automatically.
+    ///
+    /// For optimal touch interaction, the slider defaults to a medium size that provides an adequately sized touch
+    /// target. You can adjust the size using the size property to match your UI requirements.
+    ///
+    /// The slider supports both UXML definition and runtime instantiation, making it flexible for various UI
+    /// development workflows.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic slider with default settings — creates a basic horizontal slider with default range (0-1) and initial
+    /// value of 0.5.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <TouchSliderFloat value="0.5" />
+    /// ]]></code>
+    /// <para>Customized slider with specific range and step values — creates a large slider with a range from -10 to 10,
+    /// 0.5 step increments, 2.0 shift-step, and one decimal place formatting.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <TouchSliderFloat
+    ///     low-value="-10"
+    ///     high-value="10"
+    ///     value="0"
+    ///     step="0.5"
+    ///     shift-step="2.0"
+    ///     format-string="F1"
+    ///     size="L"
+    /// />
+    /// ]]></code>
+    /// <para>Vertical slider with custom styling — creates a vertical slider with a range from 0 to 100 and custom
+    /// styling class.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <TouchSliderFloat
+    ///     orientation="Vertical"
+    ///     low-value="0"
+    ///     high-value="100"
+    ///     value="50"
+    ///     class="custom-slider"
+    /// />
+    /// ]]></code>
+    /// <para>Runtime instantiation and event handling — creates a slider in code, configures it to display values as
+    /// percentages, and handles value changes.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var slider = new TouchSliderFloat();
+    /// slider.lowValue = 0f;
+    /// slider.highValue = 1f;
+    /// slider.value = 0.5f;
+    /// slider.formatString = "P0";
+    /// slider.RegisterValueChangedCallback(evt => {
+    ///     Debug.Log($"New value: {evt.newValue}");
+    /// });
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class TouchSliderFloat : TouchSlider<float>
     {
         const float k_DefaultStep = 0.1f;
@@ -33,7 +89,6 @@ namespace Unity.AppUI.UI
             value = 0;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("step")]
         float stepOverride
         {
@@ -68,7 +123,6 @@ namespace Unity.AppUI.UI
             get => value;
             set => this.value = value;
         }
-#endif
 
         /// <inheritdoc />
         protected override int thumbCount => 1;
@@ -141,48 +195,5 @@ namespace Unity.AppUI.UI
             values[0] = v;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="TouchSliderFloat"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<TouchSliderFloat, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TouchSliderFloat"/>.
-        /// </summary>
-        public new class UxmlTraits : TouchSlider<float>.UxmlTraits
-        {
-            readonly UxmlFloatAttributeDescription m_Step = new UxmlFloatAttributeDescription { name = "step", defaultValue = k_DefaultStep };
-
-            readonly UxmlFloatAttributeDescription m_ShiftStep = new UxmlFloatAttributeDescription { name = "shift-step", defaultValue = k_DefaultShiftStep };
-
-            readonly UxmlFloatAttributeDescription m_HighValue = new UxmlFloatAttributeDescription { name = "high-value", defaultValue = 1f };
-
-            readonly UxmlFloatAttributeDescription m_LowValue = new UxmlFloatAttributeDescription { name = "low-value", defaultValue = 0 };
-
-            readonly UxmlFloatAttributeDescription m_Value = new UxmlFloatAttributeDescription { name = "value", defaultValue = 0 };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var elem = (TouchSliderFloat)ve;
-
-                elem.step = m_Step.GetValueFromBag(bag, cc);
-                elem.shiftStep = m_ShiftStep.GetValueFromBag(bag, cc);
-                elem.highValue = m_HighValue.GetValueFromBag(bag, cc);
-                elem.lowValue = m_LowValue.GetValueFromBag(bag, cc);
-                elem.SetValueWithoutNotify(m_Value.GetValueFromBag(bag, cc));
-            }
-        }
-
-#endif
     }
 }

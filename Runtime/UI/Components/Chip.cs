@@ -1,21 +1,56 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Chip UI element.
+    /// A compact element that represents an input, attribute, or action.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// Chips are compact elements that represent an input, attribute, or action. They allow users to enter
+    /// information, make selections, filter content, or trigger actions.
+    ///
+    /// Chips can be used for various purposes including:
+    /// - Filtering content or search results
+    /// - Entering data or tags
+    /// - Making selections from a set of options
+    /// - Triggering actions
+    ///
+    /// **Tip:** The Chip component supports two visual variants (Filled and Outlined), can include an ornament
+    /// (like an icon or avatar), and optionally provides delete functionality.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Usage — Creating a simple chip with just a label.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Chip label="Basic Chip" />
+    /// ]]></code>
+    /// <para>Interactive Chip with Events — Creating an interactive chip with click and delete events.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var chip = new Chip { label = "Click Me" };
+    /// chip.clicked += () => Debug.Log("Chip clicked!");
+    /// chip.deleted += () => Debug.Log("Chip deleted!");
+    /// ]]></code>
+    /// <para>Filter Chips Example — Creating a group of filter chips.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Group>
+    ///     <Chip variant="Outlined" label="Filter 1" deletable="true" />
+    ///     <Chip variant="Outlined" label="Filter 2" deletable="true" />
+    ///     <Chip variant="Outlined" label="Filter 3" deletable="true" />
+    /// </Group>
+    /// ]]></code>
+    /// <para>Chip with Custom Styling — Customizing chip colors using custom properties.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var chip = new Chip { label = "Custom Style" };
+    /// chip.style.SetCustomProperty("--chip-color", new Color(1, 0, 0, 1));
+    /// chip.style.SetCustomProperty("--chip-background-color", new Color(0, 0, 1, 0.1f));
+    /// ]]></code>
+    /// </example>
+    [VisualDocPage("actions")]
     [UxmlElement]
-#endif
     public partial class Chip : BaseVisualElement, IPressable
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId deleteIconProperty = nameof(deleteIcon);
 
@@ -31,7 +66,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId deleteProperty = nameof(delete);
 
-#endif
 
         /// <summary>
         /// The possible variants for a <see cref="Chip"/>.
@@ -128,12 +162,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The icon name for the delete button.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string deleteIcon
         {
             get => m_DeleteIcon.iconName;
@@ -142,22 +172,16 @@ namespace Unity.AppUI.UI
                 var changed = m_DeleteIcon.iconName != value;
                 m_DeleteIcon.iconName = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in deleteIconProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Chip variant.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Variant variant
         {
             get => m_Variant;
@@ -168,19 +192,15 @@ namespace Unity.AppUI.UI
                 m_Variant = value;
                 AddToClassList(GetVariantUssClassName(m_Variant));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Chip ornament.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public VisualElement ornament
         {
             get => m_Ornament;
@@ -194,22 +214,16 @@ namespace Unity.AppUI.UI
                     m_OrnamentContainer.Add(m_Ornament);
                 EnableInClassList(withOrnamentUssClassName, m_Ornament != null);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in ornamentProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Chip label.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string label
         {
             get => m_Label.text;
@@ -218,22 +232,16 @@ namespace Unity.AppUI.UI
                 var changed = m_Label.text != value;
                 m_Label.text = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Set the Chip as deletable.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool deletable
         {
             get => ClassListContains(deletableUssClassName);
@@ -242,19 +250,15 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(deletableUssClassName) != value;
                 EnableInClassList(deletableUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in deletableProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Clickable Manipulator for this Chip.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -269,19 +273,15 @@ namespace Unity.AppUI.UI
                     return;
                 this.AddManipulator(m_Clickable);
                 AddToClassList(clickableUssClassName);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Deletion Manipulator for this Chip.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable delete
         {
             get => m_DeleteHandler;
@@ -294,10 +294,8 @@ namespace Unity.AppUI.UI
                 if (m_DeleteHandler == null)
                     return;
                 m_DeleteButton.AddManipulator(m_DeleteHandler);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in deleteProperty);
-#endif
             }
         }
 
@@ -334,53 +332,5 @@ namespace Unity.AppUI.UI
             ornament = null;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Defines the UxmlFactory for the Chip.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Chip, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Chip"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Variant> m_Variant = new UxmlEnumAttributeDescription<Variant>
-            {
-                name = "variant",
-                defaultValue = Variant.Filled
-            };
-
-            readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
-            {
-                name = "label",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_DeleteIcon = new UxmlStringAttributeDescription
-            {
-                name = "delete-icon",
-                defaultValue = k_DefaultDeleteIconName
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Chip)ve;
-                element.variant = m_Variant.GetValueFromBag(bag, cc);
-                element.label = m_Label.GetValueFromBag(bag, cc);
-                element.deleteIcon = m_DeleteIcon.GetValueFromBag(bag, cc);
-
-            }
-        }
-#endif
     }
 }

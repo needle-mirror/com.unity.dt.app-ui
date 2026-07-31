@@ -6,18 +6,53 @@ using System.Text;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// ColorPicker UI Element.
+    /// A color selection component that allows users to pick colors using various input methods including color
+    /// wheel, RGB sliders, HSV sliders, and hex input.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The ColorPicker is a versatile component that provides multiple ways for users to select and manipulate
+    /// colors. It combines several color selection tools into a single cohesive interface:
+    ///
+    /// - A color wheel for intuitive hue selection
+    /// - A saturation-value square for fine-tuning color brightness and intensity
+    /// - RGB sliders for precise color adjustments
+    /// - HSV sliders for alternative color space manipulation
+    /// - Hex color input for direct color code entry
+    /// - Optional alpha channel control for transparency adjustment
+    ///
+    /// The component supports both mouse/touch interaction and keyboard navigation, making it accessible across
+    /// different input methods.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic ColorPicker with all features enabled — UXML: Creating a fully featured ColorPicker.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ColorPicker show-alpha="true" show-toolbar="true" show-hex="true" />
+    /// ]]></code>
+    /// <para>Creating and configuring a ColorPicker programmatically — C#: Creating and handling color changes.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var colorPicker = new ColorPicker();
+    /// colorPicker.showAlpha = true;
+    /// colorPicker.showToolbar = true;
+    /// colorPicker.showHex = true;
+    /// colorPicker.value = Color.blue;
+    ///
+    /// // Register for color change events
+    /// colorPicker.RegisterValueChangedCallback(evt => {
+    ///     Debug.Log($"Color changed from {evt.previousValue} to {evt.newValue}");
+    /// });
+    /// ]]></code>
+    /// <para>Minimal ColorPicker for simple RGB color selection — UXML: Creating a minimal ColorPicker.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ColorPicker show-alpha="false" show-toolbar="false" show-hex="false" />
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class ColorPicker : VisualElement, INotifyValueChanged<Color>
     {
 #if UNITY_LOCALIZATION_PRESENT && ENABLE_LOCALIZED_COLOR_PICKER
@@ -44,7 +79,6 @@ namespace Unity.AppUI.UI
         const string k_DefaultHexText = "Hex";
 #endif
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
 
@@ -58,7 +92,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId hdrProperty = new BindingId(nameof(hdr));
 
-#endif
 
         /// <summary>
         /// The type of channels sliders to display in the ColorPicker.
@@ -231,12 +264,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The current color value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Color value
         {
             get => m_Value;
@@ -252,22 +281,16 @@ namespace Unity.AppUI.UI
                 if (changed)
                     SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The previous color value. This color will be displayed in the toolbar.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Color previousValue
         {
             get => m_Toolbar.previousColor;
@@ -276,22 +299,16 @@ namespace Unity.AppUI.UI
                 var changed = m_Toolbar.previousColor != value;
                 m_Toolbar.previousColor = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in previousValueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Determines if the ColorPicker should display the alpha slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool showAlpha
         {
             get => !m_AlphaSlider.parent.ClassListContains(Styles.hiddenUssClassName);
@@ -300,10 +317,8 @@ namespace Unity.AppUI.UI
                 var changed = showAlpha != value;
                 m_AlphaSlider.parent.EnableInClassList(Styles.hiddenUssClassName, !value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in showAlphaProperty);
-#endif
 
                 if (!showAlpha)
                     TryNotifyValueChanged(this.value);
@@ -313,12 +328,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Determines if the ColorPicker should display colors in HDR.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool hdr
         {
             get => ClassListContains(hdrUssClassName);
@@ -328,12 +339,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Determines if the ColorPicker should display the toolbar.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool showToolbar
         {
             get => !m_Toolbar.ClassListContains(Styles.hiddenUssClassName);
@@ -342,22 +349,16 @@ namespace Unity.AppUI.UI
                 var changed = showToolbar != value;
                 m_Toolbar.EnableInClassList(Styles.hiddenUssClassName, !value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in showToolbarProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Determines if the ColorPicker should display the hex field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool showHex
         {
             get => !m_HexField.ClassListContains(Styles.hiddenUssClassName);
@@ -366,10 +367,8 @@ namespace Unity.AppUI.UI
                 var changed = showHex != value;
                 m_HexField.EnableInClassList(Styles.hiddenUssClassName, !value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in showHexProperty);
-#endif
             }
         }
 
@@ -1218,54 +1217,5 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Class used to create a <see cref="ColorPicker"/> using UXML.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<ColorPicker, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ColorPicker"/>.
-        /// </summary>
-        public new class UxmlTraits : VisualElement.UxmlTraits
-        {
-            readonly UxmlBoolAttributeDescription m_ShowAlpha = new UxmlBoolAttributeDescription
-            {
-                name = "show-alpha",
-                defaultValue = false
-            };
-
-            readonly UxmlBoolAttributeDescription m_ShowToolbar = new UxmlBoolAttributeDescription
-            {
-                name = "show-toolbar",
-                defaultValue = false
-            };
-
-            readonly UxmlBoolAttributeDescription m_ShowHex = new UxmlBoolAttributeDescription
-            {
-                name = "show-hex",
-                defaultValue = false
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                m_PickingMode.defaultValue = PickingMode.Ignore;
-                base.Init(ve, bag, cc);
-
-                var el = (ColorPicker)ve;
-                el.showAlpha = m_ShowAlpha.GetValueFromBag(bag, cc);
-                el.showToolbar = m_ShowToolbar.GetValueFromBag(bag, cc);
-                el.showHex = m_ShowHex.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

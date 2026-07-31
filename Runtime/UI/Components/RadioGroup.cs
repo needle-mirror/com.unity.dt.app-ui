@@ -4,21 +4,71 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A container for a set of <see cref="Radio"/> UI elements.
+    /// A container component that manages a set of radio buttons, allowing users to select one option from
+    /// multiple choices.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// RadioGroup is a form control that manages a group of <see cref="Radio"/> buttons, ensuring that only one
+    /// option can be selected at a time. It's commonly used in forms and settings interfaces where users need to
+    /// choose exactly one option from a set of mutually exclusive choices.
+    ///
+    /// The RadioGroup automatically handles the mutual exclusivity of its Radio children - when one radio button
+    /// is selected, all others in the group are automatically deselected.
+    ///
+    /// **Note:** Each Radio element within the group must have a unique 'key' property to function properly.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic RadioGroup with multiple options — Creating a simple radio group with three options.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML>
+    /// <RadioGroup>
+    ///     <Radio key="option1" label="Option 1" />
+    ///     <Radio key="option2" label="Option 2" />
+    ///     <Radio key="option3" label="Option 3" />
+    /// </RadioGroup>
+    /// ]]></code>
+    /// <para>RadioGroup with validation and event handling — Creating a radio group programmatically with validation
+    /// and change event handling.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var radioGroup = new RadioGroup();
+    ///
+    /// // Add radio buttons
+    /// var radio1 = new Radio { key = "small", label = "Small" };
+    /// var radio2 = new Radio { key = "medium", label = "Medium" };
+    /// var radio3 = new Radio { key = "large", label = "Large" };
+    ///
+    /// radioGroup.Add(radio1);
+    /// radioGroup.Add(radio2);
+    /// radioGroup.Add(radio3);
+    ///
+    /// // Add validation
+    /// radioGroup.validateValue = (value) => value != "large";
+    ///
+    /// // Listen for changes
+    /// radioGroup.RegisterValueChangedCallback(evt => {
+    ///     Debug.Log($"Selected size: {evt.newValue}");
+    /// });
+    /// ]]></code>
+    /// <para>RadioGroup with default selection and styling — Creating a radio group with a pre-selected option and
+    /// styled radio buttons.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML>
+    /// <RadioGroup value="option2">
+    ///     <Radio key="option1" label="Standard" size="M" />
+    ///     <Radio key="option2" label="Premium" size="M" emphasized="true" />
+    ///     <Radio key="option3" label="Enterprise" size="M" />
+    /// </RadioGroup>
+    /// ]]></code>
+    /// </example>
+    [VisualDocPage("inputs")]
     [UxmlElement]
-#endif
     public partial class RadioGroup : BaseVisualElement, IInputElement<string>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = nameof(value);
 
@@ -26,7 +76,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
 
-#endif
 
         /// <summary>
         /// The RadioGroup main styling class.
@@ -57,12 +106,8 @@ namespace Unity.AppUI.UI
         /// The selected item key.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"> if the value is out of range.</exception>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string value
         {
             get => m_Value;
@@ -75,21 +120,15 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The RadioGroup invalid state.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -98,19 +137,15 @@ namespace Unity.AppUI.UI
                 var changed = invalid != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The RadioGroup validation function.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<string, bool> validateValue
         {
             get => m_ValidateValue;
@@ -119,10 +154,8 @@ namespace Unity.AppUI.UI
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
@@ -173,13 +206,5 @@ namespace Unity.AppUI.UI
                 value = m_RadioByKey.Keys.FirstOrDefault();
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="RadioGroup"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<RadioGroup, UxmlTraits> { }
-
-#endif
     }
 }

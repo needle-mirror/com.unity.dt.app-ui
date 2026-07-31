@@ -12,30 +12,17 @@ namespace Unity.AppUI.UI
     public static class TextFieldExtensions
     {
         /// <summary>
-        /// Make the cursor blink.
-        /// </summary>
-        /// <param name="tf">The <see cref="TextField"/> object.</param>
-        [Obsolete("Use Unity.AppUI.UI.BlinkingCursor manipulator instead.")]
-        public static void BlinkingCursor(this UnityEngine.UIElements.TextField tf)
-        {
-            tf.AddManipulator(new BlinkingCursor());
-        }
-
-        /// <summary>
         /// Adds a runtime context menu to the text field.
         /// </summary>
         /// <param name="tf"></param>
         internal static void RuntimeContextMenu(this UnityEngine.UIElements.TextField tf)
         {
-#if ENABLE_UITK_TEXT_SELECTION
             if (tf == null)
                 throw new ArgumentNullException(nameof(tf));
             tf.AddManipulator(new RuntimeContextMenuManipulator(RuntimeContextMenuBuilder));
             tf.textSelection.selectAllOnFocus = false;
-#endif
         }
 
-#if ENABLE_UITK_TEXT_SELECTION
         struct Selection
         {
             public readonly int cursorIndex;
@@ -189,6 +176,5 @@ namespace Unity.AppUI.UI
                 s_Selection.textField.textSelection.SelectRange(s_Selection.cursorIndex, s_Selection.selectionIndex);
             });
         }
-#endif
     }
 }

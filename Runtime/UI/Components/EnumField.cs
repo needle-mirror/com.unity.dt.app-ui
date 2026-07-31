@@ -3,25 +3,19 @@ using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// EnumField UI element.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class EnumField : Dropdown, IInputElement<Enum>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId enumValueProperty = nameof(value);
 
         internal static readonly BindingId enumTypeProperty = nameof(enumType);
-#endif
 
         /// <summary>
         /// The main styling class for the EnumField.
@@ -128,9 +122,7 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in enumValueProperty);
-#endif
             }
         }
 
@@ -142,12 +134,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The type of the enum.
         /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("enum-type")]
-#endif
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Type enumType
         {
             get => m_EnumType;
@@ -159,15 +147,11 @@ namespace Unity.AppUI.UI
                 PopulateDataFromType(value);
                 Init(k_EnumData[value].values.GetValue(0) as Enum);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in enumTypeProperty);
-#endif
             }
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("enum-value")]
-#endif
         string defaultValueStr
         {
             get => m_DefaultEnumValueStr;
@@ -233,42 +217,5 @@ namespace Unity.AppUI.UI
             return enumName;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="EnumField"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<EnumField, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="EnumField"/>.
-        /// </summary>
-        public new class UxmlTraits : Dropdown.UxmlTraits
-        {
-            static readonly UxmlTypeAttributeDescription<Enum> k_EnumType = new UxmlTypeAttributeDescription<Enum>
-            {
-                name = "enum-type",
-                defaultValue = null,
-                use = UxmlAttributeDescription.Use.Required
-            };
-
-            static readonly UxmlStringAttributeDescription k_DefaultEnumValue = new UxmlStringAttributeDescription
-            {
-                name = "enum-value",
-                defaultValue = null
-            };
-
-            /// <inheritdoc />
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var field = (EnumField)ve;
-                field.enumType = k_EnumType.GetValueFromBag(bag, cc);
-                field.defaultValueStr = k_DefaultEnumValue.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

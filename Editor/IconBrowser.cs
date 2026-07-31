@@ -321,9 +321,7 @@ namespace Unity.AppUI.Editor
 #endif
                     typeof(Action<Object>),
                     typeof(Action<Object>),
-#if UNITY_2022_1_OR_NEWER
                     typeof(bool),
-#endif
                 }, Array.Empty<ParameterModifier>());
 
             if (piGet == null || miShow == null)
@@ -342,9 +340,7 @@ namespace Unity.AppUI.Editor
                 null,
                 new Action<Object>(OnTexturePicked),
                 new Action<Object>(o => { }),
-#if UNITY_2022_1_OR_NEWER
                 true
-#endif
             });
         }
 

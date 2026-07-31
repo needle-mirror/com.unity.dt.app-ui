@@ -44,13 +44,11 @@ namespace Unity.AppUI.Samples
                 uiDocument.rootVisualElement.Q<Text>("determinateCircularProgressLabel").text = $"{Mathf.RoundToInt(progressValue * 100f)}%";
                 uiDocument.rootVisualElement.Q<LinearProgress>("determinateLinearProgress").value = progressValue;
 
-#if UNITY_6000_0_OR_NEWER
                 if (m_ScrollView == null)
                 {
                     m_ScrollView = uiDocument.rootVisualElement.Q<ScrollView>();
                     m_ScrollView.mouseWheelScrollSize = 1;
                 }
-#endif
             }
         }
 

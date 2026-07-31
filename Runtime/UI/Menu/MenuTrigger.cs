@@ -1,21 +1,16 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A wrapper to display a menu when a trigger has been activated.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class MenuTrigger : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId triggerProperty = new BindingId(nameof(trigger));
 
@@ -25,7 +20,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId closeOnSelectionProperty = new BindingId(nameof(closeOnSelection));
 
-#endif
 
         string m_AnchorName;
 
@@ -47,9 +41,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The trigger used to determine when to display them <see cref="menu"/>.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public VisualElement trigger
         {
             get => m_Trigger;
@@ -58,10 +50,8 @@ namespace Unity.AppUI.UI
                 var changed = m_Trigger != value;
                 m_Trigger = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in triggerProperty);
-#endif
             }
         }
 
@@ -70,9 +60,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The UI element used as an anchor for the menu's popover.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public VisualElement anchor
         {
             get => m_Anchor;
@@ -81,10 +69,8 @@ namespace Unity.AppUI.UI
                 var changed = m_Anchor != value;
                 m_Anchor = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in anchorProperty);
-#endif
             }
         }
 
@@ -93,9 +79,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The menu to display.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public Menu menu
         {
             get => m_Menu;
@@ -104,10 +88,8 @@ namespace Unity.AppUI.UI
                 var changed = m_Menu != value;
                 m_Menu = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in menuProperty);
-#endif
             }
         }
 
@@ -116,12 +98,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Whether the menu should close when a selection is made.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool closeOnSelection
         {
             get => m_CloseOnSelection;
@@ -130,10 +108,8 @@ namespace Unity.AppUI.UI
                 var changed = m_CloseOnSelection != value;
                 m_CloseOnSelection = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in closeOnSelectionProperty);
-#endif
             }
         }
 
@@ -188,47 +164,5 @@ namespace Unity.AppUI.UI
             popover.Show();
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// UXML factory for the <see cref="MenuTrigger"/>.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<MenuTrigger, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="MenuTrigger"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_Anchor = new UxmlStringAttributeDescription
-            {
-                name = "anchor",
-                defaultValue = null
-            };
-
-            readonly UxmlBoolAttributeDescription m_CloseOnSelection = new UxmlBoolAttributeDescription
-            {
-                name = "close-on-selection",
-                defaultValue = true
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (MenuTrigger)ve;
-
-                el.m_AnchorName = m_Anchor.GetValueFromBag(bag, cc);
-                el.closeOnSelection = m_CloseOnSelection.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

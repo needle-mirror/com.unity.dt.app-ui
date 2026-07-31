@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -61,14 +59,59 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// AvatarGroup UI element.
+    /// Groups multiple avatars together in a horizontal layout with configurable spacing and overflow handling.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The AvatarGroup component is used to group multiple Avatar components together. It's particularly useful
+    /// for displaying a list of users, team members, or any collection of entities represented by avatars.
+    ///
+    /// The component automatically handles overflow by showing a configurable number of avatars and collapsing
+    /// the rest into a '+N' indicator.
+    ///
+    /// Note: For optimal visual presentation, it's recommended to keep the max property value between 4 and 6
+    /// avatars.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic usage with different variants. Shows 5 circular avatars with medium spacing and '+1' overflow
+    /// indicator.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <AvatarGroup spacing="M" max="5" variant="Circular">
+    ///     <Avatar src="user1.png" />
+    ///     <Avatar src="user2.png" />
+    ///     <Avatar src="user3.png" />
+    ///     <Avatar src="user4.png" />
+    ///     <Avatar src="user5.png" />
+    ///     <Avatar src="user6.png" />
+    /// </AvatarGroup>
+    /// ]]></code>
+    /// <para>Data binding example. Dynamically create avatars from a data source with custom binding logic.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var avatarGroup = new AvatarGroup();
+    /// avatarGroup.sourceItems = usersList;
+    /// avatarGroup.max = 4;
+    /// avatarGroup.spacing = AvatarGroupSpacing.S;
+    /// avatarGroup.bindItem = (avatar, index) => {
+    ///     var user = usersList[index];
+    ///     avatar.src = user.avatarUrl;
+    ///     avatar.backgroundColor = user.color;
+    /// };
+    /// ]]></code>
+    /// <para>Custom surplus rendering. Customize the appearance of the overflow indicator.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// avatarGroup.renderSurplus = (surplusCount) => {
+    ///     var surplusAvatar = new Avatar();
+    ///     surplusAvatar.backgroundColor = new Color(0.2f, 0.2f, 0.2f);
+    ///     var label = new Text($"+{surplusCount} more");
+    ///     label.style.color = Color.white;
+    ///     surplusAvatar.Add(label);
+    ///     return surplusAvatar;
+    /// };
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("feedbacks")]
     public partial class AvatarGroup : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId maxProperty = nameof(max);
 
         internal static readonly BindingId spacingProperty = nameof(spacing);
@@ -84,7 +127,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId bindItemProperty = nameof(bindItem);
 
         internal static readonly BindingId makeItemProperty = nameof(makeItem);
-#endif
         /// <summary>
         /// The render surplus delegate.
         /// </summary>
@@ -140,13 +182,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The maximum number of avatars to display before the overflow.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Avatar Group")]
-#endif
         public int max
         {
             get => m_Max;
@@ -154,10 +192,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_Max != value;
                 m_Max = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in maxProperty);
-#endif
             }
         }
 
@@ -169,12 +205,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The spacing between avatars.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public AvatarGroupSpacing spacing
         {
             get => m_Spacing;
@@ -185,22 +217,16 @@ namespace Unity.AppUI.UI
                 m_Spacing = value;
                 AddToClassList(GetSpacingUssClassName(m_Spacing));
                 Refresh();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in spacingProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The size of avatars.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -209,30 +235,22 @@ namespace Unity.AppUI.UI
                 var changed = m_Size != value;
                 m_Size = value;
                 this.ProvideContext(new SizeContext(value));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The AvatarGroup total count.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public int total => m_Total ?? m_SourceItems?.Count ?? 0;
 
         /// <summary>
         /// The AvatarGroup variant.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public AvatarVariant variant
         {
             get => m_Variant;
@@ -241,10 +259,8 @@ namespace Unity.AppUI.UI
                 var changed = m_Variant != value;
                 m_Variant = value;
                 this.ProvideContext(new AvatarVariantContext(value));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
-#endif
             }
         }
 
@@ -260,18 +276,14 @@ namespace Unity.AppUI.UI
             var previousTotal = total;
             m_Total = customTotal;
             Refresh();
-#if ENABLE_RUNTIME_DATA_BINDINGS
             if (previousTotal != total)
                 NotifyPropertyChanged(in totalProperty);
-#endif
         }
 
         /// <summary>
         /// The collection of items that will be displayed as Radio component.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public IList sourceItems
         {
             get => m_SourceItems;
@@ -281,21 +293,17 @@ namespace Unity.AppUI.UI
                 var previousTotal = total;
                 m_SourceItems = value;
                 Refresh();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sourceItemsProperty);
                 if (previousTotal != total)
                     NotifyPropertyChanged(in totalProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Method used to bind an item to a child Avatar.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Action<Avatar, int> bindItem
         {
             get => m_BindItem;
@@ -304,19 +312,15 @@ namespace Unity.AppUI.UI
                 var changed = m_BindItem != value;
                 m_BindItem = value;
                 Refresh();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in bindItemProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Method used to create an Avatar instance.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<Avatar> makeItem
         {
             get => m_MakeItem;
@@ -325,10 +329,8 @@ namespace Unity.AppUI.UI
                 var changed = m_MakeItem != value;
                 m_MakeItem = value;
                 Refresh();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in makeItemProperty);
-#endif
             }
         }
 
@@ -435,81 +437,5 @@ namespace Unity.AppUI.UI
             return avatar;
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Defines the UxmlFactory for the AvatarGroup.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<AvatarGroup, UxmlTraits>
-        {
-            /// <summary>
-            /// Describes the types of element that can appear as children of this element in a UXML file.
-            /// </summary>
-            public override IEnumerable<UxmlChildElementDescription> uxmlChildElementsDescription
-            {
-                get { yield return new UxmlChildElementDescription(typeof(Avatar)); }
-            }
-        }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="AvatarGroup"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlIntAttributeDescription m_Max = new UxmlIntAttributeDescription
-            {
-                name = "max",
-                defaultValue = k_DefaultMax
-            };
-
-            readonly UxmlEnumAttributeDescription<AvatarGroupSpacing> m_Spacing = new UxmlEnumAttributeDescription<AvatarGroupSpacing>
-            {
-                name = "spacing",
-                defaultValue = k_DefaultSpacing
-            };
-
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = k_DefaultSize
-            };
-
-            readonly UxmlIntAttributeDescription m_CustomTotal = new UxmlIntAttributeDescription
-            {
-                name = "total",
-                defaultValue = -1
-            };
-
-            readonly UxmlEnumAttributeDescription<AvatarVariant> m_Variant = new UxmlEnumAttributeDescription<AvatarVariant>
-            {
-                name = "variant",
-                defaultValue = k_DefaultVariant,
-            };
-
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (AvatarGroup)ve;
-
-                element.max = m_Max.GetValueFromBag(bag, cc);
-                element.spacing = m_Spacing.GetValueFromBag(bag, cc);
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                element.variant = m_Variant.GetValueFromBag(bag, cc);
-
-                var total = -1;
-                if (m_CustomTotal.TryGetValueFromBag(bag, cc, ref total))
-                    element.SetCustomTotal(total);
-
-
-            }
-        }
-#endif
     }
 }

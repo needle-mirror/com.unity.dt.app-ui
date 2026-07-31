@@ -3,18 +3,85 @@ using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Slider UI element for floating point values.
+    /// A control that allows users to select a value from a continuous range.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The SliderFloat component is a user interface control that allows users to select a floating-point value
+    /// from a continuous range by dragging a thumb along a track. It provides visual feedback through its track
+    /// and thumb elements, making it intuitive for users to adjust values.
+    ///
+    /// The slider supports both horizontal and vertical orientations, and can be customized with step values,
+    /// marks, value labels, and input field integration. It's particularly useful for scenarios where users need
+    /// to adjust values like volume, opacity, size, or any other continuous numeric parameter.
+    ///
+    /// ### Features
+    /// - Continuous value selection with floating-point precision
+    /// - Customizable value range with minimum and maximum bounds
+    /// - Optional step values for discrete increments
+    /// - Support for custom marks and labels
+    /// - Value display modes (always on, auto, or off)
+    /// - Track display customization
+    /// - Optional input field integration
+    ///
+    /// ### Best Practices
+    /// - Use appropriate step values that make sense for your use case
+    /// - Provide meaningful labels when using marks
+    /// - Consider using value labels for better user feedback
+    ///
+    /// **Note:** The slider supports keyboard navigation using arrow keys, and the shift key can be used for
+    /// larger step increments.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic slider with default settings — creates a basic horizontal slider with default range (0-100).</para>
+    /// <code lang="xml"><![CDATA[
+    /// <SliderFloat />
+    /// ]]></code>
+    /// <para>Customized slider with marks and labels — creates a slider for decimal values (0-1) with marks, labels, and
+    /// visible track.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <SliderFloat
+    ///     low-value="0"
+    ///     high-value="1"
+    ///     step="0.1"
+    ///     show-marks="true"
+    ///     show-marks-label="true"
+    ///     display-value-label="On"
+    ///     track="On"
+    /// />
+    /// ]]></code>
+    /// <para>Slider with custom scaling and formatting — creates a slider that uses exponential scaling (2^n) and
+    /// formats values with KB units.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var slider = new SliderFloat {
+    ///     scale = v => Mathf.Pow(2, v),
+    ///     formatFunction = v => $"{v:F0} KB",
+    ///     lowValue = 0,
+    ///     highValue = 10,
+    ///     step = 1
+    /// };
+    /// ]]></code>
+    /// <para>Vertical slider with custom marks — creates a vertical slider with custom marks and labels at specific
+    /// positions.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var slider = new SliderFloat {
+    ///     orientation = Direction.Vertical,
+    ///     customMarks = new List<SliderMark<float>> {
+    ///         new() { value = 0, label = "Min" },
+    ///         new() { value = 50, label = "Mid" },
+    ///         new() { value = 100, label = "Max" }
+    ///     },
+    ///     showMarks = true,
+    ///     showMarksLabel = true
+    /// };
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class SliderFloat : Slider<float,float,FloatField>
     {
         const float k_DefaultStep = 0.1f;
@@ -34,45 +101,35 @@ namespace Unity.AppUI.UI
             valueOverride = 0;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("step")]
-#endif
         float stepOverride
         {
             get => step;
             set => step = value;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("shift-step")]
-#endif
         float shiftStepOverride
         {
             get => shiftStep;
             set => shiftStep = value;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("low-value")]
-#endif
         float lowValueOverride
         {
             get => lowValue;
             set => lowValue = value;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("high-value")]
-#endif
         float highValueOverride
         {
             get => highValue;
             set => highValue = value;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("value")]
-#endif
         float valueOverride
         {
             get => value;
@@ -143,67 +200,5 @@ namespace Unity.AppUI.UI
             values[0] = v;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="SliderFloat"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<SliderFloat, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="SliderFloat"/>.
-        /// </summary>
-        public new class UxmlTraits : Slider<float,float,FloatField>.UxmlTraits
-        {
-            readonly UxmlFloatAttributeDescription m_Step = new UxmlFloatAttributeDescription
-            {
-                name = "step",
-                defaultValue = k_DefaultStep
-            };
-
-            readonly UxmlFloatAttributeDescription m_ShiftStep = new UxmlFloatAttributeDescription
-            {
-                name = "shift-step",
-                defaultValue = k_DefaultShiftStep
-            };
-
-            readonly UxmlFloatAttributeDescription m_HighValue = new UxmlFloatAttributeDescription
-            {
-                name = "high-value",
-                defaultValue = 100
-            };
-
-            readonly UxmlFloatAttributeDescription m_LowValue = new UxmlFloatAttributeDescription
-            {
-                name = "low-value",
-                defaultValue = 0
-            };
-
-            readonly UxmlFloatAttributeDescription m_Value = new UxmlFloatAttributeDescription
-            {
-                name = "value",
-                defaultValue = 0
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (SliderFloat)ve;
-                el.step = m_Step.GetValueFromBag(bag, cc);
-                el.shiftStep = m_ShiftStep.GetValueFromBag(bag, cc);
-                el.lowValue = m_LowValue.GetValueFromBag(bag, cc);
-                el.highValue = m_HighValue.GetValueFromBag(bag, cc);
-                el.value = m_Value.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

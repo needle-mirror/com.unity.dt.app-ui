@@ -1,9 +1,7 @@
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -12,12 +10,9 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A tree view item that can be used directly in a <see cref="ScrollView"/> or any vertical container.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class TreeViewItem : VisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId showCaretProperty = nameof(showCaret);
 
         internal static readonly BindingId labelProperty = nameof(label);
@@ -27,7 +22,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId selectedProperty = nameof(selected);
 
         internal static readonly BindingId depthProperty = nameof(depth);
-#endif
 
         /// <summary>
         /// The USS class name for the <see cref="TreeViewItem"/>.
@@ -119,12 +113,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Gets or sets whether the caret is shown for this <see cref="TreeViewItem"/>.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool showCaret
         {
             get => ClassListContains(withCaretVariantUssClassName);
@@ -135,22 +125,16 @@ namespace Unity.AppUI.UI
                     AddToClassList(withCaretVariantUssClassName);
                 else
                     RemoveFromClassList(withCaretVariantUssClassName);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in showCaretProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Gets or sets the label of the <see cref="TreeViewItem"/>.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string label
         {
             get => m_LabelElement.text;
@@ -158,22 +142,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_LabelElement.text != value;
                 m_LabelElement.text = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Gets or sets whether the <see cref="TreeViewItem"/> is expanded or collapsed.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool expanded
         {
             get => ClassListContains(expandedVariantUssClassName);
@@ -186,22 +164,16 @@ namespace Unity.AppUI.UI
                     RemoveFromClassList(expandedVariantUssClassName);
                 UpdateViewportHeight();
                 PropagateCollapse();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in expandedProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Gets or sets whether the <see cref="TreeViewItem"/> is in selected state.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool selected
         {
             get => ClassListContains(selectedVariantUssClassName);
@@ -212,10 +184,8 @@ namespace Unity.AppUI.UI
                     AddToClassList(selectedVariantUssClassName);
                 else
                     RemoveFromClassList(selectedVariantUssClassName);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in selectedProperty);
-#endif
             }
         }
 
@@ -223,12 +193,8 @@ namespace Unity.AppUI.UI
         /// Gets or sets the depth of the <see cref="TreeViewItem"/> in the tree view hierarchy.
         /// This is used to determine the indentation level of the item.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int depth
         {
             get => m_Depth;
@@ -238,19 +204,15 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(MemoryUtils.Concatenate(depthVariantUssClassName, m_Depth.ToString()));
                 m_Depth = value;
                 AddToClassList(MemoryUtils.Concatenate(depthVariantUssClassName, m_Depth.ToString()));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in depthProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Gets or sets the clickable behavior for the header of the <see cref="TreeViewItem"/>.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -371,70 +333,5 @@ namespace Unity.AppUI.UI
                 expanded = false;
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Class to be able to use the <see cref="TreeViewItem"/> in UXML.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<TreeViewItem, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TreeViewItem"/>.
-        /// </summary>
-        public new class UxmlTraits : VisualElement.UxmlTraits
-        {
-            readonly UxmlBoolAttributeDescription m_ShowCaret = new UxmlBoolAttributeDescription
-            {
-                name = "show-caret",
-                defaultValue = false
-            };
-
-            readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
-            {
-                name = "label",
-                defaultValue = string.Empty
-            };
-
-            readonly UxmlBoolAttributeDescription m_Expanded = new UxmlBoolAttributeDescription
-            {
-                name = "expanded",
-                defaultValue = false
-            };
-
-            readonly UxmlBoolAttributeDescription m_Selected = new UxmlBoolAttributeDescription
-            {
-                name = "selected",
-                defaultValue = false
-            };
-
-            readonly UxmlIntAttributeDescription m_Depth = new UxmlIntAttributeDescription
-            {
-                name = "depth",
-                defaultValue = 0
-            };
-
-            /// <summary>
-            /// Initializes the <see cref="TreeViewItem"/> with the specified attributes.
-            /// </summary>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-                var treeViewItem = (TreeViewItem)ve;
-
-                var boolValue = false;
-                var intValue = 0;
-                var strValue = string.Empty;
-                if (m_ShowCaret.TryGetValueFromBag(bag, cc, ref boolValue))
-                    treeViewItem.showCaret = boolValue;
-                if (m_Label.TryGetValueFromBag(bag, cc, ref strValue))
-                    treeViewItem.label = strValue;
-                if (m_Expanded.TryGetValueFromBag(bag, cc, ref boolValue))
-                    treeViewItem.expanded = boolValue;
-                if (m_Selected.TryGetValueFromBag(bag, cc, ref boolValue))
-                    treeViewItem.selected = boolValue;
-                if (m_Depth.TryGetValueFromBag(bag, cc, ref intValue))
-                    treeViewItem.depth = intValue;
-            }
-        }
-#endif
     }
 }

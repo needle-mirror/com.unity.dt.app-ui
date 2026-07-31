@@ -1,7 +1,5 @@
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -29,16 +27,12 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A help text.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class HelpText : LocalizedTextElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId variantProperty = new BindingId(nameof(variant));
 
-#endif
 
         /// <summary>
         /// The HelpText main styling class.
@@ -56,12 +50,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The variant of the <see cref="HelpText"/>.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public HelpTextVariant variant
         {
             get => m_Variant;
@@ -72,10 +62,8 @@ namespace Unity.AppUI.UI
                 m_Variant = value;
                 AddToClassList(GetVariantUssClassName(m_Variant));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
-#endif
             }
         }
 
@@ -98,37 +86,5 @@ namespace Unity.AppUI.UI
             variant = HelpTextVariant.Default;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="HelpText"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<HelpText, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="HelpText"/>.
-        /// </summary>
-        public new class UxmlTraits : LocalizedTextElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<HelpTextVariant> m_Variant = new UxmlEnumAttributeDescription<HelpTextVariant>
-            {
-                name = "variant",
-                defaultValue = HelpTextVariant.Default,
-            };
-
-
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var helpText = (HelpText)ve;
-
-                var variant = HelpTextVariant.Default;
-                if (m_Variant.TryGetValueFromBag(bag, cc, ref variant))
-                    helpText.variant = variant;
-            }
-        }
-
-#endif
     }
 }

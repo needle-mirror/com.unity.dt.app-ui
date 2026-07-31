@@ -1,17 +1,76 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Breadcrumbs visual element.
+    /// A navigation component that helps users track their location within an application's hierarchy.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// Breadcrumbs are a navigation pattern that shows users their current location in an application's hierarchy.
+    /// They provide a trail of links that allows users to quickly move up to a parent level or previously viewed
+    /// location.
+    ///
+    /// The component consists of three main parts:
+    ///
+    /// - BreadcrumbItem: Clickable links representing each level in the hierarchy
+    /// - BreadcrumbSeparator: Visual separator (default '/') between items
+    /// - The current page/location is indicated by a BreadcrumbItem with isCurrent=true
+    ///
+    /// Breadcrumbs are particularly useful in:
+    ///
+    /// - Applications with hierarchical navigation
+    /// - Complex folder structures
+    /// - Multi-step processes
+    /// - Any interface where users need to understand and navigate their current location
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Breadcrumbs Implementation</para>
+    ///
+    /// <para>A basic breadcrumbs navigation showing three levels deep with the current location.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML xmlns:ui="Unity.AppUI.UI">
+    ///     <ui:Breadcrumbs>
+    ///         <ui:BreadcrumbItem text="Home" url="/" />
+    ///         <ui:BreadcrumbSeparator />
+    ///         <ui:BreadcrumbItem text="Projects" url="/projects" />
+    ///         <ui:BreadcrumbSeparator />
+    ///         <ui:BreadcrumbItem text="Project Alpha" is-current="true" />
+    ///     </ui:Breadcrumbs>
+    /// </UXML>
+    /// ]]></code>
+    /// <para>Creating Breadcrumbs in C#</para>
+    ///
+    /// <para>Programmatically creating a breadcrumbs navigation with three levels.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var breadcrumbs = new Breadcrumbs();
+    ///
+    /// var homeItem = new BreadcrumbItem { text = "Home", url = "/" };
+    /// var projectsItem = new BreadcrumbItem { text = "Projects", url = "/projects" };
+    /// var currentItem = new BreadcrumbItem { text = "Project Alpha", isCurrent = true };
+    ///
+    /// breadcrumbs.Add(homeItem);
+    /// breadcrumbs.Add(new BreadcrumbSeparator());
+    /// breadcrumbs.Add(projectsItem);
+    /// breadcrumbs.Add(new BreadcrumbSeparator());
+    /// breadcrumbs.Add(currentItem);
+    /// ]]></code>
+    /// <para>Custom Separator</para>
+    ///
+    /// <para>Using a custom separator character instead of the default '/'.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML xmlns:ui="Unity.AppUI.UI">
+    ///     <ui:Breadcrumbs>
+    ///         <ui:BreadcrumbItem text="Home" />
+    ///         <ui:BreadcrumbSeparator text=">" />
+    ///         <ui:BreadcrumbItem text="Settings" is-current="true" />
+    ///     </ui:Breadcrumbs>
+    /// </UXML>
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("nav-components")]
     public partial class Breadcrumbs : BaseVisualElement
     {
         /// <summary>
@@ -27,34 +86,15 @@ namespace Unity.AppUI.UI
             AddToClassList(ussClassName);
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// UXML Factory for Breadcrumbs.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Breadcrumbs, UxmlTraits> { }
-
-        /// <summary>
-        /// UXML Traits for Breadcrumbs.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-
-        }
-#endif
     }
 
     /// <summary>
     /// BreadcrumbItem visual element.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class BreadcrumbItem : Link
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId isCurrentProperty = nameof(isCurrent);
-#endif
         /// <summary>
         /// The BreadcrumbItem's USS class name.
         /// </summary>
@@ -68,13 +108,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Whether the BreadcrumbItem is the current item.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Breadcrumb Item")]
-#endif
         public bool isCurrent
         {
             get => ClassListContains(currentUssClassName);
@@ -83,10 +119,8 @@ namespace Unity.AppUI.UI
                 var changed = isCurrent != value;
                 EnableInClassList(currentUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in isCurrentProperty);
-#endif
             }
         }
 
@@ -98,41 +132,12 @@ namespace Unity.AppUI.UI
             AddToClassList(ussClassName);
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// UXML Factory for BreadcrumbItem.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<BreadcrumbItem, UxmlTraits> { }
-
-        /// <summary>
-        /// UXML Traits for BreadcrumbItem.
-        /// </summary>
-        public new class UxmlTraits : Link.UxmlTraits
-        {
-            readonly UxmlBoolAttributeDescription m_IsCurrent = new UxmlBoolAttributeDescription
-            {
-                name = "is-current",
-                defaultValue = false
-            };
-
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var item = (BreadcrumbItem)ve;
-                item.isCurrent = m_IsCurrent.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 
     /// <summary>
     /// BreadcrumbSeparator visual element.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class BreadcrumbSeparator : BaseTextElement
     {
         /// <summary>
@@ -150,28 +155,5 @@ namespace Unity.AppUI.UI
             text = "/";
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// UXML Factory for BreadcrumbSeparator.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<BreadcrumbSeparator, UxmlTraits> { }
-
-        /// <summary>
-        /// UXML Traits for BreadcrumbSeparator.
-        /// </summary>
-        public new class UxmlTraits : BaseTextElement.UxmlTraits
-        {
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var separator = (BreadcrumbSeparator)ve;
-
-                if (string.IsNullOrEmpty(separator.text))
-                    separator.text = "/";
-            }
-        }
-#endif
     }
 }

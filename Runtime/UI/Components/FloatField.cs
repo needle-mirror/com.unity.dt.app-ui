@@ -2,18 +2,65 @@ using System;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Float Field UI element.
+    /// A text field that accepts floating-point numeric values.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// FloatField is an input control that allows users to enter and edit floating-point numbers. It provides
+    /// validation, formatting, and range constraints for numeric input.
+    ///
+    /// The component supports both keyboard input and increment/decrement functionality. Users can directly type
+    /// values or use up/down arrow keys to adjust the value incrementally.
+    ///
+    /// **Note:** The field can be customized with various formatting options and can display optional units
+    /// alongside the numeric value.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic FloatField with validation.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var field = new FloatField
+    /// {
+    ///     value = 50.0f,
+    ///     lowValue = 0.0f,
+    ///     highValue = 100.0f,
+    ///     formatString = "F1",
+    ///     unit = "%"
+    /// };
+    ///
+    /// // Add validation for even numbers
+    /// field.validateValue = (value) => value % 2 == 0;
+    /// ]]></code>
+    /// <para>FloatField with custom formatting and event handling.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var field = new FloatField();
+    ///
+    /// // Custom format function to display with units
+    /// field.formatFunction = (value) => $"{value:0.##} sec";
+    ///
+    /// // Listen for value changes
+    /// field.RegisterValueChangedCallback(evt =>
+    /// {
+    ///     Debug.Log($"Value changed from {evt.previousValue} to {evt.newValue}");
+    /// });
+    /// ]]></code>
+    /// <para>UXML Definition Example.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:FloatField
+    ///     name="opacity-field"
+    ///     value="0.5"
+    ///     low-value="0"
+    ///     high-value="1"
+    ///     format-string="P0"
+    ///     unit="opacity"
+    ///     size="M" />
+    /// ]]></code>
+    /// </example>
+    [VisualDocPage("inputs")]
     [UxmlElement]
-#endif
     public partial class FloatField : NumericalField<float>
     {
         /// <summary>
@@ -84,7 +131,6 @@ namespace Unity.AppUI.UI
             return magnitude * 0.01f;
         }
 
-#if ENABLE_VALUEFIELD_INTERFACE
         /// <inheritdoc/>
         public override void ApplyInputDeviceDelta(Vector3 delta, DeltaSpeed speed, float startValue)
         {
@@ -98,20 +144,6 @@ namespace Unity.AppUI.UI
             SetValueWithoutNotify(newValue);
             TrySendChangingEvent(previousValue, newValue);
         }
-#endif
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="FloatField"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<FloatField, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="FloatField"/>.
-        /// </summary>
-        public new class UxmlTraits : NumericalField<float>.UxmlTraits { }
-
-#endif
     }
 }

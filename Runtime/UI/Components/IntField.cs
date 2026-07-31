@@ -2,18 +2,28 @@ using System;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A <see cref="VisualElement"/> that displays a numeric value and allows the user to edit it.
+    /// A text field component that accepts and validates integer number input.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// IntField is an input component that allows users to enter and modify integer values. It provides
+    /// validation, formatting, and range constraints to ensure proper numeric input.
+    ///
+    /// The field supports keyboard input, arrow key increments/decrements, and optional unit display. It can
+    /// be customized with minimum and maximum value constraints.
+    ///
+    /// When setting minimum (lowValue) and maximum (highValue) constraints, ensure that the minimum value is
+    /// less than the maximum value to avoid unexpected behavior.
+    ///
+    /// The component supports different sizes and can be integrated into forms or used standalone. It
+    /// automatically validates input to ensure only valid integer values are accepted.
+    /// </remarks>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class IntField : NumericalField<int>
     {
         /// <summary>
@@ -85,7 +95,6 @@ namespace Unity.AppUI.UI
             return Math.Max(1, magnitude / 10);
         }
 
-#if ENABLE_VALUEFIELD_INTERFACE
         /// <inheritdoc/>
         public override void ApplyInputDeviceDelta(Vector3 delta, DeltaSpeed speed, int startValue)
         {
@@ -98,20 +107,6 @@ namespace Unity.AppUI.UI
             SetValueWithoutNotify(newValue);
             TrySendChangingEvent(previousValue, newValue);
         }
-#endif
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="IntField"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<IntField, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="IntField"/>.
-        /// </summary>
-        public new class UxmlTraits : NumericalField<int>.UxmlTraits { }
-
-#endif
     }
 }

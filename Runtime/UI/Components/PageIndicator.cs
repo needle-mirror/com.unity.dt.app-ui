@@ -1,22 +1,81 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// PageIndicator UI element.
-    /// This element is used to display a list of dots that can be used to navigate between pages.
+    /// A component that displays a series of dots to indicate and navigate between multiple pages or slides.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The PageIndicator is a UI component that displays a sequence of interactive dots, commonly used in
+    /// carousels, slideshows, or any content that spans multiple pages. Each dot represents a page, with the
+    /// current page highlighted.
+    ///
+    /// The component supports both horizontal and vertical layouts, keyboard navigation, and can be controlled
+    /// programmatically or through user interaction.
+    ///
+    /// Note: The PageIndicator is designed to be used as a navigation aid and should be combined with the
+    /// actual content container that displays the pages.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Usage. Creating a basic horizontal page indicator with three dots and handling page changes.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML>
+    /// <PageIndicator name="pageIndicator" count="3" direction="Horizontal" />
+    /// </UXML>
+    ///
+    /// // C#
+    /// pageIndicator.RegisterCallback<ChangeEvent<int>>((evt) => {
+    ///     // Handle page change
+    ///     var newPageIndex = evt.newValue;
+    ///     UpdatePageContent(newPageIndex);
+    /// });
+    /// ]]></code>
+    /// <para>Image Carousel Integration. Implementing an image carousel with PageIndicator for navigation.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// public class ImageCarousel : VisualElement
+    /// {
+    ///     private PageIndicator m_PageIndicator;
+    ///     private VisualElement m_ImageContainer;
+    ///
+    ///     public ImageCarousel()
+    ///     {
+    ///         // Setup image container
+    ///         m_ImageContainer = new VisualElement();
+    ///         Add(m_ImageContainer);
+    ///
+    ///         // Setup page indicator
+    ///         m_PageIndicator = new PageIndicator();
+    ///         m_PageIndicator.count = 5; // For 5 images
+    ///         m_PageIndicator.RegisterCallback<ChangeEvent<int>>((evt) => {
+    ///             ShowImage(evt.newValue);
+    ///         });
+    ///         Add(m_PageIndicator);
+    ///     }
+    ///
+    ///     private void ShowImage(int index)
+    ///     {
+    ///         // Update image display logic
+    ///     }
+    /// }
+    /// ]]></code>
+    /// <para>Keyboard Navigation. Demonstrating keyboard navigation and programmatic page changes.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // The PageIndicator supports keyboard navigation out of the box:
+    /// // - Left/Right arrows for horizontal layout
+    /// // - Up/Down arrows for vertical layout
+    ///
+    /// // You can also programmatically navigate:
+    /// pageIndicator.GoToNext(); // Move to next page
+    /// pageIndicator.GoToPrevious(); // Move to previous page
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class PageIndicator : BaseVisualElement, INotifyValueChanged<int>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId directionProperty = nameof(direction);
 
@@ -24,7 +83,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId valueProperty = nameof(value);
 
-#endif
 
         /// <summary>
         /// The PageIndicator main styling class.
@@ -63,12 +121,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The number of dots.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int count
         {
             get => hierarchy.childCount;
@@ -79,21 +133,15 @@ namespace Unity.AppUI.UI
 
                 BuildDots(value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in countProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The currently selected dot index.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int value
         {
             get => m_Value;
@@ -112,21 +160,15 @@ namespace Unity.AppUI.UI
                     SendEvent(evt);
                 }
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The PageIndicator direction (horizontal or vertical).
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Direction direction
         {
             get => m_Direction;
@@ -137,10 +179,8 @@ namespace Unity.AppUI.UI
                 m_Direction = value;
                 AddToClassList(GetDirectionUssClassName(m_Direction));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
-#endif
             }
         }
 
@@ -284,56 +324,5 @@ namespace Unity.AppUI.UI
             ((ExVisualElement)evt.target).passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.Outline;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="PageIndicator"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<PageIndicator, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="PageIndicator"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Direction> m_Direction = new UxmlEnumAttributeDescription<Direction>()
-            {
-                name = "direction",
-                defaultValue = Direction.Horizontal,
-            };
-
-            readonly UxmlIntAttributeDescription m_Count = new UxmlIntAttributeDescription
-            {
-                name = "count",
-                defaultValue = 1,
-            };
-
-            readonly UxmlIntAttributeDescription m_DefaultValue = new UxmlIntAttributeDescription
-            {
-                name = "default-value",
-                defaultValue = -1,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                m_PickingMode.defaultValue = PickingMode.Ignore;
-                base.Init(ve, bag, cc);
-
-                var el = (PageIndicator)ve;
-                el.direction = m_Direction.GetValueFromBag(bag, cc);
-                el.count = m_Count.GetValueFromBag(bag, cc);
-                var defaultValue = 0;
-                if (m_DefaultValue.TryGetValueFromBag(bag, cc, ref defaultValue))
-                    el.SetValueWithoutNotify(defaultValue);
-            }
-        }
-
-#endif
     }
 }

@@ -2,18 +2,70 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Unity.AppUI.Core;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A drop zone is a container that can be used to drop content into.
+    /// A container that accepts drag and drop operations for content placement.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The DropZone component provides a designated area where users can drag and drop content. It's particularly
+    /// useful for file uploads, content organization, and any interface that requires drag-and-drop functionality.
+    ///
+    /// The component visualizes different states during drag operations, providing clear feedback to users about
+    /// whether the content being dragged can be dropped in the zone.
+    ///
+    /// Note: The drag and drop functionality is currently only available in the Unity Editor environment.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic DropZone Setup</para>
+    ///
+    /// <para>Creating a simple file drop zone.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var dropZone = new DropZone();
+    /// dropZone.style.width = new StyleLength(200);
+    /// dropZone.style.height = new StyleLength(200);
+    ///
+    /// dropZone.controller.acceptDrag = (objects) => true; // Accept all drops
+    /// dropZone.controller.dropped += (objects) => {
+    ///     Debug.Log($"Received {objects.Count()} items");
+    /// };
+    ///
+    /// rootElement.Add(dropZone);
+    /// ]]></code>
+    /// <para>UXML Definition</para>
+    ///
+    /// <para>Defining a DropZone in UXML.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI">
+    ///     <appui:DropZone name="file-drop-zone"
+    ///                     style="width: 200px; height: 200px;"
+    ///                     visible-indicator="true" />
+    /// </UXML>
+    /// ]]></code>
+    /// <para>Custom Styling</para>
+    ///
+    /// <para>Applying custom styles to DropZone states.</para>
+    /// <code lang="csharp">
+    /// .appui-dropzone {
+    ///     background-color: rgba(255, 255, 255, 0.1);
+    ///     border-radius: 4px;
+    /// }
+    ///
+    /// .appui-dropzone--accept-drag {
+    ///     background-color: rgba(0, 255, 0, 0.1);
+    ///     border-color: green;
+    /// }
+    ///
+    /// .appui-dropzone--reject-drag {
+    ///     background-color: rgba(255, 0, 0, 0.1);
+    ///     border-color: red;
+    /// }
+    /// </code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("drag-and-drop")]
     public partial class DropZone : BaseVisualElement
     {
         /// <summary>
@@ -153,18 +205,5 @@ namespace Unity.AppUI.UI
                 .Every(Styles.animationRefreshDelayMs);
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// The UXML factory for the DropZone.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<DropZone, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="DropZone"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits { }
-
-#endif
     }
 }

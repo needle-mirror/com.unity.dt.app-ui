@@ -1,25 +1,68 @@
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Quote UI element.
+    /// A visual element that helps highlight and distinguish quoted or featured content from regular text.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Quote component is a specialized visual container that creates a distinctive block for showcasing
+    /// quoted content, testimonials, or any text that needs to be visually separated from the surrounding content.
+    /// It uses a vertical border line that can be customized in color to create visual hierarchy and improve
+    /// content readability.
+    ///
+    /// This component follows a minimalist design approach, using subtle visual cues rather than heavy quotation
+    /// marks or backgrounds, making it suitable for both formal and casual user interfaces.
+    ///
+    /// The Quote component is particularly useful in documentation, testimonials, blog posts, or any context where
+    /// you need to highlight specific content while maintaining the overall flow of the interface.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic usage of the Quote component: A simple quote with attribution</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:Quote>
+    ///     <ui:Label text="The best way to predict the future is to invent it."/>
+    ///     <ui:Label text="- Alan Kay" class="quote-attribution"/>
+    /// </ui:Quote>
+    /// ]]></code>
+    /// <para>Creating a Quote programmatically with custom content: Creating a quote with custom styling and nested
+    /// elements</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var quote = new Quote();
+    /// quote.color = Color.blue;
+    ///
+    /// var content = new Label();
+    /// content.text = "Innovation distinguishes between a leader and a follower.";
+    /// quote.Add(content);
+    ///
+    /// var attribution = new Label();
+    /// attribution.text = "- Steve Jobs";
+    /// attribution.AddToClassList("quote-attribution");
+    /// quote.Add(attribution);
+    /// ]]></code>
+    /// <para>Using Quote in a complex layout: Integrating a quote within a larger content structure</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:VerticalLayout>
+    ///     <ui:Label text="Key Insights:" class="heading"/>
+    ///     <ui:Quote color="#4CAF50">
+    ///         <ui:VerticalLayout spacing="8">
+    ///             <ui:Label text="First, solve the problem. Then, write the code." />
+    ///             <ui:Label text="- John Johnson" class="quote-attribution"/>
+    ///         </ui:VerticalLayout>
+    ///     </ui:Quote>
+    /// </ui:VerticalLayout>
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class Quote : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId colorProperty = nameof(color);
 
-#endif
 
         /// <summary>
         /// The Quote main styling class.
@@ -43,12 +86,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Quote outline color.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Optional<Color> color
         {
             get => m_InlineColor;
@@ -60,10 +99,8 @@ namespace Unity.AppUI.UI
                 style.borderLeftColor = borderColor;
                 style.borderRightColor = borderColor;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (borderColor != previousBorderColor)
                     NotifyPropertyChanged(in colorProperty);
-#endif
             }
         }
 
@@ -83,45 +120,5 @@ namespace Unity.AppUI.UI
             color = Optional<Color>.none;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Defines the UxmlFactory for the Quote.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Quote, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Quote"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-
-            readonly UxmlColorAttributeDescription m_Color = new UxmlColorAttributeDescription
-            {
-                name = "color",
-                defaultValue = Color.gray
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Quote)ve;
-
-                var color = Color.gray;
-                if (m_Color.TryGetValueFromBag(bag, cc, ref color))
-                    element.color = color;
-
-
-            }
-        }
-
-#endif
     }
 }

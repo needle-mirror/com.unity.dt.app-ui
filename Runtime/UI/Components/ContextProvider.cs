@@ -1,19 +1,61 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// This element can be used in the visual tree to wrap a part of the user-interface where the context
-    /// of the application needs to be overriden.
+    /// A container component that provides contextual settings to its children in the UI hierarchy.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The ContextProvider is a powerful layout component that allows you to override various UI settings for a
+    /// specific section of your interface. It acts as a wrapper around UI elements, providing contextual
+    /// configurations that affect all child elements within its scope.
+    ///
+    /// This component is particularly useful when you need to create isolated sections of your UI with different
+    /// themes, scales, languages, or layout directions without affecting the rest of the application.
+    ///
+    /// Note: The ContextProvider's picking mode is set to ignore by default, meaning it won't intercept any
+    /// pointer events. This allows events to pass through to its children.
+    /// </remarks>
+    /// <example>
+    /// <para>Here are some common usage examples of the ContextProvider component. Creating a dark-themed modal dialog:</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ContextProvider theme="dark" scale="medium">
+    ///     <Dialog>
+    ///         <Header text="Dark Theme Dialog" />
+    ///         <Content>
+    ///             <Label text="This entire dialog uses dark theme styling" />
+    ///         </Content>
+    ///         <Footer>
+    ///             <Button text="Close" />
+    ///         </Footer>
+    ///     </Dialog>
+    /// </ContextProvider>
+    /// ]]></code>
+    /// <para>Setting up a multilingual section with RTL support.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ContextProvider lang="ar-SA" dir="Rtl">
+    ///     <Panel class="form-section">
+    ///         <TextField label="الاسم" />
+    ///         <TextField label="البريد الإلكتروني" />
+    ///         <Button text="إرسال" />
+    ///     </Panel>
+    /// </ContextProvider>
+    /// ]]></code>
+    /// <para>Creating a larger scale section for improved accessibility.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ContextProvider scale="large" tooltip-delay-ms="0">
+    ///     <Panel class="accessibility-section">
+    ///         <Label text="Larger Text for Better Visibility" />
+    ///         <Button text="Easy to Click" tooltip="Instant tooltip" />
+    ///     </Panel>
+    /// </ContextProvider>
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("context-components")]
     public partial class ContextProvider : BaseVisualElement
     {
         /// <summary>
@@ -31,11 +73,5 @@ namespace Unity.AppUI.UI
             pickingMode = PickingMode.Ignore;
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// A class responsible for creating a <see cref="ContextProvider"/> from UXML.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<ContextProvider, UxmlTraits> { }
-#endif
     }
 }

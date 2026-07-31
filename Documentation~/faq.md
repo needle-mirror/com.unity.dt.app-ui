@@ -10,9 +10,6 @@ By default, the UI Builder components library only shows the components that are
 the `UnityEngine.*` and `Unity.*` namespaces. If you want to see the App UI components, you need to enable
 the **Developer Mode** of the Unity Editor.
 
-> [!NOTE]
-> App UI components are officially available in the UI Builder components library starting from Unity 2021.3.36f1, 2022.3.19f1, 2023.2.9f1 and 2023.3.0b5.
-
 To enable the **Developer Mode** of the Unity Editor, open the **About Unity** window and
 while focusing on the **About Unity** window, type `internal` on your keyboard. This will
 prompt you to restart the Unity Editor. After restarting the Unity Editor, you will be able to

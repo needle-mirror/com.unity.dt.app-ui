@@ -1,14 +1,72 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A list view item visual element.
+    /// A versatile list item component that displays content with a title, subtitle, thumbnail, and optional
+    /// actions.
     /// </summary>
+    /// <remarks>
+    /// ListViewItem is a flexible component designed to display content in a list format. It provides a
+    /// consistent layout structure with support for leading (left) and trailing (right) content areas, making it
+    /// perfect for displaying items in lists, menus, or selection interfaces.
+    ///
+    /// The component supports various content elements including:
+    /// - A thumbnail image
+    /// - A primary title
+    /// - A secondary subtitle
+    /// - Leading and trailing containers for custom content
+    /// - A built-in options button
+    ///
+    /// **Note:** ListViewItem comes with different size variants and loading states to accommodate various use
+    /// cases and provide better user feedback during data loading.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic usage with title and subtitle — Creating a standard list item with title and subtitle.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var item = new ListViewItem
+    /// {
+    ///     title = "Project Assets",
+    ///     subtitle = "Contains 42 files",
+    ///     size = Size.M
+    /// };
+    /// ]]></code>
+    /// <para>Advanced usage with custom content and loading state — Creating a rich list item with custom content,
+    /// loading state, and event handling.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var item = new ListViewItem();
+    ///
+    /// // Add custom badge to trailing container
+    /// var badge = new Badge { label = "Updated" };
+    /// item.trailingContainer.Add(badge);
+    ///
+    /// // Configure item properties
+    /// item.title = "Documentation";
+    /// item.subtitle = "Last updated: Today";
+    /// item.thumbnail = documentIcon;
+    ///
+    /// // Handle options button click
+    /// item.optionsButton.clicked += () => ShowOptionsMenu();
+    ///
+    /// // Show loading state
+    /// item.isLoading = true;
+    /// await LoadDataAsync();
+    /// item.isLoading = false;
+    /// ]]></code>
+    /// <para>Using ListViewItem in a UXML template — Declaring a ListViewItem in UXML.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML xmlns:ui="Unity.AppUI.UI">
+    ///     <ui:ListViewItem
+    ///         title="Settings"
+    ///         subtitle="Configure application preferences"
+    ///         size="L"
+    ///     />
+    /// </UXML>
+    /// ]]></code>
+    /// </example>
+    [VisualDocPage("layouts")]
     public partial class ListViewItem : BaseVisualElement
     {
         /// <summary>

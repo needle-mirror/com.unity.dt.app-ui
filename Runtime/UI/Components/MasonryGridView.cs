@@ -3,25 +3,88 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A view containing Masonry grid layout.
+    /// A GridView that arranges items in a masonry layout pattern, similar to Pinterest's layout.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The MasonryGridView is a specialized grid layout component that arranges items in a vertical masonry
+    /// pattern. Unlike traditional grid layouts where items must conform to a fixed grid, the masonry layout
+    /// allows items of varying heights while maintaining aligned columns.
+    ///
+    /// This layout is particularly useful for displaying content of varying heights, such as images, cards, or
+    /// content blocks, in a visually appealing and space-efficient manner.
+    ///
+    /// Key features include:
+    /// - Dynamic column arrangement
+    /// - Support for items with varying heights
+    /// - Efficient item recycling for optimal performance
+    /// - Built-in selection management
+    /// - Smooth scrolling with viewport item management
+    /// </remarks>
+    /// <example>
+    /// <para>Basic setup of a MasonryGridView with custom items:</para>
+    ///
+    /// <para>Creating and configuring a MasonryGridView</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var masonryGrid = new MasonryGridView() {
+    ///     columnCount = 3,
+    ///     selectionType = SelectionType.Single,
+    ///     pack = true
+    /// };
+    ///
+    /// // Setup item source
+    /// masonryGrid.itemsSource = items;
+    ///
+    /// // Define how items are created
+    /// masonryGrid.makeItem = () => new CustomItemElement();
+    ///
+    /// // Define how items are bound
+    /// masonryGrid.bindItem = (element, index) => {
+    ///     var item = (CustomItemElement)element;
+    ///     item.SetData(itemsSource[index]);
+    /// };
+    /// ]]></code>
+    /// <para>Using MasonryGridView in UXML:</para>
+    ///
+    /// <para>UXML definition of a MasonryGridView</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:UXML xmlns:ui="UnityEngine.UIElements">
+    ///     <ui:MasonryGridView
+    ///         column-count="3"
+    ///         selection-type="Multiple"
+    ///         pack="true"
+    ///         style="height: 100%;" />
+    /// </ui:UXML>
+    /// ]]></code>
+    /// <para>Handling selection changes:</para>
+    ///
+    /// <para>Setting up selection event handlers</para>
+    /// <code lang="csharp"><![CDATA[
+    /// masonryGrid.selectionChanged += (selectedItems) => {
+    ///     foreach (var item in selectedItems) {
+    ///         Debug.Log($"Selected item: {item}");
+    ///     }
+    /// };
+    ///
+    /// masonryGrid.itemsChosen += (chosenItems) => {
+    ///     // Handle double-click or Enter key on selected items
+    ///     foreach (var item in chosenItems) {
+    ///         Debug.Log($"Chosen item: {item}");
+    ///     }
+    /// };
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class MasonryGridView : BaseGridView
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId packProperty = new BindingId(nameof(pack));
 
-#endif
         /// <summary>
         /// The USS class name of a <see cref="MasonryGridView"/>.
         /// </summary>
@@ -57,12 +120,8 @@ namespace Unity.AppUI.UI
         /// Whether to pack the items (the grid will try to take the minimum space possible
         /// by distributing the items in the columns).
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool pack
         {
             get => m_Pack;
@@ -73,9 +132,7 @@ namespace Unity.AppUI.UI
                     m_Pack = value;
                     Refresh();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in packProperty);
-#endif
                 }
             }
         }
@@ -358,46 +415,5 @@ namespace Unity.AppUI.UI
             item.RemoveFromHierarchy();
         }
 
-#if ENABLE_UXML_TRAITS
-
-
-        /// <summary>
-        /// Instantiates a <see cref="MasonryGridView"/> using data from a UXML file.
-        /// </summary>
-        /// <remarks>
-        /// This class is added to every <see cref="VisualElement"/> created from UXML.
-        /// </remarks>
-        public new class UxmlFactory : UxmlFactory<MasonryGridView, UxmlTraits> {}
-
-        /// <summary>
-        /// Defines <see cref="UxmlTraits"/> for the <see cref="MasonryGridView"/>.
-        /// </summary>
-        /// <remarks>
-        /// This class defines the GridView element properties that you can use in a UI document asset (UXML file).
-        /// </remarks>
-        public new class UxmlTraits : BaseGridView.UxmlTraits
-        {
-            readonly UxmlBoolAttributeDescription m_Pack = new UxmlBoolAttributeDescription
-            {
-                name = "pack",
-                defaultValue = false
-            };
-
-            /// <summary>
-            /// Initializes <see cref="GridView"/> properties using values from the attribute bag.
-            /// </summary>
-            /// <param name="ve">The object to initialize.</param>
-            /// <param name="bag">The attribute bag.</param>
-            /// <param name="cc">The creation context; unused.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var view = (MasonryGridView)ve;
-                view.pack = m_Pack.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

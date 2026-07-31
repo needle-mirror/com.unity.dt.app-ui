@@ -14,7 +14,7 @@ App UI is Unity's comprehensive framework for building beautiful, high-performan
 
 ## Core Requirements
 
-- Unity 2021.3 LTS or later
+- Unity 6000.3 LTS or later
 - Familiarity with UI Toolkit
 
 ## Key Namespace

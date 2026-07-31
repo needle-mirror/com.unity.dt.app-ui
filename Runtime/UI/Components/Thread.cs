@@ -2,21 +2,16 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// Thread UI element. Main container for a threaded conversation.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class Thread : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId enableResolutionProperty = nameof(enableResolution);
 
         internal static readonly BindingId isResolvedProperty = nameof(isResolved);
@@ -34,7 +29,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId bindParticipantProperty = nameof(bindParticipant);
 
         internal static readonly BindingId makeActionMenuItemsProperty = nameof(makeActionMenuItems);
-#endif
 
         /// <summary>
         /// The Thread main styling class.
@@ -206,9 +200,7 @@ namespace Unity.AppUI.UI
         /// Callback to populate the action menu when the action button is clicked.
         /// When set, the action button is visible; when <c>null</c>, it is hidden.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Action<Thread, MenuBuilder> makeActionMenuItems
         {
             get => m_MakeActionMenuItems;
@@ -217,10 +209,8 @@ namespace Unity.AppUI.UI
                 var changed = m_MakeActionMenuItems != value;
                 m_MakeActionMenuItems = value;
                 m_ActionsButton.EnableInClassList(Styles.hiddenUssClassName, m_MakeActionMenuItems == null);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in makeActionMenuItemsProperty);
-#endif
             }
         }
 
@@ -228,13 +218,9 @@ namespace Unity.AppUI.UI
         /// Whether the resolve button is visible.
         /// </summary>
         [Tooltip("Whether the resolve button is visible.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Thread")]
-#endif
         public bool enableResolution
         {
             get => m_EnableResolution;
@@ -245,9 +231,7 @@ namespace Unity.AppUI.UI
                 m_ResolveButton.EnableInClassList(Styles.hiddenUssClassName, !value);
                 if (changed)
                 {
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in enableResolutionProperty);
-#endif
                 }
             }
         }
@@ -256,12 +240,8 @@ namespace Unity.AppUI.UI
         /// The resolution state of the thread.
         /// </summary>
         [Tooltip("The resolution state of the thread.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool isResolved
         {
             get => m_IsResolved;
@@ -271,10 +251,8 @@ namespace Unity.AppUI.UI
                 m_IsResolved = value;
                 EnableInClassList(resolvedUssClassName, value);
                 m_ResolveButton.selected = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in isResolvedProperty);
-#endif
             }
         }
 
@@ -282,12 +260,8 @@ namespace Unity.AppUI.UI
         /// Whether reactions are enabled. Propagated via <see cref="ThreadContext"/>.
         /// </summary>
         [Tooltip("Whether reactions are enabled.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool enableReactions
         {
             get => m_EnableReactions;
@@ -297,9 +271,7 @@ namespace Unity.AppUI.UI
                 m_EnableReactions = value;
                 if (changed)
                 {
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in enableReactionsProperty);
-#endif
                 }
             }
         }
@@ -308,12 +280,8 @@ namespace Unity.AppUI.UI
         /// Whether likes are enabled. Propagated via <see cref="ThreadContext"/>.
         /// </summary>
         [Tooltip("Whether likes/dislikes are enabled.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool enableLikes
         {
             get => m_EnableLikes;
@@ -323,9 +291,7 @@ namespace Unity.AppUI.UI
                 m_EnableLikes = value;
                 if (changed)
                 {
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in enableLikesProperty);
-#endif
                 }
             }
         }
@@ -334,12 +300,8 @@ namespace Unity.AppUI.UI
         /// Whether dislikes are enabled. Propagated via <see cref="ThreadContext"/>.
         /// </summary>
         [Tooltip("Whether likes/dislikes are enabled.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool enableDislikes
         {
             get => m_EnableDislikes;
@@ -349,9 +311,7 @@ namespace Unity.AppUI.UI
                 m_EnableDislikes = value;
                 if (changed)
                 {
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in enableDislikesProperty);
-#endif
                 }
             }
         }
@@ -360,12 +320,8 @@ namespace Unity.AppUI.UI
         /// The number of replies displayed on the collapse button label.
         /// </summary>
         [Tooltip("The number of replies displayed on the collapse button.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int replyCount
         {
             get => m_ReplyCount;
@@ -373,19 +329,15 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_ReplyCount != value;
                 m_ReplyCount = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in replyCountProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The participants data source for the <see cref="AvatarGroup"/>.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public IList participants
         {
             get => m_ParticipantsGroup.sourceItems;
@@ -393,19 +345,15 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_ParticipantsGroup.sourceItems != value;
                 m_ParticipantsGroup.sourceItems = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in participantsProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The bind callback for participant avatars.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Action<Avatar, int> bindParticipant
         {
             get => m_ParticipantsGroup.bindItem;
@@ -413,80 +361,11 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_ParticipantsGroup.bindItem != value;
                 m_ParticipantsGroup.bindItem = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in bindParticipantProperty);
-#endif
             }
         }
 
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Defines the UxmlFactory for the Thread.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Thread, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Thread"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlBoolAttributeDescription m_EnableResolution = new UxmlBoolAttributeDescription
-            {
-                name = "enable-resolution",
-                defaultValue = false,
-            };
-
-            readonly UxmlBoolAttributeDescription m_IsResolved = new UxmlBoolAttributeDescription
-            {
-                name = "is-resolved",
-                defaultValue = false,
-            };
-
-            readonly UxmlBoolAttributeDescription m_EnableReactions = new UxmlBoolAttributeDescription
-            {
-                name = "enable-reactions",
-                defaultValue = true,
-            };
-
-            readonly UxmlBoolAttributeDescription m_EnableLikes = new UxmlBoolAttributeDescription
-            {
-                name = "enable-likes",
-                defaultValue = true,
-            };
-
-            readonly UxmlBoolAttributeDescription m_EnableDislikes = new UxmlBoolAttributeDescription
-            {
-                name = "enable-dislikes",
-                defaultValue = false,
-            };
-
-            readonly UxmlIntAttributeDescription m_ReplyCount = new UxmlIntAttributeDescription
-            {
-                name = "reply-count",
-                defaultValue = 0
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (Thread)ve;
-                el.enableResolution = m_EnableResolution.GetValueFromBag(bag, cc);
-                el.isResolved = m_IsResolved.GetValueFromBag(bag, cc);
-                el.enableReactions = m_EnableReactions.GetValueFromBag(bag, cc);
-                el.enableLikes = m_EnableLikes.GetValueFromBag(bag, cc);
-                el.enableDislikes = m_EnableDislikes.GetValueFromBag(bag, cc);
-                el.replyCount = m_ReplyCount.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

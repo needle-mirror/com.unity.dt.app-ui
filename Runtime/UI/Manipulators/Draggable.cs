@@ -305,9 +305,7 @@ namespace Unity.AppUI.UI
         static bool IsValidPointerType(int pointerId)
         {
             return pointerId == PointerId.mousePointerId
-#if UNITY_6000_2_OR_NEWER
                 || pointerId >= PointerId.trackedPointerIdBase
-#endif
                 ;
         }
     }

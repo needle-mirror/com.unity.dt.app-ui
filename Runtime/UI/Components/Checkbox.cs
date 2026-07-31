@@ -1,8 +1,6 @@
 using System;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -28,14 +26,70 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// Checkbox UI element.
+    /// A control that lets users make a binary choice between two mutually exclusive options.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Checkbox component is a fundamental user interface control that allows users to select or deselect an
+    /// option. It's particularly useful in forms, settings panels, and anywhere users need to make binary choices.
+    ///
+    /// Checkboxes can exist in three states: checked, unchecked, and intermediate. The intermediate state is useful
+    /// when representing a collection of sub-items where only some are selected.
+    ///
+    /// The intermediate state cannot be directly toggled by user interaction - it can only be set programmatically.
+    /// Users can only toggle between checked and unchecked states.
+    ///
+    /// - Users need to select one or more options from a list
+    /// - Users need to toggle a single option on or off
+    /// - Multiple independent choices need to be presented
+    /// </remarks>
+    /// <example>
+    /// <para>Basic checkbox usage in UXML.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML xmlns:appui="Unity.AppUI.UI">
+    ///     <appui:Checkbox label="Accept terms and conditions" />
+    /// </UXML>
+    /// ]]></code>
+    /// <para>Creating a checkbox group programmatically.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var container = new VisualElement();
+    ///
+    /// var option1 = new Checkbox { label = "Option 1" };
+    /// var option2 = new Checkbox { label = "Option 2" };
+    /// var selectAll = new Checkbox { label = "Select All" };
+    ///
+    /// option1.RegisterValueChangedCallback(evt => UpdateSelectAllState());
+    /// option2.RegisterValueChangedCallback(evt => UpdateSelectAllState());
+    ///
+    /// selectAll.RegisterValueChangedCallback(evt => {
+    ///     if (evt.newValue != CheckboxState.Intermediate)
+    ///     {
+    ///         option1.value = evt.newValue;
+    ///         option2.value = evt.newValue;
+    ///     }
+    /// });
+    ///
+    /// container.Add(selectAll);
+    /// container.Add(option1);
+    /// container.Add(option2);
+    /// ]]></code>
+    /// <para>Creating a validated checkbox.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var checkbox = new Checkbox { label = "Must be checked" };
+    ///
+    /// checkbox.validateValue = (state) => state == CheckboxState.Checked;
+    /// checkbox.RegisterValueChangedCallback(evt => {
+    ///     // invalid will be automatically updated based on validateValue
+    ///     if (checkbox.invalid)
+    ///     {
+    ///         Debug.Log("Please check the box to continue");
+    ///     }
+    /// });
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class Checkbox : BaseVisualElement, IInputElement<CheckboxState>, IPressable
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = nameof(value);
 
@@ -48,7 +102,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
 
         internal static readonly BindingId clickableProperty = nameof(clickable);
-#endif
 
         /// <summary>
         /// The Checkbox main styling class.
@@ -132,9 +185,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Clickable Manipulator for this Checkbox.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -147,22 +198,16 @@ namespace Unity.AppUI.UI
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Checkbox emphasized mode.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool emphasized
         {
             get => ClassListContains(emphasizedUssClassName);
@@ -171,22 +216,16 @@ namespace Unity.AppUI.UI
                 var changed = emphasized != value;
                 EnableInClassList(emphasizedUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in emphasizedProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The text displayed in the Checkbox label.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string label
         {
             get => m_Label.text;
@@ -196,22 +235,16 @@ namespace Unity.AppUI.UI
                 m_Label.text = value;
                 m_Label.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Checkbox invalid state.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -220,19 +253,15 @@ namespace Unity.AppUI.UI
                 var changed = invalid != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Checkbox validation function.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<CheckboxState, bool> validateValue
         {
             get => m_ValidateValue;
@@ -241,10 +270,8 @@ namespace Unity.AppUI.UI
                 var changed = m_ValidateValue != value;
                 m_ValidateValue = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
@@ -263,12 +290,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Checkbox value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public CheckboxState value
         {
             get => m_Value;
@@ -281,9 +304,7 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
@@ -304,53 +325,5 @@ namespace Unity.AppUI.UI
             m_Box.passMask = ExVisualElement.Passes.Clear | ExVisualElement.Passes.Outline;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// UXML factory for the Checkbox.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Checkbox, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Checkbox"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlBoolAttributeDescription m_Emphasized = new UxmlBoolAttributeDescription
-            {
-                name = "emphasized",
-                defaultValue = false
-            };
-
-            readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
-            {
-                name = "label",
-                defaultValue = null
-            };
-
-            readonly UxmlEnumAttributeDescription<CheckboxState> m_Value = new UxmlEnumAttributeDescription<CheckboxState>
-            {
-                name = "value",
-                defaultValue = CheckboxState.Unchecked
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Checkbox)ve;
-                element.emphasized = m_Emphasized.GetValueFromBag(bag, cc);
-                element.value = m_Value.GetValueFromBag(bag, cc);
-                element.label = m_Label.GetValueFromBag(bag, cc);
-
-            }
-        }
-#endif
     }
 }

@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -28,14 +26,26 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// Tabs UI element.
+    /// A navigation component that allows users to switch between different views or sections.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// Tabs make it easy to explore and switch between different views or functional aspects of an app. They
+    /// enable content organization at a high level, such as switching between views, data sets, or functional
+    /// aspects of an app.
+    ///
+    /// Tabs organize content across different screens, data sets, and other interactions. They consist of a list
+    /// of tab items that can contain text labels and/or icons. When a tab is selected, it displays an indicator to
+    /// show which tab is active.
+    ///
+    /// Note: Tabs should be used at the top level of navigation, not for subordinate or lower-level views.
+    ///
+    /// The component supports both horizontal and vertical orientations, different sizes, and can be configured
+    /// with various styling options like emphasized or justified layouts.
+    /// </remarks>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class Tabs : BaseVisualElement, INotifyValueChanged<int>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId sizeProperty = nameof(size);
 
@@ -55,7 +65,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId unbindItemProperty = nameof(unbindItem);
 
-#endif
 
         /// <summary>
         /// The Tabs main styling class.
@@ -148,9 +157,7 @@ namespace Unity.AppUI.UI
             m_ScrollView = new ScrollView
             {
                 name = scrollViewUssClassName,
-#if UITK_NESTED_INTERACTION_KIND
                 nestedInteractionKind = ScrollView.NestedInteractionKind.StopScrolling,
-#endif
                 mode = ScrollViewMode.Horizontal,
                 horizontalScrollerVisibility = ScrollerVisibility.Hidden,
                 verticalScrollerVisibility = ScrollerVisibility.Hidden,
@@ -217,12 +224,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the Tabs.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -233,22 +236,16 @@ namespace Unity.AppUI.UI
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The direction of the Tabs. Horizontal or Vertical.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Direction direction
         {
             get => m_Direction;
@@ -265,30 +262,22 @@ namespace Unity.AppUI.UI
                 };
                 SetValueWithoutNotify(m_Value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The current list of items used to populate the Tabs.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public IList items => m_SourceItems ?? m_StaticItems;
 
         /// <summary>
         /// The emphasized mode of the Tabs.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool emphasized
         {
             get => ClassListContains(emphasizedUssClassName);
@@ -297,22 +286,16 @@ namespace Unity.AppUI.UI
                 var changed = emphasized != value;
                 EnableInClassList(emphasizedUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in emphasizedProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The justified mode of the Tabs.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool justified
         {
             get => ClassListContains(justifiedUssClassName);
@@ -321,19 +304,15 @@ namespace Unity.AppUI.UI
                 var changed = justified != value;
                 EnableInClassList(justifiedUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in justifiedProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Method to bind the TabItem.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Action<TabItem, int> bindItem
         {
             get => m_BindItem;
@@ -344,19 +323,15 @@ namespace Unity.AppUI.UI
                 m_BindItem = value;
                 RefreshItems();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in bindItemProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Method to unbind the TabItem.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Action<TabItem, int> unbindItem
         {
             get => m_UnbindItem;
@@ -366,19 +341,15 @@ namespace Unity.AppUI.UI
                 m_UnbindItem = value;
                 RefreshItems();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in unbindItemProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Collection of items used to populate the Tabs.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public IList sourceItems
         {
             get => m_SourceItems;
@@ -393,10 +364,8 @@ namespace Unity.AppUI.UI
                 m_PollHierarchyItem = null;
                 RefreshItems();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in sourceItemsProperty);
                 NotifyPropertyChanged(in itemsProperty);
-#endif
             }
         }
 
@@ -450,6 +419,7 @@ namespace Unity.AppUI.UI
             }
             else
             {
+                m_ScheduledRefreshIndicator?.Pause();
                 m_Indicator.RemoveFromClassList(animatedIndicatorUssClassName);
                 if (direction == Direction.Horizontal)
                 {
@@ -507,12 +477,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the Tabs. This is the index of the selected TabItem.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int value
         {
             get => m_Value;
@@ -528,9 +494,7 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
@@ -571,9 +535,10 @@ namespace Unity.AppUI.UI
         /// <returns> True if the next TabItem is selected, false otherwise.</returns>
         public bool GoToNext()
         {
-            var nextIndex = Mathf.Clamp(value + 1, 0, childCount - 1);
-            while (!ElementAt(nextIndex).enabledSelf) nextIndex = Mathf.Clamp(nextIndex + 1, 0, childCount - 1);
-            if (nextIndex >= childCount || nextIndex == value)
+            var nextIndex = m_Value + 1;
+            while (nextIndex < m_Items.Count && !m_Items[nextIndex].enabledSelf)
+                nextIndex++;
+            if (nextIndex >= m_Items.Count || nextIndex == m_Value)
                 return false;
             value = nextIndex;
             return true;
@@ -585,9 +550,12 @@ namespace Unity.AppUI.UI
         /// <returns> True if the previous TabItem is selected, false otherwise.</returns>
         public bool GoToPrevious()
         {
-            var nextIndex = Mathf.Clamp(value - 1, 0, childCount - 1);
-            while (!ElementAt(nextIndex).enabledSelf) nextIndex = Mathf.Clamp(nextIndex - 1, 0, childCount - 1);
-            if (nextIndex == value || nextIndex < 0)
+            // From the deselected state (value == -1) scan back from the last item, mirroring
+            // GoToNext which scans forward from the first, so Left/Up can reselect a tab too.
+            var nextIndex = (m_Value == -1 ? m_Items.Count : m_Value) - 1;
+            while (nextIndex >= 0 && !m_Items[nextIndex].enabledSelf)
+                nextIndex--;
+            if (nextIndex < 0 || nextIndex == m_Value)
                 return false;
             value = nextIndex;
             return true;
@@ -617,9 +585,7 @@ namespace Unity.AppUI.UI
                     m_StaticItems.Add((TabItem)c);
                 }
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in itemsProperty);
-#endif
 
                 RefreshItems();
             }
@@ -662,7 +628,7 @@ namespace Unity.AppUI.UI
             {
                 // find the next valid item
                 var newValue = 0;
-                while (m_Items[newValue].enabledSelf == false && newValue < m_Items.Count)
+                while (newValue < m_Items.Count && m_Items[newValue].enabledSelf == false)
                     newValue++;
                 if (newValue < m_Items.Count)
                     SetValueWithoutNotifyInternal(newValue);
@@ -702,76 +668,5 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Tabs"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Tabs, UxmlTraits>
-        {
-            /// <summary>
-            /// Describes the types of element that can appear as children of this element in a UXML file.
-            /// </summary>
-            public override IEnumerable<UxmlChildElementDescription> uxmlChildElementsDescription => new[]
-            {
-                new UxmlChildElementDescription(typeof(TabItem))
-            };
-        }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Tabs"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlIntAttributeDescription m_DefaultValue = new UxmlIntAttributeDescription
-            {
-                name = "value",
-                defaultValue = 0
-            };
-
-            readonly UxmlBoolAttributeDescription m_Emphasized = new UxmlBoolAttributeDescription
-            {
-                name = "emphasized",
-                defaultValue = false
-            };
-
-            readonly UxmlBoolAttributeDescription m_Justified = new UxmlBoolAttributeDescription
-            {
-                name = "justified",
-                defaultValue = false
-            };
-
-            readonly UxmlEnumAttributeDescription<Direction> m_Orientation = new UxmlEnumAttributeDescription<Direction>
-            {
-                name = "direction",
-                defaultValue = Direction.Horizontal,
-            };
-
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                m_PickingMode.defaultValue = PickingMode.Ignore;
-                base.Init(ve, bag, cc);
-                var el = (Tabs)ve;
-                el.size = m_Size.GetValueFromBag(bag, cc);
-                el.direction = m_Orientation.GetValueFromBag(bag, cc);
-                el.emphasized = m_Emphasized.GetValueFromBag(bag, cc);
-                el.justified = m_Justified.GetValueFromBag(bag, cc);
-                el.value = m_DefaultValue.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

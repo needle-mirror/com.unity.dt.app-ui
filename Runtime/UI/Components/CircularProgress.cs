@@ -4,25 +4,60 @@ using UnityEngine.UIElements;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// CircularProgress UI element. This is a circular progress bar.
+    /// A circular progress indicator that represents loading or processing state.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// CircularProgress is a visual indicator that displays progress in a circular format. It can be used to
+    /// show the status of an operation, like loading content, processing data, or uploading files.
+    ///
+    /// The component supports two variants: determinate and indeterminate. The determinate variant shows
+    /// concrete progress with a specific value, while the indeterminate variant displays a continuous animation
+    /// indicating an ongoing process without a specific completion percentage.
+    ///
+    /// Use CircularProgress when you want to show progress in a compact, circular format. It's particularly
+    /// useful in scenarios where space is limited or when you want to maintain visual harmony with circular
+    /// design elements.
+    ///
+    /// The component features customizable properties including inner radius, rounded corners, and color
+    /// styling to match your application's design system.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic indeterminate circular progress. Creates a default circular progress with indeterminate animation.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <CircularProgress />
+    /// ]]></code>
+    /// <para>Determinate progress with custom styling. Creates a large determinate progress indicator with custom
+    /// color and thickness.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <CircularProgress variant="Determinate" value="0.75" inner-radius="0.4" color-override="#2196F3" size="L" />
+    /// ]]></code>
+    /// <para>Progress with code-behind interaction. Demonstrates how to create and update a circular progress
+    /// indicator programmatically.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var progress = new CircularProgress();
+    /// progress.variant = Progress.Variant.Determinate;
+    /// progress.value = 0.0f;
+    ///
+    /// // Update progress value over time
+    /// float currentValue = 0f;
+    /// void UpdateProgress() {
+    ///     currentValue = Mathf.Min(currentValue + 0.1f, 1f);
+    ///     progress.value = currentValue;
+    /// }
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("feedbacks")]
     public partial class CircularProgress : Progress
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId innerRadiusProperty = nameof(innerRadius);
 
-#endif
 
         static Material s_Material;
 
@@ -58,12 +93,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The inner radius of the CircularProgress.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float innerRadius
         {
             get => m_InnerRadius;
@@ -72,10 +103,8 @@ namespace Unity.AppUI.UI
                 var changed = !Mathf.Approximately(m_InnerRadius, value);
                 m_InnerRadius = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in innerRadiusProperty);
-#endif
             }
         }
 
@@ -147,17 +176,5 @@ namespace Unity.AppUI.UI
             RenderTexture.active = prevRt;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Defines the UxmlFactory for the CircularProgress.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<CircularProgress, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="CircularProgress"/>.
-        /// </summary>
-        public new class UxmlTraits : Progress.UxmlTraits { }
-#endif
     }
 }

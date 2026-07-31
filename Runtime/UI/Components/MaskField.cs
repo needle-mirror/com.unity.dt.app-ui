@@ -3,27 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// MaskField UI element.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class MaskField : Dropdown, IInputElement<int>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId maskValueProperty = nameof(value);
 
         internal static readonly BindingId getMaskValueProperty = nameof(getMaskValue);
 
         internal static readonly BindingId getDisplayNameProperty = nameof(getDisplayName);
-#endif
 
         /// <summary>
         /// The main styling class for the MaskField.
@@ -148,9 +142,7 @@ namespace Unity.AppUI.UI
                 base.value = ConvertMaskValueToIndices(value);
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in maskValueProperty);
-#endif
             }
         }
 
@@ -159,9 +151,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public new Func<int, bool> validateValue { get; set; }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("mask-value")]
-#endif
         int defaultMaskValue
         {
             get => m_DefaultMaskValue;
@@ -182,9 +172,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Get the mask value for a specific index in the source items collection.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public GetMaskValueDelegate getMaskValue
         {
             get => m_GetMaskValue;
@@ -196,9 +184,7 @@ namespace Unity.AppUI.UI
                 m_GetMaskValue = value;
                 Refresh();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in getMaskValueProperty);
-#endif
             }
         }
 
@@ -212,9 +198,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Get the display name for a specific index in the source items collection.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public GetDisplayNameDelegate getDisplayName
         {
             get => m_GetDisplayName;
@@ -226,9 +210,7 @@ namespace Unity.AppUI.UI
                 m_GetDisplayName = value;
                 Refresh();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in getDisplayNameProperty);
-#endif
             }
         }
 
@@ -376,34 +358,5 @@ namespace Unity.AppUI.UI
             };
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="MaskField"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<MaskField, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="MaskField"/>.
-        /// </summary>
-        public new class UxmlTraits : Dropdown.UxmlTraits
-        {
-            static readonly UxmlIntAttributeDescription k_DefaultMaskValue = new UxmlIntAttributeDescription
-            {
-                name = "mask-value",
-                defaultValue = 0
-            };
-
-            /// <inheritdoc />
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var field = (MaskField)ve;
-                field.defaultMaskValue = k_DefaultMaskValue.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

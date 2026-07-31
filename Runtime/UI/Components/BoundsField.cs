@@ -1,21 +1,70 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Bounds Field UI element.
+    /// A UI component for editing 3D bounds with center and size values.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The BoundsField is a specialized input component that allows users to edit 3D bounds by specifying both the
+    /// center point and size dimensions. It provides a structured interface with separate numerical fields for each
+    /// coordinate (X, Y, Z) of both the center position and size values.
+    ///
+    /// This component is particularly useful when working with 3D spaces and requiring precise control over
+    /// boundary definitions, such as in level editors, collision detection setup, or camera framing configurations.
+    ///
+    /// The field is composed of two main sections:
+    /// 1. Center: Three numerical fields for setting the X, Y, and Z coordinates of the bounds center point
+    /// 2. Size: Three numerical fields for defining the width (X), height (Y), and depth (Z) dimensions of the bounds
+    /// </remarks>
+    /// <example>
+    /// <para>Basic usage of BoundsField in UXML: creating a medium-sized BoundsField in UXML.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:BoundsField name="myBounds" size="M" />
+    /// ]]></code>
+    /// <para>Creating and configuring BoundsField in C#: complete example showing creation, configuration, validation,
+    /// and change handling.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var boundsField = new BoundsField();
+    /// boundsField.size = Size.M;
+    /// boundsField.value = new Bounds(Vector3.zero, new Vector3(1, 1, 1));
+    /// boundsField.validateValue = (bounds) => bounds.size.x > 0 && bounds.size.y > 0 && bounds.size.z > 0;
+    ///
+    /// // Register for value changes
+    /// boundsField.RegisterValueChangedCallback(evt => {
+    ///     Debug.Log($"New bounds: Center={evt.newValue.center}, Size={evt.newValue.size}");
+    /// });
+    /// ]]></code>
+    /// <para>Using BoundsField with validation for game object bounds: example showing how to use BoundsField to edit
+    /// game object bounds with size validation.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var boundsField = new BoundsField();
+    ///
+    /// // Set up validation for minimum size
+    /// boundsField.validateValue = (bounds) => {
+    ///     var minSize = 0.1f;
+    ///     return bounds.size.x >= minSize &&
+    ///            bounds.size.y >= minSize &&
+    ///            bounds.size.z >= minSize;
+    /// };
+    ///
+    /// // Update game object bounds when value changes
+    /// boundsField.RegisterValueChangedCallback(evt => {
+    ///     if (!boundsField.invalid) {
+    ///         gameObject.transform.position = evt.newValue.center;
+    ///         // Assuming a cube mesh
+    ///         gameObject.transform.localScale = evt.newValue.size;
+    ///     }
+    /// });
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class BoundsField : BaseVisualElement, IInputElement<Bounds>, ISizeableElement, INotifyValueChanging<Bounds>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId valueProperty = nameof(value);
 
         internal static readonly BindingId sizeProperty = nameof(size);
@@ -23,7 +72,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId invalidProperty = nameof(invalid);
 
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
-#endif
         /// <summary>
         /// The BoundsField main styling class.
         /// </summary>
@@ -180,13 +228,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The BoundsField size.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Bounds Field")]
-#endif
         public Size size
         {
             get => m_Size;
@@ -203,10 +247,8 @@ namespace Unity.AppUI.UI
                 m_SYField.size = m_Size;
                 m_SZField.size = m_Size;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
@@ -230,12 +272,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the BoundsField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Bounds value
         {
             get => m_Value;
@@ -250,21 +288,15 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Set the validation state of the BoundsField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -280,19 +312,15 @@ namespace Unity.AppUI.UI
                 m_SYField.EnableInClassList(Styles.invalidUssClassName, value);
                 m_SZField.EnableInClassList(Styles.invalidUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The validation function of the BoundsField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<Bounds, bool> validateValue
         {
             get => m_ValidateValue;
@@ -303,10 +331,8 @@ namespace Unity.AppUI.UI
                 if (validateValue != null)
                     invalid = !validateValue(m_Value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
@@ -399,39 +425,5 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Class to instantiate a <see cref="BoundsField"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<BoundsField, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="BoundsField"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (BoundsField)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-
-
-            }
-        }
-#endif
     }
 }

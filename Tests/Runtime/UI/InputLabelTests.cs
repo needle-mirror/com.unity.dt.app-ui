@@ -14,7 +14,6 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => InputLabel.ussClassName;
 
-#if ENABLE_VALUEFIELD_INTERFACE
         [Test]
         [Order(10)]
         public void CanSetDraggableProperty()
@@ -51,6 +50,5 @@ namespace Unity.AppUI.Tests.UI
             Assert.IsNotNull(context);
             Assert.AreEqual(5f, context.delta.x);
         }
-#endif
     }
 }

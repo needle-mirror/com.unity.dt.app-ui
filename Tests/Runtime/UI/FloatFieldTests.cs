@@ -116,7 +116,6 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(1, changedCount);
         }
 
-#if ENABLE_VALUEFIELD_INTERFACE
         [UnityTest]
         [Order(6)]
         public IEnumerator CanIncrementValueWithDrag()
@@ -141,7 +140,6 @@ namespace Unity.AppUI.Tests.UI
             // Value should have increased
             Assert.Greater(field.value, initialValue);
         }
-#endif
 
         [Test]
         [Order(7)]

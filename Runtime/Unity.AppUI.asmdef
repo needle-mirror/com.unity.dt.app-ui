@@ -22,36 +22,6 @@
     ],
     "versionDefines": [
         {
-            "name": "Unity",
-            "expression": "[2021.3.6f1,2022.1.0a1)",
-            "define": "UITK_NESTED_INTERACTION_KIND"
-        },
-        {
-            "name": "Unity",
-            "expression": "[2022.1.7f1,2022.2.0a1)",
-            "define": "UITK_NESTED_INTERACTION_KIND"
-        },
-        {
-            "name": "Unity",
-            "expression": "[2022.2.0a9,2023.1.0a1)",
-            "define": "UITK_NESTED_INTERACTION_KIND"
-        },
-        {
-            "name": "Unity",
-            "expression": "2023.1.0a4",
-            "define": "UITK_NESTED_INTERACTION_KIND"
-        },
-        {
-            "name": "Unity",
-            "expression": "2022.2.0a9",
-            "define": "UITK_SELECTED_INDICES_CHANGED"
-        },
-        {
-          "name": "Unity",
-          "expression": "2023.2.0a1",
-          "define": "UITK_MAKE_NONE_ELEMENT"
-        },
-        {
             "name": "com.unity.localization",
             "expression": "",
             "define": "UNITY_LOCALIZATION_PRESENT"
@@ -63,63 +33,8 @@
         },
         {
             "name": "Unity",
-            "expression": "2023.3.0a1",
-            "define": "ENABLE_UXML_SERIALIZED_DATA"
-        },
-        {
-            "name": "Unity",
-            "expression": "2023.2",
-            "define": "ENABLE_RUNTIME_DATA_BINDINGS"
-        },
-        {
-            "name": "Unity",
-            "expression": "[2021.3,2023.3.0a1)",
-            "define": "ENABLE_ENABLED_UXML_PROPERTY"
-        },
-        {
-            "name": "Unity",
-            "expression": "[2021.3,2023.3.0a1)",
-            "define": "ENABLE_UXML_TRAITS"
-        },
-        {
-            "name": "Unity",
-            "expression": "2023.3.0b7",
-            "define": "CONDITIONAL_WEAK_TABLE_IL2CPP"
-        },
-        {
-            "name": "Unity",
-            "expression": "[2023.2.10f1,2023.3.0a1)",
-            "define": "CONDITIONAL_WEAK_TABLE_IL2CPP"
-        },
-        {
-            "name": "Unity",
-            "expression": "[2022.3.20f1,2023.1.0a1)",
-            "define": "CONDITIONAL_WEAK_TABLE_IL2CPP"
-        },
-        {
-            "name": "Unity",
-            "expression": "[2021.3.36f1,2022.1.0a1)",
-            "define": "CONDITIONAL_WEAK_TABLE_IL2CPP"
-        },
-        {
-            "name": "Unity",
             "expression": "7000.0.0a1",
             "define": "FOCUSABLE_AS_VISUALELEMENT"
-        },
-        {
-            "name": "Unity",
-            "expression": "2023.1.0a1",
-            "define": "ENABLE_UITK_TEXT_SELECTION"
-        },
-        {
-          "name": "Unity",
-          "expression": "6000.3.0a1",
-          "define": "ENABLE_ENTITY_ID"
-        },
-        {
-          "name": "Unity",
-          "expression": "2022.1.0a1",
-          "define": "ENABLE_VALUEFIELD_INTERFACE"
         },
         {
             "name": "Unity",

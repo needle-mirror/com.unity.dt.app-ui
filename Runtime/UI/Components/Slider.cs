@@ -4,9 +4,7 @@ using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -108,15 +106,12 @@ namespace Unity.AppUI.UI
     /// <typeparam name="TValue">The final value type.</typeparam>
     /// <typeparam name="TScalar">The thumb single value type.</typeparam>
     /// <typeparam name="TInputField">The input field type.</typeparam>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public abstract partial class Slider<TValue, TScalar, TInputField>
         : BaseSlider<TValue, TScalar>
         where TScalar : unmanaged
         where TInputField : VisualElement, IValidatableElement<TValue>, IFormattable<TScalar>, new()
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId showMarksProperty = new (nameof(showMarks));
 
@@ -132,7 +127,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId trackProperty = new (nameof(track));
 
-#endif
 
         /// <summary>
         /// Handler to scale the value of the slider thumbs and marks.
@@ -286,12 +280,8 @@ namespace Unity.AppUI.UI
         /// Whether to show the marks on the slider.
         /// If no custom marks are set, the marks are generated based on the step value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool showMarks
         {
             get => m_ShowMarks;
@@ -306,12 +296,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Whether to show the marks labels on the slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool showMarksLabel
         {
             get => m_ShowMarksLabel;
@@ -326,9 +312,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The custom marks to display on the slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public IList<SliderMark<TScalar>> customMarks
         {
             get => m_CustomMarks;
@@ -343,12 +327,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The mode to display the value of the slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public ValueDisplayMode displayValueLabel
         {
             get => m_DisplayValueLabel;
@@ -363,12 +343,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The policy to restrict the values of the slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public RestrictedValuesPolicy restrictedValues
         {
             get => m_RestrictedValues;
@@ -383,9 +359,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Handler to scale the value of the slider thumbs and marks.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public ScaleHandler scale
         {
             get => m_Scale;
@@ -400,12 +374,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The mode to display the track of the slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public TrackDisplayType track
         {
             get => m_TrackDisplayMode;
@@ -420,12 +390,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Whether to show the input field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool showInputField
         {
             get => m_ShowInputField;
@@ -564,9 +530,7 @@ namespace Unity.AppUI.UI
                     ? Draggable.DragDirection.Horizontal
                     : Draggable.DragDirection.Vertical;
             RefreshUI();
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in orientationProperty);
-#endif
         }
 
         /// <inheritdoc />
@@ -955,54 +919,42 @@ namespace Unity.AppUI.UI
             m_ShowMarks = newShowMarks;
             EnableInClassList(showMarksUssClassName, m_ShowMarks);
             RefreshUI();
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in showMarksProperty);
-#endif
         }
 
         void SetShowMarksLabel(bool newShowMarksLabel)
         {
             m_ShowMarksLabel = newShowMarksLabel;
             RefreshUI();
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in showMarksLabelProperty);
-#endif
         }
 
         void SetCustomMarks(IList<SliderMark<TScalar>> newCustomMarks)
         {
             m_CustomMarks = newCustomMarks;
             RefreshUI();
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in customMarksProperty);
-#endif
         }
 
         void SetDisplayValueLabel(ValueDisplayMode newValueDisplayMode)
         {
             m_DisplayValueLabel = newValueDisplayMode;
             RefreshUI();
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in displayValueLabelProperty);
-#endif
         }
 
         void SetRestrictedValues(RestrictedValuesPolicy newRestrictedValues)
         {
             m_RestrictedValues = newRestrictedValues;
             SetValueWithoutNotify(m_Value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in restrictedValuesProperty);
-#endif
         }
 
         void SetScale(ScaleHandler newScale)
         {
             m_Scale = newScale;
             RefreshUI();
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in scaleProperty);
-#endif
         }
 
         void SetTrackDisplayMode(TrackDisplayType newTrackDisplayMode)
@@ -1011,9 +963,7 @@ namespace Unity.AppUI.UI
             m_TrackDisplayMode = newTrackDisplayMode;
             AddToClassList(GetTrackDisplayTypeUssClassName(m_TrackDisplayMode));
             RefreshUI();
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in trackProperty);
-#endif
         }
 
         void BindInputField()
@@ -1115,57 +1065,6 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the Slider.
-        /// </summary>
-        public new class UxmlTraits : BaseSlider<TValue,TScalar>.UxmlTraits
-        {
-            readonly UxmlBoolAttributeDescription m_ShowMarks = new UxmlBoolAttributeDescription
-            {
-                name = "show-marks",
-                defaultValue = false
-            };
-
-            readonly UxmlEnumAttributeDescription<ValueDisplayMode> m_ValueDisplayMode = new UxmlEnumAttributeDescription<ValueDisplayMode>
-            {
-                name = "display-value-label",
-                defaultValue = ValueDisplayMode.Off
-            };
-
-            readonly UxmlEnumAttributeDescription<RestrictedValuesPolicy> m_RestrictedValues = new UxmlEnumAttributeDescription<RestrictedValuesPolicy>
-            {
-                name = "restricted-values",
-                defaultValue = RestrictedValuesPolicy.None
-            };
-
-            readonly UxmlEnumAttributeDescription<TrackDisplayType> m_Track = new UxmlEnumAttributeDescription<TrackDisplayType>
-            {
-                name = "track",
-                defaultValue = TrackDisplayType.Off
-            };
-
-            readonly UxmlBoolAttributeDescription m_ShowInputField = new UxmlBoolAttributeDescription
-            {
-                name = "show-input-field",
-                defaultValue = false
-            };
-
-            /// <inheritdoc />
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var slider = (Slider<TValue, TScalar, TInputField>)ve;
-
-                slider.showMarks = m_ShowMarks.GetValueFromBag(bag, cc);
-                slider.displayValueLabel = m_ValueDisplayMode.GetValueFromBag(bag, cc);
-                slider.restrictedValues = m_RestrictedValues.GetValueFromBag(bag, cc);
-                slider.track = m_Track.GetValueFromBag(bag, cc);
-                slider.showInputField = m_ShowInputField.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 
 }

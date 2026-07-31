@@ -47,8 +47,6 @@ namespace Unity.AppUI.UI
 
         bool m_SpaceBarPressed;
 
-        float m_ZoomMultiplier;
-
         ValueAnimation<float> m_DampingEffect;
 
         GrabMode m_GrabMode = GrabMode.None;
@@ -117,19 +115,11 @@ namespace Unity.AppUI.UI
         /// </summary>
         public Vector2 scrollOffset
         {
-#if UNITY_6000_2_OR_NEWER
             get => viewport.resolvedStyle.translate * -1;
-#else
-            get => viewport.transform.position * -1;
-#endif
             set
             {
                 var newPosition = new Vector3(-value.x, -value.y, 0);
-#if UNITY_6000_2_OR_NEWER
                 var previousPosition = viewport.resolvedStyle.translate;
-#else
-                var previousPosition = viewport.transform.position;
-#endif
                 var changed =
                     !Mathf.Approximately(previousPosition.x, newPosition.x) ||
                     !Mathf.Approximately(previousPosition.y, newPosition.y);
@@ -146,27 +136,15 @@ namespace Unity.AppUI.UI
         /// </summary>
         public Vector2 zoom
         {
-#if UNITY_6000_2_OR_NEWER
             get => viewport.resolvedStyle.scale.value;
-#else
-            get => viewport.transform.scale;
-#endif
             set
             {
-#if UNITY_6000_2_OR_NEWER
                 var previousScale = viewport.resolvedStyle.scale.value;
-#else
-                var previousScale = viewport.transform.scale;
-#endif
                 var newScale = new Vector3(Mathf.Clamp(value.x, minZoom, maxZoom), Mathf.Clamp(value.y, minZoom, maxZoom), 1);
                 var changed =
                     !Mathf.Approximately(previousScale.x, newScale.x) ||
                     !Mathf.Approximately(previousScale.y, newScale.y);
-#if UNITY_6000_2_OR_NEWER
                 viewport.style.scale = new Scale(newScale);
-#else
-                viewport.transform.scale = newScale;
-#endif
                 if (changed)
                     m_ZoomChanged?.Invoke(previousScale, newScale);
             }
@@ -250,9 +228,6 @@ namespace Unity.AppUI.UI
             target.RegisterCallback<WheelEvent>(OnWheel);
             target.RegisterCallback<PointerDownEvent>(OnPointerDownTrickleDown, TrickleDown.TrickleDown);
             target.RegisterCallback<PointerDownEvent>(OnPointerDown);
-#if !UNITY_2023_1_OR_NEWER
-            target.RegisterCallback<MouseDownEvent>(OnMouseDown);
-#endif
             target.RegisterCallback<PointerUpEvent>(OnPointerUp);
             target.RegisterCallback<PointerCancelEvent>(OnPointerCancel);
             target.RegisterCallback<PointerCaptureOutEvent>(OnPointerCaptureOut);
@@ -268,9 +243,6 @@ namespace Unity.AppUI.UI
             target.UnregisterCallback<WheelEvent>(OnWheel);
             target.UnregisterCallback<PointerDownEvent>(OnPointerDownTrickleDown, TrickleDown.TrickleDown);
             target.UnregisterCallback<PointerDownEvent>(OnPointerDown);
-#if !UNITY_2023_1_OR_NEWER
-            target.UnregisterCallback<MouseDownEvent>(OnMouseDown);
-#endif
             target.UnregisterCallback<PointerUpEvent>(OnPointerUp);
             target.UnregisterCallback<PointerCancelEvent>(OnPointerCancel);
             target.UnregisterCallback<PointerCaptureOutEvent>(OnPointerCaptureOut);
@@ -350,10 +322,6 @@ namespace Unity.AppUI.UI
                 if (!target.HasPointerCapture(evt.pointerId))
                 {
                     target.CapturePointer(evt.pointerId);
-#if !UNITY_2023_1_OR_NEWER
-                    if (evt.pointerId == PointerId.mousePointerId)
-                        target.CaptureMouse();
-#endif
                 }
 
                 evt.StopPropagation();
@@ -362,12 +330,6 @@ namespace Unity.AppUI.UI
                 m_LastTimestamp = evt.timestamp;
                 grabMode = GrabMode.Grabbing;
             }
-        }
-
-        void OnMouseDown(MouseDownEvent evt)
-        {
-            if (target.HasMouseCapture())
-                evt.StopPropagation();
         }
 
         void OnPointerUp(PointerUpEvent evt)
@@ -554,11 +516,7 @@ namespace Unity.AppUI.UI
         /// <param name="newValue"> The new scroll offset. </param>
         public void SetScrollOffsetWithoutNotify(Vector2 newValue)
         {
-#if UNITY_6000_2_OR_NEWER
             viewport.style.translate = new Translate(-newValue.x, -newValue.y, 0);
-#else
-            viewport.transform.position = new Vector3(-newValue.x, -newValue.y, 0);
-#endif
         }
 
         void StopAnyDampingEffect()

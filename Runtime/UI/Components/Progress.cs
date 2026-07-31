@@ -1,21 +1,16 @@
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A base class for all progress UI elements. This class is not meant to be used directly.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public abstract partial class Progress : BaseVisualElement, ISizeableElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
 
@@ -31,7 +26,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId variantProperty = new BindingId(nameof(variant));
 
-#endif
 
         static readonly Vertex[] k_Vertices = new Vertex[4];
         static readonly ushort[] k_Indices = { 0, 1, 2, 2, 3, 0 };
@@ -251,13 +245,7 @@ namespace Unity.AppUI.UI
 
             var mwd = mgc.Allocate(k_Vertices.Length, k_Indices.Length, m_RT);
 
-#if !UNITY_2023_1_OR_NEWER
-            // Since the texture may be stored in an atlas, the UV coordinates need to be
-            // adjusted. Simply rescale them in the provided uvRegion.
-            var uvRegion = mwd.uvRegion;
-#else
             var uvRegion = new Rect(0, 0, 1, 1);
-#endif
             k_Vertices[0].uv = new Vector2(0, 0) * uvRegion.size + uvRegion.min;
             k_Vertices[1].uv = new Vector2(0, 1) * uvRegion.size + uvRegion.min;
             k_Vertices[2].uv = new Vector2(1, 1) * uvRegion.size + uvRegion.min;
@@ -270,12 +258,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Whether to use rounded corners for the progress.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool roundedProgressCorners
         {
             get => ClassListContains(roundedProgressCornersUssClassName);
@@ -285,22 +269,16 @@ namespace Unity.AppUI.UI
                 EnableInClassList(roundedProgressCornersUssClassName, value);
                 MarkContentDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in roundedProgressCornersProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The LinearProgress size.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -311,22 +289,16 @@ namespace Unity.AppUI.UI
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The variant of the progress.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Variant variant
         {
             get => m_Variant;
@@ -338,22 +310,16 @@ namespace Unity.AppUI.UI
                 AddToClassList(GetVariantUssClassName(m_Variant));
                 UpdateScheduledItem();
                 MarkContentDirtyRepaint();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The opacity of the secondary progress (buffer).
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float bufferOpacity
         {
             get => m_BufferOpacity;
@@ -363,22 +329,16 @@ namespace Unity.AppUI.UI
                 m_BufferOpacity = value;
                 MarkContentDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in bufferOpacityProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The color of the progress.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Color colorOverride
         {
             get => m_ColorFromCode.IsSet ? m_ColorFromCode.Value : m_ColorFromStyle;
@@ -388,22 +348,16 @@ namespace Unity.AppUI.UI
                 m_ColorFromCode = value;
                 MarkContentDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in colorOverrideProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The progress value (normalized).
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float value
         {
             get => m_Value;
@@ -414,21 +368,15 @@ namespace Unity.AppUI.UI
                 m_Value = value;
                 MarkContentDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The secondary progress (buffer) value (normalized).
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float bufferValue
         {
             get => m_BufferValue;
@@ -439,9 +387,7 @@ namespace Unity.AppUI.UI
                 m_BufferValue = value;
                 MarkContentDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in bufferValueProperty);
-#endif
             }
         }
 
@@ -485,79 +431,5 @@ namespace Unity.AppUI.UI
             m_RT = null;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Progress"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            readonly UxmlColorAttributeDescription m_Color = new UxmlColorAttributeDescription
-            {
-                name = "color-override",
-                defaultValue = Color.white,
-            };
-
-            readonly UxmlFloatAttributeDescription m_Value = new UxmlFloatAttributeDescription
-            {
-                name = "value",
-                defaultValue = 0,
-            };
-
-            readonly UxmlFloatAttributeDescription m_ValueBuffer = new UxmlFloatAttributeDescription
-            {
-                name = "buffer-value",
-                defaultValue = 0,
-            };
-
-            readonly UxmlFloatAttributeDescription m_BufferOpacity = new UxmlFloatAttributeDescription
-            {
-                name = "buffer-opacity",
-                defaultValue = 0.1f,
-            };
-
-            readonly UxmlEnumAttributeDescription<Variant> m_Variant = new UxmlEnumAttributeDescription<Variant>
-            {
-                name = "variant",
-                defaultValue = Variant.Indeterminate,
-            };
-
-            readonly UxmlBoolAttributeDescription m_RoundedCorners = new UxmlBoolAttributeDescription()
-            {
-                name = "rounded-progress-corners",
-                defaultValue = true,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                m_PickingMode.defaultValue = PickingMode.Ignore;
-                base.Init(ve, bag, cc);
-
-                var element = (Progress)ve;
-                element.variant = m_Variant.GetValueFromBag(bag, cc);
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                element.value = m_Value.GetValueFromBag(bag, cc);
-                element.bufferValue = m_ValueBuffer.GetValueFromBag(bag, cc);
-                element.bufferOpacity = m_BufferOpacity.GetValueFromBag(bag, cc);
-                element.roundedProgressCorners = m_RoundedCorners.GetValueFromBag(bag, cc);
-                var color = Color.white;
-                if (m_Color.TryGetValueFromBag(bag, cc, ref color))
-                    element.colorOverride = color;
-            }
-        }
-
-#endif
     }
 }

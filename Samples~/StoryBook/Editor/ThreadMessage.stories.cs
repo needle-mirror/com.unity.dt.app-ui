@@ -17,9 +17,7 @@ namespace Unity.AppUI.Editor
                 authorInitials = "JD",
                 message = "This is a sample message in the thread.",
                 timestamp = "2 hours ago",
-#if UNITY_2022_3_OR_NEWER
                 authorAvatar = null,
-#endif
                 authorAvatarColor = Color.magenta,
                 state = ThreadMessageState.Draft,
                 makeActionMenuItems = null,

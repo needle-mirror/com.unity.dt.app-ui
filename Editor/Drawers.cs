@@ -6,7 +6,6 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if UNITY_2022_1_OR_NEWER
 using IntegerField = UnityEngine.UIElements.IntegerField;
 using LongField = UnityEngine.UIElements.LongField;
 using FloatField = UnityEngine.UIElements.FloatField;
@@ -14,15 +13,6 @@ using DoubleField = UnityEngine.UIElements.DoubleField;
 using EnumField = UnityEngine.UIElements.EnumField;
 using ColorField = UnityEditor.UIElements.ColorField;
 using RectField = UnityEngine.UIElements.RectField;
-#else
-using IntegerField = UnityEditor.UIElements.IntegerField;
-using LongField = UnityEditor.UIElements.LongField;
-using FloatField = UnityEditor.UIElements.FloatField;
-using DoubleField = UnityEditor.UIElements.DoubleField;
-using EnumField = UnityEditor.UIElements.EnumField;
-using ColorField = UnityEditor.UIElements.ColorField;
-using RectField = UnityEditor.UIElements.RectField;
-#endif
 
 namespace Unity.AppUI.Editor
 {

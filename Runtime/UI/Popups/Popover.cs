@@ -273,8 +273,90 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// A popup usually anchored to another UI element.
+    /// A popup anchored to another UI element with flexible positioning and optional arrow pointer.
     /// </summary>
+    /// <remarks>
+    /// A popover is a floating panel anchored to a specific UI element that displays additional content or
+    /// actions. It automatically positions itself relative to the anchor element and can include an arrow
+    /// pointing to the target.
+    ///
+    /// Popovers are ideal for displaying contextual information, menus, forms, or detailed content without
+    /// navigating away from the current page. They maintain a connection to their trigger element through
+    /// visual anchoring.
+    ///
+    /// The component supports various placement options (top, bottom, left, right, and their variants), automatic
+    /// flipping when space is constrained, and optional modal backdrop for blocking outside interactions.
+    ///
+    /// Popovers can be made resizable with drag handles, allowing users to adjust the content area size. They
+    /// support both transparent and modal backdrop modes depending on the interaction pattern needed.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic popover with menu content</para>
+    ///
+    /// <para>Creating a simple popover anchored to a button.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var button = new Button { title = "Show Menu" };
+    ///
+    /// var menuContent = new VisualElement();
+    /// menuContent.Add(new MenuItem { label = "Edit", icon = "edit" });
+    /// menuContent.Add(new MenuItem { label = "Delete", icon = "trash" });
+    /// menuContent.Add(new MenuItem { label = "Share", icon = "share" });
+    ///
+    /// var popover = Popover.Build(button, menuContent)
+    ///     .SetPlacement(PopoverPlacement.Bottom)
+    ///     .SetOffset(8);
+    ///
+    /// button.clicked += () => popover.Show();
+    ///
+    /// rootElement.Add(button);
+    /// ]]></code>
+    /// <para>Resizable popover with modal backdrop</para>
+    ///
+    /// <para>Creating a popover with drag-to-resize functionality.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var triggerButton = new IconButton { icon = "settings" };
+    ///
+    /// var detailsPanel = new VisualElement();
+    /// detailsPanel.Add(new Heading { title = "Settings" });
+    /// detailsPanel.Add(new Text("Configure your application settings here."));
+    ///
+    /// var popover = Popover.Build(triggerButton, detailsPanel)
+    ///     .SetPlacement(PopoverPlacement.BottomEnd)
+    ///     .SetModalBackdrop(true)
+    ///     .SetResizable(true)
+    ///     .SetResizeDirection(Draggable.DragDirection.BottomRight);
+    ///
+    /// triggerButton.clicked += () => popover.Show();
+    ///
+    /// toolbar.Add(triggerButton);
+    /// ]]></code>
+    /// <para>Popover with positioning options</para>
+    ///
+    /// <para>Different placement and offset configurations for popovers.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Top placement with cross-axis offset
+    /// var topPopover = Popover.Build(anchorElement, contentElement)
+    ///     .SetPlacement(PopoverPlacement.Top)
+    ///     .SetCrossOffset(20)
+    ///     .SetShouldFlip(true);
+    ///
+    /// // Right placement with main axis offset
+    /// var rightPopover = Popover.Build(anchorElement, contentElement)
+    ///     .SetPlacement(PopoverPlacement.Right)
+    ///     .SetOffset(12)
+    ///     .SetShouldFlip(false);
+    ///
+    /// // Left start alignment
+    /// var leftPopover = Popover.Build(anchorElement, contentElement)
+    ///     .SetPlacement(PopoverPlacement.LeftStart)
+    ///     .SetOffset(8);
+    ///
+    /// // Handle popover events
+    /// topPopover.shown += () => Debug.Log("Popover opened");
+    /// topPopover.dismissed += (reason) => Debug.Log($"Popover closed: {reason}");
+    /// ]]></code>
+    /// </example>
+    [VisualDocPage("popups")]
     public sealed class Popover : AnchorPopup<Popover>
     {
         bool m_HasBeenManuallyMoved;

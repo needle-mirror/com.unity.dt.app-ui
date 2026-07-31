@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 #pragma warning disable CS8524 // The switch expression does not handle some values...
 
 namespace Unity.AppUI.UI
@@ -27,18 +25,78 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// A SplitView is a visual element that can be used to split its children into panes.
-    /// A SplitView can be either horizontal or vertical, and it will have splitters between the panes.
-    /// This component can contain any number of <see cref="Pane"/> elements as children.
+    /// A resizable multi-pane layout component that allows users to adjust the size of each pane using
+    /// draggable splitters.
     /// </summary>
+    /// <remarks>
+    /// The SplitView component creates a flexible layout that divides space into multiple resizable panes. Users
+    /// can drag the splitters between panes to adjust their sizes. This component is ideal for creating complex
+    /// layouts like file explorers, code editors, or any interface requiring adjustable panels. This component
+    /// can contain any number of <see cref="Pane"/> elements as children.
+    ///
+    /// Key features:
+    /// - Supports both horizontal and vertical orientations
+    /// - Allows real-time or deferred resizing
+    /// - Supports collapsible panes with customizable thresholds
+    /// - RTL (Right-to-Left) layout support
+    /// - Maintains minimum size constraints
+    ///
+    /// **Note:** Each pane in the SplitView must be a <see cref="Pane"/> component. Other visual elements are not
+    /// supported as direct children.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic horizontal split view with two panes — Creating a basic horizontal split view.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <SplitView direction="Horizontal">
+    ///     <Pane style="min-width: 200px">
+    ///         <Label text="Left Panel" />
+    ///     </Pane>
+    ///     <Pane style="min-width: 200px">
+    ///         <Label text="Right Panel" />
+    ///     </Pane>
+    /// </SplitView>
+    /// ]]></code>
+    /// <para>Complex layout with nested split views — Creating a complex layout with nested split views.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <SplitView direction="Horizontal">
+    ///     <Pane style="min-width: 200px">
+    ///         <Label text="Navigation" />
+    ///     </Pane>
+    ///     <Pane stretch="true">
+    ///         <SplitView direction="Vertical">
+    ///             <Pane style="min-height: 300px">
+    ///                 <Label text="Content" />
+    ///             </Pane>
+    ///             <Pane style="min-height: 150px">
+    ///                 <Label text="Details" />
+    ///             </Pane>
+    ///         </SplitView>
+    ///     </Pane>
+    /// </SplitView>
+    /// ]]></code>
+    /// <para>Using collapse and expand functionality — Implementing collapsible panes.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Create split view with collapsible panes
+    /// var splitView = new SplitView();
+    /// var leftPane = new Pane { compactThreshold = 50 };
+    /// var rightPane = new Pane();
+    ///
+    /// splitView.AddPane(leftPane);
+    /// splitView.AddPane(rightPane);
+    ///
+    /// // Collapse the first splitter forward
+    /// splitView.CollapseSplitter(0, CollapseDirection.Forward);
+    ///
+    /// // Later, expand it back
+    /// splitView.ExpandSplitter(0);
+    /// ]]></code>
+    /// </example>
     /// <seealso cref="Pane"/>
     /// <seealso cref="Splitter"/>
-#if ENABLE_UXML_SERIALIZED_DATA
+    [VisualDocPage("layouts")]
     [UxmlElement]
-#endif
     public partial class SplitView : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId directionProperty = nameof(direction);
 
         internal static readonly BindingId realtimeResizeProperty = nameof(realtimeResize);
@@ -48,7 +106,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId splitterCountProperty = nameof(splitterCount);
 
         internal static readonly BindingId showExpandButtonsProperty = nameof(showExpandButtons);
-#endif
 
         Direction m_Direction = Direction.Horizontal;
 
@@ -117,25 +174,17 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Whether the SplitView should show expand buttons or not.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool showExpandButtons
         {
             get => ClassListContains(withExpandButtonsUssClassName);
             set
             {
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 var changed = showExpandButtons != value;
-#endif
                 EnableInClassList(withExpandButtonsUssClassName, value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in showExpandButtonsProperty);
-#endif
             }
         }
 
@@ -143,29 +192,21 @@ namespace Unity.AppUI.UI
         /// The direction of the SplitView. A horizontal SplitView will have the splitters between the panes
         /// be vertical, and a vertical SplitView will have the splitters between the panes be horizontal.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Direction direction
         {
             get => m_Direction;
             set
             {
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 var changed = m_Direction != value;
-#endif
                 RemoveFromClassList(GetOrientationUssClassName(m_Direction));
                 m_Direction = value;
                 AddToClassList(GetOrientationUssClassName(m_Direction));
                 RedrawSplitters();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
-#endif
             }
         }
 
@@ -176,26 +217,18 @@ namespace Unity.AppUI.UI
         /// When set to false, the SplitView will only resize the panes when the user releases the dragged splitter.
         /// </para>
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool realtimeResize
         {
             get => m_RealtimeResize;
             set
             {
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 var changed = m_RealtimeResize != value;
-#endif
                 m_RealtimeResize = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in realtimeResizeProperty);
-#endif
             }
         }
 
@@ -937,62 +970,6 @@ namespace Unity.AppUI.UI
             public List<bool> collapsedPanes;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="SplitView"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<SplitView, UxmlTraits>
-        {
-            /// <summary>
-            /// Describes the types of element that can appear as children of this element in a UXML file.
-            /// </summary>
-            public override IEnumerable<UxmlChildElementDescription> uxmlChildElementsDescription => new[]
-            {
-                new UxmlChildElementDescription(typeof(Pane))
-            };
-        }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="SplitView"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlBoolAttributeDescription m_RealtimeResize = new UxmlBoolAttributeDescription
-            {
-                name = "realtime-resize",
-                defaultValue = true
-            };
-
-            readonly UxmlEnumAttributeDescription<Direction> m_Orientation = new UxmlEnumAttributeDescription<Direction>
-            {
-                name = "direction",
-                defaultValue = Direction.Horizontal,
-            };
-
-            readonly UxmlBoolAttributeDescription m_ShowExpandButtons = new UxmlBoolAttributeDescription
-            {
-                name = "show-expand-buttons",
-                defaultValue = false
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                m_PickingMode.defaultValue = PickingMode.Ignore;
-                base.Init(ve, bag, cc);
-                var el = (SplitView)ve;
-                el.realtimeResize = m_RealtimeResize.GetValueFromBag(bag, cc);
-                el.direction = m_Orientation.GetValueFromBag(bag, cc);
-                el.showExpandButtons = m_ShowExpandButtons.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 
     /// <summary>

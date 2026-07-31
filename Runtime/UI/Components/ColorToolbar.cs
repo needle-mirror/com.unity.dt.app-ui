@@ -1,9 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -12,13 +10,11 @@ namespace Unity.AppUI.UI
     /// </summary>
     public class ColorToolbar : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId previousColorPropertyKey = new BindingId(nameof(previousColor));
 
         internal static readonly BindingId currentColorPropertyKey = new BindingId(nameof(currentColor));
 
-#endif
 
         /// <summary>
         /// The main Uss class name of this element.
@@ -63,9 +59,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The previous color swatch value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Color previousColor
         {
             get => m_PreviousColorSwatch.color;
@@ -76,18 +70,14 @@ namespace Unity.AppUI.UI
 
                 m_PreviousColorSwatch.color = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in previousColorPropertyKey);
-#endif
             }
         }
 
         /// <summary>
         /// The current color swatch value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Color currentColor
         {
             get => m_CurrentColorSwatch.color;
@@ -98,9 +88,7 @@ namespace Unity.AppUI.UI
 
                 m_CurrentColorSwatch.color = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in currentColorPropertyKey);
-#endif
             }
         }
 

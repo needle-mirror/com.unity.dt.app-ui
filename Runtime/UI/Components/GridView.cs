@@ -4,18 +4,104 @@ using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A view containing recycled rows with items inside.
+    /// A virtualized grid layout component that displays a collection of items in a scrollable grid format with
+    /// selection capabilities.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The GridView component is a versatile UI element that displays items in a scrollable grid format. It
+    /// efficiently handles large datasets through virtualization, only rendering the items currently visible in
+    /// the viewport.
+    ///
+    /// Some key features include:
+    /// - Virtualized scrolling for optimal performance with large datasets
+    /// - Flexible selection modes (none, single, multiple)
+    /// - Keyboard navigation support
+    /// - Drag and drop capabilities
+    /// - Customizable item templates
+    /// - Support for right-click context menus
+    ///
+    /// NOTE: The GridView requires three essential properties to be set for proper functioning:
+    /// <see cref="BaseGridView.itemsSource"/>, <see cref="BaseGridView.makeItem"/>, and
+    /// <see cref="BaseGridView.bindItem"/>.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic GridView setup with string items</para>
+    /// <code lang="csharp"><![CDATA[
+    /// public class MyComponent : VisualElement
+    /// {
+    ///     public MyComponent()
+    ///     {
+    ///         var gridView = new GridView
+    ///         {
+    ///             itemsSource = new List<string> { "Item 1", "Item 2", "Item 3", "Item 4" },
+    ///             makeItem = () => new Label(),
+    ///             bindItem = (element, index) => ((Label)element).text = gridView.itemsSource[index].ToString(),
+    ///             itemHeight = 40,
+    ///             columnCount = 2
+    ///         };
+    ///
+    ///         gridView.selectionChanged += (items) => Debug.Log($"Selected items: {string.Join(", ", items)}");
+    ///
+    ///         Add(gridView);
+    ///     }
+    /// }
+    /// ]]></code>
+    /// <para>GridView with custom item template and multiple selection</para>
+    /// <code lang="csharp"><![CDATA[
+    /// public class CustomGridItem : VisualElement
+    /// {
+    ///     public CustomGridItem()
+    ///     {
+    ///         var image = new Image { name = "item-image" };
+    ///         var label = new Label { name = "item-label" };
+    ///
+    ///         Add(image);
+    ///         Add(label);
+    ///
+    ///         AddToClassList("custom-grid-item");
+    ///     }
+    /// }
+    ///
+    /// public class MyGridView : VisualElement
+    /// {
+    ///     public MyGridView()
+    ///     {
+    ///         var items = new List<(string label, string imageUrl)>
+    ///         {
+    ///             ("Item 1", "url1"),
+    ///             ("Item 2", "url2")
+    ///         };
+    ///
+    ///         var gridView = new GridView
+    ///         {
+    ///             itemsSource = items,
+    ///             makeItem = () => new CustomGridItem(),
+    ///             bindItem = (element, index) =>
+    ///             {
+    ///                 var item = items[index];
+    ///                 var image = element.Q<Image>("item-image");
+    ///                 var label = element.Q<Label>("item-label");
+    ///
+    ///                 image.image = LoadImage(item.imageUrl);
+    ///                 label.text = item.label;
+    ///             },
+    ///             itemHeight = 100,
+    ///             columnCount = 3,
+    ///             selectionType = SelectionType.Multiple
+    ///         };
+    ///
+    ///         Add(gridView);
+    ///     }
+    /// }
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class GridView : BaseGridView
     {
         /// <summary>
@@ -75,11 +161,9 @@ namespace Unity.AppUI.UI
             Choose = 1 << 8,
         }
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId itemHeightProperty = new BindingId(nameof(itemHeight));
 
-#endif
         const float k_PageSizeFactor = 0.25f;
 
         const int k_ExtraVisibleRows = 2;
@@ -149,12 +233,8 @@ namespace Unity.AppUI.UI
         ///
         /// This property must be set for the list view to function.
         /// </remarks>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int itemHeight
         {
             get => m_ItemHeight;
@@ -167,9 +247,7 @@ namespace Unity.AppUI.UI
                     scrollView.verticalPageSize = m_ItemHeight * k_PageSizeFactor;
                     Refresh();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in itemHeightProperty);
-#endif
                 }
             }
         }
@@ -586,53 +664,6 @@ namespace Unity.AppUI.UI
             item.style.flexShrink = 1f;
         }
 
-#if ENABLE_UXML_TRAITS
-
-
-        /// <summary>
-        /// Instantiates a <see cref="GridView"/> using data from a UXML file.
-        /// </summary>
-        /// <remarks>
-        /// This class is added to every <see cref="VisualElement"/> created from UXML.
-        /// </remarks>
-        public new class UxmlFactory : UxmlFactory<GridView, UxmlTraits> {}
-
-        /// <summary>
-        /// Defines <see cref="UxmlTraits"/> for the <see cref="GridView"/>.
-        /// </summary>
-        /// <remarks>
-        /// This class defines the GridView element properties that you can use in a UI document asset (UXML file).
-        /// </remarks>
-        public new class UxmlTraits : BaseGridView.UxmlTraits
-        {
-            readonly UxmlIntAttributeDescription m_ItemHeight = new UxmlIntAttributeDescription
-            {
-                name = "item-height",
-                obsoleteNames = new[] { "itemHeight" },
-                defaultValue = k_DefaultItemHeight
-            };
-
-            /// <summary>
-            /// Initializes <see cref="GridView"/> properties using values from the attribute bag.
-            /// </summary>
-            /// <param name="ve">The object to initialize.</param>
-            /// <param name="bag">The attribute bag.</param>
-            /// <param name="cc">The creation context; unused.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var view = (GridView)ve;
-
-                // Avoid setting itemHeight unless it's explicitly defined.
-                // Setting itemHeight property will activate inline property mode.
-                var itemHeight = 0;
-                if (m_ItemHeight.TryGetValueFromBag(bag, cc, ref itemHeight))
-                    view.itemHeight = itemHeight;
-            }
-        }
-
-#endif
 
         internal class RecycledRow : BaseVisualElement
         {

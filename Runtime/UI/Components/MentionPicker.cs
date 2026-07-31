@@ -85,9 +85,7 @@ namespace Unity.AppUI.UI
             {
                 name = listUssClassName,
                 makeItem = MakeItem,
-#if UITK_MAKE_NONE_ELEMENT
                 makeNoneElement = MakeNoneElement,
-#endif
                 bindItem = BindItem,
                 selectionType =  SelectionType.Single,
                 virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight

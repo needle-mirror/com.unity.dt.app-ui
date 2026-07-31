@@ -28,10 +28,19 @@ namespace Unity.AppUI.Core
         }
 
         [DllImport("AppUINativePlugin")]
-        static extern bool NativeAppUI_Initialize(ref PluginConfigData configData);
+        static extern bool NativeAppUI_Initialize(IntPtr configData);
 
         [DllImport("AppUINativePlugin")]
         static extern void NativeAppUI_Uninitialize();
+
+        [DllImport("AppUINativePlugin")]
+        static extern void NativeAppUI_UpdateDisplayInfo();
+
+        [DllImport("AppUINativePlugin")]
+        static extern float NativeAppUI_ScaleFactor();
+
+        [DllImport("AppUINativePlugin")]
+        static extern float NativeAppUI_TextScaleFactor();
 
         [DllImport("AppUINativePlugin")]
         static extern UIntPtr NativeAppUI_GetPasteBoardDataLength(PasteboardType type);
@@ -42,6 +51,10 @@ namespace Unity.AppUI.Core
         [DllImport("AppUINativePlugin")]
         static extern void NativeAppUI_SetPasteBoardData(PasteboardType type, UIntPtr size, IntPtr data);
 
+        static IntPtr s_ConfigDataPtr = IntPtr.Zero;
+
+        PluginConfigData m_ConfigData;
+
         public LinuxPlatformImpl() => Setup();
 
         ~LinuxPlatformImpl() => Cleanup();
@@ -49,11 +62,15 @@ namespace Unity.AppUI.Core
         void Setup()
         {
             Cleanup();
-            var configData = new PluginConfigData
+            m_ConfigData = new PluginConfigData
             {
                 DebugLogCSharpHandler = DebugLogProxy
             };
-            NativeAppUI_Initialize(ref configData);
+            // The native side keeps reading the config after this call returns,
+            // so it must live in unmanaged memory for the plugin's lifetime.
+            s_ConfigDataPtr = Marshal.AllocHGlobal(Marshal.SizeOf<PluginConfigData>());
+            Marshal.StructureToPtr(m_ConfigData, s_ConfigDataPtr, false);
+            NativeAppUI_Initialize(s_ConfigDataPtr);
             s_Instance = this;
         }
 
@@ -70,8 +87,25 @@ namespace Unity.AppUI.Core
             {
                 // ignored
             }
+            if (s_ConfigDataPtr != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(s_ConfigDataPtr);
+                s_ConfigDataPtr = IntPtr.Zero;
+            }
             s_Instance = null;
         }
+
+        protected override void LowFrequencyUpdate()
+        {
+            NativeAppUI_UpdateDisplayInfo();
+            base.LowFrequencyUpdate();
+        }
+
+        public override float referenceDpi => Screen.dpi > 0 ? Screen.dpi / scaleFactor : Platform.baseDpi;
+
+        public override float scaleFactor => NativeAppUI_ScaleFactor();
+
+        public override float textScaleFactor => NativeAppUI_TextScaleFactor();
 
         public override bool HasPasteboardData(PasteboardType type)
         {

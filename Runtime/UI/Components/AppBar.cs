@@ -7,14 +7,62 @@ using UnityEngine.UIElements;
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// AppBar is a component that can be used to display a title, a back button, a drawer button and a set of actions.
+    /// A customizable top app bar that provides content and actions related to the current screen.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The AppBar is a flexible navigation component that displays information and actions relating to the current
+    /// screen. It provides consistent navigation and helps users identify where they are in the app.
+    ///
+    /// The AppBar supports both fixed and collapsible (stretching) behaviors, making it suitable for various
+    /// navigation patterns. It can display a title, navigation buttons (back and drawer), and custom actions.
+    ///
+    /// Key features include:
+    /// - Dynamic height adjustment with stretching behavior
+    /// - Support for back and drawer navigation buttons
+    /// - Customizable action buttons
+    /// - Compact and regular size modes
+    /// - Flexible space for custom content
+    /// - Configurable elevation levels
+    ///
+    /// The AppBar is commonly used in conjunction with other navigation components like Drawer and NavigationRail
+    /// to create a cohesive navigation experience.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic AppBar with title and actions. Creating a basic AppBar with a title and action buttons.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <AppBar title="My App">
+    ///     <ActionButton icon="settings" />
+    ///     <ActionButton icon="account" />
+    /// </AppBar>
+    /// ]]></code>
+    /// <para>Collapsible AppBar with navigation. Setting up a collapsible AppBar with navigation and actions.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <AppBar
+    ///     stretch="true"
+    ///     expanded-height="150"
+    ///     show-back-button="true"
+    ///     elevation="1"
+    ///     title="Details Page">
+    ///     <ActionButton icon="share" />
+    ///     <ActionButton icon="more" />
+    /// </AppBar>
+    /// ]]></code>
+    /// <para>Compact AppBar with drawer. Creating a compact AppBar with drawer button and search action programmatically.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var appBar = new AppBar();
+    /// appBar.compact = true;
+    /// appBar.showDrawerButton = true;
+    /// appBar.title = "Dashboard";
+    ///
+    /// // Add a search action
+    /// var searchButton = new ActionButton { icon = "search" };
+    /// appBar.AddAction(searchButton);
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("nav-components")]
     public partial class AppBar : ExVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId stretchProperty = nameof(stretch);
 
         internal static readonly BindingId compactProperty = nameof(compact);
@@ -26,7 +74,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId showBackButtonProperty = nameof(showBackButton);
 
         internal static readonly BindingId showDrawerButtonProperty = nameof(showDrawerButton);
-#endif
         /// <summary>
         /// Main USS class name of the AppBar.
         /// </summary>
@@ -417,64 +464,5 @@ namespace Unity.AppUI.UI
             if (newStretch)
                 stretchTriggered?.Invoke(delta);
         }
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// UXML factory for the AppBar.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<AppBar, UxmlTraits> {}
-
-        /// <summary>
-        /// UXML traits for the AppBar.
-        /// </summary>
-        public new class UxmlTraits : ExVisualElement.UxmlTraits
-        {
-            readonly UxmlBoolAttributeDescription m_Stretch = new UxmlBoolAttributeDescription { name = "stretch" };
-
-            readonly UxmlFloatAttributeDescription m_ExpandedHeight = new UxmlFloatAttributeDescription
-            {
-                name = "expanded-height",
-                defaultValue = 128
-            };
-
-            readonly UxmlBoolAttributeDescription m_Compat = new UxmlBoolAttributeDescription { name = "compact" };
-
-            readonly UxmlIntAttributeDescription m_Elevation = new UxmlIntAttributeDescription
-            {
-                name = "elevation",
-                defaultValue = 0
-            };
-
-            readonly UxmlBoolAttributeDescription m_ShowBackButton = new UxmlBoolAttributeDescription
-            {
-                name = "show-back-button",
-                defaultValue = false
-            };
-
-            readonly UxmlBoolAttributeDescription m_ShowDrawerButton = new UxmlBoolAttributeDescription
-            {
-                name = "show-drawer-button",
-                defaultValue = false
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The VisualElement to initialize.</param>
-            /// <param name="bag"> The UXML attributes.</param>
-            /// <param name="cc"> The creation context.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var appBar = (AppBar)ve;
-                appBar.stretch = m_Stretch.GetValueFromBag(bag, cc);
-                appBar.expandedHeight = m_ExpandedHeight.GetValueFromBag(bag, cc);
-                appBar.compact = m_Compat.GetValueFromBag(bag, cc);
-                appBar.elevation = m_Elevation.GetValueFromBag(bag, cc);
-                appBar.showBackButton = m_ShowBackButton.GetValueFromBag(bag, cc);
-                appBar.showDrawerButton = m_ShowDrawerButton.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

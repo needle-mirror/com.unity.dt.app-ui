@@ -1,20 +1,65 @@
 using System;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// IconButton UI element.
+    /// A button component that displays only an icon, ideal for compact UI actions.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// IconButton is a specialized button component that displays an icon without text. It's commonly used for
+    /// toolbar actions, navigation items, or any UI element where space is limited and the icon clearly
+    /// communicates the action.
+    ///
+    /// The component supports different sizes, variants, and states to accommodate various design requirements
+    /// and user interactions.
+    ///
+    /// IconButtons can be styled with primary and quiet variants, making them versatile for different visual
+    /// hierarchies in your interface.
+    ///
+    /// For accessibility, IconButtons are keyboard focusable and support keyboard navigation with a tabIndex of 0
+    /// by default.
+    /// </remarks>
+    /// <example>
+    /// <para>**Basic IconButton Usage.** Different variations of IconButton usage in C#.</para>
+    /// <code lang="csharp">
+    /// // Create a simple icon button
+    /// var deleteButton = new IconButton("delete");
+    /// deleteButton.clicked += () => HandleDelete();
+    ///
+    /// // Create a primary action button
+    /// var addButton = new IconButton("add") { primary = true, size = Size.L };
+    ///
+    /// // Create a quiet variant for secondary actions
+    /// var menuButton = new IconButton("menu") { quiet = true };
+    /// </code>
+    /// <para>**UXML Integration.** Using IconButton in UXML markup.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI">
+    ///     <appui:IconButton icon="settings"
+    ///                      size="M"
+    ///                      primary="false"
+    ///                      quiet="false"
+    ///                      variant="Regular" />
+    /// </ui:UXML>
+    /// ]]></code>
+    /// <para>**Toolbar Example.** Creating a toolbar with multiple IconButtons.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI">
+    ///     <ui:VisualElement class="toolbar">
+    ///         <appui:IconButton icon="undo" quiet="true" size="S" />
+    ///         <appui:IconButton icon="redo" quiet="true" size="S" />
+    ///         <appui:IconButton icon="save" primary="true" size="S" />
+    ///         <appui:IconButton icon="delete" size="S" />
+    ///     </ui:VisualElement>
+    /// </ui:UXML>
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("actions")]
     public partial class IconButton : ExVisualElement, ISizeableElement, IPressable
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId iconProperty = new BindingId(nameof(icon));
 
@@ -28,7 +73,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId clickableProperty = new BindingId(nameof(clickable));
 
-#endif
 
         /// <summary>
         /// The IconButton main styling class.
@@ -133,9 +177,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Clickable Manipulator for this Button.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -148,22 +190,16 @@ namespace Unity.AppUI.UI
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Use the primary variant of the Button.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool primary
         {
             get => ClassListContains(primaryUssClassName);
@@ -172,22 +208,16 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(primaryUssClassName) != value;
                 EnableInClassList(primaryUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in primaryProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The quiet state of the Button.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool quiet
         {
             get => ClassListContains(quietUssClassName);
@@ -196,22 +226,16 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(quietUssClassName) != value;
                 EnableInClassList(quietUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in quietProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The IconButton icon.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string icon
         {
             get => m_Icon.iconName;
@@ -221,22 +245,16 @@ namespace Unity.AppUI.UI
                 m_Icon.iconName = value;
                 m_Container.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Icon.iconName));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in iconProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The IconButton icon variant.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public IconVariant variant
         {
             get => m_Icon.variant;
@@ -245,22 +263,16 @@ namespace Unity.AppUI.UI
                 var changed = m_Icon.variant != value;
                 m_Icon.variant = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Button size.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -278,76 +290,11 @@ namespace Unity.AppUI.UI
                 };
                 AddToClassList(GetSizeUssClassName(m_Size));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Factory class to instantiate a <see cref="IconButton"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<IconButton, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="IconButton"/>.
-        /// </summary>
-        public new class UxmlTraits : ExVisualElement.UxmlTraits
-        {
-
-            readonly UxmlStringAttributeDescription m_Icon = new UxmlStringAttributeDescription
-            {
-                name = "icon",
-                defaultValue = null
-            };
-
-            readonly UxmlEnumAttributeDescription<IconVariant> m_Variant = new UxmlEnumAttributeDescription<IconVariant>
-            {
-                name = "variant",
-                defaultValue = IconVariant.Regular
-            };
-
-            readonly UxmlBoolAttributeDescription m_Primary = new UxmlBoolAttributeDescription
-            {
-                name = "primary",
-                defaultValue = false
-            };
-
-            readonly UxmlBoolAttributeDescription m_Quiet = new UxmlBoolAttributeDescription
-            {
-                name = "quiet",
-                defaultValue = false
-            };
-
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (IconButton)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                element.primary = m_Primary.GetValueFromBag(bag, cc);
-                element.quiet = m_Quiet.GetValueFromBag(bag, cc);
-                element.icon = m_Icon.GetValueFromBag(bag, cc);
-                element.variant = m_Variant.GetValueFromBag(bag, cc);
-
-            }
-        }
-
-#endif
     }
 }

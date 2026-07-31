@@ -122,10 +122,6 @@ namespace Unity.AppUI.UI
                         if (!target.HasPointerCapture(evt.pointerId))
                         {
                             target.CapturePointer(evt.pointerId);
-#if !UNITY_2023_1_OR_NEWER
-                            if (evt.pointerId == PointerId.mousePointerId)
-                                target.CaptureMouse();
-#endif
                         }
 
                         isActive = true;
@@ -137,10 +133,6 @@ namespace Unity.AppUI.UI
                     if (!target.HasPointerCapture(evt.pointerId))
                     {
                         target.CapturePointer(evt.pointerId);
-#if !UNITY_2023_1_OR_NEWER
-                        if (evt.pointerId == PointerId.mousePointerId)
-                            target.CaptureMouse();
-#endif
                     }
 
                     m_Dragging?.Invoke(evt);

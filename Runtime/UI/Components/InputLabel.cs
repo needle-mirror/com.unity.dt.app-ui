@@ -1,9 +1,7 @@
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -24,14 +22,24 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// InputLabel UI element.
+    /// A versatile label component for form inputs with support for required fields, help text, and various
+    /// layout options.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// InputLabel is a specialized UI component designed to provide a consistent and accessible way to label form
+    /// inputs. It combines a label with optional required field indicators and help text, making it ideal for form
+    /// design and user input validation.
+    ///
+    /// The component supports both horizontal and vertical layouts, customizable label overflow behavior, and
+    /// different styles of required field indicators to match your design system needs.
+    ///
+    /// Note: InputLabel is designed to work seamlessly with other form input components and follows accessibility
+    /// best practices by maintaining proper label-input relationships.
+    /// </remarks>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class InputLabel : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId labelProperty = new BindingId(nameof(label));
 
@@ -51,11 +59,8 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId helpVariantProperty = new BindingId(nameof(helpVariant));
 
-#if ENABLE_VALUEFIELD_INTERFACE
         internal static readonly BindingId draggableProperty = new BindingId(nameof(draggable));
-#endif
 
-#endif
 
         /// <summary>
         /// The InputLabel main styling class.
@@ -126,11 +131,9 @@ namespace Unity.AppUI.UI
 
         Align m_InputAlignment = Align.Stretch;
 
-#if ENABLE_VALUEFIELD_INTERFACE
         bool m_Draggable;
 
         Draggable m_DraggableManipulator;
-#endif
 
         /// <summary>
         /// The content container.
@@ -140,12 +143,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The label value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string label
         {
             get => m_FieldLabel.label;
@@ -155,22 +154,16 @@ namespace Unity.AppUI.UI
                 m_FieldLabel.label = value;
                 m_FieldLabel.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The orientation of the label.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Direction direction
         {
             get => m_Direction;
@@ -181,22 +174,16 @@ namespace Unity.AppUI.UI
                 m_Direction = value;
                 AddToClassList(GetOrientationUssClassName(m_Direction));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The text overflow mode.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public TextOverflow labelOverflow
         {
             get => m_FieldLabel.labelOverflow;
@@ -205,22 +192,16 @@ namespace Unity.AppUI.UI
                 var changed = m_FieldLabel.labelOverflow != value;
                 m_FieldLabel.labelOverflow = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelOverflowProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The alignment of the input.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Align inputAlignment
         {
             get => m_InputAlignment;
@@ -231,22 +212,16 @@ namespace Unity.AppUI.UI
                 m_InputAlignment = value;
                 AddToClassList(GetInputAlignmentUssClassName(m_InputAlignment));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in inputAlignmentProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Whether the input is required or not in the form. This will add an asterisk next to the label.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool required
         {
             get => m_FieldLabel.required;
@@ -256,22 +231,16 @@ namespace Unity.AppUI.UI
                 m_FieldLabel.required = value;
                 EnableInClassList(Styles.requiredUssClassName,  m_FieldLabel.required);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in requiredProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The requirement indicator to display.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public IndicatorType indicatorType
         {
             get => m_FieldLabel.indicatorType;
@@ -280,22 +249,16 @@ namespace Unity.AppUI.UI
                 var changed = m_FieldLabel.indicatorType != value;
                 m_FieldLabel.indicatorType = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in indicatorTypeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The requirement indicator to display.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string requiredText
         {
             get => m_FieldLabel.requiredText;
@@ -304,22 +267,16 @@ namespace Unity.AppUI.UI
                 var changed = m_FieldLabel.requiredText != value;
                 m_FieldLabel.requiredText = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in requiredTextProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The error message to display.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string helpMessage
         {
             get => m_HelpText.text;
@@ -329,22 +286,16 @@ namespace Unity.AppUI.UI
                 m_HelpText.text = value;
                 EnableInClassList(withHelpTextUssClassName, !string.IsNullOrEmpty(value));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in helpMessageProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The variant of the <see cref="HelpText"/>.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public HelpTextVariant helpVariant
         {
             get => m_HelpText.variant;
@@ -353,23 +304,16 @@ namespace Unity.AppUI.UI
                 var changed = m_HelpText.variant != value;
                 m_HelpText.variant = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in helpVariantProperty);
-#endif
             }
         }
 
-#if ENABLE_VALUEFIELD_INTERFACE
         /// <summary>
         /// Whether the label is draggable to increment/decrement the value of child input fields.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool draggable
         {
             get => m_Draggable;
@@ -414,10 +358,8 @@ namespace Unity.AppUI.UI
                     }
                 }
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in draggableProperty);
-#endif
             }
         }
 
@@ -438,7 +380,6 @@ namespace Unity.AppUI.UI
             var s = d.shiftKey ? DeltaSpeed.Fast : d.altKey ? DeltaSpeed.Slow : DeltaSpeed.Normal;
             this.ProvideContext(new DragContext(DragPhase.Ended, Vector3.zero, s));
         }
-#endif
 
         /// <summary>
         /// Default constructor.
@@ -497,138 +438,8 @@ namespace Unity.AppUI.UI
             required = false;
             helpMessage = null;
             helpVariant = HelpTextVariant.Destructive;
-#if ENABLE_VALUEFIELD_INTERFACE
             draggable = false;
-#endif
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="InputLabel"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<InputLabel, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="InputLabel"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-
-            readonly UxmlEnumAttributeDescription<TextSize> m_Size = new UxmlEnumAttributeDescription<TextSize>
-            {
-                name = "size",
-                defaultValue = TextSize.S,
-            };
-
-            readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
-            {
-                name = "label",
-                defaultValue = null,
-            };
-
-            readonly UxmlEnumAttributeDescription<Direction> m_Orientation = new UxmlEnumAttributeDescription<Direction>
-            {
-                name = "direction",
-                defaultValue = Direction.Horizontal,
-            };
-
-            readonly UxmlEnumAttributeDescription<TextOverflow> m_LabelOverflow = new UxmlEnumAttributeDescription<TextOverflow>
-            {
-                name = "label-overflow",
-                defaultValue = TextOverflow.Ellipsis,
-            };
-
-            readonly UxmlEnumAttributeDescription<Align> m_InputAlignment = new UxmlEnumAttributeDescription<Align>
-            {
-                name = "input-alignment",
-                defaultValue = Align.Stretch,
-            };
-
-            readonly UxmlBoolAttributeDescription m_Required = new UxmlBoolAttributeDescription
-            {
-                name = "required",
-                defaultValue = false,
-            };
-
-            readonly UxmlStringAttributeDescription m_HelpMessage = new UxmlStringAttributeDescription
-            {
-                name = "help-message",
-                defaultValue = null,
-            };
-
-            readonly UxmlEnumAttributeDescription<HelpTextVariant> m_HelpVariant = new UxmlEnumAttributeDescription<HelpTextVariant>
-            {
-                name = "help-variant",
-                defaultValue = HelpTextVariant.Destructive,
-            };
-
-            readonly UxmlStringAttributeDescription m_RequiredText = new UxmlStringAttributeDescription
-            {
-                name = "required-text",
-                defaultValue = "(Required)",
-            };
-
-#if ENABLE_VALUEFIELD_INTERFACE
-            readonly UxmlBoolAttributeDescription m_Draggable = new UxmlBoolAttributeDescription
-            {
-                name = "draggable",
-                defaultValue = false,
-            };
-#endif
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (InputLabel)ve;
-
-                var direction = Direction.Horizontal;
-                if (m_Orientation.TryGetValueFromBag(bag, cc, ref direction))
-                    element.direction = direction;
-
-                var inputAlignment = Align.Stretch;
-                if (m_InputAlignment.TryGetValueFromBag(bag, cc, ref inputAlignment))
-                    element.inputAlignment = inputAlignment;
-
-                var labelOverflow = TextOverflow.Ellipsis;
-                if (m_LabelOverflow.TryGetValueFromBag(bag, cc, ref labelOverflow))
-                    element.labelOverflow = labelOverflow;
-
-                var label = string.Empty;
-                if (m_Label.TryGetValueFromBag(bag, cc, ref label))
-                    element.label = label;
-
-                var required = false;
-                if (m_Required.TryGetValueFromBag(bag, cc, ref required))
-                    element.required = required;
-
-                var helpMessage = string.Empty;
-                if (m_HelpMessage.TryGetValueFromBag(bag, cc, ref helpMessage))
-                    element.helpMessage = helpMessage;
-
-                var helpVariant = HelpTextVariant.Destructive;
-                if (m_HelpVariant.TryGetValueFromBag(bag, cc, ref helpVariant))
-                    element.helpVariant = helpVariant;
-
-                var requiredText = string.Empty;
-                if (m_RequiredText.TryGetValueFromBag(bag, cc, ref requiredText))
-                    element.requiredText = requiredText;
-
-#if ENABLE_VALUEFIELD_INTERFACE
-                var draggable = false;
-                if (m_Draggable.TryGetValueFromBag(bag, cc, ref draggable))
-                    element.draggable = draggable;
-#endif
-            }
-        }
-
-#endif
     }
 }

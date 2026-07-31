@@ -1,21 +1,61 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Vector3Int Field UI element.
+    /// A field component that allows users to input and edit 3D integer vectors with X, Y, and Z coordinates.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Vector3IntField is a specialized input component designed for editing 3D integer vectors. It provides
+    /// three numeric fields for X, Y, and Z coordinates, allowing precise control over 3D integer positions or
+    /// dimensions.
+    ///
+    /// Each coordinate field supports direct numeric input, validation, and formatting options. The component is
+    /// particularly useful in scenarios involving grid-based positioning, voxel coordinates, or any 3D
+    /// integer-based data entry.
+    ///
+    /// The field supports various features including:
+    /// - Individual editing of X, Y, and Z coordinates
+    /// - Value validation
+    /// - Custom formatting
+    /// - Different size variants
+    /// - Invalid state indication
+    /// </remarks>
+    /// <example>
+    /// <para>Basic usage in UXML: Creating a basic vector field with default values</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:Vector3IntField name="position-field" size="M" value="0,0,0" />
+    /// ]]></code>
+    /// <para>Setting up validation and handling value changes: Complex example showing validation and event handling</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var vector3IntField = new Vector3IntField();
+    ///
+    /// // Set up validation
+    /// vector3IntField.validateValue = (v) =>
+    ///     v.x >= 0 && v.y >= 0 && v.z >= 0;
+    ///
+    /// // Handle value changes
+    /// vector3IntField.RegisterValueChangedCallback(evt => {
+    ///     Debug.Log($"New value: {evt.newValue}");
+    /// });
+    /// ]]></code>
+    /// <para>Custom formatting with units: Adding pixel units to the coordinate values</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var vector3IntField = new Vector3IntField();
+    /// vector3IntField.formatFunction = (value) =>
+    ///     $"{value}px";
+    ///
+    /// // Set initial value
+    /// vector3IntField.value = new Vector3Int(100, 200, 300);
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class Vector3IntField : BaseVisualElement, IInputElement<Vector3Int>, ISizeableElement, INotifyValueChanging<Vector3Int>, IFormattable<int>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
 
@@ -29,7 +69,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId formatFunctionProperty = new BindingId(nameof(formatFunction));
 
-#endif
 
         /// <summary>
         /// The Vector3Field main styling class.
@@ -131,12 +170,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the Vector3IntField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -168,12 +203,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the Vector3IntField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Vector3Int value
         {
             get => m_Value;
@@ -193,12 +224,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The invalid state of the Vector3IntField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -215,9 +242,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The validation function of the Vector3IntField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<Vector3Int, bool> validateValue
         {
             get => m_ValidateValue;
@@ -227,22 +252,16 @@ namespace Unity.AppUI.UI
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The format string of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string formatString
         {
             get => m_FormatString;
@@ -255,19 +274,15 @@ namespace Unity.AppUI.UI
                 m_ZField.formatString = m_FormatString;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The format function of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public FormatFunction<int> formatFunction
         {
             get => m_FormatFunction;
@@ -280,10 +295,8 @@ namespace Unity.AppUI.UI
                 m_ZField.formatFunction = m_FormatFunction;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
-#endif
             }
         }
 
@@ -340,39 +353,5 @@ namespace Unity.AppUI.UI
             value = new Vector3Int(evt.newValue, value.y, value.z);
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Vector3IntField"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Vector3IntField, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Vector3IntField"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Vector3IntField)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

@@ -1,24 +1,18 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// ThreadUnresolveMessage UI element. Displays a system message indicating a thread was unresolved.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class ThreadUnresolveMessage : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId authorNameProperty = nameof(authorName);
 
         internal static readonly BindingId timestampProperty = nameof(timestamp);
-#endif
 
         /// <summary>
         /// The ThreadUnresolveMessage main styling class.
@@ -87,13 +81,9 @@ namespace Unity.AppUI.UI
         /// The name of the author who unresolved the thread.
         /// </summary>
         [Tooltip("The name of the author who unresolved the thread.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Thread Unresolve Message")]
-#endif
         public string authorName
         {
             get => m_AuthorName;
@@ -102,10 +92,8 @@ namespace Unity.AppUI.UI
                 var changed = m_AuthorName != value;
                 m_AuthorName = value;
                 RefreshText();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in authorNameProperty);
-#endif
             }
         }
 
@@ -113,12 +101,8 @@ namespace Unity.AppUI.UI
         /// The timestamp of when the thread was unresolved.
         /// </summary>
         [Tooltip("The timestamp of when the thread was unresolved.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string timestamp
         {
             get => m_Timestamp;
@@ -127,10 +111,8 @@ namespace Unity.AppUI.UI
                 var changed = m_Timestamp != value;
                 m_Timestamp = value;
                 m_TimestampElement.text = m_Timestamp;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in timestampProperty);
-#endif
             }
         }
 
@@ -141,44 +123,5 @@ namespace Unity.AppUI.UI
                 : $"{m_AuthorName} unresolved this thread";
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Defines the UxmlFactory for the ThreadUnresolveMessage.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<ThreadUnresolveMessage, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ThreadUnresolveMessage"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_AuthorName = new UxmlStringAttributeDescription
-            {
-                name = "author-name",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_Timestamp = new UxmlStringAttributeDescription
-            {
-                name = "timestamp",
-                defaultValue = null
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (ThreadUnresolveMessage)ve;
-                el.authorName = m_AuthorName.GetValueFromBag(bag, cc);
-                el.timestamp = m_Timestamp.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

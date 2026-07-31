@@ -1,9 +1,7 @@
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -29,14 +27,45 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// Avatar UI element.
+    /// Avatars are visual elements that represent a user, entity, or content through images or initials.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Avatar component is a versatile UI element that displays either an image, initials, or fallback icon to
+    /// represent a user or entity. It supports different shapes, sizes, and can be customized with outlines and
+    /// background colors.
+    ///
+    /// **Tip:** Avatars can be used in various contexts such as user profiles, comment sections, or anywhere user
+    /// representation is needed. They can be displayed individually or grouped together using the AvatarGroup
+    /// component.
+    ///
+    /// **Note:** When using images in avatars, ensure they are properly cropped and centered to maintain visual
+    /// consistency across your application.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Avatar with Image — Creating a circular avatar with a profile image.</para>
+    /// <code lang="csharp">
+    /// var avatar = new Avatar();
+    /// avatar.size = Size.M;
+    /// avatar.variant = AvatarVariant.Circular;
+    /// avatar.src = BackgroundExtensions.FromObject(Resources.Load("user-profile"));
+    /// </code>
+    /// <para>Styled Avatar with Outline — Creating a rounded avatar with background color and outline.</para>
+    /// <code lang="csharp">
+    /// var avatar = new Avatar();
+    /// avatar.backgroundColor = Color.blue;
+    /// avatar.outlineColor = Color.white;
+    /// avatar.outlineWidth = 2f;
+    /// avatar.variant = AvatarVariant.Rounded;
+    /// </code>
+    /// <para>UXML Declaration — Declaring an avatar in UXML.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Avatar size="L" variant="Circular" src="profile-image" outline-color="white" outline-width="2" />
+    /// ]]></code>
+    /// </example>
+    [VisualDocPage("feedbacks")]
     [UxmlElement]
-#endif
     public partial class Avatar : BaseVisualElement, ISizeableElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId backgroundColorProperty = nameof(backgroundColor);
 
         internal static readonly BindingId outlineColorProperty = nameof(outlineColor);
@@ -54,7 +83,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId labelColorProperty = nameof(labelColor);
 
         internal static readonly BindingId autoLabelColorProperty = nameof(autoLabelColor);
-#endif
 
         /// <summary>
         /// The Avatar main styling class.
@@ -106,13 +134,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Avatar size.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Avatar")]
-#endif
         public Size size
         {
             get => m_Size;
@@ -127,12 +151,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Avatar variant.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public AvatarVariant variant
         {
             get => m_Variant;
@@ -144,9 +164,7 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("src")]
-#endif
         Object srcTex
         {
             get => src.GetSelectedImage();
@@ -156,9 +174,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Avatar source image.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Background src
         {
             get => m_Container.style.backgroundImage.value;
@@ -166,22 +182,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_Container.style.backgroundImage.value != value;
                 m_Container.style.backgroundImage = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(srcProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Avatar background color.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Optional<Color> backgroundColor
         {
             get => m_BackgroundColor;
@@ -197,12 +207,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Avatar outline width.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Optional<float> outlineWidth
         {
             get => m_OutlineWidth;
@@ -221,12 +227,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Avatar outline color.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Optional<Color> outlineColor
         {
             get => m_OutlineColor;
@@ -254,12 +256,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The text label displayed inside the Avatar container.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string label
         {
             get => m_Container.text;
@@ -267,22 +265,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_Container.text != value;
                 m_Container.text = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The color of the label text. When set, takes precedence over <see cref="autoLabelColor"/>.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Optional<Color> labelColor
         {
             get => m_LabelColor;
@@ -291,10 +283,8 @@ namespace Unity.AppUI.UI
                 var changed = !m_LabelColor.Equals(value);
                 m_LabelColor = value;
                 UpdateLabelColor();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelColorProperty);
-#endif
             }
         }
 
@@ -302,12 +292,8 @@ namespace Unity.AppUI.UI
         /// When <c>true</c> and <see cref="labelColor"/> is not set, automatically computes
         /// the label color based on the luminance of <see cref="backgroundColor"/>.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool autoLabelColor
         {
             get => m_AutoLabelColor;
@@ -316,10 +302,8 @@ namespace Unity.AppUI.UI
                 var changed = m_AutoLabelColor != value;
                 m_AutoLabelColor = value;
                 UpdateLabelColor();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in autoLabelColorProperty);
-#endif
             }
         }
 
@@ -379,103 +363,5 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Defines the UxmlFactory for the Avatar.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Avatar, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Avatar"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-
-            readonly UxmlColorAttributeDescription m_BackgroundColor = new UxmlColorAttributeDescription
-            {
-                name = "background-color",
-                defaultValue = Color.gray
-            };
-
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = k_DefaultSize,
-            };
-
-            readonly UxmlEnumAttributeDescription<AvatarVariant> m_Variant = new UxmlEnumAttributeDescription<AvatarVariant>
-            {
-                name = "variant",
-                defaultValue = k_DefaultVariant,
-            };
-
-            readonly UxmlStringAttributeDescription m_Src = new UxmlStringAttributeDescription
-            {
-                name = "src",
-                defaultValue = null
-            };
-
-            readonly UxmlColorAttributeDescription m_OutlineColor = new UxmlColorAttributeDescription
-            {
-                name = "outline-color",
-                defaultValue = Color.gray
-            };
-
-            readonly UxmlFloatAttributeDescription m_OutlineWidth = new UxmlFloatAttributeDescription
-            {
-                name = "outline-width",
-                defaultValue = 2
-            };
-
-            readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
-            {
-                name = "label",
-                defaultValue = null
-            };
-
-            readonly UxmlColorAttributeDescription m_LabelColor = new UxmlColorAttributeDescription
-            {
-                name = "label-color",
-                defaultValue = Color.white
-            };
-
-            readonly UxmlBoolAttributeDescription m_AutoLabelColor = new UxmlBoolAttributeDescription
-            {
-                name = "auto-label-color",
-                defaultValue = false
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Avatar)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                element.variant = m_Variant.GetValueFromBag(bag, cc);
-                var bgColor = Color.gray;
-                if (m_BackgroundColor.TryGetValueFromBag(bag, cc, ref bgColor))
-                    element.backgroundColor = bgColor;
-                if (m_OutlineColor.TryGetValueFromBag(bag, cc, ref bgColor))
-                    element.outlineColor = bgColor;
-                string src = null;
-                if (m_Src.TryGetValueFromBag(bag, cc, ref src))
-                    element.src = BackgroundExtensions.FromObject(Resources.Load(src));
-                element.outlineWidth = m_OutlineWidth.GetValueFromBag(bag, cc);
-                string labelValue = null;
-                if (m_Label.TryGetValueFromBag(bag, cc, ref labelValue))
-                    element.label = labelValue;
-                var labelColor = Color.white;
-                if (m_LabelColor.TryGetValueFromBag(bag, cc, ref labelColor))
-                    element.labelColor = labelColor;
-                element.autoLabelColor = m_AutoLabelColor.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

@@ -4,22 +4,33 @@ using System.Linq;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// ActionGroup UI element.
+    /// A container component that organizes and manages a collection of action buttons.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// An Action Group is a container component that organizes multiple action buttons into a cohesive unit. It
+    /// provides various layout options and selection capabilities, making it ideal for toolbars, command bars, and
+    /// button groups.
+    ///
+    /// The component automatically handles overflow by showing a 'more' button when there isn't enough space to
+    /// display all actions, ensuring good responsive behavior.
+    ///
+    /// Key features:
+    /// - Horizontal or vertical layout orientation
+    /// - Single or multiple selection modes
+    /// - Compact and justified layout options
+    /// - Quiet visual variant
+    /// - Automatic overflow handling with a 'more' menu
+    /// </remarks>
     [UxmlElement]
-#endif
+    [VisualDocPage("actions")]
     public partial class ActionGroup : BaseVisualElement
     {
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId quietProperty = nameof(quiet);
 
         internal static readonly BindingId compactProperty = nameof(compact);
@@ -33,7 +44,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId closeOnSelectionProperty = nameof(closeOnSelection);
 
         internal static readonly BindingId allowNoSelectionProperty = nameof(allowNoSelection);
-#endif
 
         /// <summary>
         /// The ActionGroup main styling class.
@@ -165,13 +175,9 @@ namespace Unity.AppUI.UI
         /// The quiet state of the ActionGroup.
         /// </summary>
         [Tooltip("The quiet state of the ActionGroup. A quiet ActionGroup has no background and no border.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Action Group")]
-#endif
         public bool quiet
         {
             get => ClassListContains(quietUssClassName);
@@ -179,10 +185,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = quiet != value;
                 EnableInClassList(quietUssClassName, value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in quietProperty);
-#endif
             }
         }
 
@@ -190,12 +194,8 @@ namespace Unity.AppUI.UI
         /// The compact state of the ActionGroup.
         /// </summary>
         [Tooltip("The compact state of the ActionGroup. A compact ActionGroup doesn't have any gap between its items.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool compact
         {
             get => ClassListContains(compactUssClassName);
@@ -203,22 +203,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = compact != value;
                 EnableInClassList(compactUssClassName, value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in compactProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The orientation of the ActionGroup.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Direction direction
         {
             get => m_Direction;
@@ -234,10 +228,8 @@ namespace Unity.AppUI.UI
                     Direction.Vertical => "dots-three-vertical",
                     _ => throw new ArgumentOutOfRangeException()
                 };
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
-#endif
             }
         }
 
@@ -245,12 +237,8 @@ namespace Unity.AppUI.UI
         /// The justified state of the ActionGroup.
         /// </summary>
         [Tooltip("The justified state of the ActionGroup. A justified ActionGroup has its items stretched to fill the available space.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool justified
         {
             get => ClassListContains(justifiedUssClassName);
@@ -258,10 +246,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = justified != value;
                 EnableInClassList(justifiedUssClassName, value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in justifiedProperty);
-#endif
             }
         }
 
@@ -272,12 +258,8 @@ namespace Unity.AppUI.UI
             "A selection type of None means that no item can be selected. " +
             "A selection type of Single means that only one item can be selected at a time. " +
             "A selection type of Multiple means that multiple items can be selected at a time.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public SelectionType selectionType
         {
             get => m_SelectionType;
@@ -297,10 +279,8 @@ namespace Unity.AppUI.UI
                     else
                         SetSelection(new[] { m_SelectedIndices.Last() });
                 }
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in selectionTypeProperty);
-#endif
             }
         }
 
@@ -308,12 +288,8 @@ namespace Unity.AppUI.UI
         /// Whether the ActionGroup's menu popover should close when a selection is made.
         /// </summary>
         [Tooltip("Whether the ActionGroup's menu popover should close when a selection is made.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool closeOnSelection
         {
             get => m_CloseOnSelection;
@@ -321,10 +297,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_CloseOnSelection != value;
                 m_CloseOnSelection = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in closeOnSelectionProperty);
-#endif
             }
         }
 
@@ -355,12 +329,8 @@ namespace Unity.AppUI.UI
         /// Whether the ActionGroup allows no selection when in single or multi selection mode.
         /// </summary>
         [Tooltip("Whether the ActionGroup allows no selection when in single or multi selection mode.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool allowNoSelection
         {
             get => m_AllowNoSelection;
@@ -370,10 +340,8 @@ namespace Unity.AppUI.UI
                 m_AllowNoSelection = value;
                 if (!m_AllowNoSelection && m_SelectedIndices.Count == 0)
                     SetSelection(new[] { 0 });
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in allowNoSelectionProperty);
-#endif
             }
         }
 
@@ -704,79 +672,5 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// The UXML factory for the ActionGroup.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<ActionGroup, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ActionGroup"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlBoolAttributeDescription m_Compact = new UxmlBoolAttributeDescription
-            {
-                name = "compact",
-                defaultValue = false
-            };
-
-            readonly UxmlBoolAttributeDescription m_Justified = new UxmlBoolAttributeDescription
-            {
-                name = "justified",
-                defaultValue = false
-            };
-
-            readonly UxmlBoolAttributeDescription m_Quiet = new UxmlBoolAttributeDescription
-            {
-                name = "quiet",
-                defaultValue = false
-            };
-
-            readonly UxmlEnumAttributeDescription<Direction> m_Direction = new UxmlEnumAttributeDescription<Direction>
-            {
-                name = "direction",
-                defaultValue = Direction.Horizontal
-            };
-
-            readonly UxmlEnumAttributeDescription<SelectionType> m_SelectionType = new UxmlEnumAttributeDescription<SelectionType>
-            {
-                name = "selection-type",
-                defaultValue = k_DefaultSelectionType
-            };
-
-            readonly UxmlBoolAttributeDescription m_CloseOnSelection = new UxmlBoolAttributeDescription
-            {
-                name = "close-on-selection",
-                defaultValue = true
-            };
-
-            readonly UxmlBoolAttributeDescription m_AllowNoSelection = new UxmlBoolAttributeDescription
-            {
-                name = "allow-no-selection",
-                defaultValue = true
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                m_PickingMode.defaultValue = PickingMode.Ignore;
-                base.Init(ve, bag, cc);
-                var el = (ActionGroup)ve;
-                el.quiet = m_Quiet.GetValueFromBag(bag, cc);
-                el.compact = m_Compact.GetValueFromBag(bag, cc);
-                el.direction = m_Direction.GetValueFromBag(bag, cc);
-                el.justified = m_Justified.GetValueFromBag(bag, cc);
-                el.selectionType = m_SelectionType.GetValueFromBag(bag, cc);
-                el.closeOnSelection = m_CloseOnSelection.GetValueFromBag(bag, cc);
-                el.allowNoSelection = m_AllowNoSelection.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

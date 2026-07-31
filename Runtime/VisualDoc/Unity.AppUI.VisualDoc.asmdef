@@ -1,0 +1,22 @@
+{
+    "name": "Unity.AppUI.VisualDoc",
+    "rootNamespace": "Unity.AppUI.VisualDoc",
+    "references": [
+        "GUID:2f101f87087d58f4ba92ca00188e763d",
+        "GUID:1d0cfa0a4b984e0eb4f9a1d48aea0ce9",
+        "GUID:f7898ee836234b98a20cbddc2a6e0b08",
+        "GUID:a5a86f181c5e41f49b43345f8b0cfaf5"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_EDITOR || !APP_UI_EDITOR_ONLY",
+        "APPUI_ENABLE_MARKDOWN"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -19,9 +19,7 @@ namespace Unity.AppUI.MVVM
     /// </remarks>
     public abstract class ObservableObject :
         System.ComponentModel.INotifyPropertyChanged, System.ComponentModel.INotifyPropertyChanging
-#if ENABLE_RUNTIME_DATA_BINDINGS
         , UnityEngine.UIElements.INotifyBindablePropertyChanged
-#endif
     {
         /// <summary>
         /// Occurs when a property value is changing.
@@ -66,10 +64,8 @@ namespace Unity.AppUI.MVVM
                 throw new ArgumentNullException(nameof(e));
 
             PropertyChanged?.Invoke(this, e);
-#if ENABLE_RUNTIME_DATA_BINDINGS
             // a bit ugly, but we need to notify the UI Toolkit runtime binding system that a property has changed.
             propertyChanged?.Invoke(this, new UnityEngine.UIElements.BindablePropertyChangedEventArgs(e.PropertyName));
-#endif
         }
 
         /// <summary>
@@ -198,7 +194,6 @@ namespace Unity.AppUI.MVVM
             return true;
         }
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
         // UnityEngine.UIElements.INotifyBindablePropertyChanged implementation
 
         /// <summary>
@@ -208,6 +203,5 @@ namespace Unity.AppUI.MVVM
         /// This event is used to notify the UI Toolkit runtime binding system that a property has changed.
         /// </remarks>
         public event EventHandler<UnityEngine.UIElements.BindablePropertyChangedEventArgs>? propertyChanged;
-#endif
     }
 }

@@ -9,8 +9,149 @@ namespace Unity.AppUI.UI
 {
 
     /// <summary>
-    /// A droppable is a container that can be used to drop content into.
+    /// A manipulator that enables drag-and-drop functionality on UI elements with customizable accept logic.
     /// </summary>
+    /// <remarks>
+    /// DropZoneController is a manipulator that adds drag-and-drop functionality to UI elements, allowing them to
+    /// receive and respond to drag operations. It provides callbacks for handling drag enter, exit, and drop events
+    /// with customizable acceptance logic.
+    ///
+    /// The controller enables creating interactive drop zones where users can drag files, objects, or other UI
+    /// elements from external sources or within the application. It supports visual feedback during drag operations
+    /// and flexible filtering of acceptable drag data.
+    ///
+    /// DropZoneController works with Unity's drag-and-drop system, providing a bridge between native drag operations
+    /// and App UI components. It can handle various data types including files, textures, objects, and custom data.
+    ///
+    /// Use DropZoneController for file upload areas, asset import zones, reorderable lists, or any interface that
+    /// benefits from intuitive drag-and-drop interactions. It enhances user experience by providing direct
+    /// manipulation capabilities.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic file drop zone. Creating a drop zone that accepts image files.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var dropZoneElement = new VisualElement();
+    /// dropZoneElement.AddToClassList("drop-zone");
+    /// dropZoneElement.Add(new Icon { icon = "upload" });
+    /// dropZoneElement.Add(new Text("Drag image files here"));
+    ///
+    /// var dropController = new DropZoneController((state) => {
+    ///     // Visual feedback during drag operations
+    ///     dropZoneElement.EnableInClassList("drag-over", state == DragAndDropState.AcceptDrag);
+    ///     dropZoneElement.EnableInClassList("drag-reject", state == DragAndDropState.RejectDrag);
+    /// });
+    ///
+    /// // Define what files to accept
+    /// dropController.acceptDrag = (objects) => {
+    ///     return objects.OfType<string>()
+    ///         .Any(path => IsImageFile(path));
+    /// };
+    ///
+    /// // Handle successful drops
+    /// dropController.dropped += (objects) => {
+    ///     foreach (var filePath in objects.OfType<string>())
+    ///     {
+    ///         if (IsImageFile(filePath))
+    ///         {
+    ///             LoadImageFile(filePath);
+    ///         }
+    ///     }
+    /// };
+    ///
+    /// dropZoneElement.AddManipulator(dropController);
+    /// container.Add(dropZoneElement);
+    /// ]]></code>
+    /// <para>Asset drop zone with multiple types. Creating a drop zone that accepts multiple asset types.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var assetDropZone = new VisualElement();
+    /// assetDropZone.AddToClassList("asset-drop-zone");
+    ///
+    /// var dropController = new DropZoneController();
+    ///
+    /// // Accept textures, audio clips, and materials
+    /// dropController.acceptDrag = (objects) => {
+    ///     return objects.Any(obj =>
+    ///         obj is Texture2D ||
+    ///         obj is AudioClip ||
+    ///         obj is Material);
+    /// };
+    ///
+    /// // Handle different asset types
+    /// dropController.dropped += (objects) => {
+    ///     foreach (var obj in objects)
+    ///     {
+    ///         switch (obj)
+    ///         {
+    ///             case Texture2D texture:
+    ///                 Debug.Log($"Dropped texture: {texture.name}");
+    ///                 ProcessTexture(texture);
+    ///                 break;
+    ///
+    ///             case AudioClip audio:
+    ///                 Debug.Log($"Dropped audio clip: {audio.name}");
+    ///                 ProcessAudioClip(audio);
+    ///                 break;
+    ///
+    ///             case Material material:
+    ///                 Debug.Log($"Dropped material: {material.name}");
+    ///                 ProcessMaterial(material);
+    ///                 break;
+    ///         }
+    ///     }
+    /// };
+    ///
+    /// assetDropZone.AddManipulator(dropController);
+    /// inspectorPanel.Add(assetDropZone);
+    /// ]]></code>
+    /// <para>Reorderable list with drop zones. Creating drop zones for reordering list items.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// public class ReorderableListItem : VisualElement
+    /// {
+    ///     public string ItemData { get; set; }
+    ///
+    ///     public ReorderableListItem(string data)
+    ///     {
+    ///         ItemData = data;
+    ///         AddToClassList("reorderable-item");
+    ///         Add(new Text(data));
+    ///
+    ///         // Make this item draggable
+    ///         var dragManipulator = new DragManipulator(this);
+    ///         AddManipulator(dragManipulator);
+    ///
+    ///         // Make this item a drop zone
+    ///         var dropController = new DropZoneController((state) => {
+    ///             EnableInClassList("drop-target", state == DragAndDropState.AcceptDrag);
+    ///         });
+    ///
+    ///         dropController.acceptDrag = (objects) => {
+    ///             // Accept other ReorderableListItem objects
+    ///             return objects.OfType<ReorderableListItem>()
+    ///                 .Any(item => item != this);
+    ///         };
+    ///
+    ///         dropController.dropped += (objects) => {
+    ///             var draggedItem = objects.OfType<ReorderableListItem>().FirstOrDefault();
+    ///             if (draggedItem != null)
+    ///             {
+    ///                 ReorderItems(draggedItem, this);
+    ///             }
+    ///         };
+    ///
+    ///         AddManipulator(dropController);
+    ///     }
+    /// }
+    ///
+    /// // Usage
+    /// var listContainer = new VisualElement();
+    /// var items = new[] { "Item 1", "Item 2", "Item 3" };
+    /// foreach (var item in items)
+    /// {
+    ///     listContainer.Add(new ReorderableListItem(item));
+    /// }
+    /// ]]></code>
+    /// </example>
+    [VisualDocPage("drag-and-drop")]
     public class DropZoneController : Manipulator
     {
 #pragma warning disable 67

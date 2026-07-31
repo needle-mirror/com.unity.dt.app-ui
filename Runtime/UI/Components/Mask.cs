@@ -2,21 +2,69 @@ using System;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A visual element that can be used to mask color.
+    /// A visual element that applies color masking effects to create visual overlays and highlights.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Mask component is a versatile visual element that allows you to create masked areas with
+    /// customizable colors, shapes, and effects. It's particularly useful for creating spotlight effects,
+    /// highlighting specific areas, or creating visual overlays in your UI.
+    ///
+    /// The component provides fine control over the mask's appearance through properties like inner and outer
+    /// colors, mask rectangle dimensions, corner radius, and blur effects. You can specify mask dimensions
+    /// either in absolute pixels or normalized coordinates (0-1 range).
+    ///
+    /// Note: The Mask component inherits from Image and uses a custom shader to generate the masking effect.
+    /// The mask is rendered using a RenderTexture that automatically adjusts to the component's size.
+    /// </remarks>
+    /// <example>
+    /// <para>Creating a spotlight effect</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var spotlight = new Mask();
+    /// spotlight.style.position = Position.Absolute;
+    /// spotlight.style.width = new StyleLength(new Length(100, LengthUnit.Percent));
+    /// spotlight.style.height = new StyleLength(new Length(100, LengthUnit.Percent));
+    /// spotlight.innerMaskColor = Color.clear;
+    /// spotlight.outerMaskColor = new Color(0, 0, 0, 0.7f);
+    /// spotlight.maskRect = new Rect(100, 100, 200, 200);
+    /// spotlight.radius = 100f; // Circular spotlight
+    /// spotlight.blur = 20f; // Soft edges
+    /// ]]></code>
+    /// <para>Creating a responsive highlight area using normalized coordinates</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var highlight = new Mask();
+    /// highlight.useNormalizedMaskRect = true;
+    /// highlight.innerMaskColor = new Color(1, 1, 0, 0.2f); // Semi-transparent yellow
+    /// highlight.outerMaskColor = Color.clear;
+    /// highlight.maskRect = new Rect(0.1f, 0.1f, 0.8f, 0.2f); // Highlight strip
+    /// highlight.radius = 10f;
+    /// highlight.blur = 5f;
+    /// ]]></code>
+    /// <para>UXML definition example</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML xmlns="UnityEngine.UIElements">
+    ///     <Mask
+    ///         inner-mask-color="#FFFFFF"
+    ///         outer-mask-color="#000000AA"
+    ///         mask-rect-x="50"
+    ///         mask-rect-y="50"
+    ///         mask-rect-width="300"
+    ///         mask-rect-height="200"
+    ///         radius="15"
+    ///         blur="10"
+    ///         use-normalized-mask-rect="false"
+    ///         style="position: absolute; width: 100%; height: 100%;" />
+    /// </UXML>
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("feedbacks")]
     public partial class Mask : Image
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId innerMaskColorProperty = nameof(innerMaskColor);
 
@@ -30,7 +78,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId useNormalizedMaskRectProperty = nameof(useNormalizedMaskRect);
 
-#endif
 
         /// <summary>
         /// The Mask main styling class.
@@ -89,12 +136,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The inner mask color. Sets the color of the inner mask.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Color innerMaskColor
         {
             get => m_InnerMaskColor;
@@ -105,22 +148,16 @@ namespace Unity.AppUI.UI
                 GenerateTextures();
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in innerMaskColorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The outer mask color. The color of the area outside the mask.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Color outerMaskColor
         {
             get => m_OuterMaskColor;
@@ -131,22 +168,16 @@ namespace Unity.AppUI.UI
                 GenerateTextures();
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in outerMaskColorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The mask rect. Sets the rect of the mask (in pixels or normalized if <see cref="useNormalizedMaskRect"/> is true).
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Rect maskRect
         {
             get => m_MaskRect;
@@ -157,22 +188,16 @@ namespace Unity.AppUI.UI
                 GenerateTextures();
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in maskRectProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The mask radius. Sets the radius of the rounded corners (in pixels).
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float radius
         {
             get => m_Radius;
@@ -183,22 +208,16 @@ namespace Unity.AppUI.UI
                 GenerateTextures();
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in radiusProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The mask blur. Sets the blur of the mask (in pixels).
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float blur
         {
             get => m_Blur;
@@ -209,22 +228,16 @@ namespace Unity.AppUI.UI
                 GenerateTextures();
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in blurProperty);
-#endif
             }
         }
 
         /// <summary>
         /// If true, the mask rect you will provide through <see cref="maskRect"/> must be normalized (0-1) instead of using pixels coordinates.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool useNormalizedMaskRect
         {
             get => m_UseNormalizedMaskRect;
@@ -235,10 +248,8 @@ namespace Unity.AppUI.UI
                 GenerateTextures();
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in useNormalizedMaskRectProperty);
-#endif
             }
         }
 
@@ -350,92 +361,5 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Mask"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Mask, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ExVisualElement"/>.
-        /// </summary>
-        public new class UxmlTraits : Image.UxmlTraits
-        {
-            readonly UxmlColorAttributeDescription m_InnerMaskColor = new UxmlColorAttributeDescription
-            {
-                name = "inner-mask-color",
-                defaultValue = k_DefaultInnerMaskColor
-            };
-
-            readonly UxmlColorAttributeDescription m_OuterMaskColor = new UxmlColorAttributeDescription
-            {
-                name = "outer-mask-color",
-                defaultValue = k_DefaultOuterMaskColor
-            };
-
-            readonly UxmlFloatAttributeDescription m_Radius = new UxmlFloatAttributeDescription
-            {
-                name = "radius",
-                defaultValue = k_DefaultRadius
-            };
-
-            readonly UxmlFloatAttributeDescription m_Blur = new UxmlFloatAttributeDescription
-            {
-                name = "blur",
-                defaultValue = k_DefaultBlur
-            };
-
-            readonly UxmlFloatAttributeDescription m_MaskRectX = new UxmlFloatAttributeDescription
-            {
-                name = "mask-rect-x",
-                defaultValue = k_DefaultMaskRect.x
-            };
-
-            readonly UxmlFloatAttributeDescription m_MaskRectY = new UxmlFloatAttributeDescription
-            {
-                name = "mask-rect-y",
-                defaultValue = k_DefaultMaskRect.y
-            };
-
-            readonly UxmlFloatAttributeDescription m_MaskRectWidth = new UxmlFloatAttributeDescription
-            {
-                name = "mask-rect-width",
-                defaultValue = k_DefaultMaskRect.width
-            };
-
-            readonly UxmlFloatAttributeDescription m_MaskRectHeight = new UxmlFloatAttributeDescription
-            {
-                name = "mask-rect-height",
-                defaultValue = k_DefaultMaskRect.height
-            };
-
-            readonly UxmlBoolAttributeDescription m_UseNormalizedMaskRect = new UxmlBoolAttributeDescription
-            {
-                name = "use-normalized-mask-rect",
-                defaultValue = k_DefaultUseNormalizedMaskRect
-            };
-
-            /// <summary>
-            /// Initialize the <see cref="Mask"/> using values from the attribute bag.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> to read values from.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var mask = (Mask)ve;
-                mask.innerMaskColor = m_InnerMaskColor.GetValueFromBag(bag, cc);
-                mask.outerMaskColor = m_OuterMaskColor.GetValueFromBag(bag, cc);
-                mask.radius = m_Radius.GetValueFromBag(bag, cc);
-                mask.blur = m_Blur.GetValueFromBag(bag, cc);
-                mask.useNormalizedMaskRect = m_UseNormalizedMaskRect.GetValueFromBag(bag, cc);
-                mask.maskRect = new Rect(m_MaskRectX.GetValueFromBag(bag, cc), m_MaskRectY.GetValueFromBag(bag, cc), m_MaskRectWidth.GetValueFromBag(bag, cc), m_MaskRectHeight.GetValueFromBag(bag, cc));
-            }
-        }
-
-#endif
     }
 }

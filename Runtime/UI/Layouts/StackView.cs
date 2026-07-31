@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -169,19 +167,192 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// A StackView is a container that can contain multiple items. It is similar to a stack of cards.
-    /// The items are added to the stack using the Push method. The top item is the current item.
-    /// The current item can be removed using the Pop method. The item below the current item becomes the new current item.
-    /// The current item can be replaced using the Replace method. The item below the current item is removed and the new item is added.
+    /// A container that manages a stack of items with animated transitions between them, similar to a stack of
+    /// cards.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The StackView component provides a sophisticated navigation container that manages a stack of visual
+    /// elements with smooth animated transitions. It follows a last-in-first-out (LIFO) pattern, where only
+    /// the topmost item is visible and active at any time.
+    ///
+    /// The items are added to the stack using the Push method. The top item is the current item. The current
+    /// item can be removed using the Pop method. The item below the current item becomes the new current item.
+    /// The current item can be replaced using the Replace method. The item below the current item is removed
+    /// and the new item is added.
+    ///
+    /// Key features:
+    /// - Stack-based navigation with push, pop, and replace operations
+    /// - Customizable animation descriptions for each transition type
+    /// - Lifecycle events for items (activating, activated, deactivating, deactivated, removed)
+    /// - Support for both StackViewItem and regular VisualElement children
+    /// - Depth tracking and empty state detection
+    /// - Non-blocking animations with busy state checking
+    ///
+    /// StackView is ideal for implementing wizard-style interfaces, slideshow presentations, or any UI flow
+    /// that requires sequential navigation with the ability to go back to previous states.
+    ///
+    /// NOTE: Each item in the stack can be either a StackViewItem or any VisualElement, which will be
+    /// automatically wrapped in a StackViewItem.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic stack view with navigation. Creating a simple two-page navigation with stack view.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var stackView = new StackView();
+    ///
+    /// // Push first item
+    /// var page1 = new Box();
+    /// page1.Add(new Text { text = "Page 1" });
+    /// var nextButton = new Button { text = "Next" };
+    /// page1.Add(nextButton);
+    ///
+    /// stackView.Push(page1);
+    ///
+    /// // Push second item when button clicked
+    /// nextButton.clicked += () =>
+    /// {
+    ///     var page2 = new Box();
+    ///     page2.Add(new Text { text = "Page 2" });
+    ///     var backButton = new Button { text = "Back" };
+    ///     page2.Add(backButton);
+    ///
+    ///     stackView.Push(page2);
+    ///
+    ///     // Pop back to first item
+    ///     backButton.clicked += () => stackView.Pop();
+    /// };
+    /// ]]></code>
+    /// <para>Wizard interface with replace functionality. Implementing a wizard with skip functionality.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var stackView = new StackView();
+    ///
+    /// // Initial welcome screen
+    /// var welcomePage = CreateWelcomePage();
+    /// stackView.initialItem = welcomePage;
+    ///
+    /// void CreateStep(int stepNumber)
+    /// {
+    ///     var stepPage = new Box();
+    ///     stepPage.Add(new Text { text = $"Step {stepNumber}" });
+    ///
+    ///     var nextButton = new Button { text = "Next" };
+    ///     var skipButton = new Button { text = "Skip to End" };
+    ///
+    ///     stepPage.Add(nextButton);
+    ///     stepPage.Add(skipButton);
+    ///
+    ///     nextButton.clicked += () => CreateStep(stepNumber + 1);
+    ///     skipButton.clicked += () =>
+    ///     {
+    ///         // Replace all items with final page
+    ///         stackView.Replace(null, CreateFinalPage());
+    ///     };
+    ///
+    ///     stackView.Push(stepPage);
+    /// }
+    /// ]]></code>
+    /// <para>Using lifecycle events. Handling item lifecycle events.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var item = new StackViewItem(new Text { text = "Content" });
+    ///
+    /// item.activating += () =>
+    /// {
+    ///     Debug.Log("Item is about to become active");
+    ///     // Prepare item, load data, etc.
+    /// };
+    ///
+    /// item.activated += () =>
+    /// {
+    ///     Debug.Log("Item is now active");
+    ///     // Start animations, play sounds, etc.
+    /// };
+    ///
+    /// item.deactivating += () =>
+    /// {
+    ///     Debug.Log("Item is about to be deactivated");
+    ///     // Save state, pause operations, etc.
+    /// };
+    ///
+    /// item.deactivated += () =>
+    /// {
+    ///     Debug.Log("Item is now inactive");
+    /// };
+    ///
+    /// item.removed += () =>
+    /// {
+    ///     Debug.Log("Item has been removed from stack");
+    ///     // Clean up resources
+    /// };
+    ///
+    /// stackView.Push(item);
+    /// ]]></code>
+    /// <para>Custom slide animations. Creating iOS-style slide navigation animations.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var stackView = new StackView();
+    ///
+    /// // Configure slide-left animation for push
+    /// stackView.pushEnterAnimation = new AnimationDescription
+    /// {
+    ///     durationMs = 300,
+    ///     easing = Easing.OutQuad,
+    ///     callback = (element, t) =>
+    ///     {
+    ///         var offset = 100 * (1 - t);
+    ///         element.style.translate = new Translate(new Length(offset, LengthUnit.Percent), 0);
+    ///         element.style.opacity = t;
+    ///     }
+    /// };
+    ///
+    /// stackView.pushExitAnimation = new AnimationDescription
+    /// {
+    ///     durationMs = 300,
+    ///     easing = Easing.InQuad,
+    ///     callback = (element, t) =>
+    ///     {
+    ///         var offset = -50 * t;
+    ///         element.style.translate = new Translate(new Length(offset, LengthUnit.Percent), 0);
+    ///         element.style.opacity = 1 - t * 0.5f;
+    ///     }
+    /// };
+    ///
+    /// // Configure slide-right animation for pop
+    /// stackView.popExitAnimation = new AnimationDescription
+    /// {
+    ///     durationMs = 300,
+    ///     easing = Easing.InQuad,
+    ///     callback = (element, t) =>
+    ///     {
+    ///         var offset = 100 * t;
+    ///         element.style.translate = new Translate(new Length(offset, LengthUnit.Percent), 0);
+    ///         element.style.opacity = 1 - t;
+    ///     }
+    /// };
+    ///
+    /// stackView.popEnterAnimation = new AnimationDescription
+    /// {
+    ///     durationMs = 300,
+    ///     easing = Easing.OutQuad,
+    ///     callback = (element, t) =>
+    ///     {
+    ///         var offset = -50 * (1 - t);
+    ///         element.style.translate = new Translate(new Length(offset, LengthUnit.Percent), 0);
+    ///         element.style.opacity = 0.5f + t * 0.5f;
+    ///     }
+    /// };
+    /// ]]></code>
+    /// <para>Clearing the stack. Resetting the stack to start fresh.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Clear all items and reset to initial state
+    /// stackView.ClearStack();
+    ///
+    /// // Then push a new initial item
+    /// stackView.Push(homeScreen);
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class StackView : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
-#endif
 
         readonly Stack<StackViewItem> m_Stack;
 
@@ -463,21 +634,5 @@ namespace Unity.AppUI.UI
             item.view = null;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Defines the UxmlFactory for the StackView.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<StackView, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="StackView"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-
-        }
-
-#endif
     }
 }

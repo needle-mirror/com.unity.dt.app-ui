@@ -6,9 +6,7 @@ using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -42,9 +40,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A SwipeViewItem is an item that must be used as a child of a <see cref="SwipeView"/>.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class SwipeViewItem : BaseVisualElement
     {
         /// <summary>
@@ -76,36 +72,97 @@ namespace Unity.AppUI.UI
             // Items will be set to absolute positioning and sized based on visibleItemCount
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Defines the UxmlFactory for the SwipeViewItem.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<SwipeViewItem, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="SwipeViewItem"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-
-        }
-
-#endif
     }
 
     /// <summary>
+    /// A container that allows users to swipe between multiple items with smooth animations and customizable
+    /// behavior.
+    /// </summary>
+    /// <remarks>
     /// A SwipeView is a container that displays one or more children at a time and provides a UI to
     /// navigate between them. It is similar to a <see cref="ScrollView"/> but here children are
     /// snapped to the container's edges. See <see cref="PageView"/> for a similar container that
     /// includes a page indicator.
-    /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    ///
+    /// The SwipeView is a versatile container component that enables users to navigate through content using
+    /// swipe gestures or programmatic controls. It's perfect for creating image carousels, onboarding flows, or
+    /// any interface where users need to browse through a sequence of items.
+    ///
+    /// Key features include:
+    /// - Horizontal or vertical orientation
+    /// - Smooth animations with customizable speed and easing
+    /// - Support for both touch/mouse swipe gestures and keyboard navigation
+    /// - Optional wrapping behavior
+    /// - Configurable resistance and thresholds
+    /// - Auto-play capability
+    ///
+    /// The SwipeView can be populated either through UXML by adding SwipeViewItem elements as children, or
+    /// programmatically by setting a data source and providing bind/unbind callbacks.
+    /// </remarks>
+    /// <example>
+    /// <para>Creating an image carousel with SwipeView</para>
+    /// <code lang="xml"><![CDATA[
+    /// <SwipeView class="image-carousel">
+    ///     <SwipeViewItem>
+    ///         <Image src="image1.png" />
+    ///     </SwipeViewItem>
+    ///     <SwipeViewItem>
+    ///         <Image src="image2.png" />
+    ///     </SwipeViewItem>
+    ///     <SwipeViewItem>
+    ///         <Image src="image3.png" />
+    ///     </SwipeViewItem>
+    /// </SwipeView>
+    /// ]]></code>
+    /// <para>Implementing a dynamic image gallery with data binding</para>
+    /// <code lang="csharp"><![CDATA[
+    /// public class Gallery : VisualElement
+    /// {
+    ///     private SwipeView swipeView;
+    ///     private List<string> imageUrls;
+    ///
+    ///     public Gallery()
+    ///     {
+    ///         swipeView = new SwipeView
+    ///         {
+    ///             direction = Direction.Horizontal,
+    ///             wrap = true,
+    ///             autoPlayDuration = 3000,
+    ///             snapAnimationSpeed = 0.5f
+    ///         };
+    ///
+    ///         swipeView.sourceItems = imageUrls;
+    ///         swipeView.bindItem = (item, index) => {
+    ///             var image = new Image { image = LoadImage(imageUrls[index]) };
+    ///             item.Add(image);
+    ///         };
+    ///
+    ///         Add(swipeView);
+    ///     }
+    /// }
+    /// ]]></code>
+    /// <para>Creating an onboarding flow with vertical swiping</para>
+    /// <code lang="xml"><![CDATA[
+    /// <SwipeView direction="Vertical" class="onboarding">
+    ///     <SwipeViewItem>
+    ///         <Label text="Welcome" />
+    ///         <Image src="welcome.png" />
+    ///     </SwipeViewItem>
+    ///     <SwipeViewItem>
+    ///         <Label text="Features" />
+    ///         <Image src="features.png" />
+    ///     </SwipeViewItem>
+    ///     <SwipeViewItem>
+    ///         <Label text="Get Started" />
+    ///         <Button text="Continue" />
+    ///     </SwipeViewItem>
+    /// </SwipeView>
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class SwipeView : BaseVisualElement, INotifyValueChanged<int>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId directionProperty = new BindingId(nameof(direction));
 
@@ -145,7 +202,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId goToStrategyProperty = new BindingId(nameof(goToStrategy));
 
-#endif
 
         /// <summary>
         /// The main styling class of the SwipeView. This is the class that is used in the USS file.
@@ -217,12 +273,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The speed of the animation when snapping to an item.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float snapAnimationSpeed
         {
             get => m_SnapAnimationSpeed;
@@ -231,10 +283,8 @@ namespace Unity.AppUI.UI
                 var changed = !Mathf.Approximately(m_SnapAnimationSpeed, value);
                 m_SnapAnimationSpeed = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in snapAnimationSpeedProperty);
-#endif
             }
         }
 
@@ -245,9 +295,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The easing of the animation when snapping to an item.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<float, float> snapAnimationEasing
         {
             get => m_SnapAnimationEasing;
@@ -256,10 +304,8 @@ namespace Unity.AppUI.UI
                 var changed = m_SnapAnimationEasing != value;
                 m_SnapAnimationEasing = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in snapAnimationEasingProperty);
-#endif
             }
         }
 
@@ -268,12 +314,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The amount of pixels that must be swiped before the SwipeView begins to swipe.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float startSwipeThreshold
         {
             get => m_Scrollable.threshold;
@@ -282,10 +324,8 @@ namespace Unity.AppUI.UI
                 var changed = !Mathf.Approximately(m_Scrollable.threshold, value);
                 m_Scrollable.threshold = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in startSwipeThresholdProperty);
-#endif
             }
         }
 
@@ -294,12 +334,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The strategy used when going to a specific item.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public GoToStrategy goToStrategy
         {
             get => m_GoToStrategy;
@@ -307,10 +343,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_GoToStrategy != value;
                 m_GoToStrategy = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in goToStrategyProperty);
-#endif
             }
         }
 
@@ -319,12 +353,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The number of items that are visible at the same time.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int visibleItemCount
         {
             get => m_VisibleItemCount;
@@ -334,14 +364,12 @@ namespace Unity.AppUI.UI
                 m_VisibleItemCount = value;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
                     NotifyPropertyChanged(in visibleItemCountProperty);
                     NotifyPropertyChanged(in canGoToNextProperty);
                     NotifyPropertyChanged(in canGoToPreviousProperty);
                 }
-#endif
             }
         }
 
@@ -350,12 +378,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The number of milliseconds between each automatic swipe.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int autoPlayDuration
         {
             get => m_AutoPlayDuration;
@@ -376,9 +400,7 @@ namespace Unity.AppUI.UI
                     m_AutoPlayAnimation = null;
                 }
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in autoPlayDurationProperty);
-#endif
             }
         }
 
@@ -387,12 +409,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The orientation of the SwipeView.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Direction direction
         {
             get => m_Direction;
@@ -405,10 +423,8 @@ namespace Unity.AppUI.UI
                 AddToClassList(GetDirectionUssClassName(m_Direction));
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
-#endif
             }
         }
 
@@ -417,9 +433,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// A method that is called when an item is bound to the SwipeView.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Action<SwipeViewItem, int> bindItem
         {
             get => m_BindItem;
@@ -429,10 +443,8 @@ namespace Unity.AppUI.UI
                 m_BindItem = value;
                 RefreshList();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in bindItemProperty);
-#endif
             }
         }
 
@@ -441,9 +453,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// A method that is called when an item is unbound from the SwipeView.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Action<SwipeViewItem, int> unbindItem
         {
             get => m_UnbindItem;
@@ -453,19 +463,15 @@ namespace Unity.AppUI.UI
                 m_UnbindItem = value;
                 RefreshList();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in unbindItemProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The source of items that are used to populate the SwipeView.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public IList sourceItems
         {
             get => m_SourceItems;
@@ -480,7 +486,6 @@ namespace Unity.AppUI.UI
 
                 RefreshList();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
                     NotifyPropertyChanged(in sourceItemsProperty);
@@ -488,7 +493,6 @@ namespace Unity.AppUI.UI
                     NotifyPropertyChanged(in canGoToNextProperty);
                     NotifyPropertyChanged(in canGoToPreviousProperty);
                 }
-#endif
             }
         }
 
@@ -497,12 +501,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// This property determines whether or not the view wraps around when it reaches the start or end.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool wrap
         {
             get => m_Wrap;
@@ -512,23 +512,19 @@ namespace Unity.AppUI.UI
                 m_Wrap = value;
                 PositionAllItems();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
                     NotifyPropertyChanged(in wrapProperty);
                     NotifyPropertyChanged(in canGoToNextProperty);
                     NotifyPropertyChanged(in canGoToPreviousProperty);
                 }
-#endif
             }
         }
 
         /// <summary>
         /// The total number of items.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public int count => items?.Count ?? 0;
 
         /// <summary>
@@ -561,9 +557,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The current item.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public SwipeViewItem currentItem => GetItem(value);
 
         IList items => m_SourceItems ?? m_StaticItems;
@@ -587,12 +581,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the SwipeView (i.e. the index of the current item).
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int value
         {
             get => m_Value;
@@ -616,12 +606,10 @@ namespace Unity.AppUI.UI
                 SendEvent(evt);
             }
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
                 NotifyPropertyChanged(in canGoToNextProperty);
                 NotifyPropertyChanged(in canGoToPreviousProperty);
                 NotifyPropertyChanged(in currentItemProperty);
-#endif
         }
 
         const float k_DefaultResistance = 1f;
@@ -638,12 +626,8 @@ namespace Unity.AppUI.UI
         /// be harder to swipe. If you set this property to less than 1, the SwipeView will be easier to swipe.
         /// </para>
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float resistance
         {
             get => m_Resistance;
@@ -652,10 +636,8 @@ namespace Unity.AppUI.UI
                 var changed = !Mathf.Approximately(m_Resistance, value);
                 m_Resistance = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in resistanceProperty);
-#endif
             }
         }
 
@@ -668,12 +650,8 @@ namespace Unity.AppUI.UI
         /// able to interact with the SwipeView (except programmatically).
         /// </para>
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool swipeable
         {
             get => m_Swipeable;
@@ -686,10 +664,8 @@ namespace Unity.AppUI.UI
                 else
                     this.RemoveManipulator(m_Scrollable);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in swipeableProperty);
-#endif
             }
         }
 
@@ -700,12 +676,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// This property determines the threshold at which the animation will be skipped.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int skipAnimationThreshold
         {
             get => m_SkipAnimationThreshold;
@@ -714,10 +686,8 @@ namespace Unity.AppUI.UI
                 var changed = m_SkipAnimationThreshold != value;
                 m_SkipAnimationThreshold = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in skipAnimationThresholdProperty);
-#endif
             }
         }
 
@@ -909,12 +879,10 @@ namespace Unity.AppUI.UI
                 SendEvent(evt);
             }
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in valueProperty);
             NotifyPropertyChanged(in canGoToNextProperty);
             NotifyPropertyChanged(in canGoToPreviousProperty);
             NotifyPropertyChanged(in currentItemProperty);
-#endif
         }
 
         void OnDrag(Scrollable drag)
@@ -1321,12 +1289,10 @@ namespace Unity.AppUI.UI
                 }
                 RefreshList();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in sourceItemsProperty);
                 NotifyPropertyChanged(in countProperty);
                 NotifyPropertyChanged(in canGoToNextProperty);
                 NotifyPropertyChanged(in canGoToPreviousProperty);
-#endif
             }
         }
 
@@ -1460,17 +1426,13 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Check if there is a next item or not.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public bool canGoToNext => shouldWrap || (value + 1 < childCount && value + 1 >= 0);
 
         /// <summary>
         /// Check if there is a previous item or not.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public bool canGoToPrevious => shouldWrap || (value - 1 < childCount && value - 1 >= 0);
 
         /// <summary>
@@ -1546,111 +1508,5 @@ namespace Unity.AppUI.UI
 
 
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Defines the UxmlFactory for the SwipeView.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<SwipeView, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="SwipeView"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Direction> m_Direction = new UxmlEnumAttributeDescription<Direction>()
-            {
-                name = "direction",
-                defaultValue = k_DefaultDirection,
-            };
-
-            readonly UxmlFloatAttributeDescription m_AnimationSpeed = new UxmlFloatAttributeDescription()
-            {
-                name = "animation-speed",
-                defaultValue = k_DefaultSnapAnimationSpeed,
-            };
-
-            readonly UxmlIntAttributeDescription m_SkipAnim = new UxmlIntAttributeDescription()
-            {
-                name = "skip-animation-threshold",
-                defaultValue = k_DefaultSkipAnimationThreshold,
-            };
-
-            readonly UxmlBoolAttributeDescription m_Wrap = new UxmlBoolAttributeDescription()
-            {
-                name = "wrap",
-                defaultValue = k_DefaultWrap,
-            };
-
-            readonly UxmlIntAttributeDescription m_VisibleItemCount = new UxmlIntAttributeDescription()
-            {
-                name = "visible-item-count",
-                defaultValue = k_DefaultVisibleItemCount,
-            };
-
-            readonly UxmlFloatAttributeDescription m_StartSwipeThreshold = new UxmlFloatAttributeDescription()
-            {
-                name = "start-swipe-threshold",
-                defaultValue = k_DefaultStartSwipeThreshold,
-            };
-
-            readonly UxmlIntAttributeDescription m_AutoPlayDuration = new UxmlIntAttributeDescription()
-            {
-                name = "auto-play-duration",
-                defaultValue = k_DefaultAutoPlayDuration,
-            };
-
-            readonly UxmlBoolAttributeDescription m_Swipeable = new UxmlBoolAttributeDescription()
-            {
-                name = "swipeable",
-                defaultValue = k_DefaultSwipeable,
-            };
-
-            readonly UxmlFloatAttributeDescription m_Resistance = new UxmlFloatAttributeDescription()
-            {
-                name = "resistance",
-                defaultValue = k_DefaultResistance,
-            };
-
-            readonly UxmlEnumAttributeDescription<GoToStrategy> m_GoToStrategy = new UxmlEnumAttributeDescription<GoToStrategy>()
-            {
-                name = "go-to-strategy",
-                defaultValue = GoToStrategy.ShortestPath,
-            };
-
-            /// <summary>
-            /// Returns an enumerable containing UxmlChildElementDescription(typeof(VisualElement)), since VisualElements can contain other VisualElements.
-            /// </summary>
-            public override IEnumerable<UxmlChildElementDescription> uxmlChildElementsDescription =>
-                new UxmlChildElementDescription[]
-                {
-                    new UxmlChildElementDescription(typeof(SwipeViewItem))
-                };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (SwipeView)ve;
-                el.direction = m_Direction.GetValueFromBag(bag, cc);
-                el.wrap = m_Wrap.GetValueFromBag(bag, cc);
-                el.visibleItemCount = m_VisibleItemCount.GetValueFromBag(bag, cc);
-                el.skipAnimationThreshold = m_SkipAnim.GetValueFromBag(bag, cc);
-                el.snapAnimationSpeed = m_AnimationSpeed.GetValueFromBag(bag, cc);
-                el.startSwipeThreshold = m_StartSwipeThreshold.GetValueFromBag(bag, cc);
-                el.autoPlayDuration = m_AutoPlayDuration.GetValueFromBag(bag, cc);
-                el.swipeable = m_Swipeable.GetValueFromBag(bag, cc);
-                el.resistance = m_Resistance.GetValueFromBag(bag, cc);
-                el.goToStrategy = m_GoToStrategy.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

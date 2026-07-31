@@ -1,7 +1,5 @@
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -47,18 +45,57 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// Spacer visual element.
+    /// A layout component that creates consistent spacing between elements.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Spacer component is a versatile layout utility that helps create whitespace and manage spacing between
+    /// elements in your UI. It provides predefined spacing options and can also expand to fill available space,
+    /// making it essential for creating consistent and responsive layouts.
+    ///
+    /// Spacers are non-interactive elements (they ignore pointer events) and can be used both vertically and
+    /// horizontally depending on the parent container's layout direction.
+    ///
+    /// The Spacer component automatically handles its styling through USS classes, making it easy to maintain
+    /// consistent spacing across your application.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic usage in a horizontal layout. Creating equal spacing between buttons in a horizontal layout.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Box style="flex-direction: row;">
+    ///     <Button text="Left" />
+    ///     <Spacer spacing="M" />
+    ///     <Button text="Center" />
+    ///     <Spacer spacing="M" />
+    ///     <Button text="Right" />
+    /// </Box>
+    /// ]]></code>
+    /// <para>Using Spacer to push elements apart. Using an expanding spacer to push elements to opposite ends of a
+    /// container.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Box style="flex-direction: row;">
+    ///     <Button text="Left-aligned" />
+    ///     <Spacer spacing="Expand" />
+    ///     <Button text="Right-aligned" />
+    /// </Box>
+    /// ]]></code>
+    /// <para>Vertical spacing in a column layout. Creating different spaces between form elements in a vertical layout.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Box style="flex-direction: column;">
+    ///     <Label text="Header" />
+    ///     <Spacer spacing="S" />
+    ///     <TextField />
+    ///     <Spacer spacing="L" />
+    ///     <Button text="Submit" />
+    /// </Box>
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class Spacer : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId spacingProperty = nameof(spacing);
 
-#endif
 
         const SpacerSpacing k_DefaultSpacing = SpacerSpacing.M;
 
@@ -90,12 +127,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The spacer's spacing.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public SpacerSpacing spacing
         {
             get => m_Spacing;
@@ -106,37 +139,10 @@ namespace Unity.AppUI.UI
                 m_Spacing = value;
                 AddToClassList(GetSpacingUssClassName(m_Spacing));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in spacingProperty);
-#endif
             }
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <inheritdoc cref="UnityEngine.UIElements.UxmlFactory{Spacer,UxmlTraits}"/>
-        public new class UxmlFactory : UxmlFactory<Spacer, UxmlTraits> { }
-
-        /// <inheritdoc cref="UnityEngine.UIElements.VisualElement.UxmlTraits"/>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<SpacerSpacing> m_Spacing =
-                new UxmlEnumAttributeDescription<SpacerSpacing>
-                {
-                    name = "spacing",
-                    defaultValue = k_DefaultSpacing
-                };
-
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Spacer)ve;
-                element.spacing = m_Spacing.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

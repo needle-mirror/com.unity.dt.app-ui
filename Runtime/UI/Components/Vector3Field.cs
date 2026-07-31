@@ -1,21 +1,27 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Vector3 Field UI element.
+    /// A UI component for editing 3D vector values with x, y, and z coordinates.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Vector3Field is a specialized input component that allows users to edit three-dimensional vector values.
+    /// It provides three numerical input fields for the x, y, and z coordinates of a vector.
+    ///
+    /// The component is built on top of three FloatField components, each handling one dimension of the vector.
+    /// It supports various features like value validation, formatting, and size customization.
+    ///
+    /// Use Vector3Field when you need to let users input or modify 3D coordinates, positions, scales, or any other
+    /// three-dimensional values in your application.
+    /// </remarks>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class Vector3Field : BaseVisualElement, IInputElement<Vector3>, ISizeableElement, INotifyValueChanging<Vector3>, IFormattable<float>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
 
@@ -29,7 +35,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId formatFunctionProperty = new BindingId(nameof(formatFunction));
 
-#endif
 
         /// <summary>
         /// The Vector3Field main styling class.
@@ -131,12 +136,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the Vector3Field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -168,12 +169,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the Vector3Field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Vector3 value
         {
             get => m_Value;
@@ -193,12 +190,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The invalid state of the Vector3Field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -215,9 +208,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The validation function of the Vector3Field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<Vector3, bool> validateValue
         {
             get => m_ValidateValue;
@@ -227,22 +218,16 @@ namespace Unity.AppUI.UI
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The format string of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string formatString
         {
             get => m_FormatString;
@@ -255,19 +240,15 @@ namespace Unity.AppUI.UI
                 m_ZField.formatString = m_FormatString;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The format function of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public FormatFunction<float> formatFunction
         {
             get => m_FormatFunction;
@@ -280,10 +261,8 @@ namespace Unity.AppUI.UI
                 m_ZField.formatFunction = m_FormatFunction;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
-#endif
             }
         }
 
@@ -340,39 +319,5 @@ namespace Unity.AppUI.UI
             value = new Vector3(evt.newValue, value.y, value.z);
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Vector3Field"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Vector3Field, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Vector3Field"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Vector3Field)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

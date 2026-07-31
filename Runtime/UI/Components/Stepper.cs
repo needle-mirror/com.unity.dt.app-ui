@@ -1,27 +1,76 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Stepper UI element.
+    /// A control that lets users incrementally adjust a value by pressing the plus or minus buttons.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Stepper component provides a simple way to increment or decrement numeric values through button
+    /// interactions. It consists of two buttons: one for increasing and one for decreasing the value.
+    ///
+    /// Steppers are particularly useful when users need to make small adjustments to a value, such as changing
+    /// quantity, adjusting volume, or modifying numeric settings.
+    ///
+    /// The component supports both mouse/touch interaction and keyboard navigation. Users can interact with the
+    /// stepper using:
+    /// - Plus/Minus buttons
+    /// - Left/Right arrow keys
+    /// - Keyboard Plus/Minus keys
+    ///
+    /// Note: The stepper's value is represented as -1 for decrement and 1 for increment, making it ideal for
+    /// relative value adjustments rather than absolute values.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Stepper Usage: creating a basic stepper to manage a counter value.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var stepper = new Stepper();
+    /// var count = 0;
+    ///
+    /// stepper.RegisterValueChangedCallback(evt => {
+    ///     count += evt.newValue;
+    ///     Debug.Log($"Current count: {count}");
+    /// });
+    ///
+    /// container.Add(stepper);
+    /// ]]></code>
+    /// <para>Customized Stepper with Size: creating a large stepper with custom styling in UXML.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML xmlns:ui="Unity.AppUI.UI">
+    ///     <ui:Stepper size="L" class="custom-stepper" />
+    /// </UXML>
+    /// ]]></code>
+    /// <para>Stepper with Value Change Handling: implementing a volume control using a stepper with clamped values.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// public class VolumeControl : VisualElement
+    /// {
+    ///     private float volume = 50f;
+    ///     private const float STEP = 5f;
+    ///
+    ///     public VolumeControl()
+    ///     {
+    ///         var stepper = new Stepper();
+    ///         stepper.RegisterValueChangedCallback(evt => {
+    ///             volume = Mathf.Clamp(volume + (STEP * evt.newValue), 0f, 100f);
+    ///             Debug.Log($"Volume adjusted to: {volume}%");
+    ///         });
+    ///         Add(stepper);
+    ///     }
+    /// }
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("actions")]
     public partial class Stepper : ExVisualElement, INotifyValueChanged<int>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = nameof(value);
 
         internal static readonly BindingId sizeProperty = nameof(size);
 
-#endif
 
         /// <summary>
         /// The Stepper main styling class.
@@ -134,12 +183,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the Stepper.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -150,10 +195,8 @@ namespace Unity.AppUI.UI
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
@@ -173,12 +216,8 @@ namespace Unity.AppUI.UI
         /// To track the changes of the value, use <see cref="INotifyValueChangedExtensions.RegisterValueChangedCallback{T}"/> instead.
         /// </para>
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int value
         {
             get => m_Value;
@@ -189,9 +228,7 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
@@ -240,40 +277,5 @@ namespace Unity.AppUI.UI
             value = -1;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Stepper"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Stepper, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Stepper"/>.
-        /// </summary>
-        public new class UxmlTraits : ExVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (Stepper)ve;
-                el.size = m_Size.GetValueFromBag(bag, cc);
-
-            }
-        }
-
-#endif
     }
 }

@@ -2,9 +2,7 @@ using System;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -12,12 +10,9 @@ namespace Unity.AppUI.UI
     /// AssetTarget Field UI element.
     /// </summary>
     // todo This has to work with an AssetReferencePicker
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     partial class AssetTargetField : BaseVisualElement, IInputElement<AssetReference>, ISizeableElement, IPressable
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId typeProperty = nameof(type);
 
         internal static readonly BindingId sizeProperty = nameof(size);
@@ -29,7 +24,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId validateValueProperty = nameof(validateValue);
 
         internal static readonly BindingId clickableProperty = nameof(clickable);
-#endif
         const string k_DefaultIconName = "scene";
 
         /// <summary>
@@ -123,9 +117,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Clickable Manipulator for this AssetTargetField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -138,10 +130,8 @@ namespace Unity.AppUI.UI
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
-#endif
             }
         }
 
@@ -149,9 +139,7 @@ namespace Unity.AppUI.UI
         /// The type of the AssetReference that this field accepts.
         /// This is used to filter the assets that can be assigned to this field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Type type
         {
             get => m_Type;
@@ -169,22 +157,16 @@ namespace Unity.AppUI.UI
                 m_IconElement.iconName = m_Type?.Name.ToLower();
                 m_TypeLabelElement.text = m_Type?.Name.ToUpper();
 
-#if  ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in typeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The size of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -194,10 +176,8 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
@@ -205,12 +185,8 @@ namespace Unity.AppUI.UI
         /// Whether the current value of the AssetTargetField is valid or not.
         /// This is determined by the validateValue function.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -218,10 +194,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = invalid != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
-#endif
             }
         }
 
@@ -229,9 +203,7 @@ namespace Unity.AppUI.UI
         /// A function that validates the value of the AssetTargetField.
         /// It returns true if the value is valid, false otherwise.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<AssetReference, bool> validateValue
         {
             get => m_ValidateValue;
@@ -241,10 +213,8 @@ namespace Unity.AppUI.UI
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(this.value) ?? false;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
@@ -262,9 +232,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The current value of the AssetTargetField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public AssetReference value
         {
             get => m_AssetReference;
@@ -276,52 +244,9 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// The UXML factory for the <see cref="AssetTargetField"/>.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<AssetTargetField, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="AssetTargetField"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-
-            readonly UxmlBoolAttributeDescription m_Invalid = new UxmlBoolAttributeDescription
-            {
-                name = "invalid",
-                defaultValue = false
-            };
-
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (AssetTargetField)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                element.invalid = m_Invalid.GetValueFromBag(bag, cc);
-
-            }
-        }
-#endif
     }
 }

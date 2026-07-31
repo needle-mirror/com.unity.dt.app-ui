@@ -2,9 +2,7 @@ using System;
 using UnityEngine.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements.Experimental;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -38,12 +36,9 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Item used inside an <see cref="Accordion"/> element.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class AccordionItem : BaseVisualElement, INotifyValueChanged<bool>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId titleProperty = nameof(title);
 
         internal static readonly BindingId indicatorPositionProperty = nameof(indicatorPosition);
@@ -53,7 +48,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId trailingContentTemplateProperty = nameof(trailingContentTemplate);
 
         internal static readonly BindingId leadingContentTemplateProperty = nameof(leadingContentTemplate);
-#endif
 
         const string k_IndicatorIconName = "caret-down";
 
@@ -232,12 +226,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The header's leading container template of the AccordionItem.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public VisualTreeAsset leadingContentTemplate
         {
             get => m_LeadingContentTemplate;
@@ -248,22 +238,16 @@ namespace Unity.AppUI.UI
                 leadingContainer.Clear();
                 if (m_LeadingContentTemplate)
                     m_LeadingContentTemplate.CloneTree(leadingContainer);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in leadingContentTemplateProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The header's trailing container template of the AccordionItem.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public VisualTreeAsset trailingContentTemplate
         {
             get => m_TrailingContentTemplate;
@@ -274,10 +258,8 @@ namespace Unity.AppUI.UI
                 trailingContainer.Clear();
                 if (m_TrailingContentTemplate)
                     m_TrailingContentTemplate.CloneTree(trailingContainer);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in trailingContentTemplateProperty);
-#endif
             }
         }
 
@@ -285,12 +267,8 @@ namespace Unity.AppUI.UI
         /// The position of the indicator.
         /// </summary>
         [Tooltip("The position of the indicator.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public FlexPosition indicatorPosition
         {
             get => m_HeaderElement.hierarchy.IndexOf(m_HeaderIndicatorElement) == 0 ? FlexPosition.Start : FlexPosition.End;
@@ -308,9 +286,7 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetIndicatorPosUssClassName(previousValue));
                 AddToClassList(GetIndicatorPosUssClassName(value));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(indicatorPositionProperty);
-#endif
             }
         }
 
@@ -318,12 +294,8 @@ namespace Unity.AppUI.UI
         /// The title of the AccordionItem.
         /// </summary>
         [Tooltip("The title of the AccordionItem.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string title
         {
             get => m_HeaderTextElement.text;
@@ -333,10 +305,8 @@ namespace Unity.AppUI.UI
 
                 m_HeaderTextElement.text = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (previousValue != value)
                     NotifyPropertyChanged(titleProperty);
-#endif
             }
         }
 
@@ -344,12 +314,8 @@ namespace Unity.AppUI.UI
         /// The value of the item, which represents its open state.
         /// </summary>
         [Tooltip("The value of the item, which represents its open state.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool value
         {
             get => ClassListContains(Styles.openUssClassName);
@@ -366,9 +332,7 @@ namespace Unity.AppUI.UI
                 SendEvent(evt);
                 SendEvent(itemEvt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(valueProperty);
-#endif
             }
         }
 
@@ -394,66 +358,27 @@ namespace Unity.AppUI.UI
             value = !value;
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Class to be able to use the <see cref="AccordionItem"/> in UXML.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<AccordionItem, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="AccordionItem"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_Title = new UxmlStringAttributeDescription
-            {
-                name = "title",
-                defaultValue = "Header",
-            };
-
-            readonly UxmlEnumAttributeDescription<FlexPosition> m_IndicatorPosition = new UxmlEnumAttributeDescription<FlexPosition>
-            {
-                name = "indicator-position",
-                defaultValue = FlexPosition.End,
-            };
-
-            readonly UxmlBoolAttributeDescription m_Value = new UxmlBoolAttributeDescription
-            {
-                name = "value",
-                defaultValue = false,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                m_PickingMode.defaultValue = PickingMode.Ignore;
-                base.Init(ve, bag, cc);
-
-                var element = (AccordionItem)ve;
-                element.title = m_Title.GetValueFromBag(bag, cc);
-                element.indicatorPosition = m_IndicatorPosition.GetValueFromBag(bag, cc);
-                element.value = m_Value.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 
     /// <summary>
-    /// Accordion UI element.
+    /// A collapsible content container that allows users to expand and collapse sections of content.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Accordion component is a versatile UI element that organizes content into collapsible sections. Each
+    /// section consists of a header and content area that can be toggled open or closed. This pattern is
+    /// particularly useful when you need to present multiple sections of content in a limited space.
+    ///
+    /// The component supports both single-expansion (exclusive) and multi-expansion modes, making it suitable for
+    /// various use cases such as FAQs, settings panels, or navigation menus.
+    ///
+    /// Note: The Accordion component requires <see cref="AccordionItem"/> children to function properly. Each
+    /// AccordionItem represents a collapsible section within the Accordion.
+    /// </remarks>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class Accordion : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId isExclusiveProperty = nameof(isExclusive);
-#endif
 
         /// <summary>
         /// The Accordion main styling class.
@@ -469,13 +394,9 @@ namespace Unity.AppUI.UI
         /// If true, a maximum of one item can be open at a time.
         /// </remarks>
         [Tooltip("If true, a maximum of one item can be open at a time.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Accordion")]
-#endif
         public bool isExclusive
         {
             get => m_IsExclusive;
@@ -484,10 +405,8 @@ namespace Unity.AppUI.UI
                 var previousValue = m_IsExclusive;
                 m_IsExclusive = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (previousValue != value)
                     NotifyPropertyChanged(isExclusiveProperty);
-#endif
             }
         }
 
@@ -523,44 +442,5 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// The UXML factory for the Accordion.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Accordion, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Accordion"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            /// <summary>
-            /// The behavior of the Accordion when multiple items are open.
-            /// <para>
-            /// If true, a maximum of one item can be open at a time.
-            /// </para>
-            /// </summary>
-            readonly UxmlBoolAttributeDescription m_IsExclusive = new UxmlBoolAttributeDescription
-            {
-                name = "is-exclusive",
-                defaultValue = false
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                m_PickingMode.defaultValue = PickingMode.Ignore;
-                base.Init(ve, bag, cc);
-
-                var element = (Accordion)ve;
-                element.isExclusive = m_IsExclusive.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

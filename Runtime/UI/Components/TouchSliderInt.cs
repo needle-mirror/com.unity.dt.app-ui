@@ -2,18 +2,79 @@ using System;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// TouchSlider UI element for integer values.
+    /// A touch-optimized slider component for selecting integer values within a specified range.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// TouchSliderInt is a user interface control that allows users to select an integer value from a
+    /// continuous range by dragging a thumb along a track. It is specifically designed for touch interactions
+    /// while maintaining full keyboard and mouse support.
+    ///
+    /// The slider provides visual feedback through a progress bar that fills according to the current value.
+    /// It supports both horizontal and vertical orientations, and automatically adapts to RTL (Right-to-Left)
+    /// layouts.
+    ///
+    /// The component includes a label that can display units or descriptions, and a value display that shows
+    /// the current selection. Users can directly edit the value through a text input field that appears when
+    /// clicking on the value display.
+    ///
+    /// For performance reasons, it's recommended to set appropriate step values to limit the number of possible
+    /// values in very large ranges.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic usage of TouchSliderInt in UXML — creating an age selector slider in UXML.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <TouchSliderInt name="ageSlider"
+    ///              low-value="0"
+    ///              high-value="100"
+    ///              value="25"
+    ///              label="years"
+    ///              step="1"
+    ///              shift-step="5"
+    ///              size="M" />
+    /// ]]></code>
+    /// <para>Creating and configuring TouchSliderInt in C# — creating a volume control slider programmatically.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var volumeSlider = new TouchSliderInt
+    /// {
+    ///     lowValue = 0,
+    ///     highValue = 100,
+    ///     value = 50,
+    ///     label = "%",
+    ///     step = 5,
+    ///     shiftStep = 10,
+    ///     size = Size.M
+    /// };
+    ///
+    /// // Add value change listener
+    /// volumeSlider.RegisterValueChangedCallback(evt =>
+    /// {
+    ///     Debug.Log($"Volume changed from {evt.previousValue} to {evt.newValue}");
+    /// });
+    /// ]]></code>
+    /// <para>Creating a vertical slider with custom styling — creating a height measurement slider.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var heightSlider = new TouchSliderInt
+    /// {
+    ///     orientation = Direction.Vertical,
+    ///     lowValue = 0,
+    ///     highValue = 200,
+    ///     value = 170,
+    ///     label = "cm",
+    ///     step = 1,
+    ///     shiftStep = 10
+    /// };
+    ///
+    /// // Add custom styling
+    /// heightSlider.AddToClassList("custom-slider");
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class TouchSliderInt : TouchSlider<int>
     {
         const int k_DefaultStep = 1;
@@ -33,7 +94,6 @@ namespace Unity.AppUI.UI
             value = 0;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("step")]
         int stepOverride
         {
@@ -68,7 +128,6 @@ namespace Unity.AppUI.UI
             get => value;
             set => this.value = value;
         }
-#endif
 
         /// <inheritdoc />
         protected override int thumbCount => 1;
@@ -140,49 +199,6 @@ namespace Unity.AppUI.UI
             values[0] = v;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="TouchSliderInt"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<TouchSliderInt, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TouchSliderInt"/>.
-        /// </summary>
-        public new class UxmlTraits : TouchSlider<int>.UxmlTraits
-        {
-            readonly UxmlIntAttributeDescription m_Step = new UxmlIntAttributeDescription { name = "step", defaultValue = 1 };
-
-            readonly UxmlIntAttributeDescription m_ShiftStep = new UxmlIntAttributeDescription { name = "shift-step", defaultValue = 10 };
-
-            readonly UxmlIntAttributeDescription m_HighValue = new UxmlIntAttributeDescription { name = "high-value", defaultValue = 1 };
-
-            readonly UxmlIntAttributeDescription m_LowValue = new UxmlIntAttributeDescription { name = "low-value", defaultValue = 0 };
-
-            readonly UxmlIntAttributeDescription m_Value = new UxmlIntAttributeDescription { name = "value", defaultValue = 0 };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var elem = (TouchSliderInt)ve;
-
-                elem.step = m_Step.GetValueFromBag(bag, cc);
-                elem.shiftStep = m_ShiftStep.GetValueFromBag(bag, cc);
-                elem.highValue = m_HighValue.GetValueFromBag(bag, cc);
-                elem.lowValue = m_LowValue.GetValueFromBag(bag, cc);
-                elem.SetValueWithoutNotify(m_Value.GetValueFromBag(bag, cc));
-            }
-        }
-
-#endif
     }
 
 }

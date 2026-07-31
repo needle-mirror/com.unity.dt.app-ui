@@ -2,23 +2,84 @@ using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A PageView is a container that displays a single child at a time and provides a UI to
-    /// navigate between them. It is similar to a <see cref="ScrollView"/> but here children are
-    /// snapped to the container's edges.
+    /// A container component that displays a single child at a time with built-in navigation.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The PageView component is a container that displays one child element at a time and provides smooth
+    /// navigation between them. It combines a <see cref="SwipeView"/> for touch/mouse interaction with a
+    /// <see cref="PageIndicator"/> for visual feedback and navigation control. It is similar to a
+    /// <see cref="ScrollView"/>, but here children are snapped to the container's edges.
+    ///
+    /// It's ideal for creating carousels, slideshows, onboarding flows, or any interface where content needs to
+    /// be displayed one page at a time.
+    ///
+    /// Key features:
+    /// - Supports both horizontal and vertical orientations
+    /// - Touch and mouse swipe gestures
+    /// - Keyboard navigation
+    /// - Auto-play capability
+    /// - Configurable animation speed and behavior
+    /// - Optional wrapping navigation
+    /// - Built-in page indicator
+    /// </remarks>
+    /// <example>
+    /// <para>**Basic Usage** — Creating a simple horizontal page view with three pages.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <PageView style="width: 100%; height: 300px;">
+    ///     <SwipeViewItem>
+    ///         <Label text="Page 1" />
+    ///     </SwipeViewItem>
+    ///     <SwipeViewItem>
+    ///         <Label text="Page 2" />
+    ///     </SwipeViewItem>
+    ///     <SwipeViewItem>
+    ///         <Label text="Page 3" />
+    ///     </SwipeViewItem>
+    /// </PageView>
+    /// ]]></code>
+    /// <para>**Image Carousel** — Creating an auto-playing image carousel with wrap-around navigation.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <PageView class="carousel" auto-play-duration="5000" wrap="true">
+    ///     <SwipeViewItem>
+    ///         <Image src="image1.png" />
+    ///     </SwipeViewItem>
+    ///     <SwipeViewItem>
+    ///         <Image src="image2.png" />
+    ///     </SwipeViewItem>
+    ///     <SwipeViewItem>
+    ///         <Image src="image3.png" />
+    ///     </SwipeViewItem>
+    /// </PageView>
+    /// ]]></code>
+    /// <para>**Onboarding Flow** — Creating an onboarding flow with multiple pages.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <PageView direction="Horizontal" class="onboarding">
+    ///     <SwipeViewItem>
+    ///         <Box class="onboarding-page">
+    ///             <Image src="welcome.png" />
+    ///             <Label text="Welcome!" class="title" />
+    ///             <Label text="Swipe to learn more" class="subtitle" />
+    ///         </Box>
+    ///     </SwipeViewItem>
+    ///     <SwipeViewItem>
+    ///         <Box class="onboarding-page">
+    ///             <Image src="feature1.png" />
+    ///             <Label text="Feature 1" class="title" />
+    ///             <Label text="Description of feature 1" class="subtitle" />
+    ///         </Box>
+    ///     </SwipeViewItem>
+    /// </PageView>
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class PageView : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId directionProperty = new BindingId(nameof(direction));
 
@@ -31,7 +92,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId visibilityCountProperty = new BindingId(nameof(visibilityCount));
 
         internal static readonly BindingId autoPlayDurationProperty = new BindingId(nameof(autoPlayDuration));
-#endif
 
         /// <summary>
         /// The main styling class of the PageView. This is the class that is used in the USS file.
@@ -68,12 +128,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The speed of the animation when snapping to a page.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float snapAnimationSpeed
         {
             get => m_SwipeView.snapAnimationSpeed;
@@ -82,22 +138,16 @@ namespace Unity.AppUI.UI
                 var changed = !Mathf.Approximately(m_SwipeView.snapAnimationSpeed, value);
                 m_SwipeView.snapAnimationSpeed = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in animationSpeedProperty);
-#endif
             }
         }
 
         /// <summary>
         /// A limit number of pages to keep animating the transition between pages.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int skipAnimationThreshold
         {
             get => m_SwipeView.skipAnimationThreshold;
@@ -106,22 +156,16 @@ namespace Unity.AppUI.UI
                 var changed = m_SwipeView.skipAnimationThreshold != value;
                 m_SwipeView.skipAnimationThreshold = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in skipAnimationThresholdProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Whether the PageView should wrap around when reaching the end of the list.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool wrap
         {
             get => m_SwipeView.wrap;
@@ -130,22 +174,16 @@ namespace Unity.AppUI.UI
                 var changed = m_SwipeView.wrap != value;
                 m_SwipeView.wrap = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in wrapProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The number of milliseconds between each automatic swipe.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int autoPlayDuration
         {
             get => m_SwipeView.autoPlayDuration;
@@ -154,22 +192,16 @@ namespace Unity.AppUI.UI
                 var changed = m_SwipeView.autoPlayDuration != value;
                 m_SwipeView.autoPlayDuration = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in autoPlayDurationProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The orientation of the PageView.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Direction direction
         {
             get => m_SwipeView.direction;
@@ -181,22 +213,16 @@ namespace Unity.AppUI.UI
                 m_PageIndicator.direction = value;
                 AddToClassList(GetDirectionUssClassName(m_SwipeView.direction));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in directionProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The number of pages that are visible at the same time.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int visibilityCount
         {
             get => m_SwipeView.visibleItemCount;
@@ -205,10 +231,8 @@ namespace Unity.AppUI.UI
                 var changed = m_SwipeView.visibleItemCount != value;
                 m_SwipeView.visibleItemCount = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in visibilityCountProperty);
-#endif
             }
         }
 
@@ -268,83 +292,5 @@ namespace Unity.AppUI.UI
             m_SwipeView.SetValueWithoutNotify(m_SwipeView.value);
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Class used to create a PageView from UXML.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<PageView, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="PageView"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Direction> m_Direction = new UxmlEnumAttributeDescription<Direction>
-            {
-                name = "direction",
-                defaultValue = Direction.Horizontal,
-            };
-
-            readonly UxmlFloatAttributeDescription m_AnimationSpeed = new UxmlFloatAttributeDescription()
-            {
-                name = "animation-speed",
-                defaultValue = 0.5f,
-            };
-
-            readonly UxmlIntAttributeDescription m_SkipAnim = new UxmlIntAttributeDescription()
-            {
-                name = "skip-animation-threshold",
-                defaultValue = 2,
-            };
-
-            readonly UxmlBoolAttributeDescription m_Wrap = new UxmlBoolAttributeDescription()
-            {
-                name = "wrap",
-                defaultValue = false,
-            };
-
-            readonly UxmlIntAttributeDescription m_VisibilityCount = new UxmlIntAttributeDescription()
-            {
-                name = "visibility-count",
-                defaultValue = 1,
-            };
-
-            readonly UxmlIntAttributeDescription m_AutoPlayDuration = new UxmlIntAttributeDescription()
-            {
-                name = "auto-play-duration",
-                defaultValue = SwipeView.noAutoPlayDuration,
-            };
-
-            /// <summary>
-            /// Returns an enumerable containing UxmlChildElementDescription(typeof(VisualElement)), since VisualElements can contain other VisualElements.
-            /// </summary>
-            public override IEnumerable<UxmlChildElementDescription> uxmlChildElementsDescription =>
-                new[]
-                {
-                    new UxmlChildElementDescription(typeof(SwipeViewItem))
-                };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (PageView)ve;
-                el.direction = m_Direction.GetValueFromBag(bag, cc);
-                el.wrap = m_Wrap.GetValueFromBag(bag, cc);
-                el.visibilityCount = m_VisibilityCount.GetValueFromBag(bag, cc);
-                el.skipAnimationThreshold = m_SkipAnim.GetValueFromBag(bag, cc);
-                el.snapAnimationSpeed = m_AnimationSpeed.GetValueFromBag(bag, cc);
-                el.autoPlayDuration = m_AutoPlayDuration.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

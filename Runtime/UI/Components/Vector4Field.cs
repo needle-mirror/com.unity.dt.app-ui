@@ -1,21 +1,75 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Vector4 Field UI element.
+    /// A field control that allows users to edit a Vector4 value by inputting its X, Y, Z and W components.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Vector4Field is a specialized input control that allows users to edit a Vector4 value through four
+    /// separate numerical fields representing its X, Y, Z and W components. It's particularly useful for handling
+    /// 4D vectors or when you need to input quaternion values.
+    ///
+    /// The field is organized in a 2x2 grid layout with clearly labeled inputs for each component. Each component
+    /// field supports numerical input with floating-point precision and can be individually edited.
+    ///
+    /// Key features:
+    /// - Individual floating-point input fields for X, Y, Z, and W components
+    /// - Support for value validation
+    /// - Customizable number formatting
+    /// - Different size variants
+    /// - Support for UXML integration
+    /// </remarks>
+    /// <example>
+    /// <para>Basic usage with UXML. Basic UXML declaration of a Vector4Field.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:Vector4Field name="myVector4Field"
+    ///                size="M"
+    ///                value="1 2 3 4"
+    ///                format-string="F2" />
+    /// ]]></code>
+    /// <para>Code example showing various features. Creating and configuring a Vector4Field in code.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var vector4Field = new Vector4Field {
+    ///     value = new Vector4(1, 2, 3, 4),
+    ///     size = Size.M,
+    ///     formatString = "F2",
+    ///     validateValue = (v) => v.magnitude <= 1.0f
+    /// };
+    ///
+    /// vector4Field.RegisterValueChangedCallback(evt => {
+    ///     Debug.Log($"New value: {evt.newValue}");
+    /// });
+    ///
+    /// container.Add(vector4Field);
+    /// ]]></code>
+    /// <para>Using with validation and custom formatting. Advanced setup with custom formatting and validation.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var vector4Field = new Vector4Field();
+    ///
+    /// // Custom format function
+    /// vector4Field.formatFunction = (float value) => $"{value:0.##}u";
+    ///
+    /// // Validation function
+    /// vector4Field.validateValue = (Vector4 v) => {
+    ///     return v.x >= 0 && v.y >= 0 && v.z >= 0 && v.w >= 0;
+    /// };
+    ///
+    /// // Register change callback
+    /// vector4Field.RegisterValueChangedCallback(evt => {
+    ///     if (!vector4Field.invalid) {
+    ///         ApplyVector4Value(evt.newValue);
+    ///     }
+    /// });
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class Vector4Field : BaseVisualElement, IInputElement<Vector4>, ISizeableElement, INotifyValueChanging<Vector4>, IFormattable<float>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
 
@@ -29,7 +83,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId formatFunctionProperty = new BindingId(nameof(formatFunction));
 
-#endif
 
         /// <summary>
         /// The Vector4Field main styling class.
@@ -149,12 +202,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the Vector4Field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -188,12 +237,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the Vector4Field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Vector4 value
         {
             get => m_Value;
@@ -213,12 +258,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The invalid state of the Vector4Field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -236,9 +277,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The validation function of the Vector4Field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<Vector4, bool> validateValue
         {
             get => m_ValidateValue;
@@ -248,22 +287,16 @@ namespace Unity.AppUI.UI
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The format string of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string formatString
         {
             get => m_FormatString;
@@ -277,19 +310,15 @@ namespace Unity.AppUI.UI
                 m_WField.formatString = m_FormatString;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The format function of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public FormatFunction<float> formatFunction
         {
             get => m_FormatFunction;
@@ -303,10 +332,8 @@ namespace Unity.AppUI.UI
                 m_WField.formatFunction = m_FormatFunction;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
-#endif
             }
         }
 
@@ -376,39 +403,5 @@ namespace Unity.AppUI.UI
         }
 
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Vector4Field"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Vector4Field, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Vector4Field"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Vector4Field)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

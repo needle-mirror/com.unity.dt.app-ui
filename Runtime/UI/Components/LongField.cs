@@ -2,18 +2,29 @@ using System;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A <see cref="NumericalField{T}"/> that only accepts long values.
+    /// A numerical input field that accepts and validates long integer values.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// LongField is a specialized input component designed for entering and manipulating long integer values. It
+    /// provides built-in validation, formatting options, and support for value constraints.
+    ///
+    /// The component extends NumericalField&lt;long&gt; and includes features such as:
+    /// - Value constraints through lowValue and highValue properties
+    /// - Custom value formatting using formatString or formatFunction
+    /// - Unit display support
+    /// - Keyboard navigation and increment/decrement functionality
+    /// - Invalid state handling with custom validation
+    ///
+    /// **Tip:** Use LongField when you need to collect or display long integer values in forms, settings panels,
+    /// or any interface requiring numerical input within the long integer range.
+    /// </remarks>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class LongField : NumericalField<long>
     {
         /// <summary>
@@ -77,7 +88,6 @@ namespace Unity.AppUI.UI
             return Math.Abs(baseValue) > 100 ? (float)Math.Ceiling(baseValue * 0.1f) : 1;
         }
 
-#if ENABLE_VALUEFIELD_INTERFACE
         /// <inheritdoc/>
         public override void ApplyInputDeviceDelta(Vector3 delta, DeltaSpeed speed, long startValue)
         {
@@ -90,20 +100,6 @@ namespace Unity.AppUI.UI
             SetValueWithoutNotify(newValue);
             TrySendChangingEvent(previousValue, newValue);
         }
-#endif
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="LongField"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<LongField, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="LongField"/>.
-        /// </summary>
-        public new class UxmlTraits : NumericalField<long>.UxmlTraits { }
-
-#endif
     }
 }

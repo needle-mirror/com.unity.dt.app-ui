@@ -1,21 +1,16 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// ThreadReaction UI element. Displays an emoji reaction with a count.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class ThreadReaction : BaseVisualElement, IPressable
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId emojiProperty = nameof(emoji);
 
         internal static readonly BindingId countProperty = nameof(count);
@@ -23,7 +18,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId isOwnReactionProperty = nameof(isOwnReaction);
 
         internal static readonly BindingId clickableProperty = nameof(clickable);
-#endif
 
         /// <summary>
         /// The ThreadReaction main styling class.
@@ -89,9 +83,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Clickable Manipulator for this ThreadReaction.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -107,10 +99,8 @@ namespace Unity.AppUI.UI
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
-#endif
             }
         }
 
@@ -132,13 +122,9 @@ namespace Unity.AppUI.UI
         /// The emoji string to display.
         /// </summary>
         [Tooltip("The emoji string to display.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Thread Reaction")]
-#endif
         public string emoji
         {
             get => m_Emoji;
@@ -147,10 +133,8 @@ namespace Unity.AppUI.UI
                 var changed = m_Emoji != value;
                 m_Emoji = value;
                 m_EmojiElement.text = m_Emoji;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in emojiProperty);
-#endif
             }
         }
 
@@ -158,12 +142,8 @@ namespace Unity.AppUI.UI
         /// The reaction count.
         /// </summary>
         [Tooltip("The reaction count.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int count
         {
             get => m_Count;
@@ -172,10 +152,8 @@ namespace Unity.AppUI.UI
                 var changed = m_Count != value;
                 m_Count = value;
                 m_CountElement.text = m_Count.ToString();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in countProperty);
-#endif
             }
         }
 
@@ -183,12 +161,8 @@ namespace Unity.AppUI.UI
         /// Whether this reaction belongs to the current user.
         /// </summary>
         [Tooltip("Whether this reaction belongs to the current user.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool isOwnReaction
         {
             get => ClassListContains(Styles.selectedUssClassName);
@@ -196,58 +170,10 @@ namespace Unity.AppUI.UI
             {
                 var changed = ClassListContains(Styles.selectedUssClassName) != value;
                 EnableInClassList(Styles.selectedUssClassName, value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in isOwnReactionProperty);
-#endif
             }
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Defines the UxmlFactory for the ThreadReaction.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<ThreadReaction, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ThreadReaction"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_Emoji = new UxmlStringAttributeDescription
-            {
-                name = "emoji",
-                defaultValue = null
-            };
-
-            readonly UxmlIntAttributeDescription m_Count = new UxmlIntAttributeDescription
-            {
-                name = "count",
-                defaultValue = 0
-            };
-
-            readonly UxmlBoolAttributeDescription m_IsOwnReaction = new UxmlBoolAttributeDescription
-            {
-                name = "is-own-reaction",
-                defaultValue = false,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (ThreadReaction)ve;
-                el.emoji = m_Emoji.GetValueFromBag(bag, cc);
-                el.count = m_Count.GetValueFromBag(bag, cc);
-                el.isOwnReaction = m_IsOwnReaction.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

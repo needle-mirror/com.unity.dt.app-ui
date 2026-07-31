@@ -1,20 +1,31 @@
 using System;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Toggle UI element.
+    /// A control that allows users to switch between two states: on (checked) and off (unchecked).
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Toggle component is a user interface element that allows users to switch between two states. It's
+    /// commonly used for enabling or disabling options, features, or settings within an application.
+    ///
+    /// Toggles are best used when you need to:
+    /// - Present a binary choice, such as on/off or true/false
+    /// - Immediately apply state changes
+    /// - Show the current state clearly through visual feedback
+    ///
+    /// The component consists of a box containing a checkmark that indicates the selected state, and an optional
+    /// label that describes the toggle's purpose.
+    ///
+    /// When clicked or activated via keyboard, the toggle switches its state and triggers a change event that can
+    /// be handled by the application.
+    /// </remarks>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class Toggle : BaseVisualElement, IInputElement<bool>, IPressable
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = nameof(value);
 
@@ -26,7 +37,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId clickableProperty = nameof(clickable);
 
-#endif
 
         /// <summary>
         /// The Toggle main styling class.
@@ -117,9 +127,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Clickable Manipulator for this Toggle.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -132,22 +140,16 @@ namespace Unity.AppUI.UI
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Toggle label.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string label
         {
             get => m_Label.text;
@@ -157,22 +159,16 @@ namespace Unity.AppUI.UI
                 m_Label.text = value;
                 m_Label.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The invalid state of the Toggle.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -181,19 +177,15 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(Styles.invalidUssClassName) != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The validation function for the Toggle.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<bool, bool> validateValue
         {
             get => m_ValidateValue;
@@ -203,10 +195,8 @@ namespace Unity.AppUI.UI
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
@@ -224,12 +214,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Toggle value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool value
         {
             get => m_Value;
@@ -242,9 +228,7 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
@@ -263,48 +247,5 @@ namespace Unity.AppUI.UI
             value = !value;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Toggle"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Toggle, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Toggle"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
-            {
-                name = "label",
-                defaultValue = null
-            };
-
-            readonly UxmlBoolAttributeDescription m_Value = new UxmlBoolAttributeDescription
-            {
-                name = "value",
-                defaultValue = false
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Toggle)ve;
-                element.value = m_Value.GetValueFromBag(bag, cc);
-                element.label = m_Label.GetValueFromBag(bag, cc);
-
-
-            }
-        }
-
-#endif
     }
 }

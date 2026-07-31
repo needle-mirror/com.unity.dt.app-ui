@@ -6,22 +6,76 @@ using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// This is the main UI element of any Runtime App. The <see cref="Panel"/> class will create different
-    /// UI layers for the main user-interface, popups, notifications and tooltips.
+    /// The root UI container that provides layered architecture for the main interface, popups, notifications,
+    /// and tooltips.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The <see cref="Panel"/> component is the foundational element of any App UI runtime application. It
+    /// establishes a hierarchical layer system that organizes different UI contexts, ensuring proper z-ordering
+    /// and isolation between the main interface, popup elements, notifications, and tooltips.
+    ///
+    /// Key features:
+    /// - Four distinct UI layers: main container, popup container, notification container, and tooltip container
+    /// - Global context providers for theme, scale, language, and layout direction
+    /// - Automatic DPI scaling support for different displays
+    /// - Integrated tooltip management system
+    /// - RTL (Right-to-Left) layout support
+    /// - Localization integration with Unity Localization package
+    ///
+    /// The Panel automatically manages contexts that are inherited by all child elements, making it easy to
+    /// apply consistent theming, scaling, and localization throughout your application.
+    ///
+    /// NOTE: Each application should have one root Panel element. Additional Panel elements can be nested but
+    /// will not act as root panels.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic panel setup: Creating a basic application with a Panel root.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Panel>
+    ///     <Box>
+    ///         <Heading>Welcome to App UI</Heading>
+    ///         <Text text="Main content goes here" />
+    ///     </Box>
+    /// </Panel>
+    /// ]]></code>
+    /// <para>Panel with custom theme and scale: Configuring panel appearance and scale.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Panel theme="light" scale="large" lang="en">
+    ///     <Box>
+    ///         <Text text="This panel uses a light theme with large scale" />
+    ///     </Box>
+    /// </Panel>
+    /// ]]></code>
+    /// <para>Accessing panel layers programmatically: Using panel utility methods to access UI layers.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Get the panel from any element in the hierarchy
+    /// var notificationLayer = Panel.FindNotificationLayer(myElement);
+    /// var popupLayer = Panel.FindPopupLayer(myElement);
+    /// var tooltipLayer = Panel.FindTooltipLayer(myElement);
+    ///
+    /// // Add a notification to the notification layer
+    /// var snackbar = new Snackbar("Operation completed");
+    /// notificationLayer.Add(snackbar);
+    /// snackbar.Show();
+    /// ]]></code>
+    /// <para>RTL layout support: Setting up a panel for right-to-left languages.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Panel layout-direction="Rtl" lang="ar" theme="dark">
+    ///     <Box>
+    ///         <Text text="مرحبا بكم في واجهة المستخدم" />
+    ///     </Box>
+    /// </Panel>
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class Panel : VisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId scaleProperty = nameof(scale);
 
         internal static readonly BindingId themeProperty = nameof(theme);
@@ -35,7 +89,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId tooltipDelayMsProperty = nameof(tooltipDelayMs);
 
         internal static readonly BindingId forceUseTooltipSystemProperty = nameof(forceUseTooltipSystem);
-#endif
 
         /// <summary>
         /// Main Uss Class Name.
@@ -244,13 +297,9 @@ namespace Unity.AppUI.UI
         /// The default language for this panel.
         /// </summary>
         [Tooltip("The default language for this panel.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Panel")]
-#endif
         public string lang
         {
             get => this.GetSelfContext<LangContext>()?.lang ?? defaultLang;
@@ -260,9 +309,7 @@ namespace Unity.AppUI.UI
                 if (previous == null || previous.lang != value)
                 {
                     this.ProvideContext(string.IsNullOrEmpty(value) ? null : new LangContext(value));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in langProperty);
-#endif
                 }
             }
         }
@@ -271,12 +318,8 @@ namespace Unity.AppUI.UI
         /// The default scale for this panel.
         /// </summary>
         [Tooltip("The default scale for this panel.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string scale
         {
             get => this.GetSelfContext<ScaleContext>()?.scale ?? defaultScale;
@@ -288,9 +331,7 @@ namespace Unity.AppUI.UI
                 if (previous?.scale != value)
                 {
                     this.ProvideContext(new ScaleContext(value));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in scaleProperty);
-#endif
                 }
             }
         }
@@ -299,12 +340,8 @@ namespace Unity.AppUI.UI
         /// The default theme for this panel.
         /// </summary>
         [Tooltip("The default theme for this panel.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string theme
         {
             get => this.GetSelfContext<ThemeContext>()?.theme ?? defaultTheme;
@@ -316,9 +353,7 @@ namespace Unity.AppUI.UI
                 if (previous?.theme != value)
                 {
                     this.ProvideContext(new ThemeContext(value));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in themeProperty);
-#endif
                 }
             }
         }
@@ -327,12 +362,8 @@ namespace Unity.AppUI.UI
         /// The default layout direction for this panel.
         /// </summary>
         [Tooltip("The default layout direction for this panel.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Dir layoutDirection
         {
             get => this.GetSelfContext<DirContext>()?.dir ?? Dir.Ltr;
@@ -342,9 +373,7 @@ namespace Unity.AppUI.UI
                 if (previous == null || previous.dir != value)
                 {
                     this.ProvideContext(new DirContext(value));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in layoutDirectionProperty);
-#endif
                 }
             }
         }
@@ -357,12 +386,8 @@ namespace Unity.AppUI.UI
         /// </remarks>
         [Tooltip("The default preferred tooltip placement for this panel.\n" +
             "Note that this is just the ideal placement, the tooltip will be placed on the opposite side if there is not enough space.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public PopoverPlacement preferredTooltipPlacement
         {
             get => this.GetSelfContext<TooltipPlacementContext>()?.placement ?? Tooltip.defaultPlacement;
@@ -372,9 +397,7 @@ namespace Unity.AppUI.UI
                 if (previous == null || previous.placement != value)
                 {
                     this.ProvideContext(new TooltipPlacementContext(value));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in tooltipPlacementProperty);
-#endif
                 }
             }
         }
@@ -383,12 +406,8 @@ namespace Unity.AppUI.UI
         /// The default tooltip delay in milliseconds for this panel.
         /// </summary>
         [Tooltip("The default tooltip delay in milliseconds for this panel.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int tooltipDelayMs
         {
             get => this.GetSelfContext<TooltipDelayContext>()?.tooltipDelayMs ?? TooltipManipulator.defaultDelayMs;
@@ -398,9 +417,7 @@ namespace Unity.AppUI.UI
                 if (previous == null || previous.tooltipDelayMs != value)
                 {
                     this.ProvideContext(new TooltipDelayContext(value));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in tooltipDelayMsProperty);
-#endif
                 }
             }
         }
@@ -409,12 +426,8 @@ namespace Unity.AppUI.UI
         /// If true, the panel will use the tooltip system, even if the default UI-Toolkit tooltips are enabled.
         /// </summary>
         [Tooltip("Force the use of the tooltip system, even if the default UI-Toolkit tooltips are enabled.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool forceUseTooltipSystem
         {
             get => m_ForceUseTooltipSystem;
@@ -424,9 +437,7 @@ namespace Unity.AppUI.UI
                 if (m_TooltipManipulator != null)
                     m_TooltipManipulator.force = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in forceUseTooltipSystemProperty);
-#endif
             }
         }
 
@@ -659,82 +670,5 @@ namespace Unity.AppUI.UI
             element.style.right = 0;
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Class used to create instances of <see cref="Panel"/> from UXML.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Panel, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Panel"/>.
-        /// </summary>
-        public new class UxmlTraits : VisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_Lang = new UxmlStringAttributeDescription
-            {
-                name = "lang",
-                defaultValue = defaultLang
-            };
-
-            readonly UxmlStringAttributeDescription m_Scale = new UxmlStringAttributeDescription
-            {
-                name = "scale",
-                defaultValue = defaultScale,
-                restriction = new UxmlEnumeration
-                {
-                    values = new[] { "small", "medium", "large" }
-                }
-            };
-
-            readonly UxmlStringAttributeDescription m_Theme = new UxmlStringAttributeDescription
-            {
-                name = "theme",
-                defaultValue = defaultTheme,
-                restriction = new UxmlEnumeration
-                {
-                    values = new[] { "light", "dark", "editor-dark", "editor-light" }
-                }
-            };
-
-            readonly UxmlEnumAttributeDescription<Dir> m_Dir = new UxmlEnumAttributeDescription<Dir>
-            {
-                name = "dir",
-                defaultValue = defaultDir
-            };
-
-            readonly UxmlEnumAttributeDescription<PopoverPlacement> m_PreferredTooltipPlacement = new UxmlEnumAttributeDescription<PopoverPlacement>
-            {
-                name = "preferred-tooltip-placement",
-                defaultValue = Tooltip.defaultPlacement
-            };
-
-            readonly UxmlIntAttributeDescription m_TooltipDelayMs = new UxmlIntAttributeDescription
-            {
-                name = "tooltip-delay-ms",
-                defaultValue = TooltipManipulator.defaultDelayMs
-            };
-
-            readonly UxmlBoolAttributeDescription m_ForceUseTooltipSystem = new UxmlBoolAttributeDescription
-            {
-                name = "force-use-tooltip-system",
-                defaultValue = false
-            };
-
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var panel = (Panel)ve;
-
-                panel.lang = m_Lang.GetValueFromBag(bag, cc);
-                panel.scale = m_Scale.GetValueFromBag(bag, cc);
-                panel.theme = m_Theme.GetValueFromBag(bag, cc);
-                panel.layoutDirection = m_Dir.GetValueFromBag(bag, cc);
-                panel.preferredTooltipPlacement = m_PreferredTooltipPlacement.GetValueFromBag(bag, cc);
-                panel.tooltipDelayMs = m_TooltipDelayMs.GetValueFromBag(bag, cc);
-                panel.forceUseTooltipSystem = m_ForceUseTooltipSystem.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

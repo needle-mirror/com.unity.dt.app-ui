@@ -2,18 +2,72 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Menu UI element.
+    /// A container for menu items organized in a vertical list.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Menu component is a container that displays a vertical list of menu items, sections, and dividers.
+    /// It provides a structured way to present actions, navigation options, or selectable items to users.
+    ///
+    /// Menus are commonly used in context menus, dropdown menus, navigation sidebars, and command palettes.
+    /// They support keyboard navigation, nested sub-menus, and scrolling for long lists of items.
+    ///
+    /// The Menu component automatically handles focus management and keyboard navigation (Up/Down arrows)
+    /// between menu items, making it fully keyboard accessible.
+    ///
+    /// Note: Menu has picking mode set to ignore by default, but is focusable to support keyboard navigation.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Menu Structure &#8212; Creating a simple file menu with items and a divider.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:Menu>
+    ///     <ui:MenuItem label="New File" icon="file" />
+    ///     <ui:MenuItem label="Open" icon="folder-open" shortcut="Ctrl+O" />
+    ///     <ui:MenuItem label="Save" icon="save" shortcut="Ctrl+S" />
+    ///     <ui:MenuDivider />
+    ///     <ui:MenuItem label="Exit" icon="exit" />
+    /// </ui:Menu>
+    /// ]]></code>
+    /// <para>Menu with Sections &#8212; Organizing menu items into titled sections.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:Menu>
+    ///     <ui:MenuSection title="Edit">
+    ///         <ui:MenuItem label="Undo" shortcut="Ctrl+Z" />
+    ///         <ui:MenuItem label="Redo" shortcut="Ctrl+Y" />
+    ///     </ui:MenuSection>
+    ///     <ui:MenuDivider />
+    ///     <ui:MenuSection title="Selection">
+    ///         <ui:MenuItem label="Select All" shortcut="Ctrl+A" />
+    ///         <ui:MenuItem label="Deselect" />
+    ///     </ui:MenuSection>
+    /// </ui:Menu>
+    /// ]]></code>
+    /// <para>Creating a Menu programmatically &#8212; Building a menu with code and managing sub-menus.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var menu = new Menu();
+    ///
+    /// // Add regular items
+    /// menu.Add(new MenuItem { label = "Cut", icon = "scissors", shortcut = "Ctrl+X" });
+    /// menu.Add(new MenuItem { label = "Copy", icon = "copy", shortcut = "Ctrl+C" });
+    /// menu.Add(new MenuItem { label = "Paste", icon = "clipboard", shortcut = "Ctrl+V" });
+    ///
+    /// // Add a divider
+    /// menu.Add(new MenuDivider());
+    ///
+    /// // Add a selectable item
+    /// var item = new MenuItem { label = "Show Grid", selectable = true, value = true };
+    /// menu.Add(item);
+    ///
+    /// // Close all sub-menus when needed
+    /// menu.CloseSubMenus();
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("popups")]
     public partial class Menu : BaseVisualElement
     {
         /// <summary>
@@ -128,29 +182,5 @@ namespace Unity.AppUI.UI
             return this.GetChildren<MenuItem>(true);
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Class to be able to instantiate a <see cref="Menu"/> from UXML.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Menu, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Menu"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                m_PickingMode.defaultValue = PickingMode.Ignore;
-                base.Init(ve, bag, cc);
-            }
-        }
-#endif
     }
 }

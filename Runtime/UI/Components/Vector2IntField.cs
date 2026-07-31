@@ -1,22 +1,76 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Vector2Int Field UI element.
+    /// A field control that allows users to input or modify a 2D vector with integer components.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Vector2IntField is a specialized input control that enables users to edit two-dimensional vectors with
+    /// integer components (X and Y values). It provides a clean and intuitive interface for manipulating 2D
+    /// coordinates, dimensions, or any other data that can be represented as a pair of integer values.
+    ///
+    /// The field consists of two numerical inputs arranged horizontally - one for the X component and one for the
+    /// Y component. Each component is clearly labeled and can be modified independently.
+    ///
+    /// This component is particularly useful in scenarios involving:
+    ///
+    /// - 2D grid positions or coordinates
+    /// - Pixel dimensions or offsets
+    /// - Integer-based 2D transformations
+    ///
+    /// Both input fields support keyboard navigation, direct numerical input, and validation to ensure only valid
+    /// integer values are accepted.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Vector2IntField Usage:</para>
+    ///
+    /// <para>Creating a basic Vector2IntField in UXML.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI">
+    ///     <appui:Vector2IntField
+    ///         name="positionField"
+    ///         size="M"
+    ///         value="0,0"
+    ///     />
+    /// </ui:UXML>
+    /// ]]></code>
+    /// <para>Vector2IntField with Validation:</para>
+    ///
+    /// <para>Setting up a Vector2IntField with validation and change handling.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var vector2IntField = new Vector2IntField();
+    ///
+    /// // Set up validation for positive values only
+    /// vector2IntField.validateValue = (v) => v.x >= 0 && v.y >= 0;
+    ///
+    /// // Add change handler
+    /// vector2IntField.RegisterValueChangedCallback(evt => {
+    ///     Debug.Log($"Vector changed to: ({evt.newValue.x}, {evt.newValue.y})");
+    /// });
+    /// ]]></code>
+    /// <para>Customized Vector2IntField:</para>
+    ///
+    /// <para>Creating a customized Vector2IntField for screen resolution input.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI">
+    ///     <appui:Vector2IntField
+    ///         name="resolutionField"
+    ///         size="L"
+    ///         value="1920,1080"
+    ///         format-string="D4"
+    ///     />
+    /// </ui:UXML>
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class Vector2IntField
         : BaseVisualElement, IInputElement<Vector2Int>, ISizeableElement, INotifyValueChanging<Vector2Int>, IFormattable<int>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
 
@@ -30,7 +84,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId formatFunctionProperty = new BindingId(nameof(formatFunction));
 
-#endif
 
         /// <summary>
         /// The Vector2Field main styling class.
@@ -117,12 +170,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the Vector2IntField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -152,12 +201,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the Vector2IntField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Vector2Int value
         {
             get => m_Value;
@@ -177,12 +222,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The invalid state of the Vector2IntField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -198,9 +239,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The validation function to use to validate the value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<Vector2Int, bool> validateValue
         {
             get => m_ValidateValue;
@@ -210,22 +249,16 @@ namespace Unity.AppUI.UI
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The format string of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string formatString
         {
             get => m_FormatString;
@@ -237,19 +270,15 @@ namespace Unity.AppUI.UI
                 m_YField.formatString = m_FormatString;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The format function of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public FormatFunction<int> formatFunction
         {
             get => m_FormatFunction;
@@ -261,10 +290,8 @@ namespace Unity.AppUI.UI
                 m_YField.formatFunction = m_FormatFunction;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
-#endif
             }
         }
 
@@ -309,39 +336,5 @@ namespace Unity.AppUI.UI
             value = new Vector2Int(evt.newValue, value.y);
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Vector2IntField"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Vector2IntField, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Vector2IntField"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Vector2IntField)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

@@ -2,9 +2,7 @@ using System;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -74,14 +72,46 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// Badge UI element.
+    /// A small overlay element that displays numerical or status information.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Badge component generates a small badge element that can be used to display counts, notifications, or
+    /// status information. It's commonly used to show unread messages, notifications, or task counts on top of
+    /// icons or other UI elements.
+    ///
+    /// Badges can be customized in various ways, including their position (using anchors), appearance (using
+    /// variants), and overlap behavior. They can display numbers with an optional maximum value, or appear as
+    /// simple dots for status indication.
+    ///
+    /// When using badges, ensure they provide meaningful information and don't overwhelm the user interface.
+    /// Consider using the dot variant for simple status indicators and the default variant for numerical
+    /// information.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Badge Usage — Simple numerical badge.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Badge content="5" />
+    /// ]]></code>
+    /// <para>Status Indicator — Using dot variant as a status indicator.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Badge variant="Dot" background-color="#4CAF50" />
+    /// ]]></code>
+    /// <para>Notification Badge — Badge overlapping an icon to show notifications.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <VisualElement>
+    ///     <Icon name="notifications" />
+    ///     <Badge content="3" overlap-type="Circular" horizontal-anchor="Right" vertical-anchor="Top" />
+    /// </VisualElement>
+    /// ]]></code>
+    /// <para>Maximum Value Badge — Badge showing maximum value with overflow.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Badge content="1000" max="999" background-color="#FF4081" />
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("feedbacks")]
     public partial class Badge : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId backgroundColorProperty = nameof(backgroundColor);
 
@@ -95,18 +125,8 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId verticalAnchorProperty = nameof(verticalAnchor);
 
-        [Obsolete]
-        internal static readonly BindingId contentProperty = nameof(content);
-
-        [Obsolete]
-        internal static readonly BindingId maxProperty = nameof(max);
-
-        [Obsolete]
-        internal static readonly BindingId showZeroProperty = nameof(showZero);
-
         internal static readonly BindingId labelProperty = nameof(label);
 
-#endif
         /// <summary>
         /// The Badge main styling class.
         /// </summary>
@@ -161,13 +181,7 @@ namespace Unity.AppUI.UI
 
         VerticalAnchor m_VerticalAnchor;
 
-        int m_Content;
-
         readonly TextElement m_LabelElement;
-
-        bool m_ShowZero;
-
-        int m_Max;
 
         Optional<Color> m_Color;
 
@@ -181,13 +195,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The background color of the Badge.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Badge")]
-#endif
         public Optional<Color> backgroundColor
         {
             get => m_BackgroundColor;
@@ -197,22 +207,16 @@ namespace Unity.AppUI.UI
                 m_BackgroundColor = value;
                 m_BadgeElement.style.backgroundColor = m_BackgroundColor.IsSet ?
                     m_BackgroundColor.Value : new StyleColor(StyleKeyword.Null);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in backgroundColorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The content color of the Badge.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Optional<Color> color
         {
             get => m_Color;
@@ -221,22 +225,16 @@ namespace Unity.AppUI.UI
                 var changed = m_Color != value;
                 m_Color = value;
                 m_LabelElement.style.color = m_Color.IsSet ? m_Color.Value : new StyleColor(StyleKeyword.Null);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in colorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The variant of the Badge.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public BadgeVariant variant
         {
             get => m_Variant;
@@ -246,22 +244,16 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetVariantUssClassName(m_Variant));
                 m_Variant = value;
                 AddToClassList(GetVariantUssClassName(m_Variant));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The overlap type of the Badge.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public BadgeOverlapType overlapType
         {
             get => m_BadgeOverlapType;
@@ -271,22 +263,16 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetOverlapUssClassName(m_BadgeOverlapType));
                 m_BadgeOverlapType = value;
                 AddToClassList(GetOverlapUssClassName(m_BadgeOverlapType));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in overlapTypeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The horizontal anchor of the Badge.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public HorizontalAnchor horizontalAnchor
         {
             get => m_HorizontalAnchor;
@@ -296,22 +282,16 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetHorizontalAnchorUssClassName(m_HorizontalAnchor));
                 m_HorizontalAnchor = value;
                 AddToClassList(GetHorizontalAnchorUssClassName(m_HorizontalAnchor));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in horizontalAnchorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The vertical anchor of the Badge.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public VerticalAnchor verticalAnchor
         {
             get => m_VerticalAnchor;
@@ -321,88 +301,16 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetVerticalAnchorUssClassName(m_VerticalAnchor));
                 m_VerticalAnchor = value;
                 AddToClassList(GetVerticalAnchorUssClassName(m_VerticalAnchor));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in verticalAnchorProperty);
-#endif
-            }
-        }
-
-        /// <summary>
-        /// The text of the Badge.
-        /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
-        [CreateProperty]
-#endif
-        [Obsolete("content is deprecated and will be removed in a future release. Badge can now have any kind of content.")]
-        public int content
-        {
-            get => m_Content;
-            set
-            {
-                var changed = m_Content != value;
-                m_Content = value;
-                RefreshContent();
-#if ENABLE_RUNTIME_DATA_BINDINGS
-                if (changed)
-                    NotifyPropertyChanged(in contentProperty);
-#endif
-            }
-        }
-
-        /// <summary>
-        /// The maximum value of the Badge.
-        /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
-        [CreateProperty]
-#endif
-        [Obsolete("max is deprecated and will be removed in a future release. Badge can now have any kind of content.")]
-        public int max
-        {
-            get => m_Max;
-            set
-            {
-                var changed = m_Max != value;
-                m_Max = value;
-                RefreshContent();
-#if ENABLE_RUNTIME_DATA_BINDINGS
-                if (changed)
-                    NotifyPropertyChanged(in maxProperty);
-#endif
-            }
-        }
-
-        /// <summary>
-        /// Whether the Badge should show zero values.
-        /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
-        [CreateProperty]
-#endif
-        [Obsolete("showZero is deprecated and will be removed in a future release. Badge can now have any kind of content. Use label to set textual content.")]
-        public bool showZero
-        {
-            get => m_ShowZero;
-            set
-            {
-                var changed = m_ShowZero != value;
-                m_ShowZero = value;
-                RefreshContent();
-#if ENABLE_RUNTIME_DATA_BINDINGS
-                if (changed)
-                    NotifyPropertyChanged(in showZeroProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The textual content of the Badge.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string label
         {
             get => m_LabelElement.text;
@@ -410,17 +318,9 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_LabelElement.text != value;
                 m_LabelElement.text = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
-#endif
             }
-        }
-
-        void RefreshContent()
-        {
-            m_LabelElement.text = m_Content > m_Max ? $"{m_Max}+" : m_Content.ToString();
-            EnableInClassList(zeroUssClassName, !m_ShowZero && (m_Max == 0 || m_Content == 0));
         }
 
         /// <summary>
@@ -448,87 +348,5 @@ namespace Unity.AppUI.UI
             verticalAnchor = VerticalAnchor.Top;
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Defines the UxmlFactory for the Badge.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Badge, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Badge"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlColorAttributeDescription m_BackgroundColor = new UxmlColorAttributeDescription
-            {
-                name = "background-color",
-                defaultValue = new Color(1, 0.3f, 0.3f)
-            };
-
-            readonly UxmlEnumAttributeDescription<BadgeVariant> m_Variant = new UxmlEnumAttributeDescription<BadgeVariant>
-            {
-                name = "variant",
-                defaultValue = BadgeVariant.Default
-            };
-
-            readonly UxmlEnumAttributeDescription<BadgeOverlapType> m_OverlapType = new UxmlEnumAttributeDescription<BadgeOverlapType>
-            {
-                name = "overlap-type",
-                defaultValue = BadgeOverlapType.Rectangular
-            };
-
-            readonly UxmlEnumAttributeDescription<HorizontalAnchor> m_HorizontalAnchor = new UxmlEnumAttributeDescription<HorizontalAnchor>
-            {
-                name = "horizontal-anchor",
-                defaultValue = HorizontalAnchor.Right
-            };
-
-            readonly UxmlEnumAttributeDescription<VerticalAnchor> m_VerticalAnchor = new UxmlEnumAttributeDescription<VerticalAnchor>
-            {
-                name = "vertical-anchor",
-                defaultValue = VerticalAnchor.Top
-            };
-
-            readonly UxmlColorAttributeDescription m_Color = new UxmlColorAttributeDescription
-            {
-                name = "color",
-                defaultValue = Color.white
-            };
-
-            readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
-            {
-                name = "label",
-                defaultValue = string.Empty
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (Badge)ve;
-
-                var color = Color.clear;
-                if (m_BackgroundColor.TryGetValueFromBag(bag, cc, ref color))
-                    el.backgroundColor = color;
-
-                if (m_Color.TryGetValueFromBag(bag, cc, ref color))
-                    el.color = color;
-
-                el.variant = m_Variant.GetValueFromBag(bag, cc);
-                el.overlapType = m_OverlapType.GetValueFromBag(bag, cc);
-                el.horizontalAnchor = m_HorizontalAnchor.GetValueFromBag(bag, cc);
-                el.verticalAnchor = m_VerticalAnchor.GetValueFromBag(bag, cc);
-                var label = string.Empty;
-                if (m_Label.TryGetValueFromBag(bag, cc, ref label))
-                    el.label = label;
-            }
-        }
-#endif
     }
 }

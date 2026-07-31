@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -28,11 +26,59 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// Range Slider UI element for floating point values.
+    /// A dual-thumb slider component for selecting a range of floating point values.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The RangeSliderFloat is an input component that allows users to select a range between two numeric
+    /// values by dragging two thumbs along a track. It's particularly useful when users need to define minimum
+    /// and maximum bounds within a larger range of values.
+    ///
+    /// The slider supports both horizontal and vertical orientations, customizable step increments, and
+    /// various visual feedback options like marks, labels, and track highlighting.
+    ///
+    /// The slider automatically handles RTL (Right-to-Left) layouts and will reverse its direction accordingly
+    /// when in RTL context.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic range slider setup with UXML.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML>
+    ///   <ui:RangeSliderFloat
+    ///     low-value="0"
+    ///     high-value="100"
+    ///     min-value="20"
+    ///     max-value="80"
+    ///     step="5"
+    ///     show-marks="true"
+    ///     display-value-label="Auto"
+    ///     track="On" />
+    /// </UXML>
+    /// ]]></code>
+    /// <para>Creating and configuring a range slider in C#.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var rangeSlider = new RangeSliderFloat
+    /// {
+    ///     lowValue = 0f,
+    ///     highValue = 100f,
+    ///     value = new Vector2(25f, 75f),
+    ///     step = 5f,
+    ///     showMarks = true,
+    ///     displayValueLabel = ValueDisplayMode.Auto,
+    ///     track = TrackDisplayType.On
+    /// };
+    ///
+    /// rangeSlider.RegisterValueChangedCallback(evt => {
+    ///     Debug.Log($"Range changed: {evt.newValue.x} - {evt.newValue.y}");
+    /// });
+    /// ]]></code>
+    /// <para>Custom formatting of values.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// rangeSlider.formatString = "F1"; // Display one decimal place
+    /// rangeSlider.formatFunction = (value) => $"{value:F1}°C"; // Add units
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class RangeSliderFloat : Slider<Vector2, float, Vector2Field>
     {
         const float k_DefaultStep = 0.1f;
@@ -54,54 +100,42 @@ namespace Unity.AppUI.UI
             maxValueOverride = 100;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("step")]
-#endif
         float stepOverride
         {
             get => step;
             set => step = value;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("shift-step")]
-#endif
         float shiftStepOverride
         {
             get => shiftStep;
             set => shiftStep = value;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("low-value")]
-#endif
         float lowValueOverride
         {
             get => lowValue;
             set => lowValue = value;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("high-value")]
-#endif
         float highValueOverride
         {
             get => highValue;
             set => highValue = value;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("min-value")]
-#endif
         float minValueOverride
         {
             get => minValue;
             set => minValue = value;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("max-value")]
-#endif
         float maxValueOverride
         {
             get => maxValue;
@@ -199,73 +233,5 @@ namespace Unity.AppUI.UI
             values[1] = v.y;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="RangeSliderFloat"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<RangeSliderFloat, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="RangeSliderFloat"/>.
-        /// </summary>
-        public new class UxmlTraits : Slider<Vector2, float, Vector2Field>.UxmlTraits
-        {
-
-            readonly UxmlFloatAttributeDescription m_Step = new UxmlFloatAttributeDescription
-            {
-                name = "step",
-                defaultValue = k_DefaultStep
-            };
-
-            readonly UxmlFloatAttributeDescription m_ShiftStep = new UxmlFloatAttributeDescription
-            {
-                name = "shift-step",
-                defaultValue = k_DefaultShiftStep
-            };
-
-            readonly UxmlFloatAttributeDescription m_HighValue = new UxmlFloatAttributeDescription
-            {
-                name = "high-value",
-                defaultValue = 100
-            };
-
-            readonly UxmlFloatAttributeDescription m_LowValue = new UxmlFloatAttributeDescription
-            {
-                name = "low-value",
-                defaultValue = 0
-            };
-
-            readonly UxmlFloatAttributeDescription m_MinValue = new UxmlFloatAttributeDescription
-            {
-                name = "min-value",
-                defaultValue = 0
-            };
-
-            readonly UxmlFloatAttributeDescription m_MaxValue = new UxmlFloatAttributeDescription
-            {
-                name = "max-value",
-                defaultValue = 100
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (RangeSliderFloat)ve;
-                el.step = m_Step.GetValueFromBag(bag, cc);
-                el.shiftStep = m_ShiftStep.GetValueFromBag(bag, cc);
-                el.lowValue = m_LowValue.GetValueFromBag(bag, cc);
-                el.highValue = m_HighValue.GetValueFromBag(bag, cc);
-                el.value = new Vector2(m_MinValue.GetValueFromBag(bag, cc), m_MaxValue.GetValueFromBag(bag, cc));
-            }
-        }
-#endif
     }
 }

@@ -1,21 +1,61 @@
 using System;
 using Unity.AppUI.Bridge;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Text Field UI element.
+    /// A text input component that allows users to enter and edit text.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// TextField is a fundamental input component that enables users to enter and edit text content. It provides a
+    /// versatile interface for capturing user input in various formats like plain text, passwords, and validated
+    /// content.
+    ///
+    /// The component supports different sizes, placeholder text, leading and trailing icons, and various
+    /// customization options to fit different use cases and design requirements.
+    ///
+    /// When using TextField for sensitive information like passwords, make sure to enable the isPassword property
+    /// to mask the input appropriately.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic TextField Example: Simple text input with placeholder.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <TextField placeholder="Enter your name" size="Size.M" />
+    /// ]]></code>
+    /// <para>Password Field Example: Secure password input with validation.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <TextField
+    ///     isPassword="true"
+    ///     maskChar="*"
+    ///     placeholder="Enter password"
+    ///     maxLength="20"
+    ///     leadingIconName="lock"
+    /// />
+    /// ]]></code>
+    /// <para>Search Field Example: Search input with icons.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <TextField
+    ///     leadingIconName="search"
+    ///     trailingIconName="clear"
+    ///     placeholder="Search..."
+    ///     size="Size.L"
+    /// />
+    /// ]]></code>
+    /// <para>Validated Input Example: Email input with validation.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var textField = new TextField();
+    /// textField.placeholder = "Enter email";
+    /// textField.validateValue = (value) => {
+    ///     return value.Contains("@") && value.Contains(".");
+    /// };
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class TextField : ExVisualElement, IInputElement<string>, INotifyValueChanging<string>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = nameof(value);
 
@@ -39,7 +79,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId trailingIconNameProperty = nameof(trailingIconName);
 
-#endif
 
         /// <summary>
         /// The TextField main styling class.
@@ -102,6 +141,8 @@ namespace Unity.AppUI.UI
         readonly LocalizedTextElement m_Placeholder;
 
         Size m_Size;
+
+        bool m_IsPassword;
 
         readonly VisualElement m_TrailingContainer;
 
@@ -184,6 +225,12 @@ namespace Unity.AppUI.UI
             m_InputField.RuntimeContextMenu();
             m_Placeholder.RegisterValueChangedCallback(OnPlaceholderValueChanged);
             m_InputField.RegisterValueChangedCallback(OnInputValueChanged);
+            RegisterCallback<AttachToPanelEvent>(OnAttachToPanel);
+        }
+
+        void OnAttachToPanel(AttachToPanelEvent evt)
+        {
+            ApplyIsPassword();
         }
 
         void OnInputValueChanged(ChangeEvent<string> e)
@@ -256,36 +303,45 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Whether the TextField is a password field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool isPassword
         {
-            get => m_InputField.isPasswordField;
+            get => m_IsPassword;
             set
             {
-                var changed = m_InputField.isPasswordField != value;
-                m_InputField.isPasswordField = value;
+                var changed = m_IsPassword != value;
+                m_IsPassword = value;
+                ApplyIsPassword();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in isPasswordProperty);
-#endif
             }
+        }
+
+        /// <summary>
+        /// Pushes <see cref="isPassword"/> down to the underlying UITK TextField.
+        /// </summary>
+        /// <remarks>
+        /// Enabling UITK's <c>isPasswordField</c> forces multiline off, which walks text
+        /// backing that is only wired up once the field belongs to a panel. Setting it
+        /// while detached throws a NullReferenceException, so the value is stored here and
+        /// applied on attach instead. Disabling it is safe at any time, but is deferred too
+        /// so the panel remains the single point where the two stay in sync.
+        /// </remarks>
+        void ApplyIsPassword()
+        {
+            if (panel == null)
+                return;
+
+            m_InputField.isPasswordField = m_IsPassword;
         }
 
         /// <summary>
         /// Whether the TextField is read-only.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool isReadOnly
         {
             get => m_InputField.isReadOnly;
@@ -294,22 +350,16 @@ namespace Unity.AppUI.UI
                 var changed = m_InputField.isReadOnly != value;
                 m_InputField.isReadOnly = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in isReadOnlyProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The TextField mask character.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public char maskChar
         {
             get => m_InputField.maskChar;
@@ -318,22 +368,16 @@ namespace Unity.AppUI.UI
                 var changed = m_InputField.maskChar != value;
                 m_InputField.maskChar = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in maskCharProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The TextField max length.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int maxLength
         {
             get => m_InputField.maxLength;
@@ -342,22 +386,16 @@ namespace Unity.AppUI.UI
                 var changed = m_InputField.maxLength != value;
                 m_InputField.maxLength = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in maxLengthProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The TextField placeholder text.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string placeholder
         {
             get => m_Placeholder.text;
@@ -366,22 +404,16 @@ namespace Unity.AppUI.UI
                 var changed = m_Placeholder.text != value;
                 m_Placeholder.text = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in placeholderProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The trailing icon name.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string trailingIconName
         {
             get => (trailingElement as Icon)?.iconName;
@@ -394,22 +426,16 @@ namespace Unity.AppUI.UI
                 icon.iconName = value;
                 m_TrailingContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(icon.iconName));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in trailingIconNameProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The leading icon name.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string leadingIconName
         {
             get => (leadingElement as Icon)?.iconName;
@@ -422,22 +448,16 @@ namespace Unity.AppUI.UI
                 icon.iconName = value;
                 m_LeadingContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(icon.iconName));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in leadingIconNameProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The TextField size.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -480,19 +500,15 @@ namespace Unity.AppUI.UI
                         break;
                 }
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The validation function for the TextField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<string, bool> validateValue
         {
             get => m_ValidateValue;
@@ -502,22 +518,16 @@ namespace Unity.AppUI.UI
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The invalid state of the TextField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -526,10 +536,8 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(Styles.invalidUssClassName) != value;
                 EnableInClassList(Styles.invalidUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
-#endif
             }
         }
 
@@ -548,12 +556,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The TextField value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string value
         {
             get => m_InputField.value;
@@ -571,9 +575,7 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
@@ -582,9 +584,7 @@ namespace Unity.AppUI.UI
             RemoveFromClassList(Styles.focusedUssClassName);
             RemoveFromClassList(Styles.keyboardFocusUssClassName);
             value = m_InputField.value;
-#if UNITY_2022_1_OR_NEWER
             m_InputField.cursorIndex = 0;
-#endif
         }
 
         void OnFocusedIn(FocusInEvent evt)
@@ -607,124 +607,5 @@ namespace Unity.AppUI.UI
             m_Placeholder.EnableInClassList(Styles.hiddenUssClassName, !string.IsNullOrEmpty(m_Value));
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="TextField"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<TextField, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="TextField"/>.
-        /// </summary>
-        public new class UxmlTraits : ExVisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_LeadingIconName = new UxmlStringAttributeDescription
-            {
-                name = "leading-icon-name",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_Placeholder = new UxmlStringAttributeDescription
-            {
-                name = "placeholder",
-                defaultValue = null
-            };
-
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            readonly UxmlStringAttributeDescription m_TrailingIconName = new UxmlStringAttributeDescription
-            {
-                name = "trailing-icon-name",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_Value = new UxmlStringAttributeDescription
-            {
-                name = "value",
-                defaultValue = null
-            };
-
-            readonly UxmlBoolAttributeDescription m_IsPassword = new UxmlBoolAttributeDescription
-            {
-                name = "is-password",
-                defaultValue = k_IsPasswordDefault
-            };
-
-            readonly UxmlBoolAttributeDescription m_IsReadOnly = new UxmlBoolAttributeDescription
-            {
-                name = "is-read-only",
-                defaultValue = k_IsReadOnlyDefault
-            };
-
-            readonly UxmlStringAttributeDescription m_MaskChar = new UxmlStringAttributeDescription
-            {
-                name = "mask-char",
-                defaultValue = k_MaskCharDefault.ToString()
-            };
-
-            readonly UxmlIntAttributeDescription m_MaxLength = new UxmlIntAttributeDescription
-            {
-                name = "max-length",
-                defaultValue = k_MaxLengthDefault
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (TextField)ve;
-
-                var size = Size.M;
-                if (m_Size.TryGetValueFromBag(bag, cc, ref size))
-                    el.size = size;
-
-                var placeholder = string.Empty;
-                if (m_Placeholder.TryGetValueFromBag(bag, cc, ref placeholder))
-                    el.placeholder = placeholder;
-
-                var value = string.Empty;
-                if (m_Value.TryGetValueFromBag(bag, cc, ref value))
-                    el.value = value;
-
-                var leadingIconName = string.Empty;
-                if (m_LeadingIconName.TryGetValueFromBag(bag, cc, ref leadingIconName))
-                    el.leadingIconName = leadingIconName;
-
-                var trailingIconName = string.Empty;
-                if (m_TrailingIconName.TryGetValueFromBag(bag, cc, ref trailingIconName))
-                    el.trailingIconName = trailingIconName;
-
-                var isPassword = k_IsPasswordDefault;
-                if (m_IsPassword.TryGetValueFromBag(bag, cc, ref isPassword))
-                    el.isPassword = isPassword;
-
-                var isReadOnly = k_IsReadOnlyDefault;
-                if (m_IsReadOnly.TryGetValueFromBag(bag, cc, ref isReadOnly))
-                    el.isReadOnly = isReadOnly;
-
-                var maskChar = k_MaskCharDefault.ToString();
-                if (m_MaskChar.TryGetValueFromBag(bag, cc, ref maskChar))
-                    el.maskChar = string.IsNullOrEmpty(maskChar) ? k_MaskCharDefault : maskChar[0];
-
-                var maxLength = k_MaxLengthDefault;
-                if (m_MaxLength.TryGetValueFromBag(bag, cc, ref maxLength))
-                    el.maxLength = maxLength;
-
-
-            }
-        }
-
-#endif
     }
 }

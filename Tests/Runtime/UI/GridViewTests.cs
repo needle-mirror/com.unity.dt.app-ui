@@ -6,9 +6,7 @@ using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.Tests.UI
 {
@@ -130,7 +128,6 @@ namespace Unity.AppUI.Tests.UI
             m_TestUI.rootVisualElement.Clear();
         }
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [UnityTest, Order(30)]
         public IEnumerator DataBinding_ColumnCount()
         {
@@ -322,6 +319,5 @@ namespace Unity.AppUI.Tests.UI
             m_TestUI.rootVisualElement.Clear();
             Object.Destroy(dataSource);
         }
-#endif
     }
 }

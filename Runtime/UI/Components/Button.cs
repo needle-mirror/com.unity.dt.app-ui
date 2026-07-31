@@ -2,9 +2,7 @@ using System;
 using System.Windows.Input;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -30,14 +28,66 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// Button UI element.
+    /// A button triggers an action or event when pressed.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// Buttons are interactive elements that users can click or tap to trigger actions. They serve as key
+    /// interaction points in the user interface, guiding users through their journey and enabling them to
+    /// accomplish tasks.
+    ///
+    /// The Button component provides several customization options including different variants, sizes, and
+    /// the ability to include icons and text labels. This flexibility allows you to create buttons that match
+    /// your application's design language while maintaining consistency and usability.
+    ///
+    /// Use buttons for the most important actions in your interface. For less important or secondary actions,
+    /// consider using alternative components like links or menu items.
+    ///
+    /// ### Variants
+    /// - **Default**: Standard button style for most use cases
+    /// - **Accent**: Highlights the primary action in a group of buttons
+    /// - **Destructive**: Indicates actions that may have destructive consequences
+    /// </remarks>
+    /// <example>
+    /// <para>Here are some common button usage patterns: various button configurations for different use cases.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Basic button with title
+    /// <Button title="Click Me" />
+    ///
+    /// // Primary action button
+    /// <Button variant="Accent" title="Save Changes" />
+    ///
+    /// // Destructive action with warning
+    /// <Button
+    ///     variant="Destructive"
+    ///     title="Delete Item"
+    ///     subtitle="This cannot be undone"
+    ///     leadingIcon="trash" />
+    ///
+    /// // Icon-only button
+    /// <Button leadingIcon="settings" size="S" />
+    ///
+    /// // Quiet secondary action
+    /// <Button quiet="true" title="Cancel" />
+    /// ]]></code>
+    /// <para>Creating and handling buttons in C#: programming button behavior.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Create a new button
+    /// var saveButton = new Button();
+    /// saveButton.variant = ButtonVariant.Accent;
+    /// saveButton.title = "Save Changes";
+    /// saveButton.leadingIcon = "save";
+    ///
+    /// // Handle click events
+    /// saveButton.clicked += () => {
+    ///     SaveChanges();
+    ///     Debug.Log("Changes saved!");
+    /// };
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("actions")]
     public partial class Button : ExVisualElement, ISizeableElement, IPressable
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId variantProperty = nameof(variant);
 
         internal static readonly BindingId quietProperty = nameof(quiet);
@@ -53,7 +103,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId sizeProperty = nameof(size);
 
         internal static readonly BindingId clickableProperty = nameof(clickable);
-#endif
         /// <summary>
         /// The Button main styling class.
         /// </summary>
@@ -222,9 +271,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Clickable Manipulator for this Button.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -237,23 +284,17 @@ namespace Unity.AppUI.UI
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The button variant.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Button")]
-#endif
         public ButtonVariant variant
         {
             get => m_Variant;
@@ -264,22 +305,16 @@ namespace Unity.AppUI.UI
                 m_Variant = value;
                 AddToClassList(GetVariantUssClassName(m_Variant));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The quiet state of the Button.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool quiet
         {
             get => ClassListContains(quietUssClassName);
@@ -288,22 +323,16 @@ namespace Unity.AppUI.UI
                 var changed = quiet != value;
                 EnableInClassList(quietUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in quietProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The title of the Button.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string title
         {
             get => m_Title.text;
@@ -314,22 +343,16 @@ namespace Unity.AppUI.UI
                 m_TitleContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Title.text));
                 EnableInClassList(iconOnlyUssClassName, string.IsNullOrEmpty(m_Title.text));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in titleProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The subtitle of the Button.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string subtitle
         {
             get => m_Subtitle.text;
@@ -339,22 +362,16 @@ namespace Unity.AppUI.UI
                 m_Subtitle.text = value;
                 m_Subtitle.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_Subtitle.text));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in subtitleProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Button leading icon.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string leadingIcon
         {
             get => m_LeadingIcon.iconName;
@@ -364,22 +381,16 @@ namespace Unity.AppUI.UI
                 m_LeadingIcon.iconName = value;
                 m_LeadingContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_LeadingIcon.iconName));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in leadingIconProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Button trailing icon.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string trailingIcon
         {
             get => m_TrailingIcon.iconName;
@@ -389,22 +400,16 @@ namespace Unity.AppUI.UI
                 m_TrailingIcon.iconName = value;
                 m_TrailingContainer.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(m_TrailingIcon.iconName));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in trailingIconProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The Button size.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -423,89 +428,10 @@ namespace Unity.AppUI.UI
                 m_TrailingIcon.size = m_LeadingIcon.size;
                 AddToClassList(GetSizeUssClassName(m_Size));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Defines the UxmlFactory for the Button.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Button, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Button"/>.
-        /// </summary>
-        public new class UxmlTraits : ExVisualElement.UxmlTraits
-        {
-
-            readonly UxmlStringAttributeDescription m_LeadingIcon = new UxmlStringAttributeDescription
-            {
-                name = "leading-icon",
-                defaultValue = null
-            };
-
-            readonly UxmlEnumAttributeDescription<ButtonVariant> m_Variant = new UxmlEnumAttributeDescription<ButtonVariant>
-            {
-                name = "variant",
-                defaultValue = ButtonVariant.Default
-            };
-
-            readonly UxmlBoolAttributeDescription m_Quiet = new UxmlBoolAttributeDescription
-            {
-                name = "quiet",
-                defaultValue = false
-            };
-
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            readonly UxmlStringAttributeDescription m_Subtitle = new UxmlStringAttributeDescription
-            {
-                name = "subtitle",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_Title = new UxmlStringAttributeDescription
-            {
-                name = "title",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_TrailingIcon = new UxmlStringAttributeDescription
-            {
-                name = "trailing-icon",
-                defaultValue = null
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Button)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                element.variant = m_Variant.GetValueFromBag(bag, cc);
-                element.quiet = m_Quiet.GetValueFromBag(bag, cc);
-                element.title = m_Title.GetValueFromBag(bag, cc);
-                element.subtitle = m_Subtitle.GetValueFromBag(bag, cc);
-                element.leadingIcon = m_LeadingIcon.GetValueFromBag(bag, cc);
-                element.trailingIcon = m_TrailingIcon.GetValueFromBag(bag, cc);
-
-            }
-        }
-#endif
     }
 }

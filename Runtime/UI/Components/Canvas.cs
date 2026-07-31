@@ -4,9 +4,7 @@ using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -149,15 +147,56 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// A Canvas is a VisualElement that can be used to group other VisualElements.
-    /// You can use it to create a scrollable area inside a window.
+    /// A scrollable and zoomable container that provides infinite canvas functionality.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Canvas component provides a scrollable and zoomable container that can host any UI elements. It's
+    /// particularly useful for creating infinite canvas experiences like design tools, diagrams, or large content
+    /// areas that need pan and zoom capabilities.
+    ///
+    /// Key features include:
+    /// - Smooth pan and zoom interactions
+    /// - Customizable control schemes (Editor or Modern)
+    /// - Configurable zoom limits and speeds
+    /// - Frame-to-fit functionality
+    /// - Grid background with customizable appearance
+    /// - Space bar pan mode
+    ///
+    /// The Canvas supports two control schemes:
+    /// 1. Modern (default): Similar to modern design tools like Figma or Sketch
+    /// 2. Editor: Matches Unity Editor's viewport controls
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Canvas Setup: Create a basic canvas with some content</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Canvas class="my-canvas">
+    ///     <Button text="Zoom Content" />
+    ///     <Label text="Pan me around!" />
+    /// </Canvas>
+    /// ]]></code>
+    /// <para>Frame Content Programmatically: Automatically adjust zoom and position to frame content</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Frame all content to fit the view
+    /// canvas.FrameAll();
+    ///
+    /// // Frame a specific element
+    /// var element = canvas.Q<VisualElement>("my-element");
+    /// canvas.FrameElement(element);
+    /// ]]></code>
+    /// <para>Custom Control Configuration: Configure canvas controls for optimal user experience</para>
+    /// <code lang="csharp"><![CDATA[
+    /// canvas.controlScheme = CanvasControlScheme.Modern;
+    /// canvas.zoomSpeed = 0.1f;
+    /// canvas.scrollSpeed = 1.5f;
+    /// canvas.useSpaceBar = true;
+    /// canvas.minZoom = 0.25f;
+    /// canvas.maxZoom = 4.0f;
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class Canvas : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId frameContainerProperty = nameof(frameContainer);
 
         internal static readonly BindingId scrollOffsetProperty = nameof(scrollOffset);
@@ -188,7 +227,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId primaryManipulatorProperty = nameof(primaryManipulator);
 
-#endif
         /// <summary>
         /// USS class name of elements of this type.
         /// </summary>
@@ -294,12 +332,8 @@ namespace Unity.AppUI.UI
         /// <remarks>
         /// The container rect value must be defined in the Canvas' local coordinates.
         /// </remarks>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Optional<Rect> frameContainer
         {
             get => m_FrameContainer;
@@ -308,19 +342,15 @@ namespace Unity.AppUI.UI
                 var changed = m_FrameContainer != value;
                 m_FrameContainer = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in frameContainerProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The scroll coordinates of the Canvas.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Vector2 scrollOffset
         {
             get => m_Manipulator.scrollOffset;
@@ -330,12 +360,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The scroll speed of the Canvas.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float scrollSpeed
         {
             get => m_Manipulator.scrollSpeed;
@@ -344,22 +370,16 @@ namespace Unity.AppUI.UI
                 var changed = !Mathf.Approximately(m_Manipulator.scrollSpeed, value);
                 m_Manipulator.scrollSpeed = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in scrollSpeedProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The minimum zoom factor of the Canvas.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float minZoom
         {
             get => m_Manipulator.minZoom;
@@ -368,22 +388,16 @@ namespace Unity.AppUI.UI
                 var changed = !Mathf.Approximately(m_Manipulator.minZoom, value);
                 m_Manipulator.minZoom = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in minZoomProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The maximum zoom factor of the Canvas.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float maxZoom
         {
             get => m_Manipulator.maxZoom;
@@ -392,22 +406,16 @@ namespace Unity.AppUI.UI
                 var changed = !Mathf.Approximately(m_Manipulator.maxZoom, value);
                 m_Manipulator.maxZoom = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in maxZoomProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The zoom speed of the Canvas.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float zoomSpeed
         {
             get => m_Manipulator.zoomSpeed;
@@ -416,22 +424,16 @@ namespace Unity.AppUI.UI
                 var changed = !Mathf.Approximately(m_Manipulator.zoomSpeed, value);
                 m_Manipulator.zoomSpeed = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in zoomSpeedProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The zoom speed multiplier when Shift key is hold.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float zoomMultiplier
         {
             get => m_Manipulator.zoomMultiplier;
@@ -440,22 +442,16 @@ namespace Unity.AppUI.UI
                 var changed = !Mathf.Approximately(m_Manipulator.zoomMultiplier, value);
                 m_Manipulator.zoomMultiplier = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in zoomMultiplierProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The pan multiplier when Shift key is hold.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float panMultiplier
         {
             get => m_Manipulator.panMultiplier;
@@ -464,22 +460,16 @@ namespace Unity.AppUI.UI
                 var changed = !Mathf.Approximately(m_Manipulator.panMultiplier, value);
                 m_Manipulator.panMultiplier = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in panMultiplierProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The zoom factor of the Canvas.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float zoom
         {
             get => m_Manipulator.zoom.y;
@@ -489,12 +479,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The damping effect duration in milliseconds.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int dampingEffectDuration
         {
             get => m_Manipulator.dampingEffectDurationMs;
@@ -503,22 +489,16 @@ namespace Unity.AppUI.UI
                 var changed = m_Manipulator.dampingEffectDurationMs != value;
                 m_Manipulator.dampingEffectDurationMs = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in dampingEffectDurationProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The margin applied when framing the Canvas.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public float frameMargin
         {
             get => m_FrameMargin;
@@ -527,22 +507,16 @@ namespace Unity.AppUI.UI
                 var changed = !Mathf.Approximately(m_FrameMargin, value);
                 m_FrameMargin = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in frameMarginProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Whether the Canvas should use the Space bar to pan.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool useSpaceBar
         {
             get => m_Manipulator.useSpaceBar;
@@ -551,30 +525,22 @@ namespace Unity.AppUI.UI
                 var changed = m_Manipulator.useSpaceBar != value;
                 m_Manipulator.useSpaceBar = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in useSpaceBarProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The current grab state of the canvas (to pan).
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public GrabMode grabMode => m_Manipulator.grabMode;
 
         /// <summary>
         /// The current control scheme of the canvas.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public CanvasControlScheme controlScheme
         {
             get => m_Manipulator.controlScheme;
@@ -583,22 +549,16 @@ namespace Unity.AppUI.UI
                 var changed = m_Manipulator.controlScheme != value;
                 m_Manipulator.controlScheme = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in controlSchemeProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The current manipulator of the canvas for the primary pointer without modifier.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public CanvasManipulator primaryManipulator
         {
             get => m_Manipulator.primaryManipulator;
@@ -607,10 +567,8 @@ namespace Unity.AppUI.UI
                 var changed = m_Manipulator.primaryManipulator != value;
                 m_Manipulator.primaryManipulator = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in primaryManipulatorProperty);
-#endif
             }
         }
 
@@ -750,30 +708,20 @@ namespace Unity.AppUI.UI
             UpdateScrollers();
             m_Background.scale = newZoom.y;
             zoomChanged?.Invoke();
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in zoomProperty);
-#endif
         }
 
         void OnScrollOffsetChanged(Vector2 previousScrollOffset, Vector2 newScrollOffset)
         {
             UpdateScrollers();
-#if UNITY_6000_2_OR_NEWER
             m_Background.offset = m_Viewport.resolvedStyle.translate;
-#else
-            m_Background.offset = m_Viewport.transform.position;
-#endif
             scrollOffsetChanged?.Invoke();
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in scrollOffsetProperty);
-#endif
         }
 
         void OnGrabModeChanged(GrabMode previousGrabMode, GrabMode newGrabMode)
         {
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in grabModeProperty);
-#endif
         }
 
         void OnVerticalScrollValueChanged(ChangeEvent<float> evt)
@@ -783,11 +731,7 @@ namespace Unity.AppUI.UI
 
             var delta = evt.newValue - m_LastScrollersPosition.y;
             m_Manipulator.SetScrollOffsetWithoutNotify(new Vector2(scrollOffset.x, scrollOffset.y + delta));
-#if UNITY_6000_2_OR_NEWER
             m_Background.offset = m_Viewport.resolvedStyle.translate;
-#else
-            m_Background.offset = m_Viewport.transform.position;
-#endif
             m_LastScrollersPosition.y = evt.newValue;
             scrollOffsetChanged?.Invoke();
         }
@@ -799,11 +743,7 @@ namespace Unity.AppUI.UI
 
             var delta = evt.newValue - m_LastScrollersPosition.x;
             m_Manipulator.SetScrollOffsetWithoutNotify(new Vector2(scrollOffset.x - delta, scrollOffset.y));
-#if UNITY_6000_2_OR_NEWER
             m_Background.offset = m_Viewport.resolvedStyle.translate;
-#else
-            m_Background.offset = m_Viewport.transform.position;
-#endif
             m_LastScrollersPosition.x = evt.newValue;
             scrollOffsetChanged?.Invoke();
         }
@@ -894,119 +834,5 @@ namespace Unity.AppUI.UI
             m_UpdatingScrollers = false;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Defines the UxmlFactory for the Canvas.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Canvas, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the UXML traits for the <see cref="Canvas"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlFloatAttributeDescription m_ScrollSpeed = new UxmlFloatAttributeDescription
-            {
-                name = "scroll-speed",
-                defaultValue = k_DefaultScrollSpeed
-            };
-
-            readonly UxmlFloatAttributeDescription m_MinZoom = new UxmlFloatAttributeDescription
-            {
-                name = "min-zoom",
-                defaultValue = k_DefaultMinZoom
-            };
-
-            readonly UxmlFloatAttributeDescription m_MaxZoom = new UxmlFloatAttributeDescription
-            {
-                name = "max-zoom",
-                defaultValue = k_DefaultMaxZoom
-            };
-
-            readonly UxmlFloatAttributeDescription m_ZoomSpeed = new UxmlFloatAttributeDescription
-            {
-                name = "zoom-speed",
-                defaultValue = k_DefaultZoomSpeed
-            };
-
-            readonly UxmlFloatAttributeDescription m_ZoomMultiplier = new UxmlFloatAttributeDescription
-            {
-                name = "zoom-multiplier",
-                defaultValue = k_DefaultZoomMultiplier
-            };
-
-            readonly UxmlFloatAttributeDescription m_PanMultiplier = new UxmlFloatAttributeDescription
-            {
-                name = "pan-multiplier",
-                defaultValue = k_DefaultPanMultiplier
-            };
-
-            readonly UxmlIntAttributeDescription m_DampingEffectDuration = new UxmlIntAttributeDescription
-            {
-                name = "damping-effect-duration",
-                defaultValue = k_DefaultDampingEffectDurationMs
-            };
-
-            readonly UxmlFloatAttributeDescription m_FrameMargin = new UxmlFloatAttributeDescription
-            {
-                name = "frame-margin",
-                defaultValue = k_DefaultFrameMargin
-            };
-
-            readonly UxmlEnumAttributeDescription<CanvasControlScheme> m_ControlScheme = new UxmlEnumAttributeDescription<CanvasControlScheme>
-            {
-                name = "control-scheme",
-                defaultValue = k_DefaultControlScheme
-            };
-
-            readonly UxmlBoolAttributeDescription m_UseSpaceBar = new UxmlBoolAttributeDescription
-            {
-                name = "use-space-bar",
-                defaultValue = k_DefaultUseSpaceBar
-            };
-
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var canvas = (Canvas)ve;
-
-                var floatVal = 0f;
-                if (m_ScrollSpeed.TryGetValueFromBag(bag, cc, ref floatVal))
-                    canvas.scrollSpeed = floatVal;
-
-                if (m_MinZoom.TryGetValueFromBag(bag, cc, ref floatVal))
-                    canvas.minZoom = floatVal;
-
-                if (m_MaxZoom.TryGetValueFromBag(bag, cc, ref floatVal))
-                    canvas.maxZoom = floatVal;
-
-                if (m_ZoomSpeed.TryGetValueFromBag(bag, cc, ref floatVal))
-                    canvas.zoomSpeed = floatVal;
-
-                if (m_ZoomMultiplier.TryGetValueFromBag(bag, cc, ref floatVal))
-                    canvas.zoomMultiplier = floatVal;
-
-                if (m_PanMultiplier.TryGetValueFromBag(bag, cc, ref floatVal))
-                    canvas.panMultiplier = floatVal;
-
-                var intVal = 0;
-                if (m_DampingEffectDuration.TryGetValueFromBag(bag, cc, ref intVal))
-                    canvas.dampingEffectDuration = intVal;
-
-                if (m_FrameMargin.TryGetValueFromBag(bag, cc, ref floatVal))
-                    canvas.frameMargin = floatVal;
-
-                var controlSchemeVal = CanvasControlScheme.Modern;
-                if (m_ControlScheme.TryGetValueFromBag(bag, cc, ref controlSchemeVal))
-                    canvas.controlScheme = controlSchemeVal;
-
-                var boolVal = false;
-                if (m_UseSpaceBar.TryGetValueFromBag(bag, cc, ref boolVal))
-                    canvas.useSpaceBar = boolVal;
-            }
-        }
-#endif
     }
 }

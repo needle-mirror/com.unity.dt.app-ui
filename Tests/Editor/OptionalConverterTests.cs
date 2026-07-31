@@ -1,4 +1,3 @@
-#if ENABLE_UXML_SERIALIZED_DATA
 using NUnit.Framework;
 using Unity.AppUI.Core;
 using Unity.AppUI.UI;
@@ -598,5 +597,3 @@ namespace Unity.AppUI.Editor.Tests
         }
     }
 }
-
-#endif

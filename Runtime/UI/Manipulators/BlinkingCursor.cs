@@ -33,14 +33,12 @@ namespace Unity.AppUI.UI
         /// </summary>
         protected override void RegisterCallbacksOnTarget()
         {
-#if UNITY_2022_1_OR_NEWER
             if (target is not UnityEngine.UIElements.TextField)
                 return;
 
             target.RegisterCallback<FocusInEvent>(OnFocusIn);
             target.RegisterCallback<FocusOutEvent>(OnFocusOut);
             interval = m_Interval;
-#endif
         }
 
         /// <summary>
@@ -48,12 +46,10 @@ namespace Unity.AppUI.UI
         /// </summary>
         protected override void UnregisterCallbacksFromTarget()
         {
-#if UNITY_2022_1_OR_NEWER
             target.UnregisterCallback<FocusInEvent>(OnFocusIn);
             target.UnregisterCallback<FocusOutEvent>(OnFocusOut);
             m_ScheduledBlink?.Pause();
             m_ScheduledBlink = null;
-#endif
         }
 
         void OnFocusIn(FocusInEvent e)
@@ -68,14 +64,7 @@ namespace Unity.AppUI.UI
 
         void UpdateCursorColor()
         {
-#if UNITY_6000_0_OR_NEWER
             textField.ToggleInClassList("appui-text-cursor--transparent");
-#elif UNITY_2022_1_OR_NEWER
-            var color = textField.textSelection.cursorColor;
-            textField.textSelection.cursorColor = color.a == 0
-                ? new UnityEngine.Color(color.r, color.g, color.b, 1)
-                : new UnityEngine.Color(color.r, color.g, color.b, 0);
-#endif
         }
     }
 }

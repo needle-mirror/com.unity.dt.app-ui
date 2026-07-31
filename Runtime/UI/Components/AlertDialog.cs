@@ -3,9 +3,7 @@ using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -47,23 +45,78 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// AlertDialog UI element.
+    /// A dialog that interrupts the user's workflow to communicate an important message and acquire a response.
     /// </summary>
     /// <remarks>
+    /// Alert dialogs interrupt users with urgent information, details, or actions. They are displayed on top of the
+    /// current window using a Modal component and require user interaction to be dismissed.
+    ///
+    /// Alert dialogs are used for:
+    /// - Interrupting workflows with critical information or requiring decisions
+    /// - Getting user confirmation before destructive actions
+    /// - Displaying important error, warning or success messages
+    ///
+    /// The AlertDialog component supports different semantic variants to convey the nature of the dialog: Default,
+    /// Confirmation, Information, Destructive, Error, and Warning.
+    ///
+    /// AlertDialogs can have up to three actions:
+    /// - Primary action (Required): The main action that confirms or accepts
+    /// - Secondary action (Optional): An alternative action
+    /// - Cancel action (Optional): Allows users to dismiss the dialog
+    ///
     /// Use a <see cref="Modal"/> to display an <see cref="AlertDialog"/> object.
     /// </remarks>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <example>
+    /// <para>Creating a warning dialog for unsaved changes with multiple actions</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var alertDialog = new AlertDialog();
+    /// alertDialog.variant = AlertSemantic.Warning;
+    /// alertDialog.title = "Unsaved Changes";
+    /// alertDialog.description = "You have unsaved changes. Do you want to save them before leaving?";
+    ///
+    /// alertDialog.SetPrimaryAction(1, "Save", () => SaveChanges());
+    /// alertDialog.SetSecondaryAction(2, "Don't Save", () => DiscardChanges());
+    /// alertDialog.SetCancelAction(3, "Cancel");
+    ///
+    /// // Show the alert dialog using a modal
+    /// Modal.Build(parentElement, alertDialog)
+    ///     .SetKeyboardDismiss(true)
+    ///     .SetOutsideClickDismiss(false)
+    ///     .Show();
+    /// ]]></code>
+    /// <para>Defining an alert dialog in UXML</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML>
+    /// <ui:AlertDialog
+    ///     variant="Information"
+    ///     title="Update Available"
+    ///     description="A new version is available. Would you like to update now?"
+    ///     is-primary-action-disabled="false"
+    ///     is-secondary-action-disabled="false" />
+    /// </UXML>
+    /// ]]></code>
+    /// <para>Showing a simple success confirmation dialog</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var confirmationDialog = new AlertDialog();
+    /// confirmationDialog.variant = AlertSemantic.Confirmation;
+    /// confirmationDialog.title = "Success";
+    /// confirmationDialog.description = "Your changes have been saved successfully.";
+    /// confirmationDialog.SetPrimaryAction(1, "OK", null);
+    ///
+    /// Modal.Build(parentElement, confirmationDialog)
+    ///     .SetKeyboardDismiss(true)
+    ///     .Show();
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class AlertDialog : BaseDialog, IDismissInvocator
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId variantProperty = nameof(variant);
 
         internal static readonly BindingId isPrimaryActionDisabledProperty = nameof(isPrimaryActionDisabled);
 
         internal static readonly BindingId isSecondaryActionDisabledProperty = nameof(isSecondaryActionDisabled);
-#endif
         /// <summary>
         /// The AlertDialog primary action styling class.
         /// </summary>
@@ -179,13 +232,9 @@ namespace Unity.AppUI.UI
         /// The current variant used by the AlertDialog.
         /// </summary>
         [Tooltip("The current semantic variant used by the AlertDialog.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Alert Dialog")]
-#endif
         public AlertSemantic variant
         {
             get => m_Variant;
@@ -195,22 +244,16 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetVariantUssClassName(m_Variant));
                 m_Variant = value;
                 AddToClassList(GetVariantUssClassName(m_Variant));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Is the primary action button disabled.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool isPrimaryActionDisabled
         {
             get => !m_PrimaryButton.enabledSelf;
@@ -218,22 +261,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = !m_PrimaryButton.enabledSelf != value;
                 m_PrimaryButton.SetEnabled(!value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in isPrimaryActionDisabledProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Is the secondary action button disabled.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool isSecondaryActionDisabled
         {
             get => !m_SecondaryButton.enabledSelf;
@@ -241,10 +278,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = !m_SecondaryButton.enabledSelf != value;
                 m_SecondaryButton.SetEnabled(!value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in isSecondaryActionDisabledProperty);
-#endif
             }
         }
 
@@ -310,51 +345,5 @@ namespace Unity.AppUI.UI
             m_CancelButton.userData = cancelAction;
             m_CancelButton.RemoveFromClassList(Styles.hiddenUssClassName);
         }
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// The UXML factory for the AlertDialog.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<AlertDialog, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="AlertDialog"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseDialog.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<AlertSemantic> m_Variant = new UxmlEnumAttributeDescription<AlertSemantic>
-            {
-                name = "variant",
-                defaultValue = AlertSemantic.Default,
-            };
-
-            readonly UxmlBoolAttributeDescription m_IsPrimaryActionDisabled = new UxmlBoolAttributeDescription
-            {
-                name = "is-primary-action-disabled",
-                defaultValue = false
-            };
-
-            readonly UxmlBoolAttributeDescription m_IsSecondaryActionDisabled = new UxmlBoolAttributeDescription
-            {
-                name = "is-secondary-action-disabled",
-                defaultValue = false
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (AlertDialog)ve;
-                element.variant = m_Variant.GetValueFromBag(bag, cc);
-                element.isPrimaryActionDisabled = m_IsPrimaryActionDisabled.GetValueFromBag(bag, cc);
-                element.isSecondaryActionDisabled = m_IsSecondaryActionDisabled.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

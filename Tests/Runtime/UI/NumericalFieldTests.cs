@@ -13,7 +13,6 @@ namespace Unity.AppUI.Tests.UI
         where T : NumericalField<U>, new()
         where U : struct, IComparable, IComparable<U>, IFormattable
     {
-#if ENABLE_VALUEFIELD_INTERFACE
         [UnityTest]
         [Order(10)]
         public IEnumerator CanReceiveDragContextFromInputLabel()
@@ -40,7 +39,6 @@ namespace Unity.AppUI.Tests.UI
             // Value should have changed from the drag
             Assert.AreNotEqual(initialValue, field.value);
         }
-#endif
 
         [Test]
         [Order(11)]

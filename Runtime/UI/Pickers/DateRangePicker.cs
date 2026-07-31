@@ -3,25 +3,98 @@ using System.Runtime.CompilerServices;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A date range picker control.
+    /// A customizable component for selecting a range of dates.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The DateRangePicker component allows users to select a range of dates through an intuitive calendar
+    /// interface. It's particularly useful when users need to specify date ranges for filtering, scheduling, or
+    /// booking scenarios.
+    ///
+    /// The component provides a calendar view with the following features:
+    /// - Visual selection of start and end dates
+    /// - Navigation between months and years
+    /// - Support for different display modes (days, months, years)
+    /// - Localization support for month names and weekdays
+    /// - Customizable first day of the week
+    ///
+    /// The date range selection is done in two steps: first click selects the start date, second click selects
+    /// the end date. The dates in between are automatically highlighted to show the selected range.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic usage example showing how to create a DateRangePicker and handle value changes:</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var dateRangePicker = new DateRangePicker();
+    ///
+    /// // Register to value change events
+    /// dateRangePicker.RegisterValueChangedCallback(evt => {
+    ///     var startDate = evt.newValue.start;
+    ///     var endDate = evt.newValue.end;
+    ///     Debug.Log($"Selected date range: {startDate} to {endDate}");
+    /// });
+    ///
+    /// // Add to the visual tree
+    /// rootElement.Add(dateRangePicker);
+    /// ]]></code>
+    /// <para>UXML definition with custom configuration:</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:UXML xmlns:ui="UnityEngine.UIElements">
+    ///     <ui:DateRangePicker
+    ///         name="booking-dates"
+    ///         value="2024-01-01,2024-01-15"
+    ///         first-day-of-week="Monday"
+    ///         display-mode="Days"
+    ///     />
+    /// </ui:UXML>
+    /// ]]></code>
+    /// <para>Integration with a booking system example:</para>
+    /// <code lang="csharp"><![CDATA[
+    /// public class BookingWidget : VisualElement
+    /// {
+    ///     DateRangePicker m_DateRangePicker;
+    ///     Button m_ConfirmButton;
+    ///
+    ///     public BookingWidget()
+    ///     {
+    ///         // Create and configure the date range picker
+    ///         m_DateRangePicker = new DateRangePicker();
+    ///         m_DateRangePicker.value = new DateRange(
+    ///             DateTime.Now,
+    ///             DateTime.Now.AddDays(1)
+    ///         );
+    ///
+    ///         // Create confirm button
+    ///         m_ConfirmButton = new Button(OnConfirmBooking);
+    ///         m_ConfirmButton.text = "Confirm Booking";
+    ///
+    ///         // Add to the visual hierarchy
+    ///         Add(m_DateRangePicker);
+    ///         Add(m_ConfirmButton);
+    ///     }
+    ///
+    ///     void OnConfirmBooking()
+    ///     {
+    ///         var booking = new Booking
+    ///         {
+    ///             CheckIn = m_DateRangePicker.value.start,
+    ///             CheckOut = m_DateRangePicker.value.end
+    ///         };
+    ///         BookingSystem.Reserve(booking);
+    ///     }
+    /// }
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class DateRangePicker : BaseDatePicker, INotifyValueChanged<DateRange>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
 
-#endif
         DateRange m_Value;
 
         Date m_TempStartDate;
@@ -51,12 +124,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The current value of the date picker.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public DateRange value
         {
             get => m_Value;
@@ -70,9 +139,7 @@ namespace Unity.AppUI.UI
                 SetValueWithoutNotify(value);
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
@@ -117,34 +184,5 @@ namespace Unity.AppUI.UI
             return !m_IsTemporarilySelected && m_Value.Contains(date, includeStartAndEnd: false);
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Class used to create instances of <see cref="DateRangePicker"/> from UXML.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<DateRangePicker, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="DateRangePicker"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseDatePicker.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_Value = new UxmlStringAttributeDescription
-            {
-                name = "value",
-                defaultValue = new DateRange(DateTime.Now, DateTime.Now.AddDays(1)).ToString()
-            };
-
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var datePicker = (DateRangePicker)ve;
-
-                var value = m_Value.GetValueFromBag(bag, cc);
-                if (m_Value.TryGetValueFromBag(bag, cc, ref value) && DateRange.TryParse(value, out var dateRange))
-                    datePicker.value = dateRange;
-            }
-        }
-#endif
     }
 }

@@ -1,18 +1,121 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A bottom navigation bar visual element.
+    /// A navigation component that enables easy switching between top-level destinations.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Bottom Navigation Bar provides quick navigation between top-level destinations in your app. It
+    /// displays 3-5 destinations at the bottom of the screen, each represented by an icon and an optional text
+    /// label.
+    ///
+    /// Bottom navigation bars are typically used in mobile applications where quick switching between main
+    /// features is important. They should be used for important destinations that need to be accessed
+    /// frequently.
+    ///
+    /// Note: Bottom navigation should be used only for top-level destinations that need to be accessible from
+    /// anywhere in the app. For other navigation patterns, consider using tabs, drawers, or other navigation
+    /// components.
+    ///
+    /// The Bottom Navigation Bar consists of individual BottomNavBarItem elements, each representing a
+    /// destination in your application. The BottomNavBar itself is a simple container, while BottomNavBarItem
+    /// provides the actual functionality with properties for icons, labels, selection states, and click
+    /// handling.
+    ///
+    /// ## Anatomy
+    /// Basic Bottom Navigation Bar:
+    /// ```xml
+    /// &lt;appui:BottomNavBar&gt;
+    ///     &lt;appui:BottomNavBarItem icon="home" label="Home" /&gt;
+    ///     &lt;appui:BottomNavBarItem icon="search" label="Search" selected="true" /&gt;
+    ///     &lt;appui:BottomNavBarItem icon="favorite" label="Favorites" /&gt;
+    ///     &lt;appui:BottomNavBarItem icon="user" label="Profile" /&gt;
+    /// &lt;/appui:BottomNavBar&gt;
+    /// ```
+    ///
+    /// Icon-Only Bottom Navigation:
+    /// ```xml
+    /// &lt;appui:BottomNavBar&gt;
+    ///     &lt;appui:BottomNavBarItem icon="dashboard" /&gt;
+    ///     &lt;appui:BottomNavBarItem icon="analytics" selected="true" /&gt;
+    ///     &lt;appui:BottomNavBarItem icon="notifications" /&gt;
+    ///     &lt;appui:BottomNavBarItem icon="settings" /&gt;
+    /// &lt;/appui:BottomNavBar&gt;
+    /// ```
+    ///
+    /// With Badge Indicators:
+    /// ```xml
+    /// &lt;appui:BottomNavBar&gt;
+    ///     &lt;appui:BottomNavBarItem icon="home" label="Home" /&gt;
+    ///     &lt;appui:BottomNavBarItem icon="mail" label="Messages" badge-content="3" /&gt;
+    ///     &lt;appui:BottomNavBarItem icon="notifications" label="Alerts" show-badge="true" /&gt;
+    ///     &lt;appui:BottomNavBarItem icon="user" label="Profile" selected="true" /&gt;
+    /// &lt;/appui:BottomNavBar&gt;
+    /// ```
+    ///
+    /// Five Item Navigation:
+    /// ```xml
+    /// &lt;appui:BottomNavBar&gt;
+    ///     &lt;appui:BottomNavBarItem icon="home" label="Home" /&gt;
+    ///     &lt;appui:BottomNavBarItem icon="explore" label="Explore" /&gt;
+    ///     &lt;appui:BottomNavBarItem icon="add" label="Create" selected="true" /&gt;
+    ///     &lt;appui:BottomNavBarItem icon="favorite" label="Saved" /&gt;
+    ///     &lt;appui:BottomNavBarItem icon="user" label="Profile" /&gt;
+    /// &lt;/appui:BottomNavBar&gt;
+    /// ```
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Bottom Navigation Bar with three items</para>
+    /// <code lang="xml"><![CDATA[
+    /// <BottomNavBar>
+    ///     <BottomNavBarItem icon="home" label="Home" />
+    ///     <BottomNavBarItem icon="search" label="Search" />
+    ///     <BottomNavBarItem icon="settings" label="Settings" />
+    /// </BottomNavBar>
+    /// ]]></code>
+    /// <para>Creating a Bottom Navigation Bar programmatically</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var bottomNav = new BottomNavBar();
+    ///
+    /// var homeItem = new BottomNavBarItem("home", "Home", () => {
+    ///     Debug.Log("Home clicked");
+    /// });
+    ///
+    /// var searchItem = new BottomNavBarItem("search", "Search", () => {
+    ///     Debug.Log("Search clicked");
+    /// });
+    ///
+    /// var settingsItem = new BottomNavBarItem("settings", "Settings", () => {
+    ///     Debug.Log("Settings clicked");
+    /// });
+    ///
+    /// bottomNav.Add(homeItem);
+    /// bottomNav.Add(searchItem);
+    /// bottomNav.Add(settingsItem);
+    /// ]]></code>
+    /// <para>Bottom Navigation Bar integrated with Navigation System</para>
+    /// <code lang="csharp"><![CDATA[
+    /// public class MainNavController : INavVisualController
+    /// {
+    ///     public void SetupBottomNavBar(BottomNavBar bottomNavBar, NavDestination destination, NavController navController)
+    ///     {
+    ///         var homeItem = new BottomNavBarItem("home", "Home", () =>
+    ///             navController.Navigate("home"));
+    ///         var searchItem = new BottomNavBarItem("search", "Search", () =>
+    ///             navController.Navigate("search"));
+    ///
+    ///         bottomNavBar.Add(homeItem);
+    ///         bottomNavBar.Add(searchItem);
+    ///     }
+    /// }
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("nav-components", id = "bottom-navigation-bar", displayName = "Bottom Navigation Bar")]
     public partial class BottomNavBar : BaseVisualElement
     {
         /// <summary>
@@ -37,14 +140,11 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// A bottom navigation bar item visual element.
+    /// A single destination within a BottomNavBar, providing an icon, label, selection state, and click handling.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class BottomNavBarItem : BaseVisualElement, IPressable
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId iconProperty = nameof(icon);
 
         internal static readonly BindingId labelProperty = nameof(label);
@@ -56,7 +156,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId selectedIconVariantProperty = nameof(selectedIconVariant);
 
         internal static readonly BindingId clickableProperty = nameof(clickable);
-#endif
         /// <summary>
         /// The BottomNavBarItem's USS class name.
         /// </summary>
@@ -85,13 +184,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The BottomNavBarItem's icon.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Bottom Navigation Bar")]
-#endif
         public string icon
         {
             get => m_Icon.iconName;
@@ -100,22 +195,16 @@ namespace Unity.AppUI.UI
                 var changed = m_Icon.iconName != value;
                 m_Icon.iconName = value;
                 m_Icon.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in iconProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The BottomNavBarItem's label.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string label
         {
             get => m_Label.text;
@@ -124,22 +213,16 @@ namespace Unity.AppUI.UI
                 var changed = m_Label.text != value;
                 m_Label.text = value;
                 m_Label.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Whether the BottomNavBarItem is selected.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool isSelected
         {
             get => ClassListContains(Styles.selectedUssClassName);
@@ -148,22 +231,16 @@ namespace Unity.AppUI.UI
                 var changed = isSelected != value;
                 EnableInClassList(Styles.selectedUssClassName, value);
                 m_Icon.variant = value ? m_SelectedIconVariant : m_IconVariant;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in isSelectedProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The BottomNavBarItem's icon variant.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public IconVariant iconVariant
         {
             get => m_IconVariant;
@@ -175,22 +252,16 @@ namespace Unity.AppUI.UI
                 if (!isSelected)
                     m_Icon.variant = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in iconVariantProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The BottomNavBarItem's selected icon variant.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public IconVariant selectedIconVariant
         {
             get => m_SelectedIconVariant;
@@ -202,19 +273,15 @@ namespace Unity.AppUI.UI
                 if (isSelected)
                     m_Icon.variant = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in selectedIconVariantProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Clickable Manipulator for this BottomNavBarItem.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -227,10 +294,8 @@ namespace Unity.AppUI.UI
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
-#endif
             }
         }
 

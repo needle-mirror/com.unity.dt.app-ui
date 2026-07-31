@@ -1,22 +1,52 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Vector2 Field UI element.
+    /// A numeric input field for editing 2D vector values with X and Y components.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// Vector2Field is a specialized input component that allows users to edit 2D vector values by providing
+    /// separate numeric fields for X and Y coordinates. It's particularly useful for position, scale, or any
+    /// other 2D vector properties in Unity applications.
+    ///
+    /// The component consists of two numeric input fields arranged horizontally - one for the X coordinate and
+    /// one for the Y coordinate. Each field can be independently edited and supports numerical input with
+    /// floating-point precision.
+    ///
+    /// TIP: Use Vector2Field when you need to edit 2D coordinates, sizes, or any other values that naturally
+    /// come in pairs of X/Y components.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic usage in UXML. Creating a medium-sized Vector2Field with default value in UXML.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Vector2Field name="position-field" size="M" value="0,0" />
+    /// ]]></code>
+    /// <para>Code usage with validation. Creating a Vector2Field with formatting, validation, and change handling.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var vector2Field = new Vector2Field();
+    /// vector2Field.formatString = "F1";
+    /// vector2Field.validateValue = (v) => v.magnitude <= 100f;
+    /// vector2Field.RegisterValueChangedCallback(evt => {
+    ///     Debug.Log($"New value: {evt.newValue}");
+    /// });
+    /// ]]></code>
+    /// <para>Using with data binding. Binding the Vector2Field to a Transform's position.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// vector2Field.value = transform.position;
+    /// vector2Field.RegisterValueChangedCallback(evt => {
+    ///     transform.position = evt.newValue;
+    /// });
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class Vector2Field
         : BaseVisualElement, IInputElement<Vector2>, ISizeableElement, INotifyValueChanging<Vector2>, IFormattable<float>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = new BindingId(nameof(value));
 
@@ -30,7 +60,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId formatFunctionProperty = new BindingId(nameof(formatFunction));
 
-#endif
 
         /// <summary>
         /// The Vector2Field main styling class.
@@ -117,12 +146,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the Vector2Field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -152,12 +177,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the Vector2Field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Vector2 value
         {
             get => m_Value;
@@ -177,12 +198,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The invalid state of the Vector2Field.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -198,9 +215,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The validation function to use to validate the value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<Vector2, bool> validateValue
         {
             get => m_ValidateValue;
@@ -210,22 +225,16 @@ namespace Unity.AppUI.UI
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The format string of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string formatString
         {
             get => m_FormatString;
@@ -237,19 +246,15 @@ namespace Unity.AppUI.UI
                 m_YField.formatString = m_FormatString;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The format function of the element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public FormatFunction<float> formatFunction
         {
             get => m_FormatFunction;
@@ -261,10 +266,8 @@ namespace Unity.AppUI.UI
                 m_YField.formatFunction = m_FormatFunction;
                 SetValueWithoutNotify(this.value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
-#endif
             }
         }
 
@@ -309,41 +312,5 @@ namespace Unity.AppUI.UI
             value = new Vector2(evt.newValue, value.y);
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Vector2Field"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Vector2Field, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Vector2Field"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Vector2Field)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-
-
-            }
-        }
-
-#endif
     }
 }

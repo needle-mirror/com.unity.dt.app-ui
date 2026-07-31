@@ -51,7 +51,6 @@ namespace Unity.AppUI.Tests.Bridge
 
             Assert.IsNotNull(controller);
 
-#if UNITY_2022_3_OR_NEWER
 
             Assert.DoesNotThrow(() =>
             {
@@ -71,7 +70,6 @@ namespace Unity.AppUI.Tests.Bridge
 
             Assert.AreEqual(focusable1, controller.focusedElement);
 
-#endif
         }
     }
 }

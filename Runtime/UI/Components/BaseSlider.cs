@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -23,14 +21,11 @@ namespace Unity.AppUI.UI
     /// <seealso cref="TouchSlider{TValue}"/>
     /// <seealso cref="TouchSliderFloat"/>
     /// <seealso cref="TouchSliderInt"/>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public abstract partial class BaseSlider<TValue, TScalar>
         : ExVisualElement, IInputElement<TValue>, INotifyValueChanging<TValue>, IFormattable<TScalar>
         where TScalar : unmanaged
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId lowValueProperty = nameof(lowValue);
 
@@ -54,7 +49,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId swapThumbsProperty = new (nameof(swapThumbs));
 
-#endif
 
         /// <summary>
         /// The dragger manipulator used to move the slider.
@@ -146,9 +140,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Specify the minimum value in the range of this slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public TScalar lowValue
         {
             get => m_LowValue;
@@ -159,9 +151,7 @@ namespace Unity.AppUI.UI
                     m_LowValue = value;
                     OnSliderRangeChanged();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in lowValueProperty);
-#endif
                 }
             }
         }
@@ -169,9 +159,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Specify the maximum value in the range of this slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public TScalar highValue
         {
             get => m_HighValue;
@@ -182,9 +170,7 @@ namespace Unity.AppUI.UI
                     m_HighValue = value;
                     OnSliderRangeChanged();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                     NotifyPropertyChanged(in highValueProperty);
-#endif
                 }
             }
         }
@@ -198,9 +184,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The current value of the slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public TValue value
         {
             get => m_Value;
@@ -229,12 +213,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The format string used to display the value of the slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string formatString
         {
             get => m_FormatString;
@@ -243,19 +223,15 @@ namespace Unity.AppUI.UI
                 var changed = m_FormatString != value;
                 m_FormatString = value;
                 SetValueWithoutNotify(this.value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatStringProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The format function used to display the value of the slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public FormatFunction<TScalar> formatFunction
         {
             get => m_FormatFunc;
@@ -264,22 +240,16 @@ namespace Unity.AppUI.UI
                 var changed = m_FormatFunc != value;
                 m_FormatFunc = value;
                 SetValueWithoutNotify(this.value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in formatFunctionProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The invalid state of the slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -290,18 +260,14 @@ namespace Unity.AppUI.UI
 
                 EnableInClassList(Styles.invalidUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in invalidProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The validation function used to validate the value of the slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<TValue, bool> validateValue
         {
             get => m_ValidateValue;
@@ -311,10 +277,8 @@ namespace Unity.AppUI.UI
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
@@ -324,12 +288,8 @@ namespace Unity.AppUI.UI
         /// In horizontal orientation, the slider will be drawn from left to right in LTR context
         /// and from right to left in RTL context.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Direction orientation
         {
             get => m_Orientation;
@@ -337,19 +297,15 @@ namespace Unity.AppUI.UI
             {
                 var previousValue = m_Orientation;
                 SetOrientation(value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (previousValue != value)
                     NotifyPropertyChanged(in orientationProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The step value of the slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public TScalar step
         {
             get => m_Step;
@@ -364,9 +320,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The step value of the slider when the shift key is pressed.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public TScalar shiftStep
         {
             get => m_ShiftStep;
@@ -382,12 +336,8 @@ namespace Unity.AppUI.UI
         /// Whether the thumbs can be swapped a thumb value becomes greater than the next one or when
         /// it becomes smaller than the previous one.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool swapThumbs
         {
             get => m_SwapThumbs;
@@ -402,17 +352,13 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The comparer used to compare the values of the slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public IComparer<TValue> comparer { get; set; } = Comparer<TValue>.Default;
 
         /// <summary>
         /// The comparer used to compare the thumb values of the slider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public IComparer<TScalar> thumbComparer { get; set; } = Comparer<TScalar>.Default;
 
         /// <summary>
@@ -431,10 +377,8 @@ namespace Unity.AppUI.UI
         {
             var changed = m_Orientation != newValue;
             m_Orientation = newValue;
-#if ENABLE_RUNTIME_DATA_BINDINGS
             if (changed)
                 NotifyPropertyChanged(in orientationProperty);
-#endif
         }
 
         /// <summary>
@@ -445,10 +389,8 @@ namespace Unity.AppUI.UI
         {
             var changed = thumbComparer.Compare(m_Step, newStep) != 0;
             m_Step = newStep;
-#if ENABLE_RUNTIME_DATA_BINDINGS
             if (changed)
                 NotifyPropertyChanged(in stepProperty);
-#endif
         }
 
         /// <summary>
@@ -459,10 +401,8 @@ namespace Unity.AppUI.UI
         {
             var changed = thumbComparer.Compare(m_ShiftStep, newShiftStep) != 0;
             m_ShiftStep = newShiftStep;
-#if ENABLE_RUNTIME_DATA_BINDINGS
             if (changed)
                 NotifyPropertyChanged(in shiftStepProperty);
-#endif
         }
 
         /// <summary>
@@ -472,9 +412,7 @@ namespace Unity.AppUI.UI
         protected virtual void SetSwapThumbs(bool newSwapThumbs)
         {
             m_SwapThumbs = newSwapThumbs;
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in swapThumbsProperty);
-#endif
         }
 
         /// <summary>
@@ -482,9 +420,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         protected virtual void InvokeValueChangedCallbacks()
         {
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in valueProperty);
-#endif
         }
 
         /// <summary>
@@ -1045,56 +981,6 @@ namespace Unity.AppUI.UI
         /// <returns> The number of possible steps.</returns>
         protected abstract int GetStepCount(TScalar stepValue);
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the BaseSlider.
-        /// </summary>
-        public new class UxmlTraits : ExVisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_Format = new UxmlStringAttributeDescription
-            {
-                name = "format-string",
-                defaultValue = null
-            };
-
-            readonly UxmlBoolAttributeDescription m_Invalid = new UxmlBoolAttributeDescription
-            {
-                name = "invalid",
-                defaultValue = false
-            };
-
-            readonly UxmlEnumAttributeDescription<Direction> m_Orientation = new UxmlEnumAttributeDescription<Direction>
-            {
-                name = "orientation",
-                defaultValue = Direction.Horizontal
-            };
-
-            readonly UxmlBoolAttributeDescription m_SwapThumbs = new UxmlBoolAttributeDescription
-            {
-                name = "swap-thumbs",
-                defaultValue = false
-            };
-
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                if (ve is not BaseSlider<TValue, TScalar> slider)
-                    return;
-
-                slider.orientation = m_Orientation.GetValueFromBag(bag, cc);
-                slider.swapThumbs = m_SwapThumbs.GetValueFromBag(bag, cc);
-
-                string formatStr = null;
-                if (m_Format.TryGetValueFromBag(bag, cc, ref formatStr) && !string.IsNullOrEmpty(formatStr))
-                    slider.formatString = formatStr;
-
-                slider.invalid = m_Invalid.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
 
     }
 }

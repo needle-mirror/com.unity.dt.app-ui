@@ -1,8 +1,6 @@
 using System;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -53,20 +51,66 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// Text UI element.
+    /// A versatile text component that displays text content with customizable size and styling options.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The Text component is a fundamental UI element used to display text content in your application. It
+    /// provides a range of size options and styling variants to help maintain consistency and hierarchy in
+    /// your text presentation.
+    ///
+    /// Text components come with eight predefined sizes (from XXS to XXXL) and support primary/secondary
+    /// variants to establish visual hierarchy. The component is also localization-ready, inheriting from
+    /// LocalizedTextElement.
+    ///
+    /// The Text component supports both UXML attributes and runtime property modification, making it flexible
+    /// for both declarative and programmatic UI development.
+    /// </remarks>
+    /// <example>
+    /// <para>Here's an example of creating a typical text hierarchy using different sizes and variants: Creating a
+    /// text hierarchy in UXML.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML xmlns="UnityEngine.UIElements">
+    ///     <Text text="Main Heading" size="XXL" />
+    ///     <Text text="Subheading" size="XL" primary="false" />
+    ///     <Text text="Body text goes here with a medium size." size="M" />
+    ///     <Text text="Small caption text" size="XS" primary="false" />
+    /// </UXML>
+    /// ]]></code>
+    /// <para>For runtime text manipulation: Creating and managing text elements via code.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Create text elements
+    /// var container = new VisualElement();
+    ///
+    /// // Add a title
+    /// var title = new Text("Welcome!") {
+    ///     size = TextSize.XXL,
+    ///     primary = true
+    /// };
+    /// container.Add(title);
+    ///
+    /// // Add a subtitle
+    /// var subtitle = new Text("Please read the following instructions") {
+    ///     size = TextSize.L,
+    ///     primary = false
+    /// };
+    /// container.Add(subtitle);
+    ///
+    /// // Add body text
+    /// var body = new Text("Detailed instructions go here...") {
+    ///     size = TextSize.M
+    /// };
+    /// container.Add(body);
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("typography")]
     public sealed partial class Text : LocalizedTextElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId primaryProperty = nameof(primary);
 
         internal static readonly BindingId sizeProperty = nameof(size);
 
-#endif
 
         /// <summary>
         /// The Text main styling class.
@@ -110,12 +154,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The primary variant of the text.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool primary
         {
             get => ClassListContains(primaryUssClassName);
@@ -124,22 +164,16 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(primaryUssClassName) != value;
                 EnableInClassList(primaryUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in primaryProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The size of the text.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public TextSize size
         {
             get => m_Size;
@@ -150,55 +184,10 @@ namespace Unity.AppUI.UI
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="Text"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Text, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Text"/>.
-        /// </summary>
-        public new class UxmlTraits : LocalizedTextElement.UxmlTraits
-        {
-
-            readonly UxmlBoolAttributeDescription m_Primary = new UxmlBoolAttributeDescription
-            {
-                name = "primary",
-                defaultValue = true,
-            };
-
-            readonly UxmlEnumAttributeDescription<TextSize> m_Size = new UxmlEnumAttributeDescription<TextSize>
-            {
-                name = "size",
-                defaultValue = TextSize.M,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (Text)ve;
-                element.primary = m_Primary.GetValueFromBag(bag, cc);
-                element.size = m_Size.GetValueFromBag(bag, cc);
-
-            }
-        }
-
-#endif
     }
 }

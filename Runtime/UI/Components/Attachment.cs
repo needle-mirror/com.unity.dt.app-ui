@@ -1,8 +1,6 @@
 using System;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -10,12 +8,9 @@ namespace Unity.AppUI.UI
     /// Attachment UI element. Displays an attachment with a thumbnail area, title, subtitle,
     /// and a delete action button.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class Attachment : BaseVisualElement, IPressable
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId titleProperty = nameof(title);
 
         internal static readonly BindingId subtitleProperty = nameof(subtitle);
@@ -25,7 +20,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId readOnlyProperty = nameof(readOnly);
 
         internal static readonly BindingId compactProperty = nameof(compact);
-#endif
 
         /// <summary>
         /// The Attachment main styling class.
@@ -166,10 +160,8 @@ namespace Unity.AppUI.UI
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
-#endif
             }
         }
 
@@ -185,12 +177,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The title text of the attachment.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string title
         {
             get => m_TitleElement.text;
@@ -198,22 +186,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_TitleElement.text != value;
                 m_TitleElement.text = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in titleProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The subtitle text of the attachment.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string subtitle
         {
             get => m_SubtitleElement.text;
@@ -221,22 +203,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_SubtitleElement.text != value;
                 m_SubtitleElement.text = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in subtitleProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Whether the Attachment is in read-only mode. When true, the delete button is hidden.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool readOnly
         {
             get => ClassListContains(readOnlyUssClassName);
@@ -245,10 +221,8 @@ namespace Unity.AppUI.UI
                 var changed = ClassListContains(readOnlyUssClassName) != value;
                 EnableInClassList(readOnlyUssClassName, value);
                 m_DeleteButton.style.display = value ? DisplayStyle.None : DisplayStyle.Flex;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in readOnlyProperty);
-#endif
             }
         }
 
@@ -261,12 +235,8 @@ namespace Unity.AppUI.UI
         /// Whether the Attachment is in compact mode. When true (the default), the Attachment renders as a one-line row
         /// using <see cref="icon"/> instead of the thumbnail container.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool compact
         {
             get => ClassListContains(compactUssClassName);
@@ -276,10 +246,8 @@ namespace Unity.AppUI.UI
                 EnableInClassList(compactUssClassName, value);
                 m_Icon.style.display = value ? DisplayStyle.Flex : DisplayStyle.None;
                 m_ThumbnailContainer.style.display = value ? DisplayStyle.None : DisplayStyle.Flex;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in compactProperty);
-#endif
             }
         }
 
@@ -288,58 +256,5 @@ namespace Unity.AppUI.UI
             deleteClicked?.Invoke();
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Defines the UxmlFactory for the Attachment.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<Attachment, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="Attachment"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_Title = new UxmlStringAttributeDescription
-            {
-                name = "title",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_Subtitle = new UxmlStringAttributeDescription
-            {
-                name = "subtitle",
-                defaultValue = null
-            };
-
-            readonly UxmlBoolAttributeDescription m_ReadOnly = new UxmlBoolAttributeDescription
-            {
-                name = "read-only",
-                defaultValue = false
-            };
-
-            readonly UxmlBoolAttributeDescription m_Compact = new UxmlBoolAttributeDescription
-            {
-                name = "compact",
-                defaultValue = true
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (Attachment)ve;
-                el.title = m_Title.GetValueFromBag(bag, cc);
-                el.subtitle = m_Subtitle.GetValueFromBag(bag, cc);
-                el.readOnly = m_ReadOnly.GetValueFromBag(bag, cc);
-                el.compact = m_Compact.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

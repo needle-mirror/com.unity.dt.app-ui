@@ -3,18 +3,82 @@ using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// An item contained inside a <see cref="Menu"/> element.
+    /// An interactive item within a menu that triggers actions or displays sub-menus.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// MenuItem is an interactive element designed to be used within <see cref="Menu"/> components. Each item can
+    /// display a label, icon, keyboard shortcut, and optional checkmark for selection state.
+    ///
+    /// Menu items can be configured in several ways: as standard action items that trigger events when clicked, as
+    /// selectable items with checkmarks to indicate state, or as parent items that open sub-menus when activated.
+    ///
+    /// The component supports full keyboard navigation with Up/Down arrow keys to move between items, and Left/Right
+    /// arrow keys to navigate into or out of sub-menus (respecting text direction).
+    ///
+    /// When a MenuItem has a sub-menu attached, a small caret icon appears automatically as a visual indicator. The
+    /// sub-menu opens on click or hover, and can be navigated with keyboard controls.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Menu Items &#8212; Standard menu items with labels, icons, and shortcuts.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:Menu>
+    ///     <ui:MenuItem label="New" icon="file" shortcut="Ctrl+N" />
+    ///     <ui:MenuItem label="Open" icon="folder-open" shortcut="Ctrl+O" />
+    ///     <ui:MenuItem label="Recent Files" icon="clock" />
+    /// </ui:Menu>
+    /// ]]></code>
+    /// <para>Selectable Menu Items &#8212; Toggle menu items for editor preferences.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:Menu>
+    ///     <ui:MenuItem label="Word Wrap" selectable="true" value="true" />
+    ///     <ui:MenuItem label="Show Line Numbers" selectable="true" value="false" />
+    ///     <ui:MenuItem label="Show Minimap" selectable="true" value="true" />
+    /// </ui:Menu>
+    /// ]]></code>
+    /// <para>Menu with Sub-menus &#8212; Creating nested menus for hierarchical actions.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var menu = new Menu();
+    ///
+    /// // Create a parent item with sub-menu
+    /// var viewItem = new MenuItem { label = "View", icon = "eye" };
+    /// var viewSubMenu = new Menu();
+    /// viewSubMenu.Add(new MenuItem { label = "Zoom In", shortcut = "Ctrl++" });
+    /// viewSubMenu.Add(new MenuItem { label = "Zoom Out", shortcut = "Ctrl+-" });
+    /// viewSubMenu.Add(new MenuDivider());
+    /// viewSubMenu.Add(new MenuItem { label = "Reset Zoom", shortcut = "Ctrl+0" });
+    /// viewItem.subMenu = viewSubMenu;
+    ///
+    /// menu.Add(viewItem);
+    /// ]]></code>
+    /// <para>Handling Menu Item Actions &#8212; Responding to menu item interactions and state changes.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var menu = new Menu();
+    ///
+    /// // Create item and handle selection
+    /// var saveItem = new MenuItem { label = "Save", icon = "save", shortcut = "Ctrl+S" };
+    /// saveItem.RegisterCallback<ActionTriggeredEvent>(evt => {
+    ///     SaveDocument();
+    ///     Debug.Log("Document saved");
+    /// });
+    ///
+    /// // Create toggleable item and handle state changes
+    /// var gridItem = new MenuItem { label = "Show Grid", selectable = true };
+    /// gridItem.RegisterValueChangedCallback(evt => {
+    ///     SetGridVisible(evt.newValue);
+    ///     Debug.Log($"Grid visibility: {evt.newValue}");
+    /// });
+    ///
+    /// menu.Add(saveItem);
+    /// menu.Add(gridItem);
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("popups", id = "menu-item", displayName = "Menu Item")]
     public partial class MenuItem : BaseVisualElement, INotifyValueChanged<bool>, IPressable
     {
         enum FocusStrategy
@@ -23,7 +87,6 @@ namespace Unity.AppUI.UI
             Item,
         }
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId labelProperty = new BindingId(nameof(label));
 
@@ -43,7 +106,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId clickableProperty = new BindingId(nameof(clickable));
 
-#endif
 
         const int k_DefaultOpenSubMenuDelay = 300;
 
@@ -367,9 +429,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Clickable Manipulator for this MenuItem.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -382,22 +442,16 @@ namespace Unity.AppUI.UI
                 if (m_Clickable == null)
                     return;
                 this.AddManipulator(m_Clickable);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The label text value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string label
         {
             get => m_Label.text;
@@ -406,22 +460,16 @@ namespace Unity.AppUI.UI
                 var changed = m_Label.text != value;
                 m_Label.text = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The shortcut text value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string shortcut
         {
             get => m_Shortcut.text;
@@ -430,22 +478,16 @@ namespace Unity.AppUI.UI
                 var changed = m_Shortcut.text != value;
                 m_Shortcut.text = value;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in shortcutProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The icon to display next to the label.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string icon
         {
             get => m_Icon.iconName;
@@ -455,10 +497,8 @@ namespace Unity.AppUI.UI
                 m_Icon.iconName = value;
                 m_Icon.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in iconProperty);
-#endif
             }
         }
 
@@ -466,12 +506,8 @@ namespace Unity.AppUI.UI
         /// The selected state of the item.
         /// </summary>
         /// <remarks>You should set the item as <see cref="selectable"/> first to see any result.</remarks>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool value
         {
             get => ClassListContains(Styles.selectedUssClassName);
@@ -485,9 +521,7 @@ namespace Unity.AppUI.UI
                 if (selectable)
                     SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
@@ -497,12 +531,8 @@ namespace Unity.AppUI.UI
         /// A selectable item is an item with a small checkmark as leading UI element.
         /// </para>
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool selectable
         {
             get => ClassListContains(selectableUssClassname);
@@ -511,22 +541,16 @@ namespace Unity.AppUI.UI
                 var changed = selectable != value;
                 EnableInClassList(selectableUssClassname, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in selectableProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Enable or disable the active mode of the item.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool active
         {
             get => ClassListContains(activeUssClassname);
@@ -535,10 +559,8 @@ namespace Unity.AppUI.UI
                 var changed = active != value;
                 EnableInClassList(activeUssClassname, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in activeProperty);
-#endif
             }
         }
 
@@ -549,9 +571,7 @@ namespace Unity.AppUI.UI
         /// will appear if you trigger the item's action.
         /// </para>
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Menu subMenu
         {
             get => m_SubMenu;
@@ -561,22 +581,18 @@ namespace Unity.AppUI.UI
                 m_SubMenu = value;
                 EnableInClassList(subMenuItemUssClassname, m_SubMenu != null);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
                     NotifyPropertyChanged(in subMenuProperty);
                     NotifyPropertyChanged(in hasSubMenuProperty);
                 }
-#endif
             }
         }
 
         /// <summary>
         /// Whether the item has a sub menu.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public bool hasSubMenu => subMenu != null;
 
         /// <summary>
@@ -610,79 +626,5 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to be able to instantiate a MenuItem from UXML.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<MenuItem, UxmlTraits>
-        {
-            /// <summary>
-            /// Describes the types of element that can appear as children of this element in a UXML file.
-            /// </summary>
-            public override IEnumerable<UxmlChildElementDescription> uxmlChildElementsDescription =>
-                new List<UxmlChildElementDescription>
-                {
-                    new UxmlChildElementDescription(typeof(Menu))
-                };
-        }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="MenuItem"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_Icon = new UxmlStringAttributeDescription
-            {
-                name = "icon",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
-            {
-                name = "label",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_Shortcut = new UxmlStringAttributeDescription
-            {
-                name = "shortcut",
-                defaultValue = null
-            };
-
-            readonly UxmlBoolAttributeDescription m_Selectable = new UxmlBoolAttributeDescription
-            {
-                name = "selectable",
-                defaultValue = false
-            };
-
-            readonly UxmlBoolAttributeDescription m_SelectedByDefault = new UxmlBoolAttributeDescription
-            {
-                name = "default-selected",
-                defaultValue = false
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (MenuItem)ve;
-                element.icon = m_Icon.GetValueFromBag(bag, cc);
-                element.label = m_Label.GetValueFromBag(bag, cc);
-                element.shortcut = m_Shortcut.GetValueFromBag(bag, cc);
-                element.selectable = m_Selectable.GetValueFromBag(bag, cc);
-                element.SetValueWithoutNotify(m_SelectedByDefault.GetValueFromBag(bag, cc));
-
-
-            }
-        }
-
-#endif
     }
 }

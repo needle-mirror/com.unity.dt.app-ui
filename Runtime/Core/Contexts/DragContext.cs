@@ -1,4 +1,3 @@
-#if ENABLE_VALUEFIELD_INTERFACE
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -50,4 +49,3 @@ namespace Unity.AppUI.Core
         public DeltaSpeed speed { get; } = speed;
     }
 }
-#endif

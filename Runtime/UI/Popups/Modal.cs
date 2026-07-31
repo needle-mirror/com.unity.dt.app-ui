@@ -42,8 +42,131 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// The Modal Popup class.
+    /// A modal dialog that displays as an overlay blocking interaction with the rest of the UI.
     /// </summary>
+    /// <remarks>
+    /// A modal is a dialog window that appears on top of the current interface, blocking interaction with the
+    /// parent application until the modal is closed. It typically features a backdrop overlay that dims the
+    /// content behind it.
+    ///
+    /// Modals are ideal for critical information that requires user attention, such as confirmations, alerts, or
+    /// forms that must be completed before proceeding. They maintain focus and prevent users from interacting with
+    /// other parts of the interface.
+    ///
+    /// The modal component supports various display modes including normal windowed, fullscreen with margins, and
+    /// complete fullscreen takeover. It can be configured to dismiss when clicking outside the modal content area.
+    ///
+    /// Use modals sparingly as they interrupt the user workflow. Consider alternatives like inline editing,
+    /// sidebars, or separate pages for non-critical interactions.
+    ///
+    /// ## Anatomy
+    /// Modal Examples:
+    ///
+    /// Confirmation modal.
+    /// ```xml
+    /// &lt;appui:Modal title="Confirmation" size="M" visible="true"&gt;
+    ///     &lt;appui:Text text="Are you sure you want to delete this item?" size="M" /&gt;
+    ///     &lt;appui:ActionGroup&gt;
+    ///         &lt;appui:Button title="Cancel" quiet="true" /&gt;
+    ///         &lt;appui:Button title="Delete" variant="Destructive" /&gt;
+    ///     &lt;/appui:ActionGroup&gt;
+    /// &lt;/appui:Modal&gt;
+    /// ```
+    ///
+    /// Form modal with inputs.
+    /// ```xml
+    /// &lt;appui:Modal title="Settings" size="L" visible="true"&gt;
+    ///     &lt;appui:TextField placeholder-text="Enter name..." size="M" /&gt;
+    ///     &lt;appui:TextArea placeholder-text="Description..." size="M" /&gt;
+    ///     &lt;appui:ActionGroup&gt;
+    ///         &lt;appui:Button title="Cancel" quiet="true" /&gt;
+    ///         &lt;appui:Button title="Save" variant="Accent" /&gt;
+    ///     &lt;/appui:ActionGroup&gt;
+    /// &lt;/appui:Modal&gt;
+    /// ```
+    ///
+    /// Different Sizes.
+    /// ```xml
+    /// &lt;appui:Modal title="Small Modal" size="S" visible="true"&gt;
+    ///     &lt;appui:Text text="Small content" size="S" /&gt;
+    /// &lt;/appui:Modal&gt;
+    /// &lt;appui:Modal title="Medium Modal" size="M" visible="true"&gt;
+    ///     &lt;appui:Text text="Medium content area" size="M" /&gt;
+    /// &lt;/appui:Modal&gt;
+    /// &lt;appui:Modal title="Large Modal" size="L" visible="true"&gt;
+    ///     &lt;appui:Text text="Large content area with more space" size="M" /&gt;
+    /// &lt;/appui:Modal&gt;
+    /// ```
+    /// </remarks>
+    /// <example>
+    /// <para>Basic modal with content. Creating a simple modal dialog with custom content.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var content = new VisualElement();
+    /// content.Add(new Text("Are you sure you want to delete this item?"));
+    ///
+    /// var buttonContainer = new VisualElement();
+    /// var cancelButton = new Button { title = "Cancel" };
+    /// var confirmButton = new Button { title = "Delete", variant = ButtonVariant.Destructive };
+    ///
+    /// buttonContainer.Add(cancelButton);
+    /// buttonContainer.Add(confirmButton);
+    /// content.Add(buttonContainer);
+    ///
+    /// var modal = Modal.Build(rootElement, content)
+    ///     .SetOutsideClickDismiss(true);
+    ///
+    /// cancelButton.clicked += modal.Dismiss;
+    /// confirmButton.clicked += () => {
+    ///     DeleteItem();
+    ///     modal.Dismiss();
+    /// };
+    ///
+    /// modal.Show();
+    /// ]]></code>
+    /// <para>Fullscreen modal configuration. Different fullscreen modes for modal presentation.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Normal modal (default)
+    /// var normalModal = Modal.Build(rootElement, contentElement)
+    ///     .SetFullScreenMode(ModalFullScreenMode.None);
+    ///
+    /// // Fullscreen with backdrop margin
+    /// var fullscreenModal = Modal.Build(rootElement, contentElement)
+    ///     .SetFullScreenMode(ModalFullScreenMode.FullScreen);
+    ///
+    /// // Complete fullscreen takeover
+    /// var takeoverModal = Modal.Build(rootElement, contentElement)
+    ///     .SetFullScreenMode(ModalFullScreenMode.FullScreenTakeOver);
+    ///
+    /// // Show any of them
+    /// normalModal.Show();
+    /// ]]></code>
+    /// <para>Modal with outside click handling. Configuring modal dismissal behavior for outside clicks.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var modal = Modal.Build(rootElement, contentElement)
+    ///     .SetOutsideClickDismiss(true)
+    ///     .SetOutsideClickStrategy(OutsideClickStrategy.Bounds);
+    ///
+    /// // Handle modal events
+    /// modal.shown += () => Debug.Log("Modal shown");
+    /// modal.dismissed += (reason) => {
+    ///     switch (reason)
+    ///     {
+    ///         case DismissType.OutsideClick:
+    ///             Debug.Log("Modal dismissed by outside click");
+    ///             break;
+    ///         case DismissType.Keyboard:
+    ///             Debug.Log("Modal dismissed by ESC key");
+    ///             break;
+    ///         default:
+    ///             Debug.Log("Modal dismissed programmatically");
+    ///             break;
+    ///     }
+    /// };
+    ///
+    /// modal.Show();
+    /// ]]></code>
+    /// </example>
+    [VisualDocPage("popups")]
     public sealed class Modal : Popup<Modal>
     {
         /// <summary>

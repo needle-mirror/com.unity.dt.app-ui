@@ -2,21 +2,16 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// ActionButton UI element.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class ActionButton : ExVisualElement, ISizeableElement, ISelectableElement, IPressable
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId sizeProperty = nameof(size);
 
         internal static readonly BindingId labelProperty = nameof(label);
@@ -36,7 +31,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId accentProperty = nameof(accent);
 
         internal static readonly BindingId clickableProperty = nameof(clickable);
-#endif
 
         /// <summary>
         /// The ActionButton main styling class.
@@ -153,9 +147,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Clickable Manipulator for this ActionButton.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Pressable clickable
         {
             get => m_Clickable;
@@ -173,10 +165,8 @@ namespace Unity.AppUI.UI
                     return;
                 this.AddManipulator(m_Clickable);
                 m_Clickable.clicked += OnClick;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
-#endif
             }
         }
 
@@ -193,13 +183,9 @@ namespace Unity.AppUI.UI
         /// The ActionButton label.
         /// </summary>
         [Tooltip("The ActionButton label.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Action Button")]
-#endif
         public string label
         {
             get => m_LabelElement.text;
@@ -208,10 +194,8 @@ namespace Unity.AppUI.UI
                 var changed = m_LabelElement.text != value;
                 m_LabelElement.text = value;
                 Refresh();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in labelProperty);
-#endif
             }
         }
 
@@ -219,12 +203,8 @@ namespace Unity.AppUI.UI
         /// The ActionButton icon.
         /// </summary>
         [Tooltip("The ActionButton icon.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string icon
         {
             get => m_IconElement.iconName;
@@ -233,22 +213,16 @@ namespace Unity.AppUI.UI
                 var changed = m_IconElement.iconName != value;
                 m_IconElement.iconName = value;
                 Refresh();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in iconProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The ActionButton trailing icon.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string trailingIcon
         {
             get => m_TrailingIconElement.iconName;
@@ -257,10 +231,8 @@ namespace Unity.AppUI.UI
                 var changed = m_TrailingIconElement.iconName != value;
                 m_TrailingIconElement.iconName = value;
                 Refresh();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in trailingIconProperty);
-#endif
             }
         }
 
@@ -268,12 +240,8 @@ namespace Unity.AppUI.UI
         /// The ActionButton icon variant.
         /// </summary>
         [Tooltip("The ActionButton icon variant.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public IconVariant iconVariant
         {
             get => m_IconElement.variant;
@@ -281,10 +249,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_IconElement.variant != value;
                 m_IconElement.variant = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in iconVariantProperty);
-#endif
             }
         }
 
@@ -292,12 +258,8 @@ namespace Unity.AppUI.UI
         /// The ActionButton trailing icon variant.
         /// </summary>
         [Tooltip("The ActionButton trailing icon variant.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public IconVariant trailingIconVariant
         {
             get => m_TrailingIconElement.variant;
@@ -305,10 +267,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_TrailingIconElement.variant != value;
                 m_TrailingIconElement.variant = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in trailingIconVariantProperty);
-#endif
             }
         }
 
@@ -316,12 +276,8 @@ namespace Unity.AppUI.UI
         /// The selected state of the ActionButton.
         /// </summary>
         [Tooltip("The selected state of the ActionButton")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool selected
         {
             get => ClassListContains(Styles.selectedUssClassName);
@@ -329,10 +285,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = selected != value;
                 SetSelectedWithoutNotify(value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in selectedProperty);
-#endif
             }
         }
 
@@ -340,12 +294,8 @@ namespace Unity.AppUI.UI
         /// The quiet state of the ActionButton.
         /// </summary>
         [Tooltip("The quiet state of the ActionButton")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool quiet
         {
             get => ClassListContains(quietUssClassName);
@@ -353,10 +303,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = quiet != value;
                 EnableInClassList(quietUssClassName, value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in quietProperty);
-#endif
             }
         }
 
@@ -364,12 +312,8 @@ namespace Unity.AppUI.UI
         /// The accent variant of the ActionButton.
         /// </summary>
         [Tooltip("The accent variant of the ActionButton")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool accent
         {
             get => ClassListContains(accentUssClassName);
@@ -377,10 +321,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = accent != value;
                 EnableInClassList(accentUssClassName, value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in accentProperty);
-#endif
             }
         }
 
@@ -393,12 +335,8 @@ namespace Unity.AppUI.UI
         /// The current size of the ActionButton.
         /// </summary>
         [Tooltip("The current size of the ActionButton.")]
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -408,10 +346,8 @@ namespace Unity.AppUI.UI
                 RemoveFromClassList(GetSizeUssClassName(m_Size));
                 m_Size = value;
                 AddToClassList(GetSizeUssClassName(m_Size));
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
@@ -441,93 +377,5 @@ namespace Unity.AppUI.UI
             SendEvent(evt);
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// The ActionButton UXML factory.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<ActionButton, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ActionButton"/>.
-        /// </summary>
-        public new class UxmlTraits : ExVisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_Icon = new UxmlStringAttributeDescription
-            {
-                name = "icon",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_TrailingIcon = new UxmlStringAttributeDescription
-            {
-                name = "trailing-icon",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_Label = new UxmlStringAttributeDescription
-            {
-                name = "label",
-                defaultValue = null
-            };
-
-            readonly UxmlBoolAttributeDescription m_Quiet = new UxmlBoolAttributeDescription
-            {
-                name = "quiet",
-                defaultValue = false,
-            };
-
-            readonly UxmlBoolAttributeDescription m_Selected = new UxmlBoolAttributeDescription
-            {
-                name = "selected",
-                defaultValue = false,
-            };
-
-            readonly UxmlBoolAttributeDescription m_Accent = new UxmlBoolAttributeDescription
-            {
-                name = "accent",
-                defaultValue = false,
-            };
-
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            readonly UxmlEnumAttributeDescription<IconVariant> m_IconVariant = new UxmlEnumAttributeDescription<IconVariant>
-            {
-                name = "icon-variant",
-                defaultValue = IconVariant.Regular,
-            };
-
-            readonly UxmlEnumAttributeDescription<IconVariant> m_TrailingIconVariant = new UxmlEnumAttributeDescription<IconVariant>
-            {
-                name = "trailing-icon-variant",
-                defaultValue = IconVariant.Regular,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (ActionButton)ve;
-                el.label = m_Label.GetValueFromBag(bag, cc);
-                el.icon = m_Icon.GetValueFromBag(bag, cc);
-                el.iconVariant = m_IconVariant.GetValueFromBag(bag, cc);
-                el.trailingIcon = m_TrailingIcon.GetValueFromBag(bag, cc);
-                el.trailingIconVariant = m_TrailingIconVariant.GetValueFromBag(bag, cc);
-                el.size = m_Size.GetValueFromBag(bag, cc);
-                el.accent = m_Accent.GetValueFromBag(bag, cc);
-                el.selected = m_Selected.GetValueFromBag(bag, cc);
-                el.quiet = m_Quiet.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

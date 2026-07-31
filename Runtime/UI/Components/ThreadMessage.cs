@@ -4,21 +4,16 @@ using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// ThreadMessage UI element. Displays a single message within a thread.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class ThreadMessage : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId authorNameProperty = nameof(authorName);
 
         internal static readonly BindingId timestampProperty = nameof(timestamp);
@@ -46,7 +41,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId reactionsProperty = nameof(reactions);
 
         internal static readonly BindingId makeActionMenuItemsProperty = nameof(makeActionMenuItems);
-#endif
 
         /// <summary>
         /// The ThreadMessage main styling class.
@@ -349,13 +343,9 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The author name displayed in the message header.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
         [Header("Thread Message")]
-#endif
         public string authorName
         {
             get => m_AuthorNameElement.text;
@@ -363,22 +353,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_AuthorNameElement.text != value;
                 m_AuthorNameElement.text = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in authorNameProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The timestamp text displayed in the message header.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string timestamp
         {
             get => m_TimestampElement.text;
@@ -386,22 +370,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_TimestampElement.text != value;
                 m_TimestampElement.text = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in timestampProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The tooltip displayed on the timestamp element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string timestampTooltip
         {
             get => m_TimestampElement.tooltip;
@@ -409,22 +387,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_TimestampElement.tooltip != value;
                 m_TimestampElement.tooltip = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in timestampTooltipProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The rich text content of the message body.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string message
         {
             get => m_RawMessage;
@@ -433,22 +405,16 @@ namespace Unity.AppUI.UI
                 var changed = m_RawMessage != value;
                 m_RawMessage = value;
                 RefreshContent();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in contentProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The state of the message. Adds a modifier class using the <c>--{state}</c> pattern.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public ThreadMessageState state
         {
             get => m_State;
@@ -459,10 +425,8 @@ namespace Unity.AppUI.UI
                 m_State = value;
                 AddToClassList(GetStateUssClassName(m_State));
                 SetEnabled(m_State != ThreadMessageState.Sending);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in stateProperty);
-#endif
             }
         }
 
@@ -470,9 +434,7 @@ namespace Unity.AppUI.UI
         /// Callback to populate the action menu when the action button is clicked.
         /// When set, the action button is visible; when <c>null</c>, it is hidden.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Action<ThreadMessage, MenuBuilder> makeActionMenuItems
         {
             get => m_MakeActionMenuItems;
@@ -481,22 +443,16 @@ namespace Unity.AppUI.UI
                 var changed = m_MakeActionMenuItems != value;
                 m_MakeActionMenuItems = value;
                 m_ActionsButton.EnableInClassList(Styles.hiddenUssClassName, m_MakeActionMenuItems == null);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in makeActionMenuItemsProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The number of likes displayed on the like button.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int likeCount
         {
             get => m_LikeCount;
@@ -505,22 +461,16 @@ namespace Unity.AppUI.UI
                 var changed = m_LikeCount != value;
                 m_LikeCount = value;
                 m_LikeButton.label = m_LikeCount > 0 ? m_LikeCount.ToString() : null;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in likeCountProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The number of dislikes displayed on the dislike button.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int dislikeCount
         {
             get => m_DislikeCount;
@@ -529,22 +479,16 @@ namespace Unity.AppUI.UI
                 var changed = m_DislikeCount != value;
                 m_DislikeCount = value;
                 m_DislikeButton.label = m_DislikeCount > 0 ? m_DislikeCount.ToString() : null;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in dislikeCountProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Whether the like button is in a selected (highlighted) state.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool isLiked
         {
             get => m_LikeButton.selected;
@@ -552,22 +496,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_LikeButton.selected != value;
                 m_LikeButton.selected = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in isLikedProperty);
-#endif
             }
         }
 
         /// <summary>
         /// Whether the dislike button is in a selected (highlighted) state.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool isDisliked
         {
             get => m_DislikeButton.selected;
@@ -575,19 +513,15 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_DislikeButton.selected != value;
                 m_DislikeButton.selected = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in isDislikedProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The avatar background image for the message author.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Background authorAvatar
         {
             get => m_AvatarElement.src;
@@ -595,22 +529,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_AvatarElement.src != value;
                 m_AvatarElement.src = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in authorAvatarProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The initials text displayed inside the avatar when no image is set.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string authorInitials
         {
             get => m_AvatarElement.label;
@@ -618,22 +546,16 @@ namespace Unity.AppUI.UI
             {
                 var changed = m_AvatarElement.label != value;
                 m_AvatarElement.label = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in authorInitialsProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The background color of the avatar.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Optional<Color> authorAvatarColor
         {
             get => m_AvatarElement.backgroundColor;
@@ -641,19 +563,15 @@ namespace Unity.AppUI.UI
             {
                 var changed = !m_AvatarElement.backgroundColor.Equals(value);
                 m_AvatarElement.backgroundColor = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in authorAvatarColorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The list of reactions to display on the message.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public IList<ReactionInfo> reactions
         {
             get => m_Reactions;
@@ -662,10 +580,8 @@ namespace Unity.AppUI.UI
                 var changed = m_Reactions != value;
                 m_Reactions = value;
                 m_ReactionBar.reactions = m_Reactions;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in reactionsProperty);
-#endif
             }
         }
 
@@ -691,109 +607,5 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Defines the UxmlFactory for the ThreadMessage.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<ThreadMessage, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ThreadMessage"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_AuthorName = new UxmlStringAttributeDescription
-            {
-                name = "author-name",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_Timestamp = new UxmlStringAttributeDescription
-            {
-                name = "timestamp",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_TimestampTooltip = new UxmlStringAttributeDescription
-            {
-                name = "timestamp-tooltip",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_Content = new UxmlStringAttributeDescription
-            {
-                name = "message",
-                defaultValue = null
-            };
-
-            readonly UxmlEnumAttributeDescription<ThreadMessageState> m_State = new UxmlEnumAttributeDescription<ThreadMessageState>
-            {
-                name = "state",
-                defaultValue = ThreadMessageState.Default
-            };
-
-            readonly UxmlIntAttributeDescription m_LikeCount = new UxmlIntAttributeDescription
-            {
-                name = "like-count",
-                defaultValue = 0
-            };
-
-            readonly UxmlIntAttributeDescription m_DislikeCount = new UxmlIntAttributeDescription
-            {
-                name = "dislike-count",
-                defaultValue = 0
-            };
-
-            readonly UxmlBoolAttributeDescription m_IsLiked = new UxmlBoolAttributeDescription
-            {
-                name = "is-liked",
-                defaultValue = false,
-            };
-
-            readonly UxmlBoolAttributeDescription m_IsDisliked = new UxmlBoolAttributeDescription
-            {
-                name = "is-disliked",
-                defaultValue = false,
-            };
-
-            readonly UxmlStringAttributeDescription m_AuthorInitials = new UxmlStringAttributeDescription
-            {
-                name = "author-initials",
-                defaultValue = null
-            };
-
-            readonly UxmlColorAttributeDescription m_AuthorAvatarColor = new UxmlColorAttributeDescription
-            {
-                name = "author-avatar-color",
-                defaultValue = Color.gray
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (ThreadMessage)ve;
-                el.authorName = m_AuthorName.GetValueFromBag(bag, cc);
-                el.timestamp = m_Timestamp.GetValueFromBag(bag, cc);
-                el.timestampTooltip = m_TimestampTooltip.GetValueFromBag(bag, cc);
-                el.message = m_Content.GetValueFromBag(bag, cc);
-                el.state = m_State.GetValueFromBag(bag, cc);
-                el.likeCount = m_LikeCount.GetValueFromBag(bag, cc);
-                el.dislikeCount = m_DislikeCount.GetValueFromBag(bag, cc);
-                el.isLiked = m_IsLiked.GetValueFromBag(bag, cc);
-                el.isDisliked = m_IsDisliked.GetValueFromBag(bag, cc);
-                el.authorInitials = m_AuthorInitials.GetValueFromBag(bag, cc);
-                var avatarColor = Color.gray;
-                if (m_AuthorAvatarColor.TryGetValueFromBag(bag, cc, ref avatarColor))
-                    el.authorAvatarColor = avatarColor;
-            }
-        }
-#endif
     }
 }

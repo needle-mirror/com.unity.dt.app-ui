@@ -26,8 +26,173 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// The Tray Popup class.
+    /// A popup that slides in from the edge of the screen, commonly used for mobile menus and action sheets.
     /// </summary>
+    /// <remarks>
+    /// A tray is a popup panel that slides in from the edge of the screen, typically from the bottom, left, or
+    /// right. It's commonly used in mobile interfaces for displaying action sheets, menus, or additional content
+    /// panels.
+    ///
+    /// Trays are ideal for presenting contextual actions, navigation options, or detailed content that doesn't
+    /// require a full-screen modal. They maintain visual connection to the trigger element while providing a
+    /// smooth slide-in animation.
+    ///
+    /// The tray component supports configurable slide directions, optional drag handles for gesture-based
+    /// dismissal, and customizable animation durations. Users can dismiss trays by tapping outside, using
+    /// gestures, or through programmatic control.
+    ///
+    /// Use trays for secondary actions, mobile-style navigation, or content that benefits from the edge-anchored
+    /// presentation. They work particularly well on touch interfaces where gesture-based interaction is natural.
+    ///
+    /// ## Anatomy
+    /// Tray Examples:
+    /// ```xml
+    /// &lt;appui:Tray position="Bottom" showHandle="true" size="M" /&gt;
+    /// ```
+    /// Bottom tray with drag handle (mobile action sheet style)
+    ///
+    /// Different Positions:
+    /// ```xml
+    /// &lt;appui:Tray position="Bottom" showHandle="true" size="M" /&gt;
+    /// ```
+    /// Bottom tray for mobile actions
+    /// ```xml
+    /// &lt;appui:Tray position="Left" showHandle="false" size="M" /&gt;
+    /// ```
+    /// Left side navigation menu
+    /// ```xml
+    /// &lt;appui:Tray position="Right" showHandle="true" size="M" /&gt;
+    /// ```
+    /// Right side filter panel
+    /// ```xml
+    /// &lt;appui:Tray position="Top" showHandle="false" size="M" /&gt;
+    /// ```
+    /// Top notification tray
+    ///
+    /// Handle Visibility:
+    /// ```xml
+    /// &lt;appui:Tray position="Bottom" showHandle="true" size="M" /&gt;
+    /// ```
+    /// With drag handle for gesture control
+    /// ```xml
+    /// &lt;appui:Tray position="Bottom" showHandle="false" size="M" /&gt;
+    /// ```
+    /// Without handle for clean appearance
+    ///
+    /// Transition Speeds:
+    /// ```xml
+    /// &lt;appui:Tray position="Bottom" transitionDurationMs="150" size="M" /&gt;
+    /// ```
+    /// Fast animation (150ms)
+    /// ```xml
+    /// &lt;appui:Tray position="Bottom" transitionDurationMs="300" size="M" /&gt;
+    /// ```
+    /// Standard animation (300ms)
+    /// ```xml
+    /// &lt;appui:Tray position="Bottom" transitionDurationMs="500" size="M" /&gt;
+    /// ```
+    /// Slow animation (500ms)
+    ///
+    /// Disabled State:
+    /// ```xml
+    /// &lt;appui:Tray position="Bottom" showHandle="true" enabled="false" size="M" /&gt;
+    /// ```
+    /// Non-interactive tray overlay
+    /// </remarks>
+    /// <example>
+    /// <para>Bottom action sheet. Creating a mobile-style action sheet that slides from the bottom.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var actionButton = new Button { title = "More Actions" };
+    ///
+    /// // Create action sheet content
+    /// var actionSheet = new VisualElement();
+    /// actionSheet.AddToClassList("action-sheet");
+    ///
+    /// var header = new VisualElement();
+    /// header.Add(new Text("Choose an action") { size = TextSize.S });
+    /// actionSheet.Add(header);
+    ///
+    /// var actions = new VisualElement();
+    /// actions.Add(new MenuItem { label = "Share", icon = "share" });
+    /// actions.Add(new MenuItem { label = "Edit", icon = "edit" });
+    /// actions.Add(new MenuItem { label = "Delete", icon = "trash", variant = MenuVariant.Destructive });
+    /// actionSheet.Add(actions);
+    ///
+    /// var tray = Tray.Build(rootElement, actionSheet)
+    ///     .SetPosition(TrayPosition.Bottom)
+    ///     .SetHandleVisible(true)
+    ///     .SetTransitionDuration(300);
+    ///
+    /// actionButton.clicked += () => tray.Show();
+    ///
+    /// content.Add(actionButton);
+    /// ]]></code>
+    /// <para>Side navigation tray. Creating a navigation menu that slides from the side.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var menuButton = new IconButton { icon = "menu" };
+    ///
+    /// // Create navigation menu content
+    /// var navMenu = new VisualElement();
+    /// navMenu.AddToClassList("side-navigation");
+    ///
+    /// var header = new VisualElement();
+    /// header.Add(new Avatar { src = "user.png" });
+    /// header.Add(new Text("John Doe"));
+    /// navMenu.Add(header);
+    ///
+    /// var menuItems = new VisualElement();
+    /// menuItems.Add(new MenuItem { label = "Dashboard", icon = "dashboard", selected = true });
+    /// menuItems.Add(new MenuItem { label = "Projects", icon = "folder" });
+    /// menuItems.Add(new MenuItem { label = "Settings", icon = "settings" });
+    /// menuItems.Add(new Divider { vertical = false });
+    /// menuItems.Add(new MenuItem { label = "Logout", icon = "logout" });
+    /// navMenu.Add(menuItems);
+    ///
+    /// var sideTray = Tray.Build(rootElement, navMenu)
+    ///     .SetPosition(TrayPosition.Left)
+    ///     .SetHandleVisible(false)
+    ///     .SetTransitionDuration(250);
+    ///
+    /// menuButton.clicked += () => sideTray.Show();
+    ///
+    /// appBar.leadingContainer.Add(menuButton);
+    /// ]]></code>
+    /// <para>Right-side filter panel. Creating a filter/options panel that slides from the right.</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var filterButton = new Button { title = "Filters", trailingIcon = "filter" };
+    ///
+    /// // Create filter panel content
+    /// var filterPanel = new VisualElement();
+    /// filterPanel.AddToClassList("filter-panel");
+    ///
+    /// filterPanel.Add(new Heading { title = "Filter Options" });
+    ///
+    /// var categoryFilter = new VisualElement();
+    /// categoryFilter.Add(new Text("Category"));
+    /// var categoryDropdown = new Dropdown();
+    /// categoryDropdown.choices.AddRange(new[] { "All", "Documents", "Images", "Videos" });
+    /// categoryFilter.Add(categoryDropdown);
+    /// filterPanel.Add(categoryFilter);
+    ///
+    /// var dateFilter = new VisualElement();
+    /// dateFilter.Add(new Text("Date Range"));
+    /// dateFilter.Add(new DateRangeField());
+    /// filterPanel.Add(dateFilter);
+    ///
+    /// var buttons = new VisualElement();
+    /// buttons.Add(new Button { title = "Reset", quiet = true });
+    /// buttons.Add(new Button { title = "Apply", variant = ButtonVariant.Accent });
+    /// filterPanel.Add(buttons);
+    ///
+    /// var filterTray = Tray.Build(rootElement, filterPanel)
+    ///     .SetPosition(TrayPosition.Right)
+    ///     .SetHandleVisible(true)
+    ///     .SetTransitionDuration(200);
+    ///
+    /// filterButton.clicked += () => filterTray.Show();
+    /// ]]></code>
+    /// </example>
+    [VisualDocPage("popups")]
     public sealed class Tray : Popup<Tray>
     {
         const int k_TraySlideInDurationMs = 125;

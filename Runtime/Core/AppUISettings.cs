@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Unity.AppUI.Core
@@ -13,7 +12,7 @@ namespace Unity.AppUI.Core
         internal const string configName = "com.unity.dt.app-ui";
 
         // [POSTVERSION.WriteVersion(accessibility="internal",fieldName="version",packageName="com.unity.dt.app-ui",excludePatch=true)]
-        internal const string version = "2.2";
+        internal const string version = "3.0";
 
         /// <summary>
         /// Enable this options to correct the scale of UIDocuments,
@@ -62,17 +61,6 @@ namespace Unity.AppUI.Core
                 m_EditorUpdateFrequency = value;
                 OnChange();
             }
-        }
-
-        /// <summary>
-        /// Enable this option to automatically override the AndroidManifest.xml file with the one provided by the App UI system.
-        /// </summary>
-        [Obsolete("App UI doesn't provide a custom Android manifest anymore. " +
-            "It will apply the relevant changes to the existing manifest during the build process. " +
-            "This setting has no effect.")]
-        public bool autoOverrideAndroidManifest
-        {
-            get; set;
         }
 
         /// <summary>

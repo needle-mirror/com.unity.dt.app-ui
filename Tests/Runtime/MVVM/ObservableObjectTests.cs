@@ -74,7 +74,6 @@ namespace Unity.AppUI.Tests.MVVM
             });
         }
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [Test]
         public void CanNotifyWithUIToolkitRuntimeDataBindings()
         {
@@ -90,12 +89,9 @@ namespace Unity.AppUI.Tests.MVVM
             obj.Publish();
             Assert.AreEqual(1, obj.GetViewHashCode(), "View hash code should change after calling Publish");
         }
-#endif
 
         public class Observable : ObservableObject
-#if ENABLE_RUNTIME_DATA_BINDINGS
             , UnityEngine.UIElements.IDataSourceViewHashProvider
-#endif
         {
             int m_Value1;
 

@@ -79,8 +79,124 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// A toast is a view containing a quick little message for the user.
+    /// A temporary notification that appears at the edge of the screen to display brief messages.
     /// </summary>
+    /// <remarks>
+    /// Toast notifications are brief messages that appear temporarily at the edge of the screen to inform users
+    /// about the status of operations or provide feedback. They automatically disappear after a set duration or
+    /// can include action buttons for user interaction.
+    ///
+    /// Toasts are ideal for displaying confirmations, status updates, error messages, or other non-critical
+    /// information that doesn't require immediate user attention. They don't interrupt the user's workflow and
+    /// appear unobtrusively.
+    ///
+    /// The toast component supports different visual styles (informative, positive, negative, warning) and can
+    /// include icons, text, and optional action buttons. Multiple toasts can be stacked when several notifications
+    /// need to be displayed.
+    ///
+    /// Use toasts for brief feedback messages. For critical information that requires user action, consider using
+    /// modals or alert dialogs instead.
+    ///
+    /// ## Anatomy
+    /// Toast Variants:
+    /// ```xml
+    /// &lt;appui:Toast message="This is an informative message" variant="Info" size="M" /&gt;
+    /// &lt;appui:Toast message="Operation completed successfully" variant="Positive" size="M" /&gt;
+    /// &lt;appui:Toast message="Warning: Please check your input" variant="Warning" size="M" /&gt;
+    /// &lt;appui:Toast message="Error: Something went wrong" variant="Negative" size="M" /&gt;
+    /// ```
+    ///
+    /// With Actions:
+    /// ```xml
+    /// &lt;appui:Toast message="File saved successfully" variant="Positive" action-text="Undo" size="M" /&gt;
+    /// &lt;appui:Toast message="Connection lost" variant="Warning" action-text="Retry" size="M" /&gt;
+    /// ```
+    ///
+    /// With Icons:
+    /// ```xml
+    /// &lt;appui:Toast message="Download complete" icon="download" variant="Positive" size="M" /&gt;
+    /// &lt;appui:Toast message="Update available" icon="update" variant="Info" size="M" /&gt;
+    /// ```
+    /// </remarks>
+    /// <example>
+    /// <para>Basic toast notifications: Creating simple toast messages with different styles</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Simple success message
+    /// var successToast = Toast.Build(rootElement, "File saved successfully!", NotificationDuration.Medium)
+    ///     .SetStyle(NotificationStyle.Positive)
+    ///     .SetIcon("check");
+    /// successToast.Show();
+    ///
+    /// // Error message
+    /// var errorToast = Toast.Build(rootElement, "Failed to connect to server", NotificationDuration.Long)
+    ///     .SetStyle(NotificationStyle.Negative)
+    ///     .SetIcon("warning");
+    /// errorToast.Show();
+    ///
+    /// // Information message
+    /// var infoToast = Toast.Build(rootElement, "New update available", NotificationDuration.Short)
+    ///     .SetStyle(NotificationStyle.Informative)
+    ///     .SetIcon("info");
+    /// infoToast.Show();
+    /// ]]></code>
+    /// <para>Toast with action buttons: Adding interactive buttons to toast notifications</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var undoToast = Toast.Build(rootElement, "Item deleted", NotificationDuration.Long)
+    ///     .SetStyle(NotificationStyle.Default)
+    ///     .SetIcon("trash")
+    ///     .AddAction(1, "Undo", (toast) => {
+    ///         RestoreDeletedItem();
+    ///         toast.Dismiss();
+    ///     }, true)
+    ///     .AddAction(2, "View All", (toast) => {
+    ///         OpenTrashView();
+    ///         toast.Dismiss();
+    ///     }, true);
+    ///
+    /// undoToast.Show();
+    ///
+    /// // Toast with multiple actions
+    /// var downloadToast = Toast.Build(rootElement, "Download complete", NotificationDuration.Indefinite)
+    ///     .SetStyle(NotificationStyle.Positive)
+    ///     .SetIcon("download")
+    ///     .AddAction(1, "Open", (toast) => OpenFile())
+    ///     .AddAction(2, "Show in Folder", (toast) => ShowInExplorer());
+    ///
+    /// downloadToast.Show();
+    /// ]]></code>
+    /// <para>Managing toast lifecycle: Controlling toast display duration and dismissal</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Create toast with indefinite duration
+    /// var progressToast = Toast.Build(rootElement, "Processing...", NotificationDuration.Indefinite)
+    ///     .SetStyle(NotificationStyle.Informative)
+    ///     .SetIcon("loading");
+    ///
+    /// // Show the toast
+    /// progressToast.Show();
+    ///
+    /// // Update the toast content during operation
+    /// ProcessFileAsync().ContinueWith(task => {
+    ///     if (task.IsCompletedSuccessfully)
+    ///     {
+    ///         progressToast
+    ///             .SetText("Processing complete!")
+    ///             .SetStyle(NotificationStyle.Positive)
+    ///             .SetIcon("check");
+    ///
+    ///         // Auto-dismiss after 3 seconds
+    ///         ScheduleDismissal(progressToast, 3000);
+    ///     }
+    ///     else
+    ///     {
+    ///         progressToast
+    ///             .SetText("Processing failed")
+    ///             .SetStyle(NotificationStyle.Negative)
+    ///             .SetIcon("error");
+    ///     }
+    /// });
+    /// ]]></code>
+    /// </example>
+    [VisualDocPage("popups")]
     public sealed class Toast : PopupNotification<Toast>
     {
         /// <summary>

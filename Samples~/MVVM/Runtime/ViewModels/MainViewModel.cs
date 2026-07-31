@@ -1,8 +1,6 @@
 using System;
 using Unity.AppUI.MVVM;
-#if UNITY_2023_2_OR_NEWER
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.Samples.MVVM
 {
@@ -26,9 +24,7 @@ namespace Unity.AppUI.Samples.MVVM
 
         // When creating properties yourself, you must
         // use CreateProperty attribute for UITK data binding to work.
-#if UNITY_2023_2_OR_NEWER
         [CreateProperty(ReadOnly = true)]
-#endif
         public string ClickCountMessage => $"Click count: {Counter}";
     }
 }

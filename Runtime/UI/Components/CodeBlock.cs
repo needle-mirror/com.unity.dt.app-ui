@@ -2,9 +2,7 @@ using System.Text;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 #if APPUI_ENABLE_SYNTAX_HIGHLIGHTING
 using Unity.AppUI.TextMateLib;
 #endif
@@ -26,16 +24,12 @@ namespace Unity.AppUI.UI
     /// Asset resolution from GUID requires the editor; in built players the body falls back to
     /// plain monospaced text.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class CodeBlock : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId codeProperty = nameof(code);
         internal static readonly BindingId languageProperty = nameof(language);
         internal static readonly BindingId showLineNumbersProperty = nameof(showLineNumbers);
-#endif
 
         /// <summary>The CodeBlock main USS class name.</summary>
         public const string ussClassName = "appui-code-block";
@@ -144,9 +138,7 @@ namespace Unity.AppUI.UI
             {
                 enableRichText = false,
                 pickingMode = PickingMode.Ignore,
-#if UNITY_2022_1_OR_NEWER
                 selection = { isSelectable = false },
-#endif
             };
             m_LineNumbers.AddToClassList(lineNumbersUssClassName);
             m_LineNumbers.style.display = DisplayStyle.None;
@@ -156,9 +148,7 @@ namespace Unity.AppUI.UI
             {
                 enableRichText = false,
                 pickingMode = PickingMode.Position,
-#if UNITY_2022_1_OR_NEWER
                 selection = { isSelectable = true },
-#endif
             };
             m_Body.AddToClassList(bodyUssClassName);
             m_Viewport.Add(m_Body);
@@ -181,12 +171,8 @@ namespace Unity.AppUI.UI
         /// The source code displayed in the body. Setting this triggers a re-render
         /// (with syntax highlighting if a grammar+theme pair is configured via USS).
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string code
         {
             get => m_Code;
@@ -195,10 +181,8 @@ namespace Unity.AppUI.UI
                 var changed = m_Code != value;
                 m_Code = value ?? string.Empty;
                 Refresh();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in codeProperty);
-#endif
             }
         }
 
@@ -208,12 +192,8 @@ namespace Unity.AppUI.UI
         /// Setting this also adds a <c>appui-code-block--lang-&lt;value&gt;</c> class so USS can
         /// map the language to a grammar via <c>--codeblock-grammar</c>.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string language
         {
             get => m_Language;
@@ -228,10 +208,8 @@ namespace Unity.AppUI.UI
 
                 m_LanguageLabel.text = m_Language ?? string.Empty;
                 m_LanguageLabel.style.display = string.IsNullOrEmpty(m_Language) ? DisplayStyle.None : DisplayStyle.Flex;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in languageProperty);
-#endif
             }
         }
 
@@ -240,12 +218,8 @@ namespace Unity.AppUI.UI
         /// The gutter and the body live inside the same <see cref="ScrollView"/>, so vertical
         /// (and horizontal) scrolling keeps them aligned. Disabled by default.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool showLineNumbers
         {
             get => m_ShowLineNumbers;
@@ -256,10 +230,8 @@ namespace Unity.AppUI.UI
                 m_LineNumbers.style.display = m_ShowLineNumbers ? DisplayStyle.Flex : DisplayStyle.None;
                 EnableInClassList(withLineNumbersUssClassName, m_ShowLineNumbers);
                 UpdateLineNumbers();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in showLineNumbersProperty);
-#endif
             }
         }
 
@@ -401,50 +373,5 @@ namespace Unity.AppUI.UI
         }
 #endif
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Defines the UxmlFactory for the <see cref="CodeBlock"/>.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<CodeBlock, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="CodeBlock"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_Code = new UxmlStringAttributeDescription
-            {
-                name = "code",
-                defaultValue = string.Empty,
-            };
-
-            readonly UxmlStringAttributeDescription m_Language = new UxmlStringAttributeDescription
-            {
-                name = "language",
-                defaultValue = null,
-            };
-
-            readonly UxmlBoolAttributeDescription m_ShowLineNumbers = new UxmlBoolAttributeDescription
-            {
-                name = "show-line-numbers",
-                defaultValue = false,
-            };
-
-            /// <summary>
-            /// Initializes the <see cref="CodeBlock"/> from UXML attributes.
-            /// </summary>
-            /// <param name="ve">The element being initialized.</param>
-            /// <param name="bag">Parsed attribute bag.</param>
-            /// <param name="cc">Creation context.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-                var element = (CodeBlock)ve;
-                element.code = m_Code.GetValueFromBag(bag, cc);
-                element.language = m_Language.GetValueFromBag(bag, cc);
-                element.showLineNumbers = m_ShowLineNumbers.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

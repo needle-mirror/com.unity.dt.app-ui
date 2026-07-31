@@ -3,21 +3,74 @@ using System.Collections.Generic;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// A color swatch is a visual element that displays a color or a gradient.
+    /// A visual element that displays a color or gradient with customizable appearance.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The ColorSwatch component is a versatile visual element designed to display colors and gradients in your UI.
+    /// It supports both single colors and complex gradients, making it ideal for color pickers, palettes, and visual
+    /// indicators.
+    ///
+    /// The component features a transparent checkerboard background to better visualize colors with alpha values,
+    /// and supports various sizes and shapes to fit different design requirements.
+    ///
+    /// For the best visual experience, ensure the ColorSwatch has adequate space to render properly, as it
+    /// automatically adjusts its internal render texture based on the available space and device's scale factor.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Usage Example — Creating a basic color swatch with UXML.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ColorSwatch size="M" round="true" orientation="Horizontal" value="Fixed:[0,#FF0000];[1,#0000FF]+[0,1];[1,1]" />
+    /// ]]></code>
+    /// <para>Create a color swatch programmatically — Creating a color swatch with gradient in code.</para>
+    /// <code lang="csharp">
+    /// var swatch = new ColorSwatch();
+    /// swatch.size = Size.M;
+    /// swatch.round = true;
+    ///
+    /// var gradient = new Gradient();
+    /// gradient.mode = GradientMode.Fixed;
+    /// gradient.SetKeys(
+    ///     new[] {
+    ///         new GradientColorKey(Color.red, 0),
+    ///         new GradientColorKey(Color.blue, 0.5f),
+    ///         new GradientColorKey(Color.green, 1)
+    ///     },
+    ///     new[] {
+    ///         new GradientAlphaKey(1, 0),
+    ///         new GradientAlphaKey(1, 1)
+    ///     }
+    /// );
+    ///
+    /// swatch.value = gradient;
+    /// </code>
+    /// <para>Color Palette Example — Creating a simple color palette with multiple swatches.</para>
+    /// <code lang="csharp">
+    /// var container = new VisualElement();
+    /// container.style.flexDirection = FlexDirection.Row;
+    /// container.style.flexWrap = Wrap.Wrap;
+    ///
+    /// var colors = new[] { Color.red, Color.green, Color.blue, Color.yellow };
+    ///
+    /// foreach (var color in colors)
+    /// {
+    ///     var swatch = new ColorSwatch();
+    ///     swatch.size = Size.S;
+    ///     swatch.round = true;
+    ///     swatch.color = color;
+    ///     swatch.style.margin = 5;
+    ///     container.Add(swatch);
+    /// }
+    /// </code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class ColorSwatch : BaseVisualElement, INotifyValueChanged<Gradient>, ISizeableElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId sizeProperty = nameof(size);
 
@@ -29,7 +82,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId orientationProperty = nameof(orientation);
 
-#endif
 
         const int k_MaxGradientSteps = 16;
 
@@ -125,12 +177,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The color entry list.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Gradient value
         {
             get => m_Value;
@@ -144,10 +192,8 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
                 NotifyPropertyChanged(in colorProperty);
-#endif
             }
         }
 
@@ -156,9 +202,7 @@ namespace Unity.AppUI.UI
         /// Setting this property will overwrite the current gradient value to contain only the given single color value.
         /// The property's getter always return the first item of the gradient.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Color color
         {
             get => value?.Evaluate(0) ?? default;
@@ -174,21 +218,15 @@ namespace Unity.AppUI.UI
                 });
                 this.value = g;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in colorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The size of the <see cref="ColorSwatch"/> element.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -205,20 +243,14 @@ namespace Unity.AppUI.UI
             RemoveFromClassList(GetSizeUssClassName(m_Size));
             m_Size = newSize;
             AddToClassList(GetSizeUssClassName(m_Size));
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in sizeProperty);
-#endif
         }
 
         /// <summary>
         /// Round variant of the <see cref="ColorSwatch"/>.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool round
         {
             get => ClassListContains(roundUssClassName);
@@ -233,20 +265,14 @@ namespace Unity.AppUI.UI
         void SetRound(bool newRound)
         {
             EnableInClassList(roundUssClassName, newRound);
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in roundProperty);
-#endif
         }
 
         /// <summary>
         /// The orientation of the <see cref="ColorSwatch"/>.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Direction orientation
         {
             get => m_Orientation;
@@ -264,9 +290,7 @@ namespace Unity.AppUI.UI
             m_Orientation = newOrientation;
             AddToClassList(GetOrientationUssClassName(m_Orientation));
             Refresh();
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in orientationProperty);
-#endif
         }
 
         /// <summary>
@@ -445,61 +469,5 @@ namespace Unity.AppUI.UI
             m_RT = null;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Instantiates an <see cref="ColorSwatch"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<ColorSwatch, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ColorSwatch"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            readonly UxmlStringAttributeDescription m_Value = new UxmlStringAttributeDescription
-            {
-                name = "value",
-                defaultValue = null,
-            };
-
-            readonly UxmlBoolAttributeDescription m_Round = new UxmlBoolAttributeDescription
-            {
-                name = "round",
-                defaultValue = false,
-            };
-
-            readonly UxmlEnumAttributeDescription<Direction> m_Orientation = new UxmlEnumAttributeDescription<Direction>
-            {
-                name = "orientation",
-                defaultValue = Direction.Horizontal,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-                var element = (ColorSwatch)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-                element.round = m_Round.GetValueFromBag(bag, cc);
-                element.orientation = m_Orientation.GetValueFromBag(bag, cc);
-
-                var valueFromBag = m_Value.GetValueFromBag(bag, cc);
-                if (!string.IsNullOrEmpty(valueFromBag) && GradientExtensions.TryParse(valueFromBag, out var gradient))
-                    element.value = gradient;
-            }
-        }
-#endif
     }
 }

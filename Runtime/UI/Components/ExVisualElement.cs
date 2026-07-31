@@ -2,9 +2,7 @@ using System;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
@@ -111,14 +109,81 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
-    /// A visual element that can be used as a normal VisualElement but with additional styling options like shadows, borders, outline, etc.
+    /// An enhanced VisualElement with advanced styling capabilities including shadows, borders, and outlines.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// ExVisualElement extends Unity's VisualElement to provide advanced styling options commonly found in modern
+    /// UI frameworks. It enables developers to create visually rich interfaces with features like drop shadows,
+    /// customizable borders, outlines, and complex background effects.
+    ///
+    /// This component is ideal for creating containers, cards, panels, and other UI elements that require
+    /// sophisticated visual treatments without the need for additional images or sprites.
+    ///
+    /// Key features include:
+    /// - Customizable borders with different styles (solid, dashed, dotted)
+    /// - Box shadows with inset/outset options
+    /// - Outline effects with adjustable width and offset
+    /// - Background colors and images
+    /// - Optimized rendering with configurable render passes
+    ///
+    /// WARNING: Be mindful of performance when using multiple instances with complex effects. Consider using the
+    /// passMask property to disable unnecessary render passes.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic Card Example. Creating a basic card with shadow and padding.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ExVisualElement name="card" class="card">
+    ///     <Label text="Card Title"/>
+    ///     <Label text="Card content goes here"/>
+    /// </ExVisualElement>
+    ///
+    /// .card {
+    ///     --background-color: white;
+    ///     --box-shadow-offset-x: 0;
+    ///     --box-shadow-offset-y: 2px;
+    ///     --box-shadow-blur: 4px;
+    ///     --box-shadow-color: rgba(0, 0, 0, 0.2);
+    ///     padding: 16px;
+    ///     border-radius: 4px;
+    /// }
+    /// ]]></code>
+    /// <para>Outlined Button Example. Creating an outlined button with hover effect.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ExVisualElement name="button" class="outlined-button">
+    ///     <Label text="Click Me"/>
+    /// </ExVisualElement>
+    ///
+    /// .outlined-button {
+    ///     --outline-color: rgb(25, 118, 210);
+    ///     --outline-width: 1px;
+    ///     padding: 8px 16px;
+    ///     border-radius: 4px;
+    /// }
+    ///
+    /// .outlined-button:hover {
+    ///     --background-color: rgba(25, 118, 210, 0.04);
+    /// }
+    /// ]]></code>
+    /// <para>Custom Panel with Inset Shadow. Creating a panel with an inset shadow effect.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ExVisualElement class="inset-panel">
+    ///     <Label text="Panel Content"/>
+    /// </ExVisualElement>
+    ///
+    /// .inset-panel {
+    ///     --background-color: rgb(245, 245, 245);
+    ///     --box-shadow-type: 1; /* inset */
+    ///     --box-shadow-blur: 4px;
+    ///     --box-shadow-color: rgba(0, 0, 0, 0.1);
+    ///     padding: 24px;
+    ///     border-radius: 8px;
+    /// }
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("layouts")]
     public partial class ExVisualElement : BaseVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId backgroundColorProperty = new BindingId(nameof(backgroundColor));
 
@@ -126,7 +191,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId passMaskProperty = new BindingId(nameof(passMask));
 
-#endif
 
         /// <summary>
         /// Rendering passes that will be executed. This is used to optimize and fine-tune the rendering.
@@ -339,9 +403,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The outline color of this element. Setting this will override the outline color defined in the USS.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Color outlineColor
         {
             get => m_OutlineColorByCode.IsSet ? m_OutlineColorByCode.Value : m_Style.outlineColor;
@@ -351,10 +413,8 @@ namespace Unity.AppUI.UI
                 m_OutlineColorByCode = value;
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in outlineColorProperty);
-#endif
             }
         }
 
@@ -370,19 +430,15 @@ namespace Unity.AppUI.UI
                 m_BackgroundColorByCode = value;
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in backgroundColorProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The mask of passes to render.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Passes passMask
         {
             get => m_PassMask;
@@ -393,9 +449,7 @@ namespace Unity.AppUI.UI
                 m_PassMask = value;
                 MarkDirtyRepaint();
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in passMaskProperty);
-#endif
             }
         }
 
@@ -559,13 +613,7 @@ namespace Unity.AppUI.UI
 
             var mwd = mgc.Allocate(k_Vertices.Length, k_Indices.Length, m_RT);
 
-#if !UNITY_2023_1_OR_NEWER
-            // Since the texture may be stored in an atlas, the UV coordinates need to be
-            // adjusted. Simply rescale them in the provided uvRegion.
-            var uvRegion = mwd.uvRegion;
-#else
             var uvRegion = new Rect(0, 0, 1, 1);
-#endif
             k_Vertices[0].uv = new Vector2(0, 0) * uvRegion.size + uvRegion.min;
             k_Vertices[1].uv = new Vector2(0, 1) * uvRegion.size + uvRegion.min;
             k_Vertices[2].uv = new Vector2(1, 1) * uvRegion.size + uvRegion.min;
@@ -717,16 +765,5 @@ namespace Unity.AppUI.UI
             return biggestRect;
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Factory class to instantiate a <see cref="ExVisualElement"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<ExVisualElement, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ExVisualElement"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits { }
-#endif
     }
 }

@@ -78,6 +78,7 @@
 @import "./Components/Tooltip.uss";
 @import "./Components/TouchSlider.uss";
 @import "./Components/Tray.uss";
+@import "./Components/TreeViewItem.uss";
 @import "./Components/Vector2Field.uss";
 @import "./Components/Vector3Field.uss";
 @import "./Components/Vector4Field.uss";

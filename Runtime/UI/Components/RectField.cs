@@ -1,21 +1,73 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Rect Field UI element.
+    /// A specialized input field for editing Unity Rect values with position and size components.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The RectField component provides a specialized input interface for editing Unity Rect values. It breaks
+    /// down the rect into its four components - X, Y (position) and Width, Height (size) - making it easier to
+    /// edit rect values in a structured way.
+    ///
+    /// The field is organized in two rows - one for position (X,Y) and one for size (Width,Height) - each with
+    /// clear labels and numeric inputs. Each numeric component is implemented as a FloatField, providing
+    /// precise control over the values.
+    ///
+    /// All numeric inputs support keyboard input, validation, and optional value constraints. The component
+    /// maintains the integrity of the Rect structure while allowing independent editing of its components.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic RectField Usage</para>
+    /// <code lang="csharp"><![CDATA[
+    /// // Create a new RectField
+    /// var rectField = new RectField();
+    ///
+    /// // Set initial value
+    /// rectField.value = new Rect(0, 0, 100, 100);
+    ///
+    /// // Register for value changes
+    /// rectField.RegisterValueChangedCallback(evt => {
+    ///     Debug.Log($"New rect: {evt.newValue}");
+    /// });
+    /// ]]></code>
+    /// <para>RectField with Validation</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var rectField = new RectField();
+    ///
+    /// // Set up validation for positive values within bounds
+    /// rectField.validateValue = (rect) => {
+    ///     return rect.width > 0 && rect.height > 0 &&
+    ///            rect.x >= 0 && rect.y >= 0 &&
+    ///            rect.x + rect.width <= Screen.width &&
+    ///            rect.y + rect.height <= Screen.height;
+    /// };
+    ///
+    /// // Handle invalid values
+    /// rectField.RegisterCallback<ChangeEvent<Rect>>(evt => {
+    ///     if (rectField.invalid)
+    ///     {
+    ///         Debug.LogWarning("Invalid rectangle dimensions");
+    ///     }
+    /// });
+    /// ]]></code>
+    /// <para>UXML Usage Example</para>
+    /// <code lang="xml"><![CDATA[
+    /// <UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI">
+    ///     <appui:RectField
+    ///         size="M"
+    ///         value="0, 0, 100, 100"
+    ///         style="width: 300px;"/>
+    /// </UXML>
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class RectField : BaseVisualElement, IInputElement<Rect>, ISizeableElement, INotifyValueChanging<Rect>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
         internal static readonly BindingId valueProperty = nameof(value);
 
@@ -25,7 +77,6 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId sizeProperty = nameof(size);
 
-#endif
 
         /// <summary>
         /// The RectField main styling class.
@@ -153,12 +204,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the RectField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Size size
         {
             get => m_Size;
@@ -173,10 +220,8 @@ namespace Unity.AppUI.UI
                 m_HField.size = m_Size;
                 m_WField.size = m_Size;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);
-#endif
             }
         }
 
@@ -198,12 +243,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The value of the RectField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public Rect value
         {
             get => m_Value;
@@ -218,21 +259,15 @@ namespace Unity.AppUI.UI
                 evt.target = this;
                 SendEvent(evt);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 NotifyPropertyChanged(in valueProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The invalid state of the RectField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool invalid
         {
             get => ClassListContains(Styles.invalidUssClassName);
@@ -246,19 +281,15 @@ namespace Unity.AppUI.UI
                 m_HField.EnableInClassList(Styles.invalidUssClassName, value);
                 m_WField.EnableInClassList(Styles.invalidUssClassName, value);
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in invalidProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The validation function of the RectField.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public Func<Rect, bool> validateValue
         {
             get => m_ValidateValue;
@@ -268,10 +299,8 @@ namespace Unity.AppUI.UI
                 m_ValidateValue = value;
                 invalid = !m_ValidateValue?.Invoke(m_Value) ?? false;
 
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in validateValueProperty);
-#endif
             }
         }
 
@@ -340,39 +369,5 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="RectField"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<RectField, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="RectField"/>.
-        /// </summary>
-        public new class UxmlTraits : BaseVisualElement.UxmlTraits
-        {
-            readonly UxmlEnumAttributeDescription<Size> m_Size = new UxmlEnumAttributeDescription<Size>
-            {
-                name = "size",
-                defaultValue = Size.M,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var element = (RectField)ve;
-                element.size = m_Size.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

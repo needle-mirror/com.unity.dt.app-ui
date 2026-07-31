@@ -23,9 +23,7 @@ namespace Unity.AppUI.Editor
                 id = "1234567890",
                 title = "Alice",
                 avatarColor = new Color(0.30f, 0.44f, 0.93f),
-#if UNITY_2022_3_OR_NEWER
                 avatarSrc = null,
-#endif
                 subtitle = "alice@company.com",
             },
             new MentionInfo
@@ -33,9 +31,7 @@ namespace Unity.AppUI.Editor
                 id = "9876543211011",
                 title = "Bob",
                 avatarColor = new Color(0.20f, 0.72f, 0.47f),
-#if UNITY_2022_3_OR_NEWER
                 avatarSrc = null,
-#endif
                 subtitle = "bob@company.com"
             },
             new MentionInfo { id = "1111111111", title = "Carol" },
@@ -110,9 +106,7 @@ namespace Unity.AppUI.Editor
             }
             else
             {
-#if UNITY_2022_3_OR_NEWER
                 avatar.src = null;
-#endif
                 avatar.label = mention.title.GetInitials();
                 avatar.backgroundColor = mention.avatarColor;
             }

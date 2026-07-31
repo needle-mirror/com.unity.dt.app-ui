@@ -4,21 +4,16 @@ using Unity.AppUI.Bridge;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
     /// ThreadComposer UI element. Provides a text input area with submit and attach actions.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
-#endif
     public partial class ThreadComposer : ExVisualElement
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
         internal static readonly BindingId placeholderProperty = nameof(placeholder);
 
         internal static readonly BindingId valueProperty = nameof(value);
@@ -34,7 +29,6 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId alwaysShowToolbarProperty = nameof(alwaysShowToolbar);
 
         internal static readonly BindingId maxTextLengthProperty = nameof(maxTextLength);
-#endif
 
         /// <summary>
         /// The default maximum text length for the composer.
@@ -334,11 +328,9 @@ namespace Unity.AppUI.UI
                 autoResize = true,
                 autoShrink = true,
             };
-#if UNITY_2022_3_OR_NEWER
             var field = textArea.Q<UnityEngine.UIElements.TextField>();
             var textElement = field.Q<TextElement>();
             textElement.enableRichText = true;
-#endif
             textArea.AddToClassList(textareaUssClassName);
             textArea.submitted += OnTextAreaSubmitted;
             textArea.RegisterValueChangingCallback(e => OnTextAreaValueChanged(e.newValue));
@@ -469,12 +461,8 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The placeholder text for the text area.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string placeholder
         {
             get => textArea.placeholder;
@@ -482,10 +470,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = textArea.placeholder != value;
                 textArea.placeholder = value;
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in placeholderProperty);
-#endif
             }
         }
 
@@ -493,12 +479,8 @@ namespace Unity.AppUI.UI
         /// Whether to show the avatar next to the composer.
         /// When <c>true</c>, the avatar element is visible and can be set via the <see cref="avatar"/> property.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool showAvatar
         {
             get => ClassListContains(showAvatarUssClassName);
@@ -506,10 +488,8 @@ namespace Unity.AppUI.UI
             {
                 var changed = showAvatar != value;
                 EnableInClassList(showAvatarUssClassName, value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in showAvatarProperty);
-#endif
             }
         }
 
@@ -517,12 +497,8 @@ namespace Unity.AppUI.UI
         /// Whether to always show the toolbar even when the text area is empty.
         /// When <c>false</c>, the toolbar is only shown when there is text in the text area.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool alwaysShowToolbar
         {
             get => m_AlwaysShowToolbar;
@@ -531,10 +507,8 @@ namespace Unity.AppUI.UI
                 var changed = m_AlwaysShowToolbar != value;
                 m_AlwaysShowToolbar = value;
                 EnableInClassList(forceToolbarUssClassName, alwaysShowToolbar);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in alwaysShowToolbarProperty);
-#endif
             }
         }
 
@@ -543,12 +517,8 @@ namespace Unity.AppUI.UI
         /// Drives the underlying <see cref="TextArea.maxLength"/> and the visible character counter
         /// (<c>current / max</c>) shown in the toolbar.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public int maxTextLength
         {
             get => m_MaxTextLength;
@@ -559,22 +529,16 @@ namespace Unity.AppUI.UI
                 textArea.maxLength = value;
                 m_CounterMax.text = value.ToString();
                 RefreshCounter();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in maxTextLengthProperty);
-#endif
             }
         }
 
         /// <summary>
         /// The current text value.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public string value
         {
             get => textArea.value;
@@ -583,22 +547,18 @@ namespace Unity.AppUI.UI
                 var changed = textArea.value != value;
                 textArea.value = value;
                 RefreshStyles();
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                 {
                     NotifyPropertyChanged(in valueProperty);
                     NotifyPropertyChanged(in encodedValueProperty);
                 }
-#endif
             }
         }
 
         /// <summary>
         /// Get the final encoded value of the text area, with any mentions encoded using the mention provider.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
-#endif
         public string encodedValue
         {
             get
@@ -616,9 +576,7 @@ namespace Unity.AppUI.UI
         /// The sending state of the composer,
         /// which can be used to disable input and show a loading state when a message is being submitted.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
         public bool sending
         {
             get => ClassListContains(sendingUssClassName);
@@ -627,10 +585,8 @@ namespace Unity.AppUI.UI
                 var changed = sending != value;
                 EnableInClassList(sendingUssClassName, value);
                 SetEnabled(!value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in sendingProperty);
-#endif
             }
         }
 
@@ -638,12 +594,8 @@ namespace Unity.AppUI.UI
         /// Whether the composer is in editing mode.
         /// When <c>true</c>, the submit icon-button is hidden and replaced with Cancel and Save buttons.
         /// </summary>
-#if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty]
-#endif
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute]
-#endif
         public bool isEditing
         {
             get => m_IsEditing;
@@ -652,10 +604,8 @@ namespace Unity.AppUI.UI
                 var changed = m_IsEditing != value;
                 m_IsEditing = value;
                 EnableInClassList(editingUssClassName, value);
-#if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
                     NotifyPropertyChanged(in isEditingProperty);
-#endif
             }
         }
 
@@ -666,9 +616,7 @@ namespace Unity.AppUI.UI
         public void ClearMentionsCache()
         {
             m_Mentions.Clear();
-#if ENABLE_RUNTIME_DATA_BINDINGS
             NotifyPropertyChanged(in encodedValueProperty);
-#endif
         }
 
         void RefreshStyles()
@@ -879,7 +827,6 @@ namespace Unity.AppUI.UI
             var l = part0.Length;
             textArea.value = part0 + after;
 
-#if ENABLE_UITK_TEXT_SELECTION
             // place cursor at the end of the inserted mention
             schedule.Execute(() =>
             {
@@ -887,7 +834,6 @@ namespace Unity.AppUI.UI
                 field.textSelection.cursorIndex = l;
                 field.textSelection.selectIndex = l;
             });
-#endif
 
             DismissMentionPopover();
         }
@@ -908,79 +854,5 @@ namespace Unity.AppUI.UI
             }
         }
 
-#if ENABLE_UXML_TRAITS
-        /// <summary>
-        /// Defines the UxmlFactory for the ThreadComposer.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<ThreadComposer, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="ThreadComposer"/>.
-        /// </summary>
-        public new class UxmlTraits : ExVisualElement.UxmlTraits
-        {
-            readonly UxmlStringAttributeDescription m_Placeholder = new UxmlStringAttributeDescription
-            {
-                name = "placeholder",
-                defaultValue = null
-            };
-
-            readonly UxmlStringAttributeDescription m_Value = new UxmlStringAttributeDescription
-            {
-                name = "value",
-                defaultValue = null
-            };
-
-            readonly UxmlBoolAttributeDescription m_IsEditing = new UxmlBoolAttributeDescription
-            {
-                name = "is-editing",
-                defaultValue = false,
-            };
-
-            readonly UxmlBoolAttributeDescription m_Sending = new UxmlBoolAttributeDescription
-            {
-                name = "sending",
-                defaultValue = false,
-            };
-
-            readonly UxmlBoolAttributeDescription m_ShowAvatar = new UxmlBoolAttributeDescription
-            {
-                name = "show-avatar",
-                defaultValue = false,
-            };
-
-             readonly UxmlBoolAttributeDescription m_AlwaysShowToolbar = new UxmlBoolAttributeDescription
-            {
-                name = "always-show-toolbar",
-                defaultValue = false,
-            };
-
-            readonly UxmlIntAttributeDescription m_MaxTextLength = new UxmlIntAttributeDescription
-            {
-                name = "max-text-length",
-                defaultValue = defaultMaxTextLength,
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (ThreadComposer)ve;
-                el.placeholder = m_Placeholder.GetValueFromBag(bag, cc);
-                el.value = m_Value.GetValueFromBag(bag, cc);
-                el.isEditing = m_IsEditing.GetValueFromBag(bag, cc);
-                el.sending = m_Sending.GetValueFromBag(bag, cc);
-                el.showAvatar = m_ShowAvatar.GetValueFromBag(bag, cc);
-                el.alwaysShowToolbar = m_AlwaysShowToolbar.GetValueFromBag(bag, cc);
-                el.maxTextLength = m_MaxTextLength.GetValueFromBag(bag, cc);
-            }
-        }
-#endif
     }
 }

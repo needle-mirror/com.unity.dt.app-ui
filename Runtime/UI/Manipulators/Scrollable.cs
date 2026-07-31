@@ -106,10 +106,6 @@ namespace Unity.AppUI.UI
                 m_PointerId = evt.pointerId;
                 m_LastPos = evt.position;
                 target.CapturePointer(evt.pointerId);
-#if !UNITY_2023_1_OR_NEWER
-                if (evt.pointerId == PointerId.mousePointerId)
-                    target.CaptureMouse();
-#endif
                 var pseudoStates = target.GetPseudoStates();
                 target.SetPseudoStates(pseudoStates | PseudoStates.Active);
             }
@@ -149,10 +145,6 @@ namespace Unity.AppUI.UI
                 if (!target.HasPointerCapture(evt.pointerId))
                 {
                     target.CapturePointer(evt.pointerId);
-#if !UNITY_2023_1_OR_NEWER
-                    if (evt.pointerId == PointerId.mousePointerId)
-                        target.CaptureMouse();
-#endif
                 }
                 var pseudoStates = target.GetPseudoStates();
                 target.SetPseudoStates(pseudoStates | PseudoStates.Active);

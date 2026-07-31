@@ -204,10 +204,8 @@ namespace Unity.AppUI.Core
             EditorApplication.playModeStateChanged += OnPlayModeChange;
             EditorApplication.update -= EditorUpdate;
             EditorApplication.update += EditorUpdate;
-#if UNITY_2022_2_OR_NEWER
             EditorApplication.focusChanged -= OnApplicationFocus;
             EditorApplication.focusChanged += OnApplicationFocus;
-#endif
         }
 
         static void OnPlayModeChange(PlayModeStateChange change)
@@ -237,11 +235,7 @@ namespace Unity.AppUI.Core
         static void OnProjectChange()
         {
             var settingsObj =
-#if ENABLE_ENTITY_ID
                 EditorUtility.EntityIdToObject(settings.GetEntityId());
-#else
-                EditorUtility.InstanceIDToObject(settings.GetInstanceID());
-#endif
             if (!settingsObj)
             {
                 var newSettings = ScriptableObject.CreateInstance<AppUISettings>();

@@ -18,13 +18,8 @@ using Toolbar = UnityEditor.UIElements.Toolbar;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 #endif
-#if UNITY_2022_1_OR_NEWER
 using FloatField = UnityEngine.UIElements.FloatField;
 using EnumField = UnityEngine.UIElements.EnumField;
-#else
-using FloatField = UnityEditor.UIElements.FloatField;
-using EnumField = UnityEditor.UIElements.EnumField;
-#endif
 
 namespace Unity.AppUI.Editor
 {
@@ -402,13 +397,8 @@ namespace Unity.AppUI.Editor
             m_StoryListView = new ListView(new List<StoryBookStory>(), -1f, MakeListVIewItem, BindStoryListViewItem);
             m_StoryListView.style.minWidth = 100;
             m_Preview = CreateDetailPage();
-#if UITK_SELECTED_INDICES_CHANGED
             m_ListView.selectedIndicesChanged += OnSelectionChanged;
             m_StoryListView.selectedIndicesChanged += OnStorySelectionChanged;
-#else
-            m_ListView.onSelectedIndicesChange += OnSelectionChanged;
-            m_StoryListView.onSelectedIndicesChange += OnStorySelectionChanged;
-#endif
             listPane.Add(m_ListView);
             listPane.Add(m_StoryListView);
             m_SplitView.Add(listPane);

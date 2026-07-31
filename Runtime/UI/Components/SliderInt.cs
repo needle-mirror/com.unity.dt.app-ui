@@ -4,23 +4,61 @@ using System.Globalization;
 using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if ENABLE_RUNTIME_DATA_BINDINGS
 using Unity.Properties;
-#endif
 
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Slider UI element for integer values.
+    /// A slider component for selecting an integer value from a range.
     /// </summary>
-#if ENABLE_UXML_SERIALIZED_DATA
+    /// <remarks>
+    /// The SliderInt component lets users select a value by moving a thumb control along a horizontal or vertical
+    /// track. It's ideal for adjusting settings that have a fixed numerical range and where users benefit from
+    /// visual feedback.
+    ///
+    /// The component supports various features like:
+    /// - Customizable range with minimum and maximum values
+    /// - Optional step values for incremental changes
+    /// - Value display modes (always visible, on interaction, or hidden)
+    /// - Customizable track appearance
+    /// - Optional marks and labels along the track
+    /// - Keyboard navigation and accessibility support
+    /// - RTL (Right-to-Left) layout support
+    ///
+    /// The SliderInt only works with integer values. For decimal values, use SliderFloat instead.
+    /// </remarks>
+    /// <example>
+    /// <para>Basic slider with default settings: Creates a basic horizontal slider with range 0-100 and initial value 50</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Slider value="50" />
+    /// ]]></code>
+    /// <para>Slider with custom range and step: Creates a slider with range -50 to 50, step size 5, and visible marks</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Slider low-value="-50" high-value="50" step="5" value="0" show-marks="true" />
+    /// ]]></code>
+    /// <para>Vertical slider with value label: Creates a vertical slider with always visible value label and track</para>
+    /// <code lang="xml"><![CDATA[
+    /// <Slider orientation="Vertical" display-value-label="On" track="On" />
+    /// ]]></code>
+    /// <para>Advanced slider with custom formatting: Creates a slider for selecting memory sizes with custom value
+    /// formatting</para>
+    /// <code lang="csharp"><![CDATA[
+    /// var slider = new SliderInt {
+    ///     value = 1024,
+    ///     lowValue = 0,
+    ///     highValue = 8192,
+    ///     step = 1024,
+    ///     showMarks = true,
+    ///     displayValueLabel = ValueDisplayMode.On,
+    ///     formatFunction = (v) => $"{v / 1024}MB"
+    /// };
+    /// ]]></code>
+    /// </example>
     [UxmlElement]
-#endif
+    [VisualDocPage("inputs")]
     public partial class SliderInt : Slider<int,int,IntField>
     {
-#if ENABLE_RUNTIME_DATA_BINDINGS
 
-#endif
 
         const int k_DefaultStep = 1;
 
@@ -39,54 +77,42 @@ namespace Unity.AppUI.UI
             valueOverride = 0;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("step")]
-#endif
         int stepOverride
         {
             get => step;
             set => step = value;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("shift-step")]
-#endif
         int shiftStepOverride
         {
             get => shiftStep;
             set => shiftStep = value;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("low-value")]
-#endif
         int lowValueOverride
         {
             get => lowValue;
             set => lowValue = value;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("high-value")]
-#endif
         int highValueOverride
         {
             get => highValue;
             set => highValue = value;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("value")]
-#endif
         int valueOverride
         {
             get => value;
             set => this.value = value;
         }
 
-#if ENABLE_UXML_SERIALIZED_DATA
         [UxmlAttribute("format-string")]
-#endif
         string formatStringOverride
         {
             get => formatString;
@@ -162,68 +188,5 @@ namespace Unity.AppUI.UI
             values[0] = v;
         }
 
-#if ENABLE_UXML_TRAITS
-
-        /// <summary>
-        /// Factory class to instantiate a <see cref="SliderInt"/> using the data read from a UXML file.
-        /// </summary>
-        public new class UxmlFactory : UxmlFactory<SliderInt, UxmlTraits> { }
-
-        /// <summary>
-        /// Class containing the <see cref="UxmlTraits"/> for the <see cref="SliderInt"/>.
-        /// </summary>
-        public new class UxmlTraits : Slider<int,int,IntField>.UxmlTraits
-        {
-
-            readonly UxmlIntAttributeDescription m_Step = new UxmlIntAttributeDescription
-            {
-                name = "step",
-                defaultValue = k_DefaultStep
-            };
-
-            readonly UxmlIntAttributeDescription m_ShiftStep = new UxmlIntAttributeDescription
-            {
-                name = "shift-step",
-                defaultValue = k_DefaultShiftStep
-            };
-
-            readonly UxmlIntAttributeDescription m_HighValue = new UxmlIntAttributeDescription
-            {
-                name = "high-value",
-                defaultValue = 100
-            };
-
-            readonly UxmlIntAttributeDescription m_LowValue = new UxmlIntAttributeDescription
-            {
-                name = "low-value",
-                defaultValue = 0
-            };
-
-            readonly UxmlIntAttributeDescription m_Value = new UxmlIntAttributeDescription
-            {
-                name = "value",
-                defaultValue = 0
-            };
-
-            /// <summary>
-            /// Initializes the VisualElement from the UXML attributes.
-            /// </summary>
-            /// <param name="ve"> The <see cref="VisualElement"/> to initialize.</param>
-            /// <param name="bag"> The <see cref="IUxmlAttributes"/> bag to use to initialize the <see cref="VisualElement"/>.</param>
-            /// <param name="cc"> The <see cref="CreationContext"/> to use to initialize the <see cref="VisualElement"/>.</param>
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var el = (SliderInt)ve;
-                el.step = m_Step.GetValueFromBag(bag, cc);
-                el.shiftStep = m_ShiftStep.GetValueFromBag(bag, cc);
-                el.lowValue = m_LowValue.GetValueFromBag(bag, cc);
-                el.highValue = m_HighValue.GetValueFromBag(bag, cc);
-                el.value = m_Value.GetValueFromBag(bag, cc);
-            }
-        }
-
-#endif
     }
 }

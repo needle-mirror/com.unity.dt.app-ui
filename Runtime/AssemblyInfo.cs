@@ -8,6 +8,7 @@ using UnityEditor.UIElements;
 [assembly: InternalsVisibleTo("Unity.AppUI.Editor")]
 [assembly: InternalsVisibleTo("Unity.AppUI.Redux")]
 [assembly: InternalsVisibleTo("Unity.AppUI.Navigation")]
+[assembly: InternalsVisibleTo("Unity.AppUI.VisualDoc")]
 #if UNITY_EDITOR
 [assembly: UxmlNamespacePrefix("Unity.AppUI.UI", "appui")]
 #endif
