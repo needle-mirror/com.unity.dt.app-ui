@@ -574,7 +574,7 @@ Base class for screens that automatically handle SetupAppBar, SetupDrawer, Setup
 ### Methods
 
 ```csharp
-public abstract class NavigationScreen : VisualElement, INavigationScreen
+public class NavigationScreen : VisualElement, INavigationScreen
 {
     // Called when entering this screen
     public virtual void OnEnter(NavController controller, NavDestination destination, Argument[] args)

@@ -540,7 +540,10 @@ namespace Unity.AppUI.UI
         public void SetValueWithoutNotify(string newValue)
         {
             m_Value = newValue;
-            m_InputField.SetValueWithoutNotify(m_Value);
+            // Never hand null down to the UITK field: before 6000.0 its multiline setter
+            // calls text.Replace("\n", "") with no null check, so a null text makes
+            // isPasswordField = true throw a NullReferenceException.
+            m_InputField.SetValueWithoutNotify(m_Value ?? string.Empty);
             RefreshUI();
             if (validateValue != null) invalid = !validateValue(m_Value);
         }

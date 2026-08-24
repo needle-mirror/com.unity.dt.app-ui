@@ -450,6 +450,7 @@ namespace Unity.AppUI.UI
             }
             else
             {
+                m_ScheduledRefreshIndicator?.Pause();
                 m_Indicator.RemoveFromClassList(animatedIndicatorUssClassName);
                 if (direction == Direction.Horizontal)
                 {
@@ -571,9 +572,10 @@ namespace Unity.AppUI.UI
         /// <returns> True if the next TabItem is selected, false otherwise.</returns>
         public bool GoToNext()
         {
-            var nextIndex = Mathf.Clamp(value + 1, 0, childCount - 1);
-            while (!ElementAt(nextIndex).enabledSelf) nextIndex = Mathf.Clamp(nextIndex + 1, 0, childCount - 1);
-            if (nextIndex >= childCount || nextIndex == value)
+            var nextIndex = m_Value + 1;
+            while (nextIndex < m_Items.Count && !m_Items[nextIndex].enabledSelf)
+                nextIndex++;
+            if (nextIndex >= m_Items.Count || nextIndex == m_Value)
                 return false;
             value = nextIndex;
             return true;
@@ -585,9 +587,12 @@ namespace Unity.AppUI.UI
         /// <returns> True if the previous TabItem is selected, false otherwise.</returns>
         public bool GoToPrevious()
         {
-            var nextIndex = Mathf.Clamp(value - 1, 0, childCount - 1);
-            while (!ElementAt(nextIndex).enabledSelf) nextIndex = Mathf.Clamp(nextIndex - 1, 0, childCount - 1);
-            if (nextIndex == value || nextIndex < 0)
+            // From the deselected state (value == -1) scan back from the last item, mirroring
+            // GoToNext which scans forward from the first, so Left/Up can reselect a tab too.
+            var nextIndex = (m_Value == -1 ? m_Items.Count : m_Value) - 1;
+            while (nextIndex >= 0 && !m_Items[nextIndex].enabledSelf)
+                nextIndex--;
+            if (nextIndex < 0 || nextIndex == m_Value)
                 return false;
             value = nextIndex;
             return true;
@@ -662,7 +667,7 @@ namespace Unity.AppUI.UI
             {
                 // find the next valid item
                 var newValue = 0;
-                while (m_Items[newValue].enabledSelf == false && newValue < m_Items.Count)
+                while (newValue < m_Items.Count && m_Items[newValue].enabledSelf == false)
                     newValue++;
                 if (newValue < m_Items.Count)
                     SetValueWithoutNotifyInternal(newValue);

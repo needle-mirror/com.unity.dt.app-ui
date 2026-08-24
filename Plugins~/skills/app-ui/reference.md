@@ -257,7 +257,9 @@ public partial class MyElement : VisualElement
 {
     public MyElement()
     {
-        UxmlCloneTree();  // Auto-generated
+        UxmlCloneTree();  // Auto-generated: UxmlCloneTree(VisualElement parent = null)
+        // Pass a container to clone into it instead of `this`, e.g. UxmlCloneTree(scrollView)
+        // for a NavigationScreen subclass.
     }
 }
 ```
