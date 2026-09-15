@@ -1,1 +1,91 @@
-{"name":"com.unity.dt.app-ui","displayName":"App UI","version":"2.1.12","unity":"2021.3","category":"UI","keywords":["app","ui","components","runtime","framework","navigation","dependency-injection","mvvm","undostack","redux","state-management","dark-theme","data-binding","cloud","unity","app-ui"],"description":"App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.","dependencies":{"com.unity.modules.androidjni":"1.0.0","com.unity.modules.uielements":"1.0.0","com.unity.modules.physics":"1.0.0","com.unity.modules.screencapture":"1.0.0"},"samples":[{"displayName":"Drag And Drop","description":"Example of drag and drop system using App UI DropZone component and Dragger/DropTarget manipulators","path":"Samples~/Drag And Drop"},{"displayName":"UI Kit","description":"Every component in a single page","path":"Samples~/UI Kit"},{"displayName":"StoryBook","description":"StoryBookJS-like window in the Editor","path":"Samples~/StoryBook"},{"displayName":"Navigation","description":"Navigation system","path":"Samples~/Navigation"},{"displayName":"MVVM","description":"Example that showcases the MVVM pattern with dependency injection","path":"Samples~/MVVM"},{"displayName":"Redux","description":"Example of state management with Redux","path":"Samples~/Redux"},{"displayName":"MVVM And Redux","description":"Example that showcases the MVVM pattern with dependency injection and state management with Redux","path":"Samples~/MVVM And Redux"},{"displayName":"UndoRedo","description":"Example of undo/redo system","path":"Samples~/UndoRedo"},{"displayName":"Trackpad","description":"Example of Trackpad gesture recognition","path":"Samples~/Trackpad"}],"repository":{"revision":"fde629bec10066b9c8400a930cff93d96d124517","type":"git","url":"https://github.com/Unity-Technologies/unity-app-ui.git"},"documentationUrl":"https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.1/manual/index.html","_upm":{"changelog":"### Fixed\n\n- Fix headless Windows IL2CPP build crash caused by the native plugin activating WinRT settings objects at static scope on Windows Server Core (game-ci/unity-builder#702)"}}
+{
+  "name": "com.unity.dt.app-ui",
+  "displayName": "App UI",
+  "version": "2.1.13",
+  "unity": "2021.3",
+  "category": "UI",
+  "keywords": [
+    "app",
+    "ui",
+    "components",
+    "runtime",
+    "framework",
+    "navigation",
+    "dependency-injection",
+    "mvvm",
+    "undostack",
+    "redux",
+    "state-management",
+    "dark-theme",
+    "data-binding",
+    "cloud",
+    "unity",
+    "app-ui"
+  ],
+  "description": "App UI is a versatile and customizable UI library for Unity that provides essential building blocks for creating beautiful and responsive user interfaces. With support for MVVM architecture, state management, and localization, App UI simplifies app development while maintaining flexibility and extensibility. The library includes a wide range of UI components, design tokens, and symbols, all of which can be easily customized to fit your app's unique style and branding.",
+  "dependencies": {
+    "com.unity.modules.androidjni": "1.0.0",
+    "com.unity.modules.uielements": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.screencapture": "1.0.0"
+  },
+  "samples": [
+    {
+      "displayName": "Drag And Drop",
+      "description": "Example of drag and drop system using App UI DropZone component and Dragger/DropTarget manipulators",
+      "path": "Samples~/Drag And Drop"
+    },
+    {
+      "displayName": "UI Kit",
+      "description": "Every component in a single page",
+      "path": "Samples~/UI Kit"
+    },
+    {
+      "displayName": "StoryBook",
+      "description": "StoryBookJS-like window in the Editor",
+      "path": "Samples~/StoryBook"
+    },
+    {
+      "displayName": "Navigation",
+      "description": "Navigation system",
+      "path": "Samples~/Navigation"
+    },
+    {
+      "displayName": "MVVM",
+      "description": "Example that showcases the MVVM pattern with dependency injection",
+      "path": "Samples~/MVVM"
+    },
+    {
+      "displayName": "Redux",
+      "description": "Example of state management with Redux",
+      "path": "Samples~/Redux"
+    },
+    {
+      "displayName": "MVVM And Redux",
+      "description": "Example that showcases the MVVM pattern with dependency injection and state management with Redux",
+      "path": "Samples~/MVVM And Redux"
+    },
+    {
+      "displayName": "UndoRedo",
+      "description": "Example of undo/redo system",
+      "path": "Samples~/UndoRedo"
+    },
+    {
+      "displayName": "Trackpad",
+      "description": "Example of Trackpad gesture recognition",
+      "path": "Samples~/Trackpad"
+    }
+  ],
+  "_upm": {
+    "changelog": "### Fixed\n\n- The native platform P/Invoke declarations that return a `bool` now pin one-byte marshalling with `[return: MarshalAs(UnmanagedType.I1)]`. Without it a `[DllImport]` returning `bool` marshals as the 4-byte `UnmanagedType.Bool`, while every `NativeAppUI_*` entry point returns a 1-byte C++ `bool`; on x86-64 `setcc %al` writes only the low byte, so register residue in bits 8-31 could read back as `true` when the native answer was `false`.\n- App UI shaders no longer fail to compile on Unity 7000, where the `UnityCG.hlsl` / `UnityUI.hlsl` includes they expected do not exist; they now include `UnityCG.cginc` on every Unity version."
+  },
+  "upmCi": {
+    "footprint": "c6fde7654db612311aa81b7418b318fe07230ece"
+  },
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.1/manual/index.html",
+  "repository": {
+    "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
+    "type": "git",
+    "revision": "316ad9201d66344db3d836fc5e10753ebacfedce"
+  }
+}

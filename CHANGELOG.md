@@ -4,7 +4,55 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.1.12] - 2026-07-15
+## [2.1.13] - 2026-09-15
+
+### Fixed
+
+- The native platform P/Invoke declarations that return a `bool` now pin one-byte marshalling with `[return: MarshalAs(UnmanagedType.I1)]`. Without it a `[DllImport]` returning `bool` marshals as the 4-byte `UnmanagedType.Bool`, while every `NativeAppUI_*` entry point returns a 1-byte C++ `bool`; on x86-64 `setcc %al` writes only the low byte, so register residue in bits 8-31 could read back as `true` when the native answer was `false`.
+- App UI shaders no longer fail to compile on Unity 7000, where the `UnityCG.hlsl` / `UnityUI.hlsl` includes they expected do not exist; they now include `UnityCG.cginc` on every Unity version.
+
+## [2.2.2] - 2026-08-24
+
+### Fixed
+
+- Fixed `Unity.AppUI.Markdown` failing when `APPUI_ENABLE_MARKDOWN` is defined. The bundled `Markdig.dll` was the `netstandard2.0` build, which references the `System.Runtime.CompilerServices.Unsafe`, `System.Memory` and `System.Buffers` facades. Unity ships shims for the latter two but not for `Unsafe`, so parsing markdown threw `FileNotFoundException` at runtime. Replaced it with Markdig's `netstandard2.1` build, which targets the same profile Unity uses and references nothing but `netstandard` itself.
+- Fixed ArgumentOutOfRangeException in Tabs when all items are disabled, and cancelled pending indicator refreshes when the selection is cleared.
+- Fixed Tabs arrow-key navigation throwing ArgumentOutOfRangeException and not skipping disabled tabs (it scanned the empty content container instead of the tab items).
+- Fixed `TextField.isPassword = true` throwing a `NullReferenceException` on Unity versions before 6000.0. Enabling UITK's `isPasswordField` forces multiline off, and that setter calls `text.Replace("\n", "")` with no null check on those versions. `TextField` seeded the underlying UITK field with a null value, so `new TextField { isPassword = true }` — and any `isPassword` toggle after the value was cleared — threw. The underlying field is now never given a null text, which also means `TextField.value` returns an empty string rather than null for an empty field.
+
+## [3.0.0-pre.1] - 2026-08-21
+
+### Changed
+
+- The minimum supported Unity version is now **6000.3 LTS** (previously 2021.3). The package manifest declares `"unity": "6000.3"`, and the CI editor matrix (validation, API validation, preview APV, package/project tests and player tests) now covers 6000.3, 6000.5, 6000.6 and trunk only. This is a major bump because the new floor drops Unity 6000.0 LTS, which is still under support — raising the minimum editor is only a non-breaking change when every dropped release line is already past end-of-support.
+- The `[UxmlFilePath]` source generator now emits `UxmlCloneTree(VisualElement parent = null)` instead of a parameterless method. Passing a container clones the UXML tree (and resolves `[UxmlElementName]` bindings) into that container rather than onto the element itself, letting `NavigationScreen` subclasses and other custom elements direct authored content into a chosen part of their hierarchy. Existing parameterless `UxmlCloneTree()` calls keep working unchanged.
+
+### Removed
+
+- The APIs that were marked `[Obsolete]` are now gone, as part of the 3.0 major release. `Badge.content`, `Badge.max` and `Badge.showZero` have been removed — a Badge can hold any content, so use `Badge.label` for textual content or add child elements. The `TextFieldExtensions.BlinkingCursor()` extension method has been removed in favour of the `Unity.AppUI.UI.BlinkingCursor` manipulator (`textField.AddManipulator(new BlinkingCursor())`). `AppUISettings.autoOverrideAndroidManifest` has been removed; it had no effect, since App UI applies the changes it needs to the existing Android manifest during the build instead of shipping its own.
+- Conditional compilation for editor versions below the new 6000.3 minimum. The `versionDefines` that can no longer change value at 6000.3+ were dropped from the `.asmdef` files and the `#if` branches they guarded were resolved in place: `ENABLE_UXML_TRAITS` and `ENABLE_ENABLED_UXML_PROPERTY` (never defined at 6000.3+) were deleted along with the code they guarded, while `ENABLE_UXML_SERIALIZED_DATA`, `ENABLE_RUNTIME_DATA_BINDINGS`, `ENABLE_VALUEFIELD_INTERFACE`, `ENABLE_UITK_TEXT_SELECTION`, `UITK_NESTED_INTERACTION_KIND`, `UITK_SELECTED_INDICES_CHANGED`, `UITK_MAKE_NONE_ELEMENT`, `CONDITIONAL_WEAK_TABLE_IL2CPP`, `UI_DOCUMENT_ROOT_ELEMENT_TYPE_EXISTS`, `UNITY_ENABLE_TABVIEW` and `UNITY_ENABLE_SLIDER_FILL` (always defined at 6000.3+) are now unconditional. Legacy `#if !UNITY_2022_*` and `#if !UNITY_2023_*` fallbacks were removed too. Because every one of these symbols already had a fixed value on 6000.3, the compiled API surface is unchanged for supported editors.
+
+### Added
+
+- Added App UI Visual Documentation window. This window builds its pages dynamically from the XML documentation of the components (extracted at compile time by a Roslyn source generator) and from the package's markdown documentation, instead of loading pre-generated UXML pages. The Visual Documentation window requires the `APPUI_ENABLE_MARKDOWN` scripting define.
+- Add display scale factor and DPI support on Linux, exposing `scaleFactor`, `textScaleFactor` and `referenceDpi` on the Linux platform via new native plugin display-info APIs.
+- Added a Linux native plugin, bringing the TextMate syntax highlighter and DPI scale factor support to the Linux Editor and player.
+
+### Fixed
+
+- Fixed `Unity.AppUI.Markdown` failing when `APPUI_ENABLE_MARKDOWN` is defined. The bundled `Markdig.dll` was the `netstandard2.0` build, which references the `System.Runtime.CompilerServices.Unsafe`, `System.Memory` and `System.Buffers` facades. Unity ships shims for the latter two but not for `Unsafe`, so parsing markdown threw `FileNotFoundException` at runtime. Replaced it with Markdig's `netstandard2.1` build, which targets the same profile Unity uses and references nothing but `netstandard` itself.
+- Fixed ArgumentOutOfRangeException in Tabs when all items are disabled, and cancelled pending indicator refreshes when the selection is cleared.
+- Fixed Tabs arrow-key navigation throwing ArgumentOutOfRangeException and not skipping disabled tabs (it scanned the empty content container instead of the tab items).
+- Fixed a crash (SIGABRT) on Linux when the TextMate syntax highlighter handled invalid input (e.g. `Registry.AddGrammarFromJson` with malformed JSON). The Linux native plugin was built with a statically-linked libgcc unwinder that collided with the one loaded by the Unity player, so C++ exceptions aborted during unwinding instead of being caught. It is now linked dynamically and built on an old-glibc base (Ubuntu 18.04) for portability.
+- Fixed `TextField.isPassword` throwing a `NullReferenceException` when set before the field is attached to a panel, which made `new TextField { isPassword = true }` unusable. Enabling UITK's `isPasswordField` forces multiline off and walks text backing that only exists once the field belongs to a panel, so the value is now stored and applied on attach.
+
+## [2.2.1] - 2026-07-19
+
+### Fixed
+
+- Fixed a crash (SIGABRT) on Linux when the TextMate syntax highlighter handled invalid input (e.g. `Registry.AddGrammarFromJson` with malformed JSON). The Linux native plugin was built with a statically-linked libgcc unwinder that collided with the one loaded by the Unity player, so C++ exceptions aborted during unwinding instead of being caught. It is now linked dynamically and built on an old-glibc base (Ubuntu 18.04) for portability.
+
+## [2.1.12] - 2026-07-16
 
 ### Fixed
 

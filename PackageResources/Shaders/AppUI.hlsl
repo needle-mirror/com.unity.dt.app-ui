@@ -1,13 +1,8 @@
 #ifndef UNITY_APPUI_SHADERLIB_INCLUDED
 #define UNITY_APPUI_SHADERLIB_INCLUDED
 
-#if UNITY_VERSION >= 70000000
-#include "UnityCG.hlsl"
-#include "UnityUI.hlsl"
-#else
 #include "UnityCG.cginc"
 #include "UnityUI.cginc"
-#endif
 
 half4 checker_board(float2 uv, float width, float height, float pixelSize, half4 color1, half4 color2)
 {
