@@ -102,24 +102,29 @@ namespace Unity.AppUI.Core
         static void InvokeSmartMagnifyEventProxy() { }
 
         [DllImport("AppUINativePlugin")]
+        [return: MarshalAs(UnmanagedType.I1)]
         static extern bool NativeAppUI_Initialize(ref PluginConfigData configData);
 
         [DllImport("AppUINativePlugin")]
         static extern void NativeAppUI_Uninitialize();
 
         [DllImport("AppUINativePlugin")]
+        [return: MarshalAs(UnmanagedType.I1)]
         static extern bool NativeAppUI_ReadTouch(ref NativeTouch touch);
 
         [DllImport("AppUINativePlugin")]
         static extern float NativeAppUI_ScaleFactor();
 
         [DllImport("AppUINativePlugin")]
+        [return: MarshalAs(UnmanagedType.I1)]
         static extern bool NativeAppUI_DarkMode();
 
         [DllImport("AppUINativePlugin")]
+        [return: MarshalAs(UnmanagedType.I1)]
         static extern bool NativeAppUI_HighContrast();
 
         [DllImport("AppUINativePlugin")]
+        [return: MarshalAs(UnmanagedType.I1)]
         static extern bool NativeAppUI_ReduceMotion();
 
         [DllImport("AppUINativePlugin")]

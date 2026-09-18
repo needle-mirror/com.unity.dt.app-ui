@@ -42,9 +42,11 @@ namespace Unity.AppUI.Core
         }
 
         [DllImport("AppUINativePlugin", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         static extern bool NativeAppUI_Initialize(IntPtr configDataPtr);
 
         [DllImport("AppUINativePlugin", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         static extern bool NativeAppUI_EnsureUnityWindowFound();
 
         [DllImport("AppUINativePlugin", CallingConvention = CallingConvention.Cdecl)]
@@ -54,12 +56,15 @@ namespace Unity.AppUI.Core
         static extern float NativeAppUI_ScaleFactor();
 
         [DllImport("AppUINativePlugin", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         static extern bool NativeAppUI_DarkMode();
 
         [DllImport("AppUINativePlugin", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         static extern bool NativeAppUI_HighContrast();
 
         [DllImport("AppUINativePlugin", CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.I1)]
         static extern bool NativeAppUI_ReduceMotion();
 
         [DllImport("AppUINativePlugin", CallingConvention = CallingConvention.Cdecl)]

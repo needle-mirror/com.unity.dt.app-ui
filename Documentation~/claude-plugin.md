@@ -2,13 +2,12 @@
 uid: claude-plugin
 ---
 
-# Claude Code Plugin
+# App UI plugin for Claude Code
 
-App UI includes a Claude Code plugin that provides AI-assisted development for building user interfaces. The plugin includes specialized skills that help you write App UI code faster and with fewer errors.
+The App UI package includes a plugin for [Claude Code](https://code.claude.com/docs), Anthropic's command-line AI coding tool. The App UI plugin provides specialized skills that help you build user interfaces with App UI faster and with fewer errors.
 
-## What is Claude Code?
-
-[Claude Code](https://code.claude.com/docs) is a command-line tool that brings AI assistance directly into your development workflow. It can read your codebase, understand context, and help you write, debug, and refactor code.
+> [!NOTE]
+> This page describes the App UI plugin for Claude Code, which is specific to building user interfaces with the App UI package. For general Unity Editor and engine development with Claude Code, refer to [Unity's plugin for Claude Code](https://docs.unity.com/en-us/ai/unity-plugin/claude-code). You can install both plugins side by side.
 
 ## Installation
 
@@ -21,21 +20,21 @@ App UI includes a Claude Code plugin that provides AI-assisted development for b
 
 App UI includes a Package Manager extension that lets you install AI Agent skills directly from the Unity Editor.
 
-1. Open **Window > Package Manager** in Unity
-2. Select the **App UI** package
-3. In the package detail pane, expand the **AI Agent Skills** foldout
-4. Click **Install All** to install every available skill, or click **Install** next to individual skills
+1. Open **Window > Package Manager** in Unity.
+2. Select the **App UI** package.
+3. In the package detail pane, expand the **AI Agent Skills** foldout.
+4. Click **Install All** to install every available skill, or click **Install** next to individual skills.
 
-The extension copies skill files into your `.claude/skills` directory. It walks up from your project root looking for an existing `.claude` folder; if none is found, it defaults to `<project-root>/.claude/skills`.
+The extension copies App UI skill files into your `.claude/skills` directory. It walks up from your project root looking for an existing `.claude` folder; if none is found, it defaults to `<project-root>/.claude/skills`.
 
 > [!NOTE]
 > If no `.claude` folder exists in or above your project, skills are installed relative to the project root. A warning is displayed if the resolved path falls under your home directory (`~/.claude/skills`). Consider creating a `.claude` folder in your project to keep skills project-scoped.
 
 The extension also detects when installed skills are **outdated** (the package contains newer files) and offers an **Update** button. You can remove individual skills or use **Remove All** to uninstall them.
 
-### Installing the Plugin (CLI)
+### Install the App UI Plugin through CLI
 
-The Claude Code plugin is located in the `Plugins~` folder of the App UI package. There are two ways to install it via the CLI:
+The App UI plugin is located in the `Plugins~` folder of the App UI package. There are two ways to install it via the CLI:
 
 #### Option 1: Add as a Marketplace
 
@@ -249,8 +248,9 @@ If you installed the plugin via the CLI as a marketplace, you can refresh by run
 /plugin marketplace update unity-app-ui
 ```
 
-## Additional Resources
+## Additional resources
 
+- [Unity's plugin for Claude Code](https://docs.unity.com/en-us/ai/unity-plugin/claude-code)
 - [Claude Code Documentation](https://code.claude.com/docs)
 - [Claude Code Skills](https://code.claude.com/docs/en/skills)
 - [Claude Code Plugins](https://code.claude.com/docs/en/plugins)
