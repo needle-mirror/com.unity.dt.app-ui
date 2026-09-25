@@ -108,6 +108,8 @@ namespace Unity.AppUI.UI
 
         readonly List<TabItem> m_Items = new List<TabItem>();
 
+        bool m_UnbindingItems;
+
         readonly ScrollView m_ScrollView;
 
         readonly VisualElement m_LambdaContainer;
@@ -211,6 +213,7 @@ namespace Unity.AppUI.UI
 
         void OnDirectionChanged(ContextChangedEvent<DirContext> evt)
         {
+            SyncItemsWithContainer();
             RefreshVisuals();
         }
 
@@ -263,7 +266,7 @@ namespace Unity.AppUI.UI
                     Direction.Vertical => ScrollViewMode.Vertical,
                     _ => ScrollViewMode.Horizontal
                 };
-                SetValueWithoutNotify(m_Value);
+                RefreshSelection();
 
 #if ENABLE_RUNTIME_DATA_BINDINGS
                 if (changed)
@@ -278,7 +281,14 @@ namespace Unity.AppUI.UI
 #if ENABLE_RUNTIME_DATA_BINDINGS
         [CreateProperty(ReadOnly = true)]
 #endif
-        public IList items => m_SourceItems ?? m_StaticItems;
+        public IList items
+        {
+            get
+            {
+                SyncItemsWithContainer();
+                return m_SourceItems ?? m_StaticItems;
+            }
+        }
 
         /// <summary>
         /// The emphasized mode of the Tabs.
@@ -340,6 +350,7 @@ namespace Unity.AppUI.UI
 
             set
             {
+                SyncItemsWithContainer();
                 var changed = m_BindItem != value;
                 m_BindItem = value;
                 RefreshItems();
@@ -362,6 +373,7 @@ namespace Unity.AppUI.UI
             get => m_UnbindItem;
             set
             {
+                SyncItemsWithContainer();
                 var changed = m_UnbindItem != value;
                 m_UnbindItem = value;
                 RefreshItems();
@@ -387,6 +399,7 @@ namespace Unity.AppUI.UI
                 if (m_SourceItems == value)
                     return;
 
+                SyncItemsWithContainer();
                 m_SourceItems = value;
 
                 m_PollHierarchyItem?.Pause();
@@ -417,7 +430,14 @@ namespace Unity.AppUI.UI
         /// <exception cref="ValueOutOfRangeException"> Throws if the value is out of range.</exception>
         public void SetValueWithoutNotify(int newValue)
         {
+            SyncItemsWithContainer();
             SetValueWithoutNotifyInternal(newValue);
+        }
+
+        void RefreshSelection(bool scroll = true)
+        {
+            SyncItemsWithContainer();
+            SetValueWithoutNotifyInternal(m_Value, scroll);
         }
 
         void SetValueWithoutNotifyInternal(int newValue, bool scroll = true, bool animateIndicator = false)
@@ -516,9 +536,14 @@ namespace Unity.AppUI.UI
 #endif
         public int value
         {
-            get => m_Value;
+            get
+            {
+                SyncItemsWithContainer();
+                return m_Value;
+            }
             set
             {
+                SyncItemsWithContainer();
                 if (value == m_Value || !IsValid(value))
                     return;
 
@@ -572,6 +597,7 @@ namespace Unity.AppUI.UI
         /// <returns> True if the next TabItem is selected, false otherwise.</returns>
         public bool GoToNext()
         {
+            SyncItemsWithContainer();
             var nextIndex = m_Value + 1;
             while (nextIndex < m_Items.Count && !m_Items[nextIndex].enabledSelf)
                 nextIndex++;
@@ -587,6 +613,7 @@ namespace Unity.AppUI.UI
         /// <returns> True if the previous TabItem is selected, false otherwise.</returns>
         public bool GoToPrevious()
         {
+            SyncItemsWithContainer();
             // From the deselected state (value == -1) scan back from the last item, mirroring
             // GoToNext which scans forward from the first, so Left/Up can reselect a tab too.
             var nextIndex = (m_Value == -1 ? m_Items.Count : m_Value) - 1;
@@ -601,13 +628,13 @@ namespace Unity.AppUI.UI
         void OnHorizontalScrollerChanged(float offset)
         {
             if (direction == Direction.Horizontal)
-                SetValueWithoutNotifyInternal(value, false);
+                RefreshSelection(false);
         }
 
         void OnVerticalScrollerChanged(float offset)
         {
             if (direction == Direction.Vertical)
-                SetValueWithoutNotifyInternal(value, false);
+                RefreshSelection(false);
         }
 
         void PollHierarchy()
@@ -619,7 +646,8 @@ namespace Unity.AppUI.UI
                 m_StaticItems = new List<TabItem>();
                 foreach (var c in Children())
                 {
-                    m_StaticItems.Add((TabItem)c);
+                    if (c is TabItem item)
+                        m_StaticItems.Add(item);
                 }
 
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -632,11 +660,20 @@ namespace Unity.AppUI.UI
 
         void RefreshItems()
         {
-            for (var i = 0; i < itemContainer.childCount; i++)
+            // Unbind while the views are still attached, without letting a handler that reads value resync mid-rebuild.
+            var previousItems = m_Items.ToArray();
+            m_UnbindingItems = true;
+            try
             {
-                var item = (TabItem)itemContainer.ElementAt(i);
-                unbindItem?.Invoke(item, i);
-                item.UnregisterCallback<GeometryChangedEvent>(OnItemGeometryChanged);
+                for (var i = 0; i < previousItems.Length; i++)
+                {
+                    unbindItem?.Invoke(previousItems[i], i);
+                    previousItems[i].UnregisterCallback<GeometryChangedEvent>(OnItemGeometryChanged);
+                }
+            }
+            finally
+            {
+                m_UnbindingItems = false;
             }
 
             itemContainer.Clear();
@@ -663,21 +700,113 @@ namespace Unity.AppUI.UI
                 }
             }
 
-            if (itemContainer.childCount > 0)
+            SetValueWithoutNotifyInternal(FirstEnabledIndex());
+        }
+
+        int FirstEnabledIndex()
+        {
+            for (var i = 0; i < m_Items.Count; i++)
             {
-                // find the next valid item
-                var newValue = 0;
-                while (newValue < m_Items.Count && m_Items[newValue].enabledSelf == false)
-                    newValue++;
-                if (newValue < m_Items.Count)
-                    SetValueWithoutNotifyInternal(newValue);
-                else
-                    SetValueWithoutNotifyInternal(-1);
+                if (m_Items[i].enabledSelf)
+                    return i;
             }
-            else
+            return -1;
+        }
+
+        bool ItemsMatchContainer()
+        {
+            var i = 0;
+            for (var c = 0; c < itemContainer.childCount; c++)
             {
-                SetValueWithoutNotifyInternal(-1);
+                var child = itemContainer[c];
+                if (!(child is TabItem))
+                    continue;
+                if (i >= m_Items.Count || m_Items[i] != child)
+                    return false;
+                i++;
             }
+            return i == m_Items.Count;
+        }
+
+        // UI Builder adds and removes TabItems directly in the item container, bypassing items and sourceItems.
+        // Indices are only meaningful against the current container, so this runs before any of them is read.
+        void SyncItemsWithContainer()
+        {
+            if (m_UnbindingItems)
+                return;
+
+            // The value-change notification can run a handler that edits the container again.
+            while (!ItemsMatchContainer())
+                ResyncItemsWithContainer();
+        }
+
+        void ResyncItemsWithContainer()
+        {
+            var previousValue = m_Value;
+
+            // The source is authoritative for bound tabs, so value keeps indexing it and the views are rebuilt.
+            if (m_SourceItems != null)
+            {
+                RefreshItems();
+                SetValueWithoutNotifyInternal(previousValue);
+                NotifyValueChangedIfNeeded(previousValue);
+                return;
+            }
+
+            var selectedItem = m_Value >= 0 && m_Value < m_Items.Count ? m_Items[m_Value] : null;
+            var wasEmpty = m_Items.Count == 0;
+
+            foreach (var item in m_Items)
+                item.UnregisterCallback<GeometryChangedEvent>(OnItemGeometryChanged);
+            m_Items.Clear();
+
+            foreach (var child in itemContainer.Children())
+            {
+                if (child is TabItem item)
+                {
+                    item.RegisterCallback<GeometryChangedEvent>(OnItemGeometryChanged);
+                    m_Items.Add(item);
+                }
+            }
+
+            m_StaticItems ??= new List<TabItem>();
+            m_StaticItems.Clear();
+            m_StaticItems.AddRange(m_Items);
+            m_PollHierarchyItem?.Pause();
+            m_PollHierarchyItem = null;
+#if ENABLE_RUNTIME_DATA_BINDINGS
+            NotifyPropertyChanged(in itemsProperty);
+#endif
+
+            m_Value = selectedItem != null ? m_Items.IndexOf(selectedItem) : -1;
+            if (selectedItem != null && m_Value == -1)
+            {
+                selectedItem.selected = false;
+                m_Value = FirstEnabledIndex();
+            }
+            else if (wasEmpty)
+            {
+                m_Value = FirstEnabledIndex();
+            }
+
+            for (var i = 0; i < m_Items.Count; i++)
+                m_Items[i].selected = i == m_Value;
+
+            RefreshVisuals();
+            NotifyValueChangedIfNeeded(previousValue);
+        }
+
+        void NotifyValueChangedIfNeeded(int previousValue)
+        {
+            if (m_Value == previousValue)
+                return;
+
+            using var evt = ChangeEvent<int>.GetPooled(previousValue, m_Value);
+            evt.target = this;
+            SendEvent(evt);
+#if ENABLE_RUNTIME_DATA_BINDINGS
+            NotifyPropertyChanged(in valueProperty);
+#endif
         }
 
         void OnItemGeometryChanged(GeometryChangedEvent evt)
@@ -686,21 +815,22 @@ namespace Unity.AppUI.UI
                 return;
 
             if (evt.target is TabItem { selected: true })
-                SetValueWithoutNotify(m_Value);
+                RefreshSelection();
         }
 
         void OnGeometryChanged(GeometryChangedEvent evt)
         {
-            SetValueWithoutNotify(m_Value);
+            RefreshSelection();
         }
 
         void OnItemClicked(ActionTriggeredEvent evt)
         {
             if (evt.target is TabItem item)
             {
-                var newValue = item.parent.IndexOf(item);
+                SyncItemsWithContainer();
+                var newValue = m_Items.IndexOf(item);
                 if (value != newValue)
-                    value = item.parent.IndexOf(item);
+                    value = newValue;
                 else
                     RefreshVisuals(true, true);
                 evt.StopPropagation();

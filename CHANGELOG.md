@@ -4,7 +4,13 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.2.3] - 2026-09-18
+## [2.2.4] - 2026-09-25
+
+### Fixed
+
+- Fixed Tabs throwing "Cannot scroll to a VisualElement that's not a child of the ScrollView content-container" when TabItems are deleted from it in UI Builder. Tabs now picks up TabItems added to or removed from its item container directly, and keeps the same tab selected when it can (UUM-154225).
+
+## [2.2.3] - 2026-09-19
 
 ### Fixed
 
