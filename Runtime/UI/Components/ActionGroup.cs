@@ -612,15 +612,22 @@ namespace Unity.AppUI.UI
                         m_FirstIndexOutOfBound = i;
                     }
                     spaceUsed += childSize;
-                    child.visible = spaceUsed <= size;
+                    if (spaceUsed <= size)
+                        child.style.visibility = StyleKeyword.Null;
+                    else
+                        child.visible = false;
                 }
                 else
                 {
-                    child.visible = true;
+                    // clear the inline style so that an inherited "visibility: hidden" still applies
+                    child.style.visibility = StyleKeyword.Null;
                 }
             }
 
-            m_MoreButton.visible = m_FirstIndexOutOfBound >= 0;
+            if (m_FirstIndexOutOfBound >= 0)
+                m_MoreButton.style.visibility = StyleKeyword.Null;
+            else
+                m_MoreButton.visible = false;
             if (m_FirstIndexOutOfBound >= 0) // overflow detected
             {
                 var firstChildOutOfBoundLayout = m_HandledChildren[m_FirstIndexOutOfBound].layout;

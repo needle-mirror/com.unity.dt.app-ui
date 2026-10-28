@@ -339,7 +339,9 @@ namespace Unity.AppUI.Tests.UI
         {
             var sensitivity1 = UINumericFieldsUtils.CalculateIntDragSensitivity(1.0);
             var sensitivity2 = UINumericFieldsUtils.CalculateIntDragSensitivity(1000.0);
-            Assert.IsTrue(Math.Abs(sensitivity2 - sensitivity1) < Mathf.Epsilon);
+            // Both values are clamped to 1. Do not use Mathf.Epsilon as the tolerance: it is a float
+            // denormal that some engine builds evaluate as 0, which turns '< Epsilon' into '< 0'.
+            Assert.IsTrue(Math.Abs(sensitivity2 - sensitivity1) < 1e-9);
         }
         #endregion
 

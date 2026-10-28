@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Unity.AppUI.MVVM;
@@ -182,6 +184,53 @@ namespace Unity.AppUI.Tests.MVVM
             Assert.AreSame(instance, conditional.implementationInstance);
             Assert.IsNotNull(conditional.condition);
             Assert.AreEqual(ServiceLifetime.Singleton, conditional.lifetime);
+        }
+
+        [Test]
+        public void AppUIServiceCollection_IsReadOnly_RejectsChanges()
+        {
+            var services = new AppUIServiceCollection();
+            Assert.IsFalse(((IServiceCollection)services).IsReadOnly);
+
+            var descriptor = ServiceDescriptor.Singleton(typeof(IServiceTest), typeof(ServiceTest));
+            services.Add(descriptor);
+            var provider = services.BuildServiceProvider();
+            services.IsReadOnly = true;
+
+            Assert.IsTrue(services.IsReadOnly);
+            Assert.IsTrue(((ICollection<ServiceDescriptor>)services).IsReadOnly);
+            Assert.IsTrue(((IServiceCollection)services).IsReadOnly);
+
+            var other = ServiceDescriptor.Transient(typeof(AlternateServiceTest), typeof(AlternateServiceTest));
+            Assert.Throws<InvalidOperationException>(() => services.Add(other));
+            Assert.Throws<InvalidOperationException>(() => ((IServiceCollection)services).Add(other));
+            Assert.Throws<InvalidOperationException>(() => services.Insert(0, other));
+            Assert.Throws<InvalidOperationException>(() => services[0] = other);
+            Assert.Throws<InvalidOperationException>(() => services.Remove(descriptor));
+            Assert.Throws<InvalidOperationException>(() => services.RemoveAt(0));
+            Assert.Throws<InvalidOperationException>(() => services.Clear());
+            Assert.Throws<InvalidOperationException>(() => services.AddSingleton<AlternateServiceTest>());
+            Assert.Throws<InvalidOperationException>(() => services.AddScoped<AlternateServiceTest>());
+            Assert.Throws<InvalidOperationException>(() => services.AddTransient<AlternateServiceTest>());
+            Assert.Throws<InvalidOperationException>(() => services.TryAddSingleton<AlternateServiceTest>());
+
+            Assert.AreEqual(1, services.Count);
+            Assert.AreSame(descriptor, services[0]);
+            Assert.Throws<InvalidOperationException>(() => provider.GetService(typeof(AlternateServiceTest)));
+
+            services.IsReadOnly = false;
+            Assert.DoesNotThrow(() => services.Add(other));
+            Assert.AreEqual(2, services.Count);
+        }
+
+        [Test]
+        public void AppUIServiceCollection_IsReadOnly_RejectsInstanceRegistrations()
+        {
+            var services = new AppUIServiceCollection { IsReadOnly = true };
+
+            Assert.Throws<InvalidOperationException>(() => services.AddSingleton<IServiceTest>(new ServiceTest()));
+            Assert.Throws<InvalidOperationException>(() => services.AddSingleton(typeof(IServiceTest), new ServiceTest()));
+            Assert.AreEqual(0, services.Count);
         }
     }
 }

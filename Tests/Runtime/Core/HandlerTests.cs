@@ -9,6 +9,8 @@ namespace Unity.AppUI.Tests.Core
 {
     [TestFixture]
     [TestOf(typeof(Handler))]
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     class HandlerTests
     {
         UIDocument m_TestUI;
@@ -95,6 +97,110 @@ namespace Unity.AppUI.Tests.Core
             yield return new WaitUntilOrTimeOut(() => handled);
 
             Assert.IsTrue(handled);
+        }
+
+        [Test]
+        public void Handler_RemoveCallbacksAndMessages_OnlyRemovesOwnMessages([Values(false, true)] bool useToken)
+        {
+            var looper = new Looper();
+            var h1 = new Handler(looper, Callback);
+            var h2 = new Handler(looper, Callback);
+            var token = useToken ? new object() : null;
+            h1.SendMessage(h1.ObtainMessage(1, token));
+            h2.SendMessage(h2.ObtainMessage(2, token));
+
+            h1.RemoveCallbacksAndMessages(token);
+
+            Assert.AreEqual(1, looper.queue.Count);
+            Assert.IsTrue(looper.queue.TryPeek(out var left));
+            Assert.AreEqual(2, left.what);
+        }
+
+        [Test]
+        public void Handler_RemoveCallbacksAndMessages_WithoutOwnMessages_KeepsOtherHandlersMessages()
+        {
+            var looper = new Looper();
+            var h1 = new Handler(looper, Callback);
+            var h2 = new Handler(looper, Callback);
+            h2.SendMessage(h2.ObtainMessage(2, null));
+
+            h1.RemoveCallbacksAndMessages(null);
+
+            Assert.AreEqual(1, looper.queue.Count);
+        }
+
+        [Test]
+        public void Handler_RemoveCallbacksAndMessages_KeepsMessagesPostedConcurrentlyByOtherHandlers()
+        {
+            const int count = 2000;
+            var looper = new Looper();
+            var h1 = new Handler(looper, Callback);
+            var h2 = new Handler(looper, Callback);
+            var messages = new Message[count];
+            for (var i = 0; i < count; i++)
+                messages[i] = h2.ObtainMessage(2, null);
+
+            var poster = new System.Threading.Thread(() =>
+            {
+                foreach (var message in messages)
+                    h2.SendMessage(message);
+            });
+            poster.Start();
+            while (poster.IsAlive)
+            {
+                h1.RemoveCallbacksAndMessages(null);
+                System.Threading.Thread.Yield();
+            }
+            poster.Join();
+
+            Assert.AreEqual(count, looper.queue.Count);
+        }
+
+        [Test]
+        public void Handler_RemoveCallbacksAndMessages_WhileLoopConsumes_NeverRestoresHandledMessages()
+        {
+            const int count = 2000;
+            var looper = new Looper();
+            looper.Loop();
+            var handled = 0;
+            var h1 = new Handler(looper, Callback);
+            var h2 = new Handler(looper, _ =>
+            {
+                handled++;
+                return true;
+            });
+            var stop = false;
+            var filter = new System.Threading.Thread(() =>
+            {
+                while (!System.Threading.Volatile.Read(ref stop))
+                {
+                    h1.RemoveCallbacksAndMessages(null);
+                    System.Threading.Thread.Yield();
+                }
+            });
+            filter.Start();
+            try
+            {
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                var sent = 0;
+                while (sent < count && watch.ElapsedMilliseconds < 5000)
+                {
+                    for (var i = 0; i < 10; i++, sent++)
+                        h2.SendMessage(h2.ObtainMessage(2, null));
+                    looper.LoopOnce();
+                }
+                while (looper.queue.Count > 0 && watch.ElapsedMilliseconds < 5000)
+                    looper.LoopOnce();
+            }
+            finally
+            {
+                System.Threading.Volatile.Write(ref stop, true);
+                filter.Join();
+            }
+
+            looper.LoopOnce();
+            Assert.AreEqual(count, handled);
+            Assert.AreEqual(0, looper.queue.Count);
         }
 
         bool Callback(Message arg)

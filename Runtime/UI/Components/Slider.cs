@@ -525,14 +525,13 @@ namespace Unity.AppUI.UI
         {
             if (m_RestrictedValues != RestrictedValuesPolicy.None)
             {
-                var restrictedValue = GetRestrictedThumbValue(baseValue, stepValue, evt.ctrlKey, out var idx);
+                GetRestrictedThumbValue(baseValue, stepValue, evt.ctrlKey, out var idx);
                 if (idx >= 0)
-                    return m_RestrictedValues == RestrictedValuesPolicy.Step
+                    return m_RestrictedValues is RestrictedValuesPolicy.Step or RestrictedValuesPolicy.CtrlStep
                         ? Mad(Mathf.Max(0, idx - 1), stepValue, lowValue)
                         : m_CustomMarks[Mathf.Max(0, idx - 1)].value;
-                return restrictedValue;
             }
-            return Mad(-1, stepValue, baseValue);;
+            return Mad(-1, stepValue, baseValue);
         }
 
         /// <inheritdoc />
@@ -540,12 +539,11 @@ namespace Unity.AppUI.UI
         {
             if (m_RestrictedValues != RestrictedValuesPolicy.None)
             {
-                var restrictedValue = GetRestrictedThumbValue(baseValue, stepValue, evt.ctrlKey, out var idx);
+                GetRestrictedThumbValue(baseValue, stepValue, evt.ctrlKey, out var idx);
                 if (idx >= 0)
-                    return m_RestrictedValues == RestrictedValuesPolicy.Step
+                    return m_RestrictedValues is RestrictedValuesPolicy.Step or RestrictedValuesPolicy.CtrlStep
                         ? Mad(idx + 1, stepValue, lowValue) // do not care about clamping here, it will be done later
                         : m_CustomMarks[Mathf.Min(m_CustomMarks.Count - 1, idx + 1)].value;
-                return restrictedValue;
             }
             return Mad(1, stepValue, baseValue);
         }
@@ -1072,6 +1070,7 @@ namespace Unity.AppUI.UI
         {
             m_GetCustomMarkValuePredicate ??= GetCustomMarkValue;
             m_GetStepValuePredicate ??= GetStepValue;
+            m_RestrictedStepValue = stepValue;
             stepOrMarkIndex = -1;
             if (restrictedValues is RestrictedValuesPolicy.CustomMarks or RestrictedValuesPolicy.CtrlCustomMarks &&
                 m_CustomMarks is {Count: >0})
@@ -1090,9 +1089,11 @@ namespace Unity.AppUI.UI
 
         Func<int,TScalar> m_GetStepValuePredicate;
 
+        TScalar m_RestrictedStepValue;
+
         TScalar GetStepValue(int index)
         {
-            return Mad(index, m_Step, lowValue);
+            return Mad(index, m_RestrictedStepValue, lowValue);
         }
 
         TScalar GetRestrictedThumbValue(

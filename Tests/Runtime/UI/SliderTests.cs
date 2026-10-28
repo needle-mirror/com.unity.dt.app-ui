@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Unity.AppUI.UI;
+using UnityEngine;
 using UnityEngine.UIElements;
 using SliderInt = Unity.AppUI.UI.SliderInt;
 using SliderFloat = Unity.AppUI.UI.SliderFloat;
@@ -184,5 +185,47 @@ namespace Unity.AppUI.Tests.UI
         protected override int step => 1;
 
         protected override int shiftStep => 2;
+    }
+
+    [TestFixture]
+    [TestOf(typeof(SliderFloat))]
+    class SliderFloatRestrictedKeysTests
+    {
+        class KeySliderFloat : SliderFloat
+        {
+            public void SendKey(KeyCode key, EventModifiers modifiers = EventModifiers.None)
+            {
+                using var evt = KeyDownEvent.GetPooled('\0', key, modifiers);
+                OnKeyDown(evt);
+            }
+        }
+
+        static KeySliderFloat Create(RestrictedValuesPolicy policy)
+        {
+            return new KeySliderFloat
+            {
+                lowValue = 0,
+                highValue = 100,
+                step = 0.1f,
+                shiftStep = 1f,
+                restrictedValues = policy,
+                value = 50f
+            };
+        }
+
+        [TestCase(RestrictedValuesPolicy.None, KeyCode.RightArrow, EventModifiers.None, 50.1f)]
+        [TestCase(RestrictedValuesPolicy.None, KeyCode.LeftArrow, EventModifiers.Shift, 49f)]
+        [TestCase(RestrictedValuesPolicy.Step, KeyCode.RightArrow, EventModifiers.None, 50.1f)]
+        [TestCase(RestrictedValuesPolicy.Step, KeyCode.RightArrow, EventModifiers.Shift, 51f)]
+        [TestCase(RestrictedValuesPolicy.Step, KeyCode.LeftArrow, EventModifiers.Shift, 49f)]
+        [TestCase(RestrictedValuesPolicy.CtrlStep, KeyCode.RightArrow, EventModifiers.None, 50.1f)]
+        [TestCase(RestrictedValuesPolicy.CtrlStep, KeyCode.RightArrow, EventModifiers.Control, 50.1f)]
+        [TestCase(RestrictedValuesPolicy.CtrlStep, KeyCode.LeftArrow, EventModifiers.Control | EventModifiers.Shift, 49f)]
+        public void ArrowKeys_MoveByTheStep_WhenValuesAreRestricted(RestrictedValuesPolicy policy, KeyCode key, EventModifiers modifiers, float expected)
+        {
+            var slider = Create(policy);
+            Assert.DoesNotThrow(() => slider.SendKey(key, modifiers));
+            Assert.AreEqual(expected, slider.value, 1e-3f);
+        }
     }
 }

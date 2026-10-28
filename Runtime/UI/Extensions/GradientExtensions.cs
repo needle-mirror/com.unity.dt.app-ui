@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -49,7 +50,7 @@ namespace Unity.AppUI.UI
                 if (colorKeys.Length is <= 0 or > 2)
                     return false;
 
-                var success = float.TryParse(colorKeys[0], out var time);
+                var success = float.TryParse(colorKeys[0], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var time);
                 success &= ColorUtility.TryParseHtmlString(colorKeys[1], out var color);
 
                 if (!success)
@@ -70,8 +71,8 @@ namespace Unity.AppUI.UI
                 if (alphaKeys.Length is <= 0 or > 2)
                     return false;
 
-                var success = float.TryParse(alphaKeys[0], out var time);
-                success &= float.TryParse(alphaKeys[1], out var alpha);
+                var success = float.TryParse(alphaKeys[0], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var time);
+                success &= float.TryParse(alphaKeys[1], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var alpha);
 
                 if (!success)
                     return false;

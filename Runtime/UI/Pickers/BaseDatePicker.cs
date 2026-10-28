@@ -194,6 +194,26 @@ namespace Unity.AppUI.UI
         public int currentMonth => m_DisplayedYearAndMonth.y;
 
         /// <summary>
+        /// Whether the year before the displayed one is within the supported DateTime range.
+        /// </summary>
+        internal bool canGoToPreviousYear => currentYear > DateTime.MinValue.Year;
+
+        /// <summary>
+        /// Whether the year after the displayed one is within the supported DateTime range.
+        /// </summary>
+        internal bool canGoToNextYear => currentYear < DateTime.MaxValue.Year;
+
+        /// <summary>
+        /// Whether the month before the displayed one is within the supported DateTime range.
+        /// </summary>
+        internal bool canGoToPreviousMonth => canGoToPreviousYear || (currentYear == DateTime.MinValue.Year && currentMonth > 1);
+
+        /// <summary>
+        /// Whether the month after the displayed one is within the supported DateTime range.
+        /// </summary>
+        internal bool canGoToNextMonth => canGoToNextYear || (currentYear == DateTime.MaxValue.Year && currentMonth < 12);
+
+        /// <summary>
         /// Show the specified year in the date picker.
         /// </summary>
         /// <param name="year"> The year to show. </param>
@@ -205,20 +225,28 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Show the next year in the date picker.
+        /// Does nothing when the displayed year is the last one DateTime supports.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void GoToNextYear()
         {
+            if (!canGoToNextYear)
+                return;
+
             var next = new DateTime(currentYear + 1, currentMonth, 1);
             GoTo(next);
         }
 
         /// <summary>
         /// Show the previous year in the date picker.
+        /// Does nothing when the displayed year is the first one DateTime supports.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void GoToPreviousYear()
         {
+            if (!canGoToPreviousYear)
+                return;
+
             var previous = new DateTime(currentYear - 1, currentMonth, 1);
             GoTo(previous);
         }
@@ -239,20 +267,28 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// Show the next month in the date picker.
+        /// Does nothing when the displayed month is the last one DateTime supports.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void GoToNextMonth()
         {
+            if (!canGoToNextMonth)
+                return;
+
             var next = new DateTime(currentYear, currentMonth, 1).AddMonths(1);
             GoTo(next);
         }
 
         /// <summary>
         /// Show the previous month in the date picker.
+        /// Does nothing when the displayed month is the first one DateTime supports.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void GoToPreviousMonth()
         {
+            if (!canGoToPreviousMonth)
+                return;
+
             var previous = new DateTime(currentYear, currentMonth, 1).AddMonths(-1);
             GoTo(previous);
         }

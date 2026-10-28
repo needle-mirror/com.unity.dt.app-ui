@@ -166,10 +166,10 @@ namespace Unity.AppUI.UI
             radio.SetValueWithoutNotify(radio.key == value);
         }
 
-        internal void RemoveRadio(Radio radio)
+        internal void RemoveRadio(Radio radio, bool keepValue = false)
         {
             m_RadioByKey.Remove(radio.key);
-            if (value == radio.key)
+            if (!keepValue && value == radio.key)
                 value = m_RadioByKey.Keys.FirstOrDefault();
         }
 

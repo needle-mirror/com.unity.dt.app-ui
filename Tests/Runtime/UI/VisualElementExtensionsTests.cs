@@ -16,6 +16,8 @@ namespace Unity.AppUI.Tests.UI
 {
     [TestFixture]
     [TestOf(typeof(VisualElementExtensions))]
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     class VisualElementExtensionsTests
     {
         UIDocument m_TestUI;

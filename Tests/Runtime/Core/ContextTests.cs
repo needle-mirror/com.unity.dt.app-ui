@@ -14,6 +14,8 @@ namespace Unity.AppUI.Tests.Core
 {
     [TestFixture]
     [TestOf(typeof(IContext))]
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     class ContextTests
     {
         UIDocument m_TestUI;

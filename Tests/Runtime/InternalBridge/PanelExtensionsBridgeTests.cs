@@ -9,6 +9,8 @@ namespace Unity.AppUI.Tests.Bridge
 {
     [TestFixture]
     [TestOf(typeof(PanelExtensionsBridge))]
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     class PanelExtensionsBridgeTests
     {
         UIDocument m_Document;

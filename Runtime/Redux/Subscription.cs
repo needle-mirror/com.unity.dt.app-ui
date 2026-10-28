@@ -78,7 +78,7 @@ namespace Unity.AppUI.Redux
         /// <inheritdoc/>
         public bool IsValid()
         {
-            return m_Store.TryGetTarget(out _) && m_Listener != null && m_Selector != null;
+            return m_Store != null && m_Store.TryGetTarget(out _) && m_Listener != null && m_Selector != null;
         }
 
         /// <inheritdoc/>
@@ -96,18 +96,22 @@ namespace Unity.AppUI.Redux
         /// <inheritdoc/>
         public void Notify(TState state)
         {
-            if (m_Listener == null || m_Selector == null)
+            // Read the delegates once: Unsubscribe can clear them while this runs, from the selector,
+            // the listener or another thread. A callback may then still fire once after Unsubscribe.
+            var listener = m_Listener;
+            var selector = m_Selector;
+            if (listener == null || selector == null)
             {
                 Unsubscribe();
                 return;
             }
 
-            var selected = m_Selector(state);
+            var selected = selector(state);
             var comparer = m_Options.comparer ?? EqualityComparer<TSelected>.Default;
             if (!comparer.Equals(selected, m_LastSelected))
             {
                 m_LastSelected = selected;
-                m_Listener(selected);
+                listener(selected);
             }
         }
 

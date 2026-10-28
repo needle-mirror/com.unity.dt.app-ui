@@ -103,6 +103,8 @@ namespace Unity.AppUI.UI
         {
             var year = m_DatePicker.currentYear;
             m_YearHeaderButton.title = year.ToString();
+            m_PreviousYearButton.SetEnabled(m_DatePicker.canGoToPreviousYear);
+            m_NextYearButton.SetEnabled(m_DatePicker.canGoToNextYear);
         }
 
         void OnPreviousYearButtonClick()

@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -77,15 +77,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- Fixed Tabs throwing \"Cannot scroll to a VisualElement that's not a child of the ScrollView content-container\" when TabItems are deleted from it in UI Builder. Tabs now picks up TabItems added to or removed from its item container directly, and keeps the same tab selected when it can (UUM-154225)."
+    "changelog": "### Fixed\n\n- `Rect.IsValid` and `VisualElement.IsOnScreen` no longer treat a zero-area rect as valid on engine builds where `Mathf.Epsilon` evaluates to 0.\n- `Store.Dispatch` no longer throws `InvalidOperationException` when a listener subscribes or unsubscribes while it is being notified. Subscribers are now notified from a snapshot, and a subscription that is unsubscribed while it is being notified no longer throws `NullReferenceException`. Its listener may still be called once (UUM-157944).\n- `IDisposableSubscription.IsValid()` returns `false` instead of throwing a `NullReferenceException` once the subscription or its store is disposed (UUM-157918).\n- The `Optional<float>`, `Optional<double>` and `Optional<Rect>` UXML converters, `RectExtensions.TryParse`, `GradientExtensions.TryParse` and the float sliders now read and write numbers with the invariant culture, so `0.5` is no longer read as `5` under a decimal comma culture. Values saved with the current culture by earlier versions, such as `0,5` under `de-DE`, still load, and the sliders' input field still accepts them. The `Optional<int>` and `Optional<long>` converters read the same way (UUM-157942).\n- `DateConverter` and `DateRange.TryParse` now parse serialized dates with the invariant culture, so dates no longer swap day and month or shift calendars under other cultures (UUM-157919).\n- `DatePicker` rebuilds its day grid for months before 1970, and keeps it valid at the first and last supported month, where the outward month, year and decade arrows are now disabled instead of throwing (UUM-157611).\n- `Slider` arrow keys with `restrictedValues` set to `Step` or `CtrlStep` now move by the right step with Shift, step without Ctrl for `CtrlStep`, and no longer throw with Ctrl (UUM-157601).\n- Dragging with touch and pen pointers works again on `Draggable`-based controls such as sliders, `SplitView` and `Tray` (UUM-154905).\n- `ActionGroup` children and its overflow button now follow an inherited `visibility: hidden` instead of forcing themselves visible (UUM-145391).\n- `Radio` registers with its `RadioGroup` again when it is re-attached to a panel, so radio buttons keep working and keep their selection in content that is shown more than once, such as a `Popover` or `DialogTrigger` (UUM-144282).\n- Setting `UndoStack.index` to `UndoStack.count`, or to `0` on an empty stack, now throws `ArgumentOutOfRangeException` instead of hanging (UUM-158333).\n- `UndoStack.isClean` no longer reports `true` after the clean state was reset with `ResetClean`, dropped by a `Push` or evicted by `undoLimit`, including when the clean state was the initial one. A `Push` that drops the clean command now raises `cleanStateChanged`, and `ResetClean` raises it only when `isClean` or `cleanIndex` changes (UUM-158398).\n- `AsyncRelayCommand<T>` with `AllowConcurrentExecutions` now cancels the previous run when `ExecuteAsync` is called again, so `Cancel()` reaches every run (UUM-158357).\n- `AsyncRelayCommand` and `AsyncRelayCommand<T>` now raise `CanExecuteChanged` and their completion `PropertyChanged` notifications when a run is cancelled, instead of throwing `TaskCanceledException` and leaving bound buttons disabled. A faulted run also raises them now, and its exception is still logged, including an `OperationCanceledException` that did not come from cancelling the run (UUM-158369).\n- `App.current` is no longer cleared when a different `App` instance is disposed or finalized (UUM-158373).\n- `Handler.RemoveCallbacksAndMessages` no longer removes messages sent through other handlers that share the same `Looper`. Messages whose target is not the calling handler, such as one from `Message.Obtain(null, ...)`, are no longer removed by it either (UUM-158403).\n- `Message.Obtain` keeps reusing pooled messages after more than 50 messages have been recycled (UUM-158417).\n- `NavDestination.MergeArguments` now replaces a default argument with a provided argument of the same name instead of keeping both (UUM-158420).\n- `NavGraphViewAsset.FindDestinationByRoute` no longer throws `InvalidCastException` when the r"
   },
   "upmCi": {
-    "footprint": "d4ae20725435cfad33e24c1c584f3503d19256a1"
+    "footprint": "1c6956d6c240f1df84bd6d302bd96b538ec463b1"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.2/manual/index.html",
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "2e7a58b3aa1029f23e03f89a67fea15cfd7266c4"
+    "revision": "784fe0f2d9e6e5ec1ae7c9dd577253f0cc66f86b"
   }
 }

@@ -29,6 +29,9 @@ namespace Unity.AppUI.Undo
 
         readonly Stack<MacroCommand> m_MacroStack = new Stack<MacroCommand>();
 
+        // -1 means the clean state is the base (before the first command); this means there is no reachable clean state.
+        const int k_NoCleanState = int.MinValue;
+
         int m_CleanState = -1;
 
         int m_Index = -1;
@@ -68,7 +71,7 @@ namespace Unity.AppUI.Undo
         /// <summary>
         /// The index of the clean state. -1 if there is no clean state.
         /// </summary>
-        public int cleanIndex => m_CleanState;
+        public int cleanIndex => m_CleanState == k_NoCleanState ? -1 : m_CleanState;
 
         /// <summary>
         /// The index of the last command in the undo stack.
@@ -126,7 +129,7 @@ namespace Unity.AppUI.Undo
             if (index == value)
                 return;
 
-            if (value < 0 || value > count)
+            if (value < 0 || value >= count)
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Index out of range.");
 
             var prev = index;
@@ -171,7 +174,10 @@ namespace Unity.AppUI.Undo
                     m_Commands.RemoveAt(i);
                 }
                 if (m_CleanState > m_Index)
-                    m_CleanState = -1;
+                {
+                    m_CleanState = k_NoCleanState;
+                    cleanStateChanged?.Invoke();
+                }
             }
 
             while (memorySize + command.memorySize > undoLimit)
@@ -182,7 +188,8 @@ namespace Unity.AppUI.Undo
                 m_Commands[0].OnFlush();
                 m_Commands.RemoveAt(0);
                 m_Index--;
-                m_CleanState = Math.Max(m_CleanState - 1, -1);
+                if (m_CleanState != k_NoCleanState)
+                    m_CleanState = m_CleanState == -1 ? k_NoCleanState : m_CleanState - 1;
             }
 
             m_Commands.Add(command);
@@ -276,12 +283,16 @@ namespace Unity.AppUI.Undo
         /// </summary>
         public void ResetClean()
         {
-            if (m_CleanState == -1)
+            if (m_CleanState == k_NoCleanState)
                 return;
 
-            m_CleanState = -1;
+            // -1 is a real clean state (before the first command), so it is discarded too.
+            var wasClean = isClean;
+            var previousCleanIndex = cleanIndex;
+            m_CleanState = k_NoCleanState;
 
-            cleanStateChanged?.Invoke();
+            if (wasClean != isClean || previousCleanIndex != cleanIndex)
+                cleanStateChanged?.Invoke();
         }
 
         /// <summary>

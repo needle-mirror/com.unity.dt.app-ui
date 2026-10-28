@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -317,7 +318,8 @@ namespace Unity.AppUI.Core
             if (parts.Length != 2)
                 return false;
 
-            if (!DateTime.TryParse(parts[0], out var start) || !DateTime.TryParse(parts[1], out var end))
+            if (!DateTime.TryParse(parts[0], CultureInfo.InvariantCulture, DateTimeStyles.None, out var start) ||
+                !DateTime.TryParse(parts[1], CultureInfo.InvariantCulture, DateTimeStyles.None, out var end))
                 return false;
 
             if (start > end)
