@@ -1,3 +1,4 @@
+using System;
 using Unity.AppUI.Core;
 using UnityEngine.UIElements;
 
@@ -111,17 +112,25 @@ namespace Unity.AppUI.UI
                     yearElement.text = $"{year}";
                     yearElement.userData = year;
                 }
+                // year 0 (in the first decade) is outside the supported DateTime range
+                yearElement.SetEnabled(year >= DateTime.MinValue.Year && year <= DateTime.MaxValue.Year);
             }
+            m_PreviousDecadeButton.SetEnabled(m_DatePicker.canGoToPreviousYear);
+            m_NextDecadeButton.SetEnabled(m_DatePicker.canGoToNextYear);
         }
 
-        void OnPreviousDecadeButtonClick()
+        internal void OnPreviousDecadeButtonClick()
         {
-            m_DatePicker.GoTo(new Date(m_DatePicker.currentYear - 10, m_DatePicker.currentMonth, 1));
+            if (!m_DatePicker.canGoToPreviousYear)
+                return;
+            m_DatePicker.GoToYear(Math.Max(DateTime.MinValue.Year, m_DatePicker.currentYear - 10));
         }
 
-        void OnNextDecadeButtonClick()
+        internal void OnNextDecadeButtonClick()
         {
-            m_DatePicker.GoTo(new Date(m_DatePicker.currentYear + 10, m_DatePicker.currentMonth, 1));
+            if (!m_DatePicker.canGoToNextYear)
+                return;
+            m_DatePicker.GoToYear(Math.Min(DateTime.MaxValue.Year, m_DatePicker.currentYear + 10));
         }
     }
 }

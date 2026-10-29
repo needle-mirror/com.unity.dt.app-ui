@@ -206,20 +206,28 @@ namespace Unity.AppUI.UI
         internal override void RefreshUI()
         {
             var weekDaysSequence = k_WeekDaysSequences[m_DatePicker.firstDayOfWeek];
-            if (m_DatePicker.currentYear < DateTime.UnixEpoch.Year || m_DatePicker.currentMonth is < 1 or > 12)
+            // the outward arrows are disabled at the limits of the supported DateTime range
+            m_PreviousYearButton.SetEnabled(m_DatePicker.canGoToPreviousYear);
+            m_PreviousMonthButton.SetEnabled(m_DatePicker.canGoToPreviousMonth);
+            m_NextMonthButton.SetEnabled(m_DatePicker.canGoToNextMonth);
+            m_NextYearButton.SetEnabled(m_DatePicker.canGoToNextYear);
+            if (m_DatePicker.currentYear < DateTime.MinValue.Year || m_DatePicker.currentMonth is < 1 or > 12)
                 return;
             // find the first day of the month
             var firstDayOfMonth = new DateTime(m_DatePicker.currentYear, m_DatePicker.currentMonth, 1);
             var start = Array.IndexOf(weekDaysSequence, firstDayOfMonth.DayOfWeek);
             var currentMonthDaysCount = DateTime.DaysInMonth(m_DatePicker.currentYear, m_DatePicker.currentMonth);
             // set previous days
-            var previousMonth = firstDayOfMonth.AddMonths(-1);
-            var previousMonthDaysCount = DateTime.DaysInMonth(firstDayOfMonth.Year, previousMonth.Month);
+            // spillover cells outside the supported DateTime range (before year 1 or after year 9999) are disabled
+            var hasPreviousMonth = firstDayOfMonth > DateTime.MinValue;
+            var previousMonth = hasPreviousMonth ? firstDayOfMonth.AddMonths(-1) : firstDayOfMonth;
+            var previousMonthDaysCount = DateTime.DaysInMonth(previousMonth.Year, previousMonth.Month);
             for (var i = 0; i < start; i++)
             {
-                var dayNb = previousMonthDaysCount - start + i + 1;
+                var dayNb = hasPreviousMonth ? previousMonthDaysCount - start + i + 1 : 1;
                 m_DaysElementsPool[i].userData = new Date(previousMonth.Year, previousMonth.Month, dayNb);
                 m_DaysElementsPool[i].AddToClassList(extraDayUssClassName);
+                m_DaysElementsPool[i].SetEnabled(hasPreviousMonth);
             }
             // bind days starting from the first day of the month
             for (var i = start; i < currentMonthDaysCount + start; i++)
@@ -227,14 +235,17 @@ namespace Unity.AppUI.UI
                 var dayNb = i - start + 1;
                 m_DaysElementsPool[i].userData = new Date(m_DatePicker.currentYear, m_DatePicker.currentMonth, dayNb);
                 m_DaysElementsPool[i].RemoveFromClassList(extraDayUssClassName);
+                m_DaysElementsPool[i].SetEnabled(true);
             }
             // set next days
-            var nextMonth = firstDayOfMonth.AddMonths(1);
+            var hasNextMonth = m_DatePicker.currentYear < DateTime.MaxValue.Year || m_DatePicker.currentMonth < 12;
+            var nextMonth = hasNextMonth ? firstDayOfMonth.AddMonths(1) : firstDayOfMonth;
             for (var i = currentMonthDaysCount + start; i < m_DaysElementsPool.Length; i++)
             {
-                var dayNb = i - start - currentMonthDaysCount + 1;
+                var dayNb = hasNextMonth ? i - start - currentMonthDaysCount + 1 : 1;
                 m_DaysElementsPool[i].userData = new Date(nextMonth.Year, nextMonth.Month, dayNb);
                 m_DaysElementsPool[i].AddToClassList(extraDayUssClassName);
+                m_DaysElementsPool[i].SetEnabled(hasNextMonth);
             }
             foreach (var day in m_DaysElementsPool)
             {

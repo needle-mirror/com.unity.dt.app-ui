@@ -10,6 +10,8 @@ namespace Unity.AppUI.Tests.Core
 {
     [TestFixture]
     [TestOf(typeof(NotificationManager))]
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     class NotificationManagerTests
     {
         UIDocument m_TestUI;

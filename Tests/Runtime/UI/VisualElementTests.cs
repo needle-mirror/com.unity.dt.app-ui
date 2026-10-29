@@ -14,6 +14,8 @@ using Random = UnityEngine.Random;
 
 namespace Unity.AppUI.Tests.UI
 {
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     class VisualElementTests<T> where T : VisualElement, new()
     {
         VisualElement m_VisualElement;

@@ -34,7 +34,12 @@ namespace Unity.AppUI.Editor
 
         public override string ToString(Optional<T> value)
         {
-            return value.IsSet ? value.Value.ToString() : string.Empty;
+            if (!value.IsSet)
+                return string.Empty;
+
+            return value.Value is IFormattable formattable
+                ? formattable.ToString(null, CultureInfo.InvariantCulture)
+                : value.Value.ToString();
         }
     }
 
@@ -68,7 +73,7 @@ namespace Unity.AppUI.Editor
     {
         protected override bool TryParse(string value, out int v)
         {
-            return int.TryParse(value, out v);
+            return int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out v) || int.TryParse(value, out v);
         }
     }
 
@@ -76,7 +81,7 @@ namespace Unity.AppUI.Editor
     {
         protected override bool TryParse(string value, out long v)
         {
-            return long.TryParse(value, out v);
+            return long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out v) || long.TryParse(value, out v);
         }
     }
 
@@ -84,7 +89,8 @@ namespace Unity.AppUI.Editor
     {
         protected override bool TryParse(string value, out float v)
         {
-            return float.TryParse(value, out v);
+            // Invariant first. Values saved by older versions used the current culture, so fall back to it.
+            return float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out v) || float.TryParse(value, out v);
         }
     }
 
@@ -92,7 +98,8 @@ namespace Unity.AppUI.Editor
     {
         protected override bool TryParse(string value, out double v)
         {
-            return double.TryParse(value, out v);
+            // Invariant first. Values saved by older versions used the current culture, so fall back to it.
+            return double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out v) || double.TryParse(value, out v);
         }
     }
 
@@ -126,7 +133,7 @@ namespace Unity.AppUI.Editor
                 return string.Empty;
 
             var rect = value.Value;
-            return $"{rect.x},{rect.y},{rect.width},{rect.height}";
+            return FormattableString.Invariant($"{rect.x},{rect.y},{rect.width},{rect.height}");
         }
     }
 
@@ -134,7 +141,7 @@ namespace Unity.AppUI.Editor
     {
         public override Date FromString(string value)
         {
-            if (string.IsNullOrEmpty(value) || !DateTime.TryParse(value, out var v))
+            if (string.IsNullOrEmpty(value) || !DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var v))
                 return default;
 
             return new Date(v);

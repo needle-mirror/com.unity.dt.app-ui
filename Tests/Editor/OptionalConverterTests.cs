@@ -1,4 +1,5 @@
 #if ENABLE_UXML_SERIALIZED_DATA
+using System.Globalization;
 using NUnit.Framework;
 using Unity.AppUI.Core;
 using Unity.AppUI.UI;
@@ -595,6 +596,61 @@ namespace Unity.AppUI.Editor.Tests
             var expected = "0,0,100,100";
             var actual = converter.ToString(new Optional<Rect>(new Rect(0, 0, 100, 100)));
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase("de-DE")]
+        [TestCase("fr-FR")]
+        public void NumberConverters_UseInvariantCulture(string cultureName)
+        {
+            var previous = CultureInfo.CurrentCulture;
+            try
+            {
+                CultureInfo.CurrentCulture = new CultureInfo(cultureName);
+
+                var floatConverter = new Unity.AppUI.Editor.OptionalFloatConverter();
+                Assert.AreEqual(new Optional<float>(0.5f), floatConverter.FromString("0.5"));
+                Assert.AreEqual("0.5", floatConverter.ToString(new Optional<float>(0.5f)));
+
+                var doubleConverter = new Unity.AppUI.Editor.OptionalDoubleConverter();
+                Assert.AreEqual(new Optional<double>(1.25), doubleConverter.FromString("1.25"));
+
+                var rectConverter = new Unity.AppUI.Editor.OptionalRectConverter();
+                var rect = new Rect(0.5f, 1.5f, 10, 20);
+                var text = rectConverter.ToString(new Optional<Rect>(rect));
+                Assert.AreEqual("0.5,1.5,10,20", text);
+                Assert.AreEqual(new Optional<Rect>(rect), rectConverter.FromString(text));
+
+                Assert.IsTrue(RectExtensions.TryParse("0.5,1.5,10,20", out var parsed));
+                Assert.AreEqual(rect, parsed);
+
+                Assert.IsTrue(GradientExtensions.TryParse("Blend:(0.25,#FF0000);(1,#0000FF)+(0,1);(1,1)", out var gradient));
+                Assert.AreEqual(0.25f, gradient.colorKeys[0].time, 1e-4f);
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = previous;
+            }
+        }
+
+        [TestCase("de-DE", "0,5", 0.5)]
+        [TestCase("de-DE", "0.5", 0.5)]
+        [TestCase("de-DE", "-1,25", -1.25)]
+        [TestCase("en-US", "1000.5", 1000.5)]
+        [TestCase("en-US", "0.5", 0.5)]
+        public void NumberConverters_ReadLegacyCultureValues(string cultureName, string text, double expected)
+        {
+            var previous = CultureInfo.CurrentCulture;
+            try
+            {
+                CultureInfo.CurrentCulture = new CultureInfo(cultureName);
+
+                Assert.AreEqual(new Optional<float>((float)expected), new Unity.AppUI.Editor.OptionalFloatConverter().FromString(text));
+                Assert.AreEqual(new Optional<double>(expected), new Unity.AppUI.Editor.OptionalDoubleConverter().FromString(text));
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = previous;
+            }
         }
     }
 }

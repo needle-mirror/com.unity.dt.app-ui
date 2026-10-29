@@ -84,6 +84,7 @@ namespace Unity.AppUI.Core
                     var msg = s_Pool;
                     s_Pool = msg.m_Next;
                     msg.m_Next = null;
+                    s_PoolSize--;
                     return msg;
                 }
             }

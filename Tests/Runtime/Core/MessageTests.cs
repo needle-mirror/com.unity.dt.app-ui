@@ -21,5 +21,22 @@ namespace Unity.AppUI.Tests.Core
             Assert.IsNull(msg.target);
             Assert.DoesNotThrow(msg.Recycle);
         }
+
+        [Test]
+        public void Message_Obtain_ShouldReuseRecycledMessage_AfterManyRecycles()
+        {
+            // More cycles than the pool's maximum size, so the pool counter would saturate
+            // if Obtain did not give the slot back.
+            for (var i = 0; i < 100; i++)
+            {
+                Message.Obtain(null, i, null).Recycle();
+            }
+
+            var first = Message.Obtain(null, 1, null);
+            first.Recycle();
+            var second = Message.Obtain(null, 2, null);
+            Assert.AreSame(first, second);
+            second.Recycle();
+        }
     }
 }

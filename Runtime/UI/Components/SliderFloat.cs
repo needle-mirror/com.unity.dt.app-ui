@@ -85,9 +85,8 @@ namespace Unity.AppUI.UI
         /// <inheritdoc />
         protected override bool ParseStringToValue(string strValue, out float v)
         {
-            var ret = float.TryParse(strValue, out var val);
-            v = val;
-            return ret;
+            // Invariant first, then the current culture, so a user can type 0,5 under a decimal comma culture.
+            return float.TryParse(strValue, NumberStyles.Float, CultureInfo.InvariantCulture, out v) || float.TryParse(strValue, out v);
         }
 
         /// <inheritdoc />

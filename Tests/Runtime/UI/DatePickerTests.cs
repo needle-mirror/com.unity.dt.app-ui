@@ -31,6 +31,97 @@ namespace Unity.AppUI.Tests.UI
             @"<appui:DatePicker value=""1998-07-12"" />",
         };
 
+        [TestCase(1969, 7, 20)]
+        [TestCase(1900, 1, 1)]
+        [TestCase(1970, 8, 20)]
+        public void DatePicker_DayGrid_ContainsValue_BeforeAndAfterEpoch(int year, int month, int day)
+        {
+            var date = new Date(year, month, day);
+            var datePicker = new DatePicker { value = date };
+            Assert.AreEqual(year, datePicker.currentYear);
+            Assert.AreEqual(month, datePicker.currentMonth);
+            var found = datePicker.Query<VisualElement>().Where(e => e.userData is Date d && d == date).ToList();
+            Assert.IsNotEmpty(found);
+        }
+
+        [TestCase(1, 1, 1)]
+        [TestCase(9999, 12, 31)]
+        public void DatePicker_DayGrid_DoesNotThrow_AtSupportedRangeLimits(int year, int month, int day)
+        {
+            var date = new Date(year, month, day);
+            DatePicker datePicker = null;
+            Assert.DoesNotThrow(() => datePicker = new DatePicker { value = date });
+            Assert.AreEqual(year, datePicker.currentYear);
+            Assert.AreEqual(month, datePicker.currentMonth);
+        }
+
+        [Test]
+        public void DatePicker_Navigation_StaysInRange_AtFirstSupportedMonth()
+        {
+            var datePicker = new DatePicker { value = new Date(1, 1, 1) };
+            Assert.DoesNotThrow(() => datePicker.GoToPreviousMonth());
+            Assert.DoesNotThrow(() => datePicker.GoToPreviousYear());
+            Assert.AreEqual(1, datePicker.currentYear);
+            Assert.AreEqual(1, datePicker.currentMonth);
+
+            var dayPicker = datePicker.Q<DayPicker>();
+            Assert.IsFalse(dayPicker.Q<IconButton>(className: DayPicker.previousMonthButtonUssClassName).enabledSelf);
+            Assert.IsFalse(dayPicker.Q<IconButton>(className: DayPicker.previousYearButtonUssClassName).enabledSelf);
+            Assert.IsTrue(dayPicker.Q<IconButton>(className: DayPicker.nextMonthButtonUssClassName).enabledSelf);
+            Assert.IsTrue(dayPicker.Q<IconButton>(className: DayPicker.nextYearButtonUssClassName).enabledSelf);
+
+            var yearPicker = datePicker.Q<YearPicker>();
+            Assert.IsFalse(yearPicker.Q<IconButton>(className: YearPicker.previousDecadeButtonUssClassName).enabledSelf);
+            var yearZero = yearPicker.Query<VisualElement>().Where(e => e.userData is int y && y == 0).First();
+            Assert.IsNotNull(yearZero);
+            Assert.IsFalse(yearZero.enabledSelf);
+
+            datePicker.GoToNextMonth();
+            Assert.AreEqual(1, datePicker.currentYear);
+            Assert.AreEqual(2, datePicker.currentMonth);
+            Assert.IsTrue(dayPicker.Q<IconButton>(className: DayPicker.previousMonthButtonUssClassName).enabledSelf);
+        }
+
+        [Test]
+        public void DatePicker_Navigation_StaysInRange_AtLastSupportedMonth()
+        {
+            var datePicker = new DatePicker { value = new Date(9999, 12, 31) };
+            Assert.DoesNotThrow(() => datePicker.GoToNextMonth());
+            Assert.DoesNotThrow(() => datePicker.GoToNextYear());
+            Assert.AreEqual(9999, datePicker.currentYear);
+            Assert.AreEqual(12, datePicker.currentMonth);
+
+            var dayPicker = datePicker.Q<DayPicker>();
+            Assert.IsFalse(dayPicker.Q<IconButton>(className: DayPicker.nextMonthButtonUssClassName).enabledSelf);
+            Assert.IsFalse(dayPicker.Q<IconButton>(className: DayPicker.nextYearButtonUssClassName).enabledSelf);
+            Assert.IsTrue(dayPicker.Q<IconButton>(className: DayPicker.previousMonthButtonUssClassName).enabledSelf);
+            Assert.IsTrue(dayPicker.Q<IconButton>(className: DayPicker.previousYearButtonUssClassName).enabledSelf);
+
+            var monthPicker = datePicker.Q<MonthPicker>();
+            Assert.IsFalse(monthPicker.Q<IconButton>(className: MonthPicker.nextYearButtonUssClassName).enabledSelf);
+            var yearPicker = datePicker.Q<YearPicker>();
+            Assert.IsFalse(yearPicker.Q<IconButton>(className: YearPicker.nextDecadeButtonUssClassName).enabledSelf);
+
+            datePicker.GoToPreviousMonth();
+            Assert.AreEqual(9999, datePicker.currentYear);
+            Assert.AreEqual(11, datePicker.currentMonth);
+        }
+
+        [Test]
+        public void DatePicker_DecadeNavigation_ClampsToSupportedRange()
+        {
+            var datePicker = new DatePicker { value = new Date(9995, 6, 1) };
+            var yearPicker = datePicker.Q<YearPicker>();
+            Assert.DoesNotThrow(() => yearPicker.OnNextDecadeButtonClick());
+            Assert.AreEqual(9999, datePicker.currentYear);
+            Assert.AreEqual(6, datePicker.currentMonth);
+
+            datePicker.GoTo(new Date(5, 6, 1));
+            Assert.DoesNotThrow(() => yearPicker.OnPreviousDecadeButtonClick());
+            Assert.AreEqual(1, datePicker.currentYear);
+            Assert.AreEqual(6, datePicker.currentMonth);
+        }
+
         [Test]
         public void DatePicker_CanGoTo()
         {

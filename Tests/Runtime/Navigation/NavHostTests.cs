@@ -11,6 +11,8 @@ namespace Unity.AppUI.Tests.Navigation
 {
     [TestFixture]
     [TestOf(typeof(NavHost))]
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     class NavHostTests
     {
         class TestableVisualController : INavVisualController

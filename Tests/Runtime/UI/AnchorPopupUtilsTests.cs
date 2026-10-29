@@ -9,6 +9,8 @@ using UnityEngine.UIElements;
 
 namespace Unity.AppUI.Tests.UI
 {
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     public class AnchorPopupUtilsTests
     {
         bool m_SetupDone;

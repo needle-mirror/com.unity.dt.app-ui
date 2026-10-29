@@ -135,8 +135,9 @@ namespace Unity.AppUI.UI
             var strValues = strValue.Split(" - ");
             var xStr = strValues[0];
             var yStr = strValues[1];
-            var xRet = float.TryParse(xStr, out var val1);
-            var yRet = float.TryParse(yStr, out var val2);
+            // Invariant first, then the current culture, so a user can type 0,5 under a decimal comma culture.
+            var xRet = float.TryParse(xStr, NumberStyles.Float, CultureInfo.InvariantCulture, out var val1) || float.TryParse(xStr, out val1);
+            var yRet = float.TryParse(yStr, NumberStyles.Float, CultureInfo.InvariantCulture, out var val2) || float.TryParse(yStr, out val2);
             val = new Vector2(val1, val2);
             return xRet && yRet;
         }
