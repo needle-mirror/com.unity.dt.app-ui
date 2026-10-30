@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 
 namespace Unity.AppUI.MVVM
 {
@@ -19,6 +21,12 @@ namespace Unity.AppUI.MVVM
         readonly ConcurrentDictionary<string, object> m_Singletons;
 
         readonly ConcurrentDictionary<Type, object> m_ScopedServices;
+
+        // Factory-built services are cached as Lazy so a concurrent first resolve runs the factory only once.
+        // They are keyed by the selected descriptor, so conditional factories for one service type never share an instance.
+        readonly ConcurrentDictionary<ServiceDescriptor, Lazy<object>> m_FactorySingletons;
+
+        readonly ConcurrentDictionary<ServiceDescriptor, Lazy<object>> m_FactoryScopedServices;
 
         readonly ServiceProvider m_Parent;
 
@@ -42,6 +50,8 @@ namespace Unity.AppUI.MVVM
             m_RealizedServices = new ConcurrentDictionary<string, Func<object>>();
             m_Singletons = new ConcurrentDictionary<string, object>();
             m_ScopedServices = new ConcurrentDictionary<Type, object>();
+            m_FactorySingletons = new ConcurrentDictionary<ServiceDescriptor, Lazy<object>>();
+            m_FactoryScopedServices = new ConcurrentDictionary<ServiceDescriptor, Lazy<object>>();
         }
 
         internal ServiceProvider(IServiceCollection serviceCollection, ServiceProvider parent)
@@ -79,6 +89,28 @@ namespace Unity.AppUI.MVVM
             {
                 RootProvider.m_Singletons[instanceCacheKey] = desc.implementationInstance;
                 return () => desc.implementationInstance;
+            }
+
+            if (desc.implementationFactory != null)
+            {
+                var factory = desc.implementationFactory;
+                return () =>
+                {
+                    switch (desc.lifetime)
+                    {
+                        case ServiceLifetime.Singleton:
+                        {
+                            var root = RootProvider;
+                            return GetOrCreateOnce(root.m_FactorySingletons, desc, () => CreateFromFactory(factory, serviceType, root));
+                        }
+                        case ServiceLifetime.Scoped:
+                            return GetOrCreateOnce(m_FactoryScopedServices, desc, () => CreateFromFactory(factory, serviceType, this));
+                        case ServiceLifetime.Transient:
+                            return CreateFromFactory(factory, serviceType, this);
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                };
             }
 
             var constructors = desc.implementationType.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
@@ -128,6 +160,33 @@ namespace Unity.AppUI.MVVM
                         throw new ArgumentOutOfRangeException();
                 }
             };
+        }
+
+        static object GetOrCreateOnce<TKey>(ConcurrentDictionary<TKey, Lazy<object>> cache, TKey key, Func<object> create)
+        {
+            // GetOrAdd may build two Lazy wrappers under contention, but only the stored one is ever evaluated.
+            var lazy = cache.GetOrAdd(key, _ => new Lazy<object>(create, LazyThreadSafetyMode.ExecutionAndPublication));
+            try
+            {
+                return lazy.Value;
+            }
+            catch
+            {
+                // Lazy caches the exception. Drop it so the next resolve runs the factory again.
+                ((ICollection<KeyValuePair<TKey, Lazy<object>>>)cache).Remove(new KeyValuePair<TKey, Lazy<object>>(key, lazy));
+                throw;
+            }
+        }
+
+        static object CreateFromFactory(Func<IServiceProvider, object> factory, Type serviceType, ServiceProvider provider)
+        {
+            var service = factory(provider);
+            if (service == null)
+                throw new InvalidOperationException($"The factory registered for {serviceType.FullName} returned null.");
+            if (!serviceType.IsInstanceOfType(service))
+                throw new InvalidOperationException(
+                    $"The factory registered for {serviceType.FullName} returned an instance of type {service.GetType().FullName}, which is not assignable to it.");
+            return service;
         }
 
         object ConstructAndInject(ConstructorInfo bestConstructor, Type requestingType)
@@ -250,6 +309,8 @@ namespace Unity.AppUI.MVVM
             m_RealizedServices.Clear();
             m_Singletons.Clear();
             m_ScopedServices.Clear();
+            m_FactorySingletons.Clear();
+            m_FactoryScopedServices.Clear();
             disposed = true;
         }
     }

@@ -22,6 +22,12 @@ namespace Unity.AppUI.MVVM
         public object implementationInstance { get; private set; }
 
         /// <summary>
+        /// Gets the factory used to create the service, when the service is registered from a factory.
+        /// Null when the service is registered by type or from an existing instance.
+        /// </summary>
+        public Func<IServiceProvider, object> implementationFactory { get; private set; }
+
+        /// <summary>
         /// Gets the lifetime of the service.
         /// </summary>
         public ServiceLifetime lifetime { get; private set; }
@@ -101,6 +107,25 @@ namespace Unity.AppUI.MVVM
         }
 
         /// <summary>
+        /// Creates a new instance of <see cref="ServiceDescriptor"/> that creates the service with a factory.
+        /// </summary>
+        /// <param name="serviceType"> The service type. </param>
+        /// <param name="factory"> The factory used to create the service. It receives the provider resolving the service. </param>
+        /// <param name="lifetime"> The lifetime of the service. </param>
+        /// <exception cref="ArgumentNullException"> Thrown if <paramref name="serviceType"/> or <paramref name="factory"/> is null. </exception>
+        public ServiceDescriptor(Type serviceType, Func<IServiceProvider, object> factory, ServiceLifetime lifetime)
+            : this(serviceType, lifetime)
+        {
+            if (serviceType == null)
+                throw new ArgumentNullException(nameof(serviceType));
+
+            if (factory == null)
+                throw new ArgumentNullException(nameof(factory));
+
+            this.implementationFactory = factory;
+        }
+
+        /// <summary>
         /// Creates a new instance of <see cref="ServiceDescriptor"/> as a singleton.
         /// </summary>
         /// <param name="serviceType"> The service type. </param>
@@ -120,6 +145,102 @@ namespace Unity.AppUI.MVVM
         public static ServiceDescriptor Singleton(Type serviceType, object instance)
         {
             return new ServiceDescriptor(serviceType, instance);
+        }
+
+        /// <summary>
+        /// Creates a new singleton <see cref="ServiceDescriptor"/> that creates the service with a factory.
+        /// The factory runs once, on first request.
+        /// </summary>
+        /// <param name="serviceType"> The service type. </param>
+        /// <param name="factory"> The factory used to create the service. </param>
+        /// <returns> The service descriptor. </returns>
+        public static ServiceDescriptor Singleton(Type serviceType, Func<IServiceProvider, object> factory)
+        {
+            return new ServiceDescriptor(serviceType, factory, ServiceLifetime.Singleton);
+        }
+
+        /// <summary>
+        /// Creates a new singleton <see cref="ServiceDescriptor"/> that creates the service with a factory.
+        /// The factory runs once, on first request.
+        /// </summary>
+        /// <param name="factory"> The factory used to create the service. </param>
+        /// <typeparam name="TService"> The service type. </typeparam>
+        /// <returns> The service descriptor. </returns>
+        public static ServiceDescriptor Singleton<TService>(Func<IServiceProvider, TService> factory)
+            where TService : class
+        {
+            if (factory == null)
+                throw new ArgumentNullException(nameof(factory));
+
+            return new ServiceDescriptor(typeof(TService), sp => factory(sp), ServiceLifetime.Singleton);
+        }
+
+        /// <summary>
+        /// Creates a new singleton <see cref="ServiceDescriptor"/> that returns a pre-existing instance.
+        /// </summary>
+        /// <param name="instance"> The pre-constructed implementation instance. </param>
+        /// <typeparam name="TService"> The service type. </typeparam>
+        /// <returns> The service descriptor. </returns>
+        public static ServiceDescriptor Singleton<TService>(TService instance)
+            where TService : class
+        {
+            return new ServiceDescriptor(typeof(TService), instance);
+        }
+
+        /// <summary>
+        /// Creates a new scoped <see cref="ServiceDescriptor"/> that creates the service with a factory.
+        /// The factory runs once per scope.
+        /// </summary>
+        /// <param name="serviceType"> The service type. </param>
+        /// <param name="factory"> The factory used to create the service. </param>
+        /// <returns> The service descriptor. </returns>
+        public static ServiceDescriptor Scoped(Type serviceType, Func<IServiceProvider, object> factory)
+        {
+            return new ServiceDescriptor(serviceType, factory, ServiceLifetime.Scoped);
+        }
+
+        /// <summary>
+        /// Creates a new scoped <see cref="ServiceDescriptor"/> that creates the service with a factory.
+        /// The factory runs once per scope.
+        /// </summary>
+        /// <param name="factory"> The factory used to create the service. </param>
+        /// <typeparam name="TService"> The service type. </typeparam>
+        /// <returns> The service descriptor. </returns>
+        public static ServiceDescriptor Scoped<TService>(Func<IServiceProvider, TService> factory)
+            where TService : class
+        {
+            if (factory == null)
+                throw new ArgumentNullException(nameof(factory));
+
+            return new ServiceDescriptor(typeof(TService), sp => factory(sp), ServiceLifetime.Scoped);
+        }
+
+        /// <summary>
+        /// Creates a new transient <see cref="ServiceDescriptor"/> that creates the service with a factory.
+        /// The factory runs on every request.
+        /// </summary>
+        /// <param name="serviceType"> The service type. </param>
+        /// <param name="factory"> The factory used to create the service. </param>
+        /// <returns> The service descriptor. </returns>
+        public static ServiceDescriptor Transient(Type serviceType, Func<IServiceProvider, object> factory)
+        {
+            return new ServiceDescriptor(serviceType, factory, ServiceLifetime.Transient);
+        }
+
+        /// <summary>
+        /// Creates a new transient <see cref="ServiceDescriptor"/> that creates the service with a factory.
+        /// The factory runs on every request.
+        /// </summary>
+        /// <param name="factory"> The factory used to create the service. </param>
+        /// <typeparam name="TService"> The service type. </typeparam>
+        /// <returns> The service descriptor. </returns>
+        public static ServiceDescriptor Transient<TService>(Func<IServiceProvider, TService> factory)
+            where TService : class
+        {
+            if (factory == null)
+                throw new ArgumentNullException(nameof(factory));
+
+            return new ServiceDescriptor(typeof(TService), sp => factory(sp), ServiceLifetime.Transient);
         }
 
         /// <summary>
@@ -154,6 +275,12 @@ namespace Unity.AppUI.MVVM
             if (implementationInstance != null)
             {
                 var copy = new ServiceDescriptor(serviceType, implementationInstance);
+                copy.condition = newCondition;
+                return copy;
+            }
+            if (implementationFactory != null)
+            {
+                var copy = new ServiceDescriptor(serviceType, implementationFactory, lifetime);
                 copy.condition = newCondition;
                 return copy;
             }

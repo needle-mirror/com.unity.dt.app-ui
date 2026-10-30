@@ -371,6 +371,174 @@ namespace Unity.AppUI.Tests.MVVM
             Assert.IsNull(resolved.dependency);
         }
 
+        [Test]
+        public void ServiceProvider_WithFactory_ForwardsToSameSingleton()
+        {
+            var services = new ServiceCollection();
+            services.AddSingleton<IInstanceService, InstanceService>();
+            services.Add(ServiceDescriptor.Singleton<IFactoryConsumer>(sp => (IFactoryConsumer)sp.GetService(typeof(IFactoryLifecycle))));
+            services.AddSingleton<IFactoryLifecycle, FactoryService>();
+
+            var provider = services.BuildServiceProvider();
+
+            var lifecycle = provider.GetService<IFactoryLifecycle>();
+            var consumer = provider.GetService<IFactoryConsumer>();
+            Assert.AreSame(lifecycle, consumer);
+        }
+
+        [Test]
+        public void ServiceProvider_WithFactory_RespectsLifetimes()
+        {
+            var services = new ServiceCollection();
+            var calls = 0;
+            services.AddSingleton<IFactoryLifecycle>(sp => { calls++; return new FactoryService(); });
+            services.AddScoped<IFactoryConsumer>(sp => new FactoryService());
+            services.AddTransient<IInstanceService>(sp => new InstanceService());
+
+            var provider = services.BuildServiceProvider();
+
+            Assert.AreSame(provider.GetService<IFactoryLifecycle>(), provider.GetService<IFactoryLifecycle>());
+            Assert.AreEqual(1, calls);
+            Assert.AreNotSame(provider.GetService<IInstanceService>(), provider.GetService<IInstanceService>());
+            Assert.AreSame(provider.GetService<IFactoryConsumer>(), provider.GetService<IFactoryConsumer>());
+            using var scope = provider.CreateScope();
+            Assert.AreNotSame(provider.GetService<IFactoryConsumer>(), scope.ServiceProvider.GetService<IFactoryConsumer>());
+        }
+
+        [Test]
+        public void ServiceDescriptor_WithNullFactory_Throws()
+        {
+            Assert.Throws<System.ArgumentNullException>(() => ServiceDescriptor.Singleton(typeof(IInstanceService), (System.Func<System.IServiceProvider, object>)null));
+            Assert.Throws<System.ArgumentNullException>(() => new ServiceCollection().AddSingleton<IInstanceService>((System.Func<System.IServiceProvider, IInstanceService>)null));
+        }
+
+        [Test]
+        public void ServiceProvider_WithSingletonFactory_RunsOnceForConcurrentFirstResolve()
+        {
+            var calls = 0;
+            var services = new ServiceCollection();
+            services.AddSingleton<IFactoryLifecycle>(sp => CountedFactory(ref calls));
+            var provider = services.BuildServiceProvider();
+
+            var results = ResolveFromTwoThreads(() => provider.GetService<IFactoryLifecycle>());
+
+            Assert.AreEqual(1, calls);
+            Assert.IsNotNull(results[0]);
+            Assert.AreSame(results[0], results[1]);
+        }
+
+        [Test]
+        public void ServiceProvider_WithScopedFactory_RunsOnceForConcurrentFirstResolveInAScope()
+        {
+            var calls = 0;
+            var services = new ServiceCollection();
+            services.AddScoped<IFactoryLifecycle>(sp => CountedFactory(ref calls));
+            var provider = services.BuildServiceProvider();
+            using var scope = provider.CreateScope();
+
+            var results = ResolveFromTwoThreads(() => scope.ServiceProvider.GetService<IFactoryLifecycle>());
+
+            Assert.AreEqual(1, calls);
+            Assert.IsNotNull(results[0]);
+            Assert.AreSame(results[0], results[1]);
+        }
+
+        [Test]
+        public void ServiceProvider_WithSingletonFactory_RetriesAfterTheFactoryFails()
+        {
+            var calls = 0;
+            var services = new ServiceCollection();
+            services.AddSingleton<IFactoryLifecycle>(sp => calls++ == 0 ? null : new FactoryService());
+            var provider = services.BuildServiceProvider();
+
+            Assert.Throws<System.InvalidOperationException>(() => provider.GetService<IFactoryLifecycle>());
+            Assert.IsNotNull(provider.GetService<IFactoryLifecycle>());
+            Assert.AreEqual(2, calls);
+        }
+
+        [Test]
+        public void ServiceProvider_WithConditionalScopedFactories_ResolvesEachConsumersOwnFactory()
+        {
+            var services = new ServiceCollection();
+            services.Add(ServiceDescriptor.Scoped<ITestInterface>(sp => new TestImplementation1())
+                .When(ctx => ctx.RequestingType == typeof(ServiceConsumer1)));
+            services.Add(ServiceDescriptor.Scoped<ITestInterface>(sp => new TestImplementation2())
+                .When(ctx => ctx.RequestingType == typeof(ServiceConsumer2)));
+            services.AddScoped<ServiceConsumer1>();
+            services.AddScoped<ServiceConsumer2>();
+            var provider = services.BuildServiceProvider();
+
+            using var scope = provider.CreateScope();
+            Assert.IsInstanceOf<TestImplementation1>(scope.ServiceProvider.GetService<ServiceConsumer1>().dependency);
+            Assert.IsInstanceOf<TestImplementation2>(scope.ServiceProvider.GetService<ServiceConsumer2>().dependency);
+        }
+
+        [Test]
+        public void ServiceProvider_WithConditionalSingletonFactory_SharesOneInstanceAcrossConsumers()
+        {
+            var calls = 0;
+            var services = new ServiceCollection();
+            services.Add(ServiceDescriptor.Singleton<ITestInterface>(sp => { calls++; return new TestImplementation1(); })
+                .When(ctx => ctx.RequestingType == typeof(ServiceConsumer1) || ctx.RequestingType == typeof(ServiceConsumer2)));
+            services.AddSingleton<ServiceConsumer1>();
+            services.AddSingleton<ServiceConsumer2>();
+            var provider = services.BuildServiceProvider();
+
+            Assert.AreSame(provider.GetService<ServiceConsumer1>().dependency, provider.GetService<ServiceConsumer2>().dependency);
+            Assert.AreEqual(1, calls);
+        }
+
+        // The first caller waits inside the factory for a second caller. Without a once-only guarantee the
+        // second caller enters the factory too. With it, the wait times out and the second caller reuses the result.
+        static readonly System.Threading.ManualResetEventSlim s_SecondFactoryCall = new System.Threading.ManualResetEventSlim();
+
+        static FactoryService CountedFactory(ref int calls)
+        {
+            if (System.Threading.Interlocked.Increment(ref calls) > 1)
+                s_SecondFactoryCall.Set();
+            else
+                s_SecondFactoryCall.Wait(500);
+            return new FactoryService();
+        }
+
+        static object[] ResolveFromTwoThreads(System.Func<object> resolve)
+        {
+            s_SecondFactoryCall.Reset();
+            var results = new object[2];
+            var errors = new System.Exception[2];
+            using var start = new System.Threading.Barrier(2);
+            var threads = new System.Threading.Thread[2];
+            for (var i = 0; i < threads.Length; i++)
+            {
+                var index = i;
+                threads[i] = new System.Threading.Thread(() =>
+                {
+                    try
+                    {
+                        start.SignalAndWait();
+                        results[index] = resolve();
+                    }
+                    catch (System.Exception e)
+                    {
+                        errors[index] = e;
+                    }
+                });
+                threads[i].Start();
+            }
+
+            foreach (var thread in threads)
+                Assert.IsTrue(thread.Join(5000), "A resolving thread did not finish.");
+            foreach (var error in errors)
+                Assert.IsNull(error, error?.ToString());
+            return results;
+        }
+
+        public interface IFactoryConsumer { }
+
+        public interface IFactoryLifecycle : IFactoryConsumer { }
+
+        public class FactoryService : IFactoryLifecycle { }
+
         public interface IInstanceService { }
 
         public class InstanceService : IInstanceService { }

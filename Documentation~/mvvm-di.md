@@ -199,6 +199,25 @@ public class MyAppBuilder : UIToolkitAppBuilder<MyApp>
 > instance's constructor is never invoked by the container. If you need post-registration wiring,
 > do it on the instance yourself before calling `AddSingleton(instance)`.
 
+### Register with a factory
+
+When a service must be built by your own code, register a factory. It receives the
+[IServiceProvider](https://learn.microsoft.com/dotnet/api/system.iserviceprovider) that resolves the service, so it can forward to another registration. This is how you expose one singleton under two interfaces.
+
+```cs
+appBuilder.services.AddSingleton<IFooLifecycle, FooService>();
+appBuilder.services.AddSingleton<IFooConsumer>(sp => sp.GetRequiredService<IFooLifecycle>());
+```
+
+`AddSingleton`, `AddScoped` and `AddTransient` all accept a factory, as do the matching
+`ServiceDescriptor.Singleton`, `Scoped` and `Transient` methods. A singleton factory runs once and a scoped one runs once per scope, even when several threads resolve the service at the same time. A transient one runs on every request.
+
+> [!NOTE]
+> Like instances, factory results are returned as-is. The container does not fill their
+> [Service](xref:Unity.AppUI.MVVM.ServiceAttribute) fields or properties, and does not call
+> `OnDependenciesInjected` when they implement [IDependencyInjectionListener](xref:Unity.AppUI.MVVM.IDependencyInjectionListener).
+> Resolve what the service needs inside the factory instead.
+
 ## Use Dependencies
 
 You have two ways to inject dependencies into your classes: constructor injection and property/field injection.

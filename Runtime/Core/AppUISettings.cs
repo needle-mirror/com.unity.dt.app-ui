@@ -13,7 +13,7 @@ namespace Unity.AppUI.Core
         internal const string configName = "com.unity.dt.app-ui";
 
         // [POSTVERSION.WriteVersion(accessibility="internal",fieldName="version",packageName="com.unity.dt.app-ui",excludePatch=true)]
-        internal const string version = "2.2";
+        internal const string version = "2.3";
 
         /// <summary>
         /// Enable this options to correct the scale of UIDocuments,
