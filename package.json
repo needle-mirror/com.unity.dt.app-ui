@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -77,15 +77,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Added\n\n- Factory registration for the dependency injection container: `ServiceDescriptor.Singleton`, `Scoped` and `Transient` accept a `Func<IServiceProvider, object>` (or a generic `Func<IServiceProvider, TService>`), and `AddSingleton`, `AddScoped` and `AddTransient` have matching overloads. A factory can forward to another registration, so one singleton can be exposed under two interfaces. `ServiceDescriptor.Singleton<TService>(TService instance)`, a public `ServiceDescriptor(Type, Func<IServiceProvider, object>, ServiceLifetime)` constructor and the `ServiceDescriptor.implementationFactory` property were added too."
+    "changelog": "### Fixed\n\n- `SwitchBuilder` runs every matching reducer case on the state returned by the previous one, so a slice no longer keeps only the last case's result. Several `AddDefault` calls now chain the same way.\n- `Action<TPayload>` instances with different payloads, and async thunk actions with different `meta` or creators, no longer compare as equal through `IEquatable<Action>`.\n- `StoreFactory.ComposeEnhancers` returns the identity enhancer when it is called with no enhancers instead of throwing.\n- The Redux DevTools no longer keep committed actions in `actionsById` when `maxAge` is set, and `Dispatch` accepts a `maxAge` of 0 or 1.\n- Async thunks run when DevTools is enabled through `StoreFactory.DefaultEnhancer`.\n- `IThunkAPI.Abort` cancels the async thunk instead of throwing when it is called on the main thread or from another thread, and so do `RejectWithValue` and `FulFillWithValue`.\n- `TryAddTransient` registers a transient service, and `TryAddTransient(Type)` and `TryAddScoped(Type)` add it only once.\n- `NavController.Navigate(Uri)` resolves deep links with two or more path segments.\n- `GradientExtensions.TryParse` returns false for a gradient key with a single value instead of throwing, and accepts keys with surrounding spaces.\n- `PinchGesture.GetHashCode` is equal for gestures that compare equal."
   },
   "upmCi": {
-    "footprint": "b6588edef2bd6fb4f1703a1a16f0af9567d017c9"
+    "footprint": "fba63b9823a378ddc133cfb23ca46d85e3e93a9c"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.3/manual/index.html",
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "660312bfb624e7e0df241713d0c0fcf91209bf27"
+    "revision": "58c9bbf7c5778daef96f44e6abd5d7095d6ad42d"
   }
 }

@@ -19,6 +19,11 @@ namespace Unity.AppUI.Redux
 
         TaskCompletionSource<TPayload> m_TaskCompletionSource;
 
+        readonly object m_Gate = new object();
+
+        // Test hook, run between completing the thunk and cancelling it.
+        internal System.Action onCompletingBeforeCancel;
+
         /// <summary>
         /// The request ID of the thunk.
         /// </summary>
@@ -57,12 +62,8 @@ namespace Unity.AppUI.Redux
         /// <param name="reason"> The reason for aborting the thunk. It can be null. </param>
         public void Abort(object reason)
         {
-            if (m_TaskCompletionSource.Task.IsCompleted)
-                return;
-
             // We cant use SetCanceled() here because we need to pass a reason.
-            m_TaskCompletionSource.SetException(new AbortedWithReasonException(reason));
-            m_CancellationTokenSource.Cancel();
+            Complete(tcs => tcs.TrySetException(new AbortedWithReasonException(reason)));
         }
 
         /// <summary>
@@ -71,11 +72,7 @@ namespace Unity.AppUI.Redux
         /// <param name="value"> The value to reject the thunk with. </param>
         public void RejectWithValue(TPayload value)
         {
-            if (m_TaskCompletionSource.Task.IsCompleted)
-                return;
-
-            m_TaskCompletionSource.SetException(new RejectedWithValueException<TPayload>(value));
-            m_CancellationTokenSource.Cancel();
+            Complete(tcs => tcs.TrySetException(new RejectedWithValueException<TPayload>(value)));
         }
 
         /// <summary>
@@ -84,11 +81,25 @@ namespace Unity.AppUI.Redux
         /// <param name="value"> The value to fulfill the thunk with. </param>
         public void FulFillWithValue(TPayload value)
         {
-            if (m_TaskCompletionSource.Task.IsCompleted)
-                return;
+            Complete(tcs => tcs.TrySetResult(value));
+        }
 
-            m_TaskCompletionSource.SetResult(value);
-            m_CancellationTokenSource.Cancel();
+        void Complete(Func<TaskCompletionSource<TPayload>, bool> complete)
+        {
+            // These can be called from any thread. Holding the gate keeps DispatchThunk from
+            // disposing the cancellation source between completing the thunk and cancelling it.
+            lock (m_Gate)
+            {
+                var tcs = m_TaskCompletionSource;
+                if (tcs == null || tcs.Task.IsCompleted)
+                    return;
+
+                if (complete(tcs))
+                {
+                    onCompletingBeforeCancel?.Invoke();
+                    m_CancellationTokenSource.Cancel();
+                }
+            }
         }
 
         internal string GenerateRequestId()
@@ -98,8 +109,13 @@ namespace Unity.AppUI.Redux
 
         internal async Task DispatchThunk(CancellationToken cToken = default)
         {
-            m_TaskCompletionSource = new TaskCompletionSource<TPayload>();
-            m_CancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cToken);
+            // Completing the source must not resume DispatchThunk inline, which would dispose
+            // the cancellation source before Abort, RejectWithValue or FulFillWithValue cancels it.
+            lock (m_Gate)
+            {
+                m_TaskCompletionSource = new TaskCompletionSource<TPayload>(TaskCreationOptions.RunContinuationsAsynchronously);
+                m_CancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cToken);
+            }
 
             var creator = m_Action.creator;
             var options = m_Action.creator.options;
@@ -153,9 +169,12 @@ namespace Unity.AppUI.Redux
                 HandleException(e);
             }
 
-            m_CancellationTokenSource.Dispose();
-            m_TaskCompletionSource = null;
-            m_CancellationTokenSource = null;
+            lock (m_Gate)
+            {
+                m_CancellationTokenSource.Dispose();
+                m_TaskCompletionSource = null;
+                m_CancellationTokenSource = null;
+            }
         }
 
         void HandleNotMetCondition()

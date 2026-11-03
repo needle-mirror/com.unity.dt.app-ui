@@ -374,6 +374,120 @@ namespace Unity.AppUI.Tests.Redux
         }
 
         [UnityTest]
+        public IEnumerator Store_DispatchAsyncThunk_CanBeCompletedOffTheDispatchThread()
+        {
+            // Each thunk runs on the thread pool, with no synchronization context, so DispatchThunk
+            // resumes on a pool thread. A worker completes the thunk, then holds off cancelling it
+            // until DispatchThunk finishes. DispatchThunk must wait for the cancellation instead of
+            // disposing the cancellation source under the worker.
+            Task worker = null;
+            System.Threading.ManualResetEventSlim dispatched = null;
+            var token = default(System.Threading.CancellationToken);
+            var asyncThunk = new AsyncThunkCreator<int, string>(
+                "myAsyncThunk", async api =>
+                {
+                    token = api.cancellationToken;
+                    var done = dispatched;
+                    ((ThunkAPI<int, string>)api).onCompletingBeforeCancel = () => done.Wait(250);
+                    worker = Task.Run(() =>
+                    {
+                        switch (api.arg)
+                        {
+                            case 0: api.Abort("reason"); break;
+                            case 1: api.RejectWithValue("rejected"); break;
+                            default: api.FulFillWithValue("fulfilled"); break;
+                        }
+                    });
+                    await Task.Delay(System.Threading.Timeout.Infinite, api.cancellationToken);
+                    return "result";
+                });
+
+            var store = StoreFactory.CreateStore(new []
+            {
+                StoreFactory.CreateSlice("mySlice", new MyState(), null, builder =>
+                {
+                    builder.AddCase(asyncThunk.fulfilled, (state, action) => state with { value = action });
+                    builder.AddCase(asyncThunk.rejected, (state, action) => state with { value = action });
+                })
+            });
+
+            var run = Task.Run(async () =>
+            {
+                for (var i = 0; i < 3; i++)
+                {
+                    var done = new System.Threading.ManualResetEventSlim();
+                    dispatched = done;
+                    var dispatch = store.DispatchAsyncThunk(asyncThunk.Invoke(i));
+                    _ = dispatch.ContinueWith(_ => done.Set(), TaskContinuationOptions.ExecuteSynchronously);
+                    await dispatch;
+                    // the worker must not throw, ObjectDisposedException included
+                    await worker;
+                    Assert.IsTrue(token.IsCancellationRequested, $"Iteration {i}: the runner was not cancelled.");
+
+                    var value = store.GetState<MyState>("mySlice").value;
+                    switch (i)
+                    {
+                        case 0:
+                            Assert.IsTrue((value as RejectedAction<int, string>)?.meta.aborted == true, "Abort");
+                            break;
+                        case 1:
+                            Assert.IsTrue((value as RejectedAction<int, string>)?.meta.rejectedWithValue == true, "RejectWithValue");
+                            break;
+                        default:
+                            Assert.AreEqual("fulfilled", (value as FulfilledAction<int, string>)?.payload, "FulFillWithValue");
+                            break;
+                    }
+                }
+            });
+
+            yield return new WaitUntilOrTimeOut(() => run.IsCompleted, false, TimeSpan.FromSeconds(10));
+            Assert.IsTrue(run.IsCompleted, "The thunks did not complete in time.");
+            run.GetAwaiter().GetResult();
+        }
+
+        [UnityTest]
+        public IEnumerator Store_DispatchAsyncThunk_CanBeAbortedFromMainThread()
+        {
+            IThunkAPI<string,string> thunkApi = null;
+            var token = default(System.Threading.CancellationToken);
+            var asyncThunk = new AsyncThunkCreator<string, string>(
+                "myAsyncThunk", async api =>
+                {
+                    thunkApi = api;
+                    token = api.cancellationToken;
+                    await Task.Delay(System.Threading.Timeout.Infinite, api.cancellationToken);
+                    return "result";
+                });
+
+            var store = StoreFactory.CreateStore(new []
+            {
+                StoreFactory.CreateSlice("mySlice", new MyState(), null, builder =>
+                {
+                    builder.AddCase(asyncThunk.rejected, (state, action) => state with { value = action });
+                })
+            });
+
+            store.Dispatch(asyncThunk.Invoke("arg"));
+            Assert.IsNotNull(thunkApi);
+
+            Assert.DoesNotThrow(() => thunkApi.Abort("reason"));
+            Assert.IsTrue(token.IsCancellationRequested);
+
+            yield return new WaitUntilOrTimeOut(
+                () => store.GetState<MyState>("mySlice").value is RejectedAction<string, string>,
+                false,
+                TimeSpan.FromSeconds(1));
+
+            var rejectedAction = store.GetState<MyState>("mySlice").value as RejectedAction<string, string>;
+            Assert.IsNotNull(rejectedAction);
+            Assert.IsTrue(rejectedAction.meta.aborted);
+            Assert.AreEqual("reason", rejectedAction.meta.reason);
+
+            // the thunk is complete, aborting it again does nothing
+            Assert.DoesNotThrow(() => thunkApi.Abort("reason"));
+        }
+
+        [UnityTest]
         public IEnumerator Store_DispatchAsyncThunk_CanBeRejectedWithValue()
         {
             var asyncThunk = new AsyncThunkCreator<string, string>(

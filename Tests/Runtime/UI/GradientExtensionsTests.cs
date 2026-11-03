@@ -99,5 +99,22 @@ namespace Unity.AppUI.Tests.UI
             result = GradientExtensions.TryParse("Blend:[0.0,#000000FF];[1.0,#FFFFFFFF]+[0.0,1.0];[toto,1.0]", out _);
             Assert.IsFalse(result);
         }
+
+        [Test]
+        public void TryParse_SingleValueKey_ReturnsFalse()
+        {
+            var result = GradientExtensions.TryParse("Blend:(0);(1,#0000FFFF)+(0,1);(1,1)", out _);
+            Assert.IsFalse(result);
+
+            result = GradientExtensions.TryParse("Blend:(0,#FF0000FF);(1,#0000FFFF)+(0);(1,1)", out _);
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void TryParse_KeysWithSurroundingSpaces_ReturnsTrue()
+        {
+            var result = GradientExtensions.TryParse("Blend:(0,#FF0000FF);  (1,#0000FFFF)+(0,1); (1,1) ", out _);
+            Assert.IsTrue(result);
+        }
     }
 }

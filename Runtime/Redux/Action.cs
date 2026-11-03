@@ -143,8 +143,15 @@ namespace Unity.AppUI.Redux
             if (ReferenceEquals(this, other)) return true;
             if (other is null || GetType() != other.GetType())
                 return false;
-            return type == other.type;
+            return type == other.type && PayloadEquals(other);
         }
+
+        /// <summary>
+        /// Compares the payload of this action with the payload of another action of the same runtime type.
+        /// </summary>
+        /// <param name="other"> An action whose runtime type is the same as this one. </param>
+        /// <returns> True if the payloads are equal, or if the action has no payload. </returns>
+        internal virtual bool PayloadEquals(Action other) => true;
 
         /// <inheritdoc/>
         public override int GetHashCode()
@@ -183,10 +190,17 @@ namespace Unity.AppUI.Redux
             return Equals(obj as Action<TPayload>);
         }
 
+        // Called by Action.Equals(Action), so IEquatable<Action> compares the payload too.
+        internal override bool PayloadEquals(Action other)
+        {
+            return other is Action<TPayload> typed && EqualityComparer<TPayload>.Default.Equals(payload, typed.payload);
+        }
+
         /// <inheritdoc/>
         public bool Equals(Action<TPayload> other)
         {
-            return base.Equals(other) && EqualityComparer<TPayload>.Default.Equals(payload, other!.payload);
+            // Action.Equals(Action) compares the payload through PayloadEquals.
+            return base.Equals(other);
         }
 
         /// <inheritdoc/>
