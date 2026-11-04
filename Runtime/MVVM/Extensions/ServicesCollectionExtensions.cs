@@ -338,7 +338,7 @@ namespace Unity.AppUI.MVVM
             if (serviceType == null)
                 throw new ArgumentNullException(nameof(serviceType));
 
-            return serviceCollection.AddScoped(serviceType, serviceType);
+            return serviceCollection.TryAddScoped(serviceType, serviceType);
         }
 
         /// <summary>
@@ -456,7 +456,7 @@ namespace Unity.AppUI.MVVM
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
 
-            return serviceCollection.TryAddScoped(typeof(TService), typeof(TService));
+            return serviceCollection.TryAddTransient(typeof(TService), typeof(TService));
         }
 
         /// <summary>
@@ -474,7 +474,7 @@ namespace Unity.AppUI.MVVM
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
 
-            return serviceCollection.TryAddScoped(typeof(TService), typeof(TImplementation));
+            return serviceCollection.TryAddTransient(typeof(TService), typeof(TImplementation));
         }
 
         /// <summary>
@@ -492,7 +492,7 @@ namespace Unity.AppUI.MVVM
             if (serviceType == null)
                 throw new ArgumentNullException(nameof(serviceType));
 
-            return serviceCollection.AddScoped(serviceType, serviceType);
+            return serviceCollection.TryAddTransient(serviceType, serviceType);
         }
 
         /// <summary>

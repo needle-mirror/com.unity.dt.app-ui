@@ -63,7 +63,9 @@ namespace Unity.AppUI.Core
         /// <returns> A hash code for the current object.</returns>
         public override int GetHashCode()
         {
-            return HashCode.Combine(deltaMagnification, (int) state);
+            // deltaMagnification is left out: Equals compares it with a tolerance,
+            // so no hash of its value can stay equal for every pair Equals accepts.
+            return ((int) state).GetHashCode();
         }
 
         /// <summary>

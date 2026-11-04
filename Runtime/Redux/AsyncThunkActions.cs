@@ -57,7 +57,16 @@ namespace Unity.AppUI.Redux
         /// <inheritdoc/>
         public bool Equals(PendingAction<TArg,TPayload> other)
         {
-            return base.Equals(other) && EqualityComparer<PendingMeta<TArg>>.Default.Equals(meta, other!.meta);
+            return EqualsCore(other);
+        }
+
+        // Compare the meta too when called through IEquatable<Action> or IEquatable<Action<TPayload>>.
+        internal override bool EqualsCore(Action other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            // The base check guarantees other has this exact runtime type.
+            return base.EqualsCore(other) &&
+                EqualityComparer<PendingMeta<TArg>>.Default.Equals(meta, ((PendingAction<TArg,TPayload>)other).meta);
         }
 
         /// <inheritdoc/>
@@ -96,7 +105,16 @@ namespace Unity.AppUI.Redux
         /// <inheritdoc/>
         public bool Equals(FulfilledAction<TArg,TPayload> other)
         {
-            return base.Equals(other) && EqualityComparer<FulfilledMeta<TArg>>.Default.Equals(meta, other!.meta);
+            return EqualsCore(other);
+        }
+
+        // Compare the meta too when called through IEquatable<Action> or IEquatable<Action<TPayload>>.
+        internal override bool EqualsCore(Action other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            // The base check guarantees other has this exact runtime type.
+            return base.EqualsCore(other) &&
+                EqualityComparer<FulfilledMeta<TArg>>.Default.Equals(meta, ((FulfilledAction<TArg,TPayload>)other).meta);
         }
 
         /// <inheritdoc/>
@@ -135,7 +153,16 @@ namespace Unity.AppUI.Redux
         /// <inheritdoc/>
         public bool Equals(RejectedAction<TArg,TPayload> other)
         {
-            return base.Equals(other) && EqualityComparer<RejectedMeta<TArg>>.Default.Equals(meta, other!.meta);
+            return EqualsCore(other);
+        }
+
+        // Compare the meta too when called through IEquatable<Action> or IEquatable<Action<TPayload>>.
+        internal override bool EqualsCore(Action other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            // The base check guarantees other has this exact runtime type.
+            return base.EqualsCore(other) &&
+                EqualityComparer<RejectedMeta<TArg>>.Default.Equals(meta, ((RejectedAction<TArg,TPayload>)other).meta);
         }
 
         /// <inheritdoc/>
@@ -198,8 +225,17 @@ namespace Unity.AppUI.Redux
         /// <inheritdoc/>
         public bool Equals(AsyncThunkAction<TArg, TPayload> other)
         {
-            return base.Equals(other) &&
-                EqualityComparer<AsyncThunkCreator<TArg,TPayload>>.Default.Equals(creator, other!.creator);
+            return EqualsCore(other);
+        }
+
+        // Compare the creator too when called through IEquatable<Action> or IEquatable<Action<TArg>>.
+        internal override bool EqualsCore(Action other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            // The base check guarantees other has this exact runtime type.
+            return base.EqualsCore(other) &&
+                EqualityComparer<AsyncThunkCreator<TArg,TPayload>>.Default.Equals(
+                    creator, ((AsyncThunkAction<TArg,TPayload>)other).creator);
         }
 
         /// <inheritdoc/>
