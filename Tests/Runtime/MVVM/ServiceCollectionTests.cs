@@ -98,5 +98,32 @@ namespace Unity.AppUI.Tests.MVVM
             Assert.DoesNotThrow(() => services.Add(other));
             Assert.AreEqual(2, services.Count);
         }
+
+        static IEnumerable<TestCaseData> TryAddCases()
+        {
+            yield return new TestCaseData(ServiceLifetime.Singleton, (Action<IServiceCollection>)(s => s.TryAddSingleton<IServiceTest, ServiceTest>()), typeof(IServiceTest)).SetName("TryAddSingleton<TService, TImplementation>");
+            yield return new TestCaseData(ServiceLifetime.Singleton, (Action<IServiceCollection>)(s => s.TryAddSingleton<ServiceTest>()), typeof(ServiceTest)).SetName("TryAddSingleton<TService>");
+            yield return new TestCaseData(ServiceLifetime.Singleton, (Action<IServiceCollection>)(s => s.TryAddSingleton(typeof(ServiceTest))), typeof(ServiceTest)).SetName("TryAddSingleton(Type)");
+            yield return new TestCaseData(ServiceLifetime.Scoped, (Action<IServiceCollection>)(s => s.TryAddScoped<IServiceTest, ServiceTest>()), typeof(IServiceTest)).SetName("TryAddScoped<TService, TImplementation>");
+            yield return new TestCaseData(ServiceLifetime.Scoped, (Action<IServiceCollection>)(s => s.TryAddScoped<ServiceTest>()), typeof(ServiceTest)).SetName("TryAddScoped<TService>");
+            yield return new TestCaseData(ServiceLifetime.Scoped, (Action<IServiceCollection>)(s => s.TryAddScoped(typeof(ServiceTest))), typeof(ServiceTest)).SetName("TryAddScoped(Type)");
+            yield return new TestCaseData(ServiceLifetime.Transient, (Action<IServiceCollection>)(s => s.TryAddTransient<IServiceTest, ServiceTest>()), typeof(IServiceTest)).SetName("TryAddTransient<TService, TImplementation>");
+            yield return new TestCaseData(ServiceLifetime.Transient, (Action<IServiceCollection>)(s => s.TryAddTransient<ServiceTest>()), typeof(ServiceTest)).SetName("TryAddTransient<TService>");
+            yield return new TestCaseData(ServiceLifetime.Transient, (Action<IServiceCollection>)(s => s.TryAddTransient(typeof(ServiceTest))), typeof(ServiceTest)).SetName("TryAddTransient(Type)");
+        }
+
+        [Test]
+        [TestCaseSource(nameof(TryAddCases))]
+        public void ServiceCollection_TryAdd_UsesLifetimeAndAddsOnce(ServiceLifetime lifetime, Action<IServiceCollection> tryAdd, Type serviceType)
+        {
+            var services = new ServiceCollection();
+
+            tryAdd(services);
+            tryAdd(services);
+
+            Assert.AreEqual(1, services.Count);
+            Assert.AreEqual(serviceType, services[0].serviceType);
+            Assert.AreEqual(lifetime, services[0].lifetime);
+        }
     }
 }

@@ -140,6 +140,17 @@ namespace Unity.AppUI.Redux
         /// <inheritdoc/>
         public bool Equals(Action other)
         {
+            return EqualsCore(other);
+        }
+
+        /// <summary>
+        /// Compares this action with another one. Derived actions override it to compare their payload,
+        /// so the result does not depend on the static type the comparison goes through.
+        /// </summary>
+        /// <param name="other"> The action to compare with. </param>
+        /// <returns> True if both actions have the same runtime type and the same content. </returns>
+        internal virtual bool EqualsCore(Action other)
+        {
             if (ReferenceEquals(this, other)) return true;
             if (other is null || GetType() != other.GetType())
                 return false;
@@ -186,7 +197,16 @@ namespace Unity.AppUI.Redux
         /// <inheritdoc/>
         public bool Equals(Action<TPayload> other)
         {
-            return base.Equals(other) && EqualityComparer<TPayload>.Default.Equals(payload, other!.payload);
+            return EqualsCore(other);
+        }
+
+        // Compare the payload too when called through IEquatable<Action>.
+        internal override bool EqualsCore(Action other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            // The base check guarantees other has this exact runtime type.
+            return base.EqualsCore(other) &&
+                EqualityComparer<TPayload>.Default.Equals(payload, ((Action<TPayload>)other).payload);
         }
 
         /// <inheritdoc/>

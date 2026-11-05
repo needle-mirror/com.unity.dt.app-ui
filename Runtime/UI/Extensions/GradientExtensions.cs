@@ -40,14 +40,15 @@ namespace Unity.AppUI.UI
 
             using var poolColor = ListPool<GradientColorKey>.Get(out var gradientColorKeys);
             var colorKeyItems = gradientItems[0].Split(';');
-            foreach (var item in colorKeyItems)
+            foreach (var rawItem in colorKeyItems)
             {
+                var item = rawItem.Trim();
                 if (item.Length < 3)
                     return false;
 
-                var valueList = item.Trim().Substring(1, item.Length - 2); // Remove brackets
+                var valueList = item.Substring(1, item.Length - 2); // Remove brackets
                 var colorKeys = valueList.Split(',');
-                if (colorKeys.Length is <= 0 or > 2)
+                if (colorKeys.Length != 2)
                     return false;
 
                 var success = float.TryParse(colorKeys[0], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var time);
@@ -61,14 +62,15 @@ namespace Unity.AppUI.UI
 
             using var poolAlpha = ListPool<GradientAlphaKey>.Get(out var gradientAlphaKeys);
             var alphaKeyItems = gradientItems[1].Split(';');
-            foreach (var item in alphaKeyItems)
+            foreach (var rawItem in alphaKeyItems)
             {
+                var item = rawItem.Trim();
                 if (item.Length < 3)
                     return false;
 
-                var valueList = item.Trim().Substring(1, item.Length - 2); // Remove brackets
+                var valueList = item.Substring(1, item.Length - 2); // Remove brackets
                 var alphaKeys = valueList.Split(',');
-                if (alphaKeys.Length is <= 0 or > 2)
+                if (alphaKeys.Length != 2)
                     return false;
 
                 var success = float.TryParse(alphaKeys[0], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var time);

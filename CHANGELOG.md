@@ -4,6 +4,57 @@ All notable changes to this package will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.1.16] - 2026-11-05
+
+### Fixed
+
+- `SwitchBuilder` runs every matching reducer case on the state returned by the previous one, so a slice no longer keeps only the last case's result. Several `AddDefault` calls now chain the same way.
+- `Action<TPayload>` instances with different payloads, and async thunk actions with different `meta` or creators, no longer compare as equal through `IEquatable<Action>`.
+- `StoreFactory.ComposeEnhancers` returns the identity enhancer when it is called with no enhancers instead of throwing.
+- The Redux DevTools no longer keep committed actions in `actionsById` when `maxAge` is set, and `Dispatch` accepts a `maxAge` of 0 or 1.
+- Async thunks run when DevTools is enabled through `StoreFactory.DefaultEnhancer`.
+- `IThunkAPI.Abort` cancels the async thunk instead of throwing when it is called on the main thread or from another thread, and so do `RejectWithValue` and `FulFillWithValue`.
+- `TryAddTransient` registers a transient service, and `TryAddTransient(Type)` and `TryAddScoped(Type)` add it only once.
+- `NavController.Navigate(Uri)` resolves deep links with two or more path segments.
+- `GradientExtensions.TryParse` returns false for a gradient key with a single value instead of throwing, and accepts keys with surrounding spaces.
+- `PinchGesture.GetHashCode` is equal for gestures that compare equal.
+
+## [2.2.6] - 2026-11-05
+
+### Fixed
+
+- `SwitchBuilder` runs every matching reducer case on the state returned by the previous one, so a slice no longer keeps only the last case's result. Several `AddDefault` calls now chain the same way.
+- `Action<TPayload>` instances with different payloads, and async thunk actions with different `meta` or creators, no longer compare as equal through `IEquatable<Action>`.
+- `StoreFactory.ComposeEnhancers` returns the identity enhancer when it is called with no enhancers instead of throwing.
+- The Redux DevTools no longer keep committed actions in `actionsById` when `maxAge` is set, and `Dispatch` accepts a `maxAge` of 0 or 1.
+- Async thunks run when DevTools is enabled through `StoreFactory.DefaultEnhancer`.
+- `IThunkAPI.Abort` cancels the async thunk instead of throwing when it is called on the main thread or from another thread, and so do `RejectWithValue` and `FulFillWithValue`.
+- `TryAddTransient` registers a transient service, and `TryAddTransient(Type)` and `TryAddScoped(Type)` add it only once.
+- `NavController.Navigate(Uri)` resolves deep links with two or more path segments.
+- `GradientExtensions.TryParse` returns false for a gradient key with a single value instead of throwing, and accepts keys with surrounding spaces.
+- `PinchGesture.GetHashCode` is equal for gestures that compare equal.
+
+## [2.3.1] - 2026-11-03
+
+### Fixed
+
+- `SwitchBuilder` runs every matching reducer case on the state returned by the previous one, so a slice no longer keeps only the last case's result. Several `AddDefault` calls now chain the same way.
+- `Action<TPayload>` instances with different payloads, and async thunk actions with different `meta` or creators, no longer compare as equal through `IEquatable<Action>`.
+- `StoreFactory.ComposeEnhancers` returns the identity enhancer when it is called with no enhancers instead of throwing.
+- The Redux DevTools no longer keep committed actions in `actionsById` when `maxAge` is set, and `Dispatch` accepts a `maxAge` of 0 or 1.
+- Async thunks run when DevTools is enabled through `StoreFactory.DefaultEnhancer`.
+- `IThunkAPI.Abort` cancels the async thunk instead of throwing when it is called on the main thread or from another thread, and so do `RejectWithValue` and `FulFillWithValue`.
+- `TryAddTransient` registers a transient service, and `TryAddTransient(Type)` and `TryAddScoped(Type)` add it only once.
+- `NavController.Navigate(Uri)` resolves deep links with two or more path segments.
+- `GradientExtensions.TryParse` returns false for a gradient key with a single value instead of throwing, and accepts keys with surrounding spaces.
+- `PinchGesture.GetHashCode` is equal for gestures that compare equal.
+
+## [2.3.0] - 2026-10-30
+
+### Added
+
+- Factory registration for the dependency injection container: `ServiceDescriptor.Singleton`, `Scoped` and `Transient` accept a `Func<IServiceProvider, object>` (or a generic `Func<IServiceProvider, TService>`), and `AddSingleton`, `AddScoped` and `AddTransient` have matching overloads. A factory can forward to another registration, so one singleton can be exposed under two interfaces. `ServiceDescriptor.Singleton<TService>(TService instance)`, a public `ServiceDescriptor(Type, Func<IServiceProvider, object>, ServiceLifetime)` constructor and the `ServiceDescriptor.implementationFactory` property were added too.
+
 ## [2.1.15] - 2026-10-29
 
 ### Fixed

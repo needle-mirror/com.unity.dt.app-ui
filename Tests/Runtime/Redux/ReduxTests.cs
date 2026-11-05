@@ -107,6 +107,16 @@ namespace Unity.AppUI.Tests.Redux
         }
 
         [Test]
+        public void CanComposeNoEnhancers()
+        {
+            StoreEnhancer<PartitionedState> composedEnhancer = null;
+            Assert.DoesNotThrow(() => composedEnhancer = StoreFactory.ComposeEnhancers<PartitionedState>());
+            Assert.IsNotNull(composedEnhancer);
+            var store = StoreFactory.CreateStore((state, _) => state, new PartitionedState(), composedEnhancer);
+            Assert.IsNotNull(store);
+        }
+
+        [Test]
         public void CanCombineReducers()
         {
             Reducer<PartitionedState> combinedReducer = null;
@@ -119,6 +129,83 @@ namespace Unity.AppUI.Tests.Redux
             }));
             Assert.IsNotNull(combinedReducer);
             Assert.DoesNotThrow(() => combinedReducer.Invoke(new PartitionedState(), new Action("")));
+        }
+
+        [Test]
+        public void ActionsWithDifferentPayloadsShouldNotBeEqual()
+        {
+            var setAction = new ActionCreator<int>("counter/Set");
+            Action one = setAction.Invoke(1);
+            Action other = setAction.Invoke(2);
+            Action same = setAction.Invoke(1);
+
+            Assert.IsFalse(((IEquatable<Action>)one).Equals(other));
+            Assert.IsFalse(one.Equals(other));
+            Assert.IsFalse(one.Equals((object)other));
+            Assert.IsFalse(EqualityComparer<Action>.Default.Equals(one, other));
+
+            Assert.IsTrue(((IEquatable<Action>)one).Equals(same));
+            Assert.IsTrue(one.Equals((object)same));
+            Assert.IsTrue(EqualityComparer<Action>.Default.Equals(one, same));
+            Assert.AreEqual(one.GetHashCode(), same.GetHashCode());
+
+            Assert.IsFalse(one.Equals(new Action("counter/Set")));
+            Assert.IsFalse(new Action("counter/Set").Equals(one));
+        }
+
+        [Test]
+        public void ThunkActionsWithDifferentMetaOrCreatorShouldNotBeEqual()
+        {
+            var thunk = new AsyncThunkCreator<int, string>("thunk/Equality", _ => Task.FromResult("done"));
+
+            static void AssertDiffer<T>(T one, T other, T same) where T : Action
+            {
+                Assert.IsFalse(((IEquatable<Action>)one).Equals(other));
+                Assert.IsFalse(((IEquatable<T>)one).Equals(other));
+                Assert.IsFalse(one.Equals((object)other));
+                Assert.IsFalse(EqualityComparer<Action>.Default.Equals(one, other));
+
+                Assert.IsTrue(((IEquatable<Action>)one).Equals(same));
+                Assert.IsTrue(((IEquatable<T>)one).Equals(same));
+                Assert.IsTrue(one.Equals((object)same));
+                Assert.IsTrue(EqualityComparer<Action>.Default.Equals(one, same));
+                Assert.AreEqual(one.GetHashCode(), same.GetHashCode());
+            }
+
+            AssertDiffer(
+                thunk.pending.Invoke(new PendingMeta<int> { requestId = "a", arg = 1 }),
+                thunk.pending.Invoke(new PendingMeta<int> { requestId = "b", arg = 1 }),
+                thunk.pending.Invoke(new PendingMeta<int> { requestId = "a", arg = 1 }));
+            AssertDiffer(
+                thunk.fulfilled.Invoke("done", new FulfilledMeta<int> { requestId = "a", arg = 1 }),
+                thunk.fulfilled.Invoke("done", new FulfilledMeta<int> { requestId = "b", arg = 1 }),
+                thunk.fulfilled.Invoke("done", new FulfilledMeta<int> { requestId = "a", arg = 1 }));
+            AssertDiffer(
+                thunk.rejected.Invoke(new RejectedMeta<int> { requestId = "a", arg = 1 }, "error"),
+                thunk.rejected.Invoke(new RejectedMeta<int> { requestId = "b", arg = 1 }, "error"),
+                thunk.rejected.Invoke(new RejectedMeta<int> { requestId = "a", arg = 1 }, "error"));
+
+            // A second creator with the same type string yields actions with the same type and argument.
+            var otherThunk = new AsyncThunkCreator<int, string>("thunk/Equality", _ => Task.FromResult("done"));
+            AssertDiffer(thunk.Invoke(1), otherThunk.Invoke(1), thunk.Invoke(1));
+        }
+
+        [Test]
+        public void ShouldChainEveryMatchingReducer()
+        {
+            var increment = new ActionCreator("chain/Increment");
+            var slice = StoreFactory.CreateSlice("chain", new CounterState(0),
+                reducers => reducers.AddCase(increment, Increment),
+                extraReducers =>
+                {
+                    extraReducers.AddCase(action => action.type == increment.type, Increment);
+                    extraReducers.AddCase(action => action.type.StartsWith("chain/"), Increment);
+                    extraReducers.AddDefault(Decrement);
+                    extraReducers.AddDefault(Decrement);
+                });
+
+            Assert.AreEqual(3, slice.reducer(new CounterState(0), increment.Invoke()).value);
+            Assert.AreEqual(-2, slice.reducer(new CounterState(0), new Action("other")).value);
         }
 
         [Test, Order(1)]
