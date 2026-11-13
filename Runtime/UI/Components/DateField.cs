@@ -38,7 +38,7 @@ namespace Unity.AppUI.UI
     /// <code lang="csharp"><![CDATA[
     /// var dateField = new DateField {
     ///     formatString = "MM/dd/yyyy",
-    ///     size = Size.L
+    ///     size = Size.Lg
     /// };
     ///
     /// dateField.validateValue = (date) => {
@@ -55,7 +55,7 @@ namespace Unity.AppUI.UI
     /// <code lang="xml"><![CDATA[
     /// <DateField
     ///     name="appointmentDate"
-    ///     size="M"
+    ///     size="Md"
     ///     format-string="yyyy-MM-dd"
     ///     value="2024-01-01"
     ///     class="appointment-picker" />
@@ -145,13 +145,13 @@ namespace Unity.AppUI.UI
             };
             m_PickerButton.AddToClassList(pickerButtonUssClassName);
             m_PickerButton.AddManipulator(new Pressable(OnClick));
-            var icon = new Icon { iconName = "calendar", pickingMode = PickingMode.Ignore };
+            var icon = new Icon { primary = true, iconName = "calendar", pickingMode = PickingMode.Ignore };
             m_PickerButton.Add(icon);
 
             hierarchy.Add(m_InputElement);
             hierarchy.Add(m_PickerButton);
 
-            size = Size.M;
+            size = Size.Md;
             SetValueWithoutNotify(Date.now);
             formatString = "yyyy-MM-dd";
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));

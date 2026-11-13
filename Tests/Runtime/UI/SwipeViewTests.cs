@@ -13,7 +13,31 @@ namespace Unity.AppUI.Tests.UI
     [TestOf(typeof(SwipeView))]
     class SwipeViewTests : VisualElementTests<SwipeView>
     {
+
+        // An empty SwipeView lays out to nothing, and it has no intrinsic size either.
+        protected override IEnumerable<Story> stories
+        {
+            get
+            {
+                yield return new Story("Default", (ctx) =>
+                {
+                    var view = new SwipeView { style = { width = 240, height = 120 } };
+                    for (var i = 1; i <= 3; i++)
+                    {
+                        var item = new SwipeViewItem();
+                        item.Add(new Text($"Item {i}"));
+                        view.Add(item);
+                    }
+                    return view;
+                });
+            }
+        }
+
         protected override string mainUssClassName => SwipeView.ussClassName;
+
+        // Handed over to SwipeViewSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
 
         protected override IEnumerable<string> uxmlTestCases => new[]
         {

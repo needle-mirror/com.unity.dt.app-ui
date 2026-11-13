@@ -25,17 +25,17 @@
   padding: var(--appui-alias-control-gap-md) 0;
 }
 
-.appui-heading--size-s {
+.appui-heading--size-sm {
   font-size: var(--appui-font-sizes-heading-sm);
   padding: var(--appui-alias-control-gap-md) 0;
 }
 
-.appui-heading--size-m {
+.appui-heading--size-md {
   font-size: var(--appui-font-sizes-heading-md);
   padding: var(--appui-alias-control-gap-md) 0;
 }
 
-.appui-heading--size-l {
+.appui-heading--size-lg {
   font-size: var(--appui-font-sizes-heading-lg);
   padding: var(--appui-alias-control-gap-xl) 0;
   letter-spacing: -1px;

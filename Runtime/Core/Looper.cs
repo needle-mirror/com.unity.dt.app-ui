@@ -23,6 +23,11 @@ namespace Unity.AppUI.Core
 
         readonly ConcurrentQueue<Message> m_PendingMessages;
 
+        // Held for every enqueue, dequeue, clear and filter of both queues, so a filter's snapshot, clear
+        // and restore is atomic: a message posted or consumed on another thread in between is never lost
+        // or restored after it was handled. Never held while a message is handled.
+        readonly object m_QueueLock = new object();
+
         static Looper s_MainLooper;
 
         /// <summary>
@@ -82,7 +87,7 @@ namespace Unity.AppUI.Core
                 return;
 
             var dequeuedMessages = 0;
-            while (dequeuedMessages < k_MaxMessagesPerFrame && queue.TryDequeue(out var msg))
+            while (dequeuedMessages < k_MaxMessagesPerFrame && TryDequeue(out var msg))
             {
                 if (msg.target.HandleMessage(msg))
                 {
@@ -91,7 +96,8 @@ namespace Unity.AppUI.Core
                 else
                 {
                     // not handled yet, put the message in the queue again
-                    queue.Enqueue(msg);
+                    lock (m_QueueLock)
+                        queue.Enqueue(msg);
                 }
 
                 dequeuedMessages++;
@@ -106,7 +112,8 @@ namespace Unity.AppUI.Core
         {
             m_LoopItem?.Pause();
             m_LoopItem = null;
-            queue.Clear();
+            lock (m_QueueLock)
+                queue.Clear();
             m_InLoop = false;
             m_Exiting = true;
         }
@@ -118,8 +125,13 @@ namespace Unity.AppUI.Core
         {
             m_LoopItem?.Pause();
             m_LoopItem = null;
-            var messages = queue.ToArray();
-            queue.Clear();
+            Message[] messages;
+            lock (m_QueueLock)
+            {
+                messages = queue.ToArray();
+                queue.Clear();
+            }
+
             foreach (var msg in messages)
             {
                 msg.target.HandleMessage(msg);
@@ -137,23 +149,29 @@ namespace Unity.AppUI.Core
 
             msg.scheduledTime = DateTime.Now.AddMilliseconds(delayMs);
 
-            if (delayMs <= 0)
+            lock (m_QueueLock)
             {
-                queue.Enqueue(msg);
+                if (delayMs <= 0)
+                    queue.Enqueue(msg);
+                else
+                    m_PendingMessages.Enqueue(msg);
+            }
+        }
+
+        internal void RemoveCallbacksAndMessages(object token, Handler target = null)
+        {
+            if (token == null && target == null)
+            {
+                lock (m_QueueLock)
+                {
+                    m_PendingMessages.Clear();
+                    queue.Clear();
+                }
+
                 return;
             }
 
-            m_PendingMessages.Enqueue(msg);
-        }
-
-        internal void RemoveCallbacksAndMessages(object token)
-        {
-            if (token == null)
-            {
-                m_PendingMessages.Clear();
-                queue.Clear();
-            }
-            else
+            lock (m_QueueLock)
             {
                 if (m_PendingMessages.Count > 0)
                 {
@@ -161,7 +179,7 @@ namespace Unity.AppUI.Core
                     m_PendingMessages.Clear();
                     foreach (var delayedMessage in delayedMessages)
                     {
-                        if (delayedMessage.obj != token)
+                        if (!Matches(delayedMessage, token, target))
                             m_PendingMessages.Enqueue(delayedMessage);
                     }
                 }
@@ -172,11 +190,22 @@ namespace Unity.AppUI.Core
                     queue.Clear();
                     foreach (var message in messages)
                     {
-                        if (message.obj != token)
+                        if (!Matches(message, token, target))
                             queue.Enqueue(message);
                     }
                 }
             }
+        }
+
+        bool TryDequeue(out Message msg)
+        {
+            lock (m_QueueLock)
+                return queue.TryDequeue(out msg);
+        }
+
+        static bool Matches(Message message, object token, Handler target)
+        {
+            return (target == null || message.target == target) && (token == null || message.obj == token);
         }
 
         void EnqueuePendingMessages()
@@ -185,14 +214,17 @@ namespace Unity.AppUI.Core
                 return;
 
             var now = DateTime.Now;
-            var delayedMessages = m_PendingMessages.ToArray();
-            m_PendingMessages.Clear();
-            foreach (var msg in delayedMessages)
+            lock (m_QueueLock)
             {
-                if (msg.scheduledTime > now)
-                    m_PendingMessages.Enqueue(msg);
-                else
-                    queue.Enqueue(msg);
+                var delayedMessages = m_PendingMessages.ToArray();
+                m_PendingMessages.Clear();
+                foreach (var msg in delayedMessages)
+                {
+                    if (msg.scheduledTime > now)
+                        m_PendingMessages.Enqueue(msg);
+                    else
+                        queue.Enqueue(msg);
+                }
             }
         }
     }

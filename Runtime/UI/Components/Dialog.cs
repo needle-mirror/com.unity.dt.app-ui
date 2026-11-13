@@ -6,10 +6,36 @@ using Unity.Properties;
 namespace Unity.AppUI.UI
 {
     /// <summary>
+    /// The width of a dialog. Each step reads its --appui-dialog-width-* token.
+    /// </summary>
+    public enum DialogSize
+    {
+        /// <summary>
+        /// Small, 400px.
+        /// </summary>
+        Sm = 1,
+
+        /// <summary>
+        /// Medium, 500px. This is the default.
+        /// </summary>
+        Md,
+
+        /// <summary>
+        /// Large, 640px.
+        /// </summary>
+        Lg,
+
+        /// <summary>
+        /// Extra large, 768px.
+        /// </summary>
+        Xl,
+    }
+
+    /// <summary>
     /// Base class for Dialogs (<see cref="Dialog"/>, <see cref="AlertDialog"/>, etc).
     /// </summary>
     [UxmlElement]
-    public abstract partial class BaseDialog : BaseVisualElement, ISizeableElement
+    public abstract partial class BaseDialog : BaseVisualElement
     {
 
         internal static readonly BindingId titlePropertyKey = new BindingId(nameof(title));
@@ -33,7 +59,7 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Dialog size styling class.
         /// </summary>
-        [EnumName("GetSizeUssClassName", typeof(Size))]
+        [EnumName("GetSizeUssClassName", typeof(DialogSize))]
         public const string sizeUssClassName = ussClassName + "--size-";
 
         /// <summary>
@@ -61,6 +87,9 @@ namespace Unity.AppUI.UI
         /// </summary>
         public const string buttonGroupUssClassName = ussClassName + "__buttongroup";
 
+        // The scroll view around the content. Internal so the fix ships without new public API.
+        internal const string contentScrollViewUssClassName = ussClassName + "__content-scroll";
+
         /// <summary>
         /// The container for the Dialog actions (buttons).
         /// </summary>
@@ -86,7 +115,11 @@ namespace Unity.AppUI.UI
         /// </summary>
         protected readonly VisualElement m_Heading;
 
-        Size m_Size;
+        // Holds m_Content, so content taller than the dialog's room scrolls between a pinned heading
+        // and a pinned footer instead of pushing the actions out of the dialog.
+        readonly ScrollView m_ContentScrollView;
+
+        DialogSize m_Size;
 
         /// <summary>
         /// Default constructor.
@@ -103,6 +136,14 @@ namespace Unity.AppUI.UI
             m_Divider.AddToClassList(dividerUssClassName);
             m_Content = new LocalizedTextElement { name = contentUssClassName };
             m_Content.AddToClassList(contentUssClassName);
+            m_ContentScrollView = new ScrollView(ScrollViewMode.Vertical) { name = contentScrollViewUssClassName };
+            m_ContentScrollView.AddToClassList(contentScrollViewUssClassName);
+            m_ContentScrollView.Add(m_Content);
+            // A ScrollView does not reveal a focused descendant on its own, so tabbing through a form
+            // taller than the dialog would land on fields scrolled out of sight. Registered on the
+            // content, not the scroll view, so focusing the scroll view's own scrollbar never asks it
+            // to scroll to an element outside its content (ScrollTo throws on that).
+            m_Content.RegisterCallback<FocusInEvent>(OnContentFocusIn);
             m_ActionContainer = new VisualElement { name = buttonGroupUssClassName };
             m_ActionContainer.AddToClassList(buttonGroupUssClassName);
 
@@ -110,11 +151,17 @@ namespace Unity.AppUI.UI
 
             hierarchy.Add(m_Heading);
             hierarchy.Add(m_Divider);
-            hierarchy.Add(m_Content);
+            hierarchy.Add(m_ContentScrollView);
             hierarchy.Add(m_ActionContainer);
 
-            size = Size.M;
+            size = DialogSize.Md;
             title = null;
+        }
+
+        void OnContentFocusIn(FocusInEvent evt)
+        {
+            if (evt.target is VisualElement focused)
+                m_ContentScrollView.ScrollTo(focused);
         }
 
         /// <summary>
@@ -186,7 +233,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         [CreateProperty]
         [UxmlAttribute]
-        public Size size
+        public DialogSize size
         {
             get => m_Size;
             set
@@ -229,7 +276,7 @@ namespace Unity.AppUI.UI
     /// {
     ///     title = "Welcome",
     ///     description = "Welcome to our application! We hope you enjoy using it.",
-    ///     size = Size.M,
+    ///     size = DialogSize.Md,
     ///     dismissable = true
     /// };
     ///
@@ -247,7 +294,7 @@ namespace Unity.AppUI.UI
     ///         <ui:Dialog
     ///             title="Settings"
     ///             description="Configure your application settings below."
-    ///             size="M"
+    ///             size="Md"
     ///             dismissable="true">
     ///             <!-- Add custom content here -->
     ///         </ui:Dialog>
@@ -297,7 +344,7 @@ namespace Unity.AppUI.UI
         /// </summary>
         public Dialog()
         {
-            closeButton = new Button(OnCloseButtonClicked) { name = closeButtonUssClassName, leadingIcon = "x" };
+            closeButton = new Button(OnCloseButtonClicked) { name = closeButtonUssClassName, leadingIcon = "x", variant = ButtonVariant.Ghost };
             closeButton.AddToClassList(closeButtonUssClassName);
             m_Heading.hierarchy.Add(closeButton);
 

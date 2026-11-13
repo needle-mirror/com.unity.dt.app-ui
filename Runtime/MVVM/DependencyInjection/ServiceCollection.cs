@@ -1,6 +1,7 @@
 // This file draws upon the concepts found in the ServiceCollection implementation from the .NET Runtime library (dotnet/runtime),
 // more information in Third Party Notices.md
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -12,6 +13,8 @@ namespace Unity.AppUI.MVVM
     public class ServiceCollection : IServiceCollection
     {
         readonly List<ServiceDescriptor> m_Descriptors = new List<ServiceDescriptor>();
+
+        internal bool m_IsReadOnly;
 
         /// <summary>
         /// Get an enumerator for the services.
@@ -37,6 +40,7 @@ namespace Unity.AppUI.MVVM
         /// <param name="item"> The service to add. </param>
         public void Add(ServiceDescriptor item)
         {
+            ThrowIfReadOnly();
             m_Descriptors.Add(item);
         }
 
@@ -45,6 +49,7 @@ namespace Unity.AppUI.MVVM
         /// </summary>
         public void Clear()
         {
+            ThrowIfReadOnly();
             m_Descriptors.Clear();
         }
 
@@ -75,6 +80,7 @@ namespace Unity.AppUI.MVVM
         /// <returns> True if the service was removed. </returns>
         public bool Remove(ServiceDescriptor item)
         {
+            ThrowIfReadOnly();
             return m_Descriptors.Remove(item);
         }
 
@@ -84,9 +90,9 @@ namespace Unity.AppUI.MVVM
         public int Count => m_Descriptors.Count;
 
         /// <summary>
-        /// The collection is not read-only.
+        /// Whether the collection is read-only.
         /// </summary>
-        public bool IsReadOnly => false;
+        public bool IsReadOnly => m_IsReadOnly;
 
         /// <summary>
         /// Get the index of a service in the collection.
@@ -105,6 +111,7 @@ namespace Unity.AppUI.MVVM
         /// <param name="item"> The service to insert. </param>
         public void Insert(int index, ServiceDescriptor item)
         {
+            ThrowIfReadOnly();
             m_Descriptors.Insert(index, item);
         }
 
@@ -114,6 +121,7 @@ namespace Unity.AppUI.MVVM
         /// <param name="index"> The index of the service to remove. </param>
         public void RemoveAt(int index)
         {
+            ThrowIfReadOnly();
             m_Descriptors.RemoveAt(index);
         }
 
@@ -124,7 +132,17 @@ namespace Unity.AppUI.MVVM
         public ServiceDescriptor this[int index]
         {
             get => m_Descriptors[index];
-            set => m_Descriptors[index] = value;
+            set
+            {
+                ThrowIfReadOnly();
+                m_Descriptors[index] = value;
+            }
+        }
+
+        void ThrowIfReadOnly()
+        {
+            if (m_IsReadOnly)
+                throw new InvalidOperationException("The service collection cannot be modified because it is read-only.");
         }
     }
 }

@@ -306,7 +306,7 @@ namespace Unity.AppUI.Editor
 
         const string k_StorybookDirPrefKey = "AppUI.Storybook.LayoutDirection";
 
-        const string k_StorybookScalePrefKey = "AppUI.Storybook.Scale";
+        const string k_StorybookDensityPrefKey = "AppUI.Storybook.Density";
 
         const string k_StorybookThemePrefKey = "AppUI.Storybook.Theme";
 
@@ -328,13 +328,13 @@ namespace Unity.AppUI.Editor
 
         string m_CurrentTheme = "dark";
 
-        string m_CurrentScale = "medium";
+        string m_CurrentDensity = "normal";
 
         Dir m_CurrentLayoutDirection = Dir.Ltr;
 
         EditorToolbarDropdown m_ThemeDropdown;
 
-        EditorToolbarDropdown m_ScaleDropdown;
+        EditorToolbarDropdown m_DensityDropdown;
 
         EditorToolbarDropdown m_LayoutDirectionDropdown;
 
@@ -382,7 +382,7 @@ namespace Unity.AppUI.Editor
         void CreateGUI()
         {
             m_CurrentTheme = EditorPrefs.GetString(k_StorybookThemePrefKey, "dark");
-            m_CurrentScale = EditorPrefs.GetString(k_StorybookScalePrefKey, "medium");
+            m_CurrentDensity = EditorPrefs.GetString(k_StorybookDensityPrefKey, "normal");
             m_CurrentLayoutDirection = (Dir)EditorPrefs.GetInt(k_StorybookDirPrefKey, (int)Dir.Ltr);
 
             var root = rootVisualElement;
@@ -489,7 +489,7 @@ namespace Unity.AppUI.Editor
             var panel = new Panel
             {
                 theme = m_CurrentTheme,
-                scale = m_CurrentScale,
+                density = m_CurrentDensity,
                 layoutDirection = m_CurrentLayoutDirection,
                 lang = m_CurrentLocaleId,
             };
@@ -525,30 +525,30 @@ namespace Unity.AppUI.Editor
             });
             toolbar.Add(m_ThemeDropdown);
 
-            m_ScaleDropdown = new EditorToolbarDropdown("Scale", () =>
+            m_DensityDropdown = new EditorToolbarDropdown("Density", () =>
             {
                 var menu = new GenericMenu();
-                menu.AddItem(new GUIContent("Small"), m_CurrentScale == "small", () =>
+                menu.AddItem(new GUIContent("Normal"), m_CurrentDensity == "normal", () =>
                 {
-                    m_CurrentScale = "small";
-                    EditorPrefs.SetString(k_StorybookScalePrefKey, m_CurrentScale);
-                    panel.scale = m_CurrentScale;
+                    m_CurrentDensity = "normal";
+                    EditorPrefs.SetString(k_StorybookDensityPrefKey, m_CurrentDensity);
+                    panel.density = m_CurrentDensity;
                 });
-                menu.AddItem(new GUIContent("Medium"), m_CurrentScale == "medium", () =>
+                menu.AddItem(new GUIContent("Compact"), m_CurrentDensity == "compact", () =>
                 {
-                    m_CurrentScale = "medium";
-                    EditorPrefs.SetString(k_StorybookScalePrefKey, m_CurrentScale);
-                    panel.scale = m_CurrentScale;
+                    m_CurrentDensity = "compact";
+                    EditorPrefs.SetString(k_StorybookDensityPrefKey, m_CurrentDensity);
+                    panel.density = m_CurrentDensity;
                 });
-                menu.AddItem(new GUIContent("Large"), m_CurrentScale == "large", () =>
+                menu.AddItem(new GUIContent("Comfort"), m_CurrentDensity == "comfort", () =>
                 {
-                    m_CurrentScale = "large";
-                    EditorPrefs.SetString(k_StorybookScalePrefKey, m_CurrentScale);
-                    panel.scale = m_CurrentScale;
+                    m_CurrentDensity = "comfort";
+                    EditorPrefs.SetString(k_StorybookDensityPrefKey, m_CurrentDensity);
+                    panel.density = m_CurrentDensity;
                 });
-                menu.DropDown(m_ScaleDropdown.worldBound);
+                menu.DropDown(m_DensityDropdown.worldBound);
             });
-            toolbar.Add(m_ScaleDropdown);
+            toolbar.Add(m_DensityDropdown);
 
             m_LayoutDirectionDropdown = new EditorToolbarDropdown("Layout Direction", () =>
             {
@@ -673,7 +673,7 @@ namespace Unity.AppUI.Editor
 
             var panel = container.GetFirstAncestorOfType<Panel>();
             panel.theme = m_CurrentTheme;
-            panel.scale = m_CurrentScale;
+            panel.density = m_CurrentDensity;
             panel.layoutDirection = m_CurrentLayoutDirection;
             panel.lang = m_CurrentLocaleId;
         }

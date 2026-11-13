@@ -1,0 +1,10 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--mac-os-fullscreen--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<rect width="16" height="16" fill="#000000"/>
+<g id="MacOS/fullscreen">
+<g id="Group">
+<path id="Combined Shape" d="M8 2.25C11.1756 2.25 13.75 4.82436 13.75 8C13.75 11.1756 11.1756 13.75 8 13.75C4.82436 13.75 2.25 11.1756 2.25 8C2.25 4.82436 4.82436 2.25 8 2.25Z" fill="#29CF42" stroke="#12AC28" stroke-width="0.5"/>
+</g>
+<path id="Rectangle Copy" d="M11 8.39642C11 8.61915 10.7307 8.73069 10.5732 8.5732L6.42678 4.42675C6.26928 4.26926 6.38083 3.99998 6.60355 3.99998H10.5C10.7761 3.99998 11 4.22383 11 4.49998V8.39642Z" fill="#006400"/>
+<path id="Rectangle Copy_2" d="M4.0962 6.6391C4.0962 6.41637 4.36548 6.30483 4.52297 6.46232L8.66942 10.6088C8.82691 10.7663 8.71537 11.0355 8.49264 11.0355H4.5962C4.32005 11.0355 4.0962 10.8117 4.0962 10.5355V6.6391Z" fill="#006400"/>
+</g>
+</svg>

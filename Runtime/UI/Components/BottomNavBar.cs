@@ -322,7 +322,7 @@ namespace Unity.AppUI.UI
             tabIndex = 0;
             clickable = new Pressable(clickHandler);
 
-            m_Icon = new Icon { iconName = icon, variant = IconVariant.Regular, pickingMode = PickingMode.Ignore };
+            m_Icon = new Icon { primary = true, iconName = icon, variant = IconVariant.Regular, pickingMode = PickingMode.Ignore };
             m_Icon.AddToClassList(iconUssClassName);
             hierarchy.Add(m_Icon);
 

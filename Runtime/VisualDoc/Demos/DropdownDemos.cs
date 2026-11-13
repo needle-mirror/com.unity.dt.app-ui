@@ -12,13 +12,13 @@ namespace Unity.AppUI.VisualDoc
         {
             var items = new List<string> { "Option 1", "Option 2", "Option 3" };
 
-            var small = new Dropdown { sourceItems = items, size = Size.S };
+            var small = new Dropdown { sourceItems = items, size = Size.Sm };
             small.AddToClassList("demo-field");
 
-            var medium = new Dropdown { sourceItems = items, size = Size.M };
+            var medium = new Dropdown { sourceItems = items, size = Size.Md };
             medium.AddToClassList("demo-field");
 
-            var large = new Dropdown { sourceItems = items, size = Size.L };
+            var large = new Dropdown { sourceItems = items, size = Size.Lg };
             large.AddToClassList("demo-field");
 
             return DemoUtils.Row(small, medium, large);

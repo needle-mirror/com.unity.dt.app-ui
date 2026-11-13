@@ -1,5 +1,6 @@
 using Markdig.Renderers;
 using Markdig.Syntax.Inlines;
+using Unity.AppUI.Core;
 
 namespace Unity.AppUI.Markdown.Renderers.Inlines
 {
@@ -10,6 +11,11 @@ namespace Unity.AppUI.Markdown.Renderers.Inlines
     /// Image links emit their alt text and the URL as plain text — fetching remote bitmaps is
     /// out of scope for this renderer.
     /// </summary>
+    /// <remarks>
+    /// Only destinations accepted by <see cref="HrefUtils.IsSafeHref"/> become clickable; anything
+    /// else (<c>javascript:</c>, <c>data:</c>, <c>file:</c>, custom app schemes, …) renders as
+    /// plain non-clickable text.
+    /// </remarks>
     public sealed class LinkInlineRenderer : MarkdownObjectRenderer<UITKMarkdownRenderer, LinkInline>
     {
         const string k_Color = "#4FC1FF";
@@ -18,7 +24,7 @@ namespace Unity.AppUI.Markdown.Renderers.Inlines
         /// UITK rich-text <c>href</c> values are limited to 256 characters; URLs longer than
         /// this are emitted as plain underlined text without a clickable href.
         /// </summary>
-        public const int maxHrefLength = 256;
+        public const int maxHrefLength = HrefUtils.maxHrefLength;
 
         /// <inheritdoc />
         protected override void Write(UITKMarkdownRenderer renderer, LinkInline obj)
@@ -32,12 +38,12 @@ namespace Unity.AppUI.Markdown.Renderers.Inlines
                 renderer.WriteChildren(obj);
                 renderer.InlineBuilder.Append(']');
                 if (!string.IsNullOrEmpty(url))
-                    renderer.InlineBuilder.Append("(").Append(url).Append(")");
+                    renderer.InlineBuilder.Append("(").Append(RichTextUtils.Escape(url)).Append(")");
                 return;
             }
 
-            var href = EscapeHref(url);
-            var clickable = !string.IsNullOrEmpty(href) && href.Length <= maxHrefLength;
+            var clickable = HrefUtils.IsSafeHref(url);
+            var href = clickable ? HrefUtils.EscapeHref(url) : string.Empty;
 
             if (clickable)
                 renderer.InlineBuilder.Append("<a href=\"").Append(href).Append("\">");
@@ -48,13 +54,6 @@ namespace Unity.AppUI.Markdown.Renderers.Inlines
 
             if (clickable)
                 renderer.InlineBuilder.Append("</a>");
-        }
-
-        static string EscapeHref(string url)
-        {
-            if (string.IsNullOrEmpty(url))
-                return string.Empty;
-            return url.Replace("\"", "&quot;");
         }
     }
 }

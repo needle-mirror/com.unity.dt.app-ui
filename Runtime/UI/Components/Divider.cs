@@ -25,7 +25,7 @@ namespace Unity.AppUI.UI
     /// ]]></code>
     /// <para>Custom styled divider — customized divider with specific size and spacing.</para>
     /// <code lang="xml"><![CDATA[
-    /// <Divider direction="Horizontal" size="L" spacing="XL" />
+    /// <Divider direction="Horizontal" size="Lg" spacing="XL" />
     /// ]]></code>
     /// <para>Using dividers in a layout — example of using dividers in a complex layout.</para>
     /// <code lang="xml"><![CDATA[
@@ -37,7 +37,7 @@ namespace Unity.AppUI.UI
     ///         <Box>
     ///             <Text text="Left Content" />
     ///         </Box>
-    ///         <Divider direction="Vertical" size="S" spacing="S" />
+    ///         <Divider direction="Vertical" size="Sm" spacing="S" />
     ///         <Box>
     ///             <Text text="Right Content" />
     ///         </Box>
@@ -111,7 +111,7 @@ namespace Unity.AppUI.UI
 
             pickingMode = PickingMode.Ignore;
 
-            size = Size.M;
+            size = Size.Md;
             spacing = Spacing.M;
             direction = Direction.Horizontal;
         }

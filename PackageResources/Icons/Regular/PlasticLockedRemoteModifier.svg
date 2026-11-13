@@ -1,0 +1,6 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--plastic-locked-remote-modifier--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<g id="Plastic/LockedRemoteModifier">
+<path id="Union" d="M8 9.5C8 7.567 9.567 6 11.5 6C13.433 6 15 7.567 15 9.5V10.0854C15.5826 10.2913 16 10.8469 16 11.5V14.5C16 15.3284 15.3284 16 14.5 16H8.5C7.67157 16 7 15.3284 7 14.5V11.5C7 10.8469 7.4174 10.2913 8 10.0854V9.5Z" fill="#000000"/>
+<path id="Union_2" fill-rule="evenodd" clip-rule="evenodd" d="M9 11V9.5C9 8.11929 10.1193 7 11.5 7C12.8807 7 14 8.11929 14 9.5V11C14.5523 11 15 11.4477 15 12V14C15 14.5523 14.5523 15 14 15H9C8.44772 15 8 14.5523 8 14V12C8 11.4477 8.44772 11 9 11ZM10 9.5C10 8.67157 10.6716 8 11.5 8C12.3284 8 13 8.67157 13 9.5V11H10V9.5Z" fill="#0C6CCB"/>
+</g>
+</svg>

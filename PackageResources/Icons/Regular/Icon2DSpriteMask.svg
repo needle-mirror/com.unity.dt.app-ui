@@ -1,0 +1,6 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--icon-2-d-sprite-mask--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 15C3.32843 15 4 14.3284 4 13.5C4 12.6716 3.32843 12 2.5 12C1.67157 12 1 12.6716 1 13.5C1 14.3284 1.67157 15 2.5 15Z" fill="#673AB7"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M4 5.5C4 6.32843 3.32843 7 2.5 7C1.67157 7 1 6.32843 1 5.5C1 4.67157 1.67157 4 2.5 4C3.32843 4 4 4.67157 4 5.5ZM12 13.5C12 14.3284 11.3284 15 10.5 15C9.67157 15 9 14.3284 9 13.5C9 12.6716 9.67157 12 10.5 12C11.3284 12 12 12.6716 12 13.5Z" fill="#673AB7"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M4 5H2V14H11V12H10V13H3V6H4V5Z" fill="#673AB7"/>
+<rect x="5" y="1" width="10" height="10" rx="1" fill="#555555"/>
+</svg>

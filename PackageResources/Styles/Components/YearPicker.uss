@@ -35,6 +35,7 @@
     color: var(--appui-foregrounds-200);
 }
 
+/* Disabled is the disabled text colour, never opacity, which compounds down a disabled subtree. */
 .appui-text.appui-date-picker-pane__year-button:disabled {
-    opacity: 0.5;
+    color: var(--appui-alias-text-disabled);
 }

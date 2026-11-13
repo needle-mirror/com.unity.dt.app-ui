@@ -289,12 +289,34 @@ namespace Unity.AppUI.UI
             }
         }
 
+        // An explicit pan gesture -- a middle press, or a primary press with the pan modifier held -- is
+        // taken here, in the capture phase, before the content under the pointer sees it. A pan starts
+        // whatever is under the cursor, so it selects, drags, connects or focuses nothing.
         void OnPointerDownTrickleDown(PointerDownEvent evt)
         {
             m_Velocity = Vector2.zero;
             StopAnyDampingEffect();
+
+            if (target.panel == null || target.panel.GetCapturingElement(evt.pointerId) != null)
+                return;
+
+            if (evt.pointerId != PointerId.mousePointerId)
+                return;
+
+            var hasPanModifier = controlScheme switch
+            {
+                CanvasControlScheme.Modern => m_SpaceBarPressed,
+                CanvasControlScheme.Editor => evt.altKey,
+                _ => m_SpaceBarPressed
+            };
+
+            if (evt.button == (int)MouseButton.MiddleMouse ||
+                (evt.button == (int)MouseButton.LeftMouse && hasPanModifier))
+                StartPan(evt);
         }
 
+        // What is left for the bubble phase: the hand tool's plain primary press and touch. Both stay
+        // here so a press the content handles (a node's drag, a tap that selects) still wins.
         void OnPointerDown(PointerDownEvent evt)
         {
             if (target.panel == null || target.panel.GetCapturingElement(evt.pointerId) != null)
@@ -308,28 +330,21 @@ namespace Unity.AppUI.UI
                 return;
             }
 
-            var hasModifierPressed = controlScheme switch
-            {
-                CanvasControlScheme.Modern => m_SpaceBarPressed,
-                CanvasControlScheme.Editor => evt.altKey,
-                _ => m_SpaceBarPressed
-            } || primaryManipulator == CanvasManipulator.Pan;
-
-            if (evt.button == (int)MouseButton.MiddleMouse ||
-                (evt.button == (int)MouseButton.LeftMouse && hasModifierPressed) ||
+            if ((evt.button == (int)MouseButton.LeftMouse && primaryManipulator == CanvasManipulator.Pan) ||
                 (evt.pointerId != PointerId.mousePointerId && (Application.isMobilePlatform ? evt.isPrimary : true)))
-            {
-                if (!target.HasPointerCapture(evt.pointerId))
-                {
-                    target.CapturePointer(evt.pointerId);
-                }
+                StartPan(evt);
+        }
 
-                evt.StopPropagation();
-                m_PointerId = evt.pointerId;
-                m_PointerPosition = evt.localPosition;
-                m_LastTimestamp = evt.timestamp;
-                grabMode = GrabMode.Grabbing;
-            }
+        void StartPan(PointerDownEvent evt)
+        {
+            if (!target.HasPointerCapture(evt.pointerId))
+                target.CapturePointer(evt.pointerId);
+
+            evt.StopPropagation();
+            m_PointerId = evt.pointerId;
+            m_PointerPosition = evt.localPosition;
+            m_LastTimestamp = evt.timestamp;
+            grabMode = GrabMode.Grabbing;
         }
 
         void OnPointerUp(PointerUpEvent evt)

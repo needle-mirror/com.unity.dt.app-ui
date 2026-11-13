@@ -12,29 +12,31 @@ namespace Unity.AppUI.UI
     public enum IconSize
     {
         /// <summary>
-        /// Extra extra small
+        /// Extra extra small. A glyph-only step, bound to <c>--appui-alias-control-sizing-icon-xxs</c>.
+        /// It has no <see cref="Size"/> counterpart.
         /// </summary>
-        XXS,
+        Xxs,
 
         /// <summary>
-        /// Extra small
+        /// Extra small. A glyph-only step, bound to <c>--appui-alias-control-sizing-icon-xs</c>.
+        /// It has no <see cref="Size"/> counterpart.
         /// </summary>
-        XS,
+        Xs,
 
         /// <summary>
-        /// Small
+        /// Small. Matches <see cref="Size.Sm"/>.
         /// </summary>
-        S,
+        Sm,
 
         /// <summary>
-        /// Medium
+        /// Medium. Matches <see cref="Size.Md"/>. This is the default size for icons.
         /// </summary>
-        M,
+        Md,
 
         /// <summary>
-        /// Large
+        /// Large. Matches <see cref="Size.Lg"/>.
         /// </summary>
-        L
+        Lg
     }
 
     /// <summary>
@@ -84,7 +86,7 @@ namespace Unity.AppUI.UI
     ///
     /// Icons are essential for creating intuitive user interfaces, helping users quickly identify actions, states,
     /// or categories within your application. The Icon component supports different variants (Regular, Bold,
-    /// DuoTone, Light, Fill, and Thin) and sizes (XXS to L) to accommodate various design needs.
+    /// DuoTone, Light, Fill, and Thin) and sizes (Xxs to Lg) to accommodate various design needs.
     ///
     /// By default, Icons are non-focusable and ignore picking mode, making them ideal for decorative purposes
     /// while maintaining optimal performance.
@@ -137,14 +139,20 @@ namespace Unity.AppUI.UI
             usageHints |= UsageHints.DynamicColor;
 
             iconName = "info";
-            size = IconSize.M;
-            primary = true;
+            size = IconSize.Md;
+            primary = false;
             scaleMode = ScaleMode.ScaleToFit;
         }
 
         /// <summary>
         /// The primary variant of the Icon.
         /// </summary>
+        /// <remarks>
+        /// `false` by default, matching the registry's `primary = false`: a bare icon takes the muted
+        /// `--appui-foregrounds-50` tint and blends with the surrounding text. Set it to `true` to
+        /// promote the icon to `--appui-foregrounds-100`, which is what every icon a component builds
+        /// for itself does.
+        /// </remarks>
         [CreateProperty]
         [UxmlAttribute]
         public bool primary

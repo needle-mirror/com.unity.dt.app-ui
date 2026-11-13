@@ -53,7 +53,7 @@ namespace Unity.AppUI.UI
     /// </example>
     [UxmlElement]
     [VisualDocPage("inputs")]
-    public partial class ColorPicker : VisualElement, INotifyValueChanged<Color>
+    public partial class ColorPicker : VisualElement, INotifyValueChanging<Color>
     {
 #if UNITY_LOCALIZATION_PRESENT && ENABLE_LOCALIZED_COLOR_PICKER
         const string k_DefaultAlphaChannelText = "@AppUI:AlphaChannel";
@@ -255,6 +255,12 @@ namespace Unity.AppUI.UI
         internal ActionButton eyeDropperButton => m_Toolbar.eyeDropperButton;
 
         Color m_Value;
+
+        Color m_GestureStartValue;
+
+        bool m_GestureActive;
+
+        bool m_PointerDown;
 
         /// <summary>
         /// The content container of the ColorPicker. This is null as the ColorPicker does not have a content container.
@@ -629,7 +635,8 @@ namespace Unity.AppUI.UI
             hexLabel.AddToClassList(channelLabelUssClassName);
             row.Add(hexLabel);
 
-            m_HexField = new TextField { name = hexFieldUssClassName };
+            // Sm, as the registry's color-picker value field is.
+            m_HexField = new TextField { name = hexFieldUssClassName, size = Size.Sm };
             m_HexField.AddToClassList(hexFieldUssClassName);
             row.Add(m_HexField);
 
@@ -658,6 +665,18 @@ namespace Unity.AppUI.UI
             eyeDropperButton.clickable = new Pressable(OnEyeDropperClicked);
 
             m_HexField.RegisterValueChangedCallback(OnHexValueChanged);
+
+            // Bracket a drag on any sub-control as one gesture: ChangingEvents while the pointer
+            // is down, one ChangeEvent at release.
+            RegisterCallback<PointerDownEvent>(OnPointerDownTrickle, TrickleDown.TrickleDown);
+            RegisterCallback<PointerUpEvent>(OnPointerUpTrickle, TrickleDown.TrickleDown);
+            RegisterCallback<PointerUpEvent>(OnPointerReleased);
+            RegisterCallback<PointerCancelEvent>(OnPointerReleased);
+            RegisterCallback<DetachFromPanelEvent>(OnPointerReleased);
+            RegisterCallback<PointerCaptureOutEvent>(OnPointerCaptureOut, TrickleDown.TrickleDown);
+            RegisterCallback<ChangeEvent<float>>(OnSubControlCommitted);
+            RegisterCallback<ChangeEvent<int>>(OnSubControlCommitted);
+            RegisterCallback<ChangeEvent<Vector2>>(OnSubControlCommitted);
 
             m_ChannelsDropdown.SetValueWithoutNotify(new []{ (int)SliderMode.RGB255 });
             OnChannelModeChanged(null);
@@ -767,6 +786,7 @@ namespace Unity.AppUI.UI
         /// <param name="newValue"> The new color value. </param>
         public void SetValueWithoutNotify(Color newValue)
         {
+            m_GestureActive = false;
             m_Value = newValue;
             Color.RGBToHSV(m_Value, out var h, out var s, out var v);
             m_Wheel.SetValueWithoutNotify(h);
@@ -875,7 +895,7 @@ namespace Unity.AppUI.UI
                 m_GreenChannelSlider.value,
                 m_BlueChannelSlider.value).ToArgb().ToString("X8")));
 
-            TryNotifyValueChanged(c);
+            TryNotifyValueChanging(c);
         }
 
         void OnSquareValueChanging(ChangingEvent<Vector2> evt)
@@ -911,7 +931,7 @@ namespace Unity.AppUI.UI
                 m_GreenChannelSlider.value,
                 m_BlueChannelSlider.value).ToArgb().ToString("X8")));
 
-            TryNotifyValueChanged(c);
+            TryNotifyValueChanging(c);
         }
 
         void OnRedFChannelChanging(ChangingEvent<float> evt)
@@ -942,7 +962,7 @@ namespace Unity.AppUI.UI
                 m_RedChannelSlider.value,
                 m_GreenChannelSlider.value,
                 m_BlueChannelSlider.value).ToArgb().ToString("X8")));
-            TryNotifyValueChanged(c);
+            TryNotifyValueChanging(c);
         }
 
         void OnRedChannelChanging(ChangingEvent<int> evt)
@@ -973,7 +993,7 @@ namespace Unity.AppUI.UI
                 m_RedChannelSlider.value,
                 m_GreenChannelSlider.value,
                 m_BlueChannelSlider.value).ToArgb().ToString("X8")));
-            TryNotifyValueChanged(c);
+            TryNotifyValueChanging(c);
         }
 
         void OnGreenFChannelChanging(ChangingEvent<float> evt)
@@ -1004,7 +1024,7 @@ namespace Unity.AppUI.UI
                 m_RedChannelSlider.value,
                 m_GreenChannelSlider.value,
                 m_BlueChannelSlider.value).ToArgb().ToString("X8")));
-            TryNotifyValueChanged(c);
+            TryNotifyValueChanging(c);
         }
 
         void OnGreenChannelChanging(ChangingEvent<int> evt)
@@ -1035,7 +1055,7 @@ namespace Unity.AppUI.UI
                 m_RedChannelSlider.value,
                 m_GreenChannelSlider.value,
                 m_BlueChannelSlider.value).ToArgb().ToString("X8")));
-            TryNotifyValueChanged(c);
+            TryNotifyValueChanging(c);
         }
 
         void OnBlueFChannelChanging(ChangingEvent<float> evt)
@@ -1066,7 +1086,7 @@ namespace Unity.AppUI.UI
                 m_RedChannelSlider.value,
                 m_GreenChannelSlider.value,
                 m_BlueChannelSlider.value).ToArgb().ToString("X8")));
-            TryNotifyValueChanged(c);
+            TryNotifyValueChanging(c);
         }
 
         void OnBlueChannelChanging(ChangingEvent<int> evt)
@@ -1097,7 +1117,7 @@ namespace Unity.AppUI.UI
                 m_RedChannelSlider.value,
                 m_GreenChannelSlider.value,
                 m_BlueChannelSlider.value).ToArgb().ToString("X8")));
-            TryNotifyValueChanged(c);
+            TryNotifyValueChanging(c);
         }
 
         void OnHueSliderChanging(ChangingEvent<float> evt)
@@ -1128,7 +1148,7 @@ namespace Unity.AppUI.UI
                 m_RedChannelSlider.value,
                 m_GreenChannelSlider.value,
                 m_BlueChannelSlider.value).ToArgb().ToString("X8")));
-            TryNotifyValueChanged(c);
+            TryNotifyValueChanging(c);
         }
 
         void OnSaturationSliderChanging(ChangingEvent<float> evt)
@@ -1158,7 +1178,7 @@ namespace Unity.AppUI.UI
                 m_RedChannelSlider.value,
                 m_GreenChannelSlider.value,
                 m_BlueChannelSlider.value).ToArgb().ToString("X8")));
-            TryNotifyValueChanged(c);
+            TryNotifyValueChanging(c);
         }
 
         void OnBrightnessSliderChanging(ChangingEvent<float> evt)
@@ -1188,7 +1208,7 @@ namespace Unity.AppUI.UI
                 m_RedChannelSlider.value,
                 m_GreenChannelSlider.value,
                 m_BlueChannelSlider.value).ToArgb().ToString("X8")));
-            TryNotifyValueChanged(c);
+            TryNotifyValueChanging(c);
         }
 
         void OnAlphaChannelValueChanging(ChangingEvent<float> evt)
@@ -1200,12 +1220,97 @@ namespace Unity.AppUI.UI
                 m_RedChannelSlider.value,
                 m_GreenChannelSlider.value,
                 m_BlueChannelSlider.value).ToArgb().ToString("X8")));
-            TryNotifyValueChanged(c);
+            TryNotifyValueChanging(c);
+        }
+
+        /// <summary>
+        /// A sub-control (wheel, SV square, channel or alpha slider) moved. While a pointer is down
+        /// on the picker this is part of a drag gesture: send a <see cref="ChangingEvent{T}"/> and
+        /// hold the <see cref="ChangeEvent{T}"/> until the gesture ends, so consumers and undo see
+        /// one change per drag. Without a pointer down (a key press) it is a discrete edit and
+        /// commits at once.
+        /// </summary>
+        void TryNotifyValueChanging(Color current)
+        {
+            current = !showAlpha ? new Color(current.r, current.g, current.b, 1) : current;
+            if (current == m_Value)
+                return;
+
+            if (!m_GestureActive)
+            {
+                m_GestureActive = true;
+                m_GestureStartValue = m_Value;
+            }
+
+            m_Value = current;
+            m_Toolbar.currentColor = m_Value;
+            using (var changingEvent = ChangingEvent<Color>.GetPooled())
+            {
+                changingEvent.previousValue = m_GestureStartValue;
+                changingEvent.newValue = m_Value;
+                changingEvent.target = this;
+                SendEvent(changingEvent);
+            }
+
+            if (!m_PointerDown)
+                CommitGesture();
+        }
+
+        /// <summary>
+        /// Ends the current gesture, if any, with one <see cref="ChangeEvent{T}"/> from the value
+        /// the gesture started at to the current value.
+        /// </summary>
+        void CommitGesture()
+        {
+            if (!m_GestureActive)
+                return;
+
+            m_GestureActive = false;
+            if (m_GestureStartValue == m_Value)
+                return;
+
+            using var changeEvent = ChangeEvent<Color>.GetPooled(m_GestureStartValue, m_Value);
+            changeEvent.target = this;
+            SendEvent(changeEvent);
+            NotifyPropertyChanged(in valueProperty);
+        }
+
+        void OnPointerDownTrickle(PointerDownEvent evt) => m_PointerDown = true;
+
+        void OnPointerUpTrickle(PointerUpEvent evt) => m_PointerDown = false;
+
+        /// <summary>
+        /// Capture left a sub-control. At release that is the normal end of the drag; mid-drag it
+        /// means another element (a SwipeView, say) took the pointer and the sub-control will send
+        /// no release, so the gesture ends here. Capture moving within the picker does not end it.
+        /// </summary>
+        void OnPointerCaptureOut(PointerCaptureOutEvent evt)
+        {
+            if (panel?.GetCapturingElement(evt.pointerId) is VisualElement captor && (captor == this || Contains(captor)))
+                return;
+            OnPointerReleased(evt);
+        }
+
+        void OnPointerReleased(EventBase evt)
+        {
+            m_PointerDown = false;
+            CommitGesture();
+        }
+
+        /// <summary>
+        /// A sub-control committed its own gesture (its <see cref="ChangeEvent{T}"/> bubbles up
+        /// here on release), so the picker commits too.
+        /// </summary>
+        void OnSubControlCommitted(EventBase evt)
+        {
+            if (evt.target != this)
+                CommitGesture();
         }
 
         void TryNotifyValueChanged(Color current)
         {
             current = !showAlpha ? new Color(current.r, current.g, current.b, 1) : current;
+            CommitGesture();
             if (current != m_Value)
             {
                 var prev = m_Value;

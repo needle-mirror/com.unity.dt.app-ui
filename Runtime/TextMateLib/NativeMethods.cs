@@ -6,6 +6,8 @@
 // License: MIT
 // =============================================================================
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Text;

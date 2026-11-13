@@ -31,6 +31,23 @@ namespace Unity.AppUI.Tests.UI
             return ColorExtensions.ColorToRgbaHex(color, withAlpha);
         }
 
+        static IEnumerable ColorToRgbaHex_OutOfRangeColor_ReturnsClampedRgbaHex_TestCases
+        {
+            get
+            {
+                yield return new TestCaseData(new Color(2, 0, 0, 1), true).Returns("FF0000FF");
+                yield return new TestCaseData(new Color(1, 1, 1, 1.003f), true).Returns("FFFFFFFF");
+                yield return new TestCaseData(new Color(-0.01f, 0, 0, 1), true).Returns("000000FF");
+            }
+        }
+
+        [Test]
+        [TestCaseSource(nameof(ColorToRgbaHex_OutOfRangeColor_ReturnsClampedRgbaHex_TestCases))]
+        public string ColorToRgbaHex_OutOfRangeColor_ReturnsClampedRgbaHex(Color color, bool withAlpha)
+        {
+            return ColorExtensions.ColorToRgbaHex(color, withAlpha);
+        }
+
         static IEnumerable ArgbToRgbaHex_ValidArgbHex_ReturnsRgbaHex_TestCases
         {
             get

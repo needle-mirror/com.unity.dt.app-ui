@@ -21,19 +21,19 @@
     --unity-image-tint-color: var(--appui-alias-actions-foreground-color-default);
 }
 
-.appui-fab--size-s {
+.appui-fab--size-sm {
     min-width: var(--appui-sizing-400);
     height: var(--appui-sizing-400);
     border-radius: 1000px;
 }
 
-.appui-fab--size-m {
+.appui-fab--size-md {
     min-width: var(--appui-sizing-500);
     height: var(--appui-sizing-500);
     border-radius: 1000px;
 }
 
-.appui-fab--size-l {
+.appui-fab--size-lg {
     min-width: var(--appui-sizing-600);
     height: var(--appui-sizing-600);
     border-radius: 1000px;

@@ -4,7 +4,7 @@
 }
 
 .example {
-  padding: var(--appui-spacing-275);
+  padding: var(--appui-sizing-275);
   align-items: flex-start;
 }
 
@@ -34,17 +34,16 @@
   -unity-font-definition: var(--appui-font-weights-200);
   -unity-font-style: bold;
   font-size: var(--appui-font-sizes-600);
-  margin: var(--appui-spacing-400) 0 0 0;
+  margin: var(--appui-sizing-400) 0 0 0;
 }
 
 .example-subtitle {
   color: var(--appui-foregrounds-100);
   font-size: var(--appui-font-sizes-100);
-  margin: var(--appui-spacing-400) 0;
+  margin: var(--appui-sizing-400) 0;
   padding: var(--appui-alias-control-gap-md);
   border-radius: var(--appui-alias-control-border-radius);
   align-self: flex-start;
-  background-color: var(--appui-base-50);
   -unity-font-style: bold;
 }
 
@@ -58,11 +57,11 @@
   border-radius: var(--appui-alias-control-border-radius);
   flex-grow: 0;
   flex-shrink: 0;
-  padding: var(--appui-spacing-275);
+  padding: var(--appui-sizing-275);
   flex-wrap: nowrap;
   width: 450px;
   max-width: 97%;
-  background-color: var(--appui-backgrounds-200);
+  background-color: var(--appui-alias-surface-card);
 }
 
 .example-dropzone-container {
@@ -77,10 +76,30 @@
   align-items: flex-start;
 }
 
+.example-overflow-tooltip-host {
+  /* A deliberately narrow column, so the second label truncates and the first does not. */
+  width: var(--appui-sizing-2400);
+}
+
+.example-toaster-host {
+  /* The Toaster is absolutely positioned, so its host needs a box to anchor into. */
+  position: relative;
+  height: var(--appui-sizing-1600);
+}
+
 .example-section-fullwidth {
   align-self: stretch;
   align-items: center;
   width: auto;
+}
+
+.example-section > .appui-vu-meter {
+  /* The meters sit side by side, and each one's marker label hangs past its right edge. */
+  margin-right: var(--appui-sizing-600);
+}
+
+.example-section > .appui-vu-meter.example-vu-meter--last {
+  margin-right: 0;
 }
 
 .example-section > .appui-button {

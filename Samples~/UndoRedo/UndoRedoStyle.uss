@@ -11,7 +11,7 @@
 }
 
 .history-item {
-    padding: var(--appui-spacing-100);
+    padding: var(--appui-sizing-100);
     border-radius: var(--appui-alias-control-border-radius);
     border-bottom-width: 1px;
     border-bottom-color: var(--appui-backgrounds-300);

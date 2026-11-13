@@ -1,0 +1,5 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--ui-components-canvas-scaler--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.146 3.146L12 2H15V5L13.854 3.854L13.8535 3.8535L9.85349 7.8535C9.75549 7.9515 9.62749 8.0005 9.50049 8.0005C9.37249 8.0005 9.24449 7.9515 9.14649 7.8535C8.95149 7.6585 8.95149 7.3415 9.14649 7.1465L13.1465 3.1465L13.146 3.146Z" fill="#FFFFFF"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 14H13.5C14.327 14 15 13.327 15 12.5V7L14 6V12.5C14 12.775 13.776 13 13.5 13H2.5C2.224 13 2 12.775 2 12.5V3.5C2 3.225 2.224 3 2.5 3H11L10 2H2.5C1.673 2 1 2.673 1 3.5V12.5C1 13.327 1.673 14 2.5 14Z" fill="#FFFFFF"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13 12H7V8H3V4H13V12Z" fill="#FFFFFF"/>
+</svg>

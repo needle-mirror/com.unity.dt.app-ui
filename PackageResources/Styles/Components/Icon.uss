@@ -17,26 +17,26 @@
 }
 
 .appui-icon--size-xxs {
-    width: var(--appui-sizing-200);
-    height: var(--appui-sizing-200);
+    width: var(--appui-alias-control-sizing-icon-xxs);
+    height: var(--appui-alias-control-sizing-icon-xxs);
 }
 
 .appui-icon--size-xs {
-    width: var(--appui-sizing-250);
-    height: var(--appui-sizing-250);
+    width: var(--appui-alias-control-sizing-icon-xs);
+    height: var(--appui-alias-control-sizing-icon-xs);
 }
 
-.appui-icon--size-s {
-    width: var(--appui-sizing-300);
-    height: var(--appui-sizing-300);
+.appui-icon--size-sm {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
 }
 
-.appui-icon--size-m {
-    width: var(--appui-sizing-350);
-    height: var(--appui-sizing-350);
+.appui-icon--size-md {
+    width: var(--appui-alias-control-sizing-icon-md);
+    height: var(--appui-alias-control-sizing-icon-md);
 }
 
-.appui-icon--size-l {
-    width: var(--appui-sizing-400);
-    height: var(--appui-sizing-400);
+.appui-icon--size-lg {
+    width: var(--appui-alias-control-sizing-icon-lg);
+    height: var(--appui-alias-control-sizing-icon-lg);
 }

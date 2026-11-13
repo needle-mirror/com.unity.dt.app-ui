@@ -1,0 +1,208 @@
+/* CanvasNode
+   Node-graph geometry is drawn from the *static* sizing ramp, not the density ramp. CanvasNode
+   publishes headerHeight / portRowHeight / portsPaddingY as compile-time constants that CanvasEdge
+   routes against, so the drawn geometry has to be the same at every density or an edge would land
+   off its port. The static ramp is the only ramp a density class does not override. */
+.appui-canvas-node {
+    width: var(--appui-static-sizing-2250); /* 180px — CanvasNode.defaultWidth */
+    flex-direction: column;
+    flex-shrink: 0;
+    border-radius: var(--appui-alias-control-border-radius);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-control-border-color-default);
+    background-color: var(--appui-alias-surface-card);
+    color: var(--appui-alias-text-primary);
+}
+
+.appui-canvas-node--positioned {
+    position: absolute;
+}
+
+.appui-canvas-node--movable {
+    cursor: var(--appui-alias-control-cursor-grab);
+}
+
+.appui-canvas-node--movable.appui-canvas-node--grabbing {
+    cursor: var(--appui-alias-control-cursor-grabbing);
+}
+
+.appui-canvas-node.is-selected {
+    border-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+/* Variants. The header carries the colour so the body stays a readable surface, which is how the
+   Animator draws its Entry/Exit states. */
+.appui-canvas-node--entry > .appui-canvas-node__header {
+    background-color: var(--appui-alias-semantic-positive);
+}
+
+.appui-canvas-node--entry > .appui-canvas-node__header > .appui-canvas-node__title {
+    color: var(--appui-alias-semantic-positive-foreground);
+}
+
+.appui-canvas-node--exit > .appui-canvas-node__header {
+    background-color: var(--appui-alias-semantic-destructive);
+}
+
+.appui-canvas-node--exit > .appui-canvas-node__header > .appui-canvas-node__title {
+    color: var(--appui-alias-semantic-destructive-foreground);
+}
+
+.appui-canvas-node--special > .appui-canvas-node__header {
+    background-color: var(--appui-alias-semantic-warning);
+}
+
+.appui-canvas-node--special > .appui-canvas-node__header > .appui-canvas-node__title {
+    color: var(--appui-alias-semantic-warning-foreground);
+}
+
+/* Header */
+.appui-canvas-node__header {
+    height: var(--appui-static-sizing-375); /* 30px — CanvasNode.headerHeight */
+    flex-shrink: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding-left: var(--appui-static-sizing-150);
+    padding-right: var(--appui-static-sizing-150);
+    border-bottom-width: var(--appui-alias-control-border-width);
+    border-bottom-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui-canvas-node__title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--appui-font-sizes-100);
+    -unity-font-definition: var(--appui-font-weights-200);
+    color: var(--appui-alias-text-primary);
+}
+
+/* Ports */
+.appui-canvas-node__ports {
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: var(--appui-static-sizing-100); /* 8px — CanvasNode.portsPaddingY */
+    padding-bottom: var(--appui-static-sizing-100);
+}
+
+.appui-canvas-node__ports--input {
+    flex-direction: column;
+    align-items: flex-start;
+    flex-shrink: 1;
+}
+
+.appui-canvas-node__ports--output {
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 1;
+}
+
+.appui-canvas-node__port-row {
+    height: var(--appui-static-sizing-300); /* 24px — CanvasNode.portRowHeight */
+    flex-shrink: 0;
+    flex-direction: row;
+    align-items: center;
+    padding-left: var(--appui-static-sizing-150);
+}
+
+.appui-canvas-node__ports--output > .appui-canvas-node__port-row {
+    flex-direction: row-reverse;
+    padding-left: 0;
+    padding-right: var(--appui-static-sizing-150);
+}
+
+/* The pointer target is wider than the dot so a connection is easy to grab and drop, and it is
+   centred on the node's edge so the dot's centre sits exactly on x = node.x (or node.x + width).
+   That is the point GetPortAnchor returns.
+
+   The centring is a percentage translate rather than a negative offset on purpose: USS has no
+   calc(), so half of a sizing token cannot be written as a length, and a literal -12px would be a
+   magic pixel that stops tracking the token. translate: -50% is half of whatever the hit zone's
+   own width resolves to, so the two can never disagree. */
+.appui-canvas-node__port-hit {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--appui-static-sizing-300);
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+.appui-canvas-node__ports--input .appui-canvas-node__port-hit {
+    left: 0;
+    translate: -50% 0;
+}
+
+.appui-canvas-node__ports--output .appui-canvas-node__port-hit {
+    right: 0;
+    translate: 50% 0;
+}
+
+.appui-canvas-node__port-dot {
+    width: var(--appui-static-sizing-125); /* 10px */
+    height: var(--appui-static-sizing-125);
+    border-radius: var(--appui-border-radius-full);
+    background-color: var(--appui-base-500);
+    border-width: var(--appui-static-sizing-25);
+    border-color: var(--appui-alias-surface-card);
+}
+
+.appui-canvas-node__port-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-secondary);
+    margin-left: var(--appui-static-sizing-150);
+}
+
+.appui-canvas-node__ports--output > .appui-canvas-node__port-row > .appui-canvas-node__port-label {
+    margin-left: 0;
+    margin-right: var(--appui-static-sizing-150);
+}
+
+/* Body */
+.appui-canvas-node__body {
+    flex-direction: column;
+    padding-left: var(--appui-static-sizing-150);
+    padding-right: var(--appui-static-sizing-150);
+    padding-bottom: var(--appui-static-sizing-75);
+}
+
+/* Level of detail. Every level keeps the header and port rows' geometry, so an edge anchored with
+   GetPortAnchor still meets the node: compact drops the port labels and the body, and box also
+   hides the title and the port targets, leaving the header colour over the port area. The title
+   uses visibility rather than display so the header keeps its height. */
+.appui-canvas-node--lod-compact > .appui-canvas-node__body,
+.appui-canvas-node--lod-box > .appui-canvas-node__body {
+    display: none;
+}
+
+.appui-canvas-node--lod-compact .appui-canvas-node__port-label,
+.appui-canvas-node--lod-box .appui-canvas-node__port-label {
+    display: none;
+}
+
+.appui-canvas-node--lod-box .appui-canvas-node__title {
+    visibility: hidden;
+}
+
+.appui-canvas-node--lod-box .appui-canvas-node__port-hit {
+    display: none;
+}
+
+/* A box is one block of the header colour, so a coloured variant fills the port area too. */
+.appui-canvas-node--lod-box.appui-canvas-node--entry {
+    background-color: var(--appui-alias-semantic-positive);
+}
+
+.appui-canvas-node--lod-box.appui-canvas-node--exit {
+    background-color: var(--appui-alias-semantic-destructive);
+}
+
+.appui-canvas-node--lod-box.appui-canvas-node--special {
+    background-color: var(--appui-alias-semantic-warning);
+}

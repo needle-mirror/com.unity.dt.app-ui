@@ -13,7 +13,7 @@ namespace Unity.AppUI.VisualDoc
                 new IconButton("gear"),
                 new IconButton("trash") { primary = true },
                 new IconButton("copy") { quiet = true },
-                new IconButton("star") { size = Size.L });
+                new IconButton("star") { size = Size.Lg });
         }
     }
 }

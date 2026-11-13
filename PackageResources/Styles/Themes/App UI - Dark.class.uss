@@ -3,55 +3,67 @@
  */
 
 .appui--dark {
-  --appui-primary-15: var(--appui-color-black);
-  --appui-primary-25: var(--appui-color-dark-gray-100);
-  --appui-primary-50: var(--appui-color-dark-gray-200);
-  --appui-primary-100: var(--appui-color-dark-gray-300);
-  --appui-primary-200: var(--appui-color-dark-gray-400);
-  --appui-primary-300: var(--appui-color-dark-gray-500);
-  --appui-primary-400: var(--appui-color-dark-gray-600);
-  --appui-primary-500: var(--appui-color-dark-gray-700);
-  --appui-primary-600: var(--appui-color-dark-gray-800);
-  --appui-primary-700: var(--appui-color-dark-gray-900);
-  --appui-primary-800: var(--appui-color-dark-gray-1000);
-  --appui-primary-900: var(--appui-color-dark-gray-1200);
-  --appui-primary-1000: var(--appui-color-dark-gray-1300);
-  --appui-primary-1100: var(--appui-color-dark-gray-1400);
-  --appui-primary-1200: var(--appui-color-dark-gray-1500);
-  --appui-primary-1300: var(--appui-color-white);
-  --appui-accent-25: var(--appui-color-blue-600); /** Active / Focus */
-  --appui-accent-50: var(--appui-color-blue-700); /** Hover */
-  --appui-accent-100: var(--appui-color-blue-800);
-  --appui-accent-200: var(--appui-color-blue-900);
-  --appui-accent-300: var(--appui-color-blue-1000);
-  --appui-destructive-25: var(--appui-color-red-600); /** Active / Focus */
-  --appui-destructive-50: var(--appui-color-red-700); /** Hover */
-  --appui-destructive-100: var(--appui-color-red-800);
-  --appui-destructive-200: var(--appui-color-red-900);
-  --appui-destructive-300: var(--appui-color-red-1000);
-  --appui-warning-25: var(--appui-color-orange-600); /** Active / Focus */
-  --appui-warning-50: var(--appui-color-orange-700); /** Hover */
-  --appui-warning-100: var(--appui-color-orange-800);
-  --appui-warning-200: var(--appui-color-orange-900);
-  --appui-warning-300: var(--appui-color-orange-1000);
-  --appui-positive-25: var(--appui-color-green-600); /** Active / Focus */
-  --appui-positive-50: var(--appui-color-green-700); /** Hover */
-  --appui-positive-100: var(--appui-color-green-800);
-  --appui-positive-200: var(--appui-color-green-900);
-  --appui-positive-300: var(--appui-color-green-1000);
-  --appui-backgrounds-50: var(--appui-primary-50); /** Canvas */
-  --appui-backgrounds-100: var(--appui-primary-100); /** App Background */
-  --appui-backgrounds-200: var(--appui-primary-200); /** Subtle */
-  --appui-backgrounds-300: var(--appui-primary-300); /** Borders */
-  --appui-foregrounds-25: var(--appui-primary-700); /** Disabled Text */
-  --appui-foregrounds-50: var(--appui-primary-900); /** Placeholder / Secondary */
-  --appui-foregrounds-100: var(--appui-primary-1000); /** Primary Text / Icon / Element */
-  --appui-foregrounds-200: var(--appui-primary-1100); /** High Contrast / Text on Hover */
-  --appui-base-25: var(--appui-primary-100);
-  --appui-base-50: var(--appui-primary-200); /** UI Element Pressed */
-  --appui-base-100: var(--appui-primary-300); /** UI Element */
-  --appui-base-200: var(--appui-primary-400); /** UI Element Hover */
-  --appui-base-300: var(--appui-primary-500); /** UI Element Active / Selected */
-  --appui-base-400: var(--appui-primary-600); /** UI Element Border */
-  --appui-base-500: var(--appui-primary-700); /** UI Element Border Hover */
+  --appui-alias-text-tertiary: #999999; /** Dim live text, AA (4.5:1) on every surface */
+  --appui-alias-surface-default: #1d1d1d;
+  --appui-alias-surface-subtle: #2a2a2a;
+  --appui-alias-surface-sunken: #111111;
+  --appui-alias-surface-raised: #323232;
+  --appui-alias-surface-overlay: #242424;
+  --appui-alias-surface-card: #282828;
+  --appui-neutral-25: #111111;
+  --appui-neutral-50: #111111;
+  --appui-neutral-100: #1d1d1d;
+  --appui-neutral-200: #282828;
+  --appui-neutral-300: #323232;
+  --appui-neutral-400: #3c3c3c;
+  --appui-neutral-500: #484848;
+  --appui-neutral-600: #555555;
+  --appui-neutral-700: #6a6a6a;
+  --appui-neutral-800: #7b7b7b;
+  --appui-neutral-900: #aaaaaa;
+  --appui-neutral-1000: #c0c0c0;
+  --appui-neutral-1100: #d5d5d5;
+  --appui-neutral-1200: #eeeeee;
+  --appui-accent-25: #066ebf; /** Active / Focus */
+  --appui-accent-50: #0780df; /** Hover */
+  --appui-accent-100: #0892ff;
+  --appui-accent-200: #6eb8ff;
+  --appui-accent-300: #6eb8ff;
+  --appui-destructive-25: #a13034; /** Active / Focus */
+  --appui-destructive-50: #bc383c; /** Hover */
+  --appui-destructive-100: #d74045;
+  --appui-destructive-200: #ec5d5e;
+  --appui-destructive-300: #ec5d5e;
+  --appui-warning-25: #a35829; /** Active / Focus */
+  --appui-warning-50: #a35829; /** Hover */
+  --appui-warning-100: #d17100;
+  --appui-warning-200: #ff801f;
+  --appui-warning-300: #ffa057;
+  --appui-positive-25: #28684a; /** Active / Focus */
+  --appui-positive-50: #2f7c57; /** Hover */
+  --appui-positive-100: #11a85f;
+  --appui-positive-200: #33b074;
+  --appui-positive-300: #3dd68c;
+  --appui-neutral-15: var(--appui-color-black);
+  --appui-neutral-1300: var(--appui-color-white);
+  --appui-backgrounds-50: var(--appui-neutral-50); /** Canvas */
+  --appui-backgrounds-100: var(--appui-neutral-100); /** App Background */
+  --appui-backgrounds-200: var(--appui-neutral-200); /** Subtle */
+  --appui-backgrounds-300: var(--appui-neutral-300); /** Borders */
+  --appui-foregrounds-25: var(--appui-neutral-700); /** Disabled Text */
+  --appui-foregrounds-50: var(--appui-neutral-900); /** Placeholder / Secondary */
+  --appui-foregrounds-100: var(--appui-neutral-1000); /** Primary Text / Icon / Element */
+  --appui-foregrounds-200: var(--appui-neutral-1100); /** High Contrast / Text on Hover */
+  --appui-base-25: var(--appui-neutral-100);
+  --appui-base-50: var(--appui-neutral-200); /** UI Element Pressed */
+  --appui-base-100: var(--appui-neutral-300); /** UI Element */
+  --appui-base-200: var(--appui-neutral-400); /** UI Element Hover */
+  --appui-base-300: var(--appui-neutral-500); /** UI Element Active / Selected */
+  --appui-base-400: var(--appui-neutral-600); /** UI Element Border */
+  --appui-base-500: var(--appui-neutral-700); /** UI Element Border Hover */
+  --appui-informative-25: var(--appui-accent-25);
+  --appui-informative-50: var(--appui-accent-50);
+  --appui-informative-100: var(--appui-accent-100);
+  --appui-informative-200: var(--appui-accent-200);
+  --appui-informative-300: var(--appui-accent-300);
 }

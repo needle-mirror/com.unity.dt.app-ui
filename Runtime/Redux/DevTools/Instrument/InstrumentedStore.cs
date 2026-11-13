@@ -190,7 +190,8 @@ namespace Unity.AppUI.Redux.DevTools
         /// <inheritdoc/>
         public void Dispatch(IAction action)
         {
-            m_Store.Dispatch(LiftedAction.From(action));
+            // The action is lifted in the reducer, so middlewares such as the thunk one see the original action.
+            m_Store.Dispatch(action);
         }
 
         /// <inheritdoc/>
@@ -217,7 +218,8 @@ namespace Unity.AppUI.Redux.DevTools
             lock (m_StateLock)
             {
                 previousLiftedState = m_LiftedState;
-                newLiftedState = m_LiftedReducer(previousLiftedState, action);
+                var liftedAction = action is LiftedAction ? action : LiftedAction.From(action);
+                newLiftedState = m_LiftedReducer(previousLiftedState, liftedAction);
                 m_LiftedState = newLiftedState;
             }
 

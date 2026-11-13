@@ -138,7 +138,7 @@ namespace Unity.AppUI.Redux
         }
 
         /// <inheritdoc/>
-        public bool Equals(Action other)
+        public virtual bool Equals(Action other)
         {
             if (ReferenceEquals(this, other)) return true;
             if (other is null || GetType() != other.GetType())
@@ -184,9 +184,19 @@ namespace Unity.AppUI.Redux
         }
 
         /// <inheritdoc/>
+        public override bool Equals(Action other)
+        {
+            // Compare the payload too when called through IEquatable<Action>.
+            // The base check guarantees other has this exact runtime type.
+            return base.Equals(other) &&
+                EqualityComparer<TPayload>.Default.Equals(payload, ((Action<TPayload>)other).payload);
+        }
+
+        /// <inheritdoc/>
         public bool Equals(Action<TPayload> other)
         {
-            return base.Equals(other) && EqualityComparer<TPayload>.Default.Equals(payload, other!.payload);
+            // Dispatch through the virtual overload so subclasses compare their own fields too.
+            return Equals((Action)other);
         }
 
         /// <inheritdoc/>

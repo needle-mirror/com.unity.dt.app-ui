@@ -33,7 +33,7 @@ namespace Unity.AppUI.UI
     /// <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI">
     ///     <appui:Vector2IntField
     ///         name="positionField"
-    ///         size="M"
+    ///         size="Md"
     ///         value="0,0"
     ///     />
     /// </ui:UXML>
@@ -59,7 +59,7 @@ namespace Unity.AppUI.UI
     /// <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI">
     ///     <appui:Vector2IntField
     ///         name="resolutionField"
-    ///         size="L"
+    ///         size="Lg"
     ///         value="1920,1080"
     ///         format-string="D4"
     ///     />
@@ -152,7 +152,7 @@ namespace Unity.AppUI.UI
 
             hierarchy.Add(container);
 
-            size = Size.M;
+            size = Size.Md;
             SetValueWithoutNotify(Vector2Int.zero);
 
             m_XField.RegisterValueChangingCallback(OnXFieldChanging);

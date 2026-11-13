@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -15,6 +16,7 @@ namespace Unity.AppUI.Editor
     /// </summary>
     class AIAgentExtensionUI : VisualElement
     {
+        const string k_AppUIPackageName = "com.unity.dt.app-ui";
         const string k_SkillsSubPath = "Plugins~/skills";
         const string k_SkillsManifest = "Plugins~/skills.json";
         const string k_ClaudeDirName = ".claude";
@@ -67,8 +69,9 @@ namespace Unity.AppUI.Editor
             foldout.Add(m_PathLabel);
 
             m_Warning = new HelpBox(
-                "Skills will be installed in your home directory (~/.claude/skills). " +
-                "Consider creating a .claude folder in your project to keep skills project-scoped.",
+                "This project is located directly in your home directory, so the .claude " +
+                "folder used for skills is shared with other tools. Consider moving the " +
+                "project into its own folder to keep skills project-scoped.",
                 HelpBoxMessageType.Warning);
             m_Warning.AddToClassList("ai-agent-extension__warning");
             foldout.Add(m_Warning);
@@ -107,6 +110,43 @@ namespace Unity.AppUI.Editor
 
             if (packageInfo == null || string.IsNullOrEmpty(packageInfo.resolvedPath))
             {
+                style.display = DisplayStyle.None;
+                return;
+            }
+
+            // Only offer to install skills that ship with App UI itself.
+            //
+            // This extension is registered for the whole Package Manager window, so
+            // without this check any installed package that happened to contain
+            // Plugins~/skills.json would get an "Install" button here. Skills are
+            // instructions that an agent will later execute, so that would turn this
+            // panel into a delivery path for third-party agent instructions, presented
+            // with App UI's UI as if it were first-party.
+            if (packageInfo.name != k_AppUIPackageName)
+            {
+                style.display = DisplayStyle.None;
+                return;
+            }
+
+            // The name alone proves nothing — it is just a string in a package.json that anyone can
+            // copy. A repackaged or hand-added copy claiming to be App UI would otherwise get to
+            // present agent instructions through first-party UI.
+            //
+            // PackageSource.Registry is necessary but not sufficient: it only says the package came
+            // from *a* registry, and a project can point a scoped registry in its manifest at any
+            // host and serve a package under this name from it. So the resolved registry itself has
+            // to be the default Unity registry, not merely some registry.
+            if (packageInfo.source != PackageSource.Registry ||
+                packageInfo.registry == null ||
+                !packageInfo.registry.isDefault)
+            {
+                var origin = packageInfo.registry != null
+                    ? $"the '{packageInfo.registry.name}' registry ({packageInfo.registry.url})"
+                    : $"{packageInfo.source} ({packageInfo.resolvedPath})";
+                Debug.LogWarning(
+                    $"App UI: not offering AI agent skills for '{packageInfo.name}' because it was " +
+                    $"resolved from {origin} rather than the default Unity registry. Skills are agent " +
+                    "instructions, so they are only offered for a package from the default registry.");
                 style.display = DisplayStyle.None;
                 return;
             }
@@ -277,7 +317,8 @@ namespace Unity.AppUI.Editor
                 {
                     if (!DisplayDialog(
                         "AI Agent Skills",
-                        $"The skill '{skillName}' is already installed. Overwriting will delete the existing directory and any local modifications.\n\nDo you want to continue?",
+                        $"The skill '{skillName}' is already installed. Overwriting will delete the existing directory and any local modifications.\n\n" +
+                        $"Source: {sourceDir}\nDestination: {targetSkillDir}\n\nDo you want to continue?",
                         "Overwrite", "Cancel"))
                         return;
 
@@ -445,7 +486,10 @@ namespace Unity.AppUI.Editor
         string GetTargetSkillsDirectory()
         {
             var projectRoot = Path.GetDirectoryName(Application.dataPath);
-            var claudeDir = FindClosestClaudeDirectory(projectRoot);
+
+            // Bound the search at the project root: skills belong to the project, and
+            // walking further up reaches shared directories such as ~/.claude.
+            var claudeDir = FindClosestClaudeDirectory(projectRoot, projectRoot);
 
             if (claudeDir == null)
                 claudeDir = Path.Combine(projectRoot, k_ClaudeDirName);
@@ -453,22 +497,108 @@ namespace Unity.AppUI.Editor
             return Path.Combine(claudeDir, k_SkillsDirName);
         }
 
-        static string FindClosestClaudeDirectory(string startDir)
+        /// <summary>
+        /// Looks for an existing <c>.claude</c> directory at <paramref name="startDir"/>
+        /// or above it, stopping at <paramref name="stopDir"/> (inclusive).
+        /// </summary>
+        /// <remarks>
+        /// The walk is bounded deliberately. It used to continue to the filesystem root,
+        /// so on a machine with a <c>~/.claude</c> (the common case) installing skills
+        /// wrote outside the project entirely, and a later "remove" recursively deleted
+        /// from that shared directory. Skills now stay within the project unless the
+        /// user has a project-level <c>.claude</c> above the Assets folder.
+        /// </remarks>
+        internal static string FindClosestClaudeDirectory(string startDir, string stopDir)
         {
-            var current = startDir;
+            if (string.IsNullOrEmpty(startDir))
+                return null;
+
+            var stop = string.IsNullOrEmpty(stopDir) ? null : Path.GetFullPath(stopDir);
+            var current = Path.GetFullPath(startDir);
+
             while (!string.IsNullOrEmpty(current))
             {
+                // Check this before accepting a candidate, not after. A project rooted
+                // directly in $HOME would otherwise match the shared $HOME/.claude on
+                // the very first iteration, which is the case this bound exists to stop.
+                if (IsHomeDirectory(current))
+                    break;
+
                 var candidate = Path.Combine(current, k_ClaudeDirName);
-                if (Directory.Exists(candidate))
+                if (Directory.Exists(candidate) && !IsHomeClaudeDirectory(candidate))
                     return candidate;
 
+                if (stop != null && string.Equals(current, stop, StringComparison.OrdinalIgnoreCase))
+                    break;
+
                 var parent = Path.GetDirectoryName(current);
-                if (parent == current)
+                if (string.IsNullOrEmpty(parent) || parent == current)
                     break;
                 current = parent;
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Whether <paramref name="candidateClaudeDir"/> resolves to the shared
+        /// <c>~/.claude</c>, following a symlink if the platform reports one.
+        /// </summary>
+        static bool IsHomeClaudeDirectory(string candidateClaudeDir)
+        {
+            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (string.IsNullOrEmpty(home))
+                return false;
+
+            var homeClaude = Path.Combine(home, k_ClaudeDirName);
+
+            foreach (var path in new[] { candidateClaudeDir, ResolveLinkTarget(candidateClaudeDir) })
+            {
+                if (string.IsNullOrEmpty(path))
+                    continue;
+
+                if (string.Equals(
+                        Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+                        Path.GetFullPath(homeClaude).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+                        StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the final target of a directory symlink, or <c>null</c> if the path
+        /// is not a link or the runtime cannot resolve it.
+        /// </summary>
+        static string ResolveLinkTarget(string path)
+        {
+            try
+            {
+                var info = new DirectoryInfo(path);
+                if (!info.Exists)
+                    return null;
+
+                // A project-local `.claude` may be a symlink to the shared one, which a
+                // purely lexical comparison would not catch. LinkTarget is unavailable
+                // on older runtimes, hence the reflection and the broad catch: failing
+                // to resolve must fall back to the lexical check, never throw.
+                var property = typeof(DirectoryInfo).GetProperty("LinkTarget");
+                if (property == null)
+                    return null;
+
+                var target = property.GetValue(info) as string;
+                if (string.IsNullOrEmpty(target))
+                    return null;
+
+                return Path.IsPathRooted(target)
+                    ? target
+                    : Path.Combine(info.Parent?.FullName ?? string.Empty, target);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         static bool IsHomeDirectory(string path)

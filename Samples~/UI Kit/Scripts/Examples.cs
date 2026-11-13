@@ -15,6 +15,11 @@ using MaskField = Unity.AppUI.UI.MaskField;
 
 namespace Unity.AppUI.Samples
 {
+    // Declared inside the namespace: a compilation-unit alias loses to the root
+    // `Timeline` namespace Unity 6.6 puts in scope, but an alias at this level is
+    // found before the lookup walks outward.
+    using Timeline = Unity.AppUI.UI.Timeline;
+
     public class Examples : MonoBehaviour
     {
         public UIDocument uiDocument;
@@ -55,7 +60,7 @@ namespace Unity.AppUI.Samples
         public static void SetupDataBinding(VisualElement root, Texture2D avatarPicture = null)
         {
             var themeSwitcher = root.Q<RadioGroup>("theme-switcher");
-            var scaleSwitcher = root.Q<RadioGroup>("scale-switcher");
+            var densitySwitcher = root.Q<RadioGroup>("density-switcher");
             var dirSwitcher = root.Q<RadioGroup>("dir-switcher");
             var panel = root.Q<Panel>("root-panel") ?? root.GetFirstAncestorOfType<Panel>();
 
@@ -81,12 +86,12 @@ namespace Unity.AppUI.Samples
                 PlayerPrefs.SetString("theme", themeSwitcher.value);
             }
 
-            void SetScale()
+            void SetDensity()
             {
-                if (string.IsNullOrEmpty(scaleSwitcher.value))
-                    scaleSwitcher.SetValueWithoutNotify("medium");
-                panel.scale = scaleSwitcher.value;
-                PlayerPrefs.SetString("scale", scaleSwitcher.value);
+                if (string.IsNullOrEmpty(densitySwitcher.value))
+                    densitySwitcher.SetValueWithoutNotify("normal");
+                panel.density = densitySwitcher.value;
+                PlayerPrefs.SetString("density", densitySwitcher.value);
             }
 
             void SetDir()
@@ -105,11 +110,11 @@ namespace Unity.AppUI.Samples
                 SetTheme();
             }
 
-            if (scaleSwitcher != null)
+            if (densitySwitcher != null)
             {
-                scaleSwitcher.RegisterValueChangedCallback(_ => SetScale());
-                scaleSwitcher.SetValueWithoutNotify(PlayerPrefs.GetString("scale", "medium"));
-                SetScale();
+                densitySwitcher.RegisterValueChangedCallback(_ => SetDensity());
+                densitySwitcher.SetValueWithoutNotify(PlayerPrefs.GetString("density", "normal"));
+                SetDensity();
             }
 
             if (dirSwitcher != null)
@@ -132,6 +137,46 @@ namespace Unity.AppUI.Samples
             {
                 localizedTextElement.variables = new object[] { localizationVariables };
             });
+
+            // The chat checklist and activity timeline are data-driven, so their content comes from
+            // here rather than from UXML.
+            root.Q<ChatTodoList>("chat-todo-list").items = new[]
+            {
+                new ChatTodoItem("Read the player controller", ChatTodoStatus.Completed),
+                new ChatTodoItem("Raise the jump force", ChatTodoStatus.InProgress),
+                new ChatTodoItem("Re-run the tests"),
+                new ChatTodoItem("Rewrite the input map", ChatTodoStatus.Cancelled),
+            };
+
+            root.Q<ChatActivityTimeline>("chat-activity-timeline").parts = new[]
+            {
+                new ChatActivityPart(ChatActivityPartKind.Thinking,
+                    "The jump force lives on the player controller.", elapsedMs: 800),
+                new ChatActivityPart(ChatActivityPartKind.Tool, "Read PlayerController.cs", elapsedMs: 4200),
+                new ChatActivityPart(ChatActivityPartKind.Tool, "Write PlayerController.cs", elapsedMs: 1500),
+            };
+
+            // A whole conversation is data too: ChatMessages takes ChatMessage records rather than
+            // UXML children, so the sample builds one here.
+            root.Q<ChatMessages>("chat-messages").messages = new[]
+            {
+                new ChatMessage { id = "u1", role = ChatRole.User, content = "Make the player jump higher" },
+                new ChatMessage
+                {
+                    id = "a1",
+                    role = ChatRole.Assistant,
+                    durationMs = 6400,
+                    parts = new[]
+                    {
+                        ChatMessagePart.Thinking("The jump force lives on the player controller.", 800),
+                        ChatMessagePart.ToolCall("t1", "read_file", "Read PlayerController.cs", elapsedMs: 4200),
+                        ChatMessagePart.ToolResult("t1", "read_file", "public float jumpForce = 5f;"),
+                        ChatMessagePart.Text("I raised the jump force to 8."),
+                    },
+                },
+            };
+
+            root.Q<Unity.AppUI.UI.CodeEditor>("code-editor").value = "function update(dt)\n  print(dt)\nend\n";
 
             var dynamicTooltipActionButton = root.Q<ActionButton>("dynamic-tooltip-action-button");
             var tooltipTemplate = new Text();
@@ -211,6 +256,66 @@ namespace Unity.AppUI.Samples
             root.Q<ActionButton>("alert-dlg-destructive-btn")
                 .clickable.clickedWithEventInfo += evt => OpenAlertDialog(evt.target as VisualElement, AlertSemantic.Destructive);
 
+            // Confirm dialog — the imperative, awaitable layer over AlertDialog + Modal.
+            root.Q<ActionButton>("confirm-dlg-btn")
+                .clickable.clickedWithEventInfo += async evt =>
+            {
+                var confirmed = await ConfirmDialog.Show(
+                    evt.target as VisualElement,
+                    "Discard changes?",
+                    "Your edits to this scene will be lost.",
+                    "Discard",
+                    "Keep editing");
+                Debug.Log($"Discard confirmed: {confirmed}");
+            };
+
+            root.Q<ActionButton>("confirm-delete-btn")
+                .clickable.clickedWithEventInfo += async evt =>
+            {
+                var confirmed = await ConfirmDialog.ConfirmDelete(evt.target as VisualElement, "Cube");
+                Debug.Log($"Delete confirmed: {confirmed}");
+            };
+
+            root.Q<ActionButton>("confirm-delete-many-btn")
+                .clickable.clickedWithEventInfo += async evt =>
+            {
+                var confirmed = await ConfirmDialog.ConfirmDelete(evt.target as VisualElement, "objects", 3);
+                Debug.Log($"Delete confirmed: {confirmed}");
+            };
+
+            root.Q<ActionButton>("confirm-queue-btn")
+                .clickable.clickedWithEventInfo += evt =>
+            {
+                // Concurrent calls queue: only one dialog is on screen at a time.
+                var view = evt.target as VisualElement;
+                for (var i = 1; i <= 3; i++)
+                {
+                    var index = i;
+                    var task = ConfirmDialog.Show(view, $"Question {index} of 3");
+                    _ = task.ContinueWith(t => Debug.Log($"Question {index} answered: {t.Result}"));
+                }
+            };
+
+            // Toaster — the stacking counterpart of Toast. Post from anywhere, the host renders.
+            root.Q<ActionButton>("toaster-default-btn")
+                .clickable.clicked += () => ToastManager.Add("Nothing to report");
+
+            root.Q<ActionButton>("toaster-positive-btn")
+                .clickable.clicked += () => ToastManager.Add("Scene saved", NotificationStyle.Positive, "check");
+
+            root.Q<ActionButton>("toaster-negative-btn")
+                .clickable.clicked += () => ToastManager.Add("Import failed", NotificationStyle.Negative, "warning");
+
+            root.Q<ActionButton>("toaster-update-btn")
+                .clickable.clicked += () =>
+            {
+                var entry = ToastManager.Add("Uploading...", NotificationStyle.Informative);
+                entry.Update("Upload complete", NotificationStyle.Positive, "check");
+            };
+
+            root.Q<ActionButton>("toaster-clear-btn")
+                .clickable.clicked += ToastManager.Clear;
+
             var dropdownSrc = new List<string>();
 
             for (var i = 1; i <= 100; i++)
@@ -243,6 +348,11 @@ namespace Unity.AppUI.Samples
 
             root.Q<UI.Avatar>("avatar-with-picture").src = Background.FromTexture2D(img);
 
+            SetupUserSwitchers(root);
+            SetupAudioExamples(root);
+            SetupZoomableThumbnails(root, img);
+            SetupTimelines(root);
+
             root.Q<ColorSlider>("rainbow-slider").colorRange.SetKeys(
                 new GradientColorKey[] {
                     new GradientColorKey(Color.red, 0),
@@ -261,6 +371,16 @@ namespace Unity.AppUI.Samples
 
             root.Q<ActionButton>("menu-action-code").clickable.clickedWithEventInfo += (evt =>
                 OpenMenu((VisualElement)evt.target));
+
+            var feedbackTray = root.Q<FeedbackTray>("feedback-tray");
+            feedbackTray.RegisterValueChangedCallback(evt => Debug.Log($"Feedback rating: {evt.newValue}"));
+            feedbackTray.refreshRequested += () => Debug.Log("Regenerate requested");
+            feedbackTray.copyRequested += () =>
+            {
+                GUIUtility.systemCopyBuffer = "The generated response.";
+                feedbackTray.copied = true;
+                feedbackTray.schedule.Execute(() => feedbackTray.copied = false).ExecuteLater(2000);
+            };
 
             var gridViewDefault = root.Q<GridView>("grid-view-default");
             gridViewDefault.columnCount = 3;
@@ -660,6 +780,154 @@ namespace Unity.AppUI.Samples
             var newScale = Mathf.Lerp(minScale, maxScale, Mathf.Clamp01(1.0f - Mathf.Abs(distance)));
             child.style.scale = new Scale(new Vector3(newScale, newScale, 1.0f));
         }
-    }
 
+        // Peaks and levels are live data, not markup, so the sample fills the audio components here
+        // rather than in UXML.
+        static void SetupAudioExamples(VisualElement root)
+        {
+            var peaks = new List<float>();
+            for (var i = 0; i < 160; i++)
+            {
+                // A plausible envelope: a slow swell shaped by a faster tremolo.
+                var t = i / 160f;
+                var swell = Mathf.Sin(t * Mathf.PI);
+                var tremolo = 0.55f + 0.45f * Mathf.Abs(Mathf.Sin(t * Mathf.PI * 9f));
+                peaks.Add(swell * tremolo);
+            }
+
+            var waveform = root.Q<AudioWaveform>("audio-waveform");
+            if (waveform != null)
+                waveform.peaks = peaks;
+
+            var withPlayhead = root.Q<AudioWaveform>("audio-waveform-playhead");
+            if (withPlayhead != null)
+                withPlayhead.peaks = peaks;
+
+            var preview = root.Q<AudioPreview>("audio-preview");
+            if (preview != null)
+                preview.peaks = peaks;
+
+            var previewPlaying = root.Q<AudioPreview>("audio-preview-playing");
+            if (previewPlaying != null)
+                previewPlaying.peaks = peaks;
+
+            var mono = root.Q<VuMeter>("vu-meter-mono");
+            if (mono != null)
+            {
+                mono.levels = new List<float> { -14f };
+                mono.peak = new Optional<float>(-9f);
+            }
+
+            var stereo = root.Q<VuMeter>("vu-meter-stereo");
+            if (stereo != null)
+            {
+                stereo.levels = new List<float> { -4f, -11f };
+                stereo.fader = -6f;
+                stereo.peak = new Optional<float>(-2f);
+            }
+
+            var quiet = root.Q<VuMeter>("vu-meter-quiet");
+            if (quiet != null)
+            {
+                quiet.levels = new List<float> { -33f, -38f };
+                quiet.ticks = new List<float> { 6f, 0f, -20f, -40f, -60f };
+            }
+        }
+
+        // Accounts and profiles are data, not markup, so the sample fills the UserSwitchers here
+        // rather than in UXML.
+        static void SetupUserSwitchers(VisualElement root)
+        {
+            var people = new List<UserAccount>
+            {
+                new UserAccount { id = "ada", name = "Ada Lovelace", email = "ada@example.com", color = new Color(0.04f, 0.43f, 0.78f) },
+                new UserAccount { id = "grace", name = "Grace Hopper", email = "grace@example.com", color = new Color(0.48f, 0.31f, 0.75f) },
+                new UserAccount { id = "katherine", name = "Katherine Johnson", email = "katherine@example.com", color = new Color(0.12f, 0.54f, 0.36f) },
+            };
+
+            var plain = root.Q<UserSwitcher>("user-switcher");
+            if (plain != null)
+            {
+                plain.accounts = people;
+                plain.activeAccountId = "grace";
+            }
+
+            var named = root.Q<UserSwitcher>("user-switcher-named");
+            if (named != null)
+            {
+                named.accounts = people;
+                named.activeAccountId = "ada";
+                named.profile = new UserProfile
+                {
+                    name = "Ada Lovelace",
+                    email = "ada@example.com",
+                    caption = "Analytical Engines",
+                    color = new Color(0.04f, 0.43f, 0.78f),
+                };
+                named.Add(new MenuItem { label = "Preferences", icon = "gear" });
+                named.Add(new MenuItem { label = "Sign out", icon = "sign-out", variant = MenuItemVariant.Destructive });
+            }
+
+            var orgs = root.Q<UserSwitcher>("user-switcher-orgs");
+            if (orgs != null)
+            {
+                orgs.accounts = new List<UserAccount>
+                {
+                    new UserAccount { id = "personal", name = "Personal" },
+                    new UserAccount { id = "engines", name = "Analytical Engines" },
+                    new UserAccount { id = "looms", name = "Jacquard Looms" },
+                    new UserAccount
+                    {
+                        id = "difference", name = "Difference Engines",
+                        disabled = true, warning = "You have no seat on this organization.",
+                    },
+                };
+                orgs.activeAccountId = "engines";
+                orgs.triggerLabel = "Analytical Engines";
+            }
+        }
+
+        // Markers and the seek handler are behaviour rather than markup, so the sample wires the
+        // Timelines here. Everything structural — lanes, groups, clips, keyframes — is in the UXML.
+        static void SetupTimelines(VisualElement root)
+        {
+            var dopeSheet = root.Q<Timeline>("timeline-dope-sheet");
+            if (dopeSheet != null)
+            {
+                dopeSheet.value = 18f;
+                dopeSheet.playhead.showLabel = true;
+                dopeSheet.selection = new TimelineSelection(34f, 46f);
+                dopeSheet.AddMarker(new TimelineMarker { time = 30f, label = "Cut" });
+                dopeSheet.AddMarker(new TimelineMarker { time = 52f, label = "End" });
+            }
+
+            var editorScheme = root.Q<Timeline>("timeline-editor-scheme");
+            if (editorScheme != null)
+            {
+                editorScheme.value = 40f;
+                editorScheme.formatTime = t => $"{Mathf.FloorToInt(t) / 60:00}:{Mathf.FloorToInt(t) % 60:00}";
+            }
+        }
+
+        static void SetupZoomableThumbnails(VisualElement root, Texture2D img)
+        {
+            var source = img ? Background.FromTexture2D(img) : new Background();
+
+            var corner = root.Q<ZoomableThumbnail>("zoomable-corner");
+            if (corner != null)
+            {
+                corner.src = source;
+                corner.fallback = new Icon { iconName = "image" };
+            }
+
+            var whole = root.Q<ZoomableThumbnail>("zoomable-whole");
+            if (whole != null)
+                whole.src = source;
+
+            // Deliberately left with no image, to show the fallback path.
+            var empty = root.Q<ZoomableThumbnail>("zoomable-empty");
+            if (empty != null)
+                empty.fallback = new Text { text = "No preview" };
+        }
+    }
 }

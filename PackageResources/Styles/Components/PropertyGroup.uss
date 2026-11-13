@@ -1,0 +1,183 @@
+/*
+ * PropertyGroup — a titled, foldable span of an inspector. The title sits on the text line with no
+ * caret, so a column of groups reads as text rather than as a tree; a closed group that holds rows
+ * shows an ellipsis in its place.
+ *
+ * UI Toolkit has no `gap`, so the row rhythm inside a group is a leading margin on every child with
+ * the first one tagged `unity-first-child` (PropertyGroup's content and PropertyGroupStack both
+ * refresh that tag on layout).
+ */
+.appui-property-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-shrink: 0;
+}
+
+.appui-property-group__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    height: var(--appui-alias-inspector-row-height);
+    border-radius: var(--appui-alias-control-border-radius);
+}
+
+.appui--rtl .appui-property-group__header {
+    flex-direction: row-reverse;
+}
+
+.appui-property-group__toggle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    height: 100%;
+    padding-left: var(--appui-alias-control-gap-md);
+    padding-right: var(--appui-alias-control-gap-md);
+    border-radius: var(--appui-alias-control-border-radius);
+    cursor: var(--appui-alias-control-cursor-pointer);
+    transition-property: background-color;
+    transition-duration: var(--appui-animation-duration-100);
+    transition-timing-function: var(--appui-animation-easing-ease-out);
+}
+
+.appui--rtl .appui-property-group__toggle {
+    flex-direction: row-reverse;
+}
+
+.appui-property-group__label {
+    -unity-text-align: middle-left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 1;
+    color: var(--appui-alias-text-primary);
+}
+
+.appui--rtl .appui-property-group__label {
+    -unity-text-align: middle-right;
+}
+
+.appui-property-group__ellipsis {
+    flex-shrink: 0;
+    margin-left: var(--appui-alias-control-gap-xs);
+    color: var(--appui-alias-text-secondary);
+}
+
+.appui--rtl .appui-property-group__ellipsis {
+    margin-left: 0;
+    margin-right: var(--appui-alias-control-gap-xs);
+}
+
+/* A section is the unit an inspector is made of, so it carries the larger, heavier type. */
+.appui-property-group--level-section .appui-property-group__label {
+    font-size: var(--appui-font-sizes-200);
+    -unity-font-definition: var(--appui-font-weights-200); /*font-weight: 600;*/
+}
+
+.appui-property-group--level-sub .appui-property-group__label {
+    font-size: var(--appui-font-sizes-100);
+    -unity-font-definition: var(--appui-font-weights-200); /*font-weight: 500;*/
+}
+
+/*
+ * Alone on its line the toggle is the whole header and carries the fill. Beside a trailing slot the
+ * header row carries it instead, so hovering the actions lights the same pill as hovering the title
+ * and the two never read as separate targets.
+ */
+.appui-property-group__toggle.is-hovered {
+    background-color: var(--appui-alias-actions-quiet-background-color-hover);
+}
+
+.appui-property-group__toggle.is-active {
+    background-color: var(--appui-alias-actions-quiet-background-color-active);
+}
+
+.appui-property-group--with-trailing > .appui-property-group__header:hover {
+    background-color: var(--appui-alias-actions-quiet-background-color-hover);
+}
+
+.appui-property-group--with-trailing > .appui-property-group__header > .appui-property-group__toggle.is-hovered {
+    background-color: var(--appui-alias-actions-quiet-background-color-default);
+}
+
+.appui-property-group__toggle.keyboard-focus {
+    /* converted from : outline-width: var(--appui-alias-control-outline-width); */
+    --outline-width: var(--appui-alias-control-outline-width);
+    /* converted from : outline-color: var(--appui-alias-control-outline-color); */
+    --outline-color: var(--appui-alias-control-outline-color);
+    --outline-offset: 0;
+}
+
+/* An empty group is not a disclosure: nothing to fold, nothing to hover. */
+.appui-property-group--empty > .appui-property-group__header > .appui-property-group__toggle {
+    cursor: var(--appui-alias-control-cursor-default);
+}
+
+.appui-property-group__toggle:disabled {
+    background-color: var(--appui-alias-actions-quiet-background-color-default);
+}
+
+.appui-property-group__trailing-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.appui--rtl .appui-property-group__trailing-container {
+    flex-direction: row-reverse;
+}
+
+/*
+ * The content starts one row gap below the title and keeps that same gap between its rows, so the
+ * rhythm does not change at a group boundary.
+ */
+.appui-property-group__content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-shrink: 0;
+    margin-top: var(--appui-alias-inspector-row-gap);
+    /* Every control in the section stands at the row's height: the medium control height follows the
+       inspector row height inside the body. The two resolve to the same token by default, so this
+       changes nothing until a host sets the row height apart from the control ramp. */
+    --appui-alias-control-sizing-md-height: var(--appui-alias-inspector-row-height);
+}
+
+/*
+ * An open group with nothing in it: the body is zero tall but would still carry its gap, so the group
+ * grew by one row gap. It drops the gap rather than going `display: none`, because a hidden body runs
+ * no layout pass and would never notice a row arriving to clear the empty state. An expandable group
+ * with no rows of its own is not empty but has no rows either, so it drops the gap the same way.
+ */
+.appui-property-group--empty > .appui-property-group__content,
+.appui-property-group--without-rows > .appui-property-group__content {
+    margin-top: 0;
+}
+
+.appui-property-group__content > * {
+    margin-top: var(--appui-alias-inspector-row-gap);
+}
+
+.appui-property-group__content > .unity-first-child {
+    margin-top: 0;
+}
+
+/* PropertyGroupStack: the column a panel stacks its sections in. */
+.appui-property-group-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.appui-property-group-stack > * {
+    margin-top: var(--appui-alias-inspector-section-gap);
+}
+
+.appui-property-group-stack > .unity-first-child {
+    margin-top: 0;
+}

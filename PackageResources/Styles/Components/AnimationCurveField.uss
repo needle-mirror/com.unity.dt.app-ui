@@ -1,0 +1,68 @@
+/* AnimationCurveField */
+.appui-animationcurvefield {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    flex-shrink: 0;
+    overflow: hidden;
+    padding: var(--appui-alias-control-gap-sm) var(--appui-alias-control-gap-md);
+    border-width: var(--appui-alias-control-border-width);
+    border-radius: var(--appui-alias-control-border-radius);
+    border-color: var(--appui-alias-field-border-color-default);
+    background-color: var(--appui-base-100);
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+/* Painter2D stroke settings, read back by AnimationCurveField.cs. --curve-width is unitless
+   on purpose: a CustomStyleProperty<float> silently resolves a px length to 0. */
+.appui-animationcurvefield__preview {
+    flex-grow: 1;
+    --curve-color: var(--appui-alias-semantic-positive);
+    --curve-width: 1.5;
+}
+
+.appui-animationcurvefield.keyboard-focus {
+    border-color: var(--appui-alias-field-border-color-focus);
+    /* converted from : outline-width: var(--appui-alias-control-outline-width); */
+    --outline-width: var(--appui-alias-control-outline-width);
+    /* converted from : outline-color: var(--appui-alias-control-outline-color); */
+    --outline-color: var(--appui-alias-control-outline-color);
+    /* converted from : outline-offset: var(--appui-alias-control-outline-offset); */
+    --outline-offset: var(--appui-alias-control-outline-offset);
+}
+
+.appui-animationcurvefield.is-hovered {
+    border-color: var(--appui-alias-control-border-color-hover);
+}
+
+.appui-animationcurvefield.is-active {
+    border-color: var(--appui-alias-field-border-color-active);
+}
+
+.appui-animationcurvefield.is-invalid {
+    border-color: var(--appui-alias-field-border-color-invalid);
+}
+
+/* Disabled is the field's *-disabled colour tokens, and the curve takes the disabled text
+   colour. Never opacity: a disabled subtree matches :disabled at every level, so it compounds. */
+.appui-animationcurvefield:disabled {
+    border-color: var(--appui-alias-field-border-color-disabled);
+    background-color: var(--appui-alias-field-background-color-disabled);
+    cursor: var(--appui-alias-control-cursor-disabled);
+}
+
+.appui-animationcurvefield:disabled > .appui-animationcurvefield__preview {
+    --curve-color: var(--appui-alias-text-disabled);
+}
+
+.appui-animationcurvefield--size-sm {
+    height: var(--appui-alias-control-sizing-sm-height);
+}
+
+.appui-animationcurvefield--size-md {
+    height: var(--appui-alias-control-sizing-md-height);
+}
+
+.appui-animationcurvefield--size-lg {
+    height: var(--appui-alias-control-sizing-lg-height);
+}

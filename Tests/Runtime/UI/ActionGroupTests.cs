@@ -17,6 +17,10 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => ActionGroup.ussClassName;
 
+        // Handed over to ActionGroupSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:ActionGroup/>",
@@ -36,6 +40,30 @@ namespace Unity.AppUI.Tests.UI
                 <appui:ActionButton icon=""info""/>
             </appui:ActionGroup>",
         };
+
+        [UnityTest]
+        public IEnumerator Children_FollowInheritedVisibility()
+        {
+            var doc = Utils.ConstructTestUI();
+
+            var parent = new VisualElement();
+            var actionGroup = new ActionGroup();
+            var button = new ActionButton();
+            actionGroup.Add(button);
+            parent.Add(actionGroup);
+            doc.rootVisualElement.Add(parent);
+
+            yield return null;
+            yield return null;
+            Assert.IsTrue(button.visible);
+
+            parent.style.visibility = Visibility.Hidden;
+            actionGroup.style.width = 300; // trigger a geometry change so the group refreshes
+            yield return null;
+            yield return null;
+
+            Assert.IsFalse(button.visible, "Children should inherit visibility: hidden from the parent.");
+        }
 
         [UnityTest]
         public IEnumerator HandleSelectionByInteraction()

@@ -8,5 +8,9 @@ namespace Unity.AppUI.Tests.UI
     class PreloaderTests : VisualElementTests<Preloader>
     {
         protected override string mainUssClassName => Preloader.ussClassName;
+
+        // Handed over to PreloaderSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
     }
 }

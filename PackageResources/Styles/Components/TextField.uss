@@ -6,7 +6,9 @@
     border-width: var(--appui-alias-control-border-width);
     /*border-style: var(--appui-control-border-style);*/
     border-radius: var(--appui-alias-control-border-radius);
-    padding: 0 var(--appui-alias-control-gap-md);
+    /* Horizontal inset: the size rules read --appui-alias-field-padding-horizontal-*, as the
+       registry's fields do. */
+    padding: 0;
     /*gap: var(--appui-control-gap);*/
     background-color: var(--appui-alias-field-background-color-default);
     border-color: var(--appui-alias-field-border-color-default);
@@ -19,17 +21,46 @@
     flex-direction: row-reverse;
 }
 
-.appui-textfield--size-s {
+.appui-textfield--size-sm {
     height: var(--appui-alias-control-sizing-sm-height);
+    padding-left: var(--appui-alias-field-padding-horizontal-sm);
+    padding-right: var(--appui-alias-field-padding-horizontal-sm);
 }
 
-.appui-textfield--size-m {
+.appui-textfield--size-md {
     height: var(--appui-alias-control-sizing-md-height);
+    padding-left: var(--appui-alias-field-padding-horizontal-md);
+    padding-right: var(--appui-alias-field-padding-horizontal-md);
 }
 
-.appui-textfield--size-l {
+.appui-textfield--size-lg {
     height: var(--appui-alias-control-sizing-lg-height);
+    padding-left: var(--appui-alias-field-padding-horizontal-lg);
+    padding-right: var(--appui-alias-field-padding-horizontal-lg);
 }
+
+/* Field text takes the registry's absolute steps: text-sm (font-sizes-100) at sm and
+   text-base (font-sizes-200) at md and lg. The placeholder follows the value. */
+.appui-textfield--size-sm .appui-textfield__input,
+.appui-textfield--size-sm .appui-textfield__input > .unity-text-field__input,
+.appui-textfield--size-sm .appui-textfield__placeholder {
+    font-size: var(--appui-font-sizes-100);
+}
+
+.appui-textfield--size-md .appui-textfield__input,
+.appui-textfield--size-md .appui-textfield__input > .unity-text-field__input,
+.appui-textfield--size-md .appui-textfield__placeholder {
+    font-size: var(--appui-font-sizes-200);
+}
+
+.appui-textfield--size-lg .appui-textfield__input,
+.appui-textfield--size-lg .appui-textfield__input > .unity-text-field__input,
+.appui-textfield--size-lg .appui-textfield__placeholder {
+    font-size: var(--appui-font-sizes-200);
+}
+
+/* SearchBar takes these steps too. The registry's search-bar keeps text-base at sm, but a
+   text-base line does not fit the compact sm box, so UITK deliberately steps it down. */
 
 .appui-textfield__leadingcontainer {
     display: flex;
@@ -37,11 +68,11 @@
     flex-direction: row;
     align-items: center;
     margin-left: 0;
-    margin-right: var(--appui-alias-control-gap-md); /* todo : remove when gap will be supported */
+    margin-right: var(--appui-sizing-115); /* todo : remove when gap will be supported */
 }
 
 .appui--rtl .appui-textfield__leadingcontainer {
-    margin-left: var(--appui-alias-control-gap-md); /* todo : remove when gap will be supported */
+    margin-left: var(--appui-sizing-115); /* todo : remove when gap will be supported */
     margin-right: 0;
     flex-direction: row-reverse;
 }
@@ -60,18 +91,39 @@
     flex-direction: row-reverse;
 }
 
+.appui-textfield__suffix {
+    flex-shrink: 0;
+    flex-grow: 0;
+    /* The registry's suffix is text-sm at every size, smaller than the value from md up. */
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-foregrounds-50);
+    -unity-text-align: middle-left;
+    margin-left: var(--appui-sizing-115); /* todo : remove when gap will be supported */
+    margin-right: 0;
+}
+
+.appui--rtl .appui-textfield__suffix {
+    -unity-text-align: middle-right;
+    margin-left: 0;
+    margin-right: var(--appui-sizing-115); /* todo : remove when gap will be supported */
+}
+
+.appui-textfield:disabled .appui-textfield__suffix {
+    color: var(--appui-foregrounds-25);
+}
+
 .appui-textfield__trailingcontainer {
     display: flex;
     flex-shrink: 0;
     flex-direction: row;
     align-items: center;
-    margin-left: var(--appui-alias-control-gap-md); /* todo : remove when gap will be supported */
+    margin-left: var(--appui-sizing-115); /* todo : remove when gap will be supported */
     margin-right: 0;
 }
 
 .appui--rtl .appui-textfield__trailingcontainer {
     margin-left: 0;
-    margin-right: var(--appui-alias-control-gap-md); /* todo : remove when gap will be supported */
+    margin-right: var(--appui-sizing-115); /* todo : remove when gap will be supported */
     flex-direction: row-reverse;
 }
 

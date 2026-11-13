@@ -43,7 +43,7 @@ namespace Unity.AppUI.UI
     /// <para>Using RectIntField in a layout editor:
     /// Using RectIntField as part of a UI layout editor with custom styling.</para>
     /// <code lang="xml"><![CDATA[
-    /// <RectIntField name="elementBounds" size="M" value="50,50,300,200">
+    /// <RectIntField name="elementBounds" size="Md" value="50,50,300,200">
     ///     <Style src="ElementEditor.uss" />
     /// </RectIntField>
     /// ]]></code>
@@ -166,7 +166,7 @@ namespace Unity.AppUI.UI
             hierarchy.Add(positionRow);
             hierarchy.Add(sizeRow);
 
-            size = Size.M;
+            size = Size.Md;
             SetValueWithoutNotify(new RectInt(0, 0, 0, 0));
 
             m_XField.RegisterValueChangedCallback(OnXFieldChanged);

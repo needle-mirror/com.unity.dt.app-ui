@@ -1,0 +1,153 @@
+/* ChatMessages — the conversation container.
+ *
+ * Every dimension here is a token so the whole conversation rescales with
+ * density, and every colour is a token so it follows the theme. The list is a
+ * centred column with a max width, mirroring the registry's `max-w-3xl mx-auto`.
+ *
+ * Gaps are expressed as margins on the tagged children rather than through a
+ * `> *` child selector: a bare VisualElement child has been observed not to
+ * match `> *` in UITK, and callers do drop plain elements into these slots.
+ */
+
+.appui-chat-messages {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
+    flex-direction: column;
+}
+
+.appui-chat-messages__scroll {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
+}
+
+.appui-chat-messages__list {
+    flex-direction: column;
+    align-self: center;
+    width: 100%;
+    max-width: var(--appui-static-sizing-3200);
+    padding-top: var(--appui-static-sizing-300);
+    padding-bottom: var(--appui-static-sizing-300);
+    padding-left: var(--appui-static-sizing-200);
+    padding-right: var(--appui-static-sizing-200);
+}
+
+.appui-chat-messages__list > .appui-chat-message-bubble,
+.appui-chat-messages__list > .appui-chat-messages__banner {
+    margin-bottom: var(--appui-static-sizing-300);
+}
+
+/* ---- Empty and exhausted states -------------------------------------- */
+
+.appui-chat-messages--empty .appui-chat-messages__scroll,
+.appui-chat-messages--loading .appui-chat-messages__scroll {
+    justify-content: center;
+}
+
+.appui-chat-messages__empty {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    padding-left: var(--appui-static-sizing-200);
+    padding-right: var(--appui-static-sizing-200);
+}
+
+.appui-chat-messages__empty-icon {
+    --unity-image-tint-color: var(--appui-alias-semantic-destructive);
+    color: var(--appui-alias-semantic-destructive);
+    margin-bottom: var(--appui-static-sizing-150);
+}
+
+.appui-chat-messages__empty-title {
+    color: var(--appui-alias-text-primary);
+    font-size: var(--appui-font-sizes-300);
+    -unity-font-definition: var(--appui-font-weights-200);
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+.appui-chat-messages__empty-description {
+    color: var(--appui-alias-text-secondary);
+    font-size: var(--appui-font-sizes-100);
+    -unity-text-align: middle-center;
+    white-space: normal;
+    max-width: var(--appui-static-sizing-2400);
+    margin-top: var(--appui-static-sizing-150);
+}
+
+/* ---- Conversation loading -------------------------------------------- */
+
+.appui-chat-messages__loading {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.appui-chat-messages__loading-spinner {
+    margin-bottom: var(--appui-static-sizing-150);
+}
+
+.appui-chat-messages__loading-label {
+    color: var(--appui-alias-text-secondary);
+    font-size: var(--appui-font-sizes-100);
+    -unity-text-align: middle-center;
+}
+
+/* ---- Destructive banner: system messages and the budget notice -------- */
+
+.appui-chat-messages__banner {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    padding-top: var(--appui-static-sizing-150);
+    padding-bottom: var(--appui-static-sizing-150);
+    padding-left: var(--appui-static-sizing-200);
+    padding-right: var(--appui-static-sizing-200);
+    border-radius: var(--appui-alias-control-border-radius);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-semantic-destructive);
+    background-color: var(--appui-destructive-25);
+}
+
+.appui-chat-messages__banner-icon {
+    --unity-image-tint-color: var(--appui-alias-semantic-destructive);
+    color: var(--appui-alias-semantic-destructive);
+    flex-shrink: 0;
+    margin-right: var(--appui-static-sizing-100);
+}
+
+.appui-chat-messages__banner-label {
+    color: var(--appui-alias-semantic-destructive);
+    font-size: var(--appui-font-sizes-100);
+    white-space: normal;
+    flex-shrink: 1;
+}
+
+/* ---- Per-message pieces ---------------------------------------------- */
+
+.appui-chat-messages__text {
+    color: var(--appui-alias-text-primary);
+    font-size: var(--appui-font-sizes-100);
+    white-space: normal;
+    margin-top: var(--appui-static-sizing-100);
+    margin-bottom: var(--appui-static-sizing-100);
+}
+
+.appui-chat-messages__meta {
+    flex-direction: row;
+    align-items: center;
+    margin-top: var(--appui-static-sizing-50);
+}
+
+.appui-chat-messages__tool-content {
+    margin-top: var(--appui-static-sizing-100);
+    margin-bottom: var(--appui-static-sizing-100);
+}
+
+.appui-chat-messages__chip {
+    margin-right: var(--appui-static-sizing-50);
+    margin-bottom: var(--appui-static-sizing-50);
+}

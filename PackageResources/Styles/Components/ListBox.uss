@@ -1,0 +1,29 @@
+/* ListBox */
+.appui-list-box {
+    flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+/* A ListBox is a single-column grid, so it carries no column gutter. */
+.appui-list-box .appui-grid-view__item {
+    padding: 0;
+}
+
+.appui-list-box .appui-grid-view__first-column,
+.appui-list-box .appui-grid-view__last-column {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.appui-list-box--size-sm .appui-listview-item {
+    min-height: var(--appui-alias-control-sizing-sm-height);
+}
+
+.appui-list-box--size-md .appui-listview-item {
+    min-height: var(--appui-alias-control-sizing-md-height);
+}
+
+.appui-list-box--size-lg .appui-listview-item {
+    min-height: var(--appui-alias-control-sizing-lg-height);
+}

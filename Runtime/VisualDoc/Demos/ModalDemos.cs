@@ -17,7 +17,7 @@ namespace Unity.AppUI.VisualDoc
                 content.Add(new Text("Are you sure you want to delete this item?"));
 
                 var buttonContainer = new VisualElement();
-                var cancelButton = new Button { title = "Cancel", quiet = true };
+                var cancelButton = new Button { title = "Cancel", variant = ButtonVariant.Ghost };
                 var confirmButton = new Button { title = "Delete", variant = ButtonVariant.Destructive };
                 buttonContainer.Add(cancelButton);
                 buttonContainer.Add(confirmButton);

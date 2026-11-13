@@ -135,6 +135,7 @@
 
 /* ThreadReaction */
 .appui-thread-reaction {
+    font-size: var(--appui-font-sizes-100);
     margin-right: var(--appui-alias-control-gap-sm);
 }
 

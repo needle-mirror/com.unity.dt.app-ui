@@ -1,0 +1,9 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--plastic-local-modifier--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<g id="Plastic/LocalModifier">
+<g id="Group 2081">
+<path id="Rectangle 2371 (Stroke)" fill-rule="evenodd" clip-rule="evenodd" d="M8.5 6.19995H14.5C15.3284 6.19995 16 6.87152 16 7.69995V13.7C16 14.5284 15.3284 15.2 14.5 15.2H8.5C7.67157 15.2 7 14.5284 7 13.7V7.69995C7 6.87152 7.67157 6.19995 8.5 6.19995Z" fill="#000000"/>
+<rect id="Rectangle 2370" x="8" y="7.19995" width="7" height="7" rx="0.5" fill="#000000"/>
+<path id="Subtract" fill-rule="evenodd" clip-rule="evenodd" d="M8.5 7.19995C8.22386 7.19995 8 7.42381 8 7.69995V13.7C8 13.9761 8.22386 14.2 8.5 14.2H14.5C14.7761 14.2 15 13.9761 15 13.7V7.69995C15 7.42381 14.7761 7.19995 14.5 7.19995H8.5ZM13.0581 8.25801L9.05806 12.258L9.94194 13.1419L13.9419 9.14189L13.0581 8.25801Z" fill="#008126"/>
+</g>
+</g>
+</svg>

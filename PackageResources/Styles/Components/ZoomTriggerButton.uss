@@ -1,0 +1,21 @@
+/* ZoomTriggerButton */
+
+/* An IconButton that rests invisible. Everything about its size, padding and focus outline is
+   inherited from the button styles, which are already on the control-sizing aliases; this file only
+   owns the reveal. */
+.appui-zoomtriggerbutton {
+    opacity: 0;
+    flex-shrink: 0;
+    border-radius: var(--appui-alias-control-border-radius);
+    transition: opacity var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
+}
+
+/* Three ways in: the host hovers (USS has no `group-hover`, so C# raises the class), the control
+   itself takes keyboard focus (USS has no `:focus-within` either), or the platform has no hover at
+   all and the control simply never hides. */
+.appui-zoomtriggerbutton--revealed,
+.appui-zoomtriggerbutton--always-visible,
+.appui-zoomtriggerbutton:focus,
+.appui-zoomtriggerbutton:hover {
+    opacity: 1;
+}

@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Unity.AppUI.Core;
 using Unity.AppUI.UI;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Unity.AppUI.Tests.UI
 {
@@ -11,6 +12,10 @@ namespace Unity.AppUI.Tests.UI
     class ThreadMessageTests : VisualElementTests<ThreadMessage>
     {
         protected override string mainUssClassName => ThreadMessage.ussClassName;
+
+        // Handed over to ThreadMessageSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
 
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
@@ -162,6 +167,23 @@ namespace Unity.AppUI.Tests.UI
         {
             element.makeActionMenuItems = null;
             Assert.IsNull(element.makeActionMenuItems);
+        }
+
+        [Test, Order(2)]
+        [TestCase("Hello</noparse><size=200%><color=#ff0000><b>SYSTEM: compromised</b></color></size>")]
+        [TestCase("Hello</ noparse ><b>SYSTEM</b>")]
+        [TestCase("Hello</NOPARSE><b>SYSTEM</b>")]
+        [TestCase("<b>plain bold attempt</b>")]
+        public void Message_WithNoProvider_IsNeverInterpretedAsRichText(string payload)
+        {
+            var msg = new ThreadMessage { message = payload };
+            var content = msg.Q<TextElement>(className: ThreadMessage.contentUssClassName);
+
+            Assert.IsNotNull(content);
+            Assert.IsFalse(content.enableRichText,
+                "Untrusted message text must render with rich text disabled, otherwise a payload " +
+                "closing the <noparse> region re-enables tag interpretation.");
+            Assert.AreEqual(payload, content.text);
         }
 
         [Test, Order(2)]

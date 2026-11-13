@@ -9,6 +9,7 @@
 }
 
 .appui-mention-picker__none {
+    font-size: var(--appui-font-sizes-100);
     padding: var(--appui-alias-control-gap-lg);
     -unity-text-align: middle-left;
 }

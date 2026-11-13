@@ -56,7 +56,7 @@ namespace Unity.AppUI.UI
     ///     high-value="1"
     ///     format-string="P0"
     ///     unit="opacity"
-    ///     size="M" />
+    ///     size="Md" />
     /// ]]></code>
     /// </example>
     [VisualDocPage("inputs")]

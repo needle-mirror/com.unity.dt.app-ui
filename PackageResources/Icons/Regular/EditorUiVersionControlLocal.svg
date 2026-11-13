@@ -1,0 +1,10 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--editor-ui-version-control-local--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<g clip-path="url(#clip0_402_1097)">
+<path d="M8 11.25C9.79493 11.25 11.25 9.79493 11.25 8C11.25 6.20507 9.79493 4.75 8 4.75C6.20507 4.75 4.75 6.20507 4.75 8C4.75 9.79493 6.20507 11.25 8 11.25Z" fill="#B73C15" stroke="#F0F0F0"/>
+</g>
+<defs>
+<clipPath id="clip0_402_1097">
+<rect width="8" height="8" fill="white" transform="translate(4 4)"/>
+</clipPath>
+</defs>
+</svg>

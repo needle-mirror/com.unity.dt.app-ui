@@ -1,0 +1,10 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--virtual-production-frame-lines--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path d="M8 10H7V8H8V10Z" fill="#FFFFFF"/>
+<path d="M8 7H10V8H8V7Z" fill="#FFFFFF"/>
+<path d="M8 7V5H7V7H5V8H7V7H8Z" fill="#FFFFFF"/>
+<path d="M9 12H11.5C11.78 12 12 11.78 12 11.5V9H11V11H9V12Z" fill="#FFFFFF"/>
+<path d="M4 9V11H6V12H3.5C3.22 12 3 11.78 3 11.5V9H4Z" fill="#FFFFFF"/>
+<path d="M6 4H4V6H3V3.5C3 3.22 3.22 3 3.5 3H6V4Z" fill="#FFFFFF"/>
+<path d="M11.5 3C11.78 3 12 3.22 12 3.5V6H11V4H9V3H11.5Z" fill="#FFFFFF"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.5 14H1.5C1.22 14 1 13.78 1 13.5V1.5C1 1.22 1.22 1 1.5 1H13.5C13.78 1 14 1.22 14 1.5V13.5C14 13.78 13.78 14 13.5 14ZM2 13H13V2H2V13Z" fill="#FFFFFF"/>
+</svg>

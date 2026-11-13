@@ -58,7 +58,7 @@ namespace Unity.AppUI.UI
 
             AddToClassList(ussClassName);
 
-            m_Icon = new Icon { name = iconUssClassName, pickingMode = PickingMode.Ignore };
+            m_Icon = new Icon { primary = true, name = iconUssClassName, pickingMode = PickingMode.Ignore };
             m_Icon.AddToClassList(iconUssClassName);
             hierarchy.Add(m_Icon);
             m_Label = new LocalizedTextElement { name = labelUssClassName, pickingMode = PickingMode.Ignore };

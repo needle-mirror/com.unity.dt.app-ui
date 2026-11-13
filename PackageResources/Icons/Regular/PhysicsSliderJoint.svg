@@ -1,0 +1,5 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--physics-slider-joint--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M1 2C1 1.44772 1.44772 1 2 1H13C13.5523 1 14 1.44772 14 2V14H1V2ZM9 2H13V13H8H3H2V3V2H3H8H9ZM3 3V12H8V3H3Z" fill="#2E7D32"/>
+<rect x="7" y="7" width="3" height="1" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10 5V10L12.5 7.5L10 5Z" fill="#2E7D32"/>
+</svg>

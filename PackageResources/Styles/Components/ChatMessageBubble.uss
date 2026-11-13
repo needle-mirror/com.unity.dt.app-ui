@@ -1,0 +1,131 @@
+/* ChatMessageBubble */
+
+/* The row is a column so the bubble, the extra content, the footer and the actions stack. A user
+   message aligns to the trailing edge, an assistant message fills the conversation width. */
+.appui-chat-message-bubble {
+    flex-direction: column;
+    flex-shrink: 0;
+    align-items: stretch;
+}
+
+.appui-chat-message-bubble--user {
+    align-items: flex-end;
+}
+
+/* Only a user message wears the bubble. The assistant's answer runs flush with the conversation,
+   so its bubble element is transparent and unpadded. */
+.appui-chat-message-bubble__bubble {
+    flex-direction: column;
+    max-width: 80%;
+}
+
+/* The user bubble paints from its own component tokens, which default to the accent action aliases,
+   so a theme can outline or recolour it without retinting every accent action. */
+.appui-chat-message-bubble--user > .appui-chat-message-bubble__bubble {
+    background-color: var(--appui-chat-message-bubble-user-background-color);
+    color: var(--appui-chat-message-bubble-user-foreground-color);
+    border-width: var(--appui-chat-message-bubble-user-border-width);
+    border-color: var(--appui-chat-message-bubble-user-border-color);
+    border-radius: var(--appui-border-radius-lg);
+    border-top-right-radius: var(--appui-border-radius-xs);
+    padding: var(--appui-sizing-125) var(--appui-sizing-200);
+}
+
+.appui--rtl .appui-chat-message-bubble--user > .appui-chat-message-bubble__bubble {
+    border-top-right-radius: var(--appui-border-radius-lg);
+    border-top-left-radius: var(--appui-border-radius-xs);
+}
+
+/* What the message was sent with, above the prompt text. Empty, the container has no children and
+   therefore no height, so nothing has to be toggled from C#. The rhythm below the row lives on the
+   children for the same reason. */
+.appui-chat-message-bubble__sent-with {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.appui-chat-message-bubble__sent-with > * {
+    margin-left: var(--appui-sizing-160);
+    margin-bottom: var(--appui-sizing-160);
+}
+
+.appui-chat-message-bubble__content {
+    white-space: normal;
+    font-size: var(--appui-font-sizes-200);
+}
+
+/* A context chip sits on the bubble fill, so its label takes the bubble's chip token, not the page
+   foreground a bare Chip paints. The chip's rim, ornament and hover fill tokens are color-mix() in
+   the registry, which USS cannot express, so the generated theme leaves them out. */
+.appui-chat-message-bubble--user .appui-chat-message-bubble__sent-with .appui-chip__label {
+    color: var(--appui-chat-message-bubble-user-chip-foreground-color);
+}
+
+/* With its label on the bubble foreground, the chip cannot keep its own fill: a Filled chip's light
+   base fill would sit under white text. Like the registry's outlined context chip it goes transparent
+   over the bubble. The registry's rim and hover are the bubble foreground at 40% and 10%, which USS
+   cannot mix, so they take the matching translucent white steps that foreground resolves to. Four
+   classes deep to outrank every Chip.uss state rule. */
+.appui-chat-message-bubble--user > .appui-chat-message-bubble__bubble > .appui-chat-message-bubble__sent-with .appui-chip {
+    background-color: var(--appui-alias-actions-quiet-background-color-default);
+    border-color: var(--appui-color-transparent-white-400);
+}
+
+/* The chip's glyphs, an ornament icon and the delete glyph, sit on the bubble as well, so they take the
+   chip foreground instead of the page tint Icon.uss and Chip.uss give them. */
+.appui-chat-message-bubble--user > .appui-chat-message-bubble__bubble > .appui-chat-message-bubble__sent-with .appui-chip .appui-icon {
+    --unity-image-tint-color: var(--appui-chat-message-bubble-user-chip-foreground-color);
+}
+
+.appui-chat-message-bubble--user > .appui-chat-message-bubble__bubble > .appui-chat-message-bubble__sent-with .appui-chip.is-hovered,
+.appui-chat-message-bubble--user > .appui-chat-message-bubble__bubble > .appui-chat-message-bubble__sent-with .appui-chip.is-active,
+.appui-chat-message-bubble--user > .appui-chat-message-bubble__bubble > .appui-chat-message-bubble__sent-with .appui-chip.keyboard-focus {
+    background-color: var(--appui-color-transparent-white-100);
+    border-color: var(--appui-color-transparent-white-400);
+}
+
+/* A disabled context chip. The rules above outrank Chip.uss's `:disabled` rules, so the disabled look is
+   restated here, after the hover rules it has to beat on equal specificity: no hover fill, the disabled
+   rim, and the disabled foreground on the label and glyphs. */
+.appui-chat-message-bubble--user > .appui-chat-message-bubble__bubble > .appui-chat-message-bubble__sent-with .appui-chip:disabled {
+    background-color: var(--appui-alias-actions-quiet-background-color-default);
+    border-color: var(--appui-alias-actions-border-color-disabled);
+}
+
+.appui-chat-message-bubble--user > .appui-chat-message-bubble__bubble > .appui-chat-message-bubble__sent-with .appui-chip:disabled .appui-chip__label {
+    color: var(--appui-alias-actions-foreground-color-disabled);
+}
+
+.appui-chat-message-bubble--user > .appui-chat-message-bubble__bubble > .appui-chat-message-bubble__sent-with .appui-chip:disabled .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-actions-foreground-color-disabled);
+}
+
+.appui-chat-message-bubble--user > .appui-chat-message-bubble__bubble > .appui-chat-message-bubble__content {
+    color: var(--appui-chat-message-bubble-user-foreground-color);
+}
+
+.appui-chat-message-bubble--assistant > .appui-chat-message-bubble__bubble > .appui-chat-message-bubble__content {
+    color: var(--appui-alias-text-primary);
+}
+
+/* Extra content, footer and actions. Each collapses to nothing while empty; the leading margin sits
+   on the children so an empty slot contributes no rhythm either. */
+.appui-chat-message-bubble__container,
+.appui-chat-message-bubble__footer {
+    flex-direction: column;
+}
+
+.appui-chat-message-bubble__container > *,
+.appui-chat-message-bubble__footer > * {
+    margin-top: var(--appui-sizing-250);
+}
+
+.appui-chat-message-bubble__actions {
+    flex-direction: row;
+    align-items: center;
+}
+
+.appui-chat-message-bubble__actions > * {
+    margin-top: var(--appui-sizing-75);
+}

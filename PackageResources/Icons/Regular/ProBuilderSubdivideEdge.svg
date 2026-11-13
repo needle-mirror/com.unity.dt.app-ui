@@ -1,0 +1,12 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--pro-builder-subdivide-edge--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<g clip-path="url(#clip0_223_8041)">
+<path d="M9.5 7.5C9.5 8.32843 8.82843 9 8 9C7.17157 9 6.5 8.32843 6.5 7.5C6.5 6.67157 7.17157 6 8 6C8.82843 6 9.5 6.67157 9.5 7.5Z" fill="#00876A"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10.45 8C10.4828 7.83845 10.5 7.67123 10.5 7.5C10.5 7.32877 10.4828 7.16155 10.45 7H14.5C14.7761 7 15 7.22386 15 7.5C15 7.77614 14.7761 8 14.5 8H10.45ZM5.55001 8H1.5C1.22386 8 1 7.77614 1 7.5C1 7.22386 1.22386 7 1.5 7H5.55001C5.51722 7.16155 5.5 7.32877 5.5 7.5C5.5 7.67123 5.51722 7.83845 5.55001 8Z" fill="#555555"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M3 3H13V6H14V3C14 2.44772 13.5523 2 13 2H3C2.44772 2 2 2.44772 2 3V6H3L3 3ZM3 9H2V13C2 13.5523 2.44772 14 3 14H13C13.5523 14 14 13.5523 14 13V9H13V13H3L3 9Z" fill="#555555"/>
+</g>
+<defs>
+<clipPath id="clip0_223_8041">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+</defs>
+</svg>

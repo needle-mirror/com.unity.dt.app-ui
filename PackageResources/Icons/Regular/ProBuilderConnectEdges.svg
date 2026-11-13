@@ -1,0 +1,12 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--pro-builder-connect-edges--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<g clip-path="url(#clip0_223_8031)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M15 11.5C15 13.433 13.433 15 11.5 15C9.567 15 8 13.433 8 11.5C8 9.567 9.567 8 11.5 8C13.433 8 15 9.567 15 11.5ZM11 9.5C11 9.22386 11.2239 9 11.5 9C11.7761 9 12 9.22386 12 9.5V11H13.5C13.7761 11 14 11.2239 14 11.5C14 11.7761 13.7761 12 13.5 12H12V13.5C12 13.7761 11.7761 14 11.5 14C11.2239 14 11 13.7761 11 13.5V12H9.5C9.22386 12 9 11.7761 9 11.5C9 11.2239 9.22386 11 9.5 11H11V9.5Z" fill="#00876A"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M3 9V12L7.02743 11.9997C7.06575 12.3466 7.1435 12.6816 7.25609 13.0001L3 13C2.44772 13 2 12.5523 2 12V9H3ZM12 2C12.5523 2 13 2.44772 13 3V6H12V3H3V6H2V3C2 2.44772 2.44772 2 3 2H12Z" fill="#555555"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.5 7C13.7761 7 14 7.22386 14 7.5C14 7.58025 13.9811 7.65608 13.9475 7.72328C13.2417 7.26529 12.4018 7 11.5 7C10.4283 7 9.44409 7.37464 8.67121 8.0001L1.5 8C1.22386 8 1 7.77614 1 7.5C1 7.22386 1.22386 7 1.5 7H13.5Z" fill="#00876A"/>
+</g>
+<defs>
+<clipPath id="clip0_223_8031">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+</defs>
+</svg>

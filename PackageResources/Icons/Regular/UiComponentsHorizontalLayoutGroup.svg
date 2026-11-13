@@ -1,0 +1,4 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--ui-components-horizontal-layout-group--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M3.5 3C3.224 3 3 3.225 3 3.5V12.5C3 12.775 3.224 13 3.5 13H12.5C12.776 13 13 12.775 13 12.5V3.5C13 3.225 12.776 3 12.5 3H3.5ZM12.5 14H3.5C2.673 14 2 13.327 2 12.5V3.5C2 2.673 2.673 2 3.5 2H12.5C13.327 2 14 2.673 14 3.5V12.5C14 13.327 13.327 14 12.5 14Z" fill="#FFFFFF"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M4 11C4 11.553 4.448 12 5 12C5.552 12 6 11.553 6 11V5C6 4.447 5.552 4 5 4C4.448 4 4 4.447 4 5V11ZM8 12C7.448 12 7 11.553 7 11V5C7 4.447 7.448 4 8 4C8.552 4 9 4.447 9 5V11C9 11.553 8.552 12 8 12ZM11 12C10.448 12 10 11.553 10 11V5C10 4.447 10.448 4 11 4C11.552 4 12 4.447 12 5V11C12 11.553 11.552 12 11 12Z" fill="#FFFFFF"/>
+</svg>

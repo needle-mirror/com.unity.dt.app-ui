@@ -1,0 +1,65 @@
+/* ColorGradientField */
+.appui-colorgradientfield {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    flex-shrink: 0;
+    overflow: hidden;
+    padding: var(--appui-alias-control-border-width);
+    border-width: var(--appui-alias-control-border-width);
+    border-radius: var(--appui-alias-control-border-radius);
+    border-color: var(--appui-alias-field-border-color-default);
+    background-color: var(--appui-alias-field-background-color-default);
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+/* The swatch is a full-bleed preview here, so it drops the ColorSwatch chip sizing
+   and its own rim — the field owns the rim. */
+.appui-colorgradientfield__swatch {
+    flex-grow: 1;
+    width: auto;
+    height: auto;
+    border-width: 0;
+}
+
+.appui-colorgradientfield.keyboard-focus {
+    border-color: var(--appui-alias-field-border-color-focus);
+    /* converted from : outline-width: var(--appui-alias-control-outline-width); */
+    --outline-width: var(--appui-alias-control-outline-width);
+    /* converted from : outline-color: var(--appui-alias-control-outline-color); */
+    --outline-color: var(--appui-alias-control-outline-color);
+    /* converted from : outline-offset: var(--appui-alias-control-outline-offset); */
+    --outline-offset: var(--appui-alias-control-outline-offset);
+}
+
+.appui-colorgradientfield.is-hovered {
+    border-color: var(--appui-alias-control-border-color-hover);
+}
+
+.appui-colorgradientfield.is-active {
+    border-color: var(--appui-alias-field-border-color-active);
+}
+
+.appui-colorgradientfield.is-invalid {
+    border-color: var(--appui-alias-field-border-color-invalid);
+}
+
+/* Disabled is the field's *-disabled colour tokens on the chrome, never opacity, which
+   compounds down a disabled subtree. The ramp is the value, so it keeps its colours. */
+.appui-colorgradientfield:disabled {
+    border-color: var(--appui-alias-field-border-color-disabled);
+    background-color: var(--appui-alias-field-background-color-disabled);
+    cursor: var(--appui-alias-control-cursor-disabled);
+}
+
+.appui-colorgradientfield--size-sm {
+    height: var(--appui-alias-control-sizing-sm-height);
+}
+
+.appui-colorgradientfield--size-md {
+    height: var(--appui-alias-control-sizing-md-height);
+}
+
+.appui-colorgradientfield--size-lg {
+    height: var(--appui-alias-control-sizing-lg-height);
+}

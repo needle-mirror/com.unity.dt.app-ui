@@ -10,9 +10,10 @@ namespace Unity.AppUI.VisualDoc
         static VisualElement Hierarchy()
         {
             return DemoUtils.Column(
-                new Text("Welcome!") { size = TextSize.XXL, primary = true },
-                new Text("Please read the following instructions") { size = TextSize.L, primary = false },
-                new Text("Detailed instructions go here...") { size = TextSize.M });
+                new Text("Welcome!") { size = TextSize.XXL },
+                new Text("Please read the following instructions") { size = TextSize.L, variant = TextVariant.Secondary },
+                new Text("Detailed instructions go here...") { size = TextSize.M },
+                new Text("Last updated 5 minutes ago") { size = TextSize.XS, variant = TextVariant.Muted });
         }
     }
 }

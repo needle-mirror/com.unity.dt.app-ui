@@ -20,7 +20,10 @@ class AppUIAndroidBuildProcessor : IPostGenerateGradleAndroidProject
             return;
         }
 
-        var doc = new XmlDocument();
+        // XmlResolver = null disables DTD/external-entity resolution. The manifest is
+        // Unity-generated rather than untrusted input, so this is hardening rather than
+        // a fix, but it costs nothing and removes the XXE footgun if that ever changes.
+        var doc = new XmlDocument { XmlResolver = null };
         doc.Load(manifestPath);
 
         var androidNamespace = "http://schemas.android.com/apk/res/android";

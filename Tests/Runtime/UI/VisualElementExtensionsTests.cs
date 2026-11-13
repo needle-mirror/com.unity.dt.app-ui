@@ -16,6 +16,8 @@ namespace Unity.AppUI.Tests.UI
 {
     [TestFixture]
     [TestOf(typeof(VisualElementExtensions))]
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     class VisualElementExtensionsTests
     {
         UIDocument m_TestUI;
@@ -78,18 +80,18 @@ namespace Unity.AppUI.Tests.UI
 
             LangContext langContext = default;
             ThemeContext themeContext = default;
-            ScaleContext scaleContext = default;
+            DensityContext densityContext = default;
 
             Assert.DoesNotThrow(() =>
             {
                 langContext = v.GetContext<LangContext>();
                 themeContext = v.GetContext<ThemeContext>();
-                scaleContext = v.GetContext<ScaleContext>();
+                densityContext = v.GetContext<DensityContext>();
             });
 
             Assert.AreEqual(v.lang, langContext.lang);
             Assert.AreEqual(v.theme, themeContext.theme);
-            Assert.AreEqual(v.scale, scaleContext.scale);
+            Assert.AreEqual(v.density, densityContext.density);
         }
 
         [Test]
@@ -110,17 +112,17 @@ namespace Unity.AppUI.Tests.UI
 
             LangContext langContext = default;
             ThemeContext themeContext = default;
-            ScaleContext scaleContext = default;
+            DensityContext densityContext = default;
 
             Assert.DoesNotThrow(() =>
             {
                 langContext = overrideElement.GetContext<LangContext>();
                 themeContext = overrideElement.GetContext<ThemeContext>();
-                scaleContext = overrideElement.GetContext<ScaleContext>();
+                densityContext = overrideElement.GetContext<DensityContext>();
             });
             Assert.AreEqual(overrideElement.GetSelfContext<LangContext>().lang, langContext.lang);
             Assert.AreEqual(overrideElement.GetSelfContext<ThemeContext>().theme, themeContext.theme);
-            Assert.AreEqual(v.scale, scaleContext.scale);
+            Assert.AreEqual(v.density, densityContext.density);
         }
 
         [Test]

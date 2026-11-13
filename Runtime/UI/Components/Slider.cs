@@ -127,6 +127,10 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId trackProperty = new (nameof(track));
 
+        internal static readonly BindingId fieldLowValueProperty = new (nameof(fieldLowValue));
+
+        internal static readonly BindingId fieldHighValueProperty = new (nameof(fieldHighValue));
+
 
         /// <summary>
         /// Handler to scale the value of the slider thumbs and marks.
@@ -403,6 +407,90 @@ namespace Unity.AppUI.UI
             }
         }
 
+        Optional<TScalar> m_FieldLowValue;
+
+        Optional<TScalar> m_FieldHighValue;
+
+        /// <summary>
+        /// Lower bound for the input field, when it should sit below the track's
+        /// <see cref="BaseSlider{TValue,TScalar}.lowValue"/>.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Widening only. A bound inside the track's range is ignored, because a drag could
+        /// otherwise reach a number the field would then refuse to take back.
+        /// </para>
+        /// <para>
+        /// Only the value is widened, never the track: a drag still cannot leave
+        /// <see cref="BaseSlider{TValue,TScalar}.lowValue"/>, and a typed value below it pins the
+        /// thumb at the track's start while the field keeps the number. This lets a quantity with
+        /// no real floor still offer a comfortable range to drag through.
+        /// </para>
+        /// </remarks>
+        [CreateProperty]
+        [UxmlAttribute]
+        public Optional<TScalar> fieldLowValue
+        {
+            get => m_FieldLowValue;
+            set
+            {
+                var changed = m_FieldLowValue != value;
+                m_FieldLowValue = value;
+                SetValueWithoutNotify(this.value);
+
+                if (changed)
+                    NotifyPropertyChanged(in fieldLowValueProperty);
+            }
+        }
+
+        /// <summary>
+        /// Upper bound for the input field, when it should sit above the track's
+        /// <see cref="BaseSlider{TValue,TScalar}.highValue"/>. Widening only, see
+        /// <see cref="fieldLowValue"/>.
+        /// </summary>
+        [CreateProperty]
+        [UxmlAttribute]
+        public Optional<TScalar> fieldHighValue
+        {
+            get => m_FieldHighValue;
+            set
+            {
+                var changed = m_FieldHighValue != value;
+                m_FieldHighValue = value;
+                SetValueWithoutNotify(this.value);
+
+                if (changed)
+                    NotifyPropertyChanged(in fieldHighValueProperty);
+            }
+        }
+
+        /// <summary>
+        /// The effective lower bound a value may take: the track's, or <see cref="fieldLowValue"/>
+        /// when that one is lower.
+        /// </summary>
+        TScalar effectiveLowValue =>
+            m_FieldLowValue.IsSet && thumbComparer.Compare(m_FieldLowValue.Value, lowValue) < 0
+                ? m_FieldLowValue.Value
+                : lowValue;
+
+        /// <summary>
+        /// The effective upper bound a value may take: the track's, or <see cref="fieldHighValue"/>
+        /// when that one is higher.
+        /// </summary>
+        TScalar effectiveHighValue =>
+            m_FieldHighValue.IsSet && thumbComparer.Compare(m_FieldHighValue.Value, highValue) > 0
+                ? m_FieldHighValue.Value
+                : highValue;
+
+        TScalar ClampThumbToTrack(TScalar v)
+        {
+            TScalar lowest = lowValue, highest = highValue;
+            if (thumbComparer.Compare(lowest, highest) > 0)
+                (lowest, highest) = (highest, lowest);
+
+            return ClampThumb(v, lowest, highest);
+        }
+
         /// <inheritdoc />
         public override VisualElement contentContainer => null;
 
@@ -433,6 +521,10 @@ namespace Unity.AppUI.UI
 
             m_InputField = new TInputField();
             m_InputField.AddToClassList(inputFieldUssClassName);
+            // The track is this row's drag surface. A unit glyph that also scrubbed would be a
+            // second one, at a different rate, on something that does not look draggable.
+            if (m_InputField is IScrubSuffixElement scrubbable)
+                scrubbable.scrubSuffix = false;
 
             m_TrackElement = new VisualElement
             {
@@ -491,14 +583,13 @@ namespace Unity.AppUI.UI
         {
             if (m_RestrictedValues != RestrictedValuesPolicy.None)
             {
-                var restrictedValue = GetRestrictedThumbValue(baseValue, stepValue, evt.ctrlKey, out var idx);
+                GetRestrictedThumbValue(baseValue, stepValue, evt.ctrlKey, out var idx);
                 if (idx >= 0)
-                    return m_RestrictedValues == RestrictedValuesPolicy.Step
+                    return m_RestrictedValues is RestrictedValuesPolicy.Step or RestrictedValuesPolicy.CtrlStep
                         ? Mad(Mathf.Max(0, idx - 1), stepValue, lowValue)
                         : m_CustomMarks[Mathf.Max(0, idx - 1)].value;
-                return restrictedValue;
             }
-            return Mad(-1, stepValue, baseValue);;
+            return ClampThumbToTrack(Mad(-1, stepValue, baseValue));
         }
 
         /// <inheritdoc />
@@ -506,14 +597,13 @@ namespace Unity.AppUI.UI
         {
             if (m_RestrictedValues != RestrictedValuesPolicy.None)
             {
-                var restrictedValue = GetRestrictedThumbValue(baseValue, stepValue, evt.ctrlKey, out var idx);
+                GetRestrictedThumbValue(baseValue, stepValue, evt.ctrlKey, out var idx);
                 if (idx >= 0)
-                    return m_RestrictedValues == RestrictedValuesPolicy.Step
+                    return m_RestrictedValues is RestrictedValuesPolicy.Step or RestrictedValuesPolicy.CtrlStep
                         ? Mad(idx + 1, stepValue, lowValue) // do not care about clamping here, it will be done later
                         : m_CustomMarks[Mathf.Min(m_CustomMarks.Count - 1, idx + 1)].value;
-                return restrictedValue;
             }
-            return Mad(1, stepValue, baseValue);
+            return ClampThumbToTrack(Mad(1, stepValue, baseValue));
         }
 
         /// <inheritdoc />
@@ -562,11 +652,26 @@ namespace Unity.AppUI.UI
             return GetRestrictedValue(newValue, dragger.ctrlKey);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Clamps to the widened field bounds rather than the track's, so a typed value may sit
+        /// outside the track.
+        /// </summary>
+        /// <remarks>
+        /// The thumb needs no special handling: <c>SliderNormalizeValue</c> is an
+        /// <c>InverseLerp</c>, which saturates, so an out-of-track value already pins the thumb at
+        /// the end rather than rendering past it. With neither <see cref="fieldLowValue"/> nor
+        /// <see cref="fieldHighValue"/> set, the bounds are the track's and this is what
+        /// <c>base.GetClampedValue</c> would have done.
+        /// </remarks>
+        /// <param name="newValue"> The value to clamp. </param>
+        /// <returns> The clamped value. </returns>
         protected override TValue GetClampedValue(TValue newValue)
         {
-            var ret = base.GetClampedValue(newValue);
-            return GetRestrictedValue(ret, false);
+            TScalar lowest = effectiveLowValue, highest = effectiveHighValue;
+            if (thumbComparer.Compare(lowest, highest) > 0)
+                (lowest, highest) = (highest, lowest);
+
+            return GetRestrictedValue(Clamp(newValue, lowest, highest), false);
         }
 
         /// <summary>
@@ -1022,6 +1127,7 @@ namespace Unity.AppUI.UI
         {
             m_GetCustomMarkValuePredicate ??= GetCustomMarkValue;
             m_GetStepValuePredicate ??= GetStepValue;
+            m_RestrictedStepValue = stepValue;
             stepOrMarkIndex = -1;
             if (restrictedValues is RestrictedValuesPolicy.CustomMarks or RestrictedValuesPolicy.CtrlCustomMarks &&
                 m_CustomMarks is {Count: >0})
@@ -1040,9 +1146,11 @@ namespace Unity.AppUI.UI
 
         Func<int,TScalar> m_GetStepValuePredicate;
 
+        TScalar m_RestrictedStepValue;
+
         TScalar GetStepValue(int index)
         {
-            return Mad(index, m_Step, lowValue);
+            return Mad(index, m_RestrictedStepValue, lowValue);
         }
 
         TScalar GetRestrictedThumbValue(

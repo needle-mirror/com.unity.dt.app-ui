@@ -1,5 +1,5 @@
 :root {
-    --appui-icon-link-simple-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/LinkSimple.png");
+    --appui-icon-link-simple-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/LinkSimple.svg");
 }
 
 .appui-icon--link-simple--regular {

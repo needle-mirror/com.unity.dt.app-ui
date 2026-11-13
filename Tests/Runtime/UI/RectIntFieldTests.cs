@@ -8,5 +8,9 @@ namespace Unity.AppUI.Tests.UI
     class RectIntFieldTests : VisualElementTests<RectIntField>
     {
         protected override string mainUssClassName => RectIntField.ussClassName;
+
+        // Handed over to RectIntFieldSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
     }
 }

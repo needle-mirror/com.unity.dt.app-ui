@@ -1,0 +1,202 @@
+/* ChatAssetRow */
+.appui-chat-asset-row {
+    flex-direction: row;
+    align-items: flex-start;
+    flex-shrink: 0;
+}
+
+.appui--rtl .appui-chat-asset-row {
+    flex-direction: row-reverse;
+}
+
+/* Thumbnail. Sized off the sizing ramp rather than the control-sizing aliases: this is a media
+   box, not a control, so it has no control-sizing equivalent. */
+.appui-chat-asset-row__thumbnail {
+    flex-direction: row;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--appui-sizing-1000);
+    height: var(--appui-sizing-1000);
+    border-radius: var(--appui-border-radius-sm);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-control-border-color-default);
+    background-color: var(--appui-alias-surface-raised);
+    -unity-background-scale-mode: scale-and-crop;
+    margin-right: var(--appui-sizing-250);
+}
+
+.appui--rtl .appui-chat-asset-row__thumbnail {
+    margin-right: 0;
+    margin-left: var(--appui-sizing-250);
+}
+
+.appui-chat-asset-row__thumbnail-placeholder {
+    --unity-image-tint-color: var(--appui-alias-text-disabled);
+}
+
+/* Identity block */
+.appui-chat-asset-row__identity {
+    flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+}
+
+.appui-chat-asset-row__identity > * {
+    margin-top: var(--appui-sizing-25);
+}
+
+.appui-chat-asset-row__identity > .appui-chat-asset-row__title {
+    margin-top: 0;
+}
+
+.appui-chat-asset-row__title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--appui-font-sizes-100);
+    -unity-font-style: bold;
+    color: var(--appui-alias-text-primary);
+}
+
+.appui-chat-asset-row__source {
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+}
+
+.appui--rtl .appui-chat-asset-row__source {
+    flex-direction: row-reverse;
+}
+
+.appui-chat-asset-row__source > * {
+    margin-left: var(--appui-sizing-75);
+}
+
+.appui-chat-asset-row__source > .appui-chat-asset-row__source-label {
+    margin-left: 0;
+}
+
+.appui--rtl .appui-chat-asset-row__source > * {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-75);
+}
+
+.appui--rtl .appui-chat-asset-row__source > .appui-chat-asset-row__source-label {
+    margin-right: 0;
+}
+
+.appui-chat-asset-row__source-label,
+.appui-chat-asset-row__pack-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-secondary);
+}
+
+.appui-chat-asset-row__separator {
+    flex-shrink: 0;
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-secondary);
+}
+
+.appui-chat-asset-row__details-button {
+    flex-shrink: 0;
+}
+
+.appui-chat-asset-row__details-button .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-link-default);
+}
+
+.appui-chat-asset-row__creator,
+.appui-chat-asset-row__price {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-disabled);
+}
+
+/* Size: a figure like the price, in the tertiary text role. The registry sets it in tabular figures;
+   USS has no font-variant-numeric, so it keeps the font's own. */
+.appui-chat-asset-row__size {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-tertiary);
+}
+
+/* Description: wraps, and the component caps it at two measured lines (USS has no line-clamp). The
+   size goes through a custom property so a density change re-measures the cap even when the clamped
+   box does not move. */
+.appui-chat-asset-row__description {
+    --appui-chat-asset-row-description-size: var(--appui-font-sizes-75);
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: var(--appui-chat-asset-row-description-size);
+    color: var(--appui-alias-text-secondary);
+}
+
+/* Tags: the registry's secondary Badge pills, wrapping onto new lines. The strip and the extra slot
+   are plain elements, which `> *` does not reliably match, so they carry their own gap. */
+.appui-chat-asset-row__tags {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: var(--appui-sizing-25);
+}
+
+.appui--rtl .appui-chat-asset-row__tags {
+    flex-direction: row-reverse;
+}
+
+.appui-chat-asset-row__tag {
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-control-foreground-color-default);
+    background-color: var(--appui-alias-control-background-color-default);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-control-border-color-default);
+    border-radius: var(--appui-border-radius-full);
+    padding: var(--appui-sizing-50) var(--appui-sizing-250);
+    margin-top: var(--appui-sizing-50);
+    margin-right: var(--appui-sizing-100);
+}
+
+.appui--rtl .appui-chat-asset-row__tag {
+    margin-right: 0;
+    margin-left: var(--appui-sizing-100);
+}
+
+.appui-chat-asset-row__extra {
+    margin-top: var(--appui-sizing-25);
+}
+
+/* Status. The tone decides which token the line takes, so a consumer cannot inject arbitrary
+   styling: it picks a tone, this file owns what that means. */
+.appui-chat-asset-row__status {
+    white-space: normal;
+    font-size: var(--appui-font-sizes-75);
+}
+
+.appui-chat-asset-row__status--muted {
+    color: var(--appui-alias-text-disabled);
+}
+
+.appui-chat-asset-row__status--destructive {
+    color: var(--appui-alias-semantic-destructive);
+}
+
+/* A caller-supplied medium stands in for the thumbnail, so it takes the same box. */
+.appui-chat-asset-row__media {
+    width: var(--appui-sizing-1000);
+    flex-shrink: 0;
+}
+
+/* The creator reads as a link only when there is somewhere to go. */
+.appui-chat-asset-row__creator--link {
+    color: var(--appui-accent-100);
+    cursor: link;
+}

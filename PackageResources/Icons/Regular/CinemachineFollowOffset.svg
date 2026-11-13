@@ -1,0 +1,5 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--cinemachine-follow-offset--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 10C4.77614 10 5 10.2239 5 10.5V11H12V10.5C12 10.2239 12.2239 10 12.5 10C12.7761 10 13 10.2239 13 10.5V11.5C13 11.7761 12.7761 12 12.5 12H4.5C4.22386 12 4 11.7761 4 11.5V10.5C4 10.2239 4.22386 10 4.5 10Z" fill="#6D66CC"/>
+<path d="M2 10H1V4H2C2.55 4 3 4.45 3 5V5.55L4.59 5C4.79 4.93 5 5.07 5 5.29V8.71C5 8.92 4.79 9.07 4.59 9L3 8.44V9C3 9.55 2.55 10 2 10Z" fill="#555555"/>
+<path d="M13.5 8.5C14.3284 8.5 15 7.82843 15 7C15 6.17157 14.3284 5.5 13.5 5.5C12.6716 5.5 12 6.17157 12 7C12 7.82843 12.6716 8.5 13.5 8.5Z" fill="#555555"/>
+</svg>

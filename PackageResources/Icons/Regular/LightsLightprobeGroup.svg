@@ -1,0 +1,6 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--lights-lightprobe-group--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<rect x="1.5" y="1.5" width="13" height="13" rx="0.5" stroke="#555555"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.40377 5.80755C7.17906 5.80755 7.80755 5.17906 7.80755 4.40377C7.80755 3.62849 7.17906 3 6.40377 3C5.62849 3 5 3.62849 5 4.40377C5 5.17906 5.62849 5.80755 6.40377 5.80755Z" fill="#C99700"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6 13C7.65685 13 9 11.6569 9 10C9 8.34315 7.65685 7 6 7C4.34315 7 3 8.34315 3 10C3 11.6569 4.34315 13 6 13Z" fill="#C99700"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13 7.5C13 8.88071 11.8807 10 10.5 10C10.3287 10 10.1613 9.98276 9.9997 9.94993C9.98259 8.55531 9.25177 7.33252 8.15558 6.62992C8.50894 5.67817 9.42527 5 10.5 5C11.8807 5 13 6.11929 13 7.5Z" fill="#C99700"/>
+</svg>

@@ -1,0 +1,42 @@
+/* FeedbackTray */
+.appui-feedbacktray {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.appui--rtl .appui-feedbacktray {
+    flex-direction: row-reverse;
+}
+
+/* No gap in USS yet, so the spacing is carried by the trailing margin of each button. */
+.appui-feedbacktray__button {
+    margin-left: 0;
+    margin-right: var(--appui-alias-control-gap-xs);
+}
+
+.appui--rtl .appui-feedbacktray__button {
+    margin-left: var(--appui-alias-control-gap-xs);
+    margin-right: 0;
+}
+
+.appui-feedbacktray__button.is-selected {
+    background-color: var(--appui-alias-actions-selected-background-color-default);
+}
+
+.appui-feedbacktray__button.is-selected .appui-button__leadingicon {
+    --unity-image-tint-color: var(--appui-alias-actions-foreground-color-selected);
+}
+
+.appui-feedbacktray__button.is-selected:hover:enabled {
+    background-color: var(--appui-alias-actions-selected-background-color-hover);
+}
+
+.appui-feedbacktray__button.is-selected:active {
+    background-color: var(--appui-alias-actions-selected-background-color-active);
+}
+
+.appui-feedbacktray__copy.is-selected .appui-button__leadingicon {
+    --unity-image-tint-color: var(--appui-alias-semantic-positive);
+}

@@ -1,0 +1,29 @@
+/* UserAvatar */
+
+/* Everything a plain Avatar already styles is inherited; UserAvatar only adds the presence ring.
+   The ring's widths and its resting colour are tokens, so it rescales with `Panel.density` and
+   retints with the theme. The *person's* colour is written inline from C# on hover, because it is
+   data (a stable hash of the user), not design. */
+.appui-useravatar {
+    transition: border-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125), border-width var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
+}
+
+/* Resting: the registry's `ring-1 ring-border`. */
+.appui-useravatar--ring {
+    border-top-width: var(--appui-border-width-xs);
+    border-bottom-width: var(--appui-border-width-xs);
+    border-left-width: var(--appui-border-width-xs);
+    border-right-width: var(--appui-border-width-xs);
+    border-top-color: var(--appui-alias-control-border-color-default);
+    border-bottom-color: var(--appui-alias-control-border-color-default);
+    border-left-color: var(--appui-alias-control-border-color-default);
+    border-right-color: var(--appui-alias-control-border-color-default);
+}
+
+/* Hover: the registry's `hover:ring-2`. The colour swap is C#'s half of the same affordance. */
+.appui-useravatar--ring:hover {
+    border-top-width: var(--appui-border-width-sm);
+    border-bottom-width: var(--appui-border-width-sm);
+    border-left-width: var(--appui-border-width-sm);
+    border-right-width: var(--appui-border-width-sm);
+}

@@ -139,6 +139,9 @@ The [Tooltip](xref:Unity.AppUI.UI.Tooltip)
 class is a popup that is displayed next to a target element.
 The tooltip doesn't require user interaction/decision,
 and is displayed as long as the target element is hovered.
+An enabled control also shows its tooltip when it takes keyboard focus, and hides it when it loses focus
+or when a key such as Escape is pressed. Focus given by a pointer click does not open it,
+and a disabled control keeps only its hover tooltip.
 
 In our layering system, the Tooltip layer is the highest one.
 

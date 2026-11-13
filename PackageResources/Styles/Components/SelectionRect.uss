@@ -1,0 +1,11 @@
+/* SelectionRect
+   A marquee is a selection, so it takes the design system's selection fill and the accent border.
+   The registry paints it at 15% primary; App UI has no 15% accent token that is not a disabled
+   state, so the semantic selection token is used instead and the marquee reads a little stronger. */
+.appui-selection-rect {
+    position: absolute;
+    border-radius: var(--appui-border-radius-xs);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-actions-accent-background-color-default);
+    background-color: var(--appui-alias-actions-selected-background-color-default);
+}

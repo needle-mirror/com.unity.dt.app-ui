@@ -155,5 +155,28 @@ namespace Unity.AppUI.Tests.UI
             Assert.Greater(factor2, factor1);
             Assert.Greater(factor3, factor2);
         }
+
+        [Test]
+        public void ScrubSuffix_IsOnByDefault()
+        {
+            Assert.IsTrue(new FloatField().scrubSuffix,
+                "The unit glyph scrubs by default, matching the registry's scrubSuffix default.");
+        }
+
+        /// <summary>
+        /// The field a Slider mounts must not scrub from its unit: the track is that row's drag
+        /// surface, and a second gesture at a different rate on something that does not look
+        /// draggable is exactly what the registry turns off with scrubSuffix={false}.
+        /// </summary>
+        [Test]
+        public void SliderMountedField_HasItsSuffixScrubTurnedOff()
+        {
+            var slider = new SliderFloat { showInputField = true };
+            var field = slider.Q<FloatField>();
+
+            Assert.IsNotNull(field, "showInputField must mount the numeric field.");
+            Assert.IsFalse(field.scrubSuffix,
+                "The slider's own field must not turn its unit into a second drag surface.");
+        }
     }
 }

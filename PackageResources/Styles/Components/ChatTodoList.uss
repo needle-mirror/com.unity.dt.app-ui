@@ -1,0 +1,197 @@
+/* ChatTodoList */
+.appui-chat-todo-list {
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-color: var(--appui-alias-surface-card);
+    border-radius: var(--appui-border-radius-md);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-control-border-color-default);
+}
+
+/* Header. The whole band is the toggle, so it takes the pointer cursor and the shared control
+   hover tint rather than styling a nested button. */
+.appui-chat-todo-list__header {
+    flex-direction: row;
+    align-items: center;
+    padding: var(--appui-sizing-160) var(--appui-sizing-250);
+    cursor: var(--appui-alias-control-cursor-pointer);
+    transition: background-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-200);
+}
+
+.appui-chat-todo-list__header.is-hovered {
+    background-color: var(--appui-alias-control-background-color-hover);
+}
+
+.appui--rtl .appui-chat-todo-list__header {
+    flex-direction: row-reverse;
+}
+
+.appui-chat-todo-list__header > * {
+    margin-left: var(--appui-sizing-160);
+}
+
+.appui-chat-todo-list__header > .appui-chat-todo-list__header-icon {
+    margin-left: 0;
+}
+
+.appui--rtl .appui-chat-todo-list__header > * {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-160);
+}
+
+.appui--rtl .appui-chat-todo-list__header > .appui-chat-todo-list__header-icon {
+    margin-right: 0;
+}
+
+.appui-chat-todo-list__header-icon,
+.appui-chat-todo-list__caret {
+    --unity-image-tint-color: var(--appui-alias-text-secondary);
+}
+
+.appui-chat-todo-list__title {
+    flex-grow: 1;
+    font-size: var(--appui-font-sizes-100);
+    -unity-font-style: bold;
+    color: var(--appui-alias-text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.appui-chat-todo-list__tally {
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-disabled);
+}
+
+/* Items */
+.appui-chat-todo-list__items {
+    flex-direction: column;
+    border-top-width: var(--appui-alias-control-border-width);
+    border-top-color: var(--appui-alias-control-border-color-default);
+    padding: var(--appui-sizing-160) var(--appui-sizing-250);
+}
+
+.appui-chat-todo-list__item {
+    flex-direction: row;
+    align-items: flex-start;
+    margin-top: var(--appui-sizing-75);
+}
+
+.appui--rtl .appui-chat-todo-list__item {
+    flex-direction: row-reverse;
+}
+
+.appui-chat-todo-list__item-status {
+    flex-direction: row;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+    margin-right: var(--appui-sizing-160);
+}
+
+.appui--rtl .appui-chat-todo-list__item-status {
+    margin-right: 0;
+    margin-left: var(--appui-sizing-160);
+}
+
+.appui-chat-todo-list__item-status > .appui-circular-progress {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+    --progress-color: var(--appui-alias-text-secondary);
+}
+
+.appui-chat-todo-list__item-text {
+    flex-grow: 1;
+    flex-shrink: 1;
+    white-space: normal;
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-secondary);
+}
+
+/* The pending glyph is an empty outline circle rather than an icon, matching the registry. */
+.appui-chat-todo-list__pending-glyph {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+    border-radius: var(--appui-border-radius-full);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-text-disabled);
+}
+
+/* In progress: the same ring as pending, in the accent, with a filled centre. Deliberately
+   static -- a checklist shows several rows at once and a spinning one pulls the eye away from
+   the text, which is the part that changes. The centre is an inset border rather than a child
+   element, since USS has no ::before to draw one with. */
+.appui-chat-todo-list__in-progress-glyph {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+    border-radius: var(--appui-border-radius-full);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-actions-accent-background-color-default);
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+/* Status variants. The generator lowercases the enum member, so InProgress becomes "inprogress" —
+   these selectors have to match what it emits, not what the C# reads. */
+/* The completed check's tone, the registry's COMPLETED_TONE: positive reads as "this passed", accent
+   as progress for a host whose other progress is drawn in the accent. */
+.appui-chat-todo-list--completed-tone-positive .appui-chat-todo-list__item--status-completed > .appui-chat-todo-list__item-status > .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-semantic-positive);
+}
+
+.appui-chat-todo-list--completed-tone-accent .appui-chat-todo-list__item--status-completed > .appui-chat-todo-list__item-status > .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+.appui-chat-todo-list__item--status-cancelled > .appui-chat-todo-list__item-status > .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-text-disabled);
+}
+
+.appui-chat-todo-list__item--status-inprogress > .appui-chat-todo-list__item-status > .appui-circular-progress {
+    --progress-color: var(--appui-alias-text-secondary);
+}
+
+/* Terminal items. The registry strikes them through; USS has no text-decoration, so they are
+   dimmed and italicised instead — the same "this line is done with" reading. */
+.appui-chat-todo-list__item--status-completed > .appui-chat-todo-list__item-text,
+.appui-chat-todo-list__item--status-cancelled > .appui-chat-todo-list__item-text {
+    color: var(--appui-alias-text-disabled);
+    -unity-font-style: italic;
+}
+
+/* The Sm variant: tighter spacing, one type step down, and every row on a single line, for a
+   list riding alongside other content rather than owning its surface. The body is a ScrollView,
+   but the registry's max-h-80 / max-h-40 caps (320px / 160px) have no sizing token (the ramp tops
+   out at sizing-3200), so the body is uncapped until a host sets a max-height on
+   `.appui-chat-todo-list__items`. */
+.appui-chat-todo-list--size-sm > .appui-chat-todo-list__header {
+    padding: var(--appui-sizing-100) var(--appui-sizing-160);
+}
+
+.appui-chat-todo-list--size-sm > .appui-chat-todo-list__items {
+    padding: var(--appui-sizing-100) var(--appui-sizing-160);
+}
+
+.appui-chat-todo-list--size-sm .appui-chat-todo-list__title {
+    font-size: var(--appui-font-sizes-75);
+}
+
+.appui-chat-todo-list--size-sm .appui-chat-todo-list__item {
+    margin-top: var(--appui-sizing-50);
+    align-items: center;
+}
+
+/* One line per row, so a long task truncates instead of pushing the list open. */
+.appui-chat-todo-list--size-sm .appui-chat-todo-list__item-text {
+    font-size: var(--appui-font-sizes-75);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* The header actions sit at the trailing edge, after the caret. */
+.appui-chat-todo-list__maximize,
+.appui-chat-todo-list__close {
+    flex-shrink: 0;
+}

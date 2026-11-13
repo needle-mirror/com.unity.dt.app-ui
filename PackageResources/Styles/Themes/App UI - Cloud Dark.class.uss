@@ -1,0 +1,86 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+.appui--cloud-dark {
+  --appui-alias-actions-selected-background-color-default: rgba(10, 110, 200, 0.3);
+  --appui-alias-actions-selected-background-color-hover: rgba(10, 110, 200, 0.38);
+  --appui-alias-actions-accent-background-color-hover: #1361ad;
+  --appui-alias-text-tertiary: #919191; /** Dim live text, AA (4.5:1) on every surface */
+  --appui-alias-field-background-color-default: #191919;
+  --appui-alias-semantic-warning-foreground: #202020;
+  --appui-alias-surface-default: #191919;
+  --appui-alias-surface-subtle: #242424;
+  --appui-alias-surface-muted: #2a2a2a;
+  --appui-dockview-drag-over-background-color: rgba(10, 110, 200, 0.5);
+  --appui-neutral-25: #111111;
+  --appui-neutral-50: #111111;
+  --appui-neutral-100: #222222;
+  --appui-neutral-200: #2a2a2a;
+  --appui-neutral-300: #313131;
+  --appui-neutral-400: #3a3a3a;
+  --appui-neutral-500: #484848;
+  --appui-neutral-600: #606060;
+  --appui-neutral-700: #6e6e6e;
+  --appui-neutral-800: #7b7b7b;
+  --appui-neutral-900: #b4b4b4;
+  --appui-neutral-1000: #eeeeee;
+  --appui-neutral-1100: #eeeeee;
+  --appui-neutral-1200: #eeeeee;
+  --appui-base-100: #191919; /** UI Element */
+  --appui-accent-25: #086dc7; /** Active / Focus */
+  --appui-accent-50: #0a6ec8; /** Hover */
+  --appui-accent-100: #0a6ec8;
+  --appui-accent-200: #6eb8ff;
+  --appui-accent-300: #6eb8ff;
+  --appui-destructive-25: #8c333a; /** Active / Focus */
+  --appui-destructive-50: #b54548; /** Hover */
+  --appui-destructive-100: #e5484d;
+  --appui-destructive-200: #ec5d5e;
+  --appui-destructive-300: #ec5d5e;
+  --appui-warning-25: #8f6424; /** Active / Focus */
+  --appui-warning-50: #8f6424; /** Hover */
+  --appui-warning-100: #ffc53d;
+  --appui-warning-200: #ffd60a;
+  --appui-warning-300: #ffca16;
+  --appui-positive-25: #28684a; /** Active / Focus */
+  --appui-positive-50: #2f7c57; /** Hover */
+  --appui-positive-100: #30a46c;
+  --appui-positive-200: #33b074;
+  --appui-positive-300: #3dd68c;
+  --appui-informative-25: #435db1;
+  --appui-informative-50: #3e63dd;
+  --appui-informative-100: #3e63dd;
+  --appui-informative-200: #9eb1ff;
+  --appui-informative-300: #9eb1ff;
+  --appui-alias-actions-destructive-hover: var(--appui-destructive-200);
+  --appui-alias-actions-destructive-active: var(--appui-destructive-50);
+  --appui-alias-text-disabled: var(--appui-neutral-800);
+  --appui-neutral-15: var(--appui-color-black);
+  --appui-neutral-1300: var(--appui-color-white);
+  --appui-backgrounds-50: var(--appui-neutral-50); /** Canvas */
+  --appui-backgrounds-100: var(--appui-neutral-100); /** App Background */
+  --appui-backgrounds-200: var(--appui-neutral-200); /** Subtle */
+  --appui-backgrounds-300: var(--appui-neutral-300); /** Borders */
+  --appui-foregrounds-25: var(--appui-neutral-700); /** Disabled Text */
+  --appui-foregrounds-50: var(--appui-neutral-900); /** Placeholder / Secondary */
+  --appui-foregrounds-100: var(--appui-neutral-1000); /** Primary Text / Icon / Element */
+  --appui-foregrounds-200: var(--appui-neutral-1100); /** High Contrast / Text on Hover */
+  --appui-base-25: var(--appui-neutral-100);
+  --appui-base-50: var(--appui-neutral-200); /** UI Element Pressed */
+  --appui-base-200: var(--appui-neutral-400); /** UI Element Hover */
+  --appui-base-300: var(--appui-neutral-500); /** UI Element Active / Selected */
+  --appui-base-400: var(--appui-neutral-600); /** UI Element Border */
+  --appui-alias-control-background-color-default: var(--appui-backgrounds-100);
+  --appui-alias-control-background-color-hover: var(--appui-backgrounds-200);
+  --appui-alias-control-background-color-active: var(--appui-backgrounds-300);
+  --appui-alias-control-border-color-default: var(--appui-base-200);
+  --appui-alias-control-border-color-hover: var(--appui-base-400);
+  --appui-alias-field-background-color-hover: var(--appui-backgrounds-100);
+  --appui-alias-field-border-color-default: var(--appui-base-200);
+  --appui-alias-surface-sunken: var(--appui-backgrounds-50);
+  --appui-alias-surface-raised: var(--appui-base-50);
+  --appui-alias-surface-overlay: var(--appui-backgrounds-100);
+  --appui-alias-surface-card: var(--appui-backgrounds-100);
+  --appui-base-500: var(--appui-base-300); /** UI Element Border Hover */
+}

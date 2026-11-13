@@ -3,14 +3,14 @@ using UnityEngine;
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// Use this attribute to draw a property with the optional ScaleDrawer.
+    /// Use this attribute to draw a property with the optional DensityDrawer.
     /// </summary>
-    public class OptionalScaleDrawerAttribute : PropertyAttribute {}
+    public class OptionalDensityDrawerAttribute : PropertyAttribute {}
 
     /// <summary>
-    /// Use this attribute to draw a property with the ScaleDrawer.
+    /// Use this attribute to draw a property with the DensityDrawer.
     /// </summary>
-    public class ScaleDrawerAttribute : PropertyAttribute { }
+    public class DensityDrawerAttribute : PropertyAttribute { }
 
     /// <summary>
     /// Use this attribute to draw a property with the optional ThemeDrawer.

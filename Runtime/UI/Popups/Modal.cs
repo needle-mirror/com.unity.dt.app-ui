@@ -64,10 +64,10 @@ namespace Unity.AppUI.UI
     ///
     /// Confirmation modal.
     /// ```xml
-    /// &lt;appui:Modal title="Confirmation" size="M" visible="true"&gt;
-    ///     &lt;appui:Text text="Are you sure you want to delete this item?" size="M" /&gt;
+    /// &lt;appui:Modal title="Confirmation" size="Md" visible="true"&gt;
+    ///     &lt;appui:Text text="Are you sure you want to delete this item?" size="Md" /&gt;
     ///     &lt;appui:ActionGroup&gt;
-    ///         &lt;appui:Button title="Cancel" quiet="true" /&gt;
+    ///         &lt;appui:Button title="Cancel" variant="Ghost" /&gt;
     ///         &lt;appui:Button title="Delete" variant="Destructive" /&gt;
     ///     &lt;/appui:ActionGroup&gt;
     /// &lt;/appui:Modal&gt;
@@ -75,11 +75,11 @@ namespace Unity.AppUI.UI
     ///
     /// Form modal with inputs.
     /// ```xml
-    /// &lt;appui:Modal title="Settings" size="L" visible="true"&gt;
-    ///     &lt;appui:TextField placeholder-text="Enter name..." size="M" /&gt;
-    ///     &lt;appui:TextArea placeholder-text="Description..." size="M" /&gt;
+    /// &lt;appui:Modal title="Settings" size="Lg" visible="true"&gt;
+    ///     &lt;appui:TextField placeholder-text="Enter name..." size="Md" /&gt;
+    ///     &lt;appui:TextArea placeholder-text="Description..." size="Md" /&gt;
     ///     &lt;appui:ActionGroup&gt;
-    ///         &lt;appui:Button title="Cancel" quiet="true" /&gt;
+    ///         &lt;appui:Button title="Cancel" variant="Ghost" /&gt;
     ///         &lt;appui:Button title="Save" variant="Accent" /&gt;
     ///     &lt;/appui:ActionGroup&gt;
     /// &lt;/appui:Modal&gt;
@@ -87,14 +87,14 @@ namespace Unity.AppUI.UI
     ///
     /// Different Sizes.
     /// ```xml
-    /// &lt;appui:Modal title="Small Modal" size="S" visible="true"&gt;
+    /// &lt;appui:Modal title="Small Modal" size="Sm" visible="true"&gt;
     ///     &lt;appui:Text text="Small content" size="S" /&gt;
     /// &lt;/appui:Modal&gt;
-    /// &lt;appui:Modal title="Medium Modal" size="M" visible="true"&gt;
-    ///     &lt;appui:Text text="Medium content area" size="M" /&gt;
+    /// &lt;appui:Modal title="Medium Modal" size="Md" visible="true"&gt;
+    ///     &lt;appui:Text text="Medium content area" size="Md" /&gt;
     /// &lt;/appui:Modal&gt;
-    /// &lt;appui:Modal title="Large Modal" size="L" visible="true"&gt;
-    ///     &lt;appui:Text text="Large content area with more space" size="M" /&gt;
+    /// &lt;appui:Modal title="Large Modal" size="Lg" visible="true"&gt;
+    ///     &lt;appui:Text text="Large content area with more space" size="Md" /&gt;
     /// &lt;/appui:Modal&gt;
     /// ```
     /// </remarks>

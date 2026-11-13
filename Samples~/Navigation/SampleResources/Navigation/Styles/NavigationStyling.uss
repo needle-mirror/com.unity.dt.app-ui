@@ -1,21 +1,21 @@
 .appui-navigation-screen .unity-scroll-view__content-container {
-    padding: var(--appui-spacing-100);
+    padding: var(--appui-sizing-100);
 }
 
 .text-content {
-    margin: var(--appui-spacing-1000) 0;
+    margin: var(--appui-sizing-1000) 0;
 }
 
 .icon-content {
-    margin: var(--appui-spacing-1000) 0;
+    margin: var(--appui-sizing-1000) 0;
 }
 
 .item-content {
     align-self: stretch;
-    padding: var(--appui-spacing-100);
+    padding: var(--appui-sizing-100);
     background-color: var(--appui-backgrounds-200);
     border-radius: var(--appui-alias-control-border-radius);
-    margin: var(--appui-spacing-100);
+    margin: var(--appui-sizing-100);
 }
 
 .setting-row {
@@ -26,8 +26,8 @@
     justify-content: space-between;
     background-color: var(--appui-backgrounds-200);
     border-radius: var(--appui-alias-control-border-radius);
-    padding: var(--appui-spacing-100);
-    margin: 0 0 var(--appui-spacing-200) 0;
+    padding: var(--appui-sizing-100);
+    margin: 0 0 var(--appui-sizing-200) 0;
 }
 
 .setting-row.is-hovered {
@@ -45,5 +45,5 @@
 .setting-row .setting-row-value {
     color: var(--appui-accent-100);
     flex-shrink: 0;
-    margin-right: var(--appui-spacing-100);
+    margin-right: var(--appui-sizing-100);
 }

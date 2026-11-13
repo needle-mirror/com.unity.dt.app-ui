@@ -19,7 +19,7 @@
     flex-shrink: 0;
     background-color: var(--appui-backgrounds-100);
     position: relative;
-    padding: 0 var(--appui-spacing-100);
+    padding: 0 var(--appui-static-sizing-100);
     height: var(--appui-appbar-height-default);
 }
 
@@ -73,9 +73,9 @@
     color: var(--appui-foregrounds-200);
     -unity-text-align: lower-left;
     position: absolute;
-    bottom: var(--appui-spacing-300);
+    bottom: var(--appui-static-sizing-300);
     -unity-font-definition: var(--appui-font-weights-200);
-    left: var(--appui-spacing-250);
+    left: var(--appui-static-sizing-250);
 }
 
 .appui-appbar__action-container {

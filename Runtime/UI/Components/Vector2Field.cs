@@ -23,7 +23,7 @@ namespace Unity.AppUI.UI
     /// <example>
     /// <para>Basic usage in UXML. Creating a medium-sized Vector2Field with default value in UXML.</para>
     /// <code lang="xml"><![CDATA[
-    /// <Vector2Field name="position-field" size="M" value="0,0" />
+    /// <Vector2Field name="position-field" size="Md" value="0,0" />
     /// ]]></code>
     /// <para>Code usage with validation. Creating a Vector2Field with formatting, validation, and change handling.</para>
     /// <code lang="csharp"><![CDATA[
@@ -128,7 +128,7 @@ namespace Unity.AppUI.UI
 
             hierarchy.Add(container);
 
-            size = Size.M;
+            size = Size.Md;
             SetValueWithoutNotify(Vector2.zero);
 
             m_XField.RegisterValueChangingCallback(OnXFieldChanging);

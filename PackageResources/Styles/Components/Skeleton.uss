@@ -1,0 +1,7 @@
+/* Skeleton */
+.appui-skeleton {
+    background-color: var(--appui-alias-surface-muted);
+    border-radius: var(--appui-alias-control-border-radius);
+    min-height: var(--appui-alias-control-sizing-md-height);
+    flex-shrink: 0;
+}

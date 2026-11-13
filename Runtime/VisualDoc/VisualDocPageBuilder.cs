@@ -110,8 +110,26 @@ namespace Unity.AppUI.VisualDoc
         public static void BuildGuidePage(VisualElement container, string fileName)
         {
 #if UNITY_EDITOR
-            var path = Path.Combine(Path.GetFullPath(DocTree.documentationRoot), fileName);
-            if (!File.Exists(path))
+            // Resolve the combined path and confirm it is still inside the documentation root.
+            // Checking the resolved location rather than the file name catches both `../` segments
+            // and rooted names like `/etc/passwd` or `C:\Users\dev\.ssh\id_rsa`, which escape the
+            // folder without containing `..` at all.
+            var root = Path.GetFullPath(DocTree.documentationRoot);
+            if (!root.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                root += Path.DirectorySeparatorChar;
+
+            string path;
+            try
+            {
+                path = Path.GetFullPath(Path.Combine(root, fileName));
+            }
+            catch (Exception)
+            {
+                container.Add(new Label($"Documentation file not found: {fileName}"));
+                return;
+            }
+
+            if (!path.StartsWith(root, StringComparison.Ordinal) || !File.Exists(path))
             {
                 container.Add(new Label($"Documentation file not found: {fileName}"));
                 return;

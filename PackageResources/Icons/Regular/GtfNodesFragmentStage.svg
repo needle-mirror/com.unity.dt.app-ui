@@ -1,0 +1,10 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--gtf-nodes-fragment-stage--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path d="M2.5 2C2.22386 2 2 2.22386 2 2.5V4.5C2 4.77614 1.77614 5 1.5 5C1.22386 5 1 4.77614 1 4.5V2.5C1 1.67157 1.67157 1 2.5 1H13.5C14.3284 1 15 1.67157 15 2.5V4.5C15 4.77614 14.7761 5 14.5 5C14.2239 5 14 4.77614 14 4.5V2.5C14 2.22386 13.7761 2 13.5 2H2.5Z" fill="#FFFFFF"/>
+<path d="M1.5 11C1.77614 11 2 11.2239 2 11.5V13.5C2 13.7761 2.22386 14 2.5 14H13.5C13.7761 14 14 13.7761 14 13.5V11.5C14 11.2239 14.2239 11 14.5 11C14.7761 11 15 11.2239 15 11.5V13.5C15 14.3284 14.3284 15 13.5 15H2.5C1.67157 15 1 14.3284 1 13.5V11.5C1 11.2239 1.22386 11 1.5 11Z" fill="#FFFFFF"/>
+<path d="M4 10H6V12H4V10Z" fill="#FFFFFF"/>
+<path d="M9 10H7V12H9V10Z" fill="#FFFFFF"/>
+<path d="M10 10H12V12H10V10Z" fill="#FFFFFF"/>
+<path d="M6 7H4V9H6V7Z" fill="#FFFFFF"/>
+<path d="M7 7H9V9H7V7Z" fill="#FFFFFF"/>
+<path d="M6 4H4V6H6V4Z" fill="#FFFFFF"/>
+</svg>

@@ -1,0 +1,8 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--navigation-navmesh-agent--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M7 5C8.10457 5 9 4.10457 9 3C9 1.89543 8.10457 1 7 1C5.89543 1 5 1.89543 5 3C5 4.10457 5.89543 5 7 5Z" fill="#B73C15"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M4.83915 6.80388C4.93264 6.33646 5.34305 6 5.81973 6H6.6559C7.32576 6 7.80621 6.64574 7.61373 7.28735L6.71373 10.2873C6.58683 10.7103 6.19751 11 5.7559 11H5.21973C4.58869 11 4.11539 10.4227 4.23915 9.80388L4.83915 6.80388Z" fill="#B73C15"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M4.55556 10.926C4.25586 10.4265 4.44482 9.77753 4.96583 9.51703L5.10554 9.44718C5.59951 9.20019 6.20019 9.40041 6.44718 9.89439L8.33739 13.6748C8.6418 14.2836 8.19908 15 7.5184 15C7.19676 15 6.89871 14.8312 6.73323 14.5554L4.55556 10.926Z" fill="#B73C15"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M2.81266 12.8512C3.05655 12.2063 3.9315 12.1155 4.30254 12.6967C4.4262 12.8903 4.46489 13.1263 4.40955 13.3493L4.16894 14.319C4.06966 14.7191 3.7105 15 3.29829 15C2.67089 15 2.2373 14.3725 2.45924 13.7856L2.81266 12.8512Z" fill="#B73C15"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8.64453 8H12V10H8L8.64453 8Z" fill="#0C6CCB"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M15 9L11 12V6L15 9Z" fill="#0C6CCB"/>
+</svg>

@@ -183,6 +183,43 @@ namespace Unity.AppUI.Tests.Undo
         }
 
         [Test]
+        public void SettingIndexToCountThrowsInsteadOfHanging()
+        {
+            var undoStack = new UndoStack();
+            undoStack.Push(new TestCommand("Test 1"));
+            undoStack.Push(new TestCommand("Test 2"));
+
+            Exception caught = null;
+            var thread = new System.Threading.Thread(() =>
+            {
+                try { undoStack.index = undoStack.count; }
+                catch (Exception e) { caught = e; }
+            }) { IsBackground = true };
+            thread.Start();
+
+            Assert.IsTrue(thread.Join(2000), "UndoStack.index = count did not return.");
+            Assert.IsInstanceOf<ArgumentOutOfRangeException>(caught);
+            Assert.AreEqual(1, undoStack.index);
+        }
+
+        [Test]
+        public void SettingIndexOnEmptyStackThrowsInsteadOfHanging()
+        {
+            var undoStack = new UndoStack();
+
+            Exception caught = null;
+            var thread = new System.Threading.Thread(() =>
+            {
+                try { undoStack.index = 0; }
+                catch (Exception e) { caught = e; }
+            }) { IsBackground = true };
+            thread.Start();
+
+            Assert.IsTrue(thread.Join(2000), "UndoStack.index = 0 on an empty stack did not return.");
+            Assert.IsInstanceOf<ArgumentOutOfRangeException>(caught);
+        }
+
+        [Test]
         public void CanSetIndex()
         {
             var undoStack = new UndoStack();
@@ -393,6 +430,10 @@ namespace Unity.AppUI.Tests.Undo
 
             undoStack.ResetClean();
 
+            Assert.IsFalse(undoStack.isClean);
+
+            undoStack.SetClean();
+
             Assert.IsTrue(undoStack.isClean);
         }
 
@@ -597,6 +638,115 @@ namespace Unity.AppUI.Tests.Undo
             {
                 undoStack.Push(new TestCommand("Test 1"));
             });
+        }
+
+        [Test]
+        public void ResetCleanFromInitialCleanStateThenUndoIsNotClean()
+        {
+            var undoStack = new UndoStack();
+            undoStack.Push(new TestCommand("a"));
+            var count = 0;
+            undoStack.cleanStateChanged += () => count++;
+            undoStack.ResetClean();
+            Assert.AreEqual(0, count);
+            undoStack.Undo();
+            Assert.AreEqual(-1, undoStack.index);
+            Assert.IsFalse(undoStack.isClean);
+        }
+
+        [Test]
+        public void ResetCleanOnCleanStackRaisesEvent()
+        {
+            var undoStack = new UndoStack();
+            undoStack.Push(new TestCommand("a"));
+            undoStack.Undo();
+            Assert.IsTrue(undoStack.isClean);
+            var count = 0;
+            undoStack.cleanStateChanged += () => count++;
+            undoStack.ResetClean();
+            Assert.AreEqual(1, count);
+            Assert.IsFalse(undoStack.isClean);
+        }
+
+        [Test]
+        public void ResetCleanOnEmptyStackIsNotCleanUntilSetClean()
+        {
+            var undoStack = new UndoStack();
+            Assert.IsTrue(undoStack.isClean);
+            var count = 0;
+            undoStack.cleanStateChanged += () => count++;
+            undoStack.ResetClean();
+            Assert.AreEqual(1, count);
+            Assert.AreEqual(-1, undoStack.cleanIndex);
+            Assert.IsFalse(undoStack.isClean);
+            undoStack.SetClean();
+            Assert.AreEqual(2, count);
+            Assert.AreEqual(-1, undoStack.cleanIndex);
+            Assert.IsTrue(undoStack.isClean);
+        }
+
+        [Test]
+        public void ResetCleanThenUndoAllIsNotClean()
+        {
+            var undoStack = new UndoStack();
+            undoStack.Push(new TestCommand("a"));
+            undoStack.Push(new TestCommand("b"));
+            undoStack.SetClean();
+            undoStack.ResetClean();
+            undoStack.Undo();
+            undoStack.Undo();
+            Assert.AreEqual(-1, undoStack.index);
+            Assert.AreEqual(-1, undoStack.cleanIndex);
+            Assert.IsFalse(undoStack.isClean);
+        }
+
+        [Test]
+        public void PushDroppingCleanCommandRaisesEventAndIsNotClean()
+        {
+            var undoStack = new UndoStack();
+            undoStack.Push(new TestCommand("a"));
+            undoStack.Push(new TestCommand("b"));
+            undoStack.Push(new TestCommand("c"));
+            undoStack.SetClean();
+            undoStack.Undo();
+            undoStack.Undo();
+            var count = 0;
+            undoStack.cleanStateChanged += () => count++;
+            undoStack.Push(new TestCommand("d"));
+            Assert.AreEqual(-1, undoStack.cleanIndex);
+            Assert.AreEqual(1, count);
+            undoStack.Undo();
+            undoStack.Undo();
+            Assert.IsFalse(undoStack.isClean);
+        }
+
+        [Test]
+        public void EvictingCleanStateMakesStackNeverClean()
+        {
+            var undoStack = new UndoStack { undoLimit = 2 };
+            undoStack.Push(new TestCommand("a"));
+            undoStack.SetClean();
+            undoStack.Push(new TestCommand("b"));
+            undoStack.Push(new TestCommand("c"));
+            undoStack.Push(new TestCommand("d"));
+            undoStack.Undo();
+            undoStack.Undo();
+            Assert.AreEqual(-1, undoStack.index);
+            Assert.IsFalse(undoStack.isClean);
+        }
+
+        [Test]
+        public void EvictingCleanCommandKeepsNewBaseClean()
+        {
+            var undoStack = new UndoStack { undoLimit = 2 };
+            undoStack.Push(new TestCommand("a"));
+            undoStack.SetClean();
+            undoStack.Push(new TestCommand("b"));
+            undoStack.Push(new TestCommand("c"));
+            undoStack.Undo();
+            undoStack.Undo();
+            Assert.AreEqual(-1, undoStack.cleanIndex);
+            Assert.IsTrue(undoStack.isClean);
         }
 
         class TestCommand : UndoCommand

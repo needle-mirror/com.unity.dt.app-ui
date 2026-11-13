@@ -1,0 +1,186 @@
+/* DateTimeField */
+.appui-datetime-field {
+    border-width: var(--appui-alias-control-border-width);
+    border-radius: var(--appui-alias-control-border-radius);
+    padding: 0 var(--appui-alias-control-gap-md);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--appui-foregrounds-100);
+    width: 100%;
+    flex-shrink: 0;
+    background-color: var(--appui-base-100);
+    border-color: var(--appui-base-400);
+}
+
+.appui--rtl .appui-datetime-field {
+    flex-direction: row-reverse;
+}
+
+.appui-datetime-field__date-input,
+.appui-datetime-field__time-input {
+    color: var(--appui-foregrounds-100);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -unity-text-overflow-position: end;
+    -unity-text-align: middle-left;
+    padding-right: var(--appui-alias-control-gap-md);
+    padding-left: 0;
+    margin: 0;
+}
+
+.appui-datetime-field__date-input {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.appui-datetime-field__time-input {
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.appui-datetime-field__date-input > .unity-text-field__input,
+.appui-datetime-field__time-input > .unity-text-field__input {
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.appui-datetime-field__date-input > .unity-text-field__input > .unity-text-element,
+.appui-datetime-field__time-input > .unity-text-field__input > .unity-text-element {
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.appui--rtl .appui-datetime-field__date-input,
+.appui--rtl .appui-datetime-field__time-input {
+    -unity-text-align: middle-right;
+    padding-right: 0;
+    padding-left: var(--appui-alias-control-gap-md);
+}
+
+.appui-datetime-field__separator {
+    width: var(--appui-alias-control-border-width);
+    height: var(--appui-alias-control-sizing-icon-md);
+    margin-right: var(--appui-alias-control-gap-md);
+    background-color: var(--appui-base-400);
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.appui--rtl .appui-datetime-field__separator {
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-md);
+}
+
+.appui-datetime-field__picker-button {
+    height: var(--appui-alias-control-sizing-sm-square);
+    width: var(--appui-alias-control-sizing-sm-square);
+    padding: var(--appui-alias-control-gap-sm);
+    border-radius: var(--appui-alias-control-border-radius);
+    cursor: var(--appui-alias-control-cursor-pointer);
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.appui-datetime-field__picker-button.is-hovered,
+.appui-datetime-field__picker-button:focus,
+.appui-datetime-field__picker-button:active {
+    background-color: var(--appui-alias-actions-background-color-active);
+}
+
+.appui-datetime-field__picker-button > .appui-icon {
+    width: 100%;
+    height: 100%;
+}
+
+.appui-datetime-field__picker-button.is-hovered > .appui-icon,
+.appui-datetime-field__picker-button.is-focused > .appui-icon,
+.appui-datetime-field__picker-button.is-active > .appui-icon {
+    -unity-background-image-tint-color: var(--appui-alias-actions-foreground-color-active);
+    color: var(--appui-alias-actions-foreground-color-active);
+}
+
+.appui-datetime-field__picker-pane {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--appui-alias-control-gap-md);
+}
+
+.appui-datetime-field__picker-pane > .appui-time-picker {
+    margin-top: var(--appui-alias-control-gap-md);
+}
+
+.appui-datetime-field.is-hovered {
+    background-color: var(--appui-base-200);
+    border-color: var(--appui-base-500);
+}
+
+.appui-datetime-field.is-focused {
+    background-color: var(--appui-base-50);
+    border-color: var(--appui-accent-100);
+}
+
+.appui-datetime-field.keyboard-focus {
+    --outline-width: var(--appui-alias-control-outline-width);
+    --outline-color: var(--appui-alias-control-outline-color);
+    --outline-offset: var(--appui-alias-control-outline-offset);
+}
+
+.appui-datetime-field.is-active {
+    background-color: var(--appui-base-50);
+    border-color: var(--appui-base-500);
+}
+
+.appui-datetime-field.is-invalid {
+    border-color: var(--appui-destructive-100);
+}
+
+.appui-datetime-field:disabled {
+    background-color: var(--appui-base-100);
+    border-color: var(--appui-base-400);
+    cursor: var(--appui-alias-control-cursor-disabled);
+    color: var(--appui-foregrounds-25);
+}
+
+.appui-datetime-field__date-input:disabled,
+.appui-datetime-field__time-input:disabled {
+    color: var(--appui-foregrounds-25);
+}
+
+.appui-datetime-field--size-sm {
+    height: var(--appui-alias-control-sizing-sm-height);
+}
+
+.appui-datetime-field--size-md {
+    height: var(--appui-alias-control-sizing-md-height);
+}
+
+.appui-datetime-field--size-lg {
+    height: var(--appui-alias-control-sizing-lg-height);
+}
+
+/* The value takes the registry's text-field steps: text-sm (font-sizes-100) at sm and
+   text-base (font-sizes-200) at md and lg. */
+
+.appui-datetime-field--size-sm .appui-datetime-field__date-input,
+.appui-datetime-field--size-sm .appui-datetime-field__date-input > .unity-text-field__input,
+.appui-datetime-field--size-sm .appui-datetime-field__time-input,
+.appui-datetime-field--size-sm .appui-datetime-field__time-input > .unity-text-field__input {
+    font-size: var(--appui-font-sizes-100);
+}
+
+.appui-datetime-field--size-md .appui-datetime-field__date-input,
+.appui-datetime-field--size-md .appui-datetime-field__date-input > .unity-text-field__input,
+.appui-datetime-field--size-md .appui-datetime-field__time-input,
+.appui-datetime-field--size-md .appui-datetime-field__time-input > .unity-text-field__input {
+    font-size: var(--appui-font-sizes-200);
+}
+
+.appui-datetime-field--size-lg .appui-datetime-field__date-input,
+.appui-datetime-field--size-lg .appui-datetime-field__date-input > .unity-text-field__input,
+.appui-datetime-field--size-lg .appui-datetime-field__time-input,
+.appui-datetime-field--size-lg .appui-datetime-field__time-input > .unity-text-field__input {
+    font-size: var(--appui-font-sizes-200);
+}

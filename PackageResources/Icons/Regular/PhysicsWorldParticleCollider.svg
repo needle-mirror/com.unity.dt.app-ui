@@ -1,0 +1,11 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--physics-world-particle-collider--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 14.5C3.05228 14.5 3.5 14.0523 3.5 13.5C3.5 12.9477 3.05228 12.5 2.5 12.5C1.94772 12.5 1.5 12.9477 1.5 13.5C1.5 14.0523 1.94772 14.5 2.5 14.5Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12 6.5C12.8284 6.5 13.5 5.82843 13.5 5C13.5 4.17157 12.8284 3.5 12 3.5C11.1716 3.5 10.5 4.17157 10.5 5C10.5 5.82843 11.1716 6.5 12 6.5Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8.5 14C9.32843 14 10 13.3284 10 12.5C10 11.6716 9.32843 11 8.5 11C7.67157 11 7 11.6716 7 12.5C7 13.3284 7.67157 14 8.5 14Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8.5 4C9.32843 4 10 3.32843 10 2.5C10 1.67157 9.32843 1 8.5 1C7.67157 1 7 1.67157 7 2.5C7 3.32843 7.67157 4 8.5 4Z" fill="#2E7D32"/>
+<rect x="8" y="3" width="1" height="9" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6 3.5C6 4.88071 4.88071 6 3.5 6C2.11929 6 1 4.88071 1 3.5C1 2.11929 2.11929 1 3.5 1C4.88071 1 6 2.11929 6 3.5ZM5 3.5C5 4.32843 4.32843 5 3.5 5C2.67157 5 2 4.32843 2 3.5C2 2.67157 2.67157 2 3.5 2C4.32843 2 5 2.67157 5 3.5Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M15 12C15 13.1046 14.1046 14 13 14C11.8954 14 11 13.1046 11 12C11 10.8954 11.8954 10 13 10C14.1046 10 15 10.8954 15 12ZM14 12C14 12.5523 13.5523 13 13 13C12.4477 13 12 12.5523 12 12C12 11.4477 12.4477 11 13 11C13.5523 11 14 11.4477 14 12Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M4.37531 5.28087L5 4.5L12.5 11L11.8753 11.7809L4.37531 5.28087Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12.3753 4.21912L13 4.99999L2.81232 13.8904L2.18762 13.1096L12.3753 4.21912Z" fill="#2E7D32"/>
+</svg>

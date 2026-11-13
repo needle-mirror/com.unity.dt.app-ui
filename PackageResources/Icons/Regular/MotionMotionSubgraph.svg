@@ -1,0 +1,8 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--motion-motion-subgraph--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path opacity="0.4" fill-rule="evenodd" clip-rule="evenodd" d="M1 5.5C1 5.22386 1.22386 5 1.5 5H4V6H1.5C1.22386 6 1 5.77614 1 5.5ZM2 7.5C2 7.22386 2.22386 7 2.5 7H5V8H2.5C2.22386 8 2 7.77614 2 7.5ZM1 9.5C1 9.22386 1.22386 9 1.5 9H4V10H1.5C1.22386 10 1 9.77614 1 9.5Z" fill="#FFFFFF"/>
+<path d="M15 1H13.5C12.9477 1 12.5 1.44772 12.5 2V5C12.5 5.55228 12.9477 6 13.5 6H15V1Z" fill="#FFFFFF"/>
+<path d="M15 10H13.5C12.9477 10 12.5 10.4477 12.5 11V14C12.5 14.5523 12.9477 15 13.5 15H15V10Z" fill="#FFFFFF"/>
+<path d="M8.5 7.02634V8.02634H10C10.5523 8.02634 11 7.57862 11 7.02634V4H12V3H11C10.4477 3 10 3.44772 10 4V7.02634H8.5Z" fill="#FFFFFF"/>
+<path d="M11 12.9974C10.4477 12.9974 10 12.5497 10 11.9974V8.7771C10.3724 8.7771 10.7176 8.6608 11.0013 8.46255L11 11.9974H12V12.9974H11Z" fill="#FFFFFF"/>
+<path d="M3 11L8 7.5L3 4L4.25 7.5L3 11Z" fill="#FFFFFF"/>
+</svg>

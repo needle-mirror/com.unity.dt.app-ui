@@ -160,9 +160,9 @@ namespace Unity.AppUI.UI
             focusable = true;
             tabIndex = 0;
 
-            var checkmark = new Icon { name = checkmarkUssClassName, iconName = "check", variant = IconVariant.Bold, pickingMode = PickingMode.Ignore };
+            var checkmark = new Icon { primary = true, name = checkmarkUssClassName, iconName = "check", variant = IconVariant.Bold, pickingMode = PickingMode.Ignore };
             checkmark.AddToClassList(checkmarkUssClassName);
-            var partialCheckmark = new Icon { name = partialCheckmarkUssClassName, iconName = "minus", variant = IconVariant.Bold, pickingMode = PickingMode.Ignore };
+            var partialCheckmark = new Icon { primary = true, name = partialCheckmarkUssClassName, iconName = "minus", variant = IconVariant.Bold, pickingMode = PickingMode.Ignore };
             partialCheckmark.AddToClassList(partialCheckmarkUssClassName);
             m_Box = new ExVisualElement { name = boxUssClassName, pickingMode = PickingMode.Ignore, passMask = 0 };
             m_Box.AddToClassList(boxUssClassName);

@@ -60,17 +60,17 @@
     border-right-width: 0; /*border-inline-end-width: 0;*/
 }
 
-.appui-stepper--size-s .appui-stepper__button {
+.appui-stepper--size-sm .appui-stepper__button {
     width: var(--appui-sizing-400);
     height: var(--appui-sizing-400);
 }
 
-.appui-stepper--size-m .appui-stepper__button {
+.appui-stepper--size-md .appui-stepper__button {
     width: var(--appui-sizing-500);
     height: var(--appui-sizing-500);
 }
 
-.appui-stepper--size-l .appui-stepper__button {
+.appui-stepper--size-lg .appui-stepper__button {
     width: var(--appui-sizing-600);
     height: var(--appui-sizing-600);
 }
@@ -114,7 +114,7 @@
     width: 100%;
 }
 
-.appui-stepper--size-s .appui-icon {
+.appui-stepper--size-sm .appui-icon {
     height: var(--appui-sizing-300);
     width: var(--appui-sizing-300);
 }

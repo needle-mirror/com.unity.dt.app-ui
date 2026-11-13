@@ -1,4 +1,10 @@
+using System.Collections;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
 using Unity.AppUI.MVVM;
 
 #pragma warning disable 1998
@@ -81,6 +87,105 @@ namespace Unity.AppUI.Tests.MVVM
 
             command.Execute((object)1);
             Assert.AreEqual(1, executed);
+        }
+
+        [Test]
+        public void GenericAllowConcurrentExecutions_CancelsPreviousRun()
+        {
+            CancellationToken first = default, second = default;
+            var count = 0;
+            var command = new AsyncRelayCommand<string>((s, token) =>
+            {
+                if (count++ == 0) first = token; else second = token;
+                return Task.Delay(-1, token);
+            }, AsyncRelayCommandOptions.AllowConcurrentExecutions);
+
+            _ = command.ExecuteAsync("a");
+            _ = command.ExecuteAsync("b");
+
+            Assert.IsTrue(first.IsCancellationRequested);
+            Assert.IsFalse(second.IsCancellationRequested);
+
+            command.Cancel();
+            Assert.IsTrue(second.IsCancellationRequested);
+        }
+
+        [UnityTest]
+        public IEnumerator CancelledRun_RaisesCompletionNotifications()
+        {
+            var command = new AsyncRelayCommand(token => Task.Delay(-1, token));
+            var canExecuteChanged = 0;
+            var isRunningChanged = 0;
+            command.CanExecuteChanged += (_, _) => canExecuteChanged++;
+            command.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(command.isRunning)) isRunningChanged++; };
+
+            _ = command.ExecuteAsync(null);
+            Assert.AreEqual(1, canExecuteChanged);
+            command.Cancel();
+
+            for (var i = 0; i < 10; i++)
+                yield return null;
+
+            Assert.AreEqual(2, canExecuteChanged);
+            Assert.AreEqual(2, isRunningChanged);
+            Assert.IsFalse(command.isRunning);
+            Assert.IsTrue(command.CanExecute());
+        }
+
+        [UnityTest]
+        public IEnumerator GenericCancelledRun_RaisesCompletionNotifications()
+        {
+            var command = new AsyncRelayCommand<string>((s, token) => Task.Delay(-1, token));
+            var canExecuteChanged = 0;
+            command.CanExecuteChanged += (_, _) => canExecuteChanged++;
+
+            _ = command.ExecuteAsync("a");
+            command.Cancel();
+
+            for (var i = 0; i < 10; i++)
+                yield return null;
+
+            Assert.AreEqual(2, canExecuteChanged);
+            Assert.IsTrue(command.CanExecute("a"));
+        }
+
+        [UnityTest]
+        public IEnumerator FaultedRunWithOperationCanceledException_IsStillLogged()
+        {
+            // A cancellation exception that did not come from cancelling this run, such as a timeout.
+            var source = new TaskCompletionSource<bool>();
+            var command = new AsyncRelayCommand(() => source.Task);
+            var canExecuteChanged = 0;
+            command.CanExecuteChanged += (_, _) => canExecuteChanged++;
+
+            _ = command.ExecuteAsync(null);
+            LogAssert.Expect(LogType.Exception, new Regex("OperationCanceledException.*user timeout"));
+            source.SetException(new System.OperationCanceledException("user timeout"));
+
+            for (var i = 0; i < 10; i++)
+                yield return null;
+
+            Assert.AreEqual(2, canExecuteChanged);
+            Assert.IsFalse(command.isRunning);
+        }
+
+        [UnityTest]
+        public IEnumerator GenericFaultedRunWithOperationCanceledException_IsStillLogged()
+        {
+            var source = new TaskCompletionSource<bool>();
+            var command = new AsyncRelayCommand<string>(s => source.Task);
+            var canExecuteChanged = 0;
+            command.CanExecuteChanged += (_, _) => canExecuteChanged++;
+
+            _ = command.ExecuteAsync("a");
+            LogAssert.Expect(LogType.Exception, new Regex("OperationCanceledException.*user timeout"));
+            source.SetException(new System.OperationCanceledException("user timeout"));
+
+            for (var i = 0; i < 10; i++)
+                yield return null;
+
+            Assert.AreEqual(2, canExecuteChanged);
+            Assert.IsFalse(command.isRunning);
         }
     }
 }

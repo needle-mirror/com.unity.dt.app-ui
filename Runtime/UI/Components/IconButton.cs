@@ -29,7 +29,7 @@ namespace Unity.AppUI.UI
     /// deleteButton.clicked += () => HandleDelete();
     ///
     /// // Create a primary action button
-    /// var addButton = new IconButton("add") { primary = true, size = Size.L };
+    /// var addButton = new IconButton("add") { primary = true, size = Size.Lg };
     ///
     /// // Create a quiet variant for secondary actions
     /// var menuButton = new IconButton("menu") { quiet = true };
@@ -38,7 +38,7 @@ namespace Unity.AppUI.UI
     /// <code lang="xml"><![CDATA[
     /// <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI">
     ///     <appui:IconButton icon="settings"
-    ///                      size="M"
+    ///                      size="Md"
     ///                      primary="false"
     ///                      quiet="false"
     ///                      variant="Regular" />
@@ -48,10 +48,10 @@ namespace Unity.AppUI.UI
     /// <code lang="xml"><![CDATA[
     /// <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI">
     ///     <ui:VisualElement class="toolbar">
-    ///         <appui:IconButton icon="undo" quiet="true" size="S" />
-    ///         <appui:IconButton icon="redo" quiet="true" size="S" />
-    ///         <appui:IconButton icon="save" primary="true" size="S" />
-    ///         <appui:IconButton icon="delete" size="S" />
+    ///         <appui:IconButton icon="undo" quiet="true" size="Sm" />
+    ///         <appui:IconButton icon="redo" quiet="true" size="Sm" />
+    ///         <appui:IconButton icon="save" primary="true" size="Sm" />
+    ///         <appui:IconButton icon="delete" size="Sm" />
     ///     </ui:VisualElement>
     /// </ui:UXML>
     /// ]]></code>
@@ -72,6 +72,8 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId variantProperty = new BindingId(nameof(variant));
 
         internal static readonly BindingId clickableProperty = new BindingId(nameof(clickable));
+
+        internal static readonly BindingId selectedProperty = new BindingId(nameof(selected));
 
 
         /// <summary>
@@ -140,7 +142,7 @@ namespace Unity.AppUI.UI
 
             m_Container = new VisualElement { name = containerUssClassName, pickingMode = PickingMode.Ignore };
             m_Container.AddToClassList(containerUssClassName);
-            m_Icon = new Icon { name = iconUssClassName, pickingMode = PickingMode.Ignore };
+            m_Icon = new Icon { primary = true, name = iconUssClassName, pickingMode = PickingMode.Ignore };
             m_Icon.AddToClassList(iconUssClassName);
 
             m_Container.hierarchy.Add(m_Icon);
@@ -149,7 +151,7 @@ namespace Unity.AppUI.UI
             primary = false;
             quiet = false;
             icon = iconName;
-            size = Size.M;
+            size = Size.Md;
             variant = IconVariant.Regular;
 
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));
@@ -210,6 +212,32 @@ namespace Unity.AppUI.UI
 
                 if (changed)
                     NotifyPropertyChanged(in primaryProperty);
+            }
+        }
+
+        /// <summary>
+        /// The pressed / toggle state of the IconButton, for example an active sidebar or panel
+        /// toggle.
+        /// </summary>
+        /// <remarks>
+        /// A selected IconButton paints the selected role's own fill,
+        /// <c>--appui-alias-actions-selected-background-color-default</c>, and its selected hover
+        /// alias under the pointer, so hovering never takes the pressed state back. Mirrors the
+        /// registry's <c>selected</c> variant on <c>icon-button</c>.
+        /// </remarks>
+        [UnityEngine.Tooltip("The pressed / toggle state of the IconButton.")]
+        [CreateProperty]
+        [UxmlAttribute]
+        public bool selected
+        {
+            get => ClassListContains(Styles.selectedUssClassName);
+            set
+            {
+                var changed = selected != value;
+                EnableInClassList(Styles.selectedUssClassName, value);
+
+                if (changed)
+                    NotifyPropertyChanged(in selectedProperty);
             }
         }
 
@@ -283,10 +311,10 @@ namespace Unity.AppUI.UI
                 m_Size = value;
                 m_Icon.size = m_Size switch
                 {
-                    Size.S => IconSize.S,
-                    Size.M => IconSize.M,
-                    Size.L => IconSize.L,
-                    _ => IconSize.M
+                    Size.Sm => IconSize.Sm,
+                    Size.Md => IconSize.Md,
+                    Size.Lg => IconSize.Lg,
+                    _ => IconSize.Md
                 };
                 AddToClassList(GetSizeUssClassName(m_Size));
 

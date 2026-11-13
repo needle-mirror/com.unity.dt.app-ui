@@ -12,10 +12,10 @@ namespace Unity.AppUI.Editor
 
         public ButtonPage()
         {
-            m_Stories.Add(new StoryBookStory("Primary", () => new Button
+            m_Stories.Add(new StoryBookStory("Default", () => new Button
             {
-                variant = ButtonVariant.Accent,
-                title = "Primary Style Button"
+                variant = ButtonVariant.Default,
+                title = "Default Style Button"
             }));
         }
     }

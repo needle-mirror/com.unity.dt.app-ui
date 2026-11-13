@@ -1,0 +1,61 @@
+/* ContextCounter */
+.appui-context-counter {
+    flex-direction: row;
+    align-items: center;
+    align-self: flex-start;
+    flex-shrink: 0;
+    background-color: var(--appui-alias-surface-card);
+    /* Only the first frame uses this. ContextCounter.cs sets the radius to half the laid-out
+       height on GeometryChangedEvent, because UITK clamps an oversized radius per axis and draws
+       an ellipse, whether it is 100% or a large px step. */
+    border-radius: var(--appui-sizing-1000);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-control-border-color-default);
+    padding: var(--appui-sizing-25) var(--appui-sizing-160);
+}
+
+.appui--rtl .appui-context-counter {
+    flex-direction: row-reverse;
+}
+
+.appui-context-counter > * {
+    margin-left: var(--appui-sizing-75);
+}
+
+.appui-context-counter > .appui-context-counter__ring {
+    margin-left: 0;
+}
+
+.appui--rtl .appui-context-counter > * {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-75);
+}
+
+.appui--rtl .appui-context-counter > .appui-context-counter__ring {
+    margin-right: 0;
+}
+
+.appui-context-counter__ring {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+    --progress-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+.appui-context-counter__label {
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-secondary);
+}
+
+.appui-context-counter__percent {
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-disabled);
+}
+
+/* Past the near-full threshold the readout and the ring both go warning-coloured. */
+.appui-context-counter--near > .appui-context-counter__percent {
+    color: var(--appui-alias-semantic-warning);
+}
+
+.appui-context-counter--near > .appui-context-counter__ring {
+    --progress-color: var(--appui-alias-semantic-warning);
+}

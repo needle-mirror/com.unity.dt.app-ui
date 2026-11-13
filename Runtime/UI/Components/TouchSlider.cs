@@ -143,7 +143,7 @@ namespace Unity.AppUI.UI
 
             // Default values
             HideInputField();
-            size = Size.M;
+            size = Size.Md;
 
             // Event listeners
             RegisterCallback<KeyDownEvent>(OnKeyDown);

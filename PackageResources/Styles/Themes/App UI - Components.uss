@@ -1,0 +1,89 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --appui-accordion__header-font-weight: bold;
+  --appui-dialog-default-icon-variant: regular;
+  --appui-dialog-information-icon-variant: regular;
+  --appui-dialog-confirmation-icon-variant: regular;
+  --appui-dialog-destructive-icon-variant: regular;
+  --appui-dialog-warning-icon-name: warning;
+  --appui-dialog-warning-icon-variant: fill;
+  --appui-dialog-error-icon-name: warning;
+  --appui-dialog-error-icon-variant: fill;
+  --appui-dialog-width-sm: 400px;
+  --appui-dialog-width-md: 500px;
+  --appui-dialog-width-lg: 640px;
+  --appui-dialog-width-xl: 768px;
+  --appui-dockview-drag-over-background-color: rgba(8, 146, 255, 0.5);
+  --appui-inspector-sizing-xs-width: 220px;
+  --appui-inspector-sizing-sm-width: 220px;
+  --appui-inspector-sizing-md-width: 400px;
+  --appui-inspector-sizing-lg-width: 560px;
+  --appui-inspector-none: 0;
+  --appui-tabitem-label-font-weight: bold;
+  --appui-timeline-lane-border-radius: 0;
+  --appui-timeline-tick-fine-opacity: 0;
+  --appui-avatar-size-sm: var(--appui-sizing-500);
+  --appui-avatar-size-md: var(--appui-sizing-650);
+  --appui-avatar-size-lg: var(--appui-sizing-800);
+  --appui-chat-message-bubble-user-border-width: var(--appui-border-width-none); /** Rim width of the user's message bubble; none draws no rim */
+  --appui-checkbox__box-size-sm: var(--appui-sizing-250);
+  --appui-checkbox__box-size-md: var(--appui-sizing-320);
+  --appui-checkbox__box-size-lg: var(--appui-sizing-350);
+  --appui-checkbox__box-border-radius-sm: var(--appui-sizing-75);
+  --appui-checkbox__box-border-radius-md: var(--appui-sizing-75);
+  --appui-checkbox__box-border-radius-lg: var(--appui-sizing-75);
+  --appui-inspector-border-radius: var(--appui-border-radius-md);
+  --appui-inspector-content-gap: var(--appui-sizing-150);
+  --appui-inspector-content-horizontal: var(--appui-sizing-200);
+  --appui-inspector-section-content-vertical: var(--appui-sizing-150);
+  --appui-inspector-section-content-gap: var(--appui-sizing-150);
+  --appui-linear-progress-border-height: var(--appui-sizing-125);
+  --appui-linear-progress-border-radius: var(--appui-sizing-60);
+  --appui-radio__button-size-sm: var(--appui-sizing-200);
+  --appui-radio__button-size-md: var(--appui-sizing-250);
+  --appui-radio__button-size-lg: var(--appui-sizing-300);
+  --appui-radio__checkmark-size-sm: var(--appui-sizing-75);
+  --appui-radio__checkmark-size-md: var(--appui-sizing-100);
+  --appui-radio__checkmark-size-lg: var(--appui-sizing-150);
+  --appui-splitview-splitter-anchor-size: var(--appui-sizing-25);
+  --appui-timeline-lane-border-width: var(--appui-border-width-xs);
+  --appui-toggle-thumb-inset: var(--appui-border-width-xs);
+  --appui-toggle__box-gap: var(--appui-sizing-50);
+  --appui-toggle__box-width-sm: var(--appui-sizing-500);
+  --appui-toggle__box-width-md: var(--appui-sizing-600);
+  --appui-toggle__box-width-lg: var(--appui-sizing-700);
+  --appui-toggle__box-height-sm: var(--appui-sizing-300);
+  --appui-toggle__box-height-md: var(--appui-sizing-350);
+  --appui-toggle__box-height-lg: var(--appui-sizing-400);
+  --appui-toggle__box-border-radius-sm: var(--appui-sizing-150);
+  --appui-toggle__box-border-radius-md: var(--appui-sizing-175);
+  --appui-toggle__box-border-radius-lg: var(--appui-sizing-200);
+  --appui-toggle__checkmark-size-sm: var(--appui-sizing-150);
+  --appui-toggle__checkmark-size-md: var(--appui-sizing-200);
+  --appui-toggle__checkmark-size-lg: var(--appui-sizing-250);
+  --appui-actiongroup-gap: var(--appui-alias-control-gap-md);
+  --appui-chat-message-bubble-user-background-color: var(--appui-alias-actions-accent-background-color-default); /** Fill of the user's message bubble */
+  --appui-chat-message-bubble-user-foreground-color: var(--appui-alias-actions-accent-foreground-color-default); /** Text on the user's message bubble */
+  --appui-checkbox__box-checked-background-color: var(--appui-alias-actions-accent-background-color-default); /** Fill of a checked or indeterminate checkbox box */
+  --appui-checkbox__box-checked-border-color: var(--appui-alias-actions-accent-background-color-default); /** Rim of a checked or indeterminate checkbox box */
+  --appui-checkbox__box-checked-foreground-color: var(--appui-alias-actions-accent-foreground-color-default); /** Check or dash mark on a checked or indeterminate checkbox box */
+  --appui-dialog-default-icon-color: var(--appui-foregrounds-100);
+  --appui-dialog-information-icon-color: var(--appui-foregrounds-100);
+  --appui-dialog-confirmation-icon-color: var(--appui-foregrounds-100);
+  --appui-dialog-destructive-icon-color: var(--appui-foregrounds-100);
+  --appui-dialog-warning-icon-color: var(--appui-alias-semantic-warning);
+  --appui-dialog-error-icon-color: var(--appui-alias-semantic-destructive);
+  --appui-inspector-background-color: var(--appui-backgrounds-100);
+  --appui-inputlabel: var(--appui-alias-control-gap-md);
+  --appui-slider-track-background-color: var(--appui-base-100);
+  --appui-slider-progress-background-color: var(--appui-alias-actions-accent-background-color-default);
+  --appui-actionbar-background-color: var(--appui-alias-control-background-color-default);
+  --appui-chat-message-bubble-user-border-color: var(--appui-chat-message-bubble-user-foreground-color); /** Rim of the user's message bubble, drawn at borderWidth */
+  --appui-chat-message-bubble-user-chip-foreground-color: var(--appui-chat-message-bubble-user-foreground-color); /** Value text of a context chip inside the user's bubble */
+  --appui-chat-message-bubble-user-fade-color: var(--appui-chat-message-bubble-user-background-color); /** Colour a clamped long message fades into; matches the bubble fill */
+  --appui-chat-message-bubble-user-toggle-foreground-color-hover: var(--appui-chat-message-bubble-user-foreground-color); /** Show more / Show less on a clamped user message, hovered */
+  --appui-tabitem-indicator-emphasized-color: var(--appui-alias-highlight-background-color-default);
+}

@@ -1,0 +1,124 @@
+/* CodeEditor — an editable code surface with a highlighted overlay.
+ *
+ * Syntax highlighting reads the same two custom properties CodeBlock reads,
+ * so the two components share one language-to-grammar vocabulary:
+ *   --codeblock-grammar : TextMateGrammarAsset
+ *   --codeblock-theme   : TextMateThemeAsset
+ * `--appui-code-font-family` is declared by CodeBlock.uss; both files are
+ * imported by `App UI.uss`, so the editor resolves it too.
+ *
+ * The overlay only works while both layers lay text out identically. That is
+ * why the shared block below styles them together instead of once each: split
+ * the rule and a padding or font change to one layer silently misaligns the
+ * caret from the colours, with no error anywhere.
+ */
+
+.appui-code-editor {
+    position: relative;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+/* ---- The alignment contract. Do not split this rule. ------------------ */
+
+.appui-code-editor__highlight,
+.appui-code-editor .appui-textarea__input,
+.appui-code-editor .appui-textarea__placeholder {
+    font-size: var(--appui-font-sizes-100);
+    -unity-font-definition: var(--appui-code-font-family);
+    -unity-text-align: upper-left;
+    white-space: nowrap;
+    margin: 0;
+    padding: var(--appui-static-sizing-100);
+}
+
+/* ---- Layers ----------------------------------------------------------- */
+
+.appui-code-editor__input {
+    flex-grow: 1;
+    height: auto;
+}
+
+.appui-code-editor__highlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: var(--appui-alias-text-primary);
+}
+
+/* ---- Hide the input glyphs behind the coloured copy. --------------------
+ * While the highlight layer is shown, the TextArea still draws its own text
+ * underneath, so every text-carrying layer of the input goes transparent. The
+ * selectors carry the hover, focus and active states (and an extra class) so
+ * they outrank TextArea.uss, which re-asserts the input colour in those
+ * states. The caret and selection use their own properties and stay visible;
+ * the caret colour is left alone so TextArea's blink class still applies.
+ */
+
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea__input,
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea__input:hover,
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea__input:focus,
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea__input:active,
+.appui-code-editor.appui-code-editor--highlighted:hover .appui-textarea__input,
+.appui-code-editor.appui-code-editor--highlighted:active .appui-textarea__input,
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea:hover .appui-textarea__input,
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea:active .appui-textarea__input,
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea.is-focused .appui-textarea__input,
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea__input .unity-base-text-field__input,
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea__input .unity-base-text-field__input:hover,
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea__input .unity-base-text-field__input:focus,
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea__input .unity-base-text-field__input:active,
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea__input .unity-text-element,
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea__input .unity-text-element:hover,
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea__input .unity-text-element:focus,
+.appui-code-editor.appui-code-editor--highlighted .appui-textarea__input .unity-text-element:active {
+    color: var(--appui-color-transparent-black-0);
+}
+
+/* ---- Language to grammar. Mirrors CodeBlock.uss. ---------------------- */
+
+.appui-code-editor--lang-csharp,
+.appui-code-editor--lang-cs,
+.appui-code-editor--lang-c\# {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/csharp.tmLanguage.json");
+}
+
+.appui-code-editor--lang-lua {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/lua.tmLanguage.json");
+}
+
+.appui-code-editor--lang-css {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/css.tmLanguage.json");
+}
+
+.appui-code-editor--lang-json,
+.appui-code-editor--lang-json5,
+.appui-code-editor--lang-jsonc {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/json.tmLanguage.json");
+}
+
+.appui-code-editor--lang-xml {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/xml.tmLanguage.json");
+}
+
+.appui-code-editor--lang-html {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/html.tmLanguage.json");
+}
+
+.appui-code-editor--lang-hlsl {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/hlsl.tmLanguage.json");
+}
+
+.appui-code-editor--lang-wgsl {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/wgsl.tmLanguage.json");
+}
+
+.appui-code-editor {
+    --codeblock-theme: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Themes/dark-plus.tmTheme.json");
+}
+
+.appui--light .appui-code-editor {
+    --codeblock-theme: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Themes/light-plus.tmTheme.json");
+}

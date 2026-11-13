@@ -9,6 +9,8 @@ using UnityEngine.UIElements;
 
 namespace Unity.AppUI.Tests.UI
 {
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     class PopupTests<T> where T : Popup
     {
         Popup m_Popup;

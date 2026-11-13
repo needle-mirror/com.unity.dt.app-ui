@@ -1,0 +1,17 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--graphics-texture-renderer--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<g clip-path="url(#clip0_1_19984)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13 2C13.5523 2 14 2.44772 14 3L14.0009 9.39347C13.6728 9.15056 13.3393 8.93942 13.0005 8.76003L13 3H3V13L4.29298 13.0012C4.611 13.3681 4.93474 13.7014 5.2642 14.0011L3 14C2.44772 14 2 13.5523 2 13V3C2 2.44772 2.44772 2 3 2H13Z" fill="#0C6CCB"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6 8L6.00014 9.39272C5.75139 9.57684 5.50575 9.77921 5.26321 9.99984L4 10V8H6ZM12 6V8H10V6H12ZM8 6V8H6V6H8ZM6 4V6H4V4H6ZM10 4V6H8V4H10Z" fill="#555555"/>
+</g>
+<g clip-path="url(#clip1_1_19984)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10 9C11.8409 9 13.5076 10 15 12C13.5076 14 11.8409 15 10 15C8.15905 15 6.49238 14 5 12C6.49238 10 8.15905 9 10 9ZM10 10C8.89543 10 8 10.8954 8 12C8 13.1046 8.89543 14 10 14C11.1046 14 12 13.1046 12 12C12 10.8954 11.1046 10 10 10Z" fill="#555555"/>
+</g>
+<defs>
+<clipPath id="clip0_1_19984">
+<rect width="12" height="12" fill="white" transform="translate(2 2)"/>
+</clipPath>
+<clipPath id="clip1_1_19984">
+<rect width="10" height="6" fill="white" transform="translate(5 9)"/>
+</clipPath>
+</defs>
+</svg>

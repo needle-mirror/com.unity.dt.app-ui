@@ -34,6 +34,7 @@
 }
 
 .appui-radio__label {
+    font-size: var(--appui-font-sizes-100);
     color: var(--appui-foregrounds-100);
     margin-left: var(--appui-alias-control-gap-md); /*margin-inline-start: var(--appui-alias-control-gap-md);*/
     margin-right: 0;
@@ -129,43 +130,43 @@
     opacity: 1;
 }
 
-.appui-radio--size-s {
+.appui-radio--size-sm {
     height: var(--appui-alias-control-sizing-sm-height);
 }
 
-.appui-radio--size-m {
+.appui-radio--size-md {
     height: var(--appui-alias-control-sizing-md-height);
 }
-.appui-radio--size-l {
+.appui-radio--size-lg {
     height: var(--appui-alias-control-sizing-lg-height);
 }
 
-.appui-radio--size-s > .appui-radio__button  {
+.appui-radio--size-sm > .appui-radio__button  {
     width: var(--appui-radio__button-size-sm);
     height: var(--appui-radio__button-size-sm);
 }
 
-.appui-radio--size-s .appui-radio__checkmark {
+.appui-radio--size-sm .appui-radio__checkmark {
     width: var(--appui-radio__checkmark-size-sm);
     height: var(--appui-radio__checkmark-size-sm);
 }
 
-.appui-radio--size-m > .appui-radio__button  {
+.appui-radio--size-md > .appui-radio__button  {
     width: var(--appui-radio__button-size-md);
     height: var(--appui-radio__button-size-md);
 }
 
-.appui-radio--size-m .appui-radio__checkmark {
+.appui-radio--size-md .appui-radio__checkmark {
     width: var(--appui-radio__checkmark-size-md);
     height: var(--appui-radio__checkmark-size-md);
 }
 
-.appui-radio--size-l > .appui-radio__button  {
+.appui-radio--size-lg > .appui-radio__button  {
     width: var(--appui-radio__button-size-lg);
     height: var(--appui-radio__button-size-lg);
 }
 
-.appui-radio--size-l .appui-radio__checkmark {
+.appui-radio--size-lg .appui-radio__checkmark {
     width: var(--appui-radio__checkmark-size-lg);
     height: var(--appui-radio__checkmark-size-lg);
 }

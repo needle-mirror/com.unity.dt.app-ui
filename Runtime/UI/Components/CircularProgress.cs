@@ -34,7 +34,7 @@ namespace Unity.AppUI.UI
     /// <para>Determinate progress with custom styling. Creates a large determinate progress indicator with custom
     /// color and thickness.</para>
     /// <code lang="xml"><![CDATA[
-    /// <CircularProgress variant="Determinate" value="0.75" inner-radius="0.4" color-override="#2196F3" size="L" />
+    /// <CircularProgress variant="Determinate" value="0.75" inner-radius="0.4" color-override="#2196F3" size="Lg" />
     /// ]]></code>
     /// <para>Progress with code-behind interaction. Demonstrates how to create and update a circular progress
     /// indicator programmatically.</para>

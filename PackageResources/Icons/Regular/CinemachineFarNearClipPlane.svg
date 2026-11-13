@@ -1,0 +1,7 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--cinemachine-far-near-clip-plane--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path d="M2 11H3C3.55 11 4 10.55 4 10V9.44L5.59 10C5.79 10.07 6 9.92 6 9.71V6.29C6 6.07 5.79 5.93 5.59 6L4 6.55V6C4 5.45 3.55 5 3 5H2V11Z" fill="#555555"/>
+<path d="M13 1.5L14 1V5.00003H13V4.04662L10 5.39662V6.00003H9V2.5L10 2V4.30003L13 2.95003V1.5Z" fill="#6D66CC"/>
+<path d="M9 9.00003V7.00003H10V9.00003H9Z" fill="#6D66CC"/>
+<path d="M10 10H9V13.5L10 14L10 11.7L13 13.05L13 14.5L14 15V11H13V11.9534L10 10.6034V10Z" fill="#6D66CC"/>
+<path d="M14 10H13V6.00003H14V10Z" fill="#6D66CC"/>
+</svg>

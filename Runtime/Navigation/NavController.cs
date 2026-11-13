@@ -235,7 +235,8 @@ namespace Unity.AppUI.Navigation
             // simulate navigation through each segment but not the last one
             for (var i = 1; i < deepLink.Segments.Length - 1; i++)
             {
-                var segment = deepLink.Segments[i];
+                // Uri.Segments keeps the trailing slash on every segment but the last
+                var segment = deepLink.Segments[i].TrimEnd('/');
                 var destination = m_GraphAsset.FindDestinationByRoute(segment);
                 if (destination == null)
                 {
@@ -250,7 +251,7 @@ namespace Unity.AppUI.Navigation
             // navigate to the last segment
             options = options ?? new NavOptions();
             options.enterAnim = NavigationAnimation.None;
-            var lastSegment = deepLink.Segments[deepLink.Segments.Length - 1];
+            var lastSegment = deepLink.Segments[deepLink.Segments.Length - 1].TrimEnd('/');
             var lastDestination = m_GraphAsset.FindDestinationByRoute(lastSegment);
             if (lastDestination == null)
             {

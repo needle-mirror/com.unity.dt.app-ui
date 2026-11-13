@@ -55,6 +55,8 @@ namespace Unity.AppUI.UI
         /// </summary>
         protected Draggable m_DraggerManipulator;
 
+        bool m_Scrubbing;
+
         /// <summary>
         /// Slider max value.
         /// </summary>
@@ -135,6 +137,67 @@ namespace Unity.AppUI.UI
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             RegisterCallback<CustomStyleResolvedEvent>(OnStyleResolved);
             this.RegisterContextChangedCallback<DirContext>(OnDirectionChanged);
+
+            // Backstops for the scrub bracket. A drag that ends any way other than a pointer up on the
+            // track never reaches OnTrackUp: the pointer capture going elsewhere, the OS or the panel
+            // cancelling the gesture, or the slider being removed while a thumb is still held. Without
+            // these a consumer's undo group would stay open for the rest of the session.
+            RegisterCallback<PointerCaptureOutEvent>(_ => EndScrub());
+            RegisterCallback<PointerCancelEvent>(_ => EndScrub());
+            RegisterCallback<DetachFromPanelEvent>(_ => EndScrub());
+        }
+
+        /// <summary>
+        /// A pointer drag has begun on the slider: the start of one gesture.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Pairs with <see cref="scrubEnded"/> to bracket a drag, which is what a caller needs to open
+        /// and close a single undo group while <see cref="INotifyValueChanging{T}"/> streams the
+        /// intermediate values. Keyboard steps are not a gesture and raise neither.
+        /// </para>
+        /// </remarks>
+        public event Action scrubStarted;
+
+        /// <summary>
+        /// The pointer drag has ended.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Raised exactly once for every <see cref="scrubStarted"/>. A pointer released outside the
+        /// slider, a capture stolen by another element, a cancelled gesture and the slider leaving the
+        /// panel mid-drag all close the bracket, rather than leaving a caller's undo group open.
+        /// </para>
+        /// </remarks>
+        public event Action scrubEnded;
+
+        /// <summary>
+        /// Whether a pointer drag is currently in progress on this slider.
+        /// </summary>
+        public bool scrubbing => m_Scrubbing;
+
+        /// <summary>
+        /// Opens the scrub bracket if it is not already open, raising <see cref="scrubStarted"/>.
+        /// </summary>
+        protected void BeginScrub()
+        {
+            if (m_Scrubbing)
+                return;
+
+            m_Scrubbing = true;
+            scrubStarted?.Invoke();
+        }
+
+        /// <summary>
+        /// Closes the scrub bracket if it is open, raising <see cref="scrubEnded"/>.
+        /// </summary>
+        protected void EndScrub()
+        {
+            if (!m_Scrubbing)
+                return;
+
+            m_Scrubbing = false;
+            scrubEnded?.Invoke();
         }
 
         /// <summary>
@@ -458,6 +521,9 @@ namespace Unity.AppUI.UI
         protected virtual void OnTrackUp(Draggable dragger)
         {
             m_DraggedThumbIndex = -1;
+            // Before the early return below: a drag that put the value back where it started is still
+            // a drag that happened, and its bracket has to close.
+            EndScrub();
             if (comparer.Compare(m_PreviousValue, value) == 0)
                 return;
 
@@ -475,6 +541,7 @@ namespace Unity.AppUI.UI
         protected virtual void OnTrackDown(Draggable dragger)
         {
             m_PreviousValue = value;
+            BeginScrub();
 
             Span<TScalar> values = stackalloc TScalar[thumbCount];
             GetScalarValuesFromValue(m_Value, values);

@@ -49,7 +49,7 @@ namespace Unity.AppUI.Editor.Tests
     }
 
     [TestFixture]
-    [TestOf(typeof(ScaleDrawer))]
+    [TestOf(typeof(DensityDrawer))]
     class ScaleDrawerTests
     {
         [Serializable]
@@ -62,7 +62,7 @@ namespace Unity.AppUI.Editor.Tests
         [Test]
         public void ScaleDrawer_CreatesPropertyGUI_ShouldNotThrow()
         {
-            var drawer = new ScaleDrawer();
+            var drawer = new DensityDrawer();
             var obj = ScriptableObject.CreateInstance<ScaleObject>();
             var serializedObject = new SerializedObject(obj);
             Assert.DoesNotThrow(() => drawer.CreatePropertyGUI(serializedObject.FindProperty("value")));

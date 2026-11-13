@@ -1,0 +1,206 @@
+/* ChatActivityTimeline */
+.appui-chat-activity-timeline {
+    flex-direction: column;
+    flex-shrink: 0;
+    align-items: flex-start;
+}
+
+/* Summary line — the whole thing is the toggle. */
+.appui-chat-activity-timeline__summary {
+    flex-direction: row;
+    align-items: center;
+    padding: var(--appui-sizing-75) 0;
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+.appui--rtl .appui-chat-activity-timeline__summary {
+    flex-direction: row-reverse;
+}
+
+.appui-chat-activity-timeline__summary > * {
+    margin-left: var(--appui-sizing-75);
+}
+
+.appui-chat-activity-timeline__summary > .appui-chat-activity-timeline__summary-label {
+    margin-left: 0;
+}
+
+.appui--rtl .appui-chat-activity-timeline__summary > * {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-75);
+}
+
+.appui--rtl .appui-chat-activity-timeline__summary > .appui-chat-activity-timeline__summary-label {
+    margin-right: 0;
+}
+
+.appui-chat-activity-timeline__summary-label {
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-secondary);
+}
+
+.appui-chat-activity-timeline__summary.is-hovered > .appui-chat-activity-timeline__summary-label {
+    color: var(--appui-alias-text-primary);
+}
+
+.appui-chat-activity-timeline__summary-elapsed {
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-disabled);
+}
+
+.appui-chat-activity-timeline__caret {
+    --unity-image-tint-color: var(--appui-alias-text-secondary);
+}
+
+/* Rows */
+.appui-chat-activity-timeline__rows {
+    flex-direction: column;
+    align-self: stretch;
+    margin-top: var(--appui-sizing-75);
+    padding-left: var(--appui-sizing-250);
+}
+
+.appui--rtl .appui-chat-activity-timeline__rows {
+    padding-left: 0;
+    padding-right: var(--appui-sizing-250);
+}
+
+.appui-chat-activity-timeline__row {
+    flex-direction: row;
+    align-items: flex-start;
+    padding-bottom: var(--appui-sizing-250);
+}
+
+.appui--rtl .appui-chat-activity-timeline__row {
+    flex-direction: row-reverse;
+}
+
+.appui-chat-activity-timeline__row--last {
+    padding-bottom: 0;
+}
+
+/* The connector is absolutely positioned behind the row and inset top and bottom, so it leaves a
+   gap around each glyph. Masking the line with an opaque glyph background instead would render as
+   a box in a colour that may not match the host surface. */
+.appui-chat-activity-timeline__connector {
+    position: absolute;
+    top: var(--appui-alias-control-sizing-icon-md);
+    bottom: 0;
+    left: var(--appui-sizing-160);
+    width: var(--appui-alias-control-border-width);
+    background-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui--rtl .appui-chat-activity-timeline__connector {
+    left: auto;
+    right: var(--appui-sizing-160);
+}
+
+/* The last row draws no connector, so the line never dangles past the timeline. */
+.appui-chat-activity-timeline__row--last > .appui-chat-activity-timeline__connector {
+    display: none;
+}
+
+.appui-chat-activity-timeline__row-glyph {
+    flex-direction: row;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--appui-alias-control-sizing-icon-md);
+    height: var(--appui-alias-control-sizing-icon-md);
+    margin-right: var(--appui-sizing-160);
+}
+
+.appui--rtl .appui-chat-activity-timeline__row-glyph {
+    margin-right: 0;
+    margin-left: var(--appui-sizing-160);
+}
+
+.appui-chat-activity-timeline__row-glyph > .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-text-secondary);
+}
+
+.appui-chat-activity-timeline__row-glyph > .appui-circular-progress {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+    --progress-color: var(--appui-alias-text-secondary);
+}
+
+.appui-chat-activity-timeline__row-text {
+    flex-grow: 1;
+    flex-shrink: 1;
+    white-space: normal;
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-secondary);
+}
+
+.appui-chat-activity-timeline__row-elapsed {
+    flex-shrink: 0;
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-disabled);
+    margin-left: var(--appui-sizing-160);
+}
+
+.appui--rtl .appui-chat-activity-timeline__row-elapsed {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-160);
+}
+
+/* Live figures on the header, the dimmest live text. */
+.appui-chat-activity-timeline__summary-stats {
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-tertiary);
+}
+
+/* Header at the foot: the rows open upward above a chip on the column's own surface. */
+.appui-chat-activity-timeline--header-bottom > .appui-chat-activity-timeline__rows {
+    margin-top: 0;
+    margin-bottom: var(--appui-sizing-75);
+}
+
+.appui-chat-activity-timeline--header-bottom > .appui-chat-activity-timeline__summary {
+    min-height: var(--appui-sizing-600);
+    padding: var(--appui-sizing-75) var(--appui-sizing-200);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-control-border-color-default);
+    border-radius: var(--appui-border-radius-full);
+    background-color: var(--appui-alias-surface-default);
+}
+
+.appui-chat-activity-timeline--header-bottom > .appui-chat-activity-timeline__summary.is-hovered {
+    background-color: var(--appui-alias-control-background-color-hover);
+}
+
+.appui-chat-activity-timeline--header-bottom > .appui-chat-activity-timeline__summary > .appui-chat-activity-timeline__summary-label {
+    color: var(--appui-alias-text-primary);
+}
+
+/* Entries: one line each, clipped rather than wrapped, so a stack of them stays flush. */
+.appui-chat-activity-timeline--entries .appui-chat-activity-timeline__row {
+    align-items: center;
+}
+
+.appui-chat-activity-timeline--entries .appui-chat-activity-timeline__row-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Pager on a folded row. */
+.appui-chat-activity-timeline__row-pager {
+    flex-direction: row;
+    flex-shrink: 0;
+    align-items: center;
+    margin-left: var(--appui-sizing-160);
+}
+
+.appui--rtl .appui-chat-activity-timeline__row-pager {
+    flex-direction: row-reverse;
+    margin-left: 0;
+    margin-right: var(--appui-sizing-160);
+}
+
+.appui-chat-activity-timeline__row-pager-label {
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-secondary);
+}

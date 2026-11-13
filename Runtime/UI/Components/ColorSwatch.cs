@@ -24,12 +24,12 @@ namespace Unity.AppUI.UI
     /// <example>
     /// <para>Basic Usage Example — Creating a basic color swatch with UXML.</para>
     /// <code lang="xml"><![CDATA[
-    /// <ColorSwatch size="M" round="true" orientation="Horizontal" value="Fixed:[0,#FF0000];[1,#0000FF]+[0,1];[1,1]" />
+    /// <ColorSwatch size="Md" round="true" orientation="Horizontal" value="Fixed:[0,#FF0000];[1,#0000FF]+[0,1];[1,1]" />
     /// ]]></code>
     /// <para>Create a color swatch programmatically — Creating a color swatch with gradient in code.</para>
     /// <code lang="csharp">
     /// var swatch = new ColorSwatch();
-    /// swatch.size = Size.M;
+    /// swatch.size = Size.Md;
     /// swatch.round = true;
     ///
     /// var gradient = new Gradient();
@@ -59,7 +59,7 @@ namespace Unity.AppUI.UI
     /// foreach (var color in colors)
     /// {
     ///     var swatch = new ColorSwatch();
-    ///     swatch.size = Size.S;
+    ///     swatch.size = Size.Sm;
     ///     swatch.round = true;
     ///     swatch.color = color;
     ///     swatch.style.margin = 5;
@@ -314,7 +314,7 @@ namespace Unity.AppUI.UI
 
             SetValueWithoutNotify(null);
 
-            SetSize(Size.M);
+            SetSize(Size.Md);
             SetRound(false);
             SetOrientation(Direction.Horizontal);
         }

@@ -14,6 +14,6 @@
 }
 
 .appui-quote__container {
-    padding: var(--appui-spacing-125);
+    padding: var(--appui-static-sizing-125);
 }
 

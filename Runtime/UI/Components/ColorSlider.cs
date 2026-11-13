@@ -87,6 +87,14 @@ namespace Unity.AppUI.UI
 
         readonly ColorSwatch m_TrackSwatch;
 
+        ColorSwatch m_ThumbSwatch;
+
+        /// <summary>
+        /// The ColorSlider thumb swatch styling class. The swatch draws a checker under the
+        /// thumb colour so a translucent value never makes the thumb look empty.
+        /// </summary>
+        public const string thumbSwatchUssClassName = ussClassName + "__thumb-swatch";
+
         float m_IncrementFactor;
 
         /// <summary>
@@ -160,7 +168,27 @@ namespace Unity.AppUI.UI
 
             m_TrackSwatch.orientation = orientation;
             var thumb = (Thumb)m_ThumbsContainer[0];
-            thumb.fill = colorValue;
+            if (m_ThumbSwatch == null || m_ThumbSwatch.parent == null)
+            {
+                var fill = thumb.Q(className: Thumb.fillUssClassName);
+                if (fill != null)
+                {
+                    m_ThumbSwatch ??= new ColorSwatch { pickingMode = PickingMode.Ignore, round = true };
+                    m_ThumbSwatch.AddToClassList(thumbSwatchUssClassName);
+                    fill.Add(m_ThumbSwatch);
+                }
+            }
+
+            if (m_ThumbSwatch is { parent: not null })
+            {
+                // The swatch paints checker + colour; the plain fill stays clear underneath.
+                thumb.fill = Color.clear;
+                m_ThumbSwatch.color = colorValue;
+            }
+            else
+            {
+                thumb.fill = colorValue;
+            }
         }
 
     }

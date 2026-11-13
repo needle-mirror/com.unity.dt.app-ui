@@ -1,0 +1,123 @@
+/* AudioPreview */
+.appui-audio-preview {
+    position: relative;
+    background-color: var(--appui-alias-surface-default);
+    border-radius: var(--appui-alias-control-border-radius);
+    border-width: 1px;
+    border-color: var(--appui-alias-control-border-color-default);
+    padding: var(--appui-sizing-50);
+}
+
+/* The body owns the height, so all four states occupy the same box and the
+   component does not resize as a clip moves between them. */
+.appui-audio-preview__body {
+    height: var(--appui-sizing-800);
+}
+
+/* Descendant selectors on purpose. AudioWaveform.uss sets its own height and
+   --waveform-color on .appui-audio-waveform, and it is imported after this file
+   (AudioPreview sorts before AudioWaveform), so a single-class rule here would
+   carry the same specificity and lose on order. */
+.appui-audio-preview .appui-audio-preview__waveform {
+    flex-grow: 1;
+    height: 100%;
+}
+
+/* A clip whose envelope was never computed: drawn, but quietly, so it does not
+   read as a real waveform that happens to be silent. */
+.appui-audio-preview .appui-audio-preview__waveform--flat {
+    --waveform-color: var(--appui-alias-text-disabled);
+}
+
+.appui-audio-preview .appui-audio-preview__skeleton {
+    flex-grow: 1;
+    height: 100%;
+}
+
+.appui-audio-preview__message {
+    flex-grow: 1;
+    height: 100%;
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-secondary);
+    -unity-text-align: middle-center;                   /*text-align: center;*/
+}
+
+.appui-audio-preview__fallback-icon {
+    flex-grow: 1;
+    height: 100%;
+    align-self: center;
+    --unity-image-tint-color: var(--appui-alias-text-secondary);
+}
+
+.appui-audio-preview__play-button {
+    position: absolute;
+    top: var(--appui-sizing-25);
+    right: var(--appui-sizing-25);
+}
+
+.appui--rtl .appui-audio-preview__play-button {
+    right: auto;
+    left: var(--appui-sizing-25);
+}
+
+.appui-audio-preview__duration {
+    position: absolute;
+    bottom: var(--appui-sizing-25);
+    right: var(--appui-sizing-50);
+    font-size: var(--appui-font-sizes-50);
+    color: var(--appui-alias-text-secondary);
+}
+
+.appui--rtl .appui-audio-preview__duration {
+    right: auto;
+    left: var(--appui-sizing-50);
+}
+
+/* Strip: one compact row, the control first, a short envelope, then the
+   length. The control and the length sit in the row instead of over the
+   envelope's corners. */
+.appui-audio-preview--strip {
+    flex-direction: row;
+    align-items: center;
+    background-color: var(--appui-alias-surface-sunken);
+    padding: var(--appui-sizing-75);
+}
+
+/* Panel sets direction through a class, so the row is reversed by hand to keep
+   the control first in reading order. */
+.appui--rtl .appui-audio-preview--strip {
+    flex-direction: row-reverse;
+}
+
+.appui-audio-preview--strip .appui-audio-preview__body {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    height: var(--appui-sizing-750);
+    margin-left: var(--appui-sizing-100);
+    margin-right: var(--appui-sizing-100);
+}
+
+.appui-audio-preview--strip .appui-audio-preview__play-button,
+.appui--rtl .appui-audio-preview--strip .appui-audio-preview__play-button {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    flex-shrink: 0;
+}
+
+.appui-audio-preview--strip .appui-audio-preview__duration,
+.appui--rtl .appui-audio-preview--strip .appui-audio-preview__duration {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    left: auto;
+    flex-shrink: 0;
+}
+
+.appui-audio-preview--strip .appui-audio-preview__message {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

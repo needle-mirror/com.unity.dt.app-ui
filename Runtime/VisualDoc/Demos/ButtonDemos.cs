@@ -12,9 +12,11 @@ namespace Unity.AppUI.VisualDoc
         {
             return DemoUtils.Row(
                 new Button { title = "Default" },
-                new Button { title = "Accent", variant = ButtonVariant.Accent },
                 new Button { title = "Destructive", variant = ButtonVariant.Destructive },
-                new Button { title = "Quiet", quiet = true },
+                new Button { title = "Outline", variant = ButtonVariant.Outline },
+                new Button { title = "Secondary", variant = ButtonVariant.Secondary },
+                new Button { title = "Ghost", variant = ButtonVariant.Ghost },
+                new Button { title = "Link", variant = ButtonVariant.Link },
                 new Button { title = "With icon", leadingIcon = "info" });
         }
     }

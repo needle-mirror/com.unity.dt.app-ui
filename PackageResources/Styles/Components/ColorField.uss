@@ -3,7 +3,13 @@
     border-width: var(--appui-alias-control-border-width);
     /*border-style: var(--appui-control-border-style);*/
     border-radius: var(--appui-alias-control-border-radius);
-    padding: 0 var(--appui-alias-control-gap-md);
+    /* The registry insets the swatch edge by calc(field-md - sizing-50) and the text edge by
+       field-md. USS has no calc(), so the swatch edge reads sizing-160, the step equal to that
+       difference in every density (ColorFieldTests holds the equality). */
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: var(--appui-sizing-160);
+    padding-right: var(--appui-alias-field-padding-horizontal-md);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -15,9 +21,12 @@
 
 .appui--rtl .appui-colorfield {
     flex-direction: row-reverse;
+    padding-left: var(--appui-alias-field-padding-horizontal-md);
+    padding-right: var(--appui-sizing-160);
 }
 
-.appui-colorfield--swatch-only {
+/* Two classes, after the RTL rule, so it wins in both directions. */
+.appui-colorfield.appui-colorfield--swatch-only {
     padding: 0;
 }
 
@@ -52,7 +61,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     -unity-text-overflow-position: end;
-    font-size: var(--appui-font-sizes-body-md);
+    /* The registry's color-field has one size, md, and reads text-base. UITK's sm steps down to
+       text-sm below, since a text-base line does not fit the compact sm box. */
+    font-size: var(--appui-font-sizes-200);
     -unity-text-align: middle-left;
     display: none;
     margin-left: 0;
@@ -70,6 +81,39 @@
 }
 
 .appui-colorfield--swatch-only .appui-colorfield__label {
+    display: none;
+}
+
+/*
+ * The opacity readout rides the ColorField's own rim rather than drawing a second one, so the swatch,
+ * the hex and the percent read as one control: no fill, no rounding, and a single hairline on its
+ * leading edge to separate it from the hex. The field's own padding keeps it off the rim, since USS
+ * has no calc() to negate a spacing token with.
+ *
+ * Width: the registry's readout is w-16, 16 x --spacing (sizing-75), 64px at Normal. No single
+ * sizing step equals that in every density and USS has no calc(), so it reads sizing-1350, the
+ * nearest step at Normal (65px; 54px Compact, 72px Comfort). The old lg-height (30px) left the
+ * value no room at all once the field inset was added.
+ */
+.appui-colorfield__alpha-field {
+    flex-shrink: 0;
+    width: var(--appui-sizing-1350);
+    background-color: var(--appui-color-transparent-black-0);
+    border-top-width: 0;
+    border-bottom-width: 0;
+    border-right-width: 0;
+    border-left-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-field-border-color-default);
+    border-radius: 0;
+    height: 100%;
+}
+
+.appui--rtl .appui-colorfield__alpha-field {
+    border-left-width: 0;
+    border-right-width: var(--appui-alias-control-border-width);
+}
+
+.appui-colorfield--swatch-only .appui-colorfield__alpha-field {
     display: none;
 }
 
@@ -130,14 +174,23 @@
     opacity: 0.4;
 }
 
-.appui-colorfield--size-s {
+.appui-colorfield--size-sm {
     height: var(--appui-alias-control-sizing-sm-height);
 }
 
-.appui-colorfield--size-m {
+.appui-colorfield--size-md {
     height: var(--appui-alias-control-sizing-md-height);
 }
 
-.appui-colorfield--size-l {
+.appui-colorfield--size-lg {
     height: var(--appui-alias-control-sizing-lg-height);
+}
+
+/* The hex and the alpha readout step down to text-sm at sm. The alpha is an IntField that keeps its
+   own Md size, so its rule has to outrank NumericalField's size rules. */
+.appui-colorfield--size-sm .appui-colorfield__label,
+.appui-colorfield--size-sm .appui-colorfield__label > .unity-text-field__input,
+.appui-colorfield--size-sm .appui-colorfield__alpha-field .appui-numericalfield__input,
+.appui-colorfield--size-sm .appui-colorfield__alpha-field .appui-numericalfield__input > .unity-text-field__input {
+    font-size: var(--appui-font-sizes-100);
 }

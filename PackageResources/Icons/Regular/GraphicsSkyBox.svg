@@ -1,0 +1,4 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--graphics-sky-box--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M2 3C2 2.44772 2.44772 2 3 2H13C13.5523 2 14 2.44772 14 3V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V3ZM6 12C4.34315 12 3 10.6569 3 9C3 7.64623 3.89669 6.5019 5.12854 6.12854C5.5019 4.89669 6.64623 4 8 4C9.35377 4 10.4981 4.89669 10.8715 6.12853C12.1033 6.5019 13 7.64623 13 9C13 10.6569 11.6569 12 10 12H6Z" fill="#0C6CCB"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8 5C9.10457 5 10 5.89543 10 7C11.1046 7 12 7.89543 12 9C12 10.1046 11.1046 11 10 11H6C4.89543 11 4 10.1046 4 9C4 7.89543 4.89543 7 6 7C6 5.89543 6.89543 5 8 5Z" fill="#555555"/>
+</svg>

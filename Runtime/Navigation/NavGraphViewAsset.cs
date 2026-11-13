@@ -229,7 +229,8 @@ namespace Unity.AppUI.Navigation
                 {
                     if (component is NavGraph graph)
                         return graph.FindStartDestination();
-                    return (NavDestination)component;
+                    if (component is NavDestination destination)
+                        return destination;
                 }
             }
 

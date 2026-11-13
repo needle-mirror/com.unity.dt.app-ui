@@ -8,6 +8,23 @@ using Unity.Properties;
 namespace Unity.AppUI.UI
 {
     /// <summary>
+    /// The seam a composite uses to turn off a mounted field's suffix scrub without knowing the
+    /// field's value type.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="Slider{TValue,TScalar,TInputField}"/> mounts its field through a type parameter
+    /// that is not constrained to a value type, so it cannot name
+    /// <see cref="NumericalField{TValue}"/> to reach <see cref="NumericalField{TValue}.scrubSuffix"/>.
+    /// </remarks>
+    interface IScrubSuffixElement
+    {
+        /// <summary>
+        /// Whether the unit glyph acts as a drag handle for the value.
+        /// </summary>
+        bool scrubSuffix { get; set; }
+    }
+
+    /// <summary>
     /// Numerical Field UI element.
     /// </summary>
     /// <typeparam name="TValue">The type of the numerical value.</typeparam>
@@ -17,7 +34,8 @@ namespace Unity.AppUI.UI
             IInputElement<TValue>,
             ISizeableElement,
             INotifyValueChanging<TValue>,
-            IFormattable<TValue>
+            IFormattable<TValue>,
+            IScrubSuffixElement
             , IValueField<TValue>
         where TValue : struct, IComparable, IComparable<TValue>, IFormattable
     {
@@ -29,6 +47,8 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId formatFunctionProperty = new BindingId(nameof(formatFunction));
 
         internal static readonly BindingId unitProperty = new BindingId(nameof(unit));
+
+        internal static readonly BindingId scrubSuffixProperty = new BindingId(nameof(scrubSuffix));
 
         internal static readonly BindingId invalidProperty = new BindingId(nameof(invalid));
 
@@ -120,6 +140,8 @@ namespace Unity.AppUI.UI
         Func<TValue, bool> m_ValidateValue;
 
         FormatFunction<TValue> m_FormatFunction;
+
+        bool m_ScrubSuffix = true;
 
 
         /// <summary>
@@ -240,7 +262,7 @@ namespace Unity.AppUI.UI
             RegisterCallback<DetachFromPanelEvent>(OnDetachedFromPanel);
             acceptDragging = false;
 
-            size = Size.M;
+            size = Size.Md;
         }
 
 
@@ -385,6 +407,32 @@ namespace Unity.AppUI.UI
 
                 if (changed)
                     NotifyPropertyChanged(in unitProperty);
+            }
+        }
+
+        /// <summary>
+        /// Whether the <see cref="unit"/> glyph acts as a drag handle for the value. True by
+        /// default.
+        /// </summary>
+        /// <remarks>
+        /// Set this to false where the field already sits beside a control that owns the drag
+        /// gesture, so the unit does not become a second, coarser one on something that does not
+        /// look draggable. <see cref="Slider{TValue,TScalar,TInputField}"/> turns it off for the
+        /// field it mounts, because the track is that row's drag surface.
+        /// </remarks>
+        [CreateProperty]
+        [UxmlAttribute]
+        public bool scrubSuffix
+        {
+            get => m_ScrubSuffix;
+            set
+            {
+                var changed = m_ScrubSuffix != value;
+                m_ScrubSuffix = value;
+                m_UnitDragger.SetDragZone(m_ScrubSuffix ? m_UnitElement : null);
+
+                if (changed)
+                    NotifyPropertyChanged(in scrubSuffixProperty);
             }
         }
 

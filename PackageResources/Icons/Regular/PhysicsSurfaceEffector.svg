@@ -1,0 +1,6 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--physics-surface-effector--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0 10.5C0 9.11929 1.11929 8 2.5 8H13.5C14.8807 8 16 9.11929 16 10.5C16 11.8807 14.8807 13 13.5 13H2.5C1.11929 13 0 11.8807 0 10.5ZM13.5 12C14.3284 12 15 11.3284 15 10.5C15 9.67157 14.3284 9 13.5 9C12.6716 9 12 9.67157 12 10.5C12 11.3284 12.6716 12 13.5 12ZM4 10.5C4 11.3284 3.32843 12 2.5 12C1.67157 12 1 11.3284 1 10.5C1 9.67157 1.67157 9 2.5 9C3.32843 9 4 9.67157 4 10.5Z" fill="#2E7D32"/>
+<rect x="9" y="4" width="2" height="1" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M11 2L14 4.5L11 7V2Z" fill="#2E7D32"/>
+<rect x="3" y="2" width="5" height="5" fill="#2E7D32"/>
+</svg>

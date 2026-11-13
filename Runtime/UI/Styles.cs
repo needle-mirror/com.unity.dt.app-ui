@@ -10,17 +10,17 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Small
         /// </summary>
-        S = 1,
+        Sm = 1,
 
         /// <summary>
-        /// Medium
+        /// Medium. This is the default size for controls.
         /// </summary>
-        M,
+        Md,
 
         /// <summary>
         /// Large
         /// </summary>
-        L
+        Lg
     }
 
     /// <summary>
@@ -159,12 +159,12 @@ namespace Unity.AppUI.UI
         {
             switch (size)
             {
-                case Size.S:
-                    return IconSize.S;
-                case Size.M:
-                    return IconSize.M;
-                case Size.L:
-                    return IconSize.L;
+                case Size.Sm:
+                    return IconSize.Sm;
+                case Size.Md:
+                    return IconSize.Md;
+                case Size.Lg:
+                    return IconSize.Lg;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(size), size, null);
             }
@@ -173,19 +173,32 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Converts a <see cref="IconSize"/> to a <see cref="Size"/>.
         /// </summary>
+        /// <remarks>
+        /// Only <see cref="IconSize.Sm"/>, <see cref="IconSize.Md"/> and <see cref="IconSize.Lg"/> have a
+        /// control-size counterpart. <see cref="IconSize.Xxs"/> and <see cref="IconSize.Xs"/> are glyph-only
+        /// steps of the icon ramp, so this method throws for them rather than silently rounding up to
+        /// <see cref="Size.Sm"/> and returning a control that is visibly the wrong size.
+        /// </remarks>
         /// <param name="size"> The size to convert. </param>
         /// <returns> The converted <see cref="Size"/>. </returns>
-        /// <exception cref="ArgumentOutOfRangeException"> Thrown when an unknown <see cref="IconSize"/> is provided. </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when an unknown <see cref="IconSize"/> is provided, or when it is
+        /// <see cref="IconSize.Xxs"/> or <see cref="IconSize.Xs"/>, which have no control-size equivalent.
+        /// </exception>
         public static Size ToSize(this IconSize size)
         {
             switch (size)
             {
-                case IconSize.S:
-                    return Size.S;
-                case IconSize.M:
-                    return Size.M;
-                case IconSize.L:
-                    return Size.L;
+                case IconSize.Sm:
+                    return Size.Sm;
+                case IconSize.Md:
+                    return Size.Md;
+                case IconSize.Lg:
+                    return Size.Lg;
+                case IconSize.Xxs:
+                case IconSize.Xs:
+                    throw new ArgumentOutOfRangeException(nameof(size), size,
+                        $"{size} is a glyph-only icon size and has no {nameof(Size)} equivalent.");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(size), size, null);
             }

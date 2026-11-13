@@ -9,7 +9,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Dropdown item UI element.
     /// </summary>
-    public class DropdownItem : BaseVisualElement
+    public partial class DropdownItem : BaseVisualElement
     {
         /// <summary>
         /// The Dropdown item main styling class.
@@ -20,6 +20,16 @@ namespace Unity.AppUI.UI
         /// The Dropdown item label styling class.
         /// </summary>
         public const string labelUssClassName = ussClassName + "__label";
+
+        /// <summary>
+        /// The Dropdown item description styling class.
+        /// </summary>
+        public const string descriptionUssClassName = ussClassName + "__description";
+
+        /// <summary>
+        /// The Dropdown item text container styling class. It stacks the label over the description.
+        /// </summary>
+        public const string textUssClassName = ussClassName + "__text";
 
         /// <summary>
         /// The Dropdown item icon styling class.
@@ -36,7 +46,11 @@ namespace Unity.AppUI.UI
         /// </summary>
         public LocalizedTextElement labelElement { get; }
 
+        internal static readonly BindingId descriptionProperty = nameof(description);
+
         readonly Icon m_IconElement;
+
+        readonly LocalizedTextElement m_DescriptionElement;
 
         readonly Icon m_CheckmarkElement;
 
@@ -47,6 +61,23 @@ namespace Unity.AppUI.UI
         {
             get => labelElement.text;
             set => labelElement.text = value;
+        }
+
+        /// <summary>
+        /// A secondary line under the label. The line is hidden when the description is null or empty.
+        /// </summary>
+        [CreateProperty]
+        public string description
+        {
+            get => m_DescriptionElement.text;
+            set
+            {
+                var changed = m_DescriptionElement.text != value;
+                m_DescriptionElement.text = value;
+                m_DescriptionElement.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
+                if (changed)
+                    NotifyPropertyChanged(in descriptionProperty);
+            }
         }
 
         /// <summary>
@@ -72,6 +103,7 @@ namespace Unity.AppUI.UI
 
             m_CheckmarkElement = new Icon
             {
+                primary = true,
                 pickingMode = PickingMode.Ignore,
                 iconName = MenuItem.checkmarkIconName
             };
@@ -80,6 +112,7 @@ namespace Unity.AppUI.UI
 
             m_IconElement = new Icon
             {
+                primary = true,
                 pickingMode = PickingMode.Ignore
             };
             m_IconElement.AddToClassList(iconUssClassName);
@@ -91,10 +124,23 @@ namespace Unity.AppUI.UI
                 pickingMode = PickingMode.Ignore
             };
             labelElement.AddToClassList(labelUssClassName);
-            Add(labelElement);
+
+            m_DescriptionElement = new LocalizedTextElement
+            {
+                name = descriptionUssClassName,
+                pickingMode = PickingMode.Ignore
+            };
+            m_DescriptionElement.AddToClassList(descriptionUssClassName);
+
+            var text = new VisualElement { name = textUssClassName, pickingMode = PickingMode.Ignore };
+            text.AddToClassList(textUssClassName);
+            text.Add(labelElement);
+            text.Add(m_DescriptionElement);
+            Add(text);
 
             icon = null;
             labelElement.text = null;
+            description = null;
         }
     }
 

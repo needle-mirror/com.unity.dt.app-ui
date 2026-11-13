@@ -67,9 +67,9 @@ namespace Unity.AppUI.UI
     /// <UXML>
     ///   <Heading text="Welcome to Our App" size="XXL" />
     ///   <Heading text="Getting Started" size="XL" />
-    ///   <Heading text="Quick Setup" size="L" primary="false" />
-    ///   <Heading text="Prerequisites" size="M" />
-    ///   <Heading text="Additional Notes" size="S" primary="false" />
+    ///   <Heading text="Quick Setup" size="Lg" primary="false" />
+    ///   <Heading text="Prerequisites" size="Md" />
+    ///   <Heading text="Additional Notes" size="Sm" primary="false" />
     /// </UXML>
     /// ]]></code>
     /// <para>Creating headings programmatically — creating and customizing headings in C#.</para>

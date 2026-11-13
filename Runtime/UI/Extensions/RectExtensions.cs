@@ -1,3 +1,4 @@
+using System.Globalization;
 using UnityEngine;
 
 namespace Unity.AppUI.UI
@@ -14,11 +15,13 @@ namespace Unity.AppUI.UI
         /// <returns>True if its width and height are valid, False otherwise.</returns>
         public static bool IsValid(this Rect rect)
         {
+            // Compare against zero directly. Mathf.Approximately(0, x) is not safe here: it
+            // tolerates Mathf.Epsilon * 8, and on some engine builds that evaluates to 0, which makes
+            // Approximately(0, 0) false and lets a zero-area rect through as valid.
+            // NaN fails both '> 0' checks and negatives and zero are rejected by them.
             return rect != default &&
-                !float.IsNaN(rect.width) && !float.IsNaN(rect.height) &&
-                !float.IsInfinity(rect.width) && !float.IsInfinity(rect.height) &&
-                !float.IsNegative(rect.width) && !float.IsNegative(rect.height) &&
-                !Mathf.Approximately(0, rect.width) && !Mathf.Approximately(0, rect.height);
+                rect.width > 0f && rect.height > 0f &&
+                !float.IsInfinity(rect.width) && !float.IsInfinity(rect.height);
         }
 
         /// <summary>
@@ -56,10 +59,10 @@ namespace Unity.AppUI.UI
                 return false;
             }
 
-            if (!float.TryParse(parts[0], out var x) ||
-                !float.TryParse(parts[1], out var y) ||
-                !float.TryParse(parts[2], out var w) ||
-                !float.TryParse(parts[3], out var h))
+            if (!float.TryParse(parts[0], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var x) ||
+                !float.TryParse(parts[1], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var y) ||
+                !float.TryParse(parts[2], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var w) ||
+                !float.TryParse(parts[3], NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var h))
             {
                 return false;
             }

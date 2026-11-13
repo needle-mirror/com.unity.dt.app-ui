@@ -6,7 +6,7 @@
 
                         <appui:SearchBar name="searchBar" class="mvvm-redux-searchbar" />
 
-                        <appui:Divider spacing="L" size="M" />
+                        <appui:Divider spacing="L" size="Md" />
 
                         <ui:VisualElement class="mvvm-redux-content">
 

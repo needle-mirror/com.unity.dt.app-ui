@@ -67,8 +67,8 @@ namespace Unity.AppUI.UI
     /// colors, and inline picker.</para>
     /// <code lang="xml"><![CDATA[
     /// <ColorField
-    ///     size="L"
-    ///     swatch-size="M"
+    ///     size="Lg"
+    ///     swatch-size="Md"
     ///     show-alpha="true"
     ///     hdr="true"
     ///     inline-picker="true"
@@ -78,7 +78,7 @@ namespace Unity.AppUI.UI
     /// <code lang="xml"><![CDATA[
     /// <ColorField
     ///     swatch-only="true"
-    ///     size="S"
+    ///     size="Sm"
     ///     show-text="false" />
     /// ]]></code>
     /// <para>Code example showing how to handle color changes. Demonstrates how to create a ColorField, register for
@@ -116,6 +116,8 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId showAlphaProperty = nameof(showAlpha);
 
+        internal static readonly BindingId showAlphaValueProperty = nameof(showAlphaValue);
+
         internal static readonly BindingId hdrProperty = nameof(hdr);
 
         internal static readonly BindingId clickableProperty = nameof(clickable);
@@ -144,6 +146,11 @@ namespace Unity.AppUI.UI
         public const string colorPickerIconUssClassName = ussClassName + "__color-picker-icon";
 
         /// <summary>
+        /// The ColorField opacity field styling class.
+        /// </summary>
+        public const string alphaFieldUssClassName = ussClassName + "__alpha-field";
+
+        /// <summary>
         /// The ColorField size styling class.
         /// </summary>
         [EnumName("GetSizeUssClassName", typeof(Size))]
@@ -160,6 +167,11 @@ namespace Unity.AppUI.UI
         public const string showTextUssClassName = ussClassName + "--show-text";
 
         /// <summary>
+        /// The ColorField styling class applied while the opacity readout is showing.
+        /// </summary>
+        public const string showAlphaValueUssClassName = ussClassName + "--show-alpha-value";
+
+        /// <summary>
         /// The ColorField inline picker opened styling class.
         /// </summary>
         public const string inlinePickerOpenedUssClassName = ussClassName + "--inline-picker-opened";
@@ -169,6 +181,8 @@ namespace Unity.AppUI.UI
         readonly UnityEngine.UIElements.TextField m_LabelElement;
 
         readonly Icon m_ColorPickerIcon;
+
+        readonly IntField m_AlphaField;
 
         Color m_Value;
 
@@ -191,6 +205,8 @@ namespace Unity.AppUI.UI
         ColorPickerType m_ColorPickerType;
 
         bool m_ShowAlpha;
+
+        bool m_ShowAlphaValue;
 
         bool m_Hdr;
 
@@ -227,20 +243,37 @@ namespace Unity.AppUI.UI
 
             m_ColorPickerIcon = new Icon
             {
+                primary = true,
                 name = colorPickerIconUssClassName,
                 iconName = "color-picker",
                 pickingMode = PickingMode.Ignore,
             };
             m_ColorPickerIcon.AddToClassList(colorPickerIconUssClassName);
 
+            m_AlphaField = new IntField
+            {
+                name = alphaFieldUssClassName,
+                lowValue = 0,
+                highValue = 100,
+                unit = "%"
+            };
+            m_AlphaField.AddToClassList(alphaFieldUssClassName);
+            // The field is a control of its own inside a control that opens a picker on click. Without
+            // this, typing in the opacity or scrubbing it would also open the color picker.
+            m_AlphaField.RegisterCallback<PointerDownEvent>(OnTextFieldPointerDown);
+            m_AlphaField.RegisterValueChangedCallback(OnAlphaFieldValueChanged);
+            m_AlphaField.RegisterValueChangingCallback(OnAlphaFieldValueChanging);
+
             hierarchy.Add(m_SwatchElement);
             hierarchy.Add(m_LabelElement);
+            hierarchy.Add(m_AlphaField);
             hierarchy.Add(m_ColorPickerIcon);
 
-            size = Size.M;
-            swatchSize = Size.S;
+            size = Size.Md;
+            swatchSize = Size.Sm;
             showText = true;
             showAlpha = true;
+            showAlphaValue = false;
             hdr = false;
             inlinePicker = false;
             customPicker = new DefaultColorFieldPicker();
@@ -284,6 +317,7 @@ namespace Unity.AppUI.UI
             {
                 RemoveFromClassList(Styles.focusedUssClassName);
                 RemoveFromClassList(inlinePickerOpenedUssClassName);
+                m_InlineColorPicker.UnregisterValueChangingCallback(OnPickerValueChanging);
                 m_InlineColorPicker.UnregisterValueChangedCallback(OnPickerValueChanged);
                 using var evt = ChangeEvent<Color>.GetPooled(m_PreviousValue, m_InlineColorPicker.value);
                 SetValueWithoutNotify(m_InlineColorPicker.value);
@@ -303,6 +337,7 @@ namespace Unity.AppUI.UI
             m_InlineColorPicker.hdr = hdr;
             m_InlineColorPicker.previousValue = m_PreviousValue;
             m_InlineColorPicker.SetValueWithoutNotify(m_PreviousValue);
+            m_InlineColorPicker.RegisterValueChangingCallback(OnPickerValueChanging);
             m_InlineColorPicker.RegisterValueChangedCallback(OnPickerValueChanged);
 
             m_InlineColorPicker.eyeDropperButton.clickable = new Pressable(m_InlineColorPicker.OnEyeDropperClicked);
@@ -325,6 +360,8 @@ namespace Unity.AppUI.UI
         }
 
         void OnPickerValueChanged(ChangeEvent<Color> e) => OnPickerValueChanged(e.newValue);
+
+        void OnPickerValueChanging(ChangingEvent<Color> e) => OnPickerValueChanged(e.newValue);
 
         void OnPickerValueChanged(Color color)
         {
@@ -607,6 +644,7 @@ namespace Unity.AppUI.UI
         {
             m_Value = newValue;
             m_LabelElement.SetValueWithoutNotify($"#{ColorExtensions.ColorToRgbaHex(m_Value, showAlpha)}");
+            m_AlphaField.SetValueWithoutNotify(AlphaToPercent(m_Value.a));
             m_SwatchElement.color = m_Value;
             if (validateValue != null) invalid = !validateValue(m_Value);
         }
@@ -646,12 +684,90 @@ namespace Unity.AppUI.UI
                 var changed = m_ShowAlpha != value;
                 m_ShowAlpha = value;
 
+                RefreshAlphaFieldVisibility();
+
                 if (changed)
                     NotifyPropertyChanged(in showAlphaProperty);
 
                 if (!m_ShowAlpha)
                     this.value = new Color(m_Value.r, m_Value.g, m_Value.b, 1);
             }
+        }
+
+        /// <summary>
+        /// Whether to show an opacity readout, as a percentage, beside the hex value.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The readout is editable and scrubbable like any <see cref="IntField"/>; committing a value
+        /// rewrites the color's alpha, so the readout and the picker's alpha slider always agree.
+        /// It needs <see cref="showAlpha"/>, which is on by default: a field that hides the alpha
+        /// channel has no opacity to show, and setting <c>showAlpha</c> to false hides the readout
+        /// whether this is set or not.
+        /// </para>
+        /// </remarks>
+        [CreateProperty]
+        [UxmlAttribute]
+        public bool showAlphaValue
+        {
+            get => m_ShowAlphaValue;
+            set
+            {
+                var changed = m_ShowAlphaValue != value;
+                m_ShowAlphaValue = value;
+                RefreshAlphaFieldVisibility();
+
+                if (changed)
+                    NotifyPropertyChanged(in showAlphaValueProperty);
+            }
+        }
+
+        /// <summary>
+        /// The opacity readout element, for callers that need to size or format it directly.
+        /// </summary>
+        public IntField alphaField => m_AlphaField;
+
+        void RefreshAlphaFieldVisibility()
+        {
+            var visible = m_ShowAlpha && m_ShowAlphaValue;
+            EnableInClassList(showAlphaValueUssClassName, visible);
+            m_AlphaField.EnableInClassList(Styles.hiddenUssClassName, !visible);
+        }
+
+        /// <summary>
+        /// The alpha of a color as a whole percent, the unit the readout is in.
+        /// </summary>
+        static int AlphaToPercent(float alpha) => Mathf.RoundToInt(Mathf.Clamp01(alpha) * 100f);
+
+        /// <summary>
+        /// A color with its alpha taken from a percent. Rounding to a whole percent loses precision the
+        /// picker's slider has, so the percent is only written back when it actually differs from the
+        /// color's own — editing the red channel must not quantize an alpha nobody touched.
+        /// </summary>
+        Color WithAlphaPercent(int percent)
+        {
+            var alpha = Mathf.Clamp(percent, 0, 100) / 100f;
+            return new Color(m_Value.r, m_Value.g, m_Value.b, alpha);
+        }
+
+        void OnAlphaFieldValueChanged(ChangeEvent<int> evt)
+        {
+            evt.StopPropagation();
+            if (evt.newValue == AlphaToPercent(m_Value.a))
+                return;
+
+            value = WithAlphaPercent(evt.newValue);
+        }
+
+        void OnAlphaFieldValueChanging(ChangingEvent<int> evt)
+        {
+            // A scrub streams values: they reach the swatch and the hex label as they come, and the
+            // committed ChangeEvent above is what a consumer's undo step keys off.
+            evt.StopPropagation();
+            if (evt.newValue == AlphaToPercent(m_Value.a))
+                return;
+
+            SetValueWithoutNotify(WithAlphaPercent(evt.newValue));
         }
 
         /// <summary>
@@ -696,6 +812,7 @@ namespace Unity.AppUI.UI
                 m_Picker.previousValue = initialColor;
                 m_Picker.SetValueWithoutNotify(initialColor);
                 m_Picker.RegisterValueChangedCallback(OnPickerValueChanged);
+                m_Picker.RegisterValueChangingCallback(OnPickerValueChanging);
                 m_Picker.eyeDropperButton.clickable = new Pressable(OnEyeDropperClicked);
 
                 m_Popover = Popover.Build(owner, m_Picker);
@@ -710,6 +827,7 @@ namespace Unity.AppUI.UI
                     m_OnValueChanging = null;
                     owner.RemoveFromClassList(Styles.focusedUssClassName);
                     m_Picker.UnregisterValueChangedCallback(OnPickerValueChanged);
+                    m_Picker.UnregisterValueChangingCallback(OnPickerValueChanging);
                     m_Picker.eyeDropperButton.clickable = null;
                     if (initialColor != m_Picker.value)
                     {
@@ -738,7 +856,11 @@ namespace Unity.AppUI.UI
                 m_Picker.OnEyeDropperClicked(evt);
             }
 
-            void OnPickerValueChanged(ChangeEvent<Color> e)
+            void OnPickerValueChanged(ChangeEvent<Color> e) => OnPickerValue(e.newValue);
+
+            void OnPickerValueChanging(ChangingEvent<Color> e) => OnPickerValue(e.newValue);
+
+            void OnPickerValue(Color newValue)
             {
                 if (m_Popover != null && m_Popover.view.resolvedStyle.visibility != Visibility.Visible)
                 {
@@ -746,7 +868,7 @@ namespace Unity.AppUI.UI
                     // Ensure the popover is still listening for outside clicks
                     m_Popover.EnsureEventHandlersRegistered();
                 }
-                m_OnValueChanging?.Invoke(e.newValue);
+                m_OnValueChanging?.Invoke(newValue);
             }
         }
 

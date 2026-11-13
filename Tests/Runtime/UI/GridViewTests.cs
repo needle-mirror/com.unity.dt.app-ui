@@ -16,6 +16,10 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => BaseGridView.ussClassName;
 
+        // Handed over to GridViewSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
         protected override bool uxmlConstructable => true;
 
         protected override IEnumerable<Story> stories

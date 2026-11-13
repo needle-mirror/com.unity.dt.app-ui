@@ -20,17 +20,48 @@ The App UI theming system is built on layered USS stylesheets:
 
 1. **Palette** (`App UI - Palette.uss`) - Base color definitions
 2. **Aliases** (`App UI - Alias.uss`) - Semantic color mappings
-3. **Theme Classes** (`App UI - Dark.uss`, `App UI - Light.uss`) - Theme-specific overrides
-4. **Scale Variants** (`App UI - Small.uss`, `App UI - Medium.uss`, `App UI - Large.uss`) - Responsive scaling
+3. **Component tokens** (`App UI - Components.uss`) - Per-component values from the design tokens, such as `--appui-slider-progress-background-color`. A value a component stylesheet defines itself still wins
+4. **Theme Classes** (`App UI - Dark.uss`, `App UI - Light.uss`) - Theme-specific overrides
+5. **Scale Variants** (`App UI - Small.uss`, `App UI - Medium.uss`, `App UI - Large.uss`) - Responsive scaling
 
 ### Built-in Themes
 
-App UI provides four built-in themes, each available in three scale variants:
+App UI provides six built-in themes:
 
 - **light** - Light theme for daytime/bright environments
 - **dark** - Dark theme for night-time/dark environments (default)
 - **editor-light** - Editor-optimized light theme
 - **editor-dark** - Editor-optimized dark theme
+- **cloud-light** - Cloud-branded light theme
+- **cloud-dark** - Cloud-branded dark theme
+
+Each is applied as the USS class `appui--<theme>` on the element that provides the theme context.
+
+### Light and Dark Context Markers
+
+Alongside `appui--<theme>`, that element also gets one of two mutually exclusive marker classes,
+`dark` or `light`. `appui--editor-dark` says *which* theme is active; `dark` says what *kind* of
+surface it is, so one selector covers every dark theme - built-in or custom. A theme counts as dark
+when its name ends in `dark`, so name custom dark themes accordingly (`acme-dark`).
+
+```css
+/* dark, editor-dark, cloud-dark, acme-dark, ... */
+.dark {
+    --my-illustration: url("project:/Assets/Art/diagram-dark.svg");
+}
+
+.light {
+    --my-illustration: url("project:/Assets/Art/diagram-light.svg");
+}
+```
+
+Never declare the same variable in both a marker rule and an unconditional `.appui` rule - both are
+single-class selectors matching the same element, so the winner would depend on USS declaration
+order. Declare it in the marker rules only.
+
+The markers sit on whichever element provides the theme, so a nested `ContextProvider` carries its
+own and variables resolve from the nearest ancestor that sets them. App UI uses this for the colored
+Editor icons' light/dark artwork.
 
 ### Scale Contexts
 
@@ -89,7 +120,7 @@ App UI provides organized design tokens across multiple categories:
 - Foregrounds: `--appui-foregrounds-*`
 
 **Spacing Tokens:**
-- `--appui-spacing-*` for padding, margin, gaps
+- `--appui-sizing-*` for padding, margin, gaps
 - Range from 50 to 800 in increments
 
 **Typography:**
@@ -233,7 +264,7 @@ Assets/
 
 /* Custom component styles */
 .appui-mycomponent {
-    padding: var(--appui-spacing-200);
+    padding: var(--appui-sizing-200);
     background-color: var(--appui-backgrounds-100);
 }
 ```

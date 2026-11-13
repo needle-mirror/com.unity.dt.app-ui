@@ -313,7 +313,7 @@ namespace Unity.AppUI.UI
             avatarContainer.AddToClassList(avatarContainerUssClassName);
             hierarchy.Add(avatarContainer);
 
-            avatar = new Avatar { size = Size.S };
+            avatar = new Avatar { size = Size.Sm };
             avatar.AddToClassList(avatarUssClassName);
             avatar.autoLabelColor = true;
             avatarContainer.Add(avatar);
@@ -350,7 +350,7 @@ namespace Unity.AppUI.UI
             {
                 name = attachBtnUssClassName,
                 icon = "paperclip",
-                size = Size.S,
+                size = Size.Sm,
                 quiet = true
             };
             m_AttachButton.AddToClassList(attachBtnUssClassName);
@@ -360,18 +360,18 @@ namespace Unity.AppUI.UI
             {
                 name = submitBtnUssClassName,
                 icon = "arrow-up",
-                size = Size.S,
+                size = Size.Sm,
                 primary = true
             };
             m_SubmitButton.AddToClassList(submitBtnUssClassName);
             m_SubmitButton.clicked += OnSubmitClicked;
 
-            m_CancelButton = new ActionButton { name = cancelBtnUssClassName, label = k_CancelText, quiet = true, size = Size.S };
+            m_CancelButton = new ActionButton { name = cancelBtnUssClassName, label = k_CancelText, quiet = true, size = Size.Sm };
             m_CancelButton.AddToClassList(cancelBtnUssClassName);
             m_CancelButton.AddToClassList(Styles.hiddenUssClassName);
             m_CancelButton.clicked += OnCancelClicked;
 
-            m_SaveButton = new Button { name = saveBtnUssClassName, title = k_SaveText, size = Size.S, variant = ButtonVariant.Accent };
+            m_SaveButton = new Button { name = saveBtnUssClassName, title = k_SaveText, size = Size.Sm, variant = ButtonVariant.Default };
             m_SaveButton.AddToClassList(saveBtnUssClassName);
             m_SaveButton.AddToClassList(Styles.hiddenUssClassName);
             m_SaveButton.clicked += OnSaveClicked;
@@ -403,7 +403,7 @@ namespace Unity.AppUI.UI
             m_SendingProgress = new CircularProgress
             {
                 name = sendingProgressUssClassName,
-                size = Size.S,
+                size = Size.Sm,
                 pickingMode = PickingMode.Ignore
             };
             m_SendingProgress.AddToClassList(sendingProgressUssClassName);

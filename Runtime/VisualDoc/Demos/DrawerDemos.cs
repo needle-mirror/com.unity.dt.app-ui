@@ -11,8 +11,8 @@ namespace Unity.AppUI.VisualDoc
         static VisualElement Permanent()
         {
             var drawer = new Drawer { anchor = DrawerAnchor.Left, variant = DrawerVariant.Permanent };
-            drawer.Add(new Button { title = "Home", leadingIcon = "house", quiet = true });
-            drawer.Add(new Button { title = "Settings", leadingIcon = "gear", quiet = true });
+            drawer.Add(new Button { title = "Home", leadingIcon = "house", variant = ButtonVariant.Ghost });
+            drawer.Add(new Button { title = "Settings", leadingIcon = "gear", variant = ButtonVariant.Ghost });
 
             var wrapper = DemoUtils.Row(drawer);
             wrapper.AddToClassList("demo-block");

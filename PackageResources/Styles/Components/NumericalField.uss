@@ -8,7 +8,9 @@
     border-width: var(--appui-alias-control-border-width);
     /*border-style: var(--appui-control-border-style);*/
     border-color: var(--appui-alias-field-border-color-default);
-    padding: 0 var(--appui-alias-control-gap-md);
+    /* Horizontal inset: the size rules read --appui-alias-field-padding-horizontal-*, as the
+       registry's fields do. */
+    padding: 0;
     cursor: var(--appui-alias-control-cursor-text);
     flex-shrink: 0;
 }
@@ -17,16 +19,22 @@
     flex-direction: row-reverse;
 }
 
-.appui-numericalfield--size-s {
+.appui-numericalfield--size-sm {
     height: var(--appui-alias-control-sizing-sm-height);
+    padding-left: var(--appui-alias-field-padding-horizontal-sm);
+    padding-right: var(--appui-alias-field-padding-horizontal-sm);
 }
 
-.appui-numericalfield--size-m {
+.appui-numericalfield--size-md {
     height: var(--appui-alias-control-sizing-md-height);
+    padding-left: var(--appui-alias-field-padding-horizontal-md);
+    padding-right: var(--appui-alias-field-padding-horizontal-md);
 }
 
-.appui-numericalfield--size-l {
+.appui-numericalfield--size-lg {
     height: var(--appui-alias-control-sizing-lg-height);
+    padding-left: var(--appui-alias-field-padding-horizontal-lg);
+    padding-right: var(--appui-alias-field-padding-horizontal-lg);
 }
 
 .appui-numericalfield:hover,
@@ -76,7 +84,6 @@
 .appui-numericalfield__input {
     background-color: rgba(0,0,0,0);
     border-width: 0;
-    font-size: var(--appui-font-sizes-body-md);
     /*outline: none;*/
     color: var(--appui-foregrounds-50);
     /*text-indent: 0;*/
@@ -117,9 +124,27 @@
 }
 
 .appui-numericalfield__unit {
-    font-size: var(--appui-font-sizes-body-md);
+    /* The registry's suffix is text-sm at every size, smaller than the value from md up. */
+    font-size: var(--appui-font-sizes-100);
     color: var(--appui-foregrounds-50);
     cursor: var(--appui-alias-control-cursor-ewresize);
+}
+
+/* The value takes the registry's absolute steps: text-sm (font-sizes-100) at sm and
+   text-base (font-sizes-200) at md and lg. */
+.appui-numericalfield--size-sm .appui-numericalfield__input,
+.appui-numericalfield--size-sm .appui-numericalfield__input > .unity-text-field__input {
+    font-size: var(--appui-font-sizes-100);
+}
+
+.appui-numericalfield--size-md .appui-numericalfield__input,
+.appui-numericalfield--size-md .appui-numericalfield__input > .unity-text-field__input {
+    font-size: var(--appui-font-sizes-200);
+}
+
+.appui-numericalfield--size-lg .appui-numericalfield__input,
+.appui-numericalfield--size-lg .appui-numericalfield__input > .unity-text-field__input {
+    font-size: var(--appui-font-sizes-200);
 }
 
 .appui-numericalfield:disabled .appui-numericalfield__unit  /*.appui-numericalfield.is-disabled .appui-numericalfield__unit */{

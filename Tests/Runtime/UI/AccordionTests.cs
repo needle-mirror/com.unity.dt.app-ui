@@ -13,6 +13,28 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => Accordion.ussClassName;
 
+        // Handed over to AccordionSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
+        // An empty Accordion is an empty box. The items are the component.
+        protected override IEnumerable<Story> stories
+        {
+            get
+            {
+                yield return new Story("Default", (ctx) => BuildAccordion(false));
+                yield return new Story("Exclusive", (ctx) => BuildAccordion(true));
+            }
+        }
+
+        static Accordion BuildAccordion(bool exclusive)
+        {
+            var accordion = new Accordion { isExclusive = exclusive, style = { width = 320 } };
+            accordion.Add(new AccordionItem { title = "Item 1", value = true });
+            accordion.Add(new AccordionItem { title = "Item 2" });
+            return accordion;
+        }
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             "<appui:Accordion/>",
@@ -31,6 +53,10 @@ namespace Unity.AppUI.Tests.UI
     [TestOf(typeof(AccordionItem))]
     class AccordionItemTests : VisualElementTests<AccordionItem>
     {
+        // Handed over to AccordionItemSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
         protected override string mainUssClassName => AccordionItem.ussClassName;
 
         protected override IEnumerable<string> uxmlTestCases => new[]
@@ -54,18 +80,6 @@ namespace Unity.AppUI.Tests.UI
             var expected = title;
             element.title = title;
             Assert.AreEqual(expected, element.title);
-        }
-
-        [Test, Order(2)]
-        public void AccordionItem_SubmitEvent_ShouldBeHandled()
-        {
-            //todo simulate submitevent
-        }
-
-        [Test, Order(2)]
-        public void AccordionItem_ClickEvent_ShouldBeHandled()
-        {
-            //todo simulate clickevent
         }
 
         [UnityTest]

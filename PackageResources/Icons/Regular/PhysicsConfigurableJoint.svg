@@ -1,0 +1,10 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--physics-configurable-joint--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M7.99997 13C10.7614 13 13 10.7614 13 8C13 5.23858 10.7614 3 7.99997 3C5.94965 3 4.18757 4.2341 3.41602 6H4.5351C5.22672 4.8044 6.51941 4 7.99997 4C10.2091 4 12 5.79086 12 8C12 10.2091 10.2091 12 7.99997 12C6.51941 12 5.22672 11.1956 4.5351 10H3.41602C4.18757 11.7659 5.94965 13 7.99997 13Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M15 7L12 6V10L15 9V7Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6 7H1V9H6V7Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10.634 1.43787L12.366 2.43787L11.732 5.53594L8.26794 3.53594L10.634 1.43787Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M3.63397 13.5623L5.36602 14.5623L7.73205 12.4642L4.26794 10.4642L3.63397 13.5623Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M3.63397 2.43787L5.36602 1.43787L7.73205 3.53594L4.26794 5.53594L3.63397 2.43787Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10.634 14.5623L12.366 13.5623L11.732 10.4642L8.26794 12.4642L10.634 14.5623Z" fill="#2E7D32"/>
+</svg>

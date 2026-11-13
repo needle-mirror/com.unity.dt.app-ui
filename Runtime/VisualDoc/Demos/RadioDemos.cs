@@ -13,8 +13,8 @@ namespace Unity.AppUI.VisualDoc
                 new Radio { label = "Unselected", key = "unselected" },
                 new Radio { label = "Selected", key = "selected", value = true },
                 new Radio { label = "Emphasized", key = "emphasized", value = true, emphasized = true },
-                new Radio { label = "Small", key = "small", size = Size.S },
-                new Radio { label = "Large", key = "large", size = Size.L });
+                new Radio { label = "Small", key = "small", size = Size.Sm },
+                new Radio { label = "Large", key = "large", size = Size.Lg });
         }
     }
 }

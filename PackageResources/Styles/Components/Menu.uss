@@ -34,7 +34,7 @@
 
 .appui-menusection__title {
     /*text-transform: uppercase;*/
-    font-size: var(--appui-font-sizes-body-md);
+    font-size: var(--appui-font-sizes-75);
     color: var(--appui-foregrounds-50);
     padding: var(--appui-alias-control-gap-md);
     margin-top: var(--appui-alias-control-gap-md); /*margin-block-start: var(--appui-alias-control-gap-md);*/
@@ -43,7 +43,9 @@
 
 .appui-menuitem {
     border-radius: var(--appui-alias-control-border-radius);
-    padding: var(--appui-alias-control-gap-md);
+    /* The registry's row: h-md, px-3 (12px normal / 9px compact), gap-2 between parts. */
+    padding: 0 var(--appui-sizing-250);
+    min-height: var(--appui-alias-control-sizing-md-height);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -58,17 +60,21 @@
 
 .appui-menuitem__submenu-icon {
     display: none;
-    margin-left: var(--appui-alias-control-gap-md);
+    margin-left: var(--appui-sizing-160);
     margin-right: 0;
-    width: var(--appui-sizing-400);
-    height: var(--appui-sizing-400);
     translate: 2px 0;
     --unity-image-tint-color: var(--appui-alias-actions-foreground-color-default);
 }
 
+/* The registry's caret is icon-xs. Icon.uss loads after this sheet, so outrank .appui-icon--size-md. */
+.appui-menuitem > .appui-icon.appui-menuitem__submenu-icon {
+    width: var(--appui-alias-control-sizing-icon-xs);
+    height: var(--appui-alias-control-sizing-icon-xs);
+}
+
 .appui--rtl .appui-menuitem__submenu-icon {
     margin-left: 0;
-    margin-right: var(--appui-alias-control-gap-md);
+    margin-right: var(--appui-sizing-160);
     translate: -2px 0;
     scale: -1 1;
 }
@@ -81,7 +87,7 @@
     display: none;
     opacity: 0;
     margin-left: 0;
-    margin-right: var(--appui-alias-control-gap-md);
+    margin-right: var(--appui-sizing-160);
     width: var(--appui-sizing-300);
     height: var(--appui-sizing-300);
     scale: 1.4;
@@ -89,7 +95,7 @@
 }
 
 .appui--rtl .appui-menuitem__checkmark {
-    margin-left: var(--appui-alias-control-gap-md);
+    margin-left: var(--appui-sizing-160);
     margin-right: 0;
 }
 
@@ -102,21 +108,22 @@
 }
 
 .appui-menuitem__label {
+    font-size: var(--appui-font-sizes-200);
     flex-grow: 1;
     flex-shrink: 0;
     margin-left: 0;
-    margin-right: var(--appui-alias-control-gap-md);
+    margin-right: var(--appui-sizing-160);
 }
 
 .appui--rtl .appui-menuitem__label {
-    margin-left: var(--appui-alias-control-gap-md);
+    margin-left: var(--appui-sizing-160);
     margin-right: 0;
 }
 
 .appui-menuitem__shortcut {
     flex-shrink: 0;
-    color: var(--appui-alias-actions-foreground-color-disabled);
-    font-size: var(--appui-font-sizes-body-xs);
+    color: var(--appui-alias-text-tertiary);
+    font-size: var(--appui-font-sizes-100);
 }
 
 .appui-menuitem--active > .appui-menuitem__label,
@@ -135,15 +142,21 @@
     --unity-image-tint-color: var(--appui-alias-actions-foreground-color-selected);
 }
 
+/* Icon.uss loads after this sheet, so the size needs more specificity than .appui-icon--size-md. */
+.appui-menuitem > .appui-icon.appui-menuitem__icon {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+}
+
 .appui-menuitem__icon {
     margin-left: 0;
-    margin-right: var(--appui-alias-control-gap-md); /* todo remove this when gap is supported */
+    margin-right: var(--appui-sizing-160); /* todo remove this when gap is supported */
     --unity-image-tint-color: var(--appui-alias-actions-foreground-color-default);
 }
 
 .appui--rtl .appui-menuitem__icon {
     margin-right: 0;
-    margin-left: var(--appui-alias-control-gap-md); /* todo remove this when gap is supported */
+    margin-left: var(--appui-sizing-160); /* todo remove this when gap is supported */
 }
 
 .appui-menuitem:hover:enabled {
@@ -194,20 +207,114 @@
     --unity-image-tint-color: var(--appui-alias-actions-foreground-color-active);
 }
 
+/* Radio rows — the mutually exclusive sibling of the checkmark row.
+   The bullet mirrors the checkmark's box so both indicator kinds share one gutter. */
+.appui-menuitem__radio {
+    display: none;
+    opacity: 0;
+    margin-left: 0;
+    margin-right: var(--appui-sizing-160);
+    width: var(--appui-alias-control-sizing-icon-xxs);
+    height: var(--appui-alias-control-sizing-icon-xxs);
+    border-radius: 50%;
+    background-color: var(--appui-alias-actions-foreground-color-default);
+}
+
+.appui--rtl .appui-menuitem__radio {
+    margin-left: var(--appui-sizing-160);
+    margin-right: 0;
+}
+
+.appui-menu--selectable .appui-menuitem--indicator-radio .appui-menuitem__radio {
+    display: flex;
+}
+
+.appui-menuitem--indicator-radio.appui-menuitem--selectable.is-selected > .appui-menuitem__radio {
+    opacity: 1;
+    background-color: var(--appui-alias-actions-foreground-color-selected);
+}
+
+/* A radio row reports its state with the bullet, never with a checkmark as well. */
+.appui-menu--selectable .appui-menuitem--indicator-radio .appui-menuitem__checkmark {
+    display: none;
+}
+
+/* Destructive — a row for an irreversible action, tinted with the semantic destructive colour. */
+.appui-menuitem--destructive {
+    color: var(--appui-alias-semantic-destructive);
+}
+
+.appui-menuitem--destructive > .appui-menuitem__label,
+.appui-menuitem--destructive > .appui-menuitem__icon,
+.appui-menuitem--destructive > .appui-menuitem__checkmark,
+.appui-menuitem--destructive > .appui-menuitem__submenu-icon {
+    color: var(--appui-alias-semantic-destructive);
+    --unity-image-tint-color: var(--appui-alias-semantic-destructive);
+}
+
+.appui-menuitem--destructive > .appui-menuitem__radio {
+    background-color: var(--appui-alias-semantic-destructive);
+}
+
+.appui-menuitem--destructive:hover:enabled > .appui-menuitem__label,
+.appui-menuitem--destructive:hover:enabled > .appui-menuitem__icon,
+.appui-menuitem--destructive:hover:enabled > .appui-menuitem__checkmark,
+.appui-menuitem--destructive:hover:enabled > .appui-menuitem__submenu-icon,
+.appui-menuitem--destructive:focus > .appui-menuitem__label,
+.appui-menuitem--destructive:focus > .appui-menuitem__icon,
+.appui-menuitem--destructive:focus > .appui-menuitem__checkmark,
+.appui-menuitem--destructive:focus > .appui-menuitem__submenu-icon {
+    color: var(--appui-alias-actions-destructive-hover);
+    --unity-image-tint-color: var(--appui-alias-actions-destructive-hover);
+}
+
+.appui-menuitem--destructive:active > .appui-menuitem__label,
+.appui-menuitem--destructive:active > .appui-menuitem__icon,
+.appui-menuitem--destructive:active > .appui-menuitem__checkmark,
+.appui-menuitem--destructive:active > .appui-menuitem__submenu-icon {
+    color: var(--appui-alias-actions-destructive-active);
+    --unity-image-tint-color: var(--appui-alias-actions-destructive-active);
+}
+
+/* Menu radio group — a pure grouping container, it adds no chrome of its own. */
+.appui-menuradiogroup {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-shrink: 0;
+}
+
+/* Disabled — every glyph takes the disabled text colour, never opacity, which would compound
+   down a disabled subtree. Last in the file so it outranks the destructive tint by source order;
+   a selected row's parts sit four classes deep, so they get their own rules. */
 .appui-menuitem:disabled {
     cursor: var(--appui-alias-control-cursor-disabled);
-    color: var(--appui-alias-actions-foreground-color-disabled);
-    opacity: 0.5;
+    color: var(--appui-alias-text-disabled);
 }
 
 .appui-menuitem:disabled > .appui-menuitem__label,
 .appui-menuitem:disabled > .appui-menuitem__icon,
 .appui-menuitem:disabled > .appui-menuitem__checkmark,
-.appui-menuitem:disabled > .appui-menuitem__submenu-icon {
-    color: var(--appui-alias-actions-foreground-color-disabled);
-    --unity-image-tint-color: var(--appui-alias-actions-foreground-color-disabled);
+.appui-menuitem:disabled > .appui-menuitem__submenu-icon,
+.appui-menuitem:disabled > .appui-menuitem__shortcut {
+    color: var(--appui-alias-text-disabled);
+    --unity-image-tint-color: var(--appui-alias-text-disabled);
+}
+
+.appui-menuitem:disabled > .appui-menuitem__radio {
+    background-color: var(--appui-alias-text-disabled);
 }
 
 .appui-menuitem--selectable.appui-menuitem.is-selected:disabled {
     background-color: var(--appui-alias-actions-selected-background-color-disabled);
+}
+
+.appui-menuitem--selectable.appui-menuitem.is-selected:disabled > .appui-menuitem__label,
+.appui-menuitem--selectable.appui-menuitem.is-selected:disabled > .appui-menuitem__checkmark {
+    color: var(--appui-alias-text-disabled);
+    --unity-image-tint-color: var(--appui-alias-text-disabled);
+}
+
+.appui-menuitem--indicator-radio.appui-menuitem--selectable.is-selected:disabled > .appui-menuitem__radio {
+    background-color: var(--appui-alias-text-disabled);
 }

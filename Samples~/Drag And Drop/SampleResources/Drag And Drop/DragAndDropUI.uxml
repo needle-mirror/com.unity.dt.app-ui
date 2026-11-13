@@ -11,7 +11,7 @@
                 <engine:VisualElement class="dnd-gridview-container">
                     <appui:GridView name="dnd-gridview-src" class="dnd-gridview" item-height="50" />
                 </engine:VisualElement>
-                <appui:Icon icon-name="arrow-right" size="L" class="dnd-arrow" />
+                <appui:Icon icon-name="arrow-right" size="Lg" class="dnd-arrow" />
                 <engine:VisualElement class="dnd-gridview-container">
                     <appui:GridView name="dnd-gridview-dst" class="dnd-gridview" item-height="50" />
                     <appui:DropZone name="dnd-dropzone" class="dnd-dropzone">

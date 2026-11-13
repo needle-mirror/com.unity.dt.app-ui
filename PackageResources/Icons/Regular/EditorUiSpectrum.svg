@@ -1,0 +1,16 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--editor-ui-spectrum--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<g clip-path="url(#clip0_561_12)">
+<path d="M2 8C2 11.3137 4.68629 14 8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8Z" fill="#555555"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M5.55075 3.64893L8.01403 7.97495H7.98549L3.00509 7.99995C3.01416 6.15143 4.05094 4.50516 5.55075 3.64893Z" fill="#A8EF56"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8 3.00513C8.89329 3.00513 9.75226 3.26447 10.4778 3.67525L8.01403 7.97509L5.55075 3.64906C6.26983 3.24805 7.1182 3.00513 8 3.00513Z" fill="#FCD723"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12.9949 7.99988L8.01403 7.97488L10.4778 3.67505C11.9623 4.53527 12.9859 6.16284 12.9949 7.99988Z" fill="#FF9494"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10.4975 12.3182L8 7.9751L12.9949 8.0001C12.9859 9.83542 11.9796 11.4574 10.4975 12.3182Z" fill="#EA7853"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8 12.9951C6.97312 12.9951 6.01034 12.6572 5.21661 12.1258L8 7.9751L10.4975 12.3182C9.77094 12.7305 8.895 12.9951 8 12.9951Z" fill="#AF91F4"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M3.0051 8.0001L8 7.9751L5.21662 12.1258C3.90772 11.2306 3.01344 9.70364 3.0051 8.0001Z" fill="#98D5FF"/>
+</g>
+<defs>
+<clipPath id="clip0_561_12">
+<rect width="12" height="12" fill="white" transform="translate(2 2)"/>
+</clipPath>
+</defs>
+</svg>

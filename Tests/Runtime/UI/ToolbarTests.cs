@@ -8,5 +8,9 @@ namespace Unity.AppUI.Tests.UI
     class ToolbarTests : VisualElementTests<Toolbar>
     {
         protected override string mainUssClassName => Toolbar.ussClassName;
+
+        // Handed over to ToolbarSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
     }
 }

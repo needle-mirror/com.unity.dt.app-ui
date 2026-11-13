@@ -1,0 +1,210 @@
+/* UserSwitcher */
+
+.appui-userswitcher {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* Trigger — avatar only by default; with a name it becomes a hoverable row with a caret. */
+.appui-userswitcher__trigger {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: var(--appui-alias-control-border-radius);
+    cursor: var(--appui-alias-control-cursor-pointer);
+    --outline-width: var(--appui-alias-control-outline-width);
+    --outline-color: var(--appui-alias-control-outline-color);
+    --outline-offset: var(--appui-alias-control-outline-offset);
+    transition: background-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-200);
+}
+
+.appui-userswitcher__trigger--with-name {
+    padding-left: var(--appui-sizing-125);
+    padding-right: var(--appui-sizing-125);
+    padding-top: var(--appui-sizing-75);
+    padding-bottom: var(--appui-sizing-75);
+}
+
+.appui-userswitcher__trigger--with-name:hover {
+    background-color: var(--appui-alias-control-background-color-hover);
+}
+
+.appui-userswitcher__trigger-label {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    margin-left: var(--appui-sizing-160);
+    font-size: var(--appui-font-sizes-200);
+    color: var(--appui-alias-text-primary);
+    -unity-text-align: middle-left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -unity-text-overflow-position: end;
+    white-space: nowrap;
+}
+
+.appui-userswitcher__caret {
+    flex-shrink: 0;
+    margin-left: var(--appui-sizing-160);
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+    --unity-image-tint-color: var(--appui-alias-text-disabled);
+}
+
+/* The hidden element the row height is measured from. It is a real, laid-out box — that is the only
+   way UI Toolkit hands a token `px` length back to C# — but it is out of flow and paints nothing. */
+.appui-userswitcher__row-probe {
+    position: absolute;
+    width: 0;
+    height: var(--appui-alias-control-sizing-md-height);
+    opacity: 0;
+}
+
+/* Menu — the popover is a stack of cards on the raised surface, one per group, so a consumer can add
+   further cards of their own below. */
+.appui-userswitcher__menu {
+    background-color: var(--appui-alias-surface-raised);
+    border-radius: var(--appui-border-radius-lg);
+    padding: var(--appui-sizing-100);
+}
+
+/* Profile header card. */
+.appui-userswitcher__profile {
+    flex-direction: row;
+    margin-bottom: var(--appui-sizing-100);
+    align-items: center;
+    flex-shrink: 0;
+    padding: var(--appui-sizing-160);
+    border-radius: var(--appui-alias-control-border-radius);
+    background-color: var(--appui-alias-surface-default);
+}
+
+.appui-userswitcher__profile-text {
+    flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    margin-left: var(--appui-sizing-250);
+}
+
+.appui-userswitcher__profile-name {
+    font-size: var(--appui-font-sizes-200);
+    -unity-font-definition: var(--appui-font-weights-200);
+    color: var(--appui-alias-text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -unity-text-overflow-position: end;
+    white-space: nowrap;
+}
+
+.appui-userswitcher__profile-email {
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -unity-text-overflow-position: end;
+    white-space: nowrap;
+}
+
+.appui-userswitcher__profile-caption {
+    margin-top: var(--appui-sizing-25);
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-disabled);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -unity-text-overflow-position: end;
+    white-space: nowrap;
+}
+
+/* Accounts card. */
+.appui-userswitcher__accounts {
+    flex-direction: column;
+    margin-bottom: var(--appui-sizing-100);
+    flex-shrink: 0;
+    padding: var(--appui-sizing-75);
+    border-radius: var(--appui-alias-control-border-radius);
+    background-color: var(--appui-alias-surface-default);
+}
+
+.appui-userswitcher__search {
+    padding-left: var(--appui-sizing-160);
+    padding-right: var(--appui-sizing-160);
+    padding-bottom: var(--appui-sizing-75);
+    flex-shrink: 0;
+}
+
+/* The max-height is written inline from the probe measurement; everything else is USS. */
+.appui-userswitcher__list {
+    flex-shrink: 1;
+}
+
+.appui-userswitcher__list .unity-scroll-view__content-container {
+    flex-direction: column;
+}
+
+.appui-userswitcher__empty {
+    padding-left: var(--appui-sizing-250);
+    padding-right: var(--appui-sizing-250);
+    padding-top: var(--appui-sizing-160);
+    padding-bottom: var(--appui-sizing-160);
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-disabled);
+}
+
+/* An account row's avatar sits exactly where MenuItem puts its own leading icon, so a list mixing
+   avatar rows and icon rows still lines up. */
+.appui-userswitcher__account-avatar {
+    flex-shrink: 0;
+    margin-right: var(--appui-sizing-160);
+}
+
+/* The marker on a row that cannot be switched to. The row itself is disabled, which already dims it;
+   the marker says why in one glance, and the tooltip says it in words. */
+.appui-userswitcher__account-warning {
+    flex-shrink: 0;
+    margin-left: var(--appui-sizing-160);
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+    --unity-image-tint-color: var(--appui-alias-semantic-warning);
+}
+
+.appui-userswitcher__extra {
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+/* RTL mirrors the trigger row and every leading/trailing margin with it. */
+.appui--rtl .appui-userswitcher__trigger {
+    flex-direction: row-reverse;
+}
+
+.appui--rtl .appui-userswitcher__trigger-label {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-160);
+    -unity-text-align: middle-right;
+}
+
+.appui--rtl .appui-userswitcher__caret {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-160);
+}
+
+.appui--rtl .appui-userswitcher__profile {
+    flex-direction: row-reverse;
+}
+
+.appui--rtl .appui-userswitcher__profile-text {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-250);
+}
+
+.appui--rtl .appui-userswitcher__account-avatar {
+    margin-right: 0;
+    margin-left: var(--appui-sizing-160);
+}
+
+.appui--rtl .appui-userswitcher__account-warning {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-160);
+}

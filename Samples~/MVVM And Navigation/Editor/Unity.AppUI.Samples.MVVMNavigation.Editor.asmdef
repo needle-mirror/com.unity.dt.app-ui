@@ -1,0 +1,20 @@
+{
+    "name": "Unity.AppUI.Samples.MVVMNavigation.Editor",
+    "rootNamespace": "Unity.AppUI.Samples.MVVMNavigation.Editor",
+    "references": [
+        "Unity.AppUI.Samples.MVVMNavigation",
+        "GUID:f7898ee836234b98a20cbddc2a6e0b08",
+        "GUID:2f101f87087d58f4ba92ca00188e763d"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

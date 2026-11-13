@@ -4,14 +4,26 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  padding: var(--appui-spacing-100);
+  padding: var(--appui-static-sizing-100);
   cursor: var(--appui-alias-control-cursor-pointer);
   border-radius: var(--appui-sizing-150);
   flex-shrink: 0;
 }
 
 .appui-listview-item:hover {
-  background-color: var(--appui-backgrounds-300);
+  background-color: var(--appui-alias-control-background-color-hover);
+}
+
+.appui-listview-item.is-selected {
+  background-color: var(--appui-alias-actions-selected-background-color-default);
+}
+
+.appui-listview-item.is-selected:hover {
+  background-color: var(--appui-alias-actions-selected-background-color-hover);
+}
+
+.appui-listview-item.is-selected .appui-listview-item__title {
+  color: var(--appui-alias-text-callout);
 }
 
 .appui-listview-item--loading {
@@ -30,7 +42,7 @@
 .appui-listview-item__container {
   flex-shrink: 1;
   flex-grow: 1;
-  margin: 0 var(--appui-spacing-150);
+  margin: 0 var(--appui-static-sizing-150);
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
@@ -52,24 +64,24 @@
   flex-shrink: 0;
 }
 
-.appui-listview-item--size-s .appui-listview-item__thumbnail {
+.appui-listview-item--size-sm .appui-listview-item__thumbnail {
   width: var(--appui-sizing-600);
   height: var(--appui-sizing-600);
 }
 
-.appui-listview-item--size-m .appui-listview-item__thumbnail {
+.appui-listview-item--size-md .appui-listview-item__thumbnail {
   width: var(--appui-sizing-600);
   height: var(--appui-sizing-600);
 }
 
-.appui-listview-item--size-l .appui-listview-item__thumbnail {
+.appui-listview-item--size-lg .appui-listview-item__thumbnail {
   width: var(--appui-sizing-800);
   height: var(--appui-sizing-800);
 }
 
 .appui-listview-item__title {
   -unity-font-definition: var(--appui-font-weights-200);
-  font-size: var(--appui-font-sizes-100);
+  font-size: var(--appui-font-sizes-200);
   color: var(--appui-foregrounds-200);
   overflow: hidden;
   white-space: nowrap;
@@ -89,7 +101,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  margin-top: var(--appui-spacing-25);
+  margin-top: var(--appui-static-sizing-25);
   border-radius: var(--appui-alias-control-border-radius);
 }
 

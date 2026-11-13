@@ -13,8 +13,9 @@ namespace Unity.AppUI.UI
     /// versatile interface for capturing user input in various formats like plain text, passwords, and validated
     /// content.
     ///
-    /// The component supports different sizes, placeholder text, leading and trailing icons, and various
-    /// customization options to fit different use cases and design requirements.
+    /// The component supports different sizes, placeholder text, leading and trailing icons, a static
+    /// suffix such as a unit, and various customization options to fit different use cases and design
+    /// requirements.
     ///
     /// When using TextField for sensitive information like passwords, make sure to enable the isPassword property
     /// to mask the input appropriately.
@@ -22,26 +23,34 @@ namespace Unity.AppUI.UI
     /// <example>
     /// <para>Basic TextField Example: Simple text input with placeholder.</para>
     /// <code lang="xml"><![CDATA[
-    /// <TextField placeholder="Enter your name" size="Size.M" />
+    /// <TextField placeholder="Enter your name" size="Md" />
     /// ]]></code>
     /// <para>Password Field Example: Secure password input with validation.</para>
     /// <code lang="xml"><![CDATA[
     /// <TextField
-    ///     isPassword="true"
-    ///     maskChar="*"
+    ///     is-password="true"
+    ///     mask-char="*"
     ///     placeholder="Enter password"
-    ///     maxLength="20"
-    ///     leadingIconName="lock"
+    ///     max-length="20"
+    ///     leading-icon-name="lock"
     /// />
     /// ]]></code>
     /// <para>Search Field Example: Search input with icons.</para>
     /// <code lang="xml"><![CDATA[
     /// <TextField
-    ///     leadingIconName="search"
-    ///     trailingIconName="clear"
+    ///     leading-icon-name="search"
+    ///     trailing-icon-name="clear"
     ///     placeholder="Search..."
-    ///     size="Size.L"
+    ///     size="Lg"
     /// />
+    /// ]]></code>
+    /// <para>Suffix Example: a unit rendered after the input.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <TextField placeholder="Width" suffix="px" />
+    /// ]]></code>
+    /// <para>Append-friendly Example: keep the caret where the user clicked.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <TextField select-all-on-focus="false" />
     /// ]]></code>
     /// <para>Validated Input Example: Email input with validation.</para>
     /// <code lang="csharp"><![CDATA[
@@ -78,6 +87,10 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId leadingIconNameProperty = nameof(leadingIconName);
 
         internal static readonly BindingId trailingIconNameProperty = nameof(trailingIconName);
+
+        internal static readonly BindingId suffixProperty = nameof(suffix);
+
+        internal static readonly BindingId selectAllOnFocusProperty = nameof(selectAllOnFocus);
 
 
         /// <summary>
@@ -117,6 +130,11 @@ namespace Unity.AppUI.UI
         public const string placeholderUssClassName = ussClassName + "__placeholder";
 
         /// <summary>
+        /// The TextField suffix styling class.
+        /// </summary>
+        public const string suffixUssClassName = ussClassName + "__suffix";
+
+        /// <summary>
         /// The TextField trailing container styling class.
         /// </summary>
         public const string trailingContainerUssClassName = ussClassName + "__trailingcontainer";
@@ -134,15 +152,21 @@ namespace Unity.AppUI.UI
 
         const int k_MaxLengthDefault = -1;
 
+        const bool k_SelectAllOnFocusDefault = true;
+
         readonly UnityEngine.UIElements.TextField m_InputField;
 
         readonly VisualElement m_LeadingContainer;
 
         readonly LocalizedTextElement m_Placeholder;
 
+        readonly LocalizedTextElement m_Suffix;
+
         Size m_Size;
 
         bool m_IsPassword;
+
+        bool m_SelectAllOnFocus;
 
         readonly VisualElement m_TrailingContainer;
 
@@ -185,7 +209,7 @@ namespace Unity.AppUI.UI
             m_LeadingContainer.AddToClassList(leadingContainerUssClassName);
             hierarchy.Add(m_LeadingContainer);
 
-            var leadingIcon = new Icon { name = leadingIconUssClassName, iconName = null, pickingMode = PickingMode.Ignore };
+            var leadingIcon = new Icon { primary = true, name = leadingIconUssClassName, iconName = null, pickingMode = PickingMode.Ignore };
             leadingIcon.AddToClassList(leadingIconUssClassName);
             m_LeadingContainer.hierarchy.Add(leadingIcon);
 
@@ -202,11 +226,15 @@ namespace Unity.AppUI.UI
             m_InputField.AddManipulator(new BlinkingCursor());
             inputContainer.hierarchy.Add(m_InputField);
 
+            m_Suffix = new LocalizedTextElement { name = suffixUssClassName, pickingMode = PickingMode.Ignore, focusable = false };
+            m_Suffix.AddToClassList(suffixUssClassName);
+            hierarchy.Add(m_Suffix);
+
             m_TrailingContainer = new VisualElement { name = trailingContainerUssClassName, pickingMode = PickingMode.Ignore };
             m_TrailingContainer.AddToClassList(trailingContainerUssClassName);
             hierarchy.Add(m_TrailingContainer);
 
-            var trailingIcon = new Icon { name = trailingIconUssClassName, iconName = null, pickingMode = PickingMode.Ignore };
+            var trailingIcon = new Icon { primary = true, name = trailingIconUssClassName, iconName = null, pickingMode = PickingMode.Ignore };
             trailingIcon.AddToClassList(trailingIconUssClassName);
             m_TrailingContainer.hierarchy.Add(trailingIcon);
 
@@ -215,14 +243,18 @@ namespace Unity.AppUI.UI
             trailingElement = trailingIcon;
             leadingIconName = null;
             trailingIconName = null;
-            size = Size.M;
+            size = Size.Md;
             isPassword = k_IsPasswordDefault;
             isReadOnly = k_IsReadOnlyDefault;
             maskChar = k_MaskCharDefault;
             maxLength = k_MaxLengthDefault;
+            suffix = null;
 
             m_InputField.AddManipulator(new KeyboardFocusController(OnKeyboardFocusedIn, OnFocusedIn, OnFocusedOut));
             m_InputField.RuntimeContextMenu();
+            // RuntimeContextMenu force-disables UITK's own select-all-on-focus, so the App UI
+            // default has to be applied after it rather than with the other defaults above.
+            selectAllOnFocus = k_SelectAllOnFocusDefault;
             m_Placeholder.RegisterValueChangedCallback(OnPlaceholderValueChanged);
             m_InputField.RegisterValueChangedCallback(OnInputValueChanged);
             RegisterCallback<AttachToPanelEvent>(OnAttachToPanel);
@@ -454,6 +486,53 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// A short static text rendered after the input, such as a unit or a currency symbol.
+        /// </summary>
+        /// <remarks>
+        /// The suffix sits between the input and the trailing element, is purely decorative and
+        /// never takes focus. It is hidden entirely when null or empty, so it costs no layout
+        /// space on a plain field. The string is localized, like every other App UI text.
+        /// </remarks>
+        [CreateProperty]
+        [UxmlAttribute]
+        public string suffix
+        {
+            get => m_Suffix.text;
+            set
+            {
+                var changed = m_Suffix.text != value;
+                m_Suffix.text = value;
+                m_Suffix.EnableInClassList(Styles.hiddenUssClassName, string.IsNullOrEmpty(value));
+
+                if (changed)
+                    NotifyPropertyChanged(in suffixProperty);
+            }
+        }
+
+        /// <summary>
+        /// Whether focusing the field selects its whole value, so that typing replaces it.
+        /// </summary>
+        /// <remarks>
+        /// Enabled by default, matching the rest of the design system: a field you tab into is
+        /// ready to be overwritten. Turn it off for fields users are expected to append to.
+        /// </remarks>
+        [CreateProperty]
+        [UxmlAttribute]
+        public bool selectAllOnFocus
+        {
+            get => m_SelectAllOnFocus;
+            set
+            {
+                var changed = m_SelectAllOnFocus != value;
+                m_SelectAllOnFocus = value;
+                m_InputField.textSelection.selectAllOnFocus = value;
+
+                if (changed)
+                    NotifyPropertyChanged(in selectAllOnFocusProperty);
+            }
+        }
+
+        /// <summary>
         /// The TextField size.
         /// </summary>
         [CreateProperty]
@@ -476,10 +555,10 @@ namespace Unity.AppUI.UI
                     case Icon leadingIcon:
                         leadingIcon.size = m_Size switch
                         {
-                            Size.S => IconSize.S,
-                            Size.M => IconSize.S,
-                            Size.L => IconSize.M,
-                            _ => IconSize.S
+                            Size.Sm => IconSize.Sm,
+                            Size.Md => IconSize.Sm,
+                            Size.Lg => IconSize.Md,
+                            _ => IconSize.Sm
                         };
                         break;
                 }
@@ -492,10 +571,10 @@ namespace Unity.AppUI.UI
                     case Icon trailingIcon:
                         trailingIcon.size = m_Size switch
                         {
-                            Size.S => IconSize.S,
-                            Size.M => IconSize.S,
-                            Size.L => IconSize.M,
-                            _ => IconSize.S
+                            Size.Sm => IconSize.Sm,
+                            Size.Md => IconSize.Sm,
+                            Size.Lg => IconSize.Md,
+                            _ => IconSize.Sm
                         };
                         break;
                 }

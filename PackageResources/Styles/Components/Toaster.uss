@@ -1,0 +1,100 @@
+/* Toaster — the stacking viewport for the ToastManager stack. */
+.appui-toaster {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: var(--appui-sizing-300);
+    max-width: 100%;
+    max-height: 100%;
+    /* No overflow clipping: the toast's outset shadow has to paint past the stack's edge. */
+}
+
+/* Each stacked toast is the same container a Toast popup uses. It keeps its natural height (the
+   stack runs along the column axis, so shrinking would overlap toasts) and wraps within the
+   viewport width instead of overflowing it. */
+.appui-toaster > .appui-toast-container {
+    margin-top: var(--appui-alias-control-gap-md);
+    flex-shrink: 0;
+    max-width: 100%;
+}
+
+.appui-toaster > .appui-toast-container > .appui-toast {
+    flex-shrink: 1;
+}
+
+.appui-toaster > .appui-toast-container.unity-first-child /* *:first-child */ {
+    margin-top: 0;
+}
+
+/* Anchors. The stack grows away from the anchored edge, newest first. */
+
+.appui-toaster--top,
+.appui-toaster--topleft,
+.appui-toaster--topright,
+.appui--ltr .appui-toaster--topstart,
+.appui--rtl .appui-toaster--topend,
+.appui--rtl .appui-toaster--topstart,
+.appui--ltr .appui-toaster--topend {
+    top: 0;
+    bottom: auto;
+    flex-direction: column;
+}
+
+.appui-toaster--bottom,
+.appui-toaster--bottomleft,
+.appui-toaster--bottomright,
+.appui--ltr .appui-toaster--bottomstart,
+.appui--rtl .appui-toaster--bottomend,
+.appui--rtl .appui-toaster--bottomstart,
+.appui--ltr .appui-toaster--bottomend {
+    top: auto;
+    bottom: 0;
+    flex-direction: column-reverse;
+}
+
+.appui-toaster--top,
+.appui-toaster--bottom {
+    left: 0;
+    right: 0;
+    align-items: center;
+}
+
+.appui-toaster--topleft,
+.appui-toaster--bottomleft,
+.appui--ltr .appui-toaster--topstart,
+.appui--ltr .appui-toaster--bottomstart,
+.appui--rtl .appui-toaster--topend,
+.appui--rtl .appui-toaster--bottomend {
+    left: 0;
+    right: auto;
+    align-items: flex-start;
+}
+
+.appui-toaster--topright,
+.appui-toaster--bottomright,
+.appui--rtl .appui-toaster--topstart,
+.appui--rtl .appui-toaster--bottomstart,
+.appui--ltr .appui-toaster--topend,
+.appui--ltr .appui-toaster--bottomend {
+    left: auto;
+    right: 0;
+    align-items: flex-end;
+}
+
+/* The bottom anchors reverse the stacking direction, so the gap moves to the other side. */
+.appui-toaster--bottom > .appui-toast-container.unity-first-child,
+.appui-toaster--bottomleft > .appui-toast-container.unity-first-child,
+.appui-toaster--bottomright > .appui-toast-container.unity-first-child,
+.appui-toaster--bottomstart > .appui-toast-container.unity-first-child,
+.appui-toaster--bottomend > .appui-toast-container.unity-first-child /* *:first-child */ {
+    margin-top: var(--appui-alias-control-gap-md);
+}
+
+.appui-toaster--bottom > .appui-toast-container.unity-last-child,
+.appui-toaster--bottomleft > .appui-toast-container.unity-last-child,
+.appui-toaster--bottomright > .appui-toast-container.unity-last-child,
+.appui-toaster--bottomstart > .appui-toast-container.unity-last-child,
+.appui-toaster--bottomend > .appui-toast-container.unity-last-child /* *:last-child */ {
+    margin-top: 0;
+}

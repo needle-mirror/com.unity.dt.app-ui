@@ -35,7 +35,7 @@ namespace Unity.AppUI.UI
     ///              label="years"
     ///              step="1"
     ///              shift-step="5"
-    ///              size="M" />
+    ///              size="Md" />
     /// ]]></code>
     /// <para>Creating and configuring TouchSliderInt in C# — creating a volume control slider programmatically.</para>
     /// <code lang="csharp"><![CDATA[
@@ -47,7 +47,7 @@ namespace Unity.AppUI.UI
     ///     label = "%",
     ///     step = 5,
     ///     shiftStep = 10,
-    ///     size = Size.M
+    ///     size = Size.Md
     /// };
     ///
     /// // Add value change listener

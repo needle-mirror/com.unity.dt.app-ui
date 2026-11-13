@@ -45,7 +45,7 @@ namespace Unity.AppUI.UI
     /// <para>Basic Avatar with Image — Creating a circular avatar with a profile image.</para>
     /// <code lang="csharp">
     /// var avatar = new Avatar();
-    /// avatar.size = Size.M;
+    /// avatar.size = Size.Md;
     /// avatar.variant = AvatarVariant.Circular;
     /// avatar.src = BackgroundExtensions.FromObject(Resources.Load("user-profile"));
     /// </code>
@@ -59,7 +59,7 @@ namespace Unity.AppUI.UI
     /// </code>
     /// <para>UXML Declaration — Declaring an avatar in UXML.</para>
     /// <code lang="xml"><![CDATA[
-    /// <Avatar size="L" variant="Circular" src="profile-image" outline-color="white" outline-width="2" />
+    /// <Avatar size="Lg" variant="Circular" src="profile-image" outline-color="white" outline-width="2" />
     /// ]]></code>
     /// </example>
     [VisualDocPage("feedbacks")]
@@ -106,11 +106,11 @@ namespace Unity.AppUI.UI
         [EnumName("GetVariantUssClassName", typeof(AvatarVariant))]
         public const string variantUssClassName = ussClassName + "--";
 
-        const Size k_DefaultSize = Size.M;
+        const Size k_DefaultSize = Size.Md;
 
         const AvatarVariant k_DefaultVariant = AvatarVariant.Circular;
 
-        Size m_Size = Size.M;
+        Size m_Size = Size.Md;
 
         readonly TextElement m_Container;
 

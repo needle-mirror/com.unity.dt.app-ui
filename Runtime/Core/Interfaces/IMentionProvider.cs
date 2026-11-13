@@ -28,8 +28,14 @@ namespace Unity.AppUI.Core
         /// Implementations should replace these patterns with appropriate rich text markup
         /// (e.g. <c>&lt;b&gt;@Jane Doe&lt;/b&gt;</c>).
         /// Because the output is rendered with <c>enableRichText = true</c>, implementations must
-        /// sanitize user-provided text segments (e.g. by wrapping them in <c>&lt;noparse&gt;</c> tags)
-        /// to prevent rich text injection.
+        /// sanitize every user-provided text segment — both the surrounding message text and the
+        /// display name captured from the mention markup. Use
+        /// <see cref="RichTextUtils.Escape"/>, which wraps the segment in <c>&lt;noparse&gt;</c>
+        /// and neutralizes any embedded <c>&lt;/noparse&gt;</c> marker. Wrapping in
+        /// <c>&lt;noparse&gt;</c> by hand is not sufficient: noparse regions do not nest and end at
+        /// the first closing marker, so a segment containing its own <c>&lt;/noparse&gt;</c> (in any
+        /// casing, or with inner whitespace such as <c>&lt;/ NoParse &gt;</c>) re-enables tag
+        /// interpretation for everything that follows.
         /// </remarks>
         /// <param name="rawContent">The raw message content potentially containing mention markup.</param>
         /// <returns>The content with mentions resolved to rich text.</returns>

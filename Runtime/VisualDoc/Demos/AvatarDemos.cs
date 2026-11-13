@@ -21,10 +21,10 @@ namespace Unity.AppUI.VisualDoc
         static VisualElement Sizing()
         {
             return DemoUtils.Row(
-                new Avatar { size = Size.S, label = "S", backgroundColor = new Color(0.30f, 0.44f, 0.93f), autoLabelColor = true },
-                new Avatar { size = Size.M, label = "M", backgroundColor = new Color(0.30f, 0.44f, 0.93f), autoLabelColor = true },
-                new Avatar { size = Size.L, label = "L", backgroundColor = new Color(0.30f, 0.44f, 0.93f), autoLabelColor = true },
-                new Avatar { size = Size.M, backgroundColor = new Color(0.30f, 0.44f, 0.93f), outlineColor = Color.white, label = "MB", autoLabelColor = true });
+                new Avatar { size = Size.Sm, label = "S", backgroundColor = new Color(0.30f, 0.44f, 0.93f), autoLabelColor = true },
+                new Avatar { size = Size.Md, label = "M", backgroundColor = new Color(0.30f, 0.44f, 0.93f), autoLabelColor = true },
+                new Avatar { size = Size.Lg, label = "L", backgroundColor = new Color(0.30f, 0.44f, 0.93f), autoLabelColor = true },
+                new Avatar { size = Size.Md, backgroundColor = new Color(0.30f, 0.44f, 0.93f), outlineColor = Color.white, label = "MB", autoLabelColor = true });
         }
     }
 }

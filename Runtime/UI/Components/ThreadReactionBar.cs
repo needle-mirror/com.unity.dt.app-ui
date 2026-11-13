@@ -65,7 +65,7 @@ namespace Unity.AppUI.UI
                 name = addButtonUssClassName,
                 quiet = true,
                 icon = "smiley",
-                size = Size.M
+                size = Size.Md
             };
             m_AddButton.AddToClassList(addButtonUssClassName);
             m_AddButton.clicked += OnAddButtonClicked;

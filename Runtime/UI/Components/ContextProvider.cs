@@ -14,7 +14,7 @@ namespace Unity.AppUI.UI
     /// configurations that affect all child elements within its scope.
     ///
     /// This component is particularly useful when you need to create isolated sections of your UI with different
-    /// themes, scales, languages, or layout directions without affecting the rest of the application.
+    /// themes, densities, languages, or layout directions without affecting the rest of the application.
     ///
     /// Note: The ContextProvider's picking mode is set to ignore by default, meaning it won't intercept any
     /// pointer events. This allows events to pass through to its children.
@@ -22,7 +22,7 @@ namespace Unity.AppUI.UI
     /// <example>
     /// <para>Here are some common usage examples of the ContextProvider component. Creating a dark-themed modal dialog:</para>
     /// <code lang="xml"><![CDATA[
-    /// <ContextProvider theme="dark" scale="medium">
+    /// <ContextProvider theme="dark" density="normal">
     ///     <Dialog>
     ///         <Header text="Dark Theme Dialog" />
     ///         <Content>
@@ -44,9 +44,9 @@ namespace Unity.AppUI.UI
     ///     </Panel>
     /// </ContextProvider>
     /// ]]></code>
-    /// <para>Creating a larger scale section for improved accessibility.</para>
+    /// <para>Creating a more spacious section for improved accessibility.</para>
     /// <code lang="xml"><![CDATA[
-    /// <ContextProvider scale="large" tooltip-delay-ms="0">
+    /// <ContextProvider density="comfort" tooltip-delay-ms="0">
     ///     <Panel class="accessibility-section">
     ///         <Label text="Larger Text for Better Visibility" />
     ///         <Button text="Easy to Click" tooltip="Instant tooltip" />

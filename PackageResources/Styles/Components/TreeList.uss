@@ -1,0 +1,138 @@
+/* TreeList */
+.appui-tree-list {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+/*
+ * The container owns the interaction affordances of its rows, so a TreeViewItem used standalone
+ * stays inert while every item inside a TreeList is hoverable and pressable.
+ */
+.appui-tree-list .appui-tree-view-item__header {
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+.appui-tree-list .appui-tree-view-item__header:hover {
+    background-color: var(--appui-alias-actions-background-color-hover);
+}
+
+.appui-tree-list .appui-tree-view-item__header:active {
+    background-color: var(--appui-alias-actions-background-color-active);
+}
+
+.appui-tree-list .appui-tree-view-item--selected > .appui-tree-view-item__header {
+    background-color: var(--appui-alias-actions-quiet-background-color-active);
+}
+
+.appui-tree-list:focus {
+    /* The tree is the keyboard target; the selected row is the visible cursor. */
+    border-width: 0;
+}
+
+/*
+ * Size cascade. The container carries the size class and the row height comes from the
+ * control-sizing alias, so rows rescale with density and items added later need no bookkeeping.
+ */
+.appui-tree-list--size-sm .appui-tree-view-item__header {
+    height: var(--appui-alias-control-sizing-sm-height);
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.appui-tree-list--size-md .appui-tree-view-item__header {
+    height: var(--appui-alias-control-sizing-md-height);
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.appui-tree-list--size-lg .appui-tree-view-item__header {
+    height: var(--appui-alias-control-sizing-lg-height);
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.appui-tree-list--size-sm .appui-tree-view-item__caret-icon {
+    width: var(--appui-alias-control-sizing-icon-xs);
+    height: var(--appui-alias-control-sizing-icon-xs);
+}
+
+.appui-tree-list--size-md .appui-tree-view-item__caret-icon {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+}
+
+.appui-tree-list--size-lg .appui-tree-view-item__caret-icon {
+    width: var(--appui-alias-control-sizing-icon-md);
+    height: var(--appui-alias-control-sizing-icon-md);
+}
+
+/*
+ * The caret gutter and the leading icon track the caret glyph, so a row's leading column stays
+ * square whatever the size step and whatever the density.
+ */
+.appui-tree-list--size-sm .appui-tree-view-item__caret-gutter,
+.appui-tree-list--size-sm .appui-tree-view-item__icon {
+    width: var(--appui-alias-control-sizing-icon-xs);
+    height: var(--appui-alias-control-sizing-icon-xs);
+}
+
+.appui-tree-list--size-md .appui-tree-view-item__caret-gutter,
+.appui-tree-list--size-md .appui-tree-view-item__icon {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+}
+
+.appui-tree-list--size-lg .appui-tree-view-item__caret-gutter,
+.appui-tree-list--size-lg .appui-tree-view-item__icon {
+    width: var(--appui-alias-control-sizing-icon-md);
+    height: var(--appui-alias-control-sizing-icon-md);
+}
+
+/* The gutter is a fixed-width box, never a square one: its height follows the row. */
+.appui-tree-list .appui-tree-view-item__caret-gutter {
+    height: auto;
+}
+
+/*
+ * While a row drag is in progress the hover affordance would fight the drop indicators, so the
+ * tree drops it for the duration.
+ */
+.appui-tree-list--dragging .appui-tree-view-item__header:hover {
+    background-color: initial;
+}
+
+.appui-tree-list--dragging .appui-tree-view-item--selected > .appui-tree-view-item__header:hover {
+    background-color: var(--appui-alias-actions-quiet-background-color-active);
+}
+
+/*
+ * TreeListVirtual. Rows are recycled TreeViewItems placed absolutely over a container sized to the
+ * whole row list, so the element has to fill a bounded height for the window to mean anything.
+ * The indent probe's width is the per-level inset, the step the depth classes use.
+ */
+.appui-tree-list-virtual {
+    flex-shrink: 1;
+    flex-grow: 1;
+}
+
+.appui-tree-list-virtual__indent-probe {
+    position: absolute;
+    width: var(--appui-sizing-300);
+    height: 0;
+    visibility: hidden;
+}
+
+.appui-tree-list-virtual__scroll-view {
+    flex-grow: 1;
+}
+
+.appui-tree-list-virtual__rows {
+    position: relative;
+}
+
+.appui-tree-list-virtual__row {
+    position: absolute;
+    left: 0;
+    right: 0;
+}

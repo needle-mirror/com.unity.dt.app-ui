@@ -1,0 +1,29 @@
+/* TweakMenu — a floating theme/density switcher pinned to the bottom-left corner. */
+.appui-tweakmenu {
+    position: absolute;
+    left: var(--appui-alias-control-gap-xl);
+    bottom: var(--appui-alias-control-gap-xl);
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.appui--rtl .appui-tweakmenu {
+    left: auto;
+    right: var(--appui-alias-control-gap-xl);
+}
+
+.appui-tweakmenu__trigger {
+    border-radius: 50%;
+    background-color: var(--appui-alias-surface-overlay);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-menu-border-color-default);
+}
+
+.appui-tweakmenu__trigger:hover:enabled {
+    background-color: var(--appui-alias-control-background-color-hover);
+}
+
+.appui-tweakmenu__trigger:active {
+    background-color: var(--appui-alias-control-background-color-active);
+}

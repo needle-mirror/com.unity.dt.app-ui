@@ -62,14 +62,14 @@
 
 .appui-badge__label {
     -unity-font-definition: var(--appui-font-weights-200);
-    font-size: var(--appui-font-sizes-50);
+    font-size: var(--appui-font-sizes-75);
     color: var(--appui-color-white);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     -unity-text-overflow-position: end;
     -unity-text-align: middle-center;
-    padding: var(--appui-alias-control-gap-sm) var(--appui-alias-control-gap-md);
+    padding: var(--appui-sizing-50) var(--appui-sizing-200); /* py-0.5 px-2.5 in the registry */
     width: 100%;
     height: 100%;
     position: relative;

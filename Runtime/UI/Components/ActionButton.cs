@@ -111,11 +111,11 @@ namespace Unity.AppUI.UI
             focusable = true;
             tabIndex = 0;
 
-            m_IconElement = new Icon { name = iconUssClassName, iconName = null, pickingMode = PickingMode.Ignore };
+            m_IconElement = new Icon { primary = true, name = iconUssClassName, iconName = null, pickingMode = PickingMode.Ignore };
             m_IconElement.AddToClassList(iconUssClassName);
             m_LabelElement = new LocalizedTextElement { name = labelUssClassName, text = null, pickingMode = PickingMode.Ignore };
             m_LabelElement.AddToClassList(labelUssClassName);
-            m_TrailingIconElement = new Icon { name = trailingIconUssClassName, iconName = null, pickingMode = PickingMode.Ignore };
+            m_TrailingIconElement = new Icon { primary = true, name = trailingIconUssClassName, iconName = null, pickingMode = PickingMode.Ignore };
             m_TrailingIconElement.AddToClassList(trailingIconUssClassName);
 
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocus, OnFocus));
@@ -125,7 +125,7 @@ namespace Unity.AppUI.UI
             hierarchy.Add(m_TrailingIconElement);
 
             passMask = 0;
-            size = Size.M;
+            size = Size.Md;
             accent = false;
             quiet = false;
             iconVariant = IconVariant.Regular;

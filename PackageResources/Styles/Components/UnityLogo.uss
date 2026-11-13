@@ -1,0 +1,23 @@
+/* UnityLogo */
+.appui-unity-logo {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    flex-shrink: 0;
+}
+
+.appui-unity-logo > .appui-unity-logo__icon {
+    --unity-image: url("../../Logos/Unity-Logo-White.png");
+    --unity-image-tint-color: var(--appui-alias-icon-primary);
+    --unity-image-size: scale-to-fit;
+}
+
+.appui-unity-logo--empty > .appui-unity-logo__icon {
+    opacity: 0.3;
+}
+
+.unity-disabled .appui-unity-logo > .appui-unity-logo__icon,
+.unity-disabled.appui-unity-logo > .appui-unity-logo__icon {
+    --unity-image-tint-color: var(--appui-alias-icon-disabled);
+}

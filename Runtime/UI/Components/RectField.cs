@@ -58,7 +58,7 @@ namespace Unity.AppUI.UI
     /// <code lang="xml"><![CDATA[
     /// <UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI">
     ///     <appui:RectField
-    ///         size="M"
+    ///         size="Md"
     ///         value="0, 0, 100, 100"
     ///         style="width: 300px;"/>
     /// </UXML>
@@ -182,7 +182,7 @@ namespace Unity.AppUI.UI
             hierarchy.Add(positionRow);
             hierarchy.Add(sizeRow);
 
-            size = Size.M;
+            size = Size.Md;
             SetValueWithoutNotify(Rect.zero);
 
             m_XField.RegisterValueChangedCallback(OnXFieldChanged);

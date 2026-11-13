@@ -10,9 +10,9 @@ namespace Unity.AppUI.VisualDoc
         static VisualElement Sizes()
         {
             return DemoUtils.Row(
-                new Link("Small Link", "https://example.com") { size = TextSize.S },
-                new Link("Medium Link", "https://example.com") { size = TextSize.M },
-                new Link("Large Link", "https://example.com") { size = TextSize.L });
+                new Link("Small Link", "https://example.com") { size = LinkSize.Sm },
+                new Link("Medium Link", "https://example.com") { size = LinkSize.Base },
+                new Link("Large Link", "https://example.com") { size = LinkSize.Lg });
         }
     }
 }

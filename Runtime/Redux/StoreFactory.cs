@@ -232,6 +232,10 @@ namespace Unity.AppUI.Redux
         /// <returns> A new store enhancer. </returns>
         public static StoreEnhancer<TState> ComposeEnhancers<TState>(params StoreEnhancer<TState>[] enhancers)
         {
+            // With no enhancers, the composition is the identity enhancer.
+            if (enhancers is { Length: 0 })
+                return createStore => createStore;
+
             return enhancers
                 .Aggregate((prev, next) =>
                     createStore => next(prev(createStore)));

@@ -27,28 +27,28 @@ namespace Unity.AppUI.UI
     /// ## Anatomy
     /// Tooltip Examples: a button with a tooltip on hover.
     /// ```xml
-    /// &lt;appui:Button title="Hover me" size="M" /&gt;
+    /// &lt;appui:Button title="Hover me" size="Md" /&gt;
     /// &lt;appui:Tooltip text="This is a simple tooltip" anchor="Top" /&gt;
     /// ```
     ///
     /// Different Positions:
     /// ```xml
-    /// &lt;appui:IconButton icon="info" size="M" /&gt;
+    /// &lt;appui:IconButton icon="info" size="Md" /&gt;
     /// &lt;appui:Tooltip text="Tooltip above" anchor="Top" /&gt;
     ///
-    /// &lt;appui:IconButton icon="help" size="M" /&gt;
+    /// &lt;appui:IconButton icon="help" size="Md" /&gt;
     /// &lt;appui:Tooltip text="Tooltip below" anchor="Bottom" /&gt;
     ///
-    /// &lt;appui:IconButton icon="settings" size="M" /&gt;
+    /// &lt;appui:IconButton icon="settings" size="Md" /&gt;
     /// &lt;appui:Tooltip text="Tooltip on left" anchor="Left" /&gt;
     ///
-    /// &lt;appui:IconButton icon="edit" size="M" /&gt;
+    /// &lt;appui:IconButton icon="edit" size="Md" /&gt;
     /// &lt;appui:Tooltip text="Tooltip on right" anchor="Right" /&gt;
     /// ```
     ///
     /// Rich Content: a tooltip with rich content.
     /// ```xml
-    /// &lt;appui:TextField placeholder-text="Username" size="M" /&gt;
+    /// &lt;appui:TextField placeholder-text="Username" size="Md" /&gt;
     /// &lt;appui:Tooltip&gt;
     ///     &lt;appui:Text text="Username Requirements:" size="S" /&gt;
     ///     &lt;appui:Text text="&#8226; 3-20 characters" size="XS" /&gt;
@@ -85,7 +85,7 @@ namespace Unity.AppUI.UI
     /// var tooltipContent = new VisualElement();
     /// tooltipContent.AddToClassList("profile-tooltip");
     ///
-    /// var avatar = new Avatar { src = "user-avatar.png", size = Size.S };
+    /// var avatar = new Avatar { src = "user-avatar.png", size = Size.Sm };
     /// var userName = new Text("John Doe") { size = TextSize.S };
     /// var userRole = new Text("Administrator") { size = TextSize.XS };
     /// userRole.AddToClassList("text-muted");

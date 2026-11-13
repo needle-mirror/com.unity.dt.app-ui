@@ -8,5 +8,9 @@ namespace Unity.AppUI.Tests.UI
     class Vector3IntFieldTests : VisualElementTests<Vector3IntField>
     {
         protected override string mainUssClassName => Vector3IntField.ussClassName;
+
+        // Handed over to Vector3IntFieldSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
     }
 }

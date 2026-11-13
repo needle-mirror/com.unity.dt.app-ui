@@ -254,7 +254,7 @@ namespace Unity.AppUI.Samples.Navigation
             m_Value = new Unity.AppUI.UI.Text(value) { pickingMode = PickingMode.Ignore };
             m_Value.AddToClassList("setting-row-value");
             Add(m_Value);
-            var chevronIcon = new Icon {iconName = "caret-right", size = IconSize.S, pickingMode = PickingMode.Ignore};
+            var chevronIcon = new Icon {iconName = "caret-right", size = IconSize.Sm, pickingMode = PickingMode.Ignore};
             chevronIcon.AddToClassList("setting-row-chevron");
             Add(chevronIcon);
         }

@@ -46,7 +46,7 @@ namespace Unity.AppUI.UI
             m_YearHeaderButton = new Button(OnYearPressed)
             {
                 name = yearLabelUssClassName,
-                quiet = true,
+                variant = ButtonVariant.Ghost,
             };
             m_YearHeaderButton.AddToClassList(yearLabelUssClassName);
             m_HeaderContentElement.hierarchy.Add(m_YearHeaderButton);
@@ -85,7 +85,7 @@ namespace Unity.AppUI.UI
                     name = monthButtonUssClassName,
                     pickingMode = PickingMode.Position,
                     focusable = true,
-                    primary = true,
+                    variant = TextVariant.Default,
                     text = DayPicker.GetMonthText(i + 1, true, m_DatePicker.cultureInfo),
                     userData = i + 1
                 };
@@ -103,6 +103,8 @@ namespace Unity.AppUI.UI
         {
             var year = m_DatePicker.currentYear;
             m_YearHeaderButton.title = year.ToString();
+            m_PreviousYearButton.SetEnabled(m_DatePicker.canGoToPreviousYear);
+            m_NextYearButton.SetEnabled(m_DatePicker.canGoToNextYear);
         }
 
         void OnPreviousYearButtonClick()

@@ -19,15 +19,49 @@ namespace Unity.AppUI.Tests.UI
     [TestFixture(Direction.Vertical, Dir.Rtl)]
     class SplitViewTests : VisualElementTests<SplitView>
     {
+
+        // An empty SplitView lays out to nothing, and it has no intrinsic size either. The story
+        // follows the fixture's own direction, and carries it in the story name: the capture file
+        // is keyed on component and story, so a shared name would have the vertical fixtures
+        // overwrite the horizontal ones (the Ltr/Rtl axis is already part of the filename).
+        protected override IEnumerable<Story> stories
+        {
+            get
+            {
+                yield return new Story($"Default-{m_Direction}", (ctx) =>
+                {
+                    var splitView = new SplitView(m_Direction) { style = { width = 320, height = 200 } };
+                    splitView.AddPane(NamedPane("One"));
+                    splitView.AddPane(NamedPane("Two"));
+                    return splitView;
+                });
+            }
+        }
+
+        static Pane NamedPane(string title)
+        {
+            var pane = new Pane();
+            pane.Add(new Text(title));
+            return pane;
+        }
+
         const float k_TotalSize = 300;
 
         readonly Direction m_Direction;
 
         readonly Dir m_LayoutDirection;
 
-        const float k_DefaultPaneMinSize = 15;
+        // A Pane's minimum size comes from USS (min-width/min-height: var(--appui-sizing-250)), so it changes
+        // with the active density. Measurement assertions below read the resolved value from a live pane via
+        // GetMin(Pane) instead of hardcoding it; a hardcoded copy silently breaks whenever the ramp is retuned.
+        // The fixture built by SplitView_CanRemoveAndInsertPane gives panes 0 and 2 an inline 50px minimum,
+        // so pane 1 is the pane to read the USS default from.
 
         protected override string mainUssClassName => SplitView.ussClassName;
+
+        // Handed over to SplitViewSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
 
         protected override bool uxmlConstructable => true;
 
@@ -216,8 +250,8 @@ namespace Unity.AppUI.Tests.UI
         public struct SplitView_CanGetSplitterRange_TestCase
         {
             public int index;
-            public Func<Direction, Dir, float> expectedMin;
-            public Func<Direction, Dir, float> expectedMax;
+            public Func<Direction, Dir, float, float> expectedMin;
+            public Func<Direction, Dir, float, float> expectedMax;
         }
 
         static IEnumerable SplitView_CanGetSplitterRange_TestCases()
@@ -225,32 +259,32 @@ namespace Unity.AppUI.Tests.UI
             yield return new SplitView_CanGetSplitterRange_TestCase
             {
                 index = 0,
-                expectedMin = (direction, layoutDirection) => direction switch
+                expectedMin = (direction, layoutDirection, paneMinSize) => direction switch
                 {
                     Direction.Horizontal when layoutDirection == Dir.Ltr => 50f,
-                    Direction.Horizontal when layoutDirection == Dir.Rtl => k_TotalSize * 0.25f + k_DefaultPaneMinSize,
+                    Direction.Horizontal when layoutDirection == Dir.Rtl => k_TotalSize * 0.25f + paneMinSize,
                     Direction.Vertical => 50,
                 },
-                expectedMax = (direction, layoutDirection) => direction switch
+                expectedMax = (direction, layoutDirection, paneMinSize) => direction switch
                 {
-                    Direction.Horizontal when layoutDirection == Dir.Ltr => k_TotalSize - k_TotalSize * 0.25f - k_DefaultPaneMinSize,
+                    Direction.Horizontal when layoutDirection == Dir.Ltr => k_TotalSize - k_TotalSize * 0.25f - paneMinSize,
                     Direction.Horizontal when layoutDirection == Dir.Rtl => k_TotalSize - 50f,
-                    Direction.Vertical => k_TotalSize - k_TotalSize * 0.25f - k_DefaultPaneMinSize,
+                    Direction.Vertical => k_TotalSize - k_TotalSize * 0.25f - paneMinSize,
                 },
             };
             yield return new SplitView_CanGetSplitterRange_TestCase
             {
                 index = 1,
-                expectedMin = (direction, layoutDirection) => direction switch
+                expectedMin = (direction, layoutDirection, paneMinSize) => direction switch
                 {
-                    Direction.Horizontal when layoutDirection == Dir.Ltr => k_TotalSize * 0.25f + k_DefaultPaneMinSize,
+                    Direction.Horizontal when layoutDirection == Dir.Ltr => k_TotalSize * 0.25f + paneMinSize,
                     Direction.Horizontal when layoutDirection == Dir.Rtl => 50f,
-                    Direction.Vertical => k_TotalSize * 0.25f + k_DefaultPaneMinSize,
+                    Direction.Vertical => k_TotalSize * 0.25f + paneMinSize,
                 },
-                expectedMax = (direction, layoutDirection) => direction switch
+                expectedMax = (direction, layoutDirection, paneMinSize) => direction switch
                 {
                     Direction.Horizontal when layoutDirection == Dir.Ltr => k_TotalSize - 50f,
-                    Direction.Horizontal when layoutDirection == Dir.Rtl => k_TotalSize - k_TotalSize * 0.25f - k_DefaultPaneMinSize,
+                    Direction.Horizontal when layoutDirection == Dir.Rtl => k_TotalSize - k_TotalSize * 0.25f - paneMinSize,
                     Direction.Vertical => k_TotalSize - 50f,
                 },
             };
@@ -266,15 +300,19 @@ namespace Unity.AppUI.Tests.UI
             var splitView = m_TestUI.rootVisualElement.Q<SplitView>();
             splitView.GetRange(testCase.index, out var min, out var max);
 
-            Assert.AreEqual(testCase.expectedMin(m_Direction, m_LayoutDirection), min, 1);
-            Assert.AreEqual(testCase.expectedMax(m_Direction, m_LayoutDirection), max, 1);
+            // Panes 0 and 2 carry an inline 50px minimum (the hardcoded 50f in the cases above); pane 1 is the
+            // only one left on the USS default, and it is the pane whose minimum bounds both splitter ranges.
+            var paneMinSize = GetMin(splitView.PaneAt(1));
+
+            Assert.AreEqual(testCase.expectedMin(m_Direction, m_LayoutDirection, paneMinSize), min, 1);
+            Assert.AreEqual(testCase.expectedMax(m_Direction, m_LayoutDirection, paneMinSize), max, 1);
         }
 
         public struct SplitView_CanGetLegalSplitterPosition_TestCase
         {
             public int index;
             public float desiredPosition;
-            public Func<Direction, Dir, float> expectedResult;
+            public Func<Direction, Dir, float, float> expectedResult;
         }
 
         static IEnumerable SplitView_CanGetLegalSplitterPosition_TestCases()
@@ -283,10 +321,10 @@ namespace Unity.AppUI.Tests.UI
             {
                 index = 0,
                 desiredPosition = 50,
-                expectedResult = (direction, layoutDir) => direction switch
+                expectedResult = (direction, layoutDir, paneMinSize) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => 50,
-                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize * 0.25f + k_DefaultPaneMinSize,
+                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize * 0.25f + paneMinSize,
                     Direction.Vertical => 50,
                 }
             };
@@ -294,10 +332,10 @@ namespace Unity.AppUI.Tests.UI
             {
                 index = 0,
                 desiredPosition = 0,
-                expectedResult = (direction, layoutDir) => direction switch
+                expectedResult = (direction, layoutDir, paneMinSize) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => 50,
-                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize * 0.25f + k_DefaultPaneMinSize,
+                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize * 0.25f + paneMinSize,
                     Direction.Vertical => 50,
                 }
             };
@@ -305,10 +343,10 @@ namespace Unity.AppUI.Tests.UI
             {
                 index = 0,
                 desiredPosition = 60,
-                expectedResult = (direction, layoutDir) => direction switch
+                expectedResult = (direction, layoutDir, paneMinSize) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => 50,
-                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize * 0.25f + k_DefaultPaneMinSize,
+                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize * 0.25f + paneMinSize,
                     Direction.Vertical => 50,
                 }
             };
@@ -316,10 +354,10 @@ namespace Unity.AppUI.Tests.UI
             {
                 index = 0,
                 desiredPosition = 100,
-                expectedResult = (direction, layoutDir) => direction switch
+                expectedResult = (direction, layoutDir, paneMinSize) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => 100,
-                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize * 0.25f + k_DefaultPaneMinSize,
+                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize * 0.25f + paneMinSize,
                     Direction.Vertical => 100,
                 }
             };
@@ -328,10 +366,10 @@ namespace Unity.AppUI.Tests.UI
             {
                 index = 1,
                 desiredPosition = k_TotalSize,
-                expectedResult = (direction, layoutDir) => direction switch
+                expectedResult = (direction, layoutDir, paneMinSize) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => k_TotalSize - 50,
-                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize - k_TotalSize * 0.25f - k_DefaultPaneMinSize,
+                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize - k_TotalSize * 0.25f - paneMinSize,
                     Direction.Vertical => k_TotalSize - 50,
                 }
             };
@@ -339,10 +377,10 @@ namespace Unity.AppUI.Tests.UI
             {
                 index = 1,
                 desiredPosition = 250,
-                expectedResult = (direction, layoutDir) => direction switch
+                expectedResult = (direction, layoutDir, paneMinSize) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => 250,
-                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize - k_TotalSize * 0.25f - k_DefaultPaneMinSize,
+                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize - k_TotalSize * 0.25f - paneMinSize,
                     Direction.Vertical => 250,
                 }
             };
@@ -350,10 +388,10 @@ namespace Unity.AppUI.Tests.UI
             {
                 index = 1,
                 desiredPosition = 240,
-                expectedResult = (direction, layoutDir) => direction switch
+                expectedResult = (direction, layoutDir, paneMinSize) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => 250,
-                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize - k_TotalSize * 0.25f - k_DefaultPaneMinSize,
+                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize - k_TotalSize * 0.25f - paneMinSize,
                     Direction.Vertical => 250,
                 }
             };
@@ -361,10 +399,10 @@ namespace Unity.AppUI.Tests.UI
             {
                 index = 1,
                 desiredPosition = 200,
-                expectedResult = (direction, layoutDir) => direction switch
+                expectedResult = (direction, layoutDir, paneMinSize) => direction switch
                 {
                     Direction.Horizontal when layoutDir == Dir.Ltr => 200,
-                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize - k_TotalSize * 0.25f - k_DefaultPaneMinSize,
+                    Direction.Horizontal when layoutDir == Dir.Rtl => k_TotalSize - k_TotalSize * 0.25f - paneMinSize,
                     Direction.Vertical => 200,
                 }
             };
@@ -380,7 +418,10 @@ namespace Unity.AppUI.Tests.UI
             var splitView = m_TestUI.rootVisualElement.Q<SplitView>();
             var res = splitView.GetLegalSplitterPosition(testCase.index, testCase.desiredPosition);
 
-            Assert.AreEqual(testCase.expectedResult(m_Direction, m_LayoutDirection), res, 1);
+            // Pane 1 is the only pane without an inline minimum, so it is the one carrying the USS default.
+            var paneMinSize = GetMin(splitView.PaneAt(1));
+
+            Assert.AreEqual(testCase.expectedResult(m_Direction, m_LayoutDirection, paneMinSize), res, 1);
         }
 
         [UnityTest]
@@ -432,7 +473,10 @@ namespace Unity.AppUI.Tests.UI
 
             yield return null;
 
-            Assert.AreEqual(GetExpectedPosition(50 + Pane.defaultCompactThreshold), GetMax(splitView.PaneAt(1).layout), 1);
+            // Splitter 1 snaps to its range minimum, which is pane 0's edge plus pane 1's minimum size,
+            // so this measures the pane minimum and not the compact threshold. The two were both 15-16px
+            // under the old sizing ramp, which let the +/-1 tolerance hide the mismatch.
+            Assert.AreEqual(GetExpectedPosition(50 + GetMin(splitView.PaneAt(1))), GetMax(splitView.PaneAt(1).layout), 1);
 
             splitView.OnSplitterDragged(1, GetWorldPos(290));
 

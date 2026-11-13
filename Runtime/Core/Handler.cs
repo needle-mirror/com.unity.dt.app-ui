@@ -30,12 +30,13 @@ namespace Unity.AppUI.Core
 
         /// <summary>
         /// Remove any pending posts of callbacks and sent messages whose obj is token.
-        /// If token is null, all callbacks and messages will be removed.
+        /// If token is null, all callbacks and messages sent through this handler will be removed.
+        /// Messages sent through other handlers are left untouched.
         /// </summary>
         /// <param name="token">An object (it can be null).</param>
         public void RemoveCallbacksAndMessages(object token)
         {
-            m_Looper.RemoveCallbacksAndMessages(token);
+            m_Looper.RemoveCallbacksAndMessages(token, this);
         }
 
         /// <summary>

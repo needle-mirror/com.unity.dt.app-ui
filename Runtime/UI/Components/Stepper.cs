@@ -40,7 +40,7 @@ namespace Unity.AppUI.UI
     /// <para>Customized Stepper with Size: creating a large stepper with custom styling in UXML.</para>
     /// <code lang="xml"><![CDATA[
     /// <UXML xmlns:ui="Unity.AppUI.UI">
-    ///     <ui:Stepper size="L" class="custom-stepper" />
+    ///     <ui:Stepper size="Lg" class="custom-stepper" />
     /// </UXML>
     /// ]]></code>
     /// <para>Stepper with Value Change Handling: implementing a volume control using a stepper with clamped values.</para>
@@ -137,9 +137,9 @@ namespace Unity.AppUI.UI
             pickingMode = PickingMode.Position;
             passMask = 0;
 
-            var decIcon = new Icon { name = decIconUssClassName, iconName = "minus", pickingMode = PickingMode.Ignore };
+            var decIcon = new Icon { primary = true, name = decIconUssClassName, iconName = "minus", pickingMode = PickingMode.Ignore };
             decIcon.AddToClassList(decIconUssClassName);
-            var incIcon = new Icon { name = incIconUssClassName, iconName = "plus", pickingMode = PickingMode.Ignore };
+            var incIcon = new Icon { primary = true, name = incIconUssClassName, iconName = "plus", pickingMode = PickingMode.Ignore };
             incIcon.AddToClassList(incIconUssClassName);
 
             var decIconContainer = new VisualElement { name = decIconContainerUssClassName, pickingMode = PickingMode.Ignore };
@@ -172,7 +172,7 @@ namespace Unity.AppUI.UI
             RegisterCallback<KeyDownEvent>(OnKeyDown);
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));
 
-            size = Size.M;
+            size = Size.Md;
         }
 
         /// <summary>

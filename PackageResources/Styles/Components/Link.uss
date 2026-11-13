@@ -11,3 +11,19 @@
 .appui-link.is-active {
     color: var(--appui-accent-50);
 }
+
+/* Sizes — mirrors the registry `linkVariants` size axis, `sm | base | lg`, and reuses the same
+   tier mapping as Text.uss: sm←font-sizes-100, base←font-sizes-200, lg←font-sizes-400. Binding to
+   the token vars rather than px is what makes a link rescale with Panel.density. */
+
+.appui-link--size-sm {
+    font-size: var(--appui-font-sizes-100);
+}
+
+.appui-link--size-base {
+    font-size: var(--appui-font-sizes-200);
+}
+
+.appui-link--size-lg {
+    font-size: var(--appui-font-sizes-400);
+}

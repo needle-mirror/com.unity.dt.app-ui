@@ -1,7 +1,7 @@
 :root {
     --mono-font: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Fonts/RobotoMono-Regular.ttf");
-    --appui-icon-sun-dim-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/SunDim.png");
-    --appui-icon-moon-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Moon.png");
+    --appui-icon-sun-dim-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/SunDim.svg");
+    --appui-icon-moon-regular: url("project:/Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Moon.svg");
 }
 
 .appui-icon--sun-dim--regular {
@@ -56,11 +56,11 @@
 
 #nav-drawer .appui-drawer__drawer-container {
     width: 320px;
-    background-color: var(--appui-primary-50);
+    background-color: var(--appui-alias-surface-subtle);
 }
 
 #app-bar > .appui-appbar__bar {
-    background-color: var(--appui-primary-25);
+    background-color: var(--appui-alias-surface-default);
 }
 
 .media-query--small-mobile .appui-appbar__compact-title,
@@ -77,9 +77,9 @@
 #sidebar {
     width: 270px;
     display: none;
-    background-color: var(--appui-primary-25);
+    background-color: var(--appui-alias-surface-subtle);
     border-right-width: 1px;
-    border-right-color: var(--appui-primary-200);
+    border-right-color: var(--appui-alias-control-border-color-default);
 }
 
 .media-query--tablet #sidebar,
@@ -92,14 +92,14 @@
 }
 
 #content .appui-navhost__item {
-    background-color: var(--appui-primary-25);
+    background-color: var(--appui-alias-surface-default);
 }
 
 #search-results {
     height: 400px;
     visibility: hidden;
     border-radius: var(--appui-alias-actions-border-radius);
-    background-color: var(--appui-primary-200);
+    background-color: var(--appui-alias-surface-overlay);
     position: absolute;
     margin-top: var(--appui-sizing-300);
 }
@@ -201,7 +201,7 @@
 }
 
 .shield {
-    background-color: var(--appui-primary-200);
+    background-color: var(--appui-alias-surface-muted);
     align-self: flex-start;
     border-radius: var(--appui-alias-actions-border-radius);
     margin-top: var(--appui-sizing-200);
@@ -222,7 +222,7 @@
 }
 
 .shield-label {
-    background-color: var(--appui-primary-400);
+    background-color: var(--appui-alias-surface-sunken);
 }
 
 .shield-value {
@@ -239,16 +239,16 @@
     -unity-font-style: bold;
     font-size: var(--appui-font-sizes-600);
     border-bottom-width: var(--appui-alias-control-border-width);
-    border-bottom-color: var(--appui-primary-200);
+    border-bottom-color: var(--appui-alias-control-border-color-default);
     margin-bottom: var(--appui-alias-control-gap-lg);
 }
 
 .table {
     margin: var(--appui-alias-control-gap-xl) 0;
     border-radius: var(--appui-alias-actions-border-radius);
-    background-color: var(--appui-primary-100);
+    background-color: var(--appui-alias-surface-card);
     overflow: hidden;
-    border-color: var(--appui-primary-400);
+    border-color: var(--appui-alias-control-border-color-default);
     border-width: var(--appui-alias-control-border-width);
     flex-shrink: 0;
 }
@@ -256,9 +256,9 @@
 .table-header {
     flex-direction: row;
     flex-shrink: 0;
-    background-color: var(--appui-primary-200);
+    background-color: var(--appui-alias-surface-muted);
     border-bottom-width: var(--appui-alias-control-border-width);
-    border-bottom-color: var(--appui-primary-400);
+    border-bottom-color: var(--appui-alias-control-border-color-default);
 }
 
 .table-header > .unity-label {
@@ -279,7 +279,7 @@
     flex-shrink: 0;
     flex-direction: row;
     border-bottom-width: var(--appui-alias-control-border-width);
-    border-bottom-color: var(--appui-primary-400);
+    border-bottom-color: var(--appui-alias-control-border-color-default);
 }
 
 .table-cell {
@@ -295,7 +295,7 @@
 .prop-default-value {
     -unity-font-definition: var(--mono-font);
     padding: var(--appui-alias-control-gap-sm);
-    background-color: var(--appui-primary-300);
+    background-color: var(--appui-alias-surface-sunken);
     flex-shrink: 0;
     border-radius: var(--appui-alias-actions-border-radius);
 }
@@ -312,12 +312,12 @@
 .visual-example {
     align-items: center;
     justify-content: center;
-    padding: var(--appui-spacing-600);
+    padding: var(--appui-sizing-600);
     margin: var(--appui-alias-control-gap-lg) 0;
     border-width: 1px;
-    border-color: var(--appui-primary-200);
+    border-color: var(--appui-alias-control-border-color-default);
     border-radius: var(--appui-alias-actions-border-radius);
-    background-color: var(--appui-primary-25);
+    background-color: var(--appui-alias-surface-sunken);
 }
 
 .visual-example .example-row {
@@ -351,7 +351,7 @@
     align-self: center;
     flex-direction: row;
     align-items: center;
-    margin-bottom: var(--appui-spacing-500);
+    margin-bottom: var(--appui-sizing-500);
 }
 
 .example-row > * {

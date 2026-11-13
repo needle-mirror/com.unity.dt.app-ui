@@ -1,0 +1,5 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--audio-audio-listener--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path d="M2 8H5V14H3C2.44772 14 2 13.5523 2 13V8Z" fill="#C99700"/>
+<path d="M11 8H14V13C14 13.5523 13.5523 14 13 14H11V8Z" fill="#C99700"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8H3C3 5.23858 5.23858 3 8 3C10.7614 3 13 5.23858 13 8H14Z" fill="#C99700"/>
+</svg>

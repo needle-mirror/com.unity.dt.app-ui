@@ -3,12 +3,15 @@
  */
 
 :root {
-  --appui-alias-control-border-color-default: #b0b0b0;
+  --appui-alias-control-background-color-default: #e4e4e4;
+  --appui-alias-control-background-color-hover: #ececec;
+  --appui-alias-control-background-color-active: #bebebe;
   --appui-alias-control-border-color-hover: #6c6c6c;
   --appui-alias-control-border-color-active: #a0a0a0;
   --appui-alias-control-border-color-focus: #1d5087;
   --appui-alias-control-border-color-disabled: rgba(176, 176, 176, 0.5);
   --appui-alias-control-border-color-selected: #b0b0b0;
+  --appui-alias-control-foreground-color-default: #090909;
   --appui-alias-actions-background-color-default: #e4e4e4;
   --appui-alias-actions-background-color-hover: #ececec;
   --appui-alias-actions-background-color-active: #bebebe;
@@ -21,20 +24,23 @@
   --appui-alias-actions-border-color-disabled: #b0b0b0;
   --appui-alias-actions-border-color-selected: #b0b0b0;
   --appui-alias-actions-selected-background-color-default: #96c3fb;
-  --appui-alias-actions-selected-background-color-hover: #6ba2e6;
+  --appui-alias-actions-selected-background-color-hover: #b0d2fc;
   --appui-alias-actions-selected-background-color-active: #5a90d3;
   --appui-alias-actions-selected-background-color-focus: #6ba2e6;
   --appui-alias-actions-selected-background-color-disabled: rgba(150, 195, 251, 0.5);
-  --appui-alias-actions-accent-background-color-default: #96c3fb;
-  --appui-alias-actions-accent-background-color-hover: #b0d2fc;
-  --appui-alias-actions-accent-background-color-active: #b0d2fc;
+  --appui-alias-actions-accent-background-color-default: #0892ff;
+  --appui-alias-actions-accent-background-color-hover: #0780df;
+  --appui-alias-actions-accent-background-color-active: #066ebf;
   --appui-alias-actions-accent-background-color-focus: #b0d2fc;
+  --appui-alias-text-primary: #090909;
+  --appui-alias-text-secondary: #161616;
+  --appui-alias-text-tertiary: #4c4c4c; /** Dim live text, AA (4.5:1) on every surface */
   --appui-alias-field-background-color-default: #f0f0f0;
   --appui-alias-field-background-color-hover: #f0f0f0;
   --appui-alias-field-background-color-active: #f0f0f0;
   --appui-alias-field-background-color-focus: #f0f0f0;
   --appui-alias-field-background-color-disabled: rgba(240, 240, 240, 0.5);
-  --appui-alias-field-border-color-default: #b0b0b0;
+  --appui-alias-field-border-color-default: #b7b7b7;
   --appui-alias-field-border-color-hover: #656565;
   --appui-alias-field-border-color-active: #a0a0a0;
   --appui-alias-field-border-color-focus: #1d5087;
@@ -43,77 +49,96 @@
   --appui-alias-menu-border-color-default: #9a9a9a;
   --appui-alias-caret-icon-default: var(--appui-icon-caret-down-fill);
   --appui-alias-caret-icon-variant-default: fill;
-  --appui-color-light-gray-100: #040404; /** lightGray: shade */
-  --appui-color-light-gray-200: #101010; /** lightGray: shade */
-  --appui-color-light-gray-300: #1d1d1d; /** lightGray: shade */
-  --appui-color-light-gray-400: #363636; /** lightGray: shade */
-  --appui-color-light-gray-500: #595959; /** lightGray: shade */
-  --appui-color-light-gray-600: #858585; /** lightGray: shade */
-  --appui-color-light-gray-700: #868686; /** lightGray: shade */
-  --appui-color-light-gray-800: #909090; /** lightGray: base */
-  --appui-color-light-gray-900: #9a9a9a; /** lightGray: tint */
-  --appui-color-light-gray-1000: #ababab; /** lightGray: tint */
-  --appui-color-light-gray-1100: #bdbdbd; /** lightGray: tint */
-  --appui-color-light-gray-1200: #cbcbcb; /** lightGray: tint */
-  --appui-color-light-gray-1300: #c0c0c0; /** lightGray: tint */
-  --appui-color-light-gray-1400: #a9a9a9; /** lightGray: tint */
-  --appui-color-light-gray-1500: #d9d9d9; /** lightGray: tint */
+  --appui-alias-surface-default: #c8c8c8;
+  --appui-alias-surface-subtle: #bdbdbd;
+  --appui-alias-surface-sunken: #d4d4d4;
+  --appui-alias-surface-raised: #cbcbcb;
+  --appui-alias-surface-card: #cbcbcb;
+  --appui-alias-surface-muted: #cacaca;
+  --appui-alias-link-default: #4c7eff;
+  --appui-alias-link-visited: #aa00aa;
+  --appui-dockview-drag-over-background-color: #3a72b0;
+  --appui-slider-track-background-color: #8f8f8f;
+  --appui-color-light-gray-100: #040404;
+  --appui-color-light-gray-200: #101010;
+  --appui-color-light-gray-300: #1d1d1d;
+  --appui-color-light-gray-400: #363636;
+  --appui-color-light-gray-500: #595959;
+  --appui-color-light-gray-600: #858585;
+  --appui-color-light-gray-700: #868686;
+  --appui-color-light-gray-800: #909090;
+  --appui-color-light-gray-900: #9a9a9a;
+  --appui-color-light-gray-1000: #ababab;
+  --appui-color-light-gray-1100: #bdbdbd;
+  --appui-color-light-gray-1200: #cbcbcb;
+  --appui-color-light-gray-1300: #c0c0c0;
+  --appui-color-light-gray-1400: #a9a9a9;
+  --appui-color-light-gray-1500: #d9d9d9;
+  --appui-neutral-25: #050505;
+  --appui-neutral-50: #1a1a1a;
+  --appui-neutral-100: #333333;
+  --appui-neutral-200: #4d4d4d;
+  --appui-neutral-300: #666666;
+  --appui-neutral-400: #808080;
+  --appui-neutral-500: #999999;
+  --appui-neutral-600: #b2b2b2;
+  --appui-neutral-700: #bfbfbf;
+  --appui-neutral-800: #cacaca;
+  --appui-neutral-900: #e0e0e0;
+  --appui-neutral-1000: #ebebeb;
+  --appui-neutral-1100: #f5f5f5;
+  --appui-neutral-1200: #fafafa;
+  --appui-backgrounds-50: #8a8a8a; /** Canvas */
+  --appui-base-100: #f0f0f0; /** UI Element */
   --appui-accent-25: #bac9e0; /** Active / Focus */
   --appui-accent-50: #a9c4ec; /** Hover */
   --appui-accent-100: #96c3fb;
   --appui-accent-200: #80b3ee;
   --appui-accent-300: #649ce3;
-  --appui-primary-15: var(--appui-color-black);
-  --appui-primary-25: var(--appui-color-light-gray-100);
-  --appui-primary-50: var(--appui-color-light-gray-200);
-  --appui-primary-100: var(--appui-color-light-gray-300);
-  --appui-primary-200: var(--appui-color-light-gray-400);
-  --appui-primary-300: var(--appui-color-light-gray-500);
-  --appui-primary-400: var(--appui-color-light-gray-600);
-  --appui-primary-500: var(--appui-color-light-gray-700);
-  --appui-primary-600: var(--appui-color-light-gray-800);
-  --appui-primary-700: var(--appui-color-light-gray-900);
-  --appui-primary-800: var(--appui-color-light-gray-1000);
-  --appui-primary-900: var(--appui-color-light-gray-1200);
-  --appui-primary-1000: var(--appui-color-light-gray-1300);
-  --appui-primary-1100: var(--appui-color-light-gray-1400);
-  --appui-primary-1200: var(--appui-color-light-gray-1500);
-  --appui-primary-1300: var(--appui-color-white);
-  --appui-destructive-25: var(--appui-color-red-600); /** Active / Focus */
-  --appui-destructive-50: var(--appui-color-red-700); /** Hover */
-  --appui-destructive-100: var(--appui-color-red-800);
-  --appui-destructive-200: var(--appui-color-red-900);
-  --appui-destructive-300: var(--appui-color-red-1000);
-  --appui-warning-25: var(--appui-color-orange-600); /** Active / Focus */
-  --appui-warning-50: var(--appui-color-orange-700); /** Hover */
-  --appui-warning-100: var(--appui-color-orange-800);
-  --appui-warning-200: var(--appui-color-orange-900);
-  --appui-warning-300: var(--appui-color-orange-1000);
-  --appui-positive-25: var(--appui-color-green-600); /** Active / Focus */
-  --appui-positive-50: var(--appui-color-green-700); /** Hover */
-  --appui-positive-100: var(--appui-color-green-800);
-  --appui-positive-200: var(--appui-color-green-900);
-  --appui-positive-300: var(--appui-color-green-1000);
+  --appui-destructive-25: #a13034; /** Active / Focus */
+  --appui-destructive-50: #bc383c; /** Hover */
+  --appui-destructive-100: #d74045;
+  --appui-destructive-200: #dc585c;
+  --appui-destructive-300: #e17074;
+  --appui-warning-25: #9d5500; /** Active / Focus */
+  --appui-warning-50: #b76300; /** Hover */
+  --appui-warning-100: #d17100;
+  --appui-warning-200: #d78320;
+  --appui-warning-300: #dd9540;
+  --appui-positive-25: #0d7e47; /** Active / Focus */
+  --appui-positive-50: #0f9353; /** Hover */
+  --appui-positive-100: #11a85f;
+  --appui-positive-200: #2fb373;
+  --appui-positive-300: #4dbe87;
+  --appui-alias-control-border-color-default: var(--appui-neutral-500);
   --appui-alias-control-border-color-invalid: var(--appui-destructive-100);
   --appui-alias-actions-border-color-invalid: var(--appui-destructive-100);
   --appui-alias-field-border-color-invalid: var(--appui-destructive-100);
-  --appui-backgrounds-50: var(--appui-primary-1100); /** Canvas */
-  --appui-backgrounds-100: var(--appui-primary-1000); /** App Background */
-  --appui-backgrounds-200: var(--appui-primary-900); /** Subtle */
-  --appui-backgrounds-300: var(--appui-primary-800); /** Borders */
-  --appui-foregrounds-25: var(--appui-primary-400); /** Disabled Text */
-  --appui-foregrounds-50: var(--appui-primary-200); /** Placeholder / Secondary */
-  --appui-foregrounds-100: var(--appui-primary-100); /** primary Text / Icon / Element */
-  --appui-foregrounds-200: var(--appui-primary-50); /** High Contrast / Text on Hover */
-  --appui-base-25: var(--appui-primary-1100);
-  --appui-base-50: var(--appui-primary-1000); /** UI Element Pressed */
-  --appui-base-100: var(--appui-primary-900); /** UI Element */
-  --appui-base-200: var(--appui-primary-900); /** UI Element Hover */
-  --appui-base-300: var(--appui-primary-800); /** UI Element Active / Selected */
-  --appui-base-400: var(--appui-primary-700); /** UI Element Border */
-  --appui-base-500: var(--appui-primary-400); /** UI Element Border Hover */
-  --appui-alias-actions-accent-foreground-color-default: var(--appui-foregrounds-200);
+  --appui-alias-overlay-backdrop: var(--appui-color-transparent-black-300);
+  --appui-neutral-15: var(--appui-color-black);
+  --appui-neutral-1300: var(--appui-color-white);
+  --appui-backgrounds-100: var(--appui-neutral-1000); /** App Background */
+  --appui-backgrounds-200: var(--appui-neutral-900); /** Subtle */
+  --appui-backgrounds-300: var(--appui-neutral-800); /** Borders */
+  --appui-foregrounds-25: var(--appui-neutral-400); /** Disabled Text */
+  --appui-foregrounds-50: var(--appui-neutral-200); /** Placeholder / Secondary */
+  --appui-foregrounds-100: var(--appui-neutral-100); /** primary Text / Icon / Element */
+  --appui-foregrounds-200: var(--appui-neutral-50); /** High Contrast / Text on Hover */
+  --appui-base-25: var(--appui-neutral-1100);
+  --appui-base-50: var(--appui-neutral-1000); /** UI Element Pressed */
+  --appui-base-200: var(--appui-neutral-900); /** UI Element Hover */
+  --appui-base-300: var(--appui-neutral-800); /** UI Element Active / Selected */
+  --appui-base-400: var(--appui-neutral-700); /** UI Element Border */
+  --appui-base-500: var(--appui-neutral-600); /** UI Element Border Hover */
+  --appui-informative-25: var(--appui-accent-25);
+  --appui-informative-50: var(--appui-accent-50);
+  --appui-informative-100: var(--appui-accent-100);
+  --appui-informative-200: var(--appui-accent-200);
+  --appui-informative-300: var(--appui-accent-300);
+  --appui-alias-actions-accent-foreground-color-default: var(--appui-neutral-1300);
   --appui-alias-actions-accent-foreground-color-hover: var(--appui-foregrounds-200);
   --appui-alias-actions-accent-foreground-color-active: var(--appui-foregrounds-200);
   --appui-alias-actions-accent-foreground-color-focus: var(--appui-foregrounds-200);
+  --appui-alias-text-callout: var(--appui-neutral-15);
+  --appui-alias-surface-overlay: var(--appui-neutral-1300);
 }

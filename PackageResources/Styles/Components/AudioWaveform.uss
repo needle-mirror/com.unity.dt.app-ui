@@ -1,0 +1,17 @@
+/* AudioWaveform
+   The waveform paints itself with Painter2D, and C# can only read a colour the stylesheet hands it.
+   So every colour the painter uses is declared here as a custom property on the element's own rule —
+   a :root-level alias is not readable from a probe element — and bound to an App UI token. Same
+   pattern as Progress's --progress-color and CanvasEdge's --edge-color.
+
+   The registry draws the bars in currentColor (defaulting to text-primary, the accent) and the
+   centre baseline in the same colour at 0.3 opacity. USS has no alpha maths over a var, so the
+   baseline binds to the neutral strong-border token instead, which reads as the same faint track in
+   every theme. */
+.appui-audio-waveform {
+    height: var(--appui-sizing-1650);
+    overflow: hidden;
+    --waveform-color: var(--appui-alias-actions-accent-background-color-default);
+    --waveform-baseline-color: var(--appui-base-500);
+    --waveform-playhead-color: var(--appui-alias-text-primary);
+}

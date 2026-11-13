@@ -1,0 +1,145 @@
+/* ChatPlan */
+.appui-chat-plan {
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-color: var(--appui-alias-surface-card);
+    border-radius: var(--appui-border-radius-lg);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-control-border-color-default);
+}
+
+/* Header */
+.appui-chat-plan__header {
+    flex-direction: row;
+    align-items: center;
+    padding: var(--appui-sizing-160) var(--appui-sizing-250);
+    border-bottom-width: var(--appui-alias-control-border-width);
+    border-bottom-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui--rtl .appui-chat-plan__header {
+    flex-direction: row-reverse;
+}
+
+.appui-chat-plan__header > * {
+    margin-left: var(--appui-sizing-160);
+}
+
+.appui-chat-plan__header > .appui-chat-plan__header-icon {
+    margin-left: 0;
+}
+
+.appui--rtl .appui-chat-plan__header > * {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-160);
+}
+
+.appui--rtl .appui-chat-plan__header > .appui-chat-plan__header-icon {
+    margin-right: 0;
+}
+
+.appui-chat-plan__header-icon {
+    --unity-image-tint-color: var(--appui-alias-text-secondary);
+}
+
+.appui-chat-plan__title {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: var(--appui-font-sizes-200);
+    -unity-font-style: bold;
+    color: var(--appui-alias-text-primary);
+}
+
+.appui-chat-plan__file-path {
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-disabled);
+}
+
+/* Body. The plan scrolls inside the card rather than growing it without bound. The registry caps
+   it at max-h-80 (320px); the App UI sizing ramp stops at --appui-sizing-3200, so the cap is the
+   tallest step the tokens actually offer. Set an inline max-height to go taller rather than
+   hardcoding a pixel value here. */
+.appui-chat-plan__body {
+    flex-grow: 1;
+    flex-shrink: 1;
+    max-height: var(--appui-sizing-3200);
+    padding: var(--appui-sizing-250) var(--appui-sizing-350);
+}
+
+/* Footer */
+.appui-chat-plan__footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--appui-sizing-160) var(--appui-sizing-250);
+    border-top-width: var(--appui-alias-control-border-width);
+    border-top-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui--rtl .appui-chat-plan__footer {
+    flex-direction: row-reverse;
+}
+
+.appui-chat-plan__status {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 1;
+    overflow: hidden;
+}
+
+.appui--rtl .appui-chat-plan__status {
+    flex-direction: row-reverse;
+}
+
+.appui-chat-plan__status-icon {
+    --unity-image-tint-color: var(--appui-alias-semantic-warning);
+    margin-right: var(--appui-sizing-75);
+}
+
+.appui--rtl .appui-chat-plan__status-icon {
+    margin-right: 0;
+    margin-left: var(--appui-sizing-75);
+}
+
+.appui-chat-plan__status-label {
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-secondary);
+}
+
+.appui-chat-plan__actions {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.appui--rtl .appui-chat-plan__actions {
+    flex-direction: row-reverse;
+}
+
+.appui-chat-plan__actions > * {
+    margin-left: var(--appui-sizing-160);
+}
+
+.appui-chat-plan__actions > .appui-chat-plan__discard-button {
+    margin-left: 0;
+}
+
+.appui--rtl .appui-chat-plan__actions > * {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-160);
+}
+
+.appui--rtl .appui-chat-plan__actions > .appui-chat-plan__discard-button {
+    margin-right: 0;
+}
+
+/* The edit control stays lit while the body is showing the editor. */
+.appui-chat-plan__edit-button.is-selected {
+    background-color: var(--appui-alias-actions-selected-background-color-default);
+}

@@ -1,0 +1,128 @@
+/* Card */
+
+/* The card surface. Tokens only: the raised surface, the primary foreground and the large radius
+   step. The resting border is fully transparent and only gains a colour when the card is selected,
+   so toggling selection never shifts the layout. */
+.appui-card {
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-color: var(--appui-alias-surface-raised);
+    color: var(--appui-alias-text-primary);
+    border-radius: var(--appui-border-radius-lg);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-color-transparent-black-0);
+    --outline-width: var(--appui-alias-control-outline-width);
+    --outline-color: var(--appui-alias-control-outline-color);
+    --outline-offset: var(--appui-alias-control-outline-offset);
+    transition: background-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-200), border-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-200);
+}
+
+/* Interactive cards are a single activatable target: pointer cursor, and the shared control
+   hover/active background tints. Pressable maintains is-hovered / is-active. */
+.appui-card--interactive {
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+.appui-card--interactive.is-hovered {
+    background-color: var(--appui-alias-control-background-color-hover);
+}
+
+.appui-card--interactive.is-active {
+    background-color: var(--appui-alias-control-background-color-active);
+}
+
+/* The registry draws selection as `ring-2 ring-primary`; UITK has no ring, so the always-present
+   transparent border takes the accent action colour instead. */
+.appui-card.is-selected {
+    border-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+/* Media */
+.appui-card__media {
+    flex-shrink: 0;
+    overflow: hidden;
+    background-color: var(--appui-base-100);
+}
+
+.appui-card__media-image {
+    width: 100%;
+    height: 100%;
+}
+
+/* Header. UITK has no `gap`, so the vertical rhythm is a leading margin on every child, zeroed on
+   the first one through the unity-first-child marker that CardSlot maintains. */
+.appui-card__header {
+    flex-direction: column;
+    padding: var(--appui-sizing-250);
+}
+
+.appui-card__header > * {
+    margin-top: var(--appui-sizing-75);
+}
+
+.appui-card__header > .unity-first-child {
+    margin-top: 0;
+}
+
+.appui-card__title {
+    font-size: var(--appui-font-sizes-200);
+    color: var(--appui-alias-text-primary);
+    -unity-font-definition: var(--appui-font-weights-200);
+    white-space: normal;
+}
+
+.appui-card__description {
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-secondary);
+    white-space: normal;
+}
+
+/* Content sits flush under the header, so it drops its own top padding. */
+.appui-card__content {
+    flex-direction: column;
+    padding: var(--appui-sizing-250);
+    padding-top: 0;
+}
+
+.appui-card__content > * {
+    margin-top: var(--appui-sizing-75);
+}
+
+.appui-card__content > .unity-first-child {
+    margin-top: 0;
+}
+
+/* Footer */
+.appui-card__footer {
+    flex-direction: row;
+    align-items: center;
+    padding: var(--appui-sizing-250);
+    padding-top: 0;
+}
+
+.appui-card__footer > * {
+    margin-left: var(--appui-sizing-175);
+}
+
+.appui-card__footer > .unity-first-child {
+    margin-left: 0;
+}
+
+.appui--rtl .appui-card__footer {
+    flex-direction: row-reverse;
+}
+
+.appui--rtl .appui-card__footer > * {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-175);
+}
+
+.appui--rtl .appui-card__footer > .unity-first-child {
+    margin-right: 0;
+}
+
+.appui--rtl .appui-card__title,
+.appui--rtl .appui-card__description {
+    -unity-text-align: middle-right;
+}

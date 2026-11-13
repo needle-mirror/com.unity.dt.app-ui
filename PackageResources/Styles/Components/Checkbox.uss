@@ -1,12 +1,12 @@
 /* Checkbox */
 :root {
-    --appui-checkbox__box-size-sm: var(--appui-sizing-200);
-    --appui-checkbox__box-size-md: var(--appui-sizing-250);
-    --appui-checkbox__box-size-lg: var(--appui-sizing-300);
+    --appui-checkbox__box-size-sm: var(--appui-sizing-250);
+    --appui-checkbox__box-size-md: var(--appui-sizing-320);
+    --appui-checkbox__box-size-lg: var(--appui-sizing-350);
 
-    --appui-checkbox__box-border-radius-sm: var(--appui-sizing-60);
-    --appui-checkbox__box-border-radius-md: var(--appui-sizing-60);
-    --appui-checkbox__box-border-radius-lg: var(--appui-sizing-60);
+    --appui-checkbox__box-border-radius-sm: var(--appui-sizing-75);
+    --appui-checkbox__box-border-radius-md: var(--appui-sizing-75);
+    --appui-checkbox__box-border-radius-lg: var(--appui-sizing-75);
 }
 
 .appui-checkbox {
@@ -47,7 +47,7 @@
 
 .appui-checkbox__label {
     flex: 1;
-    font-size: var(--appui-font-sizes-body-md);
+    font-size: var(--appui-font-sizes-100);
     overflow: hidden;
     -unity-text-overflow-position: end;
     text-overflow: ellipsis;
@@ -55,12 +55,12 @@
 
 .appui--ltr .appui-checkbox__label {
     -unity-text-align: middle-left;
-    margin-left: var(--appui-alias-control-gap-md);
+    margin-left: var(--appui-sizing-160);
 }
 
 .appui--rtl .appui-checkbox__label {
     -unity-text-align: middle-right;
-    margin-right: var(--appui-alias-control-gap-md);
+    margin-right: var(--appui-sizing-160);
 }
 
 .appui-checkbox__box > .appui-icon {
@@ -114,11 +114,15 @@
 
 .appui-checkbox--emphasized.is-checked > .appui-checkbox__box,
 .appui-checkbox--emphasized.is-intermediate > .appui-checkbox__box {
-    background-color: var(--appui-accent-100);
-    border-color: var(--appui-accent-100);
+    background-color: var(--appui-checkbox__box-checked-background-color);
+    border-color: var(--appui-checkbox__box-checked-border-color);
 }
 
-.appui-checkbox--emphasized .appui-icon,
+.appui-checkbox--emphasized .appui-icon {
+    --unity-image-tint-color: var(--appui-checkbox__box-checked-foreground-color);
+}
+
+/* The invalid mark sits on the destructive fill, not the checked-box fill. */
 .is-invalid .appui-checkbox .appui-icon,
 .is-invalid.appui-checkbox .appui-icon {
     --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default);
@@ -161,14 +165,14 @@
     color: var(--appui-destructive-100);
 }
 
-.appui-checkbox--size-s {
+.appui-checkbox--size-sm {
     height: var(--appui-alias-control-sizing-sm-height);
 }
 
-.appui-checkbox--size-m {
+.appui-checkbox--size-md {
     height: var(--appui-alias-control-sizing-md-height);
 }
 
-.appui-checkbox--size-l {
+.appui-checkbox--size-lg {
     height: var(--appui-alias-control-sizing-lg-height);
 }

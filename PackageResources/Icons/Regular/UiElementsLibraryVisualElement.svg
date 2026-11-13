@@ -1,0 +1,8 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--ui-elements-library-visual-element--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path d="M6 6H14V14H6V6Z" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M1 2C1 1.44772 1.44772 1 2 1H10C10.5523 1 11 1.44772 11 2V4H5.5C4.67157 4 4 4.67157 4 5.5V11H2C1.44772 11 1 10.5523 1 10V2Z" fill="#FFFFFF"/>
+<path d="M6 5C5.44772 5 5 5.44772 5 6V8H6V6H8V5H6Z" fill="#FFFFFF"/>
+<path d="M12 6H14V8H15V6C15 5.44772 14.5523 5 14 5H12V6Z" fill="#FFFFFF"/>
+<path d="M6 14V12H5V14C5 14.5523 5.44772 15 6 15H8V14H6Z" fill="#FFFFFF"/>
+<path d="M14 12V14H12V15H14C14.5523 15 15 14.5523 15 14V12H14Z" fill="#FFFFFF"/>
+</svg>

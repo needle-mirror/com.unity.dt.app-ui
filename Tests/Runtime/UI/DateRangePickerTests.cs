@@ -14,6 +14,10 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => DateRangePicker.ussClassName;
 
+        // Handed over to DateRangePickerSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
         protected override IEnumerable<Story> stories
         {
             get

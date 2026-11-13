@@ -125,7 +125,7 @@ namespace Unity.AppUI.UI
             var header = new VisualElement { name = headerUssClassName, pickingMode = PickingMode.Ignore  };
             header.AddToClassList(headerUssClassName);
 
-            m_ParticipantsGroup = new AvatarGroup { name = participantsUssClassName, max = 3, size = Size.S };
+            m_ParticipantsGroup = new AvatarGroup { name = participantsUssClassName, max = 3, size = Size.Sm };
             m_ParticipantsGroup.AddToClassList(participantsUssClassName);
 
             header.hierarchy.Add(m_ParticipantsGroup);
@@ -139,13 +139,13 @@ namespace Unity.AppUI.UI
                 name = actionsUssClassName,
                 quiet = true, icon = "dots-three",
                 iconVariant = IconVariant.Bold,
-                size = Size.M
+                size = Size.Md
             };
             m_ActionsButton.AddToClassList(actionsUssClassName);
             m_ActionsButton.clicked += OnActionButtonClicked;
             header.hierarchy.Add(m_ActionsButton);
 
-            m_ResolveButton = new ActionButton { name = resolveBtnUssClassName, quiet = true, icon = "check-circle", size = Size.M };
+            m_ResolveButton = new ActionButton { name = resolveBtnUssClassName, quiet = true, icon = "check-circle", size = Size.Md };
             m_ResolveButton.AddToClassList(resolveBtnUssClassName);
             m_ResolveButton.clicked += OnResolveClicked;
 
@@ -186,7 +186,7 @@ namespace Unity.AppUI.UI
 
         /// <summary>
         /// The replies container where reply messages are added. The API mirrors
-        /// the subset of <see cref="ListView"/> previously used here so existing
+        /// the subset of <see cref="UnityEngine.UIElements.ListView"/> previously used here so existing
         /// callers continue to compile unchanged.
         /// </summary>
         public RepliesView repliesListView => m_RepliesContainer;

@@ -1,0 +1,12 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--navigation-navmesh-surface--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<g clip-path="url(#clip0_1_19851)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12 1C12.5523 1 13 1.44772 13 2L13.0008 3.81036C11.8328 2.68913 10.2469 2 8.5 2C4.91015 2 2 4.91015 2 8.5C2 10.2469 2.68913 11.8328 3.81036 13.0008L2 13C1.44772 13 1 12.5523 1 12V2C1 1.44772 1.44772 1 2 1H12Z" fill="#0C6CCB"/>
+<path d="M8.5 13.5C11.2614 13.5 13.5 11.2614 13.5 8.5C13.5 5.73858 11.2614 3.5 8.5 3.5C5.73858 3.5 3.5 5.73858 3.5 8.5C3.5 11.2614 5.73858 13.5 8.5 13.5Z" stroke="#B73C15"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12.3354 4.6647L9.93826 9.9383L4.66465 12.3354L7.06175 7.06179L12.3354 4.6647ZM7.81694 7.81698L6.6785 10.3216L9.18307 9.18311L7.81694 7.81698Z" fill="#B73C15"/>
+</g>
+<defs>
+<clipPath id="clip0_1_19851">
+<rect width="13" height="13" fill="white" transform="translate(1 1)"/>
+</clipPath>
+</defs>
+</svg>

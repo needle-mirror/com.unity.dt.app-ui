@@ -51,13 +51,22 @@ namespace Unity.AppUI.Redux
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            return Equals(obj as PendingAction<TArg,TPayload>);
+            return Equals(obj as Action);
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(Action other)
+        {
+            // Compare the meta too when called through IEquatable<Action> or IEquatable<Action<TPayload>>.
+            // The base check guarantees other has this exact runtime type.
+            return base.Equals(other) &&
+                EqualityComparer<PendingMeta<TArg>>.Default.Equals(meta, ((PendingAction<TArg,TPayload>)other).meta);
         }
 
         /// <inheritdoc/>
         public bool Equals(PendingAction<TArg,TPayload> other)
         {
-            return base.Equals(other) && EqualityComparer<PendingMeta<TArg>>.Default.Equals(meta, other!.meta);
+            return Equals((Action)other);
         }
 
         /// <inheritdoc/>
@@ -90,13 +99,22 @@ namespace Unity.AppUI.Redux
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            return Equals(obj as FulfilledAction<TArg,TPayload>);
+            return Equals(obj as Action);
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(Action other)
+        {
+            // Compare the meta too when called through IEquatable<Action> or IEquatable<Action<TPayload>>.
+            // The base check guarantees other has this exact runtime type.
+            return base.Equals(other) &&
+                EqualityComparer<FulfilledMeta<TArg>>.Default.Equals(meta, ((FulfilledAction<TArg,TPayload>)other).meta);
         }
 
         /// <inheritdoc/>
         public bool Equals(FulfilledAction<TArg,TPayload> other)
         {
-            return base.Equals(other) && EqualityComparer<FulfilledMeta<TArg>>.Default.Equals(meta, other!.meta);
+            return Equals((Action)other);
         }
 
         /// <inheritdoc/>
@@ -129,13 +147,22 @@ namespace Unity.AppUI.Redux
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            return Equals(obj as RejectedAction<TArg,TPayload>);
+            return Equals(obj as Action);
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(Action other)
+        {
+            // Compare the meta too when called through IEquatable<Action> or IEquatable<Action<TPayload>>.
+            // The base check guarantees other has this exact runtime type.
+            return base.Equals(other) &&
+                EqualityComparer<RejectedMeta<TArg>>.Default.Equals(meta, ((RejectedAction<TArg,TPayload>)other).meta);
         }
 
         /// <inheritdoc/>
         public bool Equals(RejectedAction<TArg,TPayload> other)
         {
-            return base.Equals(other) && EqualityComparer<RejectedMeta<TArg>>.Default.Equals(meta, other!.meta);
+            return Equals((Action)other);
         }
 
         /// <inheritdoc/>
@@ -192,14 +219,23 @@ namespace Unity.AppUI.Redux
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            return Equals(obj as AsyncThunkAction<TArg,TPayload>);
+            return Equals(obj as Action);
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(Action other)
+        {
+            // Compare the creator too when called through IEquatable<Action> or IEquatable<Action<TArg>>.
+            // The base check guarantees other has this exact runtime type.
+            return base.Equals(other) &&
+                EqualityComparer<AsyncThunkCreator<TArg,TPayload>>.Default.Equals(
+                    creator, ((AsyncThunkAction<TArg,TPayload>)other).creator);
         }
 
         /// <inheritdoc/>
         public bool Equals(AsyncThunkAction<TArg, TPayload> other)
         {
-            return base.Equals(other) &&
-                EqualityComparer<AsyncThunkCreator<TArg,TPayload>>.Default.Equals(creator, other!.creator);
+            return Equals((Action)other);
         }
 
         /// <inheritdoc/>

@@ -13,45 +13,59 @@
   -unity-text-align: middle-right;
 }
 
-.appui-text--size-xxs {
-  font-size: var(--appui-font-sizes-body-xxs);
-}
+/* Sizes — mirrors the registry `textVariants` size axis. The registry's
+   build-registry.ts TEXT_TIERS maps xs←font-sizes-75, sm←100, base←200; the C# TextSize members keep their 2.3 names
+   (XS, S, M, L, XL, XXL, XXXL); lg and up
+   continue onto the steps nearest the sizes the registry renders today. Binding to
+   the token vars (never to px) is what makes Text rescale with Panel.density. */
 
 .appui-text--size-xs {
-  font-size: var(--appui-font-sizes-body-xs);
+  font-size: var(--appui-font-sizes-75);
 }
 
 .appui-text--size-s {
-  font-size: var(--appui-font-sizes-body-sm);
+  font-size: var(--appui-font-sizes-100);
 }
 
 .appui-text--size-m {
-  font-size: var(--appui-font-sizes-body-md);
+  font-size: var(--appui-font-sizes-200);
 }
 
 .appui-text--size-l {
-  font-size: var(--appui-font-sizes-body-lg);
+  font-size: var(--appui-font-sizes-400);
 }
 
 .appui-text--size-xl {
-  font-size: var(--appui-font-sizes-body-xl);
+  font-size: var(--appui-font-sizes-500);
 }
 
 .appui-text--size-xxl {
-  font-size: var(--appui-font-sizes-body-xxl);
+  font-size: var(--appui-font-sizes-700);
 }
 
 .appui-text--size-xxxl {
-  font-size: var(--appui-font-sizes-body-xxxl);
+  font-size: var(--appui-font-sizes-900);
 }
 
-.appui-text--primary {
-  color: var(--appui-foregrounds-100);
+/* Variants — mirrors the registry's `default | secondary | muted` foreground axis,
+   which maps --foreground → --appui-alias-text-primary, --foreground-secondary →
+   --appui-alias-text-secondary and --foreground-muted → --appui-alias-text-disabled. */
+
+.appui-text--default {
+  color: var(--appui-alias-text-primary);
+}
+
+.appui-text--secondary {
+  color: var(--appui-alias-text-secondary);
+}
+
+.appui-text--muted {
+  color: var(--appui-alias-text-disabled);
 }
 
 .unity-disabled.appui-text /* converted from : .is-disabled.appui-text */,
 .unity-disabled .appui-text /* converted from : .is-disabled .appui-text */,
 .unity-disabled.appui-localized-text /* converted from : .is-disabled.appui-localized-text */,
 .unity-disabled .appui-localized-text /* converted from : .is-disabled .appui-localized-text */ {
-  color: var(--appui-foregrounds-25);
+  color: var(--appui-alias-text-disabled);
 }

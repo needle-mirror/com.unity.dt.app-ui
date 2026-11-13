@@ -1,0 +1,69 @@
+/* OverflowToolbar */
+
+.appui-overflow-toolbar {
+    flex-direction: row;
+    align-items: center;
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* The inline strip. It shrinks so the caret always keeps its room; the arithmetic in Reflow is what
+   actually decides what fits, the clipping here is only a safety net during a layout pass. */
+.appui-overflow-toolbar__container {
+    flex-direction: row;
+    align-items: center;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* UITK has no `gap`. Every item carries a leading margin and the first one is tagged, exactly like
+   the Card slots. Reflow measures each item's OUTER width, so this margin is part of the arithmetic
+   and never causes an off-by-one item. */
+.appui-overflow-toolbar__item {
+    flex-shrink: 0;
+    margin-left: var(--appui-sizing-25);
+}
+
+.appui-overflow-toolbar__item.unity-first-child {
+    margin-left: 0;
+}
+
+.appui-overflow-toolbar__caret {
+    flex-shrink: 0;
+    margin-left: var(--appui-sizing-25);
+}
+
+/* The collapsed items sit in a plain vertical Menu, so they stack instead of competing for width. */
+.appui-overflow-toolbar__menu .unity-scroll-view__content-container {
+    flex-direction: column;
+}
+
+.appui-overflow-toolbar__menu .appui-overflow-toolbar__item {
+    flex-shrink: 0;
+    margin-left: 0;
+    margin-top: var(--appui-sizing-25);
+}
+
+.appui--rtl .appui-overflow-toolbar {
+    flex-direction: row-reverse;
+}
+
+.appui--rtl .appui-overflow-toolbar__container {
+    flex-direction: row-reverse;
+}
+
+.appui--rtl .appui-overflow-toolbar__item {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-25);
+}
+
+.appui--rtl .appui-overflow-toolbar__item.unity-first-child {
+    margin-right: 0;
+}
+
+.appui--rtl .appui-overflow-toolbar__caret {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-25);
+}

@@ -96,7 +96,7 @@ namespace Unity.AppUI.UI
             tabIndex = 0;
 
             // Icon (used in compact mode)
-            m_Icon = new Icon { name = iconUssClassName, pickingMode = PickingMode.Ignore, size = IconSize.S };
+            m_Icon = new Icon { primary = true, name = iconUssClassName, pickingMode = PickingMode.Ignore, size = IconSize.Sm };
             m_Icon.AddToClassList(iconUssClassName);
 
             // Thumbnail
@@ -121,7 +121,7 @@ namespace Unity.AppUI.UI
             {
                 name = deleteBtnUssClassName,
                 quiet = true,
-                size = Size.S,
+                size = Size.Sm,
                 icon = "x",
                 iconVariant = IconVariant.Regular
             };

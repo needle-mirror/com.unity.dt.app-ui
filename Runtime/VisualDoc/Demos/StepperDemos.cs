@@ -10,9 +10,9 @@ namespace Unity.AppUI.VisualDoc
         static VisualElement Sizes()
         {
             return DemoUtils.Row(
-                new Stepper { size = Size.S },
-                new Stepper { size = Size.M },
-                new Stepper { size = Size.L });
+                new Stepper { size = Size.Sm },
+                new Stepper { size = Size.Md },
+                new Stepper { size = Size.Lg });
         }
     }
 }

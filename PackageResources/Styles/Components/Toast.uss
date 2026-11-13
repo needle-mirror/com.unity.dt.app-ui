@@ -122,8 +122,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 4px var(--appui-spacing-150);
-    min-height: var(--appui-alias-control-sizing-lg-height);
+    /* The registry's toast: p-[sizing-250] all round, gap-[sizing-200] between parts, no min-height. */
+    padding: var(--appui-sizing-250);
     /*box-shadow: var(--appui-toast-box-shadow);*/
     border-radius: var(--appui-alias-control-border-radius);
     flex-shrink: 1;
@@ -173,13 +173,13 @@
 }
 
 .appui-toast > .appui-divider {
-    margin-left: var(--appui-spacing-150); /*margin-inline-start: 18px;*/
+    margin-left: var(--appui-sizing-200); /*margin-inline-start*/
     margin-right: 0;
 }
 
 .appui--rtl .appui-toast > .appui-divider {
     margin-left: 0;
-    margin-right: var(--appui-spacing-150); /*margin-inline-end: 18px;*/
+    margin-right: var(--appui-sizing-200); /*margin-inline-end*/
 }
 
 
@@ -212,11 +212,11 @@
 }
 
 .appui--ltr .appui-toast > .appui-icon {
-    margin-right: var(--appui-alias-control-gap-md); /*margin-inline-end: var(--appui-control-gap);*/
+    margin-right: var(--appui-sizing-200); /*margin-inline-end*/
 }
 
 .appui--rtl .appui-toast > .appui-icon {
-    margin-left: var(--appui-alias-control-gap-md); /*margin-inline-start: var(--appui-control-gap);*/
+    margin-left: var(--appui-sizing-200); /*margin-inline-start*/
 }
 
 .appui-toast--informative.appui-toast > .appui-icon {
@@ -244,7 +244,7 @@
 
 .appui-toast__message {
     color: var(--appui-foregrounds-200);
-    font-size: var(--appui-font-sizes-body-md);
+    font-size: var(--appui-font-sizes-100);
     flex-shrink: 1;
     white-space: normal;
 }
@@ -270,7 +270,7 @@
 
 
 .appui-toast__actioncontainer > .appui-toast__action {
-    font-size: var(--appui-font-sizes-body-md);
+    font-size: var(--appui-font-sizes-100);
     -unity-font-definition: var(--appui-font-weights-200); /*font-weight: 600;*/
     background-color: var(--appui-color-transparent-black-0);
     border-width: 0;
@@ -311,12 +311,18 @@
     margin-right: var(--appui-alias-control-gap-sm); /*margin-inline-end: var(--appui-control-gap);*/
 }
 
-.appui-toast__actioncontainer > .appui-toast__action:hover,
-.appui-toast__actioncontainer > .appui-toast__action.is-hovered {
-    background-color: var(--appui-color-transparent-black-100);
+/* The quiet hover fill is opaque, so it brings its own foreground: the coloured variants' white action
+   text would wash out on it in a light theme. The leading .appui-toast outranks those variant rules. */
+.appui-toast .appui-toast__actioncontainer > .appui-toast__action:hover,
+.appui-toast .appui-toast__actioncontainer > .appui-toast__action.is-hovered {
+    background-color: var(--appui-alias-actions-quiet-background-color-hover);
+    color: var(--appui-alias-actions-quiet-foreground-color-hover);
 }
 
-.appui-toast__actioncontainer > .appui-toast__action:active,
-.appui-toast__actioncontainer > .appui-toast__action.is-active {
-    background-color: var(--appui-color-transparent-black-300);
+/* A press adds is-active on top of is-hovered, so the pressed rule matches the hover rule's specificity
+   and comes after it, pairing the quiet pressed fill with its foreground the same way. */
+.appui-toast .appui-toast__actioncontainer > .appui-toast__action:active,
+.appui-toast .appui-toast__actioncontainer > .appui-toast__action.is-active {
+    background-color: var(--appui-alias-actions-quiet-background-color-active);
+    color: var(--appui-alias-actions-quiet-foreground-color-active);
 }

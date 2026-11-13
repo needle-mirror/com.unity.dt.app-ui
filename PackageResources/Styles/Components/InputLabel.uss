@@ -1,6 +1,7 @@
 /* InputLabel */
 :root {
     --appui-inputlabel-label-size: 33%;
+    --appui-inputlabel-input-max-size: 288px;
 }
 
 .appui-inputlabel {
@@ -34,8 +35,14 @@
     align-items: stretch;
 }
 
+/* The registry's property-field label reads the inspector label tokens in both layouts, while a bare
+   form label keeps FieldLabel's own. Rebinding FieldLabel's vars here, rather than its defaults, keeps
+   its required and disabled rules working and leaves a standalone FieldLabel alone. */
 .appui-inputlabel__field-label {
     display: flex;
+    --appui-field-label-size: var(--appui-alias-inspector-label-size);
+    --appui-field-label-color-default: var(--appui-alias-inspector-label-color);
+    /* line-height: var(--appui-alias-inspector-label-line-height); USS has no line-height. */
 }
 
 .appui-inputlabel--horizontal > .appui-inputlabel__label-container {
@@ -113,4 +120,174 @@
 .appui-inputlabel--dragging,
 .appui-inputlabel--dragging > .appui-inputlabel__label-container {
     cursor: var(--appui-alias-control-cursor-ewresize);
+}
+
+.appui-inputlabel__icon {
+    flex-shrink: 0;
+    flex-grow: 0;
+    align-self: center;
+    margin-right: var(--appui-alias-control-gap-sm);
+    --unity-image-tint-color: var(--appui-alias-text-disabled);
+}
+
+.appui--rtl .appui-inputlabel__icon {
+    margin-right: 0;
+    margin-left: var(--appui-alias-control-gap-sm);
+}
+
+.appui-inputlabel--vertical > .appui-inputlabel__icon {
+    align-self: flex-start;
+}
+
+.appui-inputlabel--cap-value.appui-inputlabel--horizontal > .appui-inputlabel__label-container {
+    flex-basis: auto;
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.appui-inputlabel--cap-value.appui-inputlabel--horizontal > .appui-inputlabel__input-container {
+    flex-grow: 0;
+    flex-shrink: 1;
+    max-width: var(--appui-inputlabel-input-max-size);
+}
+
+/* --------------------------------------------------------------------------
+   Grid layout. The inspector column grid, from the alias tokens: every grid row
+   in a panel resolves the same variables, so their column edges coincide and a
+   long label truncates instead of pushing its control out of column.
+
+   UI Toolkit has flexbox only — no grid, no subgrid, no calc() — so the label
+   cell's share of the row is a percentage basis the component computes in C#
+   from `--appui-alias-inspector-grid-label-columns` over
+   `--appui-alias-inspector-grid-columns`. Everything else below is a token
+   straight from USS.
+   -------------------------------------------------------------------------- */
+.appui-inputlabel--layout-grid {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    height: var(--appui-alias-inspector-row-height);
+    margin-top: 0;
+    margin-bottom: 0;
+    /* A control in the row is as tall as the row: the medium control height, which a field, a select
+       or a button sizes itself by, follows the row height here. The two resolve to the same token by
+       default, so this changes nothing until a host dials the row height. */
+    --appui-alias-control-sizing-md-height: var(--appui-alias-inspector-row-height);
+}
+
+.appui--rtl .appui-inputlabel--layout-grid {
+    flex-direction: row-reverse;
+}
+
+/* A control taller than one row: the row grows, and the label stays on the first line. */
+.appui-inputlabel--layout-grid.appui-inputlabel--tall {
+    height: auto;
+    min-height: var(--appui-alias-inspector-row-height);
+    align-items: flex-start;
+}
+
+.appui-inputlabel.appui-inputlabel--layout-grid > .appui-inputlabel__label-container {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding-left: 0;
+    padding-right: 0;
+    overflow: hidden;
+}
+
+.appui-inputlabel.appui-inputlabel--layout-grid.appui-inputlabel--tall > .appui-inputlabel__label-container {
+    height: var(--appui-alias-inspector-row-height);
+}
+
+.appui-inputlabel.appui-inputlabel--layout-grid > .appui-inputlabel__label-container > .appui-inputlabel__field-label {
+    overflow: hidden;
+    flex-shrink: 1;
+}
+
+/* The gap between the two cells. It comes out of the control cell, which is the one that grows. */
+.appui-inputlabel.appui-inputlabel--layout-grid > .appui-inputlabel__input-container {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    margin-left: var(--appui-alias-inspector-grid-gap);
+    margin-right: 0;
+}
+
+.appui--rtl .appui-inputlabel.appui-inputlabel--layout-grid > .appui-inputlabel__input-container {
+    margin-left: 0;
+    margin-right: var(--appui-alias-inspector-grid-gap);
+}
+
+/* On the grid the icon rides inside the label cell, so it takes room from the label, not the row. */
+.appui-inputlabel.appui-inputlabel--layout-grid > .appui-inputlabel__label-container > .appui-inputlabel__icon {
+    align-self: center;
+}
+
+/*
+ * `columns`: the control cell handed to the children as equal columns. There is no subgrid, so the
+ * children share the cell evenly and a child that needs more sets its own flex-grow. The gap is a
+ * leading margin on every child with the first one tagged `unity-first-child`, since USS has no gap
+ * and no :first-child. The children are tagged `appui-inputlabel__column` from C# rather than matched
+ * with `> *`.
+ *
+ * The child combinator is written against the InputLabel itself, not the cell. A child added through
+ * `Add` lands in the content container, but USS matches `>` against its logical parent, the element
+ * whose content container holds it. `.appui-inputlabel__container > .x` therefore never matches a
+ * caller's control, while `.appui-inputlabel > .x` does.
+ */
+.appui-inputlabel.appui-inputlabel--columns > .appui-inputlabel__input-container > .appui-inputlabel__container {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.appui--rtl .appui-inputlabel.appui-inputlabel--columns > .appui-inputlabel__input-container > .appui-inputlabel__container {
+    flex-direction: row-reverse;
+}
+
+.appui-inputlabel.appui-inputlabel--columns > .appui-inputlabel__column {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    margin-left: var(--appui-alias-inspector-grid-gap);
+}
+
+.appui--rtl .appui-inputlabel.appui-inputlabel--columns > .appui-inputlabel__column {
+    margin-left: 0;
+    margin-right: var(--appui-alias-inspector-grid-gap);
+}
+
+.appui-inputlabel.appui-inputlabel--columns > .appui-inputlabel__column.unity-first-child {
+    margin-left: 0;
+}
+
+.appui--rtl .appui-inputlabel.appui-inputlabel--columns > .appui-inputlabel__column.unity-first-child {
+    margin-right: 0;
+}
+
+/*
+ * `columns: Pair`: the registry's two equal tracks, `minmax(0, 1fr) minmax(0, 1fr)`. Each child asks
+ * for half the cell and may not grow, so a lone child keeps to the first half. With two, the gap on
+ * the second pushes the pair past the cell and equal bases shrink equally, which leaves two equal
+ * halves of what the gap does not take. `min-width: 0` is the `minmax(0, …)`: a control's own
+ * minimum must not unbalance the split.
+ */
+.appui-inputlabel.appui-inputlabel--columns-pair > .appui-inputlabel__column {
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: 50%;
+    min-width: 0;
+}
+
+/* A lone control in a pair keeps to the first track, which is half of what the gap leaves, as in a
+   pair row. The cell reserves the gap as padding so the 50% basis lands on that half. */
+.appui-inputlabel.appui-inputlabel--columns-pair-lone > .appui-inputlabel__input-container > .appui-inputlabel__container {
+    padding-right: var(--appui-alias-inspector-grid-gap);
+}
+
+.appui--rtl .appui-inputlabel.appui-inputlabel--columns-pair-lone > .appui-inputlabel__input-container > .appui-inputlabel__container {
+    padding-right: 0;
+    padding-left: var(--appui-alias-inspector-grid-gap);
 }

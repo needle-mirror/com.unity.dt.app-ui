@@ -59,9 +59,9 @@ namespace Unity.AppUI.UI
     /// <code lang="xml"><![CDATA[
     /// <UXML>
     /// <RadioGroup value="option2">
-    ///     <Radio key="option1" label="Standard" size="M" />
-    ///     <Radio key="option2" label="Premium" size="M" emphasized="true" />
-    ///     <Radio key="option3" label="Enterprise" size="M" />
+    ///     <Radio key="option1" label="Standard" size="Md" />
+    ///     <Radio key="option2" label="Premium" size="Md" emphasized="true" />
+    ///     <Radio key="option3" label="Enterprise" size="Md" />
     /// </RadioGroup>
     /// ]]></code>
     /// </example>
@@ -199,10 +199,10 @@ namespace Unity.AppUI.UI
             radio.SetValueWithoutNotify(radio.key == value);
         }
 
-        internal void RemoveRadio(Radio radio)
+        internal void RemoveRadio(Radio radio, bool keepValue = false)
         {
             m_RadioByKey.Remove(radio.key);
-            if (value == radio.key)
+            if (!keepValue && value == radio.key)
                 value = m_RadioByKey.Keys.FirstOrDefault();
         }
 

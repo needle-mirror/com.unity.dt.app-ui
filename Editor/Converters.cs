@@ -57,7 +57,12 @@ namespace Unity.AppUI.Editor
         /// <returns> The string representation of the wrapped value, or an empty string if no value is set. </returns>
         public override string ToString(Optional<T> value)
         {
-            return value.IsSet ? value.Value.ToString() : string.Empty;
+            if (!value.IsSet)
+                return string.Empty;
+
+            return value.Value is IFormattable formattable
+                ? formattable.ToString(null, CultureInfo.InvariantCulture)
+                : value.Value.ToString();
         }
     }
 
@@ -128,7 +133,7 @@ namespace Unity.AppUI.Editor
         /// <returns> True if the value could be parsed, False otherwise. </returns>
         protected override bool TryParse(string value, out int v)
         {
-            return int.TryParse(value, out v);
+            return int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out v) || int.TryParse(value, out v);
         }
     }
 
@@ -145,7 +150,7 @@ namespace Unity.AppUI.Editor
         /// <returns> True if the value could be parsed, False otherwise. </returns>
         protected override bool TryParse(string value, out long v)
         {
-            return long.TryParse(value, out v);
+            return long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out v) || long.TryParse(value, out v);
         }
     }
 
@@ -162,7 +167,8 @@ namespace Unity.AppUI.Editor
         /// <returns> True if the value could be parsed, False otherwise. </returns>
         protected override bool TryParse(string value, out float v)
         {
-            return float.TryParse(value, out v);
+            // Invariant first. Values saved by older versions used the current culture, so fall back to it.
+            return float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out v) || float.TryParse(value, out v);
         }
     }
 
@@ -179,7 +185,8 @@ namespace Unity.AppUI.Editor
         /// <returns> True if the value could be parsed, False otherwise. </returns>
         protected override bool TryParse(string value, out double v)
         {
-            return double.TryParse(value, out v);
+            // Invariant first. Values saved by older versions used the current culture, so fall back to it.
+            return double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out v) || double.TryParse(value, out v);
         }
     }
 
@@ -245,7 +252,7 @@ namespace Unity.AppUI.Editor
                 return string.Empty;
 
             var rect = value.Value;
-            return $"{rect.x},{rect.y},{rect.width},{rect.height}";
+            return FormattableString.Invariant($"{rect.x},{rect.y},{rect.width},{rect.height}");
         }
     }
 
@@ -261,7 +268,7 @@ namespace Unity.AppUI.Editor
         /// <returns> The converted date, or the default date if the value is empty or cannot be parsed. </returns>
         public override Date FromString(string value)
         {
-            if (string.IsNullOrEmpty(value) || !DateTime.TryParse(value, out var v))
+            if (string.IsNullOrEmpty(value) || !DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var v))
                 return default;
 
             return new Date(v);
@@ -304,6 +311,67 @@ namespace Unity.AppUI.Editor
         public override string ToString(DateRange value)
         {
             return value.ToString();
+        }
+    }
+
+
+    /// <summary>
+    /// UXML attribute converter for <see cref="TimeSpan"/> values, used by <see cref="TimeField"/> and
+    /// <see cref="TimePicker"/> to express a time of day such as `09:30` or `09:30:00`.
+    /// </summary>
+    public class TimeSpanConverter : UxmlAttributeConverter<TimeSpan>
+    {
+        /// <summary>
+        /// Converts a UXML attribute value into a <see cref="TimeSpan"/>.
+        /// </summary>
+        /// <param name="value"> The attribute value to convert. </param>
+        /// <returns> The converted time span, or zero if the value is empty or cannot be parsed. </returns>
+        public override TimeSpan FromString(string value)
+        {
+            if (string.IsNullOrEmpty(value) || !TimeSpan.TryParse(value, CultureInfo.InvariantCulture, out var v))
+                return default;
+
+            return v;
+        }
+
+        /// <summary>
+        /// Converts a <see cref="TimeSpan"/> into its UXML attribute representation.
+        /// </summary>
+        /// <param name="value"> The time span to convert. </param>
+        /// <returns> The time span formatted using the invariant culture. </returns>
+        public override string ToString(TimeSpan value)
+        {
+            return value.ToString("c", CultureInfo.InvariantCulture);
+        }
+    }
+
+    /// <summary>
+    /// UXML attribute converter for <see cref="DateTime"/> values, used by <see cref="DateTimeField"/>.
+    /// </summary>
+    public class DateTimeConverter : UxmlAttributeConverter<DateTime>
+    {
+        /// <summary>
+        /// Converts a UXML attribute value into a <see cref="DateTime"/>.
+        /// </summary>
+        /// <param name="value"> The attribute value to convert. </param>
+        /// <returns> The converted date and time, or the default value if it is empty or cannot be parsed. </returns>
+        public override DateTime FromString(string value)
+        {
+            if (string.IsNullOrEmpty(value) ||
+                !DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var v))
+                return default;
+
+            return v;
+        }
+
+        /// <summary>
+        /// Converts a <see cref="DateTime"/> into its UXML attribute representation.
+        /// </summary>
+        /// <param name="value"> The date and time to convert. </param>
+        /// <returns> The date and time formatted using the invariant culture round-trip format. </returns>
+        public override string ToString(DateTime value)
+        {
+            return value.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
         }
     }
 

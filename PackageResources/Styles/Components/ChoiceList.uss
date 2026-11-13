@@ -1,0 +1,106 @@
+/* ChoiceList */
+:root {
+    /* Badge box. A letter chip has no control-sizing equivalent, so it stays a component-level
+       dimension, the same rule the checkbox box and the toggle track follow. */
+    --appui-choicelistitem__badge-size: var(--appui-sizing-250);
+}
+
+.appui-choicelist {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.appui-choicelist > .appui-choicelistitem {
+    margin-bottom: var(--appui-alias-control-gap-sm);
+}
+
+.appui-choicelistitem {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    min-height: var(--appui-alias-control-sizing-md-height);
+    padding-left: var(--appui-alias-control-gap-md);
+    padding-right: var(--appui-alias-control-gap-md);
+    border-radius: var(--appui-alias-control-border-radius);
+    background-color: var(--appui-alias-control-background-color-default);
+    font-size: var(--appui-font-sizes-200);
+}
+
+.appui--rtl .appui-choicelistitem {
+    flex-direction: row-reverse;
+}
+
+.appui-choicelistitem.appui-radio--size-sm {
+    min-height: var(--appui-alias-control-sizing-sm-height);
+}
+
+.appui-choicelistitem.appui-radio--size-md {
+    min-height: var(--appui-alias-control-sizing-md-height);
+}
+
+.appui-choicelistitem.appui-radio--size-lg {
+    min-height: var(--appui-alias-control-sizing-lg-height);
+}
+
+/* The row itself is the selection surface, so the radio circle is not drawn. */
+.appui-choicelistitem > .appui-radio__button {
+    display: none;
+}
+
+.appui-choicelistitem.is-hovered {
+    background-color: var(--appui-alias-control-background-color-hover);
+}
+
+.appui-choicelistitem.is-checked {
+    background-color: var(--appui-alias-control-background-color-active);
+}
+
+.appui-choicelistitem:disabled {
+    cursor: var(--appui-alias-control-cursor-disabled);
+    background-color: var(--appui-alias-control-background-color-disabled);
+}
+
+.appui-choicelistitem:disabled > .appui-radio__label,
+.appui-choicelistitem:disabled > .appui-choicelistitem__badge {
+    color: var(--appui-alias-text-disabled);
+}
+
+.appui-choicelistitem > .appui-radio__label {
+    color: var(--appui-alias-text-primary);
+    flex-grow: 1;
+    flex-shrink: 1;
+    margin-left: var(--appui-alias-control-gap-md);
+    margin-right: 0;
+}
+
+.appui--rtl .appui-choicelistitem > .appui-radio__label {
+    margin-left: 0;
+    margin-right: var(--appui-alias-control-gap-md);
+}
+
+.appui-choicelistitem__badge {
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: var(--appui-choicelistitem__badge-size);
+    height: var(--appui-choicelistitem__badge-size);
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    -unity-text-align: middle-center;
+    -unity-paragraph-spacing: 0;
+    color: var(--appui-alias-text-primary);
+    background-color: var(--appui-base-500);
+    border-radius: var(--appui-alias-control-border-radius);
+    font-size: var(--appui-font-sizes-75);
+}
+
+/* The badge is a LocalizedTextElement, so Text.uss's `.appui-localized-text` (middle-left, and
+   middle-right under .appui--rtl) also matches it. Text.uss is imported after this file, so at
+   equal specificity it wins and the letter sits off-centre. These rules out-rank both. */
+.appui-choicelistitem > .appui-choicelistitem__badge,
+.appui--rtl .appui-choicelistitem > .appui-choicelistitem__badge {
+    -unity-text-align: middle-center;
+}

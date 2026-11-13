@@ -8,6 +8,10 @@ namespace Unity.AppUI.MVVM
         /// <summary>
         /// Gets or sets a value indicating whether the collection is read-only.
         /// </summary>
-        public new bool IsReadOnly { get; set; }
+        public new bool IsReadOnly
+        {
+            get => m_IsReadOnly;
+            set => m_IsReadOnly = value;
+        }
     }
 }

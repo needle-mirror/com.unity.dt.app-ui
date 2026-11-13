@@ -10,6 +10,10 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => AppBar.ussClassName;
 
+        // Handed over to AppBarSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:AppBar/>",

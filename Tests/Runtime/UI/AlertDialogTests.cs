@@ -10,6 +10,10 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => BaseDialog.ussClassName;
 
+        // Handed over to AlertDialogSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:AlertDialog/>",

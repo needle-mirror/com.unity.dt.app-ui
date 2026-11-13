@@ -1,0 +1,53 @@
+.appui-navigation-screen .unity-scroll-view__content-container {
+    padding: var(--appui-sizing-200);
+}
+
+/* ── Home screen ── */
+
+.mvvm-nav-list {
+    flex-grow: 1;
+}
+
+.mvvm-nav-item-row {
+    cursor: var(--appui-alias-control-cursor-pointer);
+    display: flex;
+    flex-direction: column;
+    background-color: var(--appui-backgrounds-200);
+    border-radius: var(--appui-alias-control-border-radius);
+    padding: var(--appui-sizing-200);
+    margin: 0 0 var(--appui-sizing-100) 0;
+    transition: background-color 0.15s ease;
+}
+
+.mvvm-nav-item-row:hover {
+    background-color: var(--appui-backgrounds-300);
+}
+
+.mvvm-nav-item-row:active {
+    background-color: var(--appui-backgrounds-50);
+}
+
+.mvvm-nav-item-title {
+    -unity-font-style: bold;
+    margin-bottom: var(--appui-sizing-50);
+}
+
+.mvvm-nav-item-description {
+    color: var(--appui-foregrounds-50);
+}
+
+/* ── Detail screen ── */
+
+.mvvm-nav-detail-content {
+    flex-grow: 1;
+    padding: var(--appui-sizing-200);
+}
+
+.mvvm-nav-detail-title {
+    -unity-font-style: bold;
+    margin-bottom: var(--appui-sizing-200);
+}
+
+.mvvm-nav-detail-description {
+    color: var(--appui-foregrounds-100);
+}

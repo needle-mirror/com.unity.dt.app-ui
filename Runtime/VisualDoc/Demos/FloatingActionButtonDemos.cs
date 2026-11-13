@@ -12,7 +12,7 @@ namespace Unity.AppUI.VisualDoc
             var defaultFab = new FloatingActionButton();
             defaultFab.Add(new Icon { iconName = "plus" });
 
-            var accentFab = new FloatingActionButton { accent = true, size = Size.L };
+            var accentFab = new FloatingActionButton { accent = true, size = Size.Lg };
             accentFab.Add(new Icon { iconName = "heart" });
 
             return DemoUtils.Row(defaultFab, accentFab);

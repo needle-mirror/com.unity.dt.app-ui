@@ -1,0 +1,14 @@
+/* Shimmer */
+.appui-shimmer {
+    /* Both ends of the loop live here. C# drives the animation by writing style.color every
+       frame, and an inline colour participates in style resolution, so reading the resolved
+       colour back to find the resting one would return the driver's own last write. Same reason
+       AudioWaveform and CanvasEdge declare the colours they paint with as custom properties.
+
+       The base is also the element's own colour, so a Shimmer that is not looping and one at the
+       bottom of its loop paint the same. Mirrors the web implementation, whose gradient runs
+       currentColor -> --foreground -> currentColor. */
+    --shimmer-base-color: var(--appui-alias-text-secondary);
+    --shimmer-highlight-color: var(--appui-alias-text-primary);
+    color: var(--shimmer-base-color);
+}

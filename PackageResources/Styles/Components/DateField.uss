@@ -42,7 +42,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     -unity-text-overflow-position: end;
-    font-size: var(--appui-font-sizes-body-md);
     -unity-text-align: middle-left;
     padding-right: var(--appui-alias-control-gap-md);
     padding-left: 0;
@@ -145,14 +144,32 @@
     color: var(--appui-foregrounds-25);
 }
 
-.appui-date-field--size-s {
+.appui-date-field--size-sm {
     height: var(--appui-alias-control-sizing-sm-height);
 }
 
-.appui-date-field--size-m {
+.appui-date-field--size-md {
     height: var(--appui-alias-control-sizing-md-height);
 }
 
-.appui-date-field--size-l {
+.appui-date-field--size-lg {
     height: var(--appui-alias-control-sizing-lg-height);
+}
+
+/* The value takes the registry's text-field steps: text-sm (font-sizes-100) at sm and
+   text-base (font-sizes-200) at md and lg. */
+
+.appui-date-field--size-sm .appui-date-field__input,
+.appui-date-field--size-sm .appui-date-field__input > .unity-text-field__input {
+    font-size: var(--appui-font-sizes-100);
+}
+
+.appui-date-field--size-md .appui-date-field__input,
+.appui-date-field--size-md .appui-date-field__input > .unity-text-field__input {
+    font-size: var(--appui-font-sizes-200);
+}
+
+.appui-date-field--size-lg .appui-date-field__input,
+.appui-date-field--size-lg .appui-date-field__input > .unity-text-field__input {
+    font-size: var(--appui-font-sizes-200);
 }

@@ -151,7 +151,7 @@ namespace Unity.AppUI.UI
 
             m_ColorFromStyle = new Color(0.82f, 0.82f, 0.82f);
             variant = Variant.Indeterminate;
-            size = Size.M;
+            size = Size.Md;
             value = 0;
             bufferValue = 0;
             roundedProgressCorners = true;

@@ -44,11 +44,44 @@ Here is an example with the button component:
 ```css
 /* Button.uss */
 .appui-button {
-    padding: 0 var(--appui-spacing-100);
+    padding: 0 var(--appui-sizing-100);
 }
 ```
 
 > [!NOTE]
 > It is good practice to use USS variables coming from our **Themes** folder
 > since they are designed to follow the App UI Design System guidelines.
+
+## Disabled states
+
+A disabled state propagates to every descendant: `SetEnabled(false)` puts the element
+and its whole subtree in the `:disabled` pseudo-state. A rule written as
+`opacity: 0.5` then matches at every level of that subtree, and opacity multiplies
+down the tree (0.5 × 0.5 × …), so a field inside a disabled row inside a disabled
+panel all but disappears.
+
+Colours don't compound, so style a disabled state with the `*-disabled` colour
+variables of the element's role, never with opacity. Each theme sets its own values
+for them, so the disabled look follows the theme too.
+
+```css
+/* MyField.uss */
+.my-field:disabled {
+    background-color: var(--appui-alias-field-background-color-disabled);
+    border-color: var(--appui-alias-field-border-color-disabled);
+    color: var(--appui-alias-text-disabled);
+    cursor: var(--appui-alias-control-cursor-disabled);
+}
+```
+
+| Role | Variables |
+| --- | --- |
+| Field | `--appui-alias-field-background-color-disabled`, `--appui-alias-field-border-color-disabled`, `--appui-alias-text-disabled` |
+| Button | `--appui-alias-actions-background-color-disabled`, `--appui-alias-actions-border-color-disabled`, `--appui-alias-actions-foreground-color-disabled` |
+| Quiet button | `--appui-alias-actions-quiet-background-color-disabled`, `--appui-alias-actions-quiet-border-color-disabled`, `--appui-alias-actions-quiet-foreground-color-disabled` |
+| Control | `--appui-alias-control-background-color-disabled`, `--appui-alias-control-border-color-disabled`, `--appui-alias-control-foreground-color-disabled` |
+| Text and icons | `--appui-alias-text-disabled`, `--appui-alias-icon-disabled` |
+
+The web components of the App UI registry follow the same rule, so a control looks
+disabled the same way in both implementations.
 

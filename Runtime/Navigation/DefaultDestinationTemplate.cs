@@ -94,11 +94,22 @@ namespace Unity.AppUI.Navigation
         /// <inheritdoc />
         public override INavigationScreen CreateScreen(NavHost host)
         {
-            NavigationScreen screen = null;
-            var type = Type.GetType(template);
-            if (type == null)
+            NavigationScreen screen;
+
+            // Guard the name before resolving it: Type.GetType(null) throws ArgumentNullException
+            // rather than returning null, so an unset template crashed here instead of reaching the
+            // "not set" fallback below — that branch was only ever reachable via an empty string.
+            var type = string.IsNullOrEmpty(template) ? null : Type.GetType(template);
+
+            // The assembly-qualified name comes from a serialized navigation graph asset, so the
+            // type is validated *before* it is instantiated. An `as NavigationScreen` cast after the
+            // fact would be too late: Activator.CreateInstance has already run the constructor of
+            // whatever type the name selected, along with any side effect it carries.
+            if (type == null || !typeof(NavigationScreen).IsAssignableFrom(type))
             {
-                var msg = string.IsNullOrEmpty(template) ? "The template type is not set." : $"The template type '{template}' is not valid.";
+                var msg = string.IsNullOrEmpty(template)
+                    ? "The template type is not set."
+                    : $"The template type '{template}' is not a valid {nameof(NavigationScreen)}.";
                 Debug.LogWarning($"{msg} Falling back to default screen type.");
                 screen = new NavigationScreen();
             }

@@ -27,9 +27,9 @@ namespace Unity.AppUI.UI
     /// <para>Basic Radio Group.</para>
     /// <code lang="xml"><![CDATA[
     /// <RadioGroup>
-    ///     <Radio key="small" label="Small" size="Size.S" />
-    ///     <Radio key="medium" label="Medium" size="Size.M" />
-    ///     <Radio key="large" label="Large" size="Size.L" />
+    ///     <Radio key="small" label="Small" size="Size.Sm" />
+    ///     <Radio key="medium" label="Medium" size="Size.Md" />
+    ///     <Radio key="large" label="Large" size="Size.Lg" />
     /// </RadioGroup>
     /// ]]></code>
     /// <para>Radio Group with Validation.</para>
@@ -140,7 +140,7 @@ namespace Unity.AppUI.UI
             hierarchy.Add(m_Box);
             hierarchy.Add(m_Label);
 
-            size = Size.M;
+            size = Size.Md;
             emphasized = false;
             invalid = false;
             key = null;
@@ -340,6 +340,10 @@ namespace Unity.AppUI.UI
 
         void TryAddToGroup()
         {
+            // register only while on a panel: OnDetachFromPanel forgets the group and OnAttachToPanel registers again
+            if (panel == null)
+                return;
+
             m_Group?.RemoveRadio(this);
             var group = GetFirstAncestorOfType<RadioGroup>();
             if (group != null && m_Group != group)
@@ -351,7 +355,12 @@ namespace Unity.AppUI.UI
 
         void OnDetachFromPanel(DetachFromPanelEvent evt)
         {
-            m_Group?.RemoveRadio(this);
+            // When the radio is still under its group, the group is leaving the panel too (ex: popover dismissed),
+            // so keep the group's selection for when the radios register again on re-attach.
+            var groupDetaching = m_Group != null && GetFirstAncestorOfType<RadioGroup>() == m_Group;
+            m_Group?.RemoveRadio(this, groupDetaching);
+            // forget the group so the radio registers again when it is re-attached (ex: popover content shown twice)
+            m_Group = null;
         }
 
     }

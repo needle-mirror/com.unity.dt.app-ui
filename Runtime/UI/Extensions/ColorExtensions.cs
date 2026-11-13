@@ -89,11 +89,12 @@ namespace Unity.AppUI.UI
         /// <returns>The RGBA hex color.</returns>
         public static string ColorToRgbaHex(Color color, bool alpha = true)
         {
+            // HDR or out-of-range channels are clamped, as ColorUtility.ToHtmlStringRGBA does.
             var argb = System.Drawing.Color.FromArgb(
-                Mathf.RoundToInt(color.a * 255),
-                Mathf.RoundToInt(color.r * 255),
-                Mathf.RoundToInt(color.g * 255),
-                Mathf.RoundToInt(color.b * 255)).ToArgb();
+                Mathf.Clamp(Mathf.RoundToInt(color.a * 255), 0, 255),
+                Mathf.Clamp(Mathf.RoundToInt(color.r * 255), 0, 255),
+                Mathf.Clamp(Mathf.RoundToInt(color.g * 255), 0, 255),
+                Mathf.Clamp(Mathf.RoundToInt(color.b * 255), 0, 255)).ToArgb();
             return ArgbToRgbaHex(argb.ToString("X8"), alpha);
         }
 

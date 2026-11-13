@@ -626,7 +626,11 @@ namespace Unity.AppUI.UI
         /// <inheritdoc cref="Popup.GetFocusableElement"/>
         protected override VisualElement GetFocusableElement()
         {
-            return popover.popoverElement;
+            // The content is only laid out now, so re-check whether anything can really take focus.
+            // Focusing an element that delegates focus to nothing blurs the panel, and the Panel then
+            // dismisses every popup as if the focus had left it (a Dialog's ScrollView scrollers are
+            // focusable but hidden, for example).
+            return popover.RefreshDelegatesFocus() ?? popover.popoverElement;
         }
 
         /// <inheritdoc cref="AnchorPopup{T}.GetMovableElement"/>
@@ -789,16 +793,51 @@ namespace Unity.AppUI.UI
                 movable = false;
 
                 // auto-set delegate focus if there are focusable elements in the content
-                foreach (var element in m_ContentContainer.Query().Build())
-                {
-                    if (element is {focusable: true, delegatesFocus: false} && element.resolvedStyle.display != DisplayStyle.None)
-                    {
-                        popoverElement.delegatesFocus = true;
-                        break;
-                    }
-                }
+                popoverElement.delegatesFocus = FindFocusableContent(false) != null;
 
                 RefreshPlacement();
+            }
+
+            /// <summary>
+            /// Delegate focus to the content only when one of its elements can grab focus right now.
+            /// </summary>
+            /// <returns> The first content element that can take focus, or `null` if there is none.</returns>
+            internal VisualElement RefreshDelegatesFocus()
+            {
+                var found = FindFocusableContent(popoverElement.panel != null);
+                popoverElement.delegatesFocus = found != null;
+                return found;
+            }
+
+            VisualElement FindFocusableContent(bool checkCanGrabFocus)
+            {
+                foreach (var element in m_ContentContainer.Query().Build())
+                {
+                    if (element == m_ContentContainer || element is not {focusable: true, delegatesFocus: false})
+                        continue;
+
+                    // canGrabFocus does not check every ancestor's display on all editor versions, so
+                    // reject a control inside a hidden parent (a ScrollView's collapsed scroller, a
+                    // Dialog's hidden close button) explicitly.
+                    if (IsHiddenUnderContent(element))
+                        continue;
+
+                    if (!checkCanGrabFocus || (element.canGrabFocus && element.tabIndex >= 0))
+                        return element;
+                }
+
+                return null;
+            }
+
+            bool IsHiddenUnderContent(VisualElement element)
+            {
+                for (var e = element; e != null && e != m_ContentContainer; e = e.parent)
+                {
+                    if (e.resolvedStyle.display == DisplayStyle.None || e.style.display == DisplayStyle.None)
+                        return true;
+                }
+
+                return false;
             }
 
             /// <summary>

@@ -10,11 +10,15 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => HelpBox.ussClassName;
 
+        // Handed over to HelpBoxSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:HelpBox />",
             @"<appui:HelpBox message=""Hello"" variant=""Information"" icon-name=""info"" />",
-            @"<appui:HelpBox message=""Warning"" variant=""Warning"" icon-name=""warning"" size=""M"" />",
+            @"<appui:HelpBox message=""Warning"" variant=""Warning"" icon-name=""warning"" size=""Md"" />",
             @"<appui:HelpBox message=""Error"" variant=""Error"" icon-name=""x-circle"" />",
             @"<appui:HelpBox message=""No icon"" variant=""Default"" icon-name="""" />",
         };
@@ -63,14 +67,14 @@ namespace Unity.AppUI.Tests.UI
         {
             var helpBox = new HelpBox();
 
-            helpBox.size = Size.M;
-            Assert.AreEqual(Size.M, helpBox.size);
-            Assert.IsTrue(helpBox.ClassListContains(HelpBox.sizeUssClassName + "m"));
+            helpBox.size = Size.Md;
+            Assert.AreEqual(Size.Md, helpBox.size);
+            Assert.IsTrue(helpBox.ClassListContains(HelpBox.sizeUssClassName + "md"));
 
-            helpBox.size = Size.L;
-            Assert.AreEqual(Size.L, helpBox.size);
-            Assert.IsTrue(helpBox.ClassListContains(HelpBox.sizeUssClassName + "l"));
-            Assert.IsFalse(helpBox.ClassListContains(HelpBox.sizeUssClassName + "m"));
+            helpBox.size = Size.Lg;
+            Assert.AreEqual(Size.Lg, helpBox.size);
+            Assert.IsTrue(helpBox.ClassListContains(HelpBox.sizeUssClassName + "lg"));
+            Assert.IsFalse(helpBox.ClassListContains(HelpBox.sizeUssClassName + "md"));
         }
 
         [Test]
@@ -81,7 +85,7 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual("My message", helpBox.message);
             Assert.AreEqual(AlertSemantic.Destructive, helpBox.variant);
             Assert.AreEqual("x-circle", helpBox.iconName);
-            Assert.AreEqual(Size.S, helpBox.size);
+            Assert.AreEqual(Size.Md, helpBox.size);
         }
 
         protected override IEnumerable<Story> stories

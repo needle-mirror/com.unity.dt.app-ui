@@ -16,7 +16,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     flex-shrink: 0;
-    margin: var(--appui-spacing-100) var(--appui-spacing-200);
+    margin: var(--appui-static-sizing-100) var(--appui-static-sizing-200);
 }
 
 .appui-drawer-header__container {

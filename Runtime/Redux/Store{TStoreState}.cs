@@ -158,12 +158,15 @@ namespace Unity.AppUI.Redux
         /// <inheritdoc />
         public void NotifySubscribers()
         {
+            ISubscription<TStoreState>[] subscriptions;
             lock (m_SubscribeLock)
             {
-                foreach (var subscription in m_Subscriptions)
-                {
-                    subscription.Notify(GetState());
-                }
+                subscriptions = m_Subscriptions.ToArray();
+            }
+
+            foreach (var subscription in subscriptions)
+            {
+                subscription.Notify(GetState());
             }
         }
 

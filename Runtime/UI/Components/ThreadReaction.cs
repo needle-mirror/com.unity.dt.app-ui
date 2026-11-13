@@ -57,7 +57,7 @@ namespace Unity.AppUI.UI
         {
             AddToClassList(ussClassName);
             AddToClassList(ActionButton.ussClassName);
-            AddToClassList(ActionButton.GetSizeUssClassName(Size.M));
+            AddToClassList(ActionButton.GetSizeUssClassName(Size.Md));
             AddToClassList(ActionButton.quietUssClassName);
 
             clickable = new Pressable(clickEvent);

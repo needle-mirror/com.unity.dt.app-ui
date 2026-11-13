@@ -100,22 +100,22 @@ namespace Unity.AppUI.UI
     /// ## Anatomy
     /// Toast Variants:
     /// ```xml
-    /// &lt;appui:Toast message="This is an informative message" variant="Info" size="M" /&gt;
-    /// &lt;appui:Toast message="Operation completed successfully" variant="Positive" size="M" /&gt;
-    /// &lt;appui:Toast message="Warning: Please check your input" variant="Warning" size="M" /&gt;
-    /// &lt;appui:Toast message="Error: Something went wrong" variant="Negative" size="M" /&gt;
+    /// &lt;appui:Toast message="This is an informative message" variant="Info" size="Md" /&gt;
+    /// &lt;appui:Toast message="Operation completed successfully" variant="Positive" size="Md" /&gt;
+    /// &lt;appui:Toast message="Warning: Please check your input" variant="Warning" size="Md" /&gt;
+    /// &lt;appui:Toast message="Error: Something went wrong" variant="Negative" size="Md" /&gt;
     /// ```
     ///
     /// With Actions:
     /// ```xml
-    /// &lt;appui:Toast message="File saved successfully" variant="Positive" action-text="Undo" size="M" /&gt;
-    /// &lt;appui:Toast message="Connection lost" variant="Warning" action-text="Retry" size="M" /&gt;
+    /// &lt;appui:Toast message="File saved successfully" variant="Positive" action-text="Undo" size="Md" /&gt;
+    /// &lt;appui:Toast message="Connection lost" variant="Warning" action-text="Retry" size="Md" /&gt;
     /// ```
     ///
     /// With Icons:
     /// ```xml
-    /// &lt;appui:Toast message="Download complete" icon="download" variant="Positive" size="M" /&gt;
-    /// &lt;appui:Toast message="Update available" icon="update" variant="Info" size="M" /&gt;
+    /// &lt;appui:Toast message="Download complete" icon="download" variant="Positive" size="Md" /&gt;
+    /// &lt;appui:Toast message="Update available" icon="update" variant="Info" size="Md" /&gt;
     /// ```
     /// </remarks>
     /// <example>
@@ -382,7 +382,7 @@ namespace Unity.AppUI.UI
             m_ToastElement.AddToClassList(ussClassName);
             hierarchy.Add(m_ToastElement);
 
-            m_Icon = new Icon { name = iconUssClassName };
+            m_Icon = new Icon { primary = true, name = iconUssClassName };
             m_Icon.AddToClassList(iconUssClassName);
             m_ToastElement.hierarchy.Add(m_Icon);
 
@@ -393,7 +393,7 @@ namespace Unity.AppUI.UI
             m_Divider = new Divider
             {
                 name = dividerUssClassName,
-                size = Size.M, spacing = Spacing.L,
+                size = Size.Md, spacing = Spacing.L,
                 direction = Direction.Vertical
             };
             m_Divider.AddToClassList(dividerUssClassName);

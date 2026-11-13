@@ -9,7 +9,7 @@ namespace Unity.AppUI.VisualDoc
         [VisualDocDemo("daterangefield")]
         static VisualElement Basic()
         {
-            var field = new DateRangeField { size = Size.M, formatString = "MM/dd/yyyy" };
+            var field = new DateRangeField { size = Size.Md, formatString = "MM/dd/yyyy" };
             field.AddToClassList("demo-field");
 
             return DemoUtils.Row(field);

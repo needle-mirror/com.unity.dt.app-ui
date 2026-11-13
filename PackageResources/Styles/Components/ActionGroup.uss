@@ -150,12 +150,12 @@
     flex-grow: 0;
     align-self: stretch;
     margin-left: 0;
-    margin-right: var(--appui-alias-control-gap-md); /* todo remove when gap property will be supported */
+    margin-right: var(--appui-sizing-75); /* todo remove when gap property will be supported */
     margin-bottom: 0; /* todo remove when gap property will be supported */
 }
 
 .appui--rtl .appui-actiongroup__item {
-    margin-left: var(--appui-alias-control-gap-md); /* todo remove when gap property will be supported */
+    margin-left: var(--appui-sizing-75); /* todo remove when gap property will be supported */
     margin-right: 0;
 }
 
@@ -166,7 +166,7 @@
 .appui-actiongroup--vertical .appui-actiongroup__item {
     margin-right: 0; /* todo remove when gap property will be supported */
     margin-left: 0;
-    margin-bottom: var(--appui-alias-control-gap-md); /* todo remove when gap property will be supported */
+    margin-bottom: var(--appui-sizing-75); /* todo remove when gap property will be supported */
 }
 
 .appui-actiongroup--compact .appui-actiongroup__item {

@@ -244,20 +244,31 @@ namespace Unity.AppUI.MVVM
 
                 static async void MonitorTask(AsyncRelayCommand command, Task task)
                 {
-                    await task;
-                    if (ReferenceEquals(command.executionTask, task))
+                    try
                     {
-                        command.PropertyChanged?.Invoke(command, AsyncRelayCommand.ExecutionTaskChangedEventArgs);
-                        command.PropertyChanged?.Invoke(command, AsyncRelayCommand.IsRunningChangedEventArgs);
-
-                        if (command.m_CancellableTokenSource is not null)
+                        await task;
+                    }
+                    catch (OperationCanceledException) when (task.IsCanceled)
+                    {
+                        // A cancelled run is a normal completion: still notify below.
+                        // A faulted run rethrows, even with an OperationCanceledException.
+                    }
+                    finally
+                    {
+                        if (ReferenceEquals(command.executionTask, task))
                         {
-                            command.PropertyChanged?.Invoke(command, AsyncRelayCommand.CanBeCanceledChangedEventArgs);
-                        }
+                            command.PropertyChanged?.Invoke(command, AsyncRelayCommand.ExecutionTaskChangedEventArgs);
+                            command.PropertyChanged?.Invoke(command, AsyncRelayCommand.IsRunningChangedEventArgs);
 
-                        if ((command.m_Options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
-                        {
-                            command.CanExecuteChanged?.Invoke(command, EventArgs.Empty);
+                            if (command.m_CancellableTokenSource is not null)
+                            {
+                                command.PropertyChanged?.Invoke(command, AsyncRelayCommand.CanBeCanceledChangedEventArgs);
+                            }
+
+                            if ((command.m_Options & AsyncRelayCommandOptions.AllowConcurrentExecutions) == 0)
+                            {
+                                command.CanExecuteChanged?.Invoke(command, EventArgs.Empty);
+                            }
                         }
                     }
                 }

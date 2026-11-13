@@ -58,7 +58,7 @@
     border-radius: var(--appui-alias-control-border-radius);
     background-color: rgba(0,0,0,0);
     transition: background-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
-    padding: var(--appui-spacing-50);
+    padding: var(--appui-static-sizing-50);
     margin-bottom: var(--appui-alias-control-gap-md);
 }
 
@@ -76,7 +76,7 @@
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-75);
     color: var(--appui-foregrounds-100);
 }
 

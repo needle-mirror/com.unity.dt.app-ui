@@ -50,7 +50,7 @@ namespace Unity.AppUI.Editor
             root.styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/com.unity.dt.app-ui/Editor/IconBrowser.uss"));
             panel.AddToClassList("appui");
             panel.AddToClassList(EditorGUIUtility.isProSkin ? "appui--editor-dark" : "appui--editor-light");
-            panel.AddToClassList("appui--small");
+            panel.AddToClassList("appui--compact");
 
             // create UI
             var header = new Label("Choose or create a new style sheet to browse its icons.\n" +
@@ -225,7 +225,7 @@ namespace Unity.AppUI.Editor
 
         void OnDragUpdated(DragUpdatedEvent evt)
         {
-            if (DragAndDrop.objectReferences.Length > 0 && DragAndDrop.objectReferences.Any(obj => obj is Texture2D))
+            if (DragAndDrop.objectReferences.Length > 0 && DragAndDrop.objectReferences.Any(IsIconAsset))
                 DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
             else
                 DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
@@ -235,7 +235,7 @@ namespace Unity.AppUI.Editor
 
         void OnDragPerform(DragPerformEvent evt)
         {
-            if (DragAndDrop.objectReferences.Length > 0 && DragAndDrop.objectReferences.Any(obj => obj is Texture2D))
+            if (DragAndDrop.objectReferences.Length > 0 && DragAndDrop.objectReferences.Any(IsIconAsset))
                 DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
             else
                 DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
@@ -245,11 +245,11 @@ namespace Unity.AppUI.Editor
                 var additionalIcons = ParseStyleSheet(tempContent);
                 foreach (var obj in DragAndDrop.objectReferences)
                 {
-                    if (obj is Texture2D texture)
+                    if (IsIconAsset(obj))
                     {
-                        var path = AssetDatabase.GetAssetPath(texture);
+                        var path = AssetDatabase.GetAssetPath(obj);
                         var folderName = System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(path));
-                        var iconName = ToKebabCase(texture.name);
+                        var iconName = ToKebabCase(obj.name);
                         var iconVariant = folderName.ToLowerInvariant();
                         var variants = Enum.GetNames(typeof(IconVariant)).Select(iv => iv.ToLowerInvariant()).ToList();
                         if (!variants.Contains(iconVariant))
@@ -282,13 +282,16 @@ namespace Unity.AppUI.Editor
 
         void OnAddIconsClicked()
         {
-            // var menu = new GenericMenu();
-            // menu.AddItem(new GUIContent("Add icons from App UI online repository"), false, OnAddIconsFromAppUIOnlineRepositoryClicked);
-            // menu.AddSeparator("");
-            // menu.AddItem(new GUIContent("Add a single icon from a texture..."), false, OnAddSingleIconClicked);
-            //
-            // menu.ShowAsContext();
-            OnAddSingleIconClicked();
+            // Both asset types are valid icons (see IsIconAsset), but the Object
+            // Selector filters on a single type, so offer one entry per type
+            // instead of leaving the texture path reachable by drag & drop only.
+            var menu = new GenericMenu();
+            menu.AddItem(new GUIContent("Add a single icon from a vector image..."), false,
+                () => OnAddSingleIconClicked(typeof(VectorImage)));
+            menu.AddItem(new GUIContent("Add a single icon from a texture..."), false,
+                () => OnAddSingleIconClicked(typeof(Texture2D)));
+
+            menu.ShowAsContext();
         }
 
         void OnShowRequiredIconsClicked(ChangeEvent<bool> evt)
@@ -301,7 +304,7 @@ namespace Unity.AppUI.Editor
             throw new NotImplementedException();
         }
 
-        void OnAddSingleIconClicked()
+        void OnAddSingleIconClicked(Type assetType)
         {
             var hiddenType = typeof(UnityEditor.Editor).Assembly.GetType( "UnityEditor.ObjectSelector" );
             var piGet = hiddenType.GetProperty( "get", BindingFlags.Public | BindingFlags.Static );
@@ -334,7 +337,7 @@ namespace Unity.AppUI.Editor
             miShow.Invoke(objectSelector, new object[]
             {
                 null,
-                typeof(Texture2D),
+                assetType,
                 null,
                 false,
                 null,
@@ -346,11 +349,11 @@ namespace Unity.AppUI.Editor
 
         void OnTexturePicked(Object obj)
         {
-            if (obj is Texture2D texture && styleSheetAsset)
+            if (IsIconAsset(obj) && styleSheetAsset)
             {
-                var path = AssetDatabase.GetAssetPath(texture);
+                var path = AssetDatabase.GetAssetPath(obj);
                 var folderName = System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(path));
-                var iconName = ToKebabCase(texture.name);
+                var iconName = ToKebabCase(obj.name);
                 var iconVariant = folderName.ToLowerInvariant();
                 var variants = Enum.GetNames(typeof(IconVariant)).Select(iv => iv.ToLowerInvariant()).ToList();
                 if (!variants.Contains(iconVariant))
@@ -500,8 +503,53 @@ namespace Unity.AppUI.Editor
             RefreshUI();
         }
 
+        /// <summary>
+        /// The `d_`-prefixed dark counterpart of an icon asset, when the project holds one.
+        /// </summary>
+        /// <remarks>
+        /// Colored icons (Unity's blue prefab cube and friends) ship a second artwork for dark
+        /// surfaces as a `d_&lt;Name&gt;.svg` sibling. Monochrome glyphs have none - they tint through
+        /// `--unity-image-tint-color` - so this returns null for them and they stay in `.appui`.
+        /// </remarks>
+        /// <param name="path"> The light asset's project path. </param>
+        /// <returns> The dark asset's path, or null when there is no dark counterpart. </returns>
+        static string ResolveDarkPath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return null;
+
+            var dir = System.IO.Path.GetDirectoryName(path);
+            var file = System.IO.Path.GetFileName(path);
+            if (string.IsNullOrEmpty(dir) || string.IsNullOrEmpty(file) || file.StartsWith("d_"))
+                return null;
+
+            // Keep forward slashes: this is a project path, not a filesystem one.
+            var darkPath = $"{dir.Replace('\\', '/')}/d_{file}";
+            return AssetDatabase.LoadMainAssetAtPath(darkPath) != null ? darkPath : null;
+        }
+
         static string GetStyleSheetContent(IEnumerable<IconEntry> additionalIcons)
         {
+            var required = k_RequiredIcons;
+            var additional = additionalIcons as IList<IconEntry> ?? additionalIcons.ToList();
+
+            // Icons that ship both artworks are declared in `.light` / `.dark` and left out of
+            // `.appui`, so no var is ever declared twice. `.appui` and `.light` are both
+            // single-class selectors matching the same root panel, so an icon in both would be
+            // resolved by USS declaration order alone.
+            var darkPaths = new Dictionary<string, string>();
+            foreach (var icon in required.Concat(additional))
+            {
+                var key = $"{icon.name}-{icon.variant}";
+                if (darkPaths.ContainsKey(key))
+                    continue;
+                var darkPath = ResolveDarkPath(icon.path);
+                if (!string.IsNullOrEmpty(darkPath))
+                    darkPaths[key] = darkPath;
+            }
+
+            bool HasDarkVariant(IconEntry icon) => darkPaths.ContainsKey($"{icon.name}-{icon.variant}");
+
             var sb = new System.Text.StringBuilder();
             sb.AppendLine("/*");
             sb.AppendLine(" * This style sheet was generated by the App UI Icon Browser.");
@@ -509,22 +557,48 @@ namespace Unity.AppUI.Editor
 
             sb.AppendLine(".appui {");
 
-            sb.AppendLine("/* Required icons */");
-            foreach (var icon in k_RequiredIcons)
+            sb.AppendLine("    /* Required icons */");
+            foreach (var icon in required)
             {
+                if (HasDarkVariant(icon))
+                    continue;
                 sb.AppendLine($"    --appui-icon-{icon.name}-{icon.variant}: url(\"project:/{icon.path}\");");
             }
 
-            sb.AppendLine("/* Additional icons */");
-            foreach (var icon in additionalIcons)
+            sb.AppendLine("    /* Additional icons */");
+            foreach (var icon in additional)
             {
+                if (HasDarkVariant(icon))
+                    continue;
                 sb.AppendLine($"    --appui-icon-{icon.name}-{icon.variant}: url(\"project:/{icon.path}\");");
             }
 
             sb.AppendLine("}");
             sb.AppendLine("");
 
-            foreach (var icon in k_RequiredIcons)
+            // The two skin blocks declare the same var names against different assets, and the
+            // `dark` / `light` marker classes are mutually exclusive, so they never match one
+            // element and their relative order is irrelevant. Omitted entirely when no icon in the
+            // sheet has a dark counterpart, which keeps a monochrome-only sheet byte-identical.
+            if (darkPaths.Count > 0)
+            {
+                foreach (var skin in new[] { "light", "dark" })
+                {
+                    sb.AppendLine($".{skin} {{");
+                    foreach (var icon in required.Concat(additional))
+                    {
+                        if (!darkPaths.TryGetValue($"{icon.name}-{icon.variant}", out var darkPath))
+                            continue;
+                        var assetPath = skin == "dark" ? darkPath : icon.path;
+                        sb.AppendLine($"    --appui-icon-{icon.name}-{icon.variant}: url(\"project:/{assetPath}\");");
+                    }
+
+                    sb.AppendLine("}");
+                    sb.AppendLine("");
+                }
+            }
+
+            foreach (var icon in required)
             {
                 sb.AppendLine($".appui-icon--{icon.name}--{icon.variant} {{");
                 sb.AppendLine($"    --unity-image: var(--appui-icon-{icon.name}-{icon.variant});");
@@ -532,7 +606,7 @@ namespace Unity.AppUI.Editor
                 sb.AppendLine("");
             }
 
-            foreach (var icon in additionalIcons)
+            foreach (var icon in additional)
             {
                 sb.AppendLine($".appui-icon--{icon.name}--{icon.variant} {{");
                 sb.AppendLine($"    --unity-image: var(--appui-icon-{icon.name}-{icon.variant});");
@@ -552,8 +626,31 @@ namespace Unity.AppUI.Editor
 
             var lines = content.Split('\n');
 
+            // The sheet may hold a `.dark` block declaring the same vars as `.light` against the
+            // `d_` artwork. Those are not separate icons, and the regex below reads var names only,
+            // so without this the dark lines would come back as extra icons pointing at `d_` assets
+            // and re-serializing would flatten them into `.appui`. The dark counterpart is
+            // re-resolved from disk at write time instead, so it self-heals if one is added later.
+            var inDarkBlock = false;
+
             foreach (var line in lines)
             {
+                var trimmed = line.Trim();
+                if (trimmed == ".dark {" || trimmed == ".dark{")
+                {
+                    inDarkBlock = true;
+                    continue;
+                }
+
+                if (trimmed == "}")
+                {
+                    inDarkBlock = false;
+                    continue;
+                }
+
+                if (inDarkBlock)
+                    continue;
+
                 if (line.Contains("url(\"project:/"))
                 {
                     var regexPattern = @"--appui-icon-([\w-]+)-(\w+): url\(""project:\/(.+)""\);";
@@ -562,6 +659,10 @@ namespace Unity.AppUI.Editor
                     {
                         var path = match.Groups[3].Value;
                         if (k_RequiredIcons.Any(icon => icon.path == path))
+                            continue;
+
+                        if (list.Any(icon => icon.name == match.Groups[1].Value
+                                && icon.variant == match.Groups[2].Value))
                             continue;
 
                         list.Add(new IconEntry
@@ -579,55 +680,59 @@ namespace Unity.AppUI.Editor
 
         static readonly IconEntry[] k_RequiredIcons = new[]
         {
-            new IconEntry { name = "arrow-up", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ArrowUp.png" },
+            new IconEntry { name = "arrow-up", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ArrowUp.svg" },
 
-            new IconEntry { name = "calendar", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Calendar.png" },
+            new IconEntry { name = "calendar", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Calendar.svg" },
 
-            new IconEntry { name = "caret-down", variant = k_FillVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/CaretDown.png" },
-            new IconEntry { name = "caret-down", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDown.png" },
-            new IconEntry { name = "caret-left", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretLeft.png" },
-            new IconEntry { name = "caret-right", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretRight.png" },
-            new IconEntry { name = "caret-double-left", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDoubleLeft.png" },
-            new IconEntry { name = "caret-double-right", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDoubleRight.png" },
-            new IconEntry { name = "caret-up", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretUp.png" },
+            new IconEntry { name = "caret-down", variant = k_FillVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/CaretDown.svg" },
+            new IconEntry { name = "caret-down", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDown.svg" },
+            new IconEntry { name = "caret-left", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretLeft.svg" },
+            new IconEntry { name = "caret-right", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretRight.svg" },
+            new IconEntry { name = "caret-double-left", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDoubleLeft.svg" },
+            new IconEntry { name = "caret-double-right", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretDoubleRight.svg" },
+            new IconEntry { name = "caret-up", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CaretUp.svg" },
 
-            new IconEntry { name = "check", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Check.png" },
-            new IconEntry { name = "check-circle", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CheckCircle.png" },
-            new IconEntry { name = "check", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Check.png" },
-            new IconEntry { name = "color-picker", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ColorPicker.png" },
-            new IconEntry { name = "copy", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Copy.png" },
+            new IconEntry { name = "check", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Check.svg" },
+            new IconEntry { name = "check-circle", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/CheckCircle.svg" },
+            new IconEntry { name = "check", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Check.svg" },
+            new IconEntry { name = "clock", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Clock.svg" },
+            new IconEntry { name = "color-picker", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ColorPicker.svg" },
+            new IconEntry { name = "copy", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Copy.svg" },
+            new IconEntry { name = "crosshair", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Crosshair.svg" },
 
-            new IconEntry { name = "delete", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Delete.png" },
-            new IconEntry { name = "dots-three", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThree.png" },
-            new IconEntry { name = "dots-three-vertical", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThreeVertical.png" },
+            new IconEntry { name = "delete", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Delete.svg" },
+            new IconEntry { name = "dots-three", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThree.svg" },
+            new IconEntry { name = "dots-three-vertical", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/DotsThreeVertical.svg" },
 
-            new IconEntry { name = "info", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Info.png" },
+            new IconEntry { name = "info", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Info.svg" },
 
-            new IconEntry { name = "list", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/List.png" },
-            new IconEntry { name = "magnifying-glass", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/MagnifyingGlass.png" },
-            new IconEntry { name = "menu", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Menu.png" },
-            new IconEntry { name = "minus", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Minus.png" },
-            new IconEntry { name = "minus", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Minus.png" },
+            new IconEntry { name = "list", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/List.svg" },
+            new IconEntry { name = "magnifying-glass", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/MagnifyingGlass.svg" },
+            new IconEntry { name = "menu", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Menu.svg" },
+            new IconEntry { name = "minus", variant = k_BoldVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Bold/Minus.svg" },
+            new IconEntry { name = "minus", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Minus.svg" },
 
-            new IconEntry { name = "paperclip", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Paperclip.png" },
-            new IconEntry { name = "pen", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Pen.png" },
-            new IconEntry { name = "plus", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Plus.png" },
+            new IconEntry { name = "paper-plane-tilt", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/PaperPlaneTilt.svg" },
+            new IconEntry { name = "paperclip", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Paperclip.svg" },
+            new IconEntry { name = "pen", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Pen.svg" },
+            new IconEntry { name = "plus", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Plus.svg" },
 
-            new IconEntry { name = "resize-handle", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ResizeHandle.png" },
+            new IconEntry { name = "resize-handle", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ResizeHandle.svg" },
 
-            new IconEntry { name = "scene", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Scene.png" },
-            new IconEntry { name = "smiley", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Smiley.png" },
-            new IconEntry { name = "sub-menu-indicator", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/SubMenuIndicator.png" },
+            new IconEntry { name = "scene", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Scene.svg" },
+            new IconEntry { name = "smiley", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Smiley.svg" },
+            new IconEntry { name = "sub-menu-indicator", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/SubMenuIndicator.svg" },
 
-            new IconEntry { name = "thumbs-down", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ThumbsDown.png" },
-            new IconEntry { name = "thumbs-up", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ThumbsUp.png" },
+            new IconEntry { name = "thumbs-down", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ThumbsDown.svg" },
+            new IconEntry { name = "thumbs-up", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/ThumbsUp.svg" },
 
-            new IconEntry { name = "users", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Users.png" },
+            new IconEntry { name = "users", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Users.svg" },
 
-            new IconEntry { name = "warning", variant = k_FillVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/Warning.png" },
-            new IconEntry { name = "warning", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Warning.png" },
-            new IconEntry { name = "x", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/X.png" },
-            new IconEntry { name = "x-circle", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/XCircle.png" },
+            new IconEntry { name = "warning", variant = k_FillVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Fill/Warning.svg" },
+            new IconEntry { name = "warning", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Warning.svg" },
+            new IconEntry { name = "wrench", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/Wrench.svg" },
+            new IconEntry { name = "x", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/X.svg" },
+            new IconEntry { name = "x-circle", variant = k_RegularVariant, path = "Packages/com.unity.dt.app-ui/PackageResources/Icons/Regular/XCircle.svg" },
         };
 
         struct IconEntry
@@ -685,10 +790,24 @@ namespace Unity.AppUI.Editor
 
             void RefreshUI()
             {
-                m_Image.image = AssetDatabase.LoadAssetAtPath<Texture2D>(m_Icon.path);
+                m_Image.image = null;
+                m_Image.vectorImage = null;
+                switch (AssetDatabase.LoadAssetAtPath<Object>(m_Icon.path))
+                {
+                    case VectorImage vectorImage: m_Image.vectorImage = vectorImage; break;
+                    case Texture2D texture: m_Image.image = texture; break;
+                }
                 m_Label.text = $"{m_Icon.name}";
             }
         }
+
+        /// <summary>
+        /// Whether an asset can back an Icon. App UI's own icons are SVGs imported as
+        /// <see cref="VectorImage"/>; textures are still accepted for custom icon sets.
+        /// </summary>
+        /// <param name="obj">The dragged or picked asset.</param>
+        /// <returns>True if the asset can be referenced by an Icon USS class.</returns>
+        static bool IsIconAsset(Object obj) => obj is VectorImage or Texture2D;
 
         static string ToKebabCase(string value)
         {

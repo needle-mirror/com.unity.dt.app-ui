@@ -1,5 +1,6 @@
 using Markdig.Renderers;
 using Markdig.Syntax.Inlines;
+using Unity.AppUI.Core;
 
 namespace Unity.AppUI.Markdown.Renderers.Inlines
 {
@@ -17,10 +18,10 @@ namespace Unity.AppUI.Markdown.Renderers.Inlines
             if (slice.IsEmpty || slice.Text == null)
                 return;
 
-            renderer.InlineBuilder.Append("<noparse>");
-            for (var i = slice.Start; i <= slice.End; i++)
-                renderer.InlineBuilder.Append(slice.Text[i]);
-            renderer.InlineBuilder.Append("</noparse>");
+            // Escape rather than wrap by hand: a literal containing its own `</noparse>` would
+            // otherwise close the span early and re-enable tag interpretation for the rest.
+            renderer.InlineBuilder.Append(
+                RichTextUtils.Escape(slice.Text.Substring(slice.Start, slice.End - slice.Start + 1)));
         }
     }
 }

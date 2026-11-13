@@ -10,10 +10,10 @@ namespace Unity.AppUI.VisualDoc
         static VisualElement Sizes()
         {
             return DemoUtils.Row(
-                new Icon { iconName = "heart", size = IconSize.XS },
-                new Icon { iconName = "heart", size = IconSize.S },
-                new Icon { iconName = "heart", size = IconSize.M },
-                new Icon { iconName = "heart", size = IconSize.L });
+                new Icon { iconName = "heart", size = IconSize.Xs },
+                new Icon { iconName = "heart", size = IconSize.Sm },
+                new Icon { iconName = "heart", size = IconSize.Md },
+                new Icon { iconName = "heart", size = IconSize.Lg });
         }
     }
 }

@@ -102,10 +102,25 @@
     align-self: stretch;
 }
 
+/* The horizontal inset is split: 28px on the dialog and a 4px gutter on each part, so the content
+   scroll view, which clips, still leaves room for a focused control's outline (2px offset plus
+   2px width) inside the dialog's 32px inset. */
 .appui-dialog {
     /*outline: none;*/
-    padding: var(--appui-spacing-400);
+    padding: var(--appui-static-sizing-400);
+    padding-left: var(--appui-static-sizing-350);
+    padding-right: var(--appui-static-sizing-350);
     max-width: 100%;
+}
+
+/* The heading, divider and footer keep their size; only the content scroll view gives way, so a
+   dialog taller than its modal scrolls its content and keeps the actions in reach. */
+.appui-dialog__heading,
+.appui-dialog__divider,
+.appui-dialog__buttongroup {
+    flex-shrink: 0;
+    padding-left: var(--appui-static-sizing-50);
+    padding-right: var(--appui-static-sizing-50);
 }
 
 .appui-dialog__heading {
@@ -144,6 +159,17 @@
     flex-grow: 1;
 }
 
+/* The title wraps, as the registry's does, so a long unbroken token (a file name, a URL) breaks
+   inside the dialog instead of being clipped. Two classes, to outrank .appui-heading's nowrap.
+   The heading does not shrink, so the title is capped at about four lines (96px) and clips past
+   that through .appui-heading's overflow: hidden; an unbounded title could otherwise push the
+   actions out of a short modal, where scrolling the content cannot bring them back. */
+.appui-dialog__heading > .appui-dialog__header {
+    flex-shrink: 1;
+    white-space: normal; /* overflow-wrap: anywhere; */
+    max-height: var(--appui-static-sizing-1200);
+}
+
 .appui-dialog--dismissable > .appui-dialog__heading > .appui-button {
     display: flex;
 }
@@ -152,8 +178,15 @@
 
 }
 
+.appui-dialog__content-scroll {
+    margin-top: var(--appui-static-sizing-350); /* margin-block-start: var(--appui-static-sizing-400), less the gutter; */
+    flex-grow: 0;
+    flex-shrink: 1;
+}
+
 .appui-dialog__content {
-    margin-top: var(--appui-spacing-400); /* margin-block-start: var(--appui-spacing-400); */
+    font-size: var(--appui-font-sizes-100);
+    padding: var(--appui-static-sizing-50);
     -unity-text-align: upper-left;
 }
 
@@ -169,10 +202,14 @@
     -unity-text-align: upper-right;
 }
 
+/* Wraps, so actions too wide for one row stack instead of pushing past the dialog's edge. The
+   buttons carry the row gap as a top margin, and the content carries a 4px gutter, so the group's
+   own margin gives both back. */
 .appui-dialog__buttongroup {
-    margin-top: var(--appui-spacing-400); /*margin-block-start: var(--appui-spacing-400);*/
+    margin-top: var(--appui-static-sizing-250); /*margin-block-start: var(--appui-static-sizing-400);*/
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: flex-end;
 }
 
@@ -181,6 +218,7 @@
 }
 
 .appui-dialog__buttongroup > .appui-button {
+    margin-top: var(--appui-alias-control-gap-md);
     margin-left: var(--appui-alias-control-gap-md); /*margin-inline-start: var(--appui-alias-control-gap-md);*/
     margin-right: 0;
 }
@@ -190,16 +228,20 @@
     margin-right: var(--appui-alias-control-gap-md);
 }
 
-.appui-dialog--size-s {
-    width: 400px;
+.appui-dialog--size-sm {
+    width: var(--appui-dialog-width-sm);
 }
 
-.appui-dialog--size-m {
-    width: 500px;
+.appui-dialog--size-md {
+    width: var(--appui-dialog-width-md);
 }
 
-.appui-dialog--size-l {
-    width: 640px;
+.appui-dialog--size-lg {
+    width: var(--appui-dialog-width-lg);
+}
+
+.appui-dialog--size-xl {
+    width: var(--appui-dialog-width-xl);
 }
 
 .appui-tray__content {

@@ -10,6 +10,10 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => LinearProgress.ussClassName;
 
+        // Handed over to LinearProgressSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
         protected override IEnumerable<Story> stories
         {
             get
@@ -34,8 +38,8 @@ namespace Unity.AppUI.Tests.UI
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:LinearProgress />",
-            @"<appui:LinearProgress size=""M"" buffer-opacity=""0.5"" variant=""Determinate"" value=""0.5"" buffer-value=""0.75"" color-override=""#FF0000"" />",
-            @"<appui:LinearProgress size=""M"" buffer-opacity=""0.5"" variant=""Determinate"" value=""0.5"" buffer-value=""0.75"" color-override=""#FF0000"" rounded-progress-corners=""false"" />",
+            @"<appui:LinearProgress size=""Md"" buffer-opacity=""0.5"" variant=""Determinate"" value=""0.5"" buffer-value=""0.75"" color-override=""#FF0000"" />",
+            @"<appui:LinearProgress size=""Md"" buffer-opacity=""0.5"" variant=""Determinate"" value=""0.5"" buffer-value=""0.75"" color-override=""#FF0000"" rounded-progress-corners=""false"" />",
         };
     }
 }

@@ -7,24 +7,46 @@ using Unity.Properties;
 namespace Unity.AppUI.UI
 {
     /// <summary>
-    /// The variant of the Button.
+    /// The visual variant of a <see cref="Button"/>.
     /// </summary>
+    /// <remarks>
+    /// The variants mirror the App UI web design system one-for-one, so a button authored in UI Toolkit
+    /// and the same button authored on the web carry the same name and the same emphasis.
+    /// </remarks>
     public enum ButtonVariant
     {
         /// <summary>
-        /// Default variant.
+        /// The default, highest-emphasis button: a solid accent fill. Use it for the single primary
+        /// action of a view or a dialog.
         /// </summary>
         Default,
 
         /// <summary>
-        /// Primary variant.
-        /// </summary>
-        Accent,
-
-        /// <summary>
-        /// Quiet variant.
+        /// A solid destructive fill, for actions with irreversible consequences such as deleting data.
         /// </summary>
         Destructive,
+
+        /// <summary>
+        /// A bordered button over the page background, with no fill of its own.
+        /// </summary>
+        Outline,
+
+        /// <summary>
+        /// A bordered button over the neutral control fill. The lower-emphasis companion to
+        /// <see cref="Default"/>, for actions such as Cancel.
+        /// </summary>
+        Secondary,
+
+        /// <summary>
+        /// A borderless, fill-less button that only reveals a background on hover. This is the variant
+        /// formerly expressed as the <c>quiet</c> flag.
+        /// </summary>
+        Ghost,
+
+        /// <summary>
+        /// A button that reads as a <see cref="Link"/>: accent-coloured text with no fill and no border.
+        /// </summary>
+        Link,
     }
 
     /// <summary>
@@ -43,9 +65,12 @@ namespace Unity.AppUI.UI
     /// consider using alternative components like links or menu items.
     ///
     /// ### Variants
-    /// - **Default**: Standard button style for most use cases
-    /// - **Accent**: Highlights the primary action in a group of buttons
-    /// - **Destructive**: Indicates actions that may have destructive consequences
+    /// - **Default**: A solid accent fill. The highest-emphasis button, for the primary action of a view
+    /// - **Destructive**: A solid destructive fill, for irreversible actions such as deleting data
+    /// - **Outline**: A bordered button over the page background, with no fill of its own
+    /// - **Secondary**: A bordered button over the neutral control fill, for actions such as Cancel
+    /// - **Ghost**: Borderless and fill-less until hovered. Replaces the former `quiet` flag
+    /// - **Link**: Reads as a <see cref="Link"/>, accent-coloured text with no fill and no border
     /// </remarks>
     /// <example>
     /// <para>Here are some common button usage patterns: various button configurations for different use cases.</para>
@@ -53,8 +78,8 @@ namespace Unity.AppUI.UI
     /// // Basic button with title
     /// <Button title="Click Me" />
     ///
-    /// // Primary action button
-    /// <Button variant="Accent" title="Save Changes" />
+    /// // Lower-emphasis companion action
+    /// <Button variant="Secondary" title="Cancel" />
     ///
     /// // Destructive action with warning
     /// <Button
@@ -64,16 +89,19 @@ namespace Unity.AppUI.UI
     ///     leadingIcon="trash" />
     ///
     /// // Icon-only button
-    /// <Button leadingIcon="settings" size="S" />
+    /// <Button leadingIcon="settings" size="Sm" />
     ///
-    /// // Quiet secondary action
-    /// <Button quiet="true" title="Cancel" />
+    /// // Borderless, low-emphasis action
+    /// <Button variant="Ghost" title="Dismiss" />
+    ///
+    /// // A button that reads as a link
+    /// <Button variant="Link" title="Learn more" />
     /// ]]></code>
     /// <para>Creating and handling buttons in C#: programming button behavior.</para>
     /// <code lang="csharp"><![CDATA[
     /// // Create a new button
     /// var saveButton = new Button();
-    /// saveButton.variant = ButtonVariant.Accent;
+    /// saveButton.variant = ButtonVariant.Default;
     /// saveButton.title = "Save Changes";
     /// saveButton.leadingIcon = "save";
     ///
@@ -89,8 +117,6 @@ namespace Unity.AppUI.UI
     public partial class Button : ExVisualElement, ISizeableElement, IPressable
     {
         internal static readonly BindingId variantProperty = nameof(variant);
-
-        internal static readonly BindingId quietProperty = nameof(quiet);
 
         internal static readonly BindingId titleProperty = nameof(title);
 
@@ -113,11 +139,6 @@ namespace Unity.AppUI.UI
         /// </summary>
         [EnumName("GetVariantUssClassName", typeof(ButtonVariant))]
         public const string variantUssClassName = ussClassName + "--";
-
-        /// <summary>
-        /// The Button quiet mode styling class.
-        /// </summary>
-        public const string quietUssClassName = ussClassName + "--quiet";
 
         /// <summary>
         /// The Button leading container styling class.
@@ -213,11 +234,11 @@ namespace Unity.AppUI.UI
 
             m_LeadingContainer = new VisualElement { name = leadingContainerUssClassName, pickingMode = PickingMode.Ignore };
             m_LeadingContainer.AddToClassList(leadingContainerUssClassName);
-            m_LeadingIcon = new Icon { name = leadingIconUssClassName, pickingMode = PickingMode.Ignore };
+            m_LeadingIcon = new Icon { primary = true, name = leadingIconUssClassName, pickingMode = PickingMode.Ignore };
             m_LeadingIcon.AddToClassList(leadingIconUssClassName);
             m_TrailingContainer = new VisualElement { name = trailingContainerUssClassName, pickingMode = PickingMode.Ignore };
             m_TrailingContainer.AddToClassList(trailingContainerUssClassName);
-            m_TrailingIcon = new Icon { name = trailingIconUssClassName, pickingMode = PickingMode.Ignore };
+            m_TrailingIcon = new Icon { primary = true, name = trailingIconUssClassName, pickingMode = PickingMode.Ignore };
             m_TrailingIcon.AddToClassList(trailingIconUssClassName);
             m_TitleContainer = new VisualElement { name = titleContainerUssClassName, pickingMode = PickingMode.Ignore };
             m_TitleContainer.AddToClassList(titleContainerUssClassName);
@@ -239,12 +260,11 @@ namespace Unity.AppUI.UI
             passMask = 0;
 
             variant = ButtonVariant.Default;
-            quiet = false;
             title = null;
             subtitle = null;
             leadingIcon = null;
             trailingIcon = null;
-            size = Size.M;
+            size = Size.Md;
 
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocus, OnPointerFocus));
         }
@@ -290,7 +310,7 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// The button variant.
+        /// The visual variant of the Button. Defaults to <see cref="ButtonVariant.Default"/>.
         /// </summary>
         [CreateProperty]
         [UxmlAttribute]
@@ -307,24 +327,6 @@ namespace Unity.AppUI.UI
 
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
-            }
-        }
-
-        /// <summary>
-        /// The quiet state of the Button.
-        /// </summary>
-        [CreateProperty]
-        [UxmlAttribute]
-        public bool quiet
-        {
-            get => ClassListContains(quietUssClassName);
-            set
-            {
-                var changed = quiet != value;
-                EnableInClassList(quietUssClassName, value);
-
-                if (changed)
-                    NotifyPropertyChanged(in quietProperty);
             }
         }
 
@@ -420,10 +422,10 @@ namespace Unity.AppUI.UI
                 m_Size = value;
                 m_LeadingIcon.size = m_Size switch
                 {
-                    Size.S => IconSize.S,
-                    Size.M => IconSize.M,
-                    Size.L => IconSize.L,
-                    _ => IconSize.M
+                    Size.Sm => IconSize.Sm,
+                    Size.Md => IconSize.Md,
+                    Size.Lg => IconSize.Lg,
+                    _ => IconSize.Md
                 };
                 m_TrailingIcon.size = m_LeadingIcon.size;
                 AddToClassList(GetSizeUssClassName(m_Size));

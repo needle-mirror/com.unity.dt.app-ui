@@ -7,11 +7,12 @@
 .appui-tree-view-item__header {
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     margin: 0 var(--appui-alias-control-gap-md);
     border-radius: var(--appui-alias-actions-border-radius);
     padding: var(--appui-alias-control-gap-md) var(--appui-alias-control-gap-md);
     flex-shrink: 0;
+    overflow: hidden;
 }
 
 .appui-tree-view-item--interactable > .appui-tree-view-item__header {
@@ -61,40 +62,196 @@
     -unity-text-align: middle-left;
     flex-shrink: 1;
     flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/*
+ * The caret gutter is reserved on every row, caret or not, so the icons and labels of sibling rows
+ * line up in a single column. `caret-position="End"` moves the caret button out of the gutter and
+ * after the label; the empty gutter stays put.
+ */
+.appui-tree-view-item__caret-gutter {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--appui-alias-control-sizing-icon-sm);
 }
 
 .appui-tree-view-item__caret-button {
     visibility: hidden;
     flex-shrink: 0;
-    margin-left: var(--appui-alias-control-gap-md);
     cursor: var(--appui-alias-control-cursor-pointer);
     border-radius: var(--appui-alias-actions-border-radius);
-    padding: var(--appui-alias-control-gap-sm);
+    align-items: center;
+    justify-content: center;
 }
 
+.appui-tree-view-item--caret-end > .appui-tree-view-item__header > .appui-tree-view-item__caret-button {
+    margin-left: var(--appui-alias-control-gap-md);
+}
+
+/*
+ * The caret is an Icon, so the glyph itself comes from its icon name — the default caret, or
+ * whatever `TreeList.caretIcon` sets for the whole tree — and the tint is the image tint an Icon
+ * reads, not the background-image tint a plain element would.
+ */
 .appui-tree-view-item__caret-icon {
     transition: rotate var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
     rotate: -90deg;
-    -unity-background-image-tint-color: var(--appui-foregrounds-100);
-    background-image: var(--appui-icon-caret-down-regular);
+    --unity-image-tint-color: var(--appui-foregrounds-100);
     flex-shrink: 0;
-    width: var(--appui-sizing-300);
-    height: var(--appui-sizing-300);
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
 }
 
 .appui-tree-view-item__caret-button:hover {
     background-color: var(--appui-alias-actions-background-color-active);
 }
 
-.appui-tree-view-item--with-caret > .appui-tree-view-item__header > .appui-tree-view-item__caret-button {
+.appui-tree-view-item--with-caret .appui-tree-view-item__caret-button {
     visibility: visible;
+}
+
+/*
+ * A glyph that belongs to the name, so it follows the label instead of pinning to the row's edge.
+ * It never shrinks: the label ellipsizes first, which is what keeps the badge readable on a narrow
+ * row.
+ */
+.appui-tree-view-item__label-badge {
+    flex-shrink: 0;
+    margin-left: var(--appui-alias-control-gap-xs);
+    --unity-image-tint-color: var(--appui-foregrounds-100);
+}
+
+/*
+ * The label fills the row on its own, which would carry the badge out to the trailing edge and make
+ * it read as an action rather than as part of the name. A badged row sizes its label to the text
+ * instead; the label still shrinks first, so a narrow row ellipsizes the name and keeps the badge.
+ */
+.appui-tree-view-item--with-label-badge > .appui-tree-view-item__header > .appui-tree-view-item__title-label.unity-text-element {
+    flex-grow: 0;
+}
+
+/* Leading icon slot */
+.appui-tree-view-item__icon {
+    flex-shrink: 0;
+    margin-left: var(--appui-alias-control-gap-md);
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+}
+
+.appui-tree-view-item--with-icon > .appui-tree-view-item__header > .appui-tree-view-item__title-label {
+    margin-left: var(--appui-alias-control-gap-md);
+}
+
+/*
+ * Trailing strip. It overlays the row rather than sitting in the flex flow, so the label box still
+ * runs to the right edge and the row reserves room for the actions by pushing the label's margin,
+ * measured in C#. It stays laid out (visibility, not display) even while hidden so the row can keep
+ * measuring the width it would need and know when to collapse or un-collapse.
+ */
+.appui-tree-view-item__trailing-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: var(--appui-alias-control-gap-md);
+    flex-direction: row;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
+}
+
+.appui-tree-view-item--with-trailing.appui-tree-view-item--trailing-shown > .appui-tree-view-item__header > .appui-tree-view-item__trailing-container {
+    visibility: visible;
+    opacity: 1;
+}
+
+.appui-tree-view-item--trailing-collapsed > .appui-tree-view-item__header > .appui-tree-view-item__trailing-container {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.appui-tree-view-item__overflow-button {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: var(--appui-alias-control-gap-md);
+    visibility: hidden;
+    opacity: 0;
+}
+
+.appui-tree-view-item--with-trailing.appui-tree-view-item--trailing-collapsed > .appui-tree-view-item__header > .appui-tree-view-item__overflow-button {
+    visibility: visible;
+    opacity: 1;
+}
+
+.appui-tree-view-item__overflow-popover {
+    flex-direction: row;
+    align-items: center;
+    padding: var(--appui-alias-control-gap-sm);
+}
+
+/*
+ * Minimum readable label width, as a hidden probe rather than a constant in C#: a
+ * `CustomStyleProperty<float>` cannot read a length, so the row sizes this element from a
+ * density-aware sizing step and reads its resolved width back. Same trick as CardGrid's gap probe.
+ */
+.appui-tree-view-item__min-label-probe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0;
+    width: var(--appui-sizing-1300);
+    visibility: hidden;
+}
+
+/* Drop indicators */
+.appui-tree-view-item__drop-indicator-before,
+.appui-tree-view-item__drop-indicator-after {
+    position: absolute;
+    left: var(--appui-alias-control-gap-md);
+    right: var(--appui-alias-control-gap-md);
+    height: var(--appui-border-width-md);
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+    visibility: hidden;
+}
+
+.appui-tree-view-item__drop-indicator-before {
+    top: 0;
+}
+
+.appui-tree-view-item__drop-indicator-after {
+    top: auto;
+    bottom: 0;
+}
+
+.appui-tree-view-item--drop-before > .appui-tree-view-item__drop-indicator-before {
+    visibility: visible;
+}
+
+.appui-tree-view-item--drop-after > .appui-tree-view-item__drop-indicator-after {
+    visibility: visible;
+}
+
+.appui-tree-view-item--drop-inside > .appui-tree-view-item__header {
+    border-width: var(--appui-border-width-xs);
+    border-color: var(--appui-alias-actions-accent-background-color-default);
+    background-color: var(--appui-alias-actions-quiet-background-color-active);
+}
+
+.appui-tree-view-item--dragging > .appui-tree-view-item__header {
+    opacity: 0.4;
 }
 
 .appui-tree-view-item--expanded > .appui-tree-view-item__content-viewport > .appui-tree-view-item__content-container {
     translate: 0 0;
 }
 
-.appui-tree-view-item--expanded > .appui-tree-view-item__header > .appui-tree-view-item__caret-button > .appui-tree-view-item__caret-icon {
+.appui-tree-view-item--expanded .appui-tree-view-item__caret-button > .appui-tree-view-item__caret-icon {
     rotate: 0deg;
 }
 

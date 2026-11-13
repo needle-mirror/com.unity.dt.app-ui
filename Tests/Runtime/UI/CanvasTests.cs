@@ -8,7 +8,26 @@ namespace Unity.AppUI.Tests.UI
     [TestOf(typeof(Canvas))]
     class CanvasTests : VisualElementTests<Canvas>
     {
+
+        // A Canvas is a viewport: no intrinsic size, and nothing to show without content.
+        protected override IEnumerable<Story> stories
+        {
+            get
+            {
+                yield return new Story("Default", (ctx) =>
+                {
+                    var canvas = new Canvas { style = { width = 320, height = 200 } };
+                    canvas.Add(new Unity.AppUI.UI.Button { title = "Node" });
+                    return canvas;
+                });
+            }
+        }
+
         protected override string mainUssClassName => Canvas.ussClassName;
+
+        // Handed over to CanvasSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
 
         protected override bool uxmlConstructable => true;
 

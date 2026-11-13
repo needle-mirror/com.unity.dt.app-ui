@@ -1,0 +1,673 @@
+/* Timeline */
+
+/* The strip's geometry constants live in BOTH C# and here, because C# projects time onto pixels
+   while USS renders the result. They are bound to the STATIC sizing ramp, which no density class
+   overrides, so `.appui--compact` can never make the arithmetic and the rendering disagree:
+
+     origin            = --appui-static-sizing-200 = 16px  (Timeline.origin)
+     endPadding        = --appui-static-sizing-300 = 24px  (Timeline.endPadding)
+     defaultRulerHeight= --appui-static-sizing-300 = 24px  (Timeline.defaultRulerHeight)
+     defaultTrackHeight= --appui-static-sizing-400 = 32px  (Timeline.defaultTrackHeight)
+
+   Everything that is purely decorative — paddings, type steps, glyph sizes — uses the ordinary
+   density-aware ramp, because nothing in C# depends on those numbers. */
+
+.appui-timeline {
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--appui-alias-surface-default);
+    color: var(--appui-alias-text-primary);
+    border-radius: var(--appui-border-radius-md);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-control-border-color-default);
+    /* Republished locally: UI Toolkit only surfaces a custom property a matched rule declares on the
+       element, and Timeline.cs reads this one to decide whether to draw the fine tick level. */
+    --timeline-tick-fine-opacity: var(--appui-timeline-tick-fine-opacity);
+}
+
+/* Disabled paints the *-disabled colour tokens, never opacity: an opacity rule compounds with any
+   disabled descendant (0.5 x 0.5 x ...), while colours do not. Consumer-chosen clip and keyframe
+   colours are set inline from C# and are content, like a swatch, so they keep their hue. The
+   compound selectors match the specificity of the selected and frame rules they override. */
+.appui-timeline--disabled {
+    border-color: var(--appui-alias-control-border-color-disabled);
+    color: var(--appui-alias-text-disabled);
+}
+
+.appui-timeline--disabled .appui-timeline__gutter-label,
+.appui-timeline--disabled .appui-timeline__gutter-group > .appui-timeline__gutter-label,
+.appui-timeline--disabled .appui-timeline__ruler-label,
+.appui-timeline--disabled .appui-timeline__clip-label,
+.appui-timeline--disabled .appui-timeline__clip--frame > .appui-timeline__clip-label,
+.appui-timeline--disabled .appui-timeline__corner-time,
+.appui-timeline--disabled .appui-timeline__corner-suffix {
+    color: var(--appui-alias-text-disabled);
+}
+
+.appui-timeline--disabled .appui-timeline__clip-drag-handle-icon,
+.appui-timeline--disabled .appui-timeline__gutter-chevron {
+    --unity-image-tint-color: var(--appui-alias-text-disabled);
+}
+
+/* Keyframes, the range and the playhead are indicators drawn over a lane, not buttons. The
+   button disabled fill (actions-background-color-disabled) resolves to the lane colour itself in
+   several themes (surface-raised in Dark and Light, surface-default in Cloud), so they would
+   vanish. text-disabled is opaque and stays off every lane, ruler and header surface in every
+   theme; control-border-color-disabled is half-transparent in the Editor themes and is not. */
+.appui-timeline--disabled .appui-timeline__keyframe-glyph,
+.appui-timeline--disabled .appui-timeline__keyframe.is-selected > .appui-timeline__keyframe-glyph,
+.appui-timeline--disabled .appui-timeline__range-band,
+.appui-timeline--disabled .appui-timeline__range-handle,
+.appui-timeline--disabled .appui-timeline__playhead-line,
+.appui-timeline--disabled .appui-timeline__playhead-handle {
+    background-color: var(--appui-alias-text-disabled);
+}
+
+/* The playhead label is a filled chip carrying text, so it keeps the button disabled pair. */
+.appui-timeline--disabled .appui-timeline__playhead-label {
+    background-color: var(--appui-alias-actions-background-color-disabled);
+    color: var(--appui-alias-actions-foreground-color-disabled);
+}
+
+.appui-timeline--disabled .appui-timeline__clip.is-selected {
+    border-color: var(--appui-alias-control-border-color-disabled);
+}
+
+.appui-timeline__body {
+    flex-direction: row;
+    flex-grow: 1;
+    min-width: 0;
+}
+
+/* Gutter */
+
+.appui-timeline__gutter {
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-right-width: var(--appui-alias-control-border-width);
+    border-right-color: var(--appui-alias-control-border-color-default);
+}
+
+/* Lines up with the ruler row so the first gutter row sits beside the first lane. It is also the
+   corner that shows the pointer's or the playhead's time when the Timeline has a timeLabel. */
+.appui-timeline__gutter-spacer {
+    flex-shrink: 0;
+    flex-direction: row;
+    align-items: center;
+    padding-left: var(--appui-sizing-100);
+    padding-right: var(--appui-sizing-100);
+    background-color: var(--appui-alias-surface-sunken);
+    border-bottom-width: var(--appui-alias-control-border-width);
+    border-bottom-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui-timeline__gutter-row {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    padding-left: var(--appui-sizing-100);
+    padding-right: var(--appui-sizing-100);
+    overflow: hidden;
+}
+
+.appui-timeline__gutter-row--nested {
+    padding-left: var(--appui-sizing-350);
+}
+
+.appui-timeline__gutter-group {
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+.appui-timeline__gutter-group.is-hovered {
+    background-color: var(--appui-alias-control-background-color-hover);
+}
+
+.appui-timeline__gutter-label {
+    font-size: var(--appui-font-sizes-50);
+    color: var(--appui-alias-text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.appui-timeline__gutter-group > .appui-timeline__gutter-label {
+    color: var(--appui-alias-text-primary);
+    -unity-font-definition: var(--appui-font-weights-200);
+}
+
+.appui-timeline__corner-time {
+    font-size: var(--appui-font-sizes-50);
+    color: var(--appui-alias-text-primary);
+    white-space: nowrap;
+}
+
+.appui-timeline__corner-suffix {
+    margin-left: var(--appui-sizing-50);
+    font-size: var(--appui-font-sizes-50);
+    color: var(--appui-alias-text-tertiary);
+    white-space: nowrap;
+}
+
+/* The gutter's resize sash: a strip along its right edge, over the rows and the corner. */
+.appui-timeline__sash {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: var(--appui-sizing-100);
+    cursor: var(--appui-alias-control-cursor-ewresize);
+}
+
+.appui-timeline__sash:hover,
+.appui-timeline__sash.is-active {
+    background-color: var(--appui-alias-control-border-color-hover);
+}
+
+.appui-timeline__sash:focus {
+    background-color: var(--appui-alias-field-border-color-focus);
+}
+
+.appui-timeline__gutter-chevron {
+    flex-shrink: 0;
+    width: var(--appui-alias-control-sizing-icon-xxs);
+    height: var(--appui-alias-control-sizing-icon-xxs);
+    margin-right: var(--appui-sizing-50);
+    --unity-image-tint-color: var(--appui-alias-text-secondary);
+}
+
+/* Viewport and strip */
+
+.appui-timeline__viewport {
+    position: relative;
+    flex-grow: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.appui-timeline__strip {
+    position: relative;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.appui-timeline__lanes {
+    flex-direction: column;
+    flex-shrink: 0;
+    /* Room under the last lane for the overlay scrollbar, its height in ScrollView.uss, so the bar
+       never covers the last lane's clips and keys in an auto-height Timeline. */
+    padding-bottom: var(--appui-sizing-200);
+}
+
+.appui-timeline__markers {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/* The guide drawn at the pointer, over the ruler and the lanes. Opacity here is a tint, not a
+   disabled state: USS has no alpha over a var, and the registry draws text-primary at 20%. */
+.appui-timeline__hover-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--appui-static-sizing-10);
+    background-color: var(--appui-alias-text-primary);
+    opacity: 0.2;
+}
+
+/* The horizontal scrollbar overlays the viewport's bottom edge rather than taking a row, and shows
+   while the pointer is over the timeline, while it has focus or while it is held. Its track and
+   thumb are the stock Scroller's, styled by ScrollView.uss. Opacity is the show/hide fade here;
+   the disabled look comes from the Scroller's own :enabled rules. */
+.appui-timeline__scrollbar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: var(--appui-animation-duration-150);
+}
+
+.appui-timeline:hover .appui-timeline__scrollbar,
+.appui-timeline__scrollbar:focus,
+.appui-timeline__scrollbar:active {
+    opacity: 1;
+}
+
+/* Ruler */
+
+.appui-timeline__ruler {
+    position: relative;
+    flex-shrink: 0;
+    height: var(--appui-static-sizing-300);
+    background-color: var(--appui-alias-surface-sunken);
+    border-bottom-width: var(--appui-alias-control-border-width);
+    border-bottom-color: var(--appui-alias-control-border-color-default);
+    cursor: var(--appui-alias-control-cursor-text);
+}
+
+.appui-timeline__ruler-tick {
+    position: absolute;
+    bottom: 0;
+    width: var(--appui-static-sizing-10);
+    height: var(--appui-static-sizing-75);
+    background-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui-timeline__ruler-tick--major {
+    height: var(--appui-static-sizing-150);
+}
+
+.appui-timeline__ruler-label {
+    position: absolute;
+    top: var(--appui-static-sizing-25);
+    margin-left: var(--appui-static-sizing-50);
+    font-size: var(--appui-font-sizes-25);
+    color: var(--appui-alias-text-secondary);
+    white-space: nowrap;
+}
+
+/* ticksAt = Top: the ticks hang from the ruler's head, and the labels move to its foot. */
+.appui-timeline__ruler--ticks-top > .appui-timeline__ruler-tick {
+    top: 0;
+    bottom: auto;
+}
+
+.appui-timeline__ruler--ticks-top > .appui-timeline__ruler-label {
+    top: auto;
+    bottom: var(--appui-static-sizing-25);
+}
+
+/* Grid — painted in generateVisualContent, so its two colours are custom style properties bound
+   to tokens rather than literals baked into C#. */
+
+.appui-timeline__grid {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    --grid-minor-color: var(--appui-alias-divider-default);
+    --grid-major-color: var(--appui-alias-control-border-color-default);
+}
+
+/* Tracks */
+
+.appui-timeline__track {
+    position: relative;
+    flex-shrink: 0;
+    height: var(--appui-static-sizing-400);
+}
+
+.appui-timeline__track-background {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: var(--appui-alias-surface-raised);
+    /* The lane shape tokens: App UI draws square lanes with a 1px rim, a theme rounds or drops it. */
+    border-radius: var(--appui-timeline-lane-border-radius);
+    border-top-width: var(--appui-timeline-lane-border-width);
+    border-bottom-width: var(--appui-timeline-lane-border-width);
+    border-top-color: var(--appui-alias-divider-default);
+    border-bottom-color: var(--appui-alias-divider-default);
+}
+
+/* Groups */
+
+.appui-timeline__group {
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.appui-timeline__group-header {
+    position: relative;
+    flex-shrink: 0;
+    background-color: var(--appui-alias-surface-sunken);
+}
+
+.appui-timeline__group-summary {
+    position: absolute;
+    top: 50%;
+    width: var(--appui-static-sizing-100);
+    height: var(--appui-static-sizing-100);
+    translate: -50% -50%;
+    rotate: 45deg;
+    background-color: var(--appui-alias-text-secondary);
+    opacity: 0.4;
+}
+
+.appui-timeline__group-tracks {
+    flex-direction: column;
+}
+
+/* Clips */
+
+.appui-timeline__clip {
+    position: absolute;
+    top: var(--appui-sizing-50);
+    bottom: var(--appui-sizing-50);
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+    border-radius: var(--appui-border-radius-sm);
+    /* The editor clip hue, not the generic accent: a clip's identity should not change when the
+       accent does, and the alias.editor.* tokens are deliberately the same in every theme mode. */
+    background-color: var(--appui-alias-editor-clip);
+    cursor: var(--appui-alias-control-cursor-pointer);
+    --outline-width: var(--appui-alias-control-outline-width);
+    --outline-color: var(--appui-alias-control-outline-color);
+    --outline-offset: var(--appui-alias-control-outline-offset);
+}
+
+.appui-timeline__clip.is-selected {
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-control-outline-color);
+}
+
+.appui-timeline__clip-label {
+    flex-grow: 1;
+    margin-left: var(--appui-sizing-100);
+    margin-right: var(--appui-sizing-100);
+    font-size: var(--appui-font-sizes-50);
+    color: var(--appui-alias-actions-accent-foreground-color-default);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.appui-timeline__clip-edge {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--appui-static-sizing-60);
+    background-color: var(--appui-color-transparent-black-200);
+    opacity: 0;
+    cursor: var(--appui-alias-control-cursor-ewresize);
+}
+
+.appui-timeline__clip-edge:hover {
+    opacity: 1;
+}
+
+.appui-timeline__clip-edge--left {
+    left: 0;
+}
+
+.appui-timeline__clip-edge--right {
+    right: 0;
+}
+
+/* Keyframes */
+
+.appui-timeline__keyframe {
+    position: absolute;
+    top: 50%;
+    align-items: center;
+    justify-content: center;
+    width: var(--appui-static-sizing-175);
+    height: var(--appui-static-sizing-175);
+    translate: -50% -50%;
+    cursor: var(--appui-alias-control-cursor-pointer);
+    --outline-width: var(--appui-alias-control-outline-width);
+    --outline-color: var(--appui-alias-control-outline-color);
+    --outline-offset: var(--appui-alias-control-outline-offset);
+}
+
+.appui-timeline__keyframe-glyph {
+    width: var(--appui-static-sizing-125);
+    height: var(--appui-static-sizing-125);
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+.appui-timeline__keyframe--shape-diamond {
+    rotate: 45deg;
+}
+
+.appui-timeline__keyframe--shape-circle {
+    border-radius: 50%;
+}
+
+.appui-timeline__keyframe.is-selected > .appui-timeline__keyframe-glyph {
+    background-color: var(--appui-alias-text-primary);
+}
+
+/* Markers */
+
+.appui-timeline__marker {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+
+.appui-timeline__marker-guide {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--appui-static-sizing-10);
+    background-color: var(--appui-alias-text-secondary);
+    opacity: 0.5;
+}
+
+.appui-timeline__marker-flag {
+    position: absolute;
+    top: 0;
+    width: var(--appui-static-sizing-75);
+    height: var(--appui-static-sizing-75);
+    translate: -50% -50%;
+    rotate: 45deg;
+    background-color: var(--appui-alias-text-secondary);
+}
+
+.appui-timeline__marker-label {
+    position: absolute;
+    top: var(--appui-static-sizing-75);
+    margin-left: var(--appui-static-sizing-50);
+    font-size: var(--appui-font-sizes-25);
+    color: var(--appui-alias-text-secondary);
+    white-space: nowrap;
+}
+
+/* Range selection */
+
+.appui-timeline__range {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+
+.appui-timeline__range-band {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+    opacity: 0.15;
+}
+
+.appui-timeline__range-handle {
+    position: absolute;
+    top: 0;
+    width: var(--appui-static-sizing-50);
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+    cursor: var(--appui-alias-control-cursor-ewresize);
+}
+
+.appui-timeline__range-handle-start {
+    left: 0;
+    translate: -50% 0;
+}
+
+.appui-timeline__range-handle-end {
+    right: 0;
+    translate: 50% 0;
+}
+
+/* Playhead */
+
+.appui-timeline__playhead {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--appui-static-sizing-125);
+    translate: -50% 0;
+    align-items: center;
+    cursor: var(--appui-alias-control-cursor-ewresize);
+    --outline-width: var(--appui-alias-control-outline-width);
+    --outline-color: var(--appui-alias-control-outline-color);
+    --outline-offset: var(--appui-alias-control-outline-offset);
+}
+
+.appui-timeline__playhead-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--appui-static-sizing-10);
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+.appui-timeline__playhead-handle {
+    position: absolute;
+    top: 0;
+    width: var(--appui-static-sizing-150);
+    height: var(--appui-static-sizing-150);
+    border-bottom-left-radius: var(--appui-border-radius-sm);
+    border-bottom-right-radius: var(--appui-border-radius-sm);
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+.appui-timeline__playhead-label {
+    position: absolute;
+    top: var(--appui-static-sizing-150);
+    padding-left: var(--appui-sizing-50);
+    padding-right: var(--appui-sizing-50);
+    border-radius: var(--appui-border-radius-sm);
+    background-color: var(--appui-alias-actions-accent-background-color-default);
+    color: var(--appui-alias-actions-accent-foreground-color-default);
+    font-size: var(--appui-font-sizes-25);
+    white-space: nowrap;
+}
+
+/* A key that exists but is not in play: smaller and dimmed, so the active keys read first.
+   Still pickable -- muted is about emphasis, not interactivity. */
+.appui-timeline__keyframe--muted > .appui-timeline__keyframe-glyph {
+    opacity: 0.4;
+}
+
+/* The small glyph: a muted key's by default, or every key's under Timeline.keySize = Small. The size
+   is resolved in C# (the key's own size, then the sheet's, then muted), so it is one class here. */
+.appui-timeline__keyframe--size-small > .appui-timeline__keyframe-glyph {
+    scale: 0.8 0.8;
+}
+
+/* A grip on a range boundary: no look of its own, just the hit area astride the edge the host
+   draws, and a focus ring. */
+.appui-timeline__handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--appui-sizing-125);
+    translate: -50% 0;
+    cursor: var(--appui-alias-control-cursor-ewresize);
+}
+
+.appui-timeline__handle:focus {
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-field-border-color-focus);
+}
+
+/* Handle and surface clips draw nothing over their span: the lane behind already shows it. */
+.appui-timeline__clip--handle,
+.appui-timeline__clip--surface {
+    background-color: initial;
+}
+
+/* The grip is control-sized whatever the span, so a short clip must not clip it away. */
+.appui-timeline__clip--handle {
+    overflow: visible;
+}
+
+.appui-timeline__clip--handle > .appui-timeline__clip-label,
+.appui-timeline__clip--surface > .appui-timeline__clip-label {
+    display: none;
+}
+
+.appui-timeline__clip--surface {
+    cursor: var(--appui-alias-control-cursor-grab);
+}
+
+/* The handle variant's only pickable part: a grip at the clip's start. */
+.appui-timeline__clip--handle > .appui-timeline__clip-drag-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--appui-alias-control-sizing-sm-square);
+    align-items: center;
+    justify-content: center;
+    cursor: var(--appui-alias-control-cursor-grab);
+}
+
+.appui-timeline__clip-drag-handle-icon {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+    --unity-image-tint-color: var(--appui-alias-editor-clip);
+}
+
+/* A frame clip is a placement marker rather than a solid block: a translucent body showing the
+   lane through it, a strong rim, and a handle strip along the top that is the only draggable
+   part. The registry derives the body at 12% of the frame colour and the rim at 90%; USS has no
+   alpha maths over a var, so the body leans on opacity and the rim takes the colour directly. */
+.appui-timeline__clip--frame {
+    background-color: initial;
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-editor-track-object);
+}
+
+.appui-timeline__clip--frame > .appui-timeline__clip-fill {
+    background-color: var(--appui-alias-editor-track-object);
+    opacity: 0.12;
+}
+
+.appui-timeline__clip--frame > .appui-timeline__clip-label {
+    color: var(--appui-alias-editor-track-object);
+}
+
+.appui-timeline__clip--frame-amber {
+    border-color: var(--appui-alias-editor-track-camera);
+}
+
+.appui-timeline__clip--frame-amber > .appui-timeline__clip-fill {
+    background-color: var(--appui-alias-editor-track-camera);
+}
+
+.appui-timeline__clip--frame-amber > .appui-timeline__clip-label {
+    color: var(--appui-alias-editor-track-camera);
+}
+
+.appui-timeline__clip--frame-green {
+    border-color: var(--appui-alias-editor-track-signal);
+}
+
+.appui-timeline__clip--frame-green > .appui-timeline__clip-fill {
+    background-color: var(--appui-alias-editor-track-signal);
+}
+
+.appui-timeline__clip--frame-green > .appui-timeline__clip-label {
+    color: var(--appui-alias-editor-track-signal);
+}
+
+/* The body is pointer-transparent so a click lands on the lane behind it; only the handle drags. */
+.appui-timeline__clip--frame > .appui-timeline__clip-drag-handle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    cursor: var(--appui-alias-control-cursor-grab);
+}

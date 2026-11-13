@@ -307,7 +307,7 @@ namespace Unity.AppUI.UI
             var trailingContainer = new VisualElement { name = trailingContainerUssClassName, pickingMode = PickingMode.Ignore };
             trailingContainer.AddToClassList(trailingContainerUssClassName);
 
-            var caret = new Icon { name = caretUssClassName, pickingMode = PickingMode.Ignore };
+            var caret = new Icon { primary = true, name = caretUssClassName, pickingMode = PickingMode.Ignore };
             caret.AddToClassList(caretUssClassName);
 
             hierarchy.Add(m_TitleContainer);
@@ -315,7 +315,7 @@ namespace Unity.AppUI.UI
             trailingContainer.hierarchy.Add(caret);
 
             defaultValue = defaultIndices;
-            size = Size.M;
+            size = Size.Md;
             sourceItems = items;
             closeOnSelection = true;
 

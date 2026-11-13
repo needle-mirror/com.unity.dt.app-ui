@@ -1,0 +1,89 @@
+/* FloatingWindow */
+
+/* An absolutely positioned surface inside its parent. left/top/width/height are written from C#
+   (they are user-dragged geometry, not design values); everything painted here is a token. */
+.appui-floating-window {
+    position: absolute;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--appui-alias-surface-default);
+    color: var(--appui-alias-text-primary);
+    border-radius: var(--appui-border-radius-xl);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-control-border-color-default);
+}
+
+/* autoSize lets the content decide, so the window must not stretch to a written width/height. */
+.appui-floating-window--auto-size {
+    width: auto;
+    height: auto;
+}
+
+/* The title bar doubles as the drag handle, hence the move cursor across the whole strip. */
+.appui-floating-window__header {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    height: var(--appui-alias-control-sizing-lg-height);
+    padding-left: var(--appui-sizing-250);
+    padding-right: var(--appui-sizing-75);
+    background-color: var(--appui-alias-surface-raised);
+    border-bottom-width: var(--appui-alias-control-border-width);
+    border-bottom-color: var(--appui-alias-control-border-color-default);
+    cursor: var(--appui-alias-control-cursor-move);
+}
+
+.appui-floating-window__title {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-primary);
+    -unity-font-definition: var(--appui-font-weights-200);
+    -unity-text-align: middle-left;
+    overflow: hidden;
+    -unity-text-overflow-position: end;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.appui-floating-window__close-button {
+    flex-shrink: 0;
+    margin-left: var(--appui-sizing-75);
+}
+
+.appui-floating-window__body {
+    flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
+    padding: var(--appui-sizing-250);
+    overflow: hidden;
+}
+
+/* The grip sits over the bottom-right corner and is outside the flow, so it never affects the body
+   layout. It is square by the small control-sizing alias. */
+.appui-floating-window__resize-handle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: var(--appui-alias-control-sizing-sm-square);
+    height: var(--appui-alias-control-sizing-sm-square);
+    cursor: var(--appui-alias-control-cursor-nwseresize);
+}
+
+/* RTL puts the close button and the grip on the mirrored side. */
+.appui--rtl .appui-floating-window__header {
+    flex-direction: row-reverse;
+    padding-left: var(--appui-sizing-75);
+    padding-right: var(--appui-sizing-250);
+}
+
+.appui--rtl .appui-floating-window__title {
+    -unity-text-align: middle-right;
+}
+
+.appui--rtl .appui-floating-window__close-button {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-75);
+}

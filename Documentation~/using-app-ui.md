@@ -27,24 +27,16 @@ For more information about themes, see the [Theming documentation page](xref:the
 
 ### Default Theme
 
-- `App UI.tss`: This is the main theme that encapsulates every [contexts](#root-panel-element) via different USS selectors. We recommend to use this theme if you are building a runtime app that needs to be able to switch between different color schemes, scales, layout directions, etc.
+- `App UI.tss`: This is the main theme that encapsulates every [contexts](#root-panel-element) via different USS selectors. We recommend to use this theme if you are building a runtime app that needs to be able to switch between different color schemes, layout directions, etc.
 
 ### Themes for UI Builder
 
-Theses themes are designed to be used with the UI Builder, they are the combination styling related contexts (color scheme and scale).
+These themes are designed to be used with the UI Builder, one per color scheme. Density is no longer a separate axis — the `Editor` themes are **compact** (denser controls and type for editor tooling), while the runtime themes use the default density.
 
-- `App UI - Dark - Large.tss`
-- `App UI - Dark - Medium.tss`
-- `App UI - Dark - Small.tss`
-- `App UI - Light - Large.tss`
-- `App UI - Light - Medium.tss`
-- `App UI - Light - Small.tss`
-- `App UI - Editor Dark - Large.tss`
-- `App UI - Editor Dark - Medium.tss`
-- `App UI - Editor Dark - Small.tss`
-- `App UI - Editor Light - Large.tss`
-- `App UI - Editor Light - Medium.tss`
-- `App UI - Editor Light - Small.tss`
+- `App UI - Dark.tss`
+- `App UI - Light.tss`
+- `App UI - Editor Dark.tss` (compact)
+- `App UI - Editor Light.tss` (compact)
 
 ## Root Panel Element
 
@@ -107,8 +99,8 @@ Before building your interface, you need to select an appropriate App UI theme i
 1. Open UI Builder (**Window > UI Toolkit > UI Builder**)
 2. In the viewport area, click on the **Theme** dropdown
 3. Select one of the App UI themes based on your target appearance:
-   - For runtime applications: Use the specific context themes (e.g., `App UI - Dark - Medium`)
-   - For editor tools: Use the editor themes (e.g., `App UI - Editor Dark - Small`)
+   - For runtime applications: Use the runtime themes (e.g., `App UI - Dark`)
+   - For editor tools: Use the editor themes (e.g., `App UI - Editor Dark`), which are compact
 
 <p align="center">
   <img src="images/ui-builder-theme-selection.png" alt="UI Builder theme dropdown showing App UI theme options">
@@ -173,7 +165,7 @@ App UI components expose their properties in the Inspector panel:
 Use the theme dropdown in UI Builder to preview your interface with different App UI themes:
 
 - Test both light and dark variants
-- Verify your layout works across different scale sizes
+- Verify your layout works in both default and compact (editor) density
 - Ensure proper contrast and readability
 
 <p align="center">

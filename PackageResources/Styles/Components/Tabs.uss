@@ -50,7 +50,8 @@
     flex-wrap: nowrap;
     flex-shrink: 0;
     /*gap: var(--appui-control-gap);*/
-    padding: var(--appui-alias-control-gap-sm) var(--appui-alias-control-gap-md);
+    /* The registry's trigger has a fixed height and px-3 (12px normal / 9px compact). */
+    padding: 0 var(--appui-sizing-250);
     cursor: var(--appui-alias-control-cursor-pointer);
     height: var(--appui-alias-control-sizing-md-height);
 }
@@ -70,7 +71,7 @@
 .appui-tabitem__label {
     color:var(--appui-foregrounds-50);
     -unity-font-style: var(--appui-tabitem-label-font-weight);
-    font-size: var(--appui-font-sizes-body-md);
+    font-size: var(--appui-font-sizes-200);
     flex-shrink: 0;
 }
 
@@ -160,10 +161,17 @@
     flex-direction: column;
 }
 
+/* gap-1.5 in the registry. */
 .appui--ltr .appui-tabitem__icon {
-    margin-right: var(--appui-alias-control-gap-md); /* todo remove this when gap is supported */
+    margin-right: var(--appui-sizing-115); /* todo remove this when gap is supported */
 }
 
 .appui--rtl .appui-tabitem__icon {
-    margin-left: var(--appui-alias-control-gap-md); /* todo remove this when gap is supported */
+    margin-left: var(--appui-sizing-115); /* todo remove this when gap is supported */
+}
+
+/* Icon.uss loads after this sheet, so the size needs more specificity than .appui-icon--size-md. */
+.appui-tabitem > .appui-icon.appui-tabitem__icon {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
 }

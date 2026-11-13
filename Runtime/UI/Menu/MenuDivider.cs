@@ -76,7 +76,7 @@ namespace Unity.AppUI.UI
     ///
     /// // Add another divider with custom styling
     /// var divider = new MenuDivider {
-    ///     size = Size.S,
+    ///     size = Size.Sm,
     ///     spacing = Spacing.L
     /// };
     /// menu.Add(divider);
@@ -93,7 +93,7 @@ namespace Unity.AppUI.UI
     ///     <ui:MenuItem label="Less Common Action 1" />
     ///     <ui:MenuItem label="Less Common Action 2" />
     ///     <!-- Prominent divider for major separation -->
-    ///     <ui:MenuDivider size="M" spacing="L" />
+    ///     <ui:MenuDivider size="Md" spacing="L" />
     ///     <ui:MenuItem label="Destructive Action" icon="trash" />
     /// </ui:Menu>
     /// ]]></code>

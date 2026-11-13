@@ -58,7 +58,7 @@ namespace Unity.AppUI.UI
             pickingMode = PickingMode.Ignore;
             focusable = false;
 
-            m_IconElement = new Icon { name = iconUssClassName, iconName = "x-circle", pickingMode = PickingMode.Ignore };
+            m_IconElement = new Icon { primary = true, name = iconUssClassName, iconName = "x-circle", pickingMode = PickingMode.Ignore };
             m_IconElement.AddToClassList(iconUssClassName);
             hierarchy.Add(m_IconElement);
 

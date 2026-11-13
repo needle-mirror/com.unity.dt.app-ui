@@ -4,11 +4,17 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    flex-shrink: 0;
+    /* min-w-0 max-w-full: the chip gives way inside a narrower parent instead of overflowing it. */
+    flex-shrink: 1;
     flex-grow: 0;
-    padding: 0 var(--appui-alias-control-gap-md);
+    min-width: 0;
+    max-width: 100%;
+    /* Shrinking is for the width: in a column parent flex-shrink would take the height instead. */
+    /* The registry's chip: h-sm, px-2.5 (10px normal / 7.5px compact), gap-1 between parts. */
+    min-height: var(--appui-alias-control-sizing-sm-height);
+    padding: 0 var(--appui-sizing-200);
 
-    height: var(--appui-alias-control-sizing-md-height);
+    height: var(--appui-alias-control-sizing-sm-height);
     border-radius: var(--appui-alias-control-border-radius);
     border-width: var(--appui-alias-control-border-width);
 
@@ -60,30 +66,48 @@
 
 .appui-chip__ornament-container {
     flex-shrink: 0;
-    width: var(--appui-sizing-300);
-    height: var(--appui-sizing-300);
+    width: var(--appui-alias-control-sizing-icon-xs);
+    height: var(--appui-alias-control-sizing-icon-xs);
     margin-left: 0;
-    margin-right: var(--appui-alias-control-gap-md);
+    margin-right: var(--appui-sizing-75);
     overflow: hidden;
     display: none;
 }
 
 .appui--rtl .appui-chip__ornament-container {
-    margin-left: var(--appui-alias-control-gap-md);
+    margin-left: var(--appui-sizing-75);
     margin-right: 0;
+}
+
+/* The glyph inside the ornament follows the container's icon-xs size. Icon.uss loads after this
+   sheet, so two classes are needed to outrank its `.appui-icon--size-*` class. */
+.appui-chip__ornament-container > .appui-icon {
+    width: var(--appui-alias-control-sizing-icon-xs);
+    height: var(--appui-alias-control-sizing-icon-xs);
 }
 
 .appui-chip--with-ornament > .appui-chip__ornament-container {
     display: flex;
 }
 
+/* The label gives way on one line (min-w-0 truncate): the chip's height is fixed, so a label
+   that wrapped would overflow it. */
 .appui-chip__label {
     display: flex;
-    flex-shrink: 0;
-    font-size: var(--appui-font-sizes-body-md);
+    min-width: 0;
+    overflow: hidden;
+    font-size: var(--appui-font-sizes-100);
     -unity-text-align: middle-center;
     white-space: nowrap;
+    text-overflow: ellipsis;
+    -unity-text-overflow-position: end;
     color: var(--appui-foregrounds-100);
+}
+
+/* The label shrinks so the ornament and delete button keep their room. Two classes deep, because
+   Text.uss sets `flex-shrink: 0` on every `.appui-localized-text` and is imported after this file. */
+.appui-chip > .appui-chip__label {
+    flex-shrink: 1;
 }
 
 .appui-chip__delete-icon.appui-icon {
@@ -93,21 +117,23 @@
 
 .appui-chip__delete-button {
     display: none;
-    width: var(--appui-sizing-400);
-    height: var(--appui-sizing-400);
+    width: var(--appui-alias-control-sizing-icon-xs);
+    height: var(--appui-alias-control-sizing-icon-xs);
     border-radius: var(--appui-alias-control-border-radius);
-    translate: var(--appui-alias-control-gap-sm) 0;
+    margin-left: var(--appui-sizing-75);
+    margin-right: 0;
     flex-shrink: 0;
     justify-content: center;
     align-items: center;
-    padding: 1px;
+    padding: 0;
     cursor: var(--appui-alias-control-cursor-pointer);
     opacity: 0.55;
     transition: opacity var(--appui-animation-easing-ease-out) var(--appui-animation-duration-50);
 }
 
 .appui--rtl .appui-chip__delete-button {
-    translate: 0 0;
+    margin-left: 0;
+    margin-right: var(--appui-sizing-75);
 }
 
 .appui-chip__delete-button > .appui-chip__delete-icon.appui-icon {
@@ -134,10 +160,27 @@
     display: flex;
 }
 
+/* Disabled paints the actions role's *-disabled colour tokens, never opacity, which would
+   compound down a disabled subtree. The filled rules are three parts deep and last in the file,
+   so a stale hover or focus fill cannot outrank them. An outlined chip keeps its fill, as the
+   registry's does. The ornament is the consumer's content and keeps its colours. */
 .appui-chip--clickable:disabled,
 .appui-chip:disabled {
-    opacity: 0.4;
     cursor: var(--appui-alias-control-cursor-disabled);
+    border-color: var(--appui-alias-actions-border-color-disabled);
+}
+
+.appui-chip.appui-chip--filled:disabled {
+    border-color: var(--appui-alias-actions-background-color-disabled);
+    background-color: var(--appui-alias-actions-background-color-disabled);
+}
+
+.appui-chip:disabled > .appui-chip__label {
+    color: var(--appui-alias-actions-foreground-color-disabled);
+}
+
+.appui-chip:disabled > .appui-chip__delete-button > .appui-chip__delete-icon.appui-icon {
+    --unity-image-tint-color: var(--appui-alias-actions-foreground-color-disabled);
 }
 
 .appui-chip--clickable:disabled > .appui-chip__delete-button,

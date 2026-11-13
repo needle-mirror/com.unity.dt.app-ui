@@ -1,0 +1,131 @@
+/* VuMeter
+   The bars and the marker arrow paint themselves with Painter2D, because the lit part of a bar is a
+   banded gradient and USS has no gradients. C# can only read a colour the stylesheet hands it, so
+   every painted colour is declared here as a custom property on the element's own rule — a
+   :root-level alias is not readable from a probe element — and bound to an App UI token. Same
+   pattern as Progress's --progress-color and CanvasEdge's --edge-color.
+
+   The registry hardcodes the Tailwind palette here: raw green, amber and red literals for the level
+   bands and a fixed gold for the attenuation marker (the exact values are in the slice report; they
+   are not repeated here because the token tests scan this file for hex). None of those have an App
+   UI token — `pnpm token:match` finds nothing within ΔE 3. The bands are semantic —
+   safe, approaching, clipping — so they bind to the semantic tokens, which is what they mean and
+   which makes them theme-adaptive. The gold marker has no semantic equivalent at all; it is an
+   interactive handle, so it binds to the accent action token the way every other App UI handle
+   does. See the slice report. */
+.appui-vu-meter {
+    flex-direction: column;
+    --vu-meter-safe-color: var(--appui-alias-semantic-positive);
+    --vu-meter-warning-color: var(--appui-alias-semantic-warning);
+    --vu-meter-clip-color: var(--appui-alias-semantic-destructive);
+    --vu-meter-track-color: var(--appui-alias-surface-sunken);
+    --vu-meter-peak-color: var(--appui-alias-text-primary);
+    --vu-meter-fader-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+.appui-vu-meter__body {
+    flex-direction: row;
+    flex-grow: 1;
+    justify-content: center;
+    min-height: 0;
+}
+
+.appui-vu-meter__meter {
+    position: relative;
+    width: var(--appui-sizing-320);
+    height: 100%;
+}
+
+.appui-vu-meter__bars {
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
+
+.appui-vu-meter__bar {
+    flex-grow: 1;
+    flex-basis: 0;
+    overflow: hidden;
+    margin-right: var(--appui-sizing-10);
+    border-width: var(--appui-sizing-10);
+    border-color: var(--appui-alias-control-border-color-default);
+    border-radius: var(--appui-sizing-10);
+}
+
+/* The lane the fader drag is caught in. It sits over the right edge of the bars, where the marker
+   lives; the bars themselves ignore picking, so the lane always wins the pointer. */
+.appui-vu-meter__drag-lane {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: var(--appui-sizing-250);
+    cursor: resize-vertical;
+}
+
+.appui-vu-meter__marker {
+    position: absolute;
+    right: 0;
+    flex-direction: row;
+    align-items: center;
+    translate: 100% 50%;
+    cursor: resize-vertical;
+}
+
+.appui-vu-meter__marker-arrow {
+    width: var(--appui-sizing-100);
+    height: var(--appui-sizing-250);
+}
+
+.appui-vu-meter__marker-label {
+    height: var(--appui-sizing-300);
+    min-width: var(--appui-sizing-320);
+    padding-left: var(--appui-sizing-115);
+    padding-right: var(--appui-sizing-115);
+    background-color: var(--vu-meter-fader-color);
+    color: var(--appui-alias-actions-accent-foreground-color-default);
+    font-size: var(--appui-font-sizes-75);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    border-top-right-radius: var(--appui-sizing-25);
+    border-bottom-right-radius: var(--appui-sizing-25);
+}
+
+.appui-vu-meter__ruler {
+    position: relative;
+    width: var(--appui-sizing-400);
+    height: 100%;
+    margin-left: var(--appui-sizing-115);
+}
+
+.appui-vu-meter__tick {
+    position: absolute;
+    left: 0;
+    right: 0;
+    flex-direction: row;
+    align-items: center;
+    translate: 0 50%;
+}
+
+.appui-vu-meter__tick-dash {
+    width: var(--appui-sizing-75);
+    height: var(--appui-sizing-10);
+    margin-right: var(--appui-sizing-75);
+    background-color: var(--appui-base-500);
+}
+
+.appui-vu-meter__tick-label {
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-disabled);
+}
+
+.appui-vu-meter__readout {
+    margin-top: var(--appui-sizing-75);
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-secondary);
+    -unity-text-align: middle-center;
+}
+
+.appui-vu-meter--no-readout .appui-vu-meter__readout {
+    display: none;
+}

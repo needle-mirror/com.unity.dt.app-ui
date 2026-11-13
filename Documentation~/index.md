@@ -8,9 +8,6 @@ uid: overview
  <img src="images/replica-app-ui.png" alt="Unity App UI Banner">
 </p>
 
-> [!WARNING]
-> App UI is considered as an experimental product. It is provided **"as is"** without warranty of any kind, express or implied.
-
 ## Introduction
 
 App UI is a powerful and flexible framework for building beautiful, high-performance user interfaces in Unity.

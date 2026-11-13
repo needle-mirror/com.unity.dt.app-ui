@@ -178,13 +178,13 @@ namespace Unity.AppUI.UI
 
             RegisterCallback<FocusInEvent>(OnFocusIn);
 
-            m_PrimaryButton = new Button { name = primaryActionUssClassName, variant = ButtonVariant.Accent };
+            m_PrimaryButton = new Button { name = primaryActionUssClassName, variant = ButtonVariant.Default };
             m_PrimaryButton.AddToClassList(primaryActionUssClassName);
 
-            m_SecondaryButton = new Button { name = secondaryActionUssClassName };
+            m_SecondaryButton = new Button { name = secondaryActionUssClassName, variant = ButtonVariant.Secondary };
             m_SecondaryButton.AddToClassList(secondaryActionUssClassName);
 
-            m_CancelButton = new Button { name = cancelActionUssClassName };
+            m_CancelButton = new Button { name = cancelActionUssClassName, variant = ButtonVariant.Secondary };
             m_CancelButton.AddToClassList(cancelActionUssClassName);
 
             actionContainer.Add(m_CancelButton);
@@ -201,6 +201,7 @@ namespace Unity.AppUI.UI
 
             m_IconElement = new Icon
             {
+                primary = true,
                 name = iconUssClassName,
                 iconName = "",
                 variant = IconVariant.Regular,

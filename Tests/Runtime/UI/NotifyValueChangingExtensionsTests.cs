@@ -8,6 +8,8 @@ using UnityEngine.UIElements;
 namespace Unity.AppUI.Tests.UI
 {
     [TestFixture]
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     class NotifyValueChangingExtensionsTests
     {
         class DummyElement : VisualElement, INotifyValueChanging<int>

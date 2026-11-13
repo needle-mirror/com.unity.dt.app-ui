@@ -6,6 +6,8 @@
 // License: MIT
 // =============================================================================
 
+#nullable enable
+
 using System;
 
 namespace Unity.AppUI.TextMateLib
@@ -49,10 +51,12 @@ namespace Unity.AppUI.TextMateLib
         /// <exception cref="InvalidOperationException">Thrown when the theme fails to load</exception>
         public static Theme LoadFromFile(string themePath)
         {
-            if (string.IsNullOrEmpty(themePath))
-                throw new ArgumentNullException(nameof(themePath));
+            // Read and validate in managed code, then hand the validated content to the native
+            // loader. Passing the path instead would have the native side re-read the file, so
+            // anything that changed it in between would reach the parser unvalidated.
+            var content = TextMateJson.ReadAndValidate(themePath, nameof(themePath), "theme");
 
-            var handle = NativeMethods.textmate_theme_load_from_file(themePath);
+            var handle = NativeMethods.textmate_theme_load_from_json(NativeMethods.ToUtf8NullTerminated(content));
             if (handle == IntPtr.Zero)
                 throw new InvalidOperationException($"Failed to load theme from file: {themePath}");
 
@@ -68,8 +72,7 @@ namespace Unity.AppUI.TextMateLib
         /// <exception cref="InvalidOperationException">Thrown when the theme fails to load</exception>
         public static Theme LoadFromJson(string jsonContent)
         {
-            if (string.IsNullOrEmpty(jsonContent))
-                throw new ArgumentNullException(nameof(jsonContent));
+            TextMateJson.Validate(jsonContent, nameof(jsonContent), "theme");
 
             var handle = NativeMethods.textmate_theme_load_from_json(NativeMethods.ToUtf8NullTerminated(jsonContent));
             if (handle == IntPtr.Zero)

@@ -1,5 +1,6 @@
 /* HelpText */
 .appui-help-text {
+    font-size: var(--appui-font-sizes-100);
     display: flex;
     -unity-text-align: middle-left;
 }

@@ -45,7 +45,7 @@ namespace Unity.AppUI.UI
     /// <para>UXML Usage</para>
     /// <code lang="xml"><![CDATA[
     /// <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.AppUI.UI">
-    ///     <appui:SearchBar size="M"
+    ///     <appui:SearchBar size="Md"
     ///                      placeholder="Search documents..."
     ///                      leading-icon-name="magnifying-glass" />
     /// </ui:UXML>
@@ -63,7 +63,7 @@ namespace Unity.AppUI.UI
     ///         // Create and configure search bar
     ///         searchBar = new SearchBar();
     ///         searchBar.placeholder = "Search items...";
-    ///         searchBar.size = Size.M;
+    ///         searchBar.size = Size.Md;
     ///
     ///         // Handle search input
     ///         searchBar.RegisterValueChangedCallback(OnSearchQueryChanged);

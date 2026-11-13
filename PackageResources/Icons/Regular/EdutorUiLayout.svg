@@ -1,0 +1,7 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--edutor-ui-layout--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path d="M4 10H9V12H4V10Z" fill="#FFFFFF"/>
+<path d="M9 5H6V9H9V5Z" fill="#FFFFFF"/>
+<path d="M4 5H5V9H4V5Z" fill="#FFFFFF"/>
+<path d="M12 5H10V12H12V5Z" fill="#FFFFFF"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M3 2C2.44772 2 2 2.44772 2 3V13C2 13.5523 2.44772 14 3 14H13C13.5523 14 14 13.5523 14 13V3C14 2.44772 13.5523 2 13 2H3ZM13 4H3V13H13V4Z" fill="#FFFFFF"/>
+</svg>

@@ -1,0 +1,15 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--vfx-subgraph--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<g clip-path="url(#clip0_1_21252)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.5 1H15V6H13.5C12.9477 6 12.5 5.55228 12.5 5V2C12.5 1.44772 12.9477 1 13.5 1Z" fill="#555555"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.5 10H15V15H13.5C12.9477 15 12.5 14.5523 12.5 14V11C12.5 10.4477 12.9477 10 13.5 10Z" fill="#555555"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8.5 7.02634V8.02634H10C10.5523 8.02634 11 7.57862 11 7.02634V4H12V3H11C10.4477 3 10 3.44771 10 4V7.02634H8.5Z" fill="#555555"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10 11.9974C10 12.5497 10.4477 12.9974 11 12.9974H12V11.9974H11L11.0013 8.46252C10.7176 8.66078 10.3724 8.77707 10 8.77707V11.9974Z" fill="#555555"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M7.00953 5C7.52498 5 7.95001 5.39018 8.00379 5.89236L4.142 10L2.98344 10.0003C3.17421 9.20777 3.71743 8.49592 4.73987 7.81773C6.17046 6.86881 6.94977 5.85659 6.94977 5H7.00953ZM4.29767 7.15106C3.03623 7.98777 2.36331 8.93165 2.16583 10L2 10C1.44772 10 1 9.55228 1 9V6C1 5.44772 1.44772 5 2 5H6.14977C6.14977 5.52681 5.52772 6.33516 4.29767 7.15106Z" fill="#0C6CCB"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.99857 5.00143C7.55085 5.00063 7.99922 5.44769 8.00002 5.99998L8.00002 8.99998C8.00002 9.55226 7.5523 9.99998 7.00002 9.99998L2.98364 9.99952C3.17458 9.20729 3.71777 8.49568 4.73989 7.81771C6.16993 6.86916 6.94919 5.85736 6.94979 5.00098L6.99857 5.00143Z" fill="#C99700"/>
+</g>
+<defs>
+<clipPath id="clip0_1_21252">
+<rect width="14" height="14" fill="white" transform="translate(1 1)"/>
+</clipPath>
+</defs>
+</svg>

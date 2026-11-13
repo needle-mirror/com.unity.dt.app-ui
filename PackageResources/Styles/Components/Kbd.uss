@@ -1,0 +1,29 @@
+/* Kbd */
+.appui-kbd {
+    flex-direction: row;
+    align-items: center;
+    align-self: flex-start;
+    flex-shrink: 0;
+}
+
+.appui-kbd__cap {
+    height: var(--appui-alias-control-sizing-sm-height);
+    min-width: var(--appui-alias-control-sizing-sm-square);
+    padding-left: var(--appui-sizing-115);
+    padding-right: var(--appui-sizing-115);
+    margin-right: var(--appui-sizing-75);
+    background-color: var(--appui-alias-surface-raised);
+    border-width: var(--appui-alias-control-border-width);
+    border-bottom-width: var(--appui-border-width-sm);
+    border-color: var(--appui-base-500);
+    border-radius: var(--appui-alias-control-border-radius);
+    color: var(--appui-alias-text-secondary);
+    font-size: var(--appui-font-sizes-75);
+    -unity-text-align: middle-center;
+    flex-shrink: 0;
+}
+
+.unity-disabled .appui-kbd__cap,
+.unity-disabled.appui-kbd .appui-kbd__cap {
+    color: var(--appui-alias-text-disabled);
+}

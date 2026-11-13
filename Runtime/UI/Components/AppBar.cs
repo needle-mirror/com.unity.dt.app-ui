@@ -188,7 +188,7 @@ namespace Unity.AppUI.UI
         public void AddAction(VisualElement actionVisualElement)
         {
             if (actionVisualElement is ActionButton button)
-                button.size = compact ? Size.S : Size.M;
+                button.size = compact ? Size.Sm : Size.Md;
             m_ActionContainer.Add(actionVisualElement);
         }
 
@@ -253,8 +253,8 @@ namespace Unity.AppUI.UI
             set
             {
                 EnableInClassList(compactUssClassName, value);
-                m_BackButton.size = value ? Size.S : Size.M;
-                m_DrawerButton.size = value ? Size.S : Size.M;
+                m_BackButton.size = value ? Size.Sm : Size.Md;
+                m_DrawerButton.size = value ? Size.Sm : Size.Md;
                 RefreshActionsStyle();
             }
         }
@@ -264,7 +264,7 @@ namespace Unity.AppUI.UI
             foreach (var child in m_ActionContainer.Children())
             {
                 if (child is ActionButton button)
-                    button.size = compact ? Size.S : Size.M;
+                    button.size = compact ? Size.Sm : Size.Md;
             }
         }
 

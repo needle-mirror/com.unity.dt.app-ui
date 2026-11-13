@@ -9,6 +9,8 @@ namespace Unity.AppUI.Tests.Core
 {
     [TestFixture]
     [TestOf(typeof(Looper))]
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     class LooperTests
     {
         UIDocument m_TestUI;

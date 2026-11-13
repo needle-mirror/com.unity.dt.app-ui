@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 using Unity.AppUI.UI;
 using UnityEngine.TestTools;
@@ -14,6 +15,10 @@ namespace Unity.AppUI.Tests.UI
     class MaskFieldTests : VisualElementTests<MaskField>
     {
         protected override string mainUssClassName => MaskField.ussClassName;
+
+        // Handed over to MaskFieldSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
 
         protected override IEnumerable<Story> stories
         {
@@ -33,6 +38,21 @@ namespace Unity.AppUI.Tests.UI
             {
                 yield return "<appui:MaskField />";
             }
+        }
+
+        [TestCase("k_NothingMessage", "nothing", "Nothing")]
+        [TestCase("k_EverythingMessage", "everything", "Everything")]
+        [TestCase("k_MixedMessage", "mixed", "Mixed...")]
+        public void MaskField_DefaultTexts_ShouldFollowLocalizationDefine(string fieldName, string key, string plain)
+        {
+            var field = typeof(MaskField).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(field, $"{fieldName} not found");
+            var text = (string)field.GetRawConstantValue();
+#if UNITY_LOCALIZATION_PRESENT
+            Assert.AreEqual("@AppUI:" + key, text);
+#else
+            Assert.AreEqual(plain, text);
+#endif
         }
 
         [UnityTest, Order(3)]
@@ -61,6 +81,38 @@ namespace Unity.AppUI.Tests.UI
             Assert.AreEqual(3, ((Dropdown)field).value.Count());
 
             UnityEngine.Object.Destroy(doc);
+        }
+
+        /// <summary>
+        /// MaskField has no stylesheet of its own; its trigger is the Picker's. The registry's
+        /// <c>mask-field</c> reads the field inset, sm for <c>sm</c> and md otherwise (#1395), so a
+        /// MaskField must render the same inset as a Dropdown of the same size, and a wider one at
+        /// md than the control gap it used to read.
+        /// </summary>
+        [UnityTest, Order(4)]
+        public IEnumerator Trigger_HorizontalInset_MatchesTheDropdownAtEverySize()
+        {
+            m_TestUI.rootVisualElement.Clear();
+            var panel = new Panel();
+            m_TestUI.rootVisualElement.Add(panel);
+
+            foreach (var size in new[] { Size.Sm, Size.Md, Size.Lg })
+            {
+                var mask = new MaskField(Enum.GetValues(typeof(EnumMaskForTest)), 0) { size = size };
+                var dropdown = new Dropdown { size = size };
+                panel.Add(mask);
+                panel.Add(dropdown);
+                yield return null;
+                yield return null;
+
+                Assert.IsTrue(mask.ClassListContains(Picker.sizeUssClassName + size.ToString().ToLower()),
+                    $"A {size} MaskField must carry the Picker's size class.");
+                Assert.Greater(mask.resolvedStyle.paddingLeft, 0f, $"A {size} MaskField lost its inset.");
+                Assert.AreEqual(dropdown.resolvedStyle.paddingLeft, mask.resolvedStyle.paddingLeft,
+                    $"A {size} MaskField must share the Dropdown's leading inset.");
+                Assert.AreEqual(dropdown.resolvedStyle.paddingRight, mask.resolvedStyle.paddingRight,
+                    $"A {size} MaskField must share the Dropdown's trailing inset.");
+            }
         }
     }
 

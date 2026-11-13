@@ -1,0 +1,10 @@
+/* NumericProperty */
+.appui-numericproperty > .appui-inputlabel__input-container > .appui-inputlabel__container > .appui-numericproperty__field {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.appui-numericproperty.appui-inputlabel--dragging > .appui-inputlabel__label-container,
+.appui-numericproperty.appui-inputlabel--dragging > .appui-inputlabel__icon {
+    cursor: var(--appui-alias-control-cursor-ewresize);
+}

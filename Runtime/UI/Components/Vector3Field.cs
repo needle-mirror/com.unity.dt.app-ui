@@ -116,7 +116,7 @@ namespace Unity.AppUI.UI
 
             hierarchy.Add(container);
 
-            size = Size.M;
+            size = Size.Md;
             SetValueWithoutNotify(Vector3.zero);
 
             m_XField.RegisterValueChangingCallback(OnXFieldChanging);

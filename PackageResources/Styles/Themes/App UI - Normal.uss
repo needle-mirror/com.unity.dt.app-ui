@@ -1,0 +1,16 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --appui-alias-actions-padding-horizontal-sm: 12px;
+  --appui-alias-actions-padding-horizontal-md: 16px;
+  --appui-alias-actions-padding-horizontal-lg: 32px;
+  --appui-alias-actions-compact-padding-horizontal-sm: 8px;
+  --appui-alias-actions-compact-padding-horizontal-md: 12px;
+  --appui-alias-actions-compact-padding-horizontal-lg: 16px;
+  --appui-sizing-400: 20px;
+  --appui-sizing-500: 24px;
+  --appui-sizing-600: 30px;
+  --appui-sizing-750: 36px;
+}

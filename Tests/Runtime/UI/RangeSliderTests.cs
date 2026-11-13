@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using NUnit.Framework;
 using Unity.AppUI.UI;
 using UnityEngine;
@@ -59,5 +60,42 @@ namespace Unity.AppUI.Tests.UI
         protected override string highValueToUxml => $"high-value=\"{highValue}\"";
 
         protected override string valueToUxml => $"min-value=\"{value.x}\" max-value=\"{value.y}\"";
+    }
+
+    [TestFixture]
+    [TestOf(typeof(SliderFloat))]
+    class SliderFloatParseTests
+    {
+        class ParseSliderFloat : SliderFloat
+        {
+            public bool Parse(string text, out float v) => ParseStringToValue(text, out v);
+        }
+
+        class ParseRangeSliderFloat : RangeSliderFloat
+        {
+            public bool Parse(string text, out Vector2 v) => ParseStringToValue(text, out v);
+        }
+
+        [TestCase("de-DE", "0,5", 0.5f)]
+        [TestCase("de-DE", "0.5", 0.5f)]
+        [TestCase("en-US", "1000.5", 1000.5f)]
+        public void ParseStringToValue_ReadsInvariantThenCurrentCulture(string cultureName, string text, float expected)
+        {
+            var previous = CultureInfo.CurrentCulture;
+            try
+            {
+                CultureInfo.CurrentCulture = new CultureInfo(cultureName);
+
+                Assert.IsTrue(new ParseSliderFloat().Parse(text, out var value));
+                Assert.AreEqual(expected, value, 1e-4f);
+
+                Assert.IsTrue(new ParseRangeSliderFloat().Parse(text + " - " + text, out var range));
+                Assert.AreEqual(new Vector2(expected, expected), range);
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = previous;
+            }
+        }
     }
 }

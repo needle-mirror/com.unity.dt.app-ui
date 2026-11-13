@@ -19,7 +19,7 @@ namespace Unity.AppUI.Samples.Navigation
 
             var panel = new UI.Panel
             {
-                scale = "large"
+                density = "comfort"
             };
             uiDocument.rootVisualElement.Add(panel);
             panel.StretchToParentSize();

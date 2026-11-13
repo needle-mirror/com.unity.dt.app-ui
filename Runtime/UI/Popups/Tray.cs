@@ -47,55 +47,55 @@ namespace Unity.AppUI.UI
     /// ## Anatomy
     /// Tray Examples:
     /// ```xml
-    /// &lt;appui:Tray position="Bottom" showHandle="true" size="M" /&gt;
+    /// &lt;appui:Tray position="Bottom" showHandle="true" size="Md" /&gt;
     /// ```
     /// Bottom tray with drag handle (mobile action sheet style)
     ///
     /// Different Positions:
     /// ```xml
-    /// &lt;appui:Tray position="Bottom" showHandle="true" size="M" /&gt;
+    /// &lt;appui:Tray position="Bottom" showHandle="true" size="Md" /&gt;
     /// ```
     /// Bottom tray for mobile actions
     /// ```xml
-    /// &lt;appui:Tray position="Left" showHandle="false" size="M" /&gt;
+    /// &lt;appui:Tray position="Left" showHandle="false" size="Md" /&gt;
     /// ```
     /// Left side navigation menu
     /// ```xml
-    /// &lt;appui:Tray position="Right" showHandle="true" size="M" /&gt;
+    /// &lt;appui:Tray position="Right" showHandle="true" size="Md" /&gt;
     /// ```
     /// Right side filter panel
     /// ```xml
-    /// &lt;appui:Tray position="Top" showHandle="false" size="M" /&gt;
+    /// &lt;appui:Tray position="Top" showHandle="false" size="Md" /&gt;
     /// ```
     /// Top notification tray
     ///
     /// Handle Visibility:
     /// ```xml
-    /// &lt;appui:Tray position="Bottom" showHandle="true" size="M" /&gt;
+    /// &lt;appui:Tray position="Bottom" showHandle="true" size="Md" /&gt;
     /// ```
     /// With drag handle for gesture control
     /// ```xml
-    /// &lt;appui:Tray position="Bottom" showHandle="false" size="M" /&gt;
+    /// &lt;appui:Tray position="Bottom" showHandle="false" size="Md" /&gt;
     /// ```
     /// Without handle for clean appearance
     ///
     /// Transition Speeds:
     /// ```xml
-    /// &lt;appui:Tray position="Bottom" transitionDurationMs="150" size="M" /&gt;
+    /// &lt;appui:Tray position="Bottom" transitionDurationMs="150" size="Md" /&gt;
     /// ```
     /// Fast animation (150ms)
     /// ```xml
-    /// &lt;appui:Tray position="Bottom" transitionDurationMs="300" size="M" /&gt;
+    /// &lt;appui:Tray position="Bottom" transitionDurationMs="300" size="Md" /&gt;
     /// ```
     /// Standard animation (300ms)
     /// ```xml
-    /// &lt;appui:Tray position="Bottom" transitionDurationMs="500" size="M" /&gt;
+    /// &lt;appui:Tray position="Bottom" transitionDurationMs="500" size="Md" /&gt;
     /// ```
     /// Slow animation (500ms)
     ///
     /// Disabled State:
     /// ```xml
-    /// &lt;appui:Tray position="Bottom" showHandle="true" enabled="false" size="M" /&gt;
+    /// &lt;appui:Tray position="Bottom" showHandle="true" enabled="false" size="Md" /&gt;
     /// ```
     /// Non-interactive tray overlay
     /// </remarks>
@@ -180,8 +180,8 @@ namespace Unity.AppUI.UI
     /// filterPanel.Add(dateFilter);
     ///
     /// var buttons = new VisualElement();
-    /// buttons.Add(new Button { title = "Reset", quiet = true });
-    /// buttons.Add(new Button { title = "Apply", variant = ButtonVariant.Accent });
+    /// buttons.Add(new Button { title = "Reset", variant = ButtonVariant.Ghost });
+    /// buttons.Add(new Button { title = "Apply", variant = ButtonVariant.Default });
     /// filterPanel.Add(buttons);
     ///
     /// var filterTray = Tray.Build(rootElement, filterPanel)

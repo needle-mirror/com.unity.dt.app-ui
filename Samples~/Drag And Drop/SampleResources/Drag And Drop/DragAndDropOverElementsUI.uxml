@@ -10,7 +10,7 @@
                     name="dnd-desc"
                     text="Drag and drop items from the Editor's Project window into the element below."
                     class="dnd-desc"
-                    size="S" />
+                    size="Sm" />
             <appui:Heading text="Form" class="dnd-form__title" />
             <engine:VisualElement class="dnd-dropzone-container">
                 <engine:VisualElement name="dnd-form" class="dnd-form">

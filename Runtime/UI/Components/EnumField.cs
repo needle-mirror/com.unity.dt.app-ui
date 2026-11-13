@@ -55,7 +55,11 @@ namespace Unity.AppUI.UI
             bindItem = bindItemFunc ?? OnBindEnum;
             bindTitle = bindTitleFunc ?? OnBindTitle;
 
-            if (defaultValue != null)
+            // defaultEnumValue, not defaultValue: the latter is Picker's own int[] of default
+            // selected indices, which this constructor never passes through `base(null, ...)`, so
+            // the guard was always false and Init never ran -- leaving sourceItems unpopulated and
+            // the menu unable to open for the very constructor the class documents as preferred.
+            if (defaultEnumValue != null)
                 Init(defaultEnumValue);
         }
 

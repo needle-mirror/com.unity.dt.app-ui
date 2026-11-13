@@ -6,6 +6,8 @@
 // License: MIT
 // =============================================================================
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -52,10 +54,17 @@ namespace Unity.AppUI.TextMateLib
         {
             ThrowIfDisposed();
 
-            if (string.IsNullOrEmpty(grammarPath))
-                throw new ArgumentNullException(nameof(grammarPath));
+            // Read and validate in managed code, then hand the validated content to the native
+            // loader. Passing the path instead would have the native side re-read the file, so
+            // anything that changed it in between would reach the parser unvalidated.
+            var content = TextMateJson.ReadAndValidate(grammarPath, nameof(grammarPath), "grammar");
 
-            int result = NativeMethods.textmate_registry_add_grammar_from_file(m_Handle, grammarPath);
+            // The native file loader parses only files named '*.json' (or with no extension at
+            // all); preserved here so routing through the JSON entry point does not quietly start
+            // accepting grammars this API used to reject.
+            RequireJsonExtension(grammarPath, "grammar");
+
+            int result = NativeMethods.textmate_registry_add_grammar_from_json(m_Handle, NativeMethods.ToUtf8NullTerminated(content));
             if (result == 0)
                 throw new InvalidOperationException($"Failed to add grammar from file: {grammarPath}");
         }
@@ -70,8 +79,7 @@ namespace Unity.AppUI.TextMateLib
         {
             ThrowIfDisposed();
 
-            if (string.IsNullOrEmpty(jsonContent))
-                throw new ArgumentNullException(nameof(jsonContent));
+            TextMateJson.Validate(jsonContent, nameof(jsonContent), "grammar");
 
             int result = NativeMethods.textmate_registry_add_grammar_from_json(m_Handle, NativeMethods.ToUtf8NullTerminated(jsonContent));
             if (result == 0)
@@ -83,12 +91,13 @@ namespace Unity.AppUI.TextMateLib
         /// Must be called before using TokenizeLine2 for themed output.
         /// </summary>
         /// <param name="jsonContent">The theme JSON content.</param>
+        /// <exception cref="ArgumentNullException">Thrown when jsonContent is null or empty</exception>
+        /// <exception cref="InvalidOperationException">Thrown when the theme fails to load</exception>
         public void SetThemeFromJson(string jsonContent)
         {
             ThrowIfDisposed();
 
-            if (string.IsNullOrEmpty(jsonContent))
-                throw new ArgumentNullException(nameof(jsonContent));
+            TextMateJson.Validate(jsonContent, nameof(jsonContent), "theme");
 
             int result = NativeMethods.textmate_registry_set_theme(m_Handle, NativeMethods.ToUtf8NullTerminated(jsonContent));
             if (result == 0)
@@ -163,6 +172,14 @@ namespace Unity.AppUI.TextMateLib
 
             m_LoadedGrammars.Add(grammar);
             return grammar;
+        }
+
+        static void RequireJsonExtension(string path, string what)
+        {
+            var dot = path.LastIndexOf('.');
+            if (dot >= 0 && !path.Substring(dot).Equals(".json", StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException(
+                    $"Failed to load {what} from file: only the JSON format is supported, but '{path}' does not end in '.json'.");
         }
 
         void ThrowIfDisposed()

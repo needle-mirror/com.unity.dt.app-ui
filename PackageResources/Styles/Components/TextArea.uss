@@ -52,8 +52,10 @@
     -unity-background-image-tint-color: var(--appui-foregrounds-100);
 }
 
-.appui-textarea__input,
-.appui-textarea__placeholder {
+/* Font size: the registry's textarea is text-base below its md viewport breakpoint and text-sm
+   above it. USS has no viewport query, so UITK takes the desktop step, text-sm. */
+.appui-textarea__input, .appui-textarea__placeholder {
+    font-size: var(--appui-font-sizes-100);
     background-color: rgba(0, 0, 0, 0);
     border-width: 0;
     color: var(--appui-foregrounds-100);
@@ -63,7 +65,10 @@
     flex-shrink: 0;
     width: 100%;
     margin: 0;
-    padding: var(--appui-spacing-100);
+    padding-top: var(--appui-static-sizing-100);
+    padding-bottom: var(--appui-static-sizing-100);
+    padding-left: var(--appui-alias-field-padding-horizontal-md);
+    padding-right: var(--appui-alias-field-padding-horizontal-md);
     -unity-text-align: upper-left;
 }
 
@@ -71,7 +76,8 @@
     color: var(--appui-foregrounds-25);
     position: absolute;
     align-self: flex-start;
-    padding: var(--appui-sizing-100);
+    padding-top: var(--appui-sizing-100);
+    padding-bottom: var(--appui-sizing-100);
 }
 
 .appui-textarea:hover,

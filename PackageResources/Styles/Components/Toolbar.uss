@@ -1,7 +1,7 @@
 /* Toolbar */
 .appui-toolbar {
     display: flex;
-    padding: var(--appui-spacing-100);
+    padding: var(--appui-static-sizing-100);
     background-color: var(--appui-backgrounds-100);
     border-color: var(--appui-backgrounds-300);
     align-items: center;
@@ -81,13 +81,13 @@
 }
 
 .appui-toolbar--horizontal > .appui-toolbar__drag-bar {
-    margin-right: var(--appui-spacing-100);
+    margin-right: var(--appui-static-sizing-100);
     margin-left: 0;
 }
 
 .appui--rtl .appui-toolbar--horizontal > .appui-toolbar__drag-bar {
     margin-right: 0;
-    margin-left: var(--appui-spacing-100);
+    margin-left: var(--appui-static-sizing-100);
 }
 
 .appui-toolbar--horizontal .appui-toolbar__drag-bar-indicator {
@@ -96,7 +96,7 @@
 }
 
 .appui-toolbar--vertical > .appui-toolbar__drag-bar {
-    margin-bottom: var(--appui-spacing-100);
+    margin-bottom: var(--appui-static-sizing-100);
 }
 
 .appui-toolbar--vertical .appui-toolbar__drag-bar-indicator {

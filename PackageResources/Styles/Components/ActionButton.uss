@@ -1,5 +1,6 @@
 /* ActionButton */
 .appui-actionbutton {
+    font-size: var(--appui-font-sizes-100);
     background-color: var(--appui-alias-actions-background-color-default);
     border-width: var(--appui-alias-control-border-width);
     border-color: var(--appui-alias-actions-border-color-default);
@@ -10,7 +11,8 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 0 var(--appui-spacing-100);
+    /* Horizontal inset: the size rules read the compact actions inset, as the registry does. */
+    padding: 0;
     transition-property: background-color, border-color;
     transition-duration: var(--appui-animation-duration-100);
     transition-timing-function: var(--appui-animation-easing-ease-out);
@@ -25,7 +27,8 @@
     background-color: var(--appui-alias-actions-quiet-background-color-default);
 }
 
-.appui-actionbutton--icon-only {
+/* Two classes, so it outranks the size rules' padding further down. */
+.appui-actionbutton.appui-actionbutton--icon-only {
     padding: 0;
 }
 
@@ -38,19 +41,19 @@
 }
 
 .appui--ltr .appui-actionbutton--icon-and-label > .appui-actionbutton__label {
-    margin-left: var(--appui-alias-control-gap-md); /*margin-inline-start: var(--appui-alias-control-gap-md);*/
+    margin-left: var(--appui-sizing-160); /*margin-inline-start: var(--appui-sizing-160);*/
 }
 
 .appui--rtl .appui-actionbutton--icon-and-label > .appui-actionbutton__label {
-    margin-right: var(--appui-alias-control-gap-md); /*margin-inline-end: var(--appui-alias-control-gap-md);*/
+    margin-right: var(--appui-sizing-160); /*margin-inline-end: var(--appui-sizing-160);*/
 }
 
 .appui--ltr .appui-actionbutton--with-trailing-icon > .appui-actionbutton__label {
-    margin-right: var(--appui-alias-control-gap-md); /*margin-inline-end: var(--appui-alias-control-gap-md);*/
+    margin-right: var(--appui-sizing-160); /*margin-inline-end: var(--appui-sizing-160);*/
 }
 
 .appui--rtl .appui-actionbutton--with-trailing-icon > .appui-actionbutton__label {
-    margin-left: var(--appui-alias-control-gap-md); /*margin-inline-start: var(--appui-alias-control-gap-md);*/
+    margin-left: var(--appui-sizing-160); /*margin-inline-start: var(--appui-sizing-160);*/
 }
 
 .appui-icon.appui-actionbutton__icon,
@@ -112,11 +115,6 @@
     --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default);
 }
 
-.appui-actionbutton--size-s .appui-icon{
-    height: var(--appui-sizing-300);
-    width: var(--appui-sizing-300);
-}
-
 .appui-actionbutton:disabled {
     cursor: var(--appui-alias-control-cursor-disabled);
     background-color: var(--appui-alias-actions-background-color-disabled);
@@ -150,17 +148,29 @@
     border-color: var(--appui-alias-actions-border-color-disabled);
 }
 
-.appui-actionbutton--size-s {
+.appui-actionbutton--size-sm {
     height: var(--appui-alias-control-sizing-sm-height);
     min-width: var(--appui-alias-control-sizing-sm-height);
+    padding-left: var(--appui-alias-actions-compact-padding-horizontal-sm);
+    padding-right: var(--appui-alias-actions-compact-padding-horizontal-sm);
+    font-size: var(--appui-font-sizes-75);
 }
 
-.appui-actionbutton--size-m {
+.appui-actionbutton--size-md {
     height: var(--appui-alias-control-sizing-md-height);
     min-width: var(--appui-alias-control-sizing-md-height);
+    padding-left: var(--appui-alias-actions-compact-padding-horizontal-md);
+    padding-right: var(--appui-alias-actions-compact-padding-horizontal-md);
 }
 
-.appui-actionbutton--size-l {
+.appui-actionbutton--size-lg {
     height: var(--appui-alias-control-sizing-lg-height);
     min-width: var(--appui-alias-control-sizing-lg-height);
+    padding-left: var(--appui-alias-actions-compact-padding-horizontal-lg);
+    padding-right: var(--appui-alias-actions-compact-padding-horizontal-lg);
+}
+
+.appui-actionbutton--size-sm .appui-icon {
+    height: var(--appui-sizing-300);
+    width: var(--appui-sizing-300);
 }

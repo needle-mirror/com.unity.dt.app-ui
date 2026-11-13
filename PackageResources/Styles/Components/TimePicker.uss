@@ -1,0 +1,84 @@
+/* TimePicker */
+.appui-time-picker {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.appui--rtl .appui-time-picker {
+    flex-direction: row-reverse;
+}
+
+.appui-text.appui-time-picker__separator {
+    flex-shrink: 0;
+    flex-grow: 0;
+    color: var(--appui-foregrounds-50);
+    font-size: var(--appui-font-sizes-100);
+    padding: 0 var(--appui-alias-control-gap-xs);
+}
+
+/* TimePickerColumn */
+.appui-time-picker-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    flex-grow: 0;
+    padding: 0 var(--appui-alias-control-gap-xs);
+}
+
+.appui-time-picker-column__button {
+    height: var(--appui-alias-control-sizing-sm-square);
+    width: var(--appui-alias-control-sizing-sm-square);
+    padding: var(--appui-alias-control-gap-xs);
+    border-radius: var(--appui-alias-control-border-radius);
+    cursor: var(--appui-alias-control-cursor-pointer);
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.appui-time-picker-column__button > .appui-icon {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+}
+
+.appui-time-picker-column__button:hover,
+.appui-time-picker-column__button:focus,
+.appui-time-picker-column__button:active {
+    background-color: var(--appui-alias-actions-background-color-active);
+}
+
+.appui-time-picker-column__button:hover > .appui-icon,
+.appui-time-picker-column__button:focus > .appui-icon,
+.appui-time-picker-column__button:active > .appui-icon {
+    -unity-background-image-tint-color: var(--appui-alias-actions-foreground-color-active);
+    color: var(--appui-alias-actions-foreground-color-active);
+}
+
+.appui-time-picker-column__button:disabled {
+    cursor: var(--appui-alias-control-cursor-disabled);
+}
+
+.appui-text.appui-time-picker-column__value {
+    min-width: var(--appui-alias-control-sizing-md-height);
+    margin: var(--appui-alias-control-gap-xs) 0;
+    padding: var(--appui-alias-control-gap-xs) var(--appui-alias-control-gap-md);
+    border-radius: var(--appui-alias-control-border-radius);
+    background-color: var(--appui-base-50);
+    color: var(--appui-foregrounds-100);
+    font-size: var(--appui-font-sizes-100);
+    -unity-text-align: middle-center;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+/* The AM/PM column has no numeric siblings to line up with, so it sits on its own. */
+.appui-time-picker-column--dayperiod {
+    padding-left: var(--appui-alias-control-gap-md);
+}
+
+.appui-time-picker:disabled .appui-time-picker-column__button {
+    cursor: var(--appui-alias-control-cursor-disabled);
+}

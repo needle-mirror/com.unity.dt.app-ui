@@ -1,0 +1,198 @@
+/*
+ * SplitButton — one rim around two press targets. The rim, the fill and the states are the
+ * secondary Button's (see Button.uss `.appui-button--secondary`), so a row of plain buttons and
+ * split buttons reads as one row. Only the root draws a border: the parts share it, and a single
+ * hairline between them is what makes the control read as split rather than as two buttons.
+ */
+.appui-split-button {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-width: var(--appui-alias-control-border-width);
+    border-radius: var(--appui-alias-control-border-radius);
+    background-color: var(--appui-alias-control-background-color-default);
+    border-color: var(--appui-base-500);
+    color: var(--appui-alias-control-foreground-color-default);
+}
+
+.appui--rtl .appui-split-button {
+    flex-direction: row-reverse;
+}
+
+.appui-split-button__main,
+.appui-split-button__caret {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    cursor: var(--appui-alias-control-cursor-pointer);
+    transition-property: background-color;
+    transition-duration: var(--appui-animation-duration-100);
+    transition-timing-function: var(--appui-animation-easing-ease-out);
+}
+
+.appui--rtl .appui-split-button__main,
+.appui--rtl .appui-split-button__caret {
+    flex-direction: row-reverse;
+}
+
+.appui-split-button__main {
+    flex-grow: 1;
+    /* The registry's main part reads the compact md inset at every size. */
+    padding-left: var(--appui-alias-actions-compact-padding-horizontal-md);
+    padding-right: var(--appui-alias-actions-compact-padding-horizontal-md);
+}
+
+.appui-split-button--icon-only .appui-split-button__main {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.appui-split-button__label {
+    -unity-font-definition: var(--appui-font-weights-200); /*font-weight: 600;*/
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+    color: var(--appui-alias-control-foreground-color-default);
+}
+
+.appui-split-button__icon {
+    flex-shrink: 0;
+    --unity-image-tint-color: var(--appui-alias-control-foreground-color-default);
+}
+
+/*
+ * The icon and the label only have room between them when both are there. USS has no adjacent
+ * sibling selector, so the state is a class the component sets — and an unsupported selector would
+ * take this whole stylesheet down with it, not just this rule.
+ */
+.appui-split-button--icon-and-label .appui-split-button__label {
+    margin-left: var(--appui-sizing-160); /*margin-inline-start: var(--appui-sizing-160);*/
+}
+
+.appui--rtl .appui-split-button--icon-and-label .appui-split-button__label {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-160); /*margin-inline-start: var(--appui-sizing-160);*/
+}
+
+/*
+ * The caret part is square-ish: as wide as a large glyph, holding a small one, with the hairline
+ * that separates it from the main part on its leading edge.
+ */
+.appui-split-button__caret {
+    flex-shrink: 0;
+    width: var(--appui-alias-control-sizing-icon-lg);
+    border-left-width: var(--appui-alias-control-border-width);
+    border-left-color: var(--appui-base-500);
+}
+
+.appui--rtl .appui-split-button__caret {
+    border-left-width: 0;
+    border-right-width: var(--appui-alias-control-border-width);
+    border-right-color: var(--appui-base-500);
+}
+
+.appui-split-button__caret-icon {
+    --unity-image-tint-color: var(--appui-alias-control-foreground-color-default);
+}
+
+/* Hover and press light only the part under the pointer, never the whole control. */
+.appui-split-button__main.is-hovered,
+.appui-split-button__caret.is-hovered {
+    background-color: var(--appui-alias-control-background-color-hover);
+}
+
+.appui-split-button__main.is-active,
+.appui-split-button__caret.is-active,
+.appui-split-button__caret.is-open {
+    background-color: var(--appui-alias-control-background-color-active);
+}
+
+/*
+ * A pressed main part is a toggle that is on. The fill stops at the main part: the caret offers
+ * options and carries none of the state.
+ */
+.appui-split-button__main.is-selected {
+    background-color: var(--appui-alias-actions-selected-background-color-default);
+}
+
+.appui-split-button__main.is-selected.is-hovered {
+    background-color: var(--appui-alias-actions-selected-background-color-hover);
+}
+
+.appui-split-button__main.is-selected.is-active {
+    background-color: var(--appui-alias-actions-selected-background-color-active);
+}
+
+.appui-split-button__main.is-selected > .appui-split-button__label {
+    color: var(--appui-alias-actions-accent-foreground-color-default);
+}
+
+.appui-split-button__main.is-selected > .appui-split-button__icon {
+    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default);
+}
+
+.appui-split-button__main.keyboard-focus,
+.appui-split-button__caret.keyboard-focus {
+    /* converted from : outline-width: var(--appui-alias-control-outline-width); */
+    --outline-width: var(--appui-alias-control-outline-width);
+    /* converted from : outline-color: var(--appui-alias-control-outline-color); */
+    --outline-color: var(--appui-alias-control-outline-color);
+    /* The rim is the root's, so the ring sits inside the part rather than outside it. */
+    --outline-offset: 0;
+}
+
+/* Sizes. Heights come from the control-sizing aliases, never a raw sizing step. */
+.appui-split-button--size-sm {
+    height: var(--appui-alias-control-sizing-sm-height);
+}
+
+.appui-split-button--size-md {
+    height: var(--appui-alias-control-sizing-md-height);
+}
+
+.appui-split-button--size-lg {
+    height: var(--appui-alias-control-sizing-lg-height);
+}
+
+.appui-split-button--size-sm .appui-split-button__label {
+    font-size: var(--appui-font-sizes-100);
+}
+
+.appui-split-button--size-md .appui-split-button__label,
+.appui-split-button--size-lg .appui-split-button__label {
+    font-size: var(--appui-font-sizes-200);
+}
+
+/* An icon-only main part is square, so the whole control reads as a glyph plus its caret. */
+.appui-split-button--icon-only.appui-split-button--size-sm .appui-split-button__main {
+    width: var(--appui-alias-control-sizing-sm-height);
+}
+
+.appui-split-button--icon-only.appui-split-button--size-md .appui-split-button__main {
+    width: var(--appui-alias-control-sizing-md-height);
+}
+
+.appui-split-button--icon-only.appui-split-button--size-lg .appui-split-button__main {
+    width: var(--appui-alias-control-sizing-lg-height);
+}
+
+.appui-split-button:disabled /*.appui-split-button.is-disabled*/ {
+    background-color: var(--appui-alias-control-background-color-disabled);
+    border-color: var(--appui-alias-control-border-color-disabled);
+    color: var(--appui-alias-actions-foreground-color-disabled);
+}
+
+.appui-split-button:disabled .appui-split-button__main,
+.appui-split-button:disabled .appui-split-button__caret {
+    cursor: var(--appui-alias-control-cursor-disabled);
+}
+
+.appui-split-button:disabled .appui-split-button__label {
+    color: var(--appui-alias-actions-foreground-color-disabled);
+}
+
+.appui-split-button:disabled .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-actions-foreground-color-disabled);
+}

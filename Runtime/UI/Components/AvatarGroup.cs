@@ -154,7 +154,7 @@ namespace Unity.AppUI.UI
 
         const AvatarGroupSpacing k_DefaultSpacing = AvatarGroupSpacing.M;
 
-        const Size k_DefaultSize = Size.M;
+        const Size k_DefaultSize = Size.Md;
 
         const AvatarVariant k_DefaultVariant = AvatarVariant.Circular;
 

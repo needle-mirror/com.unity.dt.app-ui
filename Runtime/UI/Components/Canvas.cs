@@ -694,6 +694,29 @@ namespace Unity.AppUI.UI
             FrameElement(m_ViewportContainer);
         }
 
+        /// <summary>
+        /// The content-space box the canvas currently shows, grown by <paramref name="margin"/> screen
+        /// pixels on every side, for culling nodes and edges that are off screen.
+        /// </summary>
+        /// <param name="contentRect"> The visible box in the canvas' content space. </param>
+        /// <param name="margin"> The screen margin to keep around the viewport, in pixels. </param>
+        /// <returns> False while the canvas has no size yet (not laid out, or hidden). </returns>
+        /// <remarks>
+        /// Pass the result to <see cref="CanvasCulling.IsVisible(CanvasNode, Rect, float)"/> and
+        /// <see cref="CanvasCulling.IsVisible(CanvasEdge, Rect)"/>.
+        /// </remarks>
+        public bool TryGetVisibleContentRect(out Rect contentRect, float margin = CanvasCulling.defaultMargin)
+        {
+            var size = GetContentSize();
+            return CanvasCulling.TryViewportToContent(zoom, -scrollOffset, size, margin, out contentRect);
+        }
+
+        Vector2 GetContentSize()
+        {
+            var r = contentRect;
+            return float.IsNaN(r.width) || float.IsNaN(r.height) ? Vector2.zero : r.size;
+        }
+
         void OnKeyDown(KeyDownEvent evt)
         {
             if (evt.keyCode == KeyCode.F)

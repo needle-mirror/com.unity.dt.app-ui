@@ -5,7 +5,7 @@
     flex-direction: row;
     align-items: center;
     flex-shrink: 0;
-    padding: var(--appui-alias-control-gap-md) var(--appui-alias-control-gap-lg);
+    padding: var(--appui-sizing-200); /* p-[sizing-200] in the registry */
     border-radius: var(--appui-alias-control-border-radius);
     border-width: var(--appui-alias-control-border-width);
     border-color: var(--appui-foregrounds-25);
@@ -45,10 +45,8 @@
 /* Icon */
 
 .appui-helpbox__icon {
-    width: var(--appui-sizing-400);
-    height: var(--appui-sizing-400);
     flex-shrink: 0;
-    margin-right: var(--appui-alias-control-gap-md);
+    margin-right: var(--appui-sizing-160); /* gap-2 in the registry */
     margin-left: 0;
     align-self: flex-start;
     --unity-image-tint-color: var(--appui-foregrounds-100);
@@ -56,7 +54,24 @@
 
 .appui--rtl .appui-helpbox__icon {
     margin-right: 0;
-    margin-left: var(--appui-alias-control-gap-md);
+    margin-left: var(--appui-sizing-160);
+}
+
+/* The registry's glyph is one step below the box size (icon-sm at md). Icon.uss is imported
+   after this file, so these outrank its `.appui-icon--size-*` class with an extra selector. */
+.appui-helpbox--size-sm > .appui-icon.appui-helpbox__icon {
+    width: var(--appui-alias-control-sizing-icon-xs);
+    height: var(--appui-alias-control-sizing-icon-xs);
+}
+
+.appui-helpbox--size-md > .appui-icon.appui-helpbox__icon {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+}
+
+.appui-helpbox--size-lg > .appui-icon.appui-helpbox__icon {
+    width: var(--appui-alias-control-sizing-icon-md);
+    height: var(--appui-alias-control-sizing-icon-md);
 }
 
 .appui-helpbox--confirmation > .appui-helpbox__icon {
@@ -84,7 +99,7 @@
 .appui-helpbox__message {
     flex-shrink: 1;
     flex-grow: 1;
-    font-size: var(--appui-font-sizes-body-md);
+    font-size: var(--appui-font-sizes-200);
     white-space: normal;
     color: var(--appui-foregrounds-100);
     -unity-text-align: middle-left;
@@ -94,14 +109,14 @@
     -unity-text-align: middle-right;
 }
 
-.appui-helpbox--size-s > .appui-helpbox__message {
-    font-size: var(--appui-font-sizes-body-sm);
+.appui-helpbox--size-sm > .appui-helpbox__message {
+    font-size: var(--appui-font-sizes-100);
 }
 
-.appui-helpbox--size-m > .appui-helpbox__message {
-    font-size: var(--appui-font-sizes-body-md);
+.appui-helpbox--size-md > .appui-helpbox__message {
+    font-size: var(--appui-font-sizes-200);
 }
 
-.appui-helpbox--size-l > .appui-helpbox__message {
-    font-size: var(--appui-font-sizes-body-lg);
+.appui-helpbox--size-lg > .appui-helpbox__message {
+    font-size: var(--appui-font-sizes-300);
 }

@@ -1,0 +1,61 @@
+/* ClampedContent */
+
+/* The block itself is transparent chrome; it only owns the column layout. */
+.appui-clamped-content {
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+/* The viewport carries the height cap (written inline from ClampedContent.maxHeight, which is a
+   per-use content budget rather than a design token) and does the clipping. The content inside keeps
+   its natural height, which is what makes it measurable while clipped. */
+.appui-clamped-content__viewport {
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.appui-clamped-content__container {
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+/* USS has no linear-gradient, so ClampedContent draws the fade as a vertex-coloured mesh going from
+   transparent to --clamped-content-fade-color. Override that property where the host surface is not
+   the default background. It is hidden unless the content actually overflows. */
+.appui-clamped-content__fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--appui-sizing-320);
+    --clamped-content-fade-color: var(--appui-alias-surface-default);
+}
+
+/* The toggle sits under the viewport and is hidden entirely unless the content overflows. */
+.appui-clamped-content__toggle {
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: var(--appui-sizing-75);
+    padding-left: var(--appui-sizing-75);
+    padding-right: var(--appui-sizing-75);
+    height: var(--appui-alias-control-sizing-sm-height);
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-disabled);
+    -unity-text-align: middle-left;
+    border-radius: var(--appui-border-radius-sm);
+    cursor: var(--appui-alias-control-cursor-pointer);
+    --outline-width: var(--appui-alias-control-outline-width);
+    --outline-color: var(--appui-alias-control-outline-color);
+    --outline-offset: var(--appui-alias-control-outline-offset);
+    transition: color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-200);
+}
+
+.appui-clamped-content__toggle.is-hovered {
+    color: var(--appui-alias-text-primary);
+}
+
+.appui--rtl .appui-clamped-content__toggle {
+    align-self: flex-end;
+    -unity-text-align: middle-right;
+}

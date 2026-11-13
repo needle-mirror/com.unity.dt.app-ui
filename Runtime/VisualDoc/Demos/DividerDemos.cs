@@ -11,7 +11,7 @@ namespace Unity.AppUI.VisualDoc
         {
             return DemoUtils.Row(
                 new Text { text = "Left content" },
-                new Divider { direction = Direction.Vertical, size = Size.M },
+                new Divider { direction = Direction.Vertical, size = Size.Md },
                 new Text { text = "Right content" });
         }
     }

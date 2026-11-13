@@ -302,11 +302,12 @@ namespace Unity.AppUI.UI
             return r;
         }
 
-        static bool IsValidPointerType(int pointerId)
+        internal static bool IsValidPointerType(int pointerId)
         {
             return pointerId == PointerId.mousePointerId
-                || pointerId >= PointerId.trackedPointerIdBase
-                ;
+                || (pointerId >= PointerId.touchPointerIdBase && pointerId < PointerId.touchPointerIdBase + PointerId.touchPointerCount)
+                || (pointerId >= PointerId.penPointerIdBase && pointerId < PointerId.penPointerIdBase + PointerId.penPointerCount)
+                || pointerId >= PointerId.trackedPointerIdBase;
         }
     }
 }

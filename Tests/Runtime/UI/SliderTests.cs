@@ -1,6 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
 using Unity.AppUI.UI;
 using UnityEngine.UIElements;
 using SliderInt = Unity.AppUI.UI.SliderInt;
@@ -160,6 +163,101 @@ namespace Unity.AppUI.Tests.UI
         protected override float step => 1f;
 
         protected override float shiftStep => 2f;
+
+        /// <summary>
+        /// The registry's SliderField lets the numeric field reach past the track, so a quantity
+        /// with no real ceiling can still offer a comfortable range to drag through. Without the
+        /// widening, a typed 500 would be clamped back to the track's 10.
+        /// </summary>
+        [Test]
+        public void FieldHighValue_WidensTheAcceptedValuePastTheTrack()
+        {
+            var slider = new SliderFloat { lowValue = 0f, highValue = 10f, fieldHighValue = 500f };
+
+            slider.value = 250f;
+            Assert.AreEqual(250f, slider.value, 0.001f,
+                "A value inside the widened field bounds must survive, even though it is past the track.");
+
+            slider.value = 900f;
+            Assert.AreEqual(500f, slider.value, 0.001f,
+                "A value past fieldHighValue must still clamp to it.");
+        }
+
+        [Test]
+        public void FieldLowValue_WidensTheAcceptedValueBelowTheTrack()
+        {
+            var slider = new SliderFloat { lowValue = 0f, highValue = 10f, fieldLowValue = -50f };
+
+            slider.value = -25f;
+            Assert.AreEqual(-25f, slider.value, 0.001f);
+
+            slider.value = -100f;
+            Assert.AreEqual(-50f, slider.value, 0.001f);
+        }
+
+        /// <summary>
+        /// Widening only. A field bound inside the track would let a drag reach a number the field
+        /// then refused to take back, so it is ignored.
+        /// </summary>
+        [Test]
+        public void FieldBoundsInsideTheTrack_AreIgnored()
+        {
+            var slider = new SliderFloat
+            {
+                lowValue = 0f, highValue = 10f, fieldLowValue = 2f, fieldHighValue = 8f,
+            };
+
+            slider.value = 10f;
+            Assert.AreEqual(10f, slider.value, 0.001f,
+                "A narrowing fieldHighValue must not clamp a value the track can reach.");
+
+            slider.value = 0f;
+            Assert.AreEqual(0f, slider.value, 0.001f,
+                "A narrowing fieldLowValue must not clamp a value the track can reach.");
+        }
+
+        [Test]
+        public void WithoutFieldBounds_TheTrackStillClamps()
+        {
+            var slider = new SliderFloat { lowValue = 0f, highValue = 10f };
+
+            slider.value = 50f;
+            Assert.AreEqual(10f, slider.value, 0.001f,
+                "With no widening set, the value must clamp to the track exactly as before.");
+        }
+
+        /// <summary>
+        /// The widened bounds exist for typed input. An arrow key on the track must not walk the
+        /// value past the end the thumb can actually reach, which is what would happen if the key
+        /// handlers were left to fall through to the widened value clamp.
+        /// </summary>
+        [UnityTest]
+        public IEnumerator ArrowKeyStepping_StaysOnTheTrackEvenWhenTheFieldIsWidened()
+        {
+            var slider = new SliderFloat
+            {
+                lowValue = 0f, highValue = 10f, fieldHighValue = 500f, step = 1f, value = 10f,
+            };
+
+            m_TestUI.rootVisualElement.Clear();
+            m_TestUI.rootVisualElement.Add(slider);
+            yield return null;
+
+            var control = slider.Q(className: SliderFloat.sliderControlUssClassName);
+            Assert.IsNotNull(control, "The slider control is the element carrying the key handler.");
+            control.Focus();
+            yield return null;
+
+            using (var evt = KeyDownEvent.GetPooled('\0', KeyCode.RightArrow, EventModifiers.None))
+            {
+                evt.target = control;
+                control.SendEvent(evt);
+            }
+            yield return null;
+
+            Assert.AreEqual(10f, slider.value, 0.001f,
+                "Stepping up from the track's end must stay at the end, not enter the widened range.");
+        }
     }
 
     [TestFixture]
@@ -184,5 +282,47 @@ namespace Unity.AppUI.Tests.UI
         protected override int step => 1;
 
         protected override int shiftStep => 2;
+    }
+
+    [TestFixture]
+    [TestOf(typeof(SliderFloat))]
+    class SliderFloatRestrictedKeysTests
+    {
+        class KeySliderFloat : SliderFloat
+        {
+            public void SendKey(KeyCode key, EventModifiers modifiers = EventModifiers.None)
+            {
+                using var evt = KeyDownEvent.GetPooled('\0', key, modifiers);
+                OnKeyDown(evt);
+            }
+        }
+
+        static KeySliderFloat Create(RestrictedValuesPolicy policy)
+        {
+            return new KeySliderFloat
+            {
+                lowValue = 0,
+                highValue = 100,
+                step = 0.1f,
+                shiftStep = 1f,
+                restrictedValues = policy,
+                value = 50f
+            };
+        }
+
+        [TestCase(RestrictedValuesPolicy.None, KeyCode.RightArrow, EventModifiers.None, 50.1f)]
+        [TestCase(RestrictedValuesPolicy.None, KeyCode.LeftArrow, EventModifiers.Shift, 49f)]
+        [TestCase(RestrictedValuesPolicy.Step, KeyCode.RightArrow, EventModifiers.None, 50.1f)]
+        [TestCase(RestrictedValuesPolicy.Step, KeyCode.RightArrow, EventModifiers.Shift, 51f)]
+        [TestCase(RestrictedValuesPolicy.Step, KeyCode.LeftArrow, EventModifiers.Shift, 49f)]
+        [TestCase(RestrictedValuesPolicy.CtrlStep, KeyCode.RightArrow, EventModifiers.None, 50.1f)]
+        [TestCase(RestrictedValuesPolicy.CtrlStep, KeyCode.RightArrow, EventModifiers.Control, 50.1f)]
+        [TestCase(RestrictedValuesPolicy.CtrlStep, KeyCode.LeftArrow, EventModifiers.Control | EventModifiers.Shift, 49f)]
+        public void ArrowKeys_MoveByTheStep_WhenValuesAreRestricted(RestrictedValuesPolicy policy, KeyCode key, EventModifiers modifiers, float expected)
+        {
+            var slider = Create(policy);
+            Assert.DoesNotThrow(() => slider.SendKey(key, modifiers));
+            Assert.AreEqual(expected, slider.value, 1e-3f);
+        }
     }
 }

@@ -1,0 +1,26 @@
+/* CardGrid */
+
+/* UITK has no CSS grid and no `gap`, so the auto-fill layout is a wrapping flex row whose column
+   count and per-tile margins CardGrid.Reflow() computes in C#. */
+.appui-card-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+/* Right-to-left: flip the row so tile 0 sits against the right edge. CardGrid.Reflow() moves the
+   inter-tile gap to `margin-left` to match, so it stays on each tile's trailing edge. */
+.appui--rtl .appui-card-grid {
+    flex-direction: row-reverse;
+}
+
+/* The gap probe keeps the inter-tile spacing a token rather than a C# constant: it is sized from a
+   density-aware --appui-sizing step and the grid reads the value back off its resolved width. It is
+   absolutely positioned and hidden, so it takes no part in the flex flow. UITK cannot read a `px`
+   length back through a float custom property, which is why this exists instead of a var. */
+.appui-card-grid__gap-probe {
+    position: absolute;
+    visibility: hidden;
+    width: var(--appui-sizing-250);
+    height: 0;
+}

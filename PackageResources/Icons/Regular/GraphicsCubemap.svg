@@ -1,0 +1,8 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--graphics-cubemap--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M1.85355 11.6464C1.65829 11.8417 1.65829 12.1583 1.85355 12.3536L3.64645 14.1464C3.84171 14.3417 4.15829 14.3417 4.35355 14.1464L6.5 12L4 9.5L1.85355 11.6464Z" fill="#555555"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 9L7 11.5L9.5 9L7 6.5L4.5 9Z" fill="#0C6CCB"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 12L9.64645 14.1464C9.84171 14.3417 10.1583 14.3417 10.3536 14.1464L12.1464 12.3536C12.3417 12.1583 12.3417 11.8417 12.1464 11.6464L10 9.5L7.5 12Z" fill="#555555"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M1.85355 5.64645C1.65829 5.84171 1.65829 6.15829 1.85355 6.35355L4 8.5L6.5 6L4.35355 3.85355C4.15829 3.65829 3.84171 3.65829 3.64645 3.85355L1.85355 5.64645Z" fill="#0C6CCB"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 6L10 8.5L12.5 6L10 3.5L7.5 6Z" fill="#555555"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 3L13 5.5L15.1464 3.35355C15.3417 3.15829 15.3417 2.84171 15.1464 2.64645L13.3536 0.853553C13.1583 0.658291 12.8417 0.658291 12.6464 0.853553L10.5 3Z" fill="#0C6CCB"/>
+</svg>

@@ -15,15 +15,38 @@
     flex-direction: row-reverse;
 }
 
+/* The registry's MenuItem stacks its label over its description in one flex-1 column. */
+.appui-dropdown-item__text {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+/* The registry's MenuItem description: text-sm in text-secondary under the row's text-base label. */
+.appui-dropdown-item__description {
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-secondary);
+}
+
+.appui-picker-item:disabled .appui-dropdown-item__description {
+    color: var(--appui-alias-text-disabled);
+}
+
+/* The registry's select trigger shows only the label, so a bound description stays in the menu. */
+.appui-picker .appui-dropdown-item__description {
+    display: none;
+}
+
 .appui-dropdown-item__checkmark {
     opacity: 0;
     display: none;
     margin-left: 0;
-    margin-right: var(--appui-alias-control-gap-md);
+    margin-right: var(--appui-sizing-160);
 }
 
 .appui--rtl .appui-dropdown-item__checkmark {
-    margin-left: var(--appui-alias-control-gap-md);
+    margin-left: var(--appui-sizing-160);
     margin-right: 0;
 }
 
@@ -33,16 +56,21 @@
     --unity-image-tint-color: var(--appui-foregrounds-200);
 }
 
+.appui-picker-item:disabled .appui-dropdown-item__checkmark {
+    color: var(--appui-alias-text-disabled);
+    --unity-image-tint-color: var(--appui-alias-text-disabled);
+}
+
 .is-selected .appui-dropdown-item__checkmark {
     opacity: 1;
 }
 
 .appui-dropdown-item__icon {
     margin-left: 0;
-    margin-right: var(--appui-alias-control-gap-md);
+    margin-right: var(--appui-sizing-160);
 }
 
 .appui--rtl .appui-dropdown-item__icon {
-    margin-left: var(--appui-alias-control-gap-md);
+    margin-left: var(--appui-sizing-160);
     margin-right: 0;
 }

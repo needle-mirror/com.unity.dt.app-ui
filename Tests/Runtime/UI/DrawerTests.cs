@@ -12,6 +12,10 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => Drawer.ussClassName;
 
+        // Handed over to DrawerSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
         [Test]
         [TestCase(DrawerAnchor.Left, true, DrawerVariant.Temporary)]
         [TestCase(DrawerAnchor.Left, false, DrawerVariant.Temporary)]

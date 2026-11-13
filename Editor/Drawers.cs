@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.AppUI.Core;
+using Unity.AppUI.Editor.Theming;
 using Unity.AppUI.UI;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -311,18 +312,18 @@ namespace Unity.AppUI.Editor
     }
 
     /// <summary>
-    /// Custom Field for <see cref="Panel.scale"/> and <see cref="BaseVisualElement.scaleOverride"/> property.
+    /// Custom Field for <see cref="Panel.density"/> and <see cref="BaseVisualElement.densityOverride"/> property.
     /// </summary>
-    public class ScaleField : DropdownField
+    public class DensityField : DropdownField
     {
-        static readonly List<string> k_ScaleOptions = new List<string> { "small", "medium", "large" };
+        static readonly List<string> k_DensityOptions = new List<string> { "normal", "compact", "comfort" };
 
         /// <inheritdoc cref="DropdownField" />
-        public ScaleField() : this(null) { }
+        public DensityField() : this(null) { }
 
         /// <inheritdoc cref="DropdownField" />
-        public ScaleField(string label)
-            : base(label, k_ScaleOptions, 1, Core.StringExtensions.Capitalize, Core.StringExtensions.Capitalize)
+        public DensityField(string label)
+            : base(label, k_DensityOptions, 0, Core.StringExtensions.Capitalize, Core.StringExtensions.Capitalize)
         {
             AddToClassList(alignedFieldUssClassName);
         }
@@ -333,34 +334,66 @@ namespace Unity.AppUI.Editor
     /// </summary>
     public class ThemeField : DropdownField
     {
-        static readonly List<string> k_ScaleOptions = new List<string> { "dark", "light", "editor-dark", "editor-light" };
-
         /// <inheritdoc cref="DropdownField" />
         public ThemeField() : this(null) { }
 
         /// <inheritdoc cref="DropdownField" />
         public ThemeField(string label)
-            : base(label, k_ScaleOptions, 1, Core.StringExtensions.Capitalize, Core.StringExtensions.Capitalize)
+            : base(label, ThemeRegistry.GetThemes(), 0, FormatTheme, FormatTheme)
         {
             AddToClassList(alignedFieldUssClassName);
+
+            // Themes are discovered from the project, so the list cannot be captured once in the
+            // constructor. Rebuilding on attach is not enough either: importing a theme while an
+            // inspector is already open invalidates the registry but would leave this field showing
+            // the list it built when it attached. So it follows project changes for as long as it
+            // is on screen, and stops when it leaves.
+            RegisterCallback<AttachToPanelEvent>(_ =>
+            {
+                RefreshChoices();
+                EditorApplication.projectChanged += RefreshChoices;
+            });
+            RegisterCallback<DetachFromPanelEvent>(_ =>
+            {
+                EditorApplication.projectChanged -= RefreshChoices;
+            });
+        }
+
+        void RefreshChoices()
+        {
+            var themes = ThemeRegistry.GetThemes();
+
+            // Never drop the current value. A project can legitimately set a theme this dropdown
+            // does not know about — one defined by a hand-written stylesheet, or an asset that has
+            // not been imported yet — and silently rewriting Panel.theme to the first entry would
+            // be an inspector quietly changing a scene.
+            if (!string.IsNullOrEmpty(value) && !themes.Contains(value))
+                themes.Add(value);
+
+            choices = themes;
+        }
+
+        static string FormatTheme(string theme)
+        {
+            return string.IsNullOrEmpty(theme) ? theme : ThemeRegistry.GetDisplayName(theme);
         }
     }
 
     /// <summary>
-    /// Draws the Inspector GUI for an optional scale property
+    /// Draws the Inspector GUI for an optional density property
     /// </summary>
-    [CustomPropertyDrawer(typeof(OptionalScaleDrawerAttribute))]
-    public class OptionalScaleDrawer : OptionalPropertyDrawer<string, ScaleField>
+    [CustomPropertyDrawer(typeof(OptionalDensityDrawerAttribute))]
+    public class OptionalDensityDrawer : OptionalPropertyDrawer<string, DensityField>
     {
         /// <inheritdoc cref="OptionalPropertyDrawer{T,TU}.SetValue" />
         protected override void SetValue(string newValue) => m_Value.stringValue = newValue;
     }
 
     /// <summary>
-    /// Draws the Inspector GUI for a scale property
+    /// Draws the Inspector GUI for a density property
     /// </summary>
-    [CustomPropertyDrawer(typeof(ScaleDrawerAttribute))]
-    public class ScaleDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(DensityDrawerAttribute))]
+    public class DensityDrawer : PropertyDrawer
     {
         /// <summary>
         ///   <para>Creates custom GUI with UI Toolkit for the property.</para>
@@ -371,7 +404,7 @@ namespace Unity.AppUI.Editor
         /// </returns>
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            var field = new ScaleField(property.displayName)
+            var field = new DensityField(property.displayName)
             {
                 bindingPath = property.propertyPath
             };

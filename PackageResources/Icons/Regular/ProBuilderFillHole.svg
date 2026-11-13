@@ -1,0 +1,11 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--pro-builder-fill-hole--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<g clip-path="url(#clip0_223_8006)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8.00002 4.26609L2.62404 8.07496L8.00002 12.6829L13.376 8.07496L8.00002 4.26609ZM7.71097 3.24534C7.88414 3.12265 8.1159 3.12265 8.28907 3.24534L14.7385 7.81476C14.7553 7.82662 14.7705 7.84049 14.7838 7.85606C14.8737 7.96089 14.8615 8.11871 14.7567 8.20857L8.32542 13.7211C8.13817 13.8816 7.86187 13.8816 7.67463 13.7211L1.24333 8.20857C1.22776 8.19522 1.21389 8.18001 1.20204 8.16328C1.12222 8.05062 1.14884 7.89458 1.2615 7.81476L7.71097 3.24534Z" fill="#555555"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M5 8L8 6L11 8L8 10.4371L5 8Z" fill="#00876A"/>
+</g>
+<defs>
+<clipPath id="clip0_223_8006">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+</defs>
+</svg>

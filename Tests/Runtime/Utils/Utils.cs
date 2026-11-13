@@ -9,9 +9,6 @@ using Unity.AppUI.Navigation;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
-#if UNITY_6000_5_OR_NEWER
-using UnityEngine.Assemblies;
-#endif
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -29,30 +26,47 @@ namespace Unity.AppUI.Tests
 
         static readonly object k_UxmlImporterImplInstance;
 
-        static Utils()
+        static bool s_ConditionalIgnoresRegistered;
+
+        /// <summary>
+        /// Registers the <c>IgnoreInEditor</c> / <c>IgnoreInPlayer</c> conditions that
+        /// <see cref="ConditionalIgnoreAttribute"/> resolves against.
+        /// </summary>
+        /// <remarks>
+        /// This cannot live in the static constructor alone. NUnit resolves a
+        /// <c>[ConditionalIgnore]</c> key while it *builds the test tree*, before any test body
+        /// runs, and a static constructor only fires when something first touches the type. In the
+        /// Editor some other code path happens to touch <see cref="Utils"/> in time; in a player
+        /// build nothing does, so every key is still unregistered when the tree is built and every
+        /// <c>[ConditionalIgnore("IgnoreInPlayer", ...)]</c> silently fails to ignore. The tests
+        /// then run in the player anyway and fail on Editor-only expectations, such as reading USS
+        /// source out of <c>Packages/</c> or instantiating a VisualElement from UXML.
+        ///
+        /// <see cref="RuntimeInitializeOnLoadMethodAttribute"/> runs before the TestRunner builds
+        /// its tree in a player, which is the guarantee the static constructor never had.
+        /// </remarks>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
+        internal static void RegisterConditionalIgnores()
         {
+            // AddConditionalIgnoreMapping throws on a duplicate key, and this runs from both the
+            // runtime hook and the static constructor.
+            if (s_ConditionalIgnoresRegistered)
+                return;
+            s_ConditionalIgnoresRegistered = true;
+
             ConditionalIgnoreAttribute.AddConditionalIgnoreMapping("IgnoreInEditor", Application.isEditor);
             ConditionalIgnoreAttribute.AddConditionalIgnoreMapping("IgnoreInPlayer", !Application.isEditor);
-#if UNITY_EDITOR
-            Type importerType = null;
-#if UNITY_6000_5_OR_NEWER
-            foreach (var assembly in CurrentAssemblies.GetLoadedAssemblies())
-#else
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-#endif
-            {
-                foreach (var type in assembly.GetTypes())
-                {
-                    if (type.FullName == "UnityEditor.UIElements.UXMLImporterImpl")
-                    {
-                        importerType = type;
-                        break;
-                    }
-                }
+        }
 
-                if (importerType != null)
-                    break;
-            }
+        static Utils()
+        {
+            RegisterConditionalIgnores();
+#if UNITY_EDITOR
+            // UXMLImporterImpl is internal, so it is looked up in the assembly of a public type
+            // that ships beside it (UnityEditor.UIElementsModule) instead of by scanning every
+            // loaded assembly, which AppDomain-based enumeration cannot do under CoreCLR.
+            var importerType = typeof(UnityEditor.UIElements.UxmlAttributeConverter<>).Assembly
+                .GetType("UnityEditor.UIElements.UXMLImporterImpl", false);
 
             if (importerType == null)
             {
@@ -78,12 +92,39 @@ namespace Unity.AppUI.Tests
             Environment.GetEnvironmentVariable("SNAPSHOTS_OUTPUT_DIR") is {Length:>0} p ?
             Path.GetFullPath(p) : null;
 
-        internal static IEnumerable<string> scales
+        /// <summary>
+        /// Resolves the capture path for one story, under a subdirectory named for the editor
+        /// running the test.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The folder is <see cref="Application.unityVersion"/>, so a set of captures is labelled
+        /// by the editor that actually produced it rather than by whichever harness took it. Story
+        /// file names are identical across editors and harnesses, so two editors' folders can be
+        /// compared image for image for the same set of tests.
+        /// </para>
+        /// <para>
+        /// That only holds because exactly one harness captures a given component on a given
+        /// editor. Where the com.unity.ui.test-framework path is live it takes over from
+        /// <c>VisualElementTests</c> per component, via that fixture's
+        /// <c>capturesSnapshotsElsewhere</c>.
+        /// </para>
+        /// </remarks>
+        /// <param name="fileName">The story's file name.</param>
+        /// <returns>An absolute path, with the directory created.</returns>
+        internal static string SnapshotOutputPath(string fileName)
+        {
+            var dir = Path.Combine(snapshotsOutputDir ?? Application.dataPath, Application.unityVersion);
+            Directory.CreateDirectory(dir);
+            return Path.GetFullPath(Path.Combine(dir, fileName));
+        }
+
+        internal static IEnumerable<string> densities
         {
             get
             {
-                yield return "small";
-                yield return "medium";
+                yield return "normal";
+                yield return "compact";
             }
         }
 
@@ -124,6 +165,31 @@ namespace Unity.AppUI.Tests
             return true;
         }
 
+        static ThemeStyleSheet s_AppUiThemeStyleSheet;
+
+        /// <summary>
+        /// The App UI theme style sheet, resolved from the package in the Editor and from
+        /// Resources in a player. Shared by <see cref="panelSettingsInstance"/> and by the
+        /// UI Test Framework fixtures, which take a <c>ThemeStyleSheet</c> directly.
+        /// </summary>
+        internal static ThemeStyleSheet appUiThemeStyleSheet
+        {
+            get
+            {
+                if (!s_AppUiThemeStyleSheet)
+                {
+#if UNITY_EDITOR
+                    s_AppUiThemeStyleSheet = AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(
+                        "Packages/com.unity.dt.app-ui/PackageResources/Styles/Themes/App UI.tss");
+#else
+                    s_AppUiThemeStyleSheet = Resources.Load<ThemeStyleSheet>("Themes/App UI");
+#endif
+                }
+
+                return s_AppUiThemeStyleSheet;
+            }
+        }
+
         static PanelSettings s_PanelSettingsInstance;
 
         internal static PanelSettings panelSettingsInstance
@@ -134,12 +200,7 @@ namespace Unity.AppUI.Tests
                 {
                     s_PanelSettingsInstance = ScriptableObject.CreateInstance<PanelSettings>();
                     s_PanelSettingsInstance.scaleMode = PanelScaleMode.ConstantPhysicalSize;
-#if UNITY_EDITOR
-                    s_PanelSettingsInstance.themeStyleSheet = AssetDatabase.LoadAssetAtPath<ThemeStyleSheet>(
-                        "Packages/com.unity.dt.app-ui/PackageResources/Styles/Themes/App UI.tss");
-#else
-                    s_PanelSettingsInstance.themeStyleSheet = Resources.Load<ThemeStyleSheet>("Themes/App UI");
-#endif
+                    s_PanelSettingsInstance.themeStyleSheet = appUiThemeStyleSheet;
                 }
 
                 return s_PanelSettingsInstance;

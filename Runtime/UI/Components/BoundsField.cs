@@ -23,13 +23,13 @@ namespace Unity.AppUI.UI
     /// <example>
     /// <para>Basic usage of BoundsField in UXML: creating a medium-sized BoundsField in UXML.</para>
     /// <code lang="xml"><![CDATA[
-    /// <ui:BoundsField name="myBounds" size="M" />
+    /// <ui:BoundsField name="myBounds" size="Md" />
     /// ]]></code>
     /// <para>Creating and configuring BoundsField in C#: complete example showing creation, configuration, validation,
     /// and change handling.</para>
     /// <code lang="csharp"><![CDATA[
     /// var boundsField = new BoundsField();
-    /// boundsField.size = Size.M;
+    /// boundsField.size = Size.Md;
     /// boundsField.value = new Bounds(Vector3.zero, new Vector3(1, 1, 1));
     /// boundsField.validateValue = (bounds) => bounds.size.x > 0 && bounds.size.y > 0 && bounds.size.z > 0;
     ///
@@ -202,7 +202,7 @@ namespace Unity.AppUI.UI
             hierarchy.Add(centerRow);
             hierarchy.Add(sizeRow);
 
-            size = Size.M;
+            size = Size.Md;
             SetValueWithoutNotify(new Bounds());
 
             m_CXField.RegisterValueChangedCallback(OnCXFieldChanged);

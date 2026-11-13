@@ -1,0 +1,5 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--physics-terrain-collider--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13 5H3V10.9064L7.53746 13.3813L13 10.8602V5ZM2.52115 11.7843C2.19989 11.609 2 11.2723 2 10.9064V4H14V10.8602C14 11.2502 13.7732 11.6047 13.4191 11.7681L7.95651 14.2893C7.6693 14.4219 7.3363 14.4107 7.0586 14.2592L2.52115 11.7843Z" fill="#2E7D32"/>
+<rect x="7" y="6" width="1" height="8" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8 8L11 5L14 6C14 6 14.4037 3.19879 14 3C13.6537 2.82949 9.48743 1.48013 8.30882 1.09959C8.10629 1.0342 7.89113 1.03629 7.68923 1.10359L2.68377 2.77208C2.27543 2.90819 2 3.29033 2 3.72076V4L5 7L8 8Z" fill="#2E7D32"/>
+</svg>

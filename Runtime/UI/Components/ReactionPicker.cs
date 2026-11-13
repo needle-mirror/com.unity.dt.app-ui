@@ -139,7 +139,7 @@ namespace Unity.AppUI.UI
 
         ActionButton MakeItem()
         {
-            var button = new ActionButton { quiet = true, size = Size.M };
+            var button = new ActionButton { quiet = true, size = Size.Md };
             button.clickable.clickedWithEventInfo += OnEmojiButtonClicked;
             return button;
         }

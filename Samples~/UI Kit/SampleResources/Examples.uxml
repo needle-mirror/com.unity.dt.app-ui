@@ -61,13 +61,13 @@
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item">
-                                <appui:ActionButton label="Action 1" icon="info" size="S" tooltip="Hello" preferred-tooltip-placement="End" />
+                                <appui:ActionButton label="Action 1" icon="info" size="Sm" tooltip="Hello" preferred-tooltip-placement="End" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
-                                <appui:ActionButton label="Action 1" icon="info" size="M" />
+                                <appui:ActionButton label="Action 1" icon="info" size="Md" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
-                                <appui:ActionButton label="Action 1" icon="info" size="L" />
+                                <appui:ActionButton label="Action 1" icon="info" size="Lg" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
@@ -360,13 +360,13 @@
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item">
-                                <appui:Avatar size="S" background-color="#4D70EE" label="MB" auto-label-color="true" />
+                                <appui:Avatar size="Sm" background-color="#4D70EE" label="MB" auto-label-color="true" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <appui:Avatar background-color="#4D70EE" label="MB" auto-label-color="true" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
-                                <appui:Avatar size="L" background-color="#4D70EE" label="MB" auto-label-color="true" />
+                                <appui:Avatar size="Lg" background-color="#4D70EE" label="MB" auto-label-color="true" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
@@ -409,9 +409,9 @@
                     </ui:VisualElement>
                     <appui:Text text="Sizing" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:AvatarGroup name="avatar-group-1" size="S" spacing="L" />
-                        <appui:AvatarGroup name="avatar-group-1" size="M" spacing="M" />
-                        <appui:AvatarGroup name="avatar-group-1" size="L" spacing="S" />
+                        <appui:AvatarGroup name="avatar-group-1" size="Sm" spacing="L" />
+                        <appui:AvatarGroup name="avatar-group-1" size="Md" spacing="M" />
+                        <appui:AvatarGroup name="avatar-group-1" size="Lg" spacing="S" />
                     </ui:VisualElement>
                     <appui:Text text="Max = 2" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
@@ -523,19 +523,52 @@
                         </appui:Breadcrumbs>
                     </ui:VisualElement>
 
+                    <!-- SplitButton -->
+                    <appui:Heading text="SPLIT BUTTON" class="example-title" />
+                    <appui:Text text="Sizing" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <ui:VisualElement class="example-row">
+                            <ui:VisualElement class="example-item">
+                                <appui:SplitButton label="Save" size="Sm" caret-tooltip="Save options" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="example-item">
+                                <appui:SplitButton label="Save" size="Md" caret-tooltip="Save options" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="example-item">
+                                <appui:SplitButton label="Save" size="Lg" caret-tooltip="Save options" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <appui:Text text="Leading Icon" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:SplitButton label="Play" icon="play" caret-tooltip="Play options" />
+                    </ui:VisualElement>
+                    <appui:Text text="Icon Only" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:SplitButton icon="cursor" caret-tooltip="Select tool options" />
+                    </ui:VisualElement>
+                    <appui:Text text="Toggle Main Part" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:SplitButton label="Mute" icon="speaker-x" selected="true" caret-tooltip="Audio options" />
+                    </ui:VisualElement>
+                    <appui:Text text="Disabled" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:SplitButton label="Save" enabled="false" caret-tooltip="Save options" />
+                    </ui:VisualElement>
+
                     <!-- Button -->
                     <appui:Heading text="BUTTON" class="example-title" />
                     <appui:Text text="Sizing" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item">
-                                <appui:Button title="Small button" size="S" />
+                                <appui:Button title="Small button" size="Sm" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
-                                <appui:Button title="Medium button" size="M" />
+                                <appui:Button title="Medium button" size="Md" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
-                                <appui:Button title="Large button" size="L" />
+                                <appui:Button title="Large button" size="Lg" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
@@ -551,31 +584,35 @@
                     <ui:VisualElement class="example-section">
                         <appui:Button leading-icon="info" />
                     </ui:VisualElement>
-                    <appui:Text text="Quiet" class="example-subtitle" />
+                    <appui:Text text="Ghost" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Button leading-icon="info" title="Quiet" quiet="true" />
+                        <appui:Button leading-icon="info" title="Ghost" variant="Ghost" />
                     </ui:VisualElement>
-                    <appui:Text text="Quiet - Accent" class="example-subtitle" />
+                    <appui:Text text="Link" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Button leading-icon="info" title="Quiet - Primary" quiet="true" variant="Accent" />
+                        <appui:Button leading-icon="info" title="Link" variant="Link" />
                     </ui:VisualElement>
                     <appui:Text text="Subtitle" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:Button title="Title" subtitle="Subtitle" />
                     </ui:VisualElement>
-                    <appui:Text text="Accent" class="example-subtitle" />
+                    <appui:Text text="Default" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Button title="Accent button" variant="Accent" />
-                        <appui:Button title="Accent button" variant="Accent" leading-icon="info" />
+                        <appui:Button title="Default button" variant="Default" />
+                        <appui:Button title="Default button" variant="Default" leading-icon="info" />
                     </ui:VisualElement>
                     <appui:Text text="Destructive" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:Button title="Destructive button" variant="Destructive" />
                         <appui:Button title="Destructive button" variant="Destructive" leading-icon="info" />
                     </ui:VisualElement>
+                    <appui:Text text="Outline" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Button title="Outline button" variant="Outline" />
+                    </ui:VisualElement>
                     <appui:Text text="Secondary" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Button title="Secondary button" />
+                        <appui:Button title="Secondary button" variant="Secondary" />
                     </ui:VisualElement>
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
@@ -595,6 +632,241 @@
                         <appui:Canvas style="height: 300px;" control-scheme="Editor">
                             <ui:VisualElement style="position: absolute; width: 20px; height: 20px; background-color: blue;" />
                         </appui:Canvas>
+                    </ui:VisualElement>
+
+                    <!-- Canvas Node Graph -->
+                    <appui:Heading text="CANVAS NODE GRAPH" class="example-title" />
+                    <appui:Text text="Nodes and edges inside a Canvas" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Canvas style="height: 300px;">
+                            <appui:CanvasEdge from="130,60" to="260,140" curve-style="Bezier" is-directional="true" />
+                            <appui:CanvasNode title="Entry" variant="Entry" x="20" y="20" movable="true" />
+                            <appui:CanvasNode title="Idle" x="240" y="120" movable="true" />
+                            <appui:CanvasNode title="Exit" variant="Exit" x="20" y="200" movable="true" />
+                        </appui:Canvas>
+                    </ui:VisualElement>
+                    <appui:Text text="Curve styles" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Canvas style="height: 240px;">
+                            <appui:CanvasEdge from="40,40" to="240,40" curve-style="Straight" />
+                            <appui:CanvasEdge from="40,90" to="240,90" curve-style="SmoothStep" is-directional="true" />
+                            <appui:CanvasEdge from="40,140" to="240,140" curve-style="Step" active="true" />
+                            <appui:CanvasEdge from="40,190" to="240,190" curve-style="Cable" />
+                        </appui:Canvas>
+                    </ui:VisualElement>
+
+                    <!-- Selection Rect -->
+                    <appui:Heading text="SELECTION RECT" class="example-title" />
+                    <ui:VisualElement class="example-section">
+                        <ui:VisualElement style="width: 240px; height: 140px;">
+                            <appui:SelectionRect rect="20,20,160,90" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                    <!-- Rect Anchor Presets -->
+                    <appui:Heading text="RECT ANCHOR PRESETS" class="example-title" />
+                    <ui:VisualElement class="example-section">
+                        <appui:RectAnchorPresets anchor-min="0,0" anchor-max="1,1" />
+                    </ui:VisualElement>
+
+                    <!-- Card -->
+                    <appui:Heading text="CARD" class="example-title" />
+                    <appui:Text text="Default" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Card style="width: 260px;">
+                            <appui:CardHeader>
+                                <appui:CardTitle text="Third Person Template" />
+                                <appui:CardDescription text="A ready-made character controller." />
+                            </appui:CardHeader>
+                            <appui:CardContent>
+                                <appui:Text text="Universal Render Pipeline - 2.4 GB" />
+                            </appui:CardContent>
+                            <appui:CardFooter>
+                                <appui:Button variant="Secondary" title="Details" />
+                                <appui:Button title="Create" />
+                            </appui:CardFooter>
+                        </appui:Card>
+                    </ui:VisualElement>
+                    <appui:Text text="Interactive and Selected" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Card interactive="true" style="width: 200px;">
+                            <appui:CardHeader>
+                                <appui:CardTitle text="Interactive" />
+                                <appui:CardDescription text="Hover or click the whole tile." />
+                            </appui:CardHeader>
+                        </appui:Card>
+                        <appui:Card interactive="true" selected="true" style="width: 200px;">
+                            <appui:CardHeader>
+                                <appui:CardTitle text="Selected" />
+                                <appui:CardDescription text="Outlined with the accent colour." />
+                            </appui:CardHeader>
+                        </appui:Card>
+                    </ui:VisualElement>
+                    <appui:Text text="Elevated with media" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Card elevation="4" style="width: 220px;">
+                            <appui:CardMedia style="height: 100px;" />
+                            <appui:CardHeader>
+                                <appui:CardTitle text="Asset Pack" />
+                                <appui:CardDescription text="Elevation 4, with a media slot." />
+                            </appui:CardHeader>
+                        </appui:Card>
+                    </ui:VisualElement>
+
+                    <!-- CardGrid -->
+                    <appui:Heading text="CARDGRID" class="example-title" />
+                    <appui:Text text="Auto-fill, columns share the leftover width" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:CardGrid min-item-width="160" style="width: 100%;">
+                            <appui:Card interactive="true">
+                                <appui:CardHeader><appui:CardTitle text="2D Platformer" /></appui:CardHeader>
+                            </appui:Card>
+                            <appui:Card interactive="true">
+                                <appui:CardHeader><appui:CardTitle text="First Person" /></appui:CardHeader>
+                            </appui:Card>
+                            <appui:Card interactive="true">
+                                <appui:CardHeader><appui:CardTitle text="Third Person" /></appui:CardHeader>
+                            </appui:Card>
+                            <appui:Card interactive="true">
+                                <appui:CardHeader><appui:CardTitle text="Top Down" /></appui:CardHeader>
+                            </appui:Card>
+                            <appui:Card interactive="true">
+                                <appui:CardHeader><appui:CardTitle text="VR Core" /></appui:CardHeader>
+                            </appui:Card>
+                        </appui:CardGrid>
+                    </ui:VisualElement>
+                    <appui:Text text="Fixed columns" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:CardGrid min-item-width="140" fill="false" style="width: 100%;">
+                            <appui:Card>
+                                <appui:CardHeader><appui:CardTitle text="Empty" /></appui:CardHeader>
+                            </appui:Card>
+                            <appui:Card>
+                                <appui:CardHeader><appui:CardTitle text="Sample" /></appui:CardHeader>
+                            </appui:Card>
+                            <appui:Card>
+                                <appui:CardHeader><appui:CardTitle text="Mobile" /></appui:CardHeader>
+                            </appui:Card>
+                        </appui:CardGrid>
+                    </ui:VisualElement>
+
+                    <!-- Chat display components -->
+                    <appui:Heading text="CHAT MESSAGE BUBBLE" class="example-title" />
+                    <appui:Text text="User and assistant" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="align-items: stretch;">
+                        <appui:ChatMessageBubble role="User" content="Make the player jump higher" />
+                        <appui:ChatMessageBubble role="Assistant" content="I raised the jump force to 8." />
+                    </ui:VisualElement>
+                    <appui:Text text="With an action row" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="align-items: stretch;">
+                        <appui:ChatMessageBubble role="Assistant" content="Here is the change.">
+                            <appui:ChatMessageActions content="Here is the change." retryable="true" />
+                        </appui:ChatMessageBubble>
+                    </ui:VisualElement>
+
+                    <appui:Heading text="CHAT MESSAGE ACTIONS" class="example-title" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ChatMessageActions content="Copied from the UI Kit sample" retryable="true" />
+                    </ui:VisualElement>
+
+                    <appui:Heading text="CHAT STREAMING INDICATOR" class="example-title" />
+                    <appui:Text text="Streaming, with stats, and completed" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ChatStreamingIndicator verb-index="0" />
+                        <appui:ChatStreamingIndicator verb-index="4" stats="2 tools • 1.2k tokens" />
+                        <appui:ChatStreamingIndicator verb-index="0" completed="true" duration-ms="6400" />
+                    </ui:VisualElement>
+
+                    <appui:Heading text="CHAT TODO LIST" class="example-title" />
+                    <ui:VisualElement class="example-section" style="align-items: stretch;">
+                        <appui:ChatTodoList name="chat-todo-list" />
+                    </ui:VisualElement>
+
+                    <appui:Heading text="CHAT ACTIVITY TIMELINE" class="example-title" />
+                    <ui:VisualElement class="example-section" style="align-items: stretch;">
+                        <appui:ChatActivityTimeline name="chat-activity-timeline" open="true" />
+                    </ui:VisualElement>
+
+                    <appui:Heading text="CHAT PLAN" class="example-title" />
+                    <ui:VisualElement class="example-section" style="align-items: stretch;">
+                        <appui:ChatPlan title="Megaman clone" file-path="Assets/Plans/megaman-clone.md" editable="true" expandable="true">
+                            <appui:Text text="1. Add a player controller" />
+                            <appui:Text text="2. Add a jump ability" />
+                            <appui:Text text="3. Add a boss room" />
+                        </appui:ChatPlan>
+                    </ui:VisualElement>
+
+                    <appui:Heading text="CHAT MESSAGES" class="example-title" />
+                    <appui:Text text="A conversation. The messages are supplied from C#." class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="align-items: stretch;">
+                        <appui:ChatMessages name="chat-messages" style="height: 320px;" />
+                    </ui:VisualElement>
+                    <appui:Text text="Empty, and out of budget" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="align-items: stretch;">
+                        <appui:ChatMessages style="height: 160px;" />
+                        <appui:ChatMessages budget-exhausted="true" style="height: 200px;" />
+                    </ui:VisualElement>
+
+                    <appui:Heading text="CODE EDITOR" class="example-title" />
+                    <appui:Text text="Editable, and read-only" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="align-items: stretch;">
+                        <appui:CodeEditor name="code-editor" language="lua" placeholder="-- your script here" />
+                        <appui:CodeEditor language="csharp" is-read-only="true" value="void Start() { }" />
+                    </ui:VisualElement>
+
+                    <appui:Heading text="CHAT BUDGET" class="example-title" />
+                    <appui:Text text="Partial and exhausted" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="align-items: stretch;">
+                        <appui:ChatBudget spent="120" total="200" />
+                        <appui:ChatBudget spent="200" total="200" />
+                    </ui:VisualElement>
+                    <appui:Text text="Credits pill" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:CreditsPill credits="51200" />
+                        <appui:CreditsPill loading="true" />
+                        <appui:CreditsPill error="true" />
+                    </ui:VisualElement>
+                    <appui:Text text="Budget indicator" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:BudgetIndicator spent="40" total="200" />
+                        <appui:BudgetIndicator spent="200" total="200" />
+                    </ui:VisualElement>
+                    <appui:Text text="Loading dots" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:LoadingDots />
+                        <appui:LoadingDots animated="false" />
+                    </ui:VisualElement>
+
+                    <appui:Heading text="CONTEXT COUNTER" class="example-title" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ContextCounter used="120000" total="200000" />
+                        <appui:ContextCounter used="190000" total="200000" />
+                    </ui:VisualElement>
+
+                    <appui:Heading text="CHAT CONVERSATION LIST ITEM" class="example-title" />
+                    <ui:VisualElement class="example-section" style="align-items: stretch;">
+                        <appui:ChatConversationListItem title="Megaman clone" subtitle="2 hours ago" is-active="true" />
+                        <appui:ChatConversationListItem title="Shader graph help" subtitle="Yesterday" is-favorite="true" />
+                        <appui:ChatConversationListItem title="Build errors" subtitle="Last week" />
+                    </ui:VisualElement>
+
+                    <appui:Heading text="CHAT ASSET ROW" class="example-title" />
+                    <ui:VisualElement class="example-section" style="align-items: stretch;">
+                        <appui:ChatAssetRow
+                            title="Sci-Fi Crate"
+                            source-label="Asset Store"
+                            pack-label="Sci-Fi Props Vol. 2"
+                            creator-label="Nebula Studios"
+                            price-label="$12"
+                            details="true"
+                            state="Added"
+                            status-text="Added to the scene" />
+                        <appui:ChatAssetRow
+                            title="Rusty Barrel"
+                            source-label="Asset Store"
+                            state="Failed"
+                            status-tone="Destructive"
+                            status-text="Download failed" />
                     </ui:VisualElement>
 
                     <!-- Checkbox -->
@@ -652,6 +924,40 @@
                         <appui:Checkbox label="Intermediate Disabled Invalid" value="Intermediate" emphasized="true" enabled="false" class="is-invalid" />
                     </ui:VisualElement>
 
+                    <!-- ChoiceList -->
+                    <appui:Heading text="CHOICE LIST" class="example-title" />
+                    <appui:Text text="Auto-lettered" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ChoiceList value="balanced">
+                            <appui:ChoiceListItem key="fast" label="Favor speed" />
+                            <appui:ChoiceListItem key="balanced" label="Balanced" />
+                            <appui:ChoiceListItem key="quality" label="Favor quality" />
+                        </appui:ChoiceList>
+                    </ui:VisualElement>
+                    <appui:Text text="Pinned and hidden badges" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ChoiceList value="yes">
+                            <appui:ChoiceListItem key="yes" label="Pinned to Y" letter="Y" />
+                            <appui:ChoiceListItem key="no" label="Pinned to N" letter="N" />
+                            <appui:ChoiceListItem key="maybe" label="No badge" letter="" />
+                        </appui:ChoiceList>
+                    </ui:VisualElement>
+                    <appui:Text text="Sizing" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ChoiceList value="sm">
+                            <appui:ChoiceListItem key="sm" label="Small" size="Sm" />
+                            <appui:ChoiceListItem key="md" label="Medium" size="Md" />
+                            <appui:ChoiceListItem key="lg" label="Large" size="Lg" />
+                        </appui:ChoiceList>
+                    </ui:VisualElement>
+                    <appui:Text text="Disabled" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ChoiceList value="a" enabled="false">
+                            <appui:ChoiceListItem key="a" label="Unavailable" />
+                            <appui:ChoiceListItem key="b" label="Also unavailable" />
+                        </appui:ChoiceList>
+                    </ui:VisualElement>
+
                     <!-- Chip -->
                     <appui:Heading text="CHIP" class="example-title" />
                     <appui:Text text="Variants" class="example-subtitle" />
@@ -704,6 +1010,27 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
 
+                    <!-- ClampedContent -->
+                    <appui:Heading text="CLAMPEDCONTENT" class="example-title" />
+                    <appui:Text text="Overflowing, collapsed by default" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ClampedContent max-height="72" style="width: 320px;">
+                            <appui:Text text="Universal Render Pipeline ships with a deferred renderer, a forward renderer and a forward+ renderer. Each one trades draw-call batching against per-pixel lighting cost differently, so the right choice depends on how many lights you expect on screen at once." />
+                        </appui:ClampedContent>
+                    </ui:VisualElement>
+                    <appui:Text text="Short content shows no toggle" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ClampedContent max-height="72" style="width: 320px;">
+                            <appui:Text text="This fits under the cap." />
+                        </appui:ClampedContent>
+                    </ui:VisualElement>
+                    <appui:Text text="Custom labels, no fade" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ClampedContent max-height="60" more-label="Read more" less-label="Collapse" fade-visible="false" style="width: 320px;">
+                            <appui:Text text="A long changelog entry that runs past the cap and therefore offers a reveal toggle underneath itself, using the labels the host chose." />
+                        </appui:ClampedContent>
+                    </ui:VisualElement>
+
                     <!-- ColorSwatch -->
                     <appui:Heading text="COLORSWATCH" class="example-title" />
                     <appui:Text text="Sizing &amp; Roundness" class="example-subtitle" />
@@ -711,18 +1038,18 @@
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item">
                                 <appui:Text text="S" class="example-subtitle" />
-                                <appui:ColorSwatch size="S" />
-                                <appui:ColorSwatch size="S" round="true" />
+                                <appui:ColorSwatch size="Sm" />
+                                <appui:ColorSwatch size="Sm" round="true" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <appui:Text text="M" class="example-subtitle" />
-                                <appui:ColorSwatch size="M" />
-                                <appui:ColorSwatch size="M" round="true" />
+                                <appui:ColorSwatch size="Md" />
+                                <appui:ColorSwatch size="Md" round="true" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <appui:Text text="L" class="example-subtitle" />
-                                <appui:ColorSwatch size="L" />
-                                <appui:ColorSwatch size="L" round="true" />
+                                <appui:ColorSwatch size="Lg" />
+                                <appui:ColorSwatch size="Lg" round="true" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
@@ -739,11 +1066,11 @@
                     <appui:Text text="Sizing" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:Text text="S" class="example-subtitle" />
-                        <appui:ColorField size="S" />
+                        <appui:ColorField size="Sm" />
                         <appui:Text text="M" class="example-subtitle" />
-                        <appui:ColorField size="M" />
+                        <appui:ColorField size="Md" />
                         <appui:Text text="L" class="example-subtitle" />
-                        <appui:ColorField size="L" />
+                        <appui:ColorField size="Lg" />
                     </ui:VisualElement>
                     <appui:Text text="No Text" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
@@ -754,6 +1081,10 @@
                     <appui:Text text="Swatch Only" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:ColorField swatch-only="true" />
+                    </ui:VisualElement>
+                    <appui:Text text="Opacity Readout" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:ColorField show-alpha-value="true" />
                     </ui:VisualElement>
                     <appui:Text text="Unity Editor ColorPicker" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
@@ -796,15 +1127,15 @@
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item" style="flex-basis: 33.33%;">
                                 <appui:Text text="S" class="example-subtitle" />
-                                <appui:ColorSlider value="0.5" from="#FF000000" to="#FF0000FF" size="S"/>
+                                <appui:ColorSlider value="0.5" from="#FF000000" to="#FF0000FF" size="Sm"/>
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item" style="flex-basis: 33.33%;">
                                 <appui:Text text="M" class="example-subtitle" />
-                                <appui:ColorSlider value="0.5" from="#FF000000" to="#FF0000FF" size="M"/>
+                                <appui:ColorSlider value="0.5" from="#FF000000" to="#FF0000FF" size="Md"/>
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item" style="flex-basis: 33.33%;">
                                 <appui:Text text="L" class="example-subtitle" />
-                                <appui:ColorSlider value="0.5" from="#FF000000" to="#FF0000FF" size="L"/>
+                                <appui:ColorSlider value="0.5" from="#FF000000" to="#FF0000FF" size="Lg"/>
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
@@ -832,18 +1163,18 @@
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item">
                                 <appui:Text text="S" class="example-subtitle" />
-                                <appui:ColorSwatch size="S" />
-                                <appui:ColorSwatch size="S" round="true" />
+                                <appui:ColorSwatch size="Sm" />
+                                <appui:ColorSwatch size="Sm" round="true" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <appui:Text text="M" class="example-subtitle" />
-                                <appui:ColorSwatch size="M" />
-                                <appui:ColorSwatch size="M" round="true" />
+                                <appui:ColorSwatch size="Md" />
+                                <appui:ColorSwatch size="Md" round="true" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <appui:Text text="L" class="example-subtitle" />
-                                <appui:ColorSwatch size="L" />
-                                <appui:ColorSwatch size="L" round="true" />
+                                <appui:ColorSwatch size="Lg" />
+                                <appui:ColorSwatch size="Lg" round="true" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
@@ -866,7 +1197,7 @@
                         <appui:ContextProvider theme="dark">
                             <appui:Text text="A Text example" />
                             <appui:Button text="A Button example" />
-                            <appui:Checkbox size="M" label="A checkbox example" />
+                            <appui:Checkbox size="Md" label="A checkbox example" />
                         </appui:ContextProvider>
                     </ui:VisualElement>
                     <appui:Text text="Override to Light theme" class="example-subtitle" />
@@ -874,7 +1205,7 @@
                         <appui:ContextProvider theme="light">
                             <appui:Text text="A Text example" />
                             <appui:Button text="A Button example" />
-                            <appui:Checkbox size="M" label="A checkbox example" />
+                            <appui:Checkbox size="Md" label="A checkbox example" />
                         </appui:ContextProvider>
                     </ui:VisualElement>
 
@@ -903,6 +1234,49 @@
                         <appui:DateRangeField />
                     </ui:VisualElement>
 
+                    <!-- DateTimeField -->
+                    <appui:Heading text="DATETIMEFIELD" class="example-title" />
+                    <appui:Text text="Default" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:DateTimeField />
+                    </ui:VisualElement>
+                    <appui:Text text="date-format=MM/dd/yyyy / hour12=true / minute-step=15" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:DateTimeField date-format="MM/dd/yyyy" hour12="true" minute-step="15" value="1998-07-12 09:30:00" />
+                    </ui:VisualElement>
+
+                    <!-- TimeField -->
+                    <appui:Heading text="TIMEFIELD" class="example-title" />
+                    <appui:Text text="Default" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:TimeField />
+                    </ui:VisualElement>
+                    <appui:Text text="value=09:30:00 / show-seconds=true" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:TimeField value="09:30:00" show-seconds="true" />
+                    </ui:VisualElement>
+                    <appui:Text text="hour12=true / minute-step=5 / size=Lg" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:TimeField hour12="true" minute-step="5" size="Lg" value="14:05:00" />
+                    </ui:VisualElement>
+
+                    <!-- TimePicker -->
+                    <appui:Heading text="TIMEPICKER" class="example-title" />
+                    <appui:Text text="Default" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:TimePicker value="09:30:00" />
+                    </ui:VisualElement>
+                    <appui:Text text="hour12=true / show-seconds=true" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:TimePicker value="14:05:30" hour12="true" show-seconds="true" />
+                    </ui:VisualElement>
+                    <appui:Text text="Custom columns - minutes only, 15 minute step" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:TimePicker minute-step="15">
+                            <appui:TimePickerColumn segment="Minutes" />
+                        </appui:TimePicker>
+                    </ui:VisualElement>
+
                     <!-- DateRangePicker -->
                     <appui:Heading text="DATERANGEPICKER" class="example-title" />
                     <appui:Text text="Default" class="example-subtitle" />
@@ -912,6 +1286,22 @@
                     <appui:Text text="value=1998-07-12 / first-day-of-week=Monday" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:DateRangePicker value="1998-07-12,1998-07-20" first-day-of-week="Monday" />
+                    </ui:VisualElement>
+
+                    <!-- Confirm Dialog -->
+                    <appui:Heading text="CONFIRM DIALOG" class="example-title" />
+                    <appui:Text text="ConfirmDialog.Show - awaits a yes/no answer" class="example-subtitle" />
+                    <ui:VisualElement class="example-section example-section-fullwidth">
+                        <appui:ActionButton name="confirm-dlg-btn" label="Discard changes?" />
+                    </ui:VisualElement>
+                    <appui:Text text="ConfirmDialog.ConfirmDelete - the destructive preset" class="example-subtitle" />
+                    <ui:VisualElement class="example-section example-section-fullwidth">
+                        <appui:ActionButton name="confirm-delete-btn" label="Delete asset" />
+                        <appui:ActionButton name="confirm-delete-many-btn" label="Delete 3 objects" />
+                    </ui:VisualElement>
+                    <appui:Text text="Concurrent calls queue, one dialog at a time" class="example-subtitle" />
+                    <ui:VisualElement class="example-section example-section-fullwidth">
+                        <appui:ActionButton name="confirm-queue-btn" label="Ask three times" />
                     </ui:VisualElement>
 
                     <!-- Dialog -->
@@ -1127,11 +1517,11 @@
                     <appui:Heading text="DROPDOWN" class="example-title" />
                     <ui:VisualElement class="example-section">
                         <appui:Text text="Sizing - Small" class="example-subtitle" />
-                        <appui:Dropdown size="S" />
+                        <appui:Dropdown size="Sm" />
                         <appui:Text text="Sizing - Medium" class="example-subtitle" />
-                        <appui:Dropdown size="M" />
+                        <appui:Dropdown size="Md" />
                         <appui:Text text="Sizing - Large" class="example-subtitle" />
-                        <appui:Dropdown size="L" />
+                        <appui:Dropdown size="Lg" />
                     </ui:VisualElement>
                     <ui:VisualElement class="example-section">
                         <appui:Text text="Primary" class="example-subtitle" />
@@ -1274,13 +1664,13 @@
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item" style="flex-basis: 33.33%;">
-                                <appui:FloatField size="S" />
+                                <appui:FloatField size="Sm" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item" style="flex-basis: 33.33%;">
-                                <appui:FloatField size="M" />
+                                <appui:FloatField size="Md" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item" style="flex-basis: 33.33%;">
-                                <appui:FloatField size="L" />
+                                <appui:FloatField size="Lg" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
@@ -1294,11 +1684,11 @@
                         <appui:Text text="Float Field - Invalid and Disabled" class="example-subtitle" />
                         <appui:FloatField unit="C" class="is-invalid" enabled="false" />
                         <appui:Text text="Int Field - Small" class="example-subtitle" />
-                        <appui:IntField size="S" />
+                        <appui:IntField size="Sm" />
                         <appui:Text text="Int Field - Medium" class="example-subtitle" />
-                        <appui:IntField size="M" />
+                        <appui:IntField size="Md" />
                         <appui:Text text="Int Field - Large" class="example-subtitle" />
-                        <appui:IntField size="L" />
+                        <appui:IntField size="Lg" />
                         <appui:Text text="Int Field - With Units" class="example-subtitle" />
                         <appui:IntField unit="C" />
                         <appui:Text text="Int Field - Disabled" class="example-subtitle" />
@@ -1333,6 +1723,52 @@
                         <appui:BoundsField />
                         <appui:Text text="BoundsInt Field" class="example-subtitle" />
                         <appui:BoundsIntField />
+                    </ui:VisualElement>
+
+                    <!-- NumericProperty -->
+                    <appui:Heading text="NUMERIC PROPERTY" class="example-title" />
+                    <appui:Text text="Drag the label horizontally to scrub the value." class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:NumericPropertyFloat label="Opacity" value="0.5" low-value="0" high-value="1" />
+                        <appui:NumericPropertyFloat label="Scale" value="1" unit="x" />
+                        <appui:NumericPropertyInt label="Subdivisions" value="4" low-value="1" />
+                    </ui:VisualElement>
+                    <appui:Text text="Leading icon" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:NumericPropertyFloat label="Radius" icon="circle" value="12" unit="px" />
+                    </ui:VisualElement>
+                    <appui:Text text="Capped value, so a long name stays readable" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:NumericPropertyFloat label="Ambient occlusion distance falloff" value="2.5" cap-value="true" />
+                    </ui:VisualElement>
+                    <appui:Text text="Sizing" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:NumericPropertyFloat label="Small" value="1" size="Sm" />
+                        <appui:NumericPropertyFloat label="Medium" value="1" size="Md" />
+                        <appui:NumericPropertyFloat label="Large" value="1" size="Lg" />
+                    </ui:VisualElement>
+                    <appui:Text text="Disabled" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:NumericPropertyFloat label="Locked" value="1" enabled="false" />
+                    </ui:VisualElement>
+
+                    <!-- FloatingWindow -->
+                    <appui:Heading text="FLOATINGWINDOW" class="example-title" />
+                    <appui:Text text="Draggable by its title bar, resizable from the bottom-right corner" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="height: 320px;">
+                        <ui:VisualElement style="flex-grow: 1;">
+                            <appui:FloatingWindow title="Inspector" storage-key="ui-kit-sample-inspector" open="true" default-width="260" default-height="180" min-width="160" min-height="120">
+                                <appui:Text text="Drag the title bar to move the window, and the bottom-right corner to resize it. The geometry is persisted under the storage key." />
+                            </appui:FloatingWindow>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <appui:Text text="Fixed size, no close button" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="height: 200px;">
+                        <ui:VisualElement style="flex-grow: 1;">
+                            <appui:FloatingWindow title="Console" storage-key="ui-kit-sample-console" open="true" resizable="false" dismissable="false" default-width="260" default-height="140" min-width="160" min-height="100">
+                                <appui:Text text="Not resizable and not dismissable." />
+                            </appui:FloatingWindow>
+                        </ui:VisualElement>
                     </ui:VisualElement>
 
                     <!-- Grid View -->
@@ -1415,27 +1851,27 @@
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item">
-                                <appui:Icon size="S" primary="true" icon-name="info" />
+                                <appui:Icon size="Sm" primary="true" icon-name="info" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
-                                <appui:Icon size="M" primary="true" icon-name="info" />
+                                <appui:Icon size="Md" primary="true" icon-name="info" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
-                                <appui:Icon size="L" primary="true" icon-name="info" />
+                                <appui:Icon size="Lg" primary="true" icon-name="info" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <appui:Text text="Primary" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Icon size="M" primary="true" icon-name="info" />
+                        <appui:Icon size="Md" primary="true" icon-name="info" />
                     </ui:VisualElement>
                     <appui:Text text="Secondary" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Icon size="M" primary="false" icon-name="info" />
+                        <appui:Icon size="Md" primary="false" icon-name="info" />
                     </ui:VisualElement>
                     <appui:Text text="Disabled" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
-                        <appui:Icon size="M" enabled="false" primary="true" icon-name="info" />
+                        <appui:Icon size="Md" enabled="false" primary="true" icon-name="info" />
                     </ui:VisualElement>
 
                     <!-- IconButton -->
@@ -1444,13 +1880,13 @@
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item">
-                                <appui:IconButton size="S" icon="info" />
+                                <appui:IconButton size="Sm" icon="info" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
-                                <appui:IconButton size="M" icon="info" />
+                                <appui:IconButton size="Md" icon="info" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
-                                <appui:IconButton size="L" icon="info" />
+                                <appui:IconButton size="Lg" icon="info" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
@@ -1476,61 +1912,61 @@
                     <appui:Text text="Horizontal - Sizing" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:InputLabel direction="Horizontal" label="Small">
-                            <appui:TextField size="S" />
+                            <appui:TextField size="Sm" />
                         </appui:InputLabel>
                         <appui:InputLabel direction="Horizontal" label="Medium">
-                            <appui:TextField size="M"/>
+                            <appui:TextField size="Md"/>
                         </appui:InputLabel>
                         <appui:InputLabel direction="Horizontal" label="Large">
-                            <appui:TextField size="L" />
+                            <appui:TextField size="Lg" />
                         </appui:InputLabel>
                         <appui:InputLabel direction="Horizontal" label="Disabled" enabled="false">
-                            <appui:TextField size="L" enabled="false" />
+                            <appui:TextField size="Lg" enabled="false" />
                         </appui:InputLabel>
                     </ui:VisualElement>
                     <appui:Text text="Vertical - Sizing" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:InputLabel direction="Vertical" label="Small">
-                            <appui:TextField size="S" />
+                            <appui:TextField size="Sm" />
                         </appui:InputLabel>
                         <appui:InputLabel direction="Vertical" label="Medium">
-                            <appui:TextField size="M"/>
+                            <appui:TextField size="Md"/>
                         </appui:InputLabel>
                         <appui:InputLabel direction="Vertical" label="Large">
-                            <appui:TextField size="L" />
+                            <appui:TextField size="Lg" />
                         </appui:InputLabel>
                         <appui:InputLabel direction="Vertical" label="Disabled" enabled="false">
-                            <appui:TextField size="L" enabled="false" />
+                            <appui:TextField size="Lg" enabled="false" />
                         </appui:InputLabel>
                     </ui:VisualElement>
                     <appui:Text text="Horizontal - Required" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:InputLabel direction="Horizontal" label="Default" required="true" help-message="The value is not valid." help-variant="Default">
-                            <appui:TextField size="M" />
+                            <appui:TextField size="Md" />
                         </appui:InputLabel>
                         <appui:InputLabel direction="Horizontal" label="Warning" required="true" help-message="The value is not valid." help-variant="Warning">
-                            <appui:TextField size="M" />
+                            <appui:TextField size="Md" />
                         </appui:InputLabel>
                         <appui:InputLabel direction="Horizontal" label="Destructive" required="true" help-message="The value is not valid." help-variant="Destructive">
-                            <appui:TextField size="M" />
+                            <appui:TextField size="Md" />
                         </appui:InputLabel>
                         <appui:InputLabel direction="Horizontal" label="Disabled" required="true" help-message="The value is not valid." help-variant="Destructive" enabled="false">
-                            <appui:TextField size="M" enabled="false" />
+                            <appui:TextField size="Md" enabled="false" />
                         </appui:InputLabel>
                     </ui:VisualElement>
                     <appui:Text text="Vertical - Required" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:InputLabel direction="Vertical" label="Default" required="true" help-message="The value is not valid." help-variant="Default">
-                            <appui:TextField size="M" />
+                            <appui:TextField size="Md" />
                         </appui:InputLabel>
                         <appui:InputLabel direction="Vertical" label="Warning" required="true" help-message="The value is not valid." help-variant="Warning">
-                            <appui:TextField size="M" />
+                            <appui:TextField size="Md" />
                         </appui:InputLabel>
                         <appui:InputLabel direction="Vertical" label="Destructive" required="true" help-message="The value is not valid." help-variant="Destructive">
-                            <appui:TextField size="M" />
+                            <appui:TextField size="Md" />
                         </appui:InputLabel>
                         <appui:InputLabel direction="Vertical" label="Disabled" required="true" help-message="The value is not valid." help-variant="Destructive" enabled="false">
-                            <appui:TextField size="M" enabled="false" />
+                            <appui:TextField size="Md" enabled="false" />
                         </appui:InputLabel>
                     </ui:VisualElement>
                     <appui:Text text="Label Overflow" class="example-subtitle" />
@@ -1544,6 +1980,24 @@
                             <appui:Checkbox />
                         </appui:InputLabel>
                     </ui:VisualElement>
+                    <appui:Text text="Property Row - Leading Icon" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:InputLabel label="Position" icon="crosshair">
+                            <appui:FloatField value="0" />
+                        </appui:InputLabel>
+                        <appui:InputLabel label="Enabled" icon="check">
+                            <appui:Checkbox />
+                        </appui:InputLabel>
+                    </ui:VisualElement>
+                    <appui:Text text="Property Row - Cap Value" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:InputLabel label="Ambient occlusion distance falloff">
+                            <appui:TextField />
+                        </appui:InputLabel>
+                        <appui:InputLabel label="Ambient occlusion distance falloff" cap-value="true">
+                            <appui:TextField />
+                        </appui:InputLabel>
+                    </ui:VisualElement>
                     <appui:Text text="Input Alignment" class="example-subtitle" />
                     <ui:VisualElement class="example-section">
                         <appui:InputLabel label="FlexStart" input-alignment="FlexStart">
@@ -1555,6 +2009,86 @@
                         <appui:InputLabel label="Stretch" input-alignment="Stretch">
                             <appui:TextField />
                         </appui:InputLabel>
+                    </ui:VisualElement>
+
+                    <appui:Text text="Inspector Grid" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:InputLabel label="Position" row-layout="Grid">
+                            <appui:Vector3Field />
+                        </appui:InputLabel>
+                        <appui:InputLabel label="Ambient occlusion intensity" row-layout="Grid">
+                            <appui:FloatField value="0.5" />
+                        </appui:InputLabel>
+                        <appui:InputLabel label="Metallic" row-layout="Grid" columns="Pair">
+                            <appui:SliderFloat low-value="0" high-value="1" value="0.5" />
+                            <appui:FloatField value="0.5" />
+                        </appui:InputLabel>
+                        <appui:InputLabel label="Notes" row-layout="Grid" tall="true">
+                            <appui:TextArea />
+                        </appui:InputLabel>
+                    </ui:VisualElement>
+
+                    <!-- PropertyGroup -->
+                    <appui:Heading text="PROPERTY GROUP" class="example-title" />
+                    <appui:Text text="Sections and sub-groups" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:PropertyGroupStack>
+                            <appui:PropertyGroup label="Transform" level="Section">
+                                <appui:InputLabel label="Position" row-layout="Grid">
+                                    <appui:Vector3Field />
+                                </appui:InputLabel>
+                                <appui:InputLabel label="Rotation" row-layout="Grid">
+                                    <appui:Vector3Field />
+                                </appui:InputLabel>
+                            </appui:PropertyGroup>
+                            <appui:PropertyGroup label="Mesh Renderer" level="Section">
+                                <appui:InputLabel label="Cast shadows" row-layout="Grid">
+                                    <appui:Checkbox />
+                                </appui:InputLabel>
+                                <appui:PropertyGroup label="Lighting" level="Sub">
+                                    <appui:InputLabel label="Light probes" row-layout="Grid">
+                                        <appui:Checkbox />
+                                    </appui:InputLabel>
+                                </appui:PropertyGroup>
+                            </appui:PropertyGroup>
+                        </appui:PropertyGroupStack>
+                    </ui:VisualElement>
+                    <appui:Text text="Closed" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:PropertyGroup label="Advanced" level="Sub" open="false">
+                            <appui:InputLabel label="Static" row-layout="Grid">
+                                <appui:Checkbox />
+                            </appui:InputLabel>
+                        </appui:PropertyGroup>
+                    </ui:VisualElement>
+                    <appui:Text text="Empty" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:PropertyGroup label="Nothing here" level="Sub" />
+                    </ui:VisualElement>
+
+                    <!-- Kbd -->
+                    <appui:Heading text="KBD" class="example-title" />
+                    <appui:Text text="Single Key" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <ui:VisualElement class="example-row">
+                            <appui:Kbd text="Esc" />
+                            <appui:Kbd text="K" />
+                            <appui:Kbd text="Enter" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <appui:Text text="Combo" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <ui:VisualElement class="example-row">
+                            <appui:Kbd keys="Ctrl,K" />
+                            <appui:Kbd keys="Ctrl,Shift,P" />
+                            <appui:Kbd keys="Alt,Tab" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <appui:Text text="Disabled" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <ui:VisualElement class="example-row">
+                            <appui:Kbd keys="Ctrl,K" enabled="false" />
+                        </ui:VisualElement>
                     </ui:VisualElement>
 
                     <!-- Localization -->
@@ -1591,6 +2125,22 @@
                         <appui:MaskField name="mask-field" />
                     </ui:VisualElement>
 
+                    <!-- FeedbackTray -->
+                    <appui:Heading text="FEEDBACK TRAY" class="example-title" />
+                    <appui:Text text="Rating only" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:FeedbackTray />
+                    </ui:VisualElement>
+                    <appui:Text text="With regenerate and copy" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:FeedbackTray name="feedback-tray" can-refresh="true" can-copy="true" />
+                    </ui:VisualElement>
+                    <appui:Text text="Rated" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:FeedbackTray value="Good" can-copy="true" />
+                        <appui:FeedbackTray value="Poor" can-copy="true" copied="true" />
+                    </ui:VisualElement>
+
                     <!-- Menu -->
                     <appui:Heading text="MENU" class="example-title" />
                     <ui:VisualElement class="example-section">
@@ -1621,8 +2171,42 @@
                                     <appui:MenuItem label="Item 4" selectable="true" default-selected="true" enabled="false" />
                                     <appui:MenuItem label="Item 5" selectable="true" />
                                 </appui:MenuSection>
+                                <appui:MenuDivider />
+                                <appui:MenuSection title="Density">
+                                    <appui:MenuRadioGroup value="normal">
+                                        <appui:MenuItem key="compact" label="Compact" />
+                                        <appui:MenuItem key="normal" label="Normal" />
+                                        <appui:MenuItem key="comfort" label="Comfort" />
+                                    </appui:MenuRadioGroup>
+                                </appui:MenuSection>
+                                <appui:MenuDivider />
+                                <appui:MenuItem label="Copy" icon="copy" shortcut="Ctrl+C" />
+                                <appui:MenuItem label="Delete" icon="delete" shortcut="Del" variant="Destructive" />
                             </appui:Menu>
                         </appui:MenuTrigger>
+                    </ui:VisualElement>
+
+                    <!-- OverflowToolbar -->
+                    <appui:Heading text="OVERFLOWTOOLBAR" class="example-title" />
+                    <appui:Text text="Roomy, everything stays inline" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:OverflowToolbar style="width: 320px;">
+                            <appui:ActionButton icon="info" quiet="true" />
+                            <appui:ActionButton icon="menu" quiet="true" />
+                            <appui:ActionButton icon="list" quiet="true" />
+                            <appui:ActionButton icon="x" quiet="true" />
+                        </appui:OverflowToolbar>
+                    </ui:VisualElement>
+                    <appui:Text text="Narrow, the trailing tools collapse into the caret" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:OverflowToolbar overflow-label="More tools" style="width: 120px;">
+                            <appui:ActionButton icon="info" quiet="true" />
+                            <appui:ActionButton icon="menu" quiet="true" />
+                            <appui:ActionButton icon="list" quiet="true" />
+                            <appui:ActionButton icon="x" quiet="true" />
+                            <appui:ActionButton icon="plus" quiet="true" />
+                            <appui:ActionButton icon="delete" quiet="true" />
+                        </appui:OverflowToolbar>
                     </ui:VisualElement>
 
                     <!-- PageIndicator -->
@@ -1785,23 +2369,23 @@
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item">
                                 <appui:RadioGroup>
-                                    <appui:Radio size="S" label="Choice 1" key="0" />
-                                    <appui:Radio size="S" label="Choice 2" key="1" value="true" />
-                                    <appui:Radio size="S" label="Choice 3" key="2" enabled="false" />
+                                    <appui:Radio size="Sm" label="Choice 1" key="0" />
+                                    <appui:Radio size="Sm" label="Choice 2" key="1" value="true" />
+                                    <appui:Radio size="Sm" label="Choice 3" key="2" enabled="false" />
                                 </appui:RadioGroup>
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <appui:RadioGroup>
-                                    <appui:Radio size="M" label="Choice 1" key="0" />
-                                    <appui:Radio size="M" label="Choice 2" key="1" value="true" />
-                                    <appui:Radio size="M" label="Choice 3" key="2" enabled="false" />
+                                    <appui:Radio size="Md" label="Choice 1" key="0" />
+                                    <appui:Radio size="Md" label="Choice 2" key="1" value="true" />
+                                    <appui:Radio size="Md" label="Choice 3" key="2" enabled="false" />
                                 </appui:RadioGroup>
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item">
                                 <appui:RadioGroup>
-                                    <appui:Radio size="L" label="Choice 1" key="0" />
-                                    <appui:Radio size="L" label="Choice 2" key="1" value="true" />
-                                    <appui:Radio size="L" label="Choice 3" key="2" enabled="false" />
+                                    <appui:Radio size="Lg" label="Choice 1" key="0" />
+                                    <appui:Radio size="Lg" label="Choice 2" key="1" value="true" />
+                                    <appui:Radio size="Lg" label="Choice 3" key="2" enabled="false" />
                                 </appui:RadioGroup>
                             </ui:VisualElement>
                         </ui:VisualElement>
@@ -1829,13 +2413,13 @@
                     <ui:VisualElement class="example-section">
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item" style="flex-basis: 33.33%;">
-                                <appui:SearchBar size="S" />
+                                <appui:SearchBar size="Sm" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item" style="flex-basis: 33.33%;">
-                                <appui:SearchBar size="M" />
+                                <appui:SearchBar size="Md" />
                             </ui:VisualElement>
                             <ui:VisualElement class="example-item" style="flex-basis: 33.33%;">
-                                <appui:SearchBar size="L" />
+                                <appui:SearchBar size="Lg" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
@@ -1918,6 +2502,80 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
 
+                    <!-- Shimmer -->
+                    <appui:Heading text="SHIMMER" class="example-title" />
+                    <appui:Text text="Default" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Shimmer text="Thinking" />
+                    </ui:VisualElement>
+                    <appui:Text text="Static" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Shimmer text="Thinking" active="false" />
+                    </ui:VisualElement>
+
+                    <!-- Skeleton -->
+                    <appui:Heading text="SKELETON" class="example-title" />
+                    <appui:Text text="Default" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Skeleton style="width: 240px;" />
+                    </ui:VisualElement>
+                    <appui:Text text="Static" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Skeleton animated="false" style="width: 240px;" />
+                    </ui:VisualElement>
+                    <appui:Text text="Paragraph" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Skeleton style="width: 240px; height: 12px; margin-bottom: 6px;" />
+                        <appui:Skeleton style="width: 200px; height: 12px; margin-bottom: 6px;" />
+                        <appui:Skeleton style="width: 160px; height: 12px;" />
+                    </ui:VisualElement>
+                    <appui:Text text="Media Card" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <ui:VisualElement class="example-row" style="align-items: flex-start;">
+                            <appui:Skeleton style="width: 48px; height: 48px; margin-right: 8px;" />
+                            <ui:VisualElement>
+                                <appui:Skeleton style="width: 160px; height: 12px; margin-bottom: 6px;" />
+                                <appui:Skeleton style="width: 120px; height: 12px;" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                    <!-- Sidebar -->
+                    <appui:Heading text="SIDEBAR" class="example-title" />
+                    <appui:Text text="Sectioned app-shell navigation" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="height: 300px;">
+                        <appui:Sidebar selected-id="assets" style="height: 100%;">
+                            <appui:SidebarHeader>
+                                <appui:Text text="My Project" />
+                            </appui:SidebarHeader>
+                            <appui:SidebarContent>
+                                <appui:SidebarSection heading="Workspace">
+                                    <appui:SidebarItem value="assets" label="Assets" icon="list" shortcut="Ctrl+1" />
+                                    <appui:SidebarItem value="scenes" label="Scenes" icon="stack" shortcut="Ctrl+2" />
+                                    <appui:SidebarItem value="builds" label="Builds" icon="cube" />
+                                </appui:SidebarSection>
+                                <appui:SidebarSection heading="Team">
+                                    <appui:SidebarItem value="members" label="Members" icon="user" />
+                                    <appui:SidebarItem value="activity" label="Activity" icon="bell" />
+                                </appui:SidebarSection>
+                            </appui:SidebarContent>
+                            <appui:SidebarFooter>
+                                <appui:SidebarItem label="Settings" icon="menu" />
+                            </appui:SidebarFooter>
+                        </appui:Sidebar>
+                    </ui:VisualElement>
+                    <appui:Text text="Narrower, no selection" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="height: 200px;">
+                        <appui:Sidebar width="180" style="height: 100%;">
+                            <appui:SidebarContent>
+                                <appui:SidebarSection>
+                                    <appui:SidebarItem value="a" label="First" />
+                                    <appui:SidebarItem value="b" label="Second" />
+                                </appui:SidebarSection>
+                            </appui:SidebarContent>
+                        </appui:Sidebar>
+                    </ui:VisualElement>
+
                     <!-- Slider -->
                     <appui:Heading text="SLIDER" class="example-title" />
                     <ui:VisualElement class="example-section">
@@ -1938,6 +2596,8 @@
                         <ui:VisualElement style="height: 8px;" />
                         <appui:Text text="With input field" class="example-subtitle" />
                         <appui:SliderFloat low-value="-100" high-value="100" value="75" track="On" step="25" show-input-field="true" format-string="#.00" />
+                        <appui:Text text="With input field - field bounds widened past the track" class="example-subtitle" />
+                        <appui:SliderFloat low-value="0" high-value="100" value="50" track="On" step="1" show-input-field="true" field-high-value="1000" />
                         <appui:Text text="With marks" class="example-subtitle" />
                         <appui:SliderFloat low-value="-100" high-value="100" value="75" track="On" show-marks="true" step="25" />
                         <ui:VisualElement style="height: 8px;" />
@@ -2012,11 +2672,11 @@
                     <appui:Heading text="STEPPER" class="example-title" />
                     <ui:VisualElement class="example-section">
                         <appui:Text text="Small" class="example-subtitle" />
-                        <appui:Stepper size="S" />
+                        <appui:Stepper size="Sm" />
                         <appui:Text text="Medium" class="example-subtitle" />
-                        <appui:Stepper size="M" />
+                        <appui:Stepper size="Md" />
                         <appui:Text text="Large" class="example-subtitle" />
-                        <appui:Stepper size="L" />
+                        <appui:Stepper size="Lg" />
                     </ui:VisualElement>
 
                     <!-- SVSquare -->
@@ -2226,20 +2886,19 @@
                     <appui:Heading text="TEXT" class="example-title" />
                     <ui:VisualElement class="example-section">
                         <appui:Text text="Sizing" class="example-subtitle" />
-                        <appui:Text text="Extra extra small text" size="XXS" />
                         <appui:Text text="Extra small text" size="XS" />
                         <appui:Text text="Small text" size="S" />
-                        <appui:Text text="Medium text" size="M" />
+                        <appui:Text text="Base text" size="M" />
                         <appui:Text text="Large text" size="L" />
                         <appui:Text text="Extra large text" size="XL" />
                         <appui:Text text="Double extra large text" size="XXL" />
                         <appui:Text text="Triple extra large text" size="XXXL" />
-                        <appui:Text text="Primary" class="example-subtitle" />
-                        <appui:Text text="Primary text" primary="true" />
-                        <appui:Text text="Secondary" class="example-subtitle" />
-                        <appui:Text text="Secondary text" primary="false" />
+                        <appui:Text text="Variants" class="example-subtitle" />
+                        <appui:Text text="Default text" />
+                        <appui:Text text="Secondary text" variant="Secondary" />
+                        <appui:Text text="Muted text" variant="Muted" />
                         <appui:Text text="Disabled" class="example-subtitle" />
-                        <appui:Text text="Secondary text" enabled="false" />
+                        <appui:Text text="Disabled text" enabled="false" />
                     </ui:VisualElement>
 
                     <!-- TextArea -->
@@ -2259,17 +2918,47 @@
                     <appui:Heading text="TEXTFIELD" class="example-title" />
                     <ui:VisualElement class="example-section">
                         <appui:Text text="Small" class="example-subtitle" />
-                        <appui:TextField size="S" placeholder="Enter a text..." />
+                        <appui:TextField size="Sm" placeholder="Enter a text..." />
                         <appui:Text text="Medium" class="example-subtitle" />
-                        <appui:TextField size="M" placeholder="Enter a text..." leading-icon-name="info"  />
+                        <appui:TextField size="Md" placeholder="Enter a text..." leading-icon-name="info"  />
                         <appui:Text text="Large" class="example-subtitle" />
-                        <appui:TextField size="L" placeholder="Enter a text..." trailing-icon="info"  />
+                        <appui:TextField size="Lg" placeholder="Enter a text..." trailing-icon-name="info" />
                         <appui:Text text="Large - Leading Icon - Trailing Icon" class="example-subtitle" />
-                        <appui:TextField size="L" placeholder="Enter a text..." enabled="false" leading-icon-name="info"  trailing-icon="info"  />
+                        <appui:TextField size="Lg" placeholder="Enter a text..." enabled="false" leading-icon-name="info" trailing-icon-name="info" />
+                        <appui:Text text="Suffix" class="example-subtitle" />
+                        <appui:TextField size="Md" value="128" suffix="px" />
+                        <appui:Text text="Suffix - Leading Icon" class="example-subtitle" />
+                        <appui:TextField size="Md" value="42" suffix="%" leading-icon-name="info" />
+                        <appui:Text text="No Select-All On Focus" class="example-subtitle" />
+                        <appui:TextField size="Md" value="append here" select-all-on-focus="false" />
                         <appui:Text text="Large - Invalid" class="example-subtitle" />
-                        <appui:TextField size="L" placeholder="Enter a text..." class="is-invalid" />
+                        <appui:TextField size="Lg" placeholder="Enter a text..." class="is-invalid" />
                         <appui:Text text="Large - Invalid - Disabled" class="example-subtitle" />
-                        <appui:TextField size="L" placeholder="Enter a text..." enabled="false" class="is-invalid" />
+                        <appui:TextField size="Lg" placeholder="Enter a text..." enabled="false" class="is-invalid" />
+                    </ui:VisualElement>
+
+                    <!-- Overflow Tooltip -->
+                    <appui:Heading text="OVERFLOW TOOLTIP" class="example-title" />
+                    <appui:Text text="Only the truncated label gets a tooltip" class="example-subtitle" />
+                    <ui:VisualElement class="example-section example-section-fullwidth">
+                        <ui:VisualElement class="example-overflow-tooltip-host">
+                            <appui:OverflowTooltip text="Fits" />
+                            <appui:OverflowTooltip text="A very long asset name that will certainly not fit in this narrow column" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                    <!-- Toaster -->
+                    <appui:Heading text="TOASTER" class="example-title" />
+                    <appui:Text text="A stack of up to 3 toasts, anchored bottom-right" class="example-subtitle" />
+                    <ui:VisualElement class="example-section example-section-fullwidth">
+                        <appui:ActionButton name="toaster-default-btn" label="Post" />
+                        <appui:ActionButton name="toaster-positive-btn" label="Post positive" />
+                        <appui:ActionButton name="toaster-negative-btn" label="Post negative" />
+                        <appui:ActionButton name="toaster-update-btn" label="Post then update" />
+                        <appui:ActionButton name="toaster-clear-btn" label="Clear" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="example-section example-section-fullwidth example-toaster-host">
+                        <appui:Toaster name="kit-toaster" anchor="BottomRight" limit="3" />
                     </ui:VisualElement>
 
                     <!-- Toast -->
@@ -2301,6 +2990,150 @@
                         <appui:Button name="positive-slide-indef-toast-button" title="Positive" />
                         <appui:Button name="warning-slide-indef-toast-button" title="Warning" />
                         <appui:Button name="negative-slide-indef-toast-button" title="Negative" />
+                    </ui:VisualElement>
+
+                    <!-- User Avatar -->
+                    <appui:Heading text="USER AVATAR" class="example-title" />
+                    <appui:Text text="A person, as initials on their identity colour" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="flex-direction: row; align-items: center;">
+                        <appui:UserAvatar user-id="u-1" user-name="Ada Lovelace" user-color="#0A6EC8" size="Sm" tooltip="Ada Lovelace" />
+                        <appui:UserAvatar user-id="u-2" user-name="Grace Hopper" user-color="#7A4FBF" size="Md" tooltip="Grace Hopper" />
+                        <appui:UserAvatar user-id="u-3" user-name="Katherine Johnson" user-color="#1F8A5B" size="Lg" tooltip="Katherine Johnson" />
+                        <appui:UserAvatar user-id="u-4" />
+                    </ui:VisualElement>
+                    <appui:Text text="Presence ring — hover to see it take the person's colour" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="flex-direction: row; align-items: center;">
+                        <appui:UserAvatar user-id="u-1" user-name="Ada Lovelace" user-color="#0A6EC8" ring="true" />
+                        <appui:UserAvatar user-id="u-2" user-name="Grace Hopper" user-color="#7A4FBF" ring="true" />
+                        <appui:UserAvatar user-id="u-3" user-name="Katherine Johnson" user-color="#1F8A5B" ring="true" />
+                    </ui:VisualElement>
+
+                    <!-- User Switcher -->
+                    <appui:Heading text="USER SWITCHER" class="example-title" />
+                    <appui:Text text="Accounts are data, so the sample fills them from C#" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="flex-direction: row; align-items: center;">
+                        <appui:UserSwitcher name="user-switcher" />
+                        <appui:UserSwitcher name="user-switcher-named" show-name="true" />
+                        <appui:UserSwitcher name="user-switcher-orgs" show-name="true" collapsible="true" section-label="Switch organization" show-account-avatars="false" />
+                    </ui:VisualElement>
+
+                    <!-- Zoomable Thumbnail -->
+                    <appui:Heading text="ZOOMABLE THUMBNAIL" class="example-title" />
+                    <appui:Text text="Corner control, revealed on hover or focus" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="flex-direction: row;">
+                        <appui:ZoomableThumbnail name="zoomable-corner" caption="cliff-face-01.png" alt="Cliff face, tiling" style="width: 96px; height: 96px;" />
+                        <appui:ZoomableThumbnail name="zoomable-empty" caption="missing.png" alt="Nothing here" style="width: 96px; height: 96px;" />
+                    </ui:VisualElement>
+                    <appui:Text text="Whole mode — the picture is the control" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="flex-direction: row;">
+                        <appui:ZoomableThumbnail name="zoomable-whole" caption="cliff-face-01.png" alt="Cliff face, tiling" trigger-mode="Whole" style="width: 48px; height: 48px;" />
+                    </ui:VisualElement>
+
+                    <!-- Zoom Trigger Button -->
+                    <appui:Heading text="ZOOM TRIGGER BUTTON" class="example-title" />
+                    <appui:Text text="On its own it rests invisible; `always-visible` pins it on" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="flex-direction: row; align-items: center;">
+                        <appui:ZoomTriggerButton asset-name="cliff-face-01.png" always-visible="true" />
+                        <appui:ZoomTriggerButton asset-name="cliff-face-01.png" />
+                    </ui:VisualElement>
+
+                    <!-- Audio Waveform -->
+                    <appui:Heading text="AUDIO WAVEFORM" class="example-title" />
+                    <appui:Text text="A clip envelope. Peaks are data, so the sample fills them from C#" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:AudioWaveform name="audio-waveform" />
+                    </ui:VisualElement>
+                    <appui:Text text="With a playhead at 35% of the clip" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:AudioWaveform name="audio-waveform-playhead" progress="0.35" />
+                    </ui:VisualElement>
+
+                    <!-- Audio Preview -->
+                    <appui:Heading text="AUDIO PREVIEW" class="example-title" />
+                    <appui:Text text="A clip audition: envelope, play control and length" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:AudioPreview name="audio-preview" duration-label="0:12" style="width: 280px;" />
+                    </ui:VisualElement>
+                    <appui:Text text="Playing, with a playhead at 40%" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:AudioPreview name="audio-preview-playing" playing="true" progress="0.4" duration-label="0:12" style="width: 280px;" />
+                    </ui:VisualElement>
+                    <appui:Text text="Envelope still being computed" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:AudioPreview loading="true" style="width: 280px;" />
+                    </ui:VisualElement>
+                    <appui:Text text="No envelope, and the host says why" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:AudioPreview message="Clip too large to preview" duration-label="4:03" style="width: 280px;" />
+                    </ui:VisualElement>
+                    <appui:Text text="No envelope, named with a symbol instead" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:AudioPreview fallback-icon="music-note" duration-label="0:31" style="width: 280px;" />
+                    </ui:VisualElement>
+
+                    <!-- VU Meter -->
+                    <appui:Heading text="VU METER" class="example-title" />
+                    <appui:Text text="Mono, stereo, and a narrowed scale with the readout hidden" class="example-subtitle" />
+                    <ui:VisualElement class="example-section" style="flex-direction: row; height: 200px;">
+                        <appui:VuMeter name="vu-meter-mono" />
+                        <appui:VuMeter name="vu-meter-stereo" />
+                        <appui:VuMeter name="vu-meter-quiet" class="example-vu-meter--last" min="-60" max="6" show-readout="false" />
+                    </ui:VisualElement>
+
+                    <!-- Timeline -->
+                    <appui:Heading text="TIMELINE" class="example-title" />
+                    <appui:Text text="A dope sheet: lanes of clips and keyframes on a shared time axis" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Timeline name="timeline-dope-sheet" duration="60" px-per-unit="12" label-width="120" style="height: 172px;">
+                            <appui:TimelineTrack id="position" label="Position">
+                                <appui:TimelineClip start="4" duration="12" label="Walk" />
+                                <appui:TimelineClip start="20" duration="8" label="Turn" />
+                            </appui:TimelineTrack>
+                            <appui:TimelineTrackGroup id="cube" title="Cube">
+                                <appui:TimelineTrack id="rotation" label="Rotation">
+                                    <appui:TimelineKeyframe time="0" />
+                                    <appui:TimelineKeyframe time="12" />
+                                    <appui:TimelineKeyframe time="30" draggable="true" />
+                                </appui:TimelineTrack>
+                                <appui:TimelineTrack id="scale" label="Scale">
+                                    <appui:TimelineKeyframe time="6" shape="Circle" />
+                                    <appui:TimelineKeyframe time="24" shape="Square" />
+                                </appui:TimelineTrack>
+                            </appui:TimelineTrackGroup>
+                        </appui:Timeline>
+                    </ui:VisualElement>
+                    <appui:Text text="Frame clips, muted keyframes and adaptive ticks" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Timeline name="timeline-frames" duration="600" px-per-unit="2" minor-tick="5" major-tick="30" adaptive-ticks="true" max-px-per-unit="240" label-width="120" style="height: 140px;">
+                            <appui:TimelineTrack id="shots" label="Shots">
+                                <appui:TimelineClip start="0" duration="120" label="Establishing" frame="true" />
+                                <appui:TimelineClip start="140" duration="90" label="Close-up" frame="true" frame-color="Amber" />
+                                <appui:TimelineClip start="260" duration="140" label="Reaction" frame="true" frame-color="Green" />
+                            </appui:TimelineTrack>
+                            <appui:TimelineTrack id="cues" label="Cues">
+                                <appui:TimelineKeyframe time="30" />
+                                <appui:TimelineKeyframe time="150" muted="true" />
+                                <appui:TimelineKeyframe time="300" muted="true" />
+                                <appui:TimelineKeyframe time="480" />
+                            </appui:TimelineTrack>
+                        </appui:Timeline>
+                    </ui:VisualElement>
+                    <appui:Text text="Fitted to the viewport — the base scale fills the strip whatever the panel width" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Timeline name="timeline-fit" duration="90" fit-width="true" adaptive-ticks="true" label-width="120" style="height: 96px;">
+                            <appui:TimelineTrack id="fit-track" label="Take">
+                                <appui:TimelineClip start="10" duration="30" label="Segment" />
+                            </appui:TimelineTrack>
+                        </appui:Timeline>
+                    </ui:VisualElement>
+                    <appui:Text text="Editor control scheme — the wheel zooms about the cursor, Alt+drag pans" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <appui:Timeline name="timeline-editor-scheme" duration="120" px-per-unit="6" minor-tick="5" major-tick="20" control-scheme="Editor" style="height: 96px;">
+                            <appui:TimelineTrack id="audio">
+                                <appui:TimelineClip start="0" duration="45" label="Ambience" />
+                                <appui:TimelineClip start="60" duration="30" label="Stinger" resizable="false" />
+                            </appui:TimelineTrack>
+                        </appui:Timeline>
                     </ui:VisualElement>
 
                     <!-- Toggle -->
@@ -2413,16 +3246,37 @@
                         <appui:Text text="Invalid And Disabled" class="example-subtitle" />
                         <appui:TouchSliderFloat label="TEMPERATURE" low-value="-100" high-value="100" value="0" class="is-invalid" enabled="false" format-string="#0.0°C"/>
                         <appui:Text text="Small" class="example-subtitle" />
-                        <appui:TouchSliderFloat label="TEMPERATURE" low-value="-100" high-value="100" value="0" size="S" format-string="#0.0°C"/>
+                        <appui:TouchSliderFloat label="TEMPERATURE" low-value="-100" high-value="100" value="0" size="Sm" format-string="#0.0°C"/>
                         <appui:Text text="Medium" class="example-subtitle" />
-                        <appui:TouchSliderFloat label="TEMPERATURE" low-value="-100" high-value="100" value="0" size="M" format-string="#0.0°C"/>
+                        <appui:TouchSliderFloat label="TEMPERATURE" low-value="-100" high-value="100" value="0" size="Md" format-string="#0.0°C"/>
                         <appui:Text text="Large" class="example-subtitle" />
-                        <appui:TouchSliderFloat label="TEMPERATURE" low-value="-100" high-value="100" value="0" size="L" format-string="#0.0°C"/>
+                        <appui:TouchSliderFloat label="TEMPERATURE" low-value="-100" high-value="100" value="0" size="Lg" format-string="#0.0°C"/>
                         <appui:Text text="Vertical" class="example-subtitle" />
                         <ui:VisualElement class="example-row">
                             <ui:VisualElement class="example-item">
                                 <appui:TouchSliderFloat style="height: 200px;" label="TEMPERATURE" low-value="-100" high-value="100" value="0" orientation="Vertical" format-string="#0.0°C" />
                             </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                    <!-- UnityLogo -->
+                    <appui:Heading text="UNITYLOGO" class="example-title" />
+                    <appui:Text text="Variants" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <ui:VisualElement class="example-row">
+                            <appui:UnityLogo variant="Filled" />
+                            <appui:UnityLogo variant="Empty" />
+                            <appui:UnityLogo variant="Animated" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <appui:Text text="Sizes" class="example-subtitle" />
+                    <ui:VisualElement class="example-section">
+                        <ui:VisualElement class="example-row">
+                            <appui:UnityLogo size="Xxs" />
+                            <appui:UnityLogo size="Xs" />
+                            <appui:UnityLogo size="Sm" />
+                            <appui:UnityLogo size="Md" />
+                            <appui:UnityLogo size="Lg" />
                         </ui:VisualElement>
                     </ui:VisualElement>
 
@@ -2444,11 +3298,11 @@
                             <appui:Radio key="editor-light" label="Editor Light" emphasized="true" />
                         </appui:RadioGroup>
 
-                        <appui:Text text="&lt;b&gt;Scale&lt;/b&gt;" enable-rich-text="true" class="example-context-switcher-panel__title" />
-                        <appui:RadioGroup name="scale-switcher" class="example-context-switcher-panel__switcher" >
-                            <appui:Radio key="small" label="Small" emphasized="true" />
-                            <appui:Radio key="medium" label="Medium" value="true" emphasized="true" />
-                            <appui:Radio key="large" label="Large" emphasized="true" />
+                        <appui:Text text="&lt;b&gt;Density&lt;/b&gt;" enable-rich-text="true" class="example-context-switcher-panel__title" />
+                        <appui:RadioGroup name="density-switcher" class="example-context-switcher-panel__switcher" >
+                            <appui:Radio key="normal" label="Normal" value="true" emphasized="true" />
+                            <appui:Radio key="compact" label="Compact" emphasized="true" />
+                            <appui:Radio key="comfort" label="Comfort" emphasized="true" />
                         </appui:RadioGroup>
 
                         <appui:Text text="&lt;b&gt;Direction&lt;/b&gt;" enable-rich-text="true" class="example-context-switcher-panel__title" />

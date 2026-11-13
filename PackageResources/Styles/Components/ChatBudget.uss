@@ -1,0 +1,168 @@
+/* LoadingDots */
+.appui-loading-dots {
+    flex-direction: row;
+    align-items: center;
+    align-self: center;
+    flex-shrink: 0;
+}
+
+.appui-loading-dots__dot {
+    width: var(--appui-sizing-75);
+    height: var(--appui-sizing-75);
+    border-radius: var(--appui-border-radius-full);
+    background-color: var(--appui-alias-text-secondary);
+    margin-left: var(--appui-sizing-60);
+}
+
+.appui-loading-dots > .appui-loading-dots__dot.unity-first-child /* *:nth-child(1) */ {
+    margin-left: 0;
+}
+
+/* ChatBudget */
+.appui-chat-budget {
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.appui-chat-budget__header {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: var(--appui-sizing-160);
+}
+
+.appui--rtl .appui-chat-budget__header {
+    flex-direction: row-reverse;
+}
+
+.appui-chat-budget__header-icon {
+    --unity-image-tint-color: var(--appui-alias-text-secondary);
+    margin-right: var(--appui-sizing-75);
+}
+
+.appui--rtl .appui-chat-budget__header-icon {
+    margin-right: 0;
+    margin-left: var(--appui-sizing-75);
+}
+
+.appui-chat-budget__label {
+    flex-grow: 1;
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-secondary);
+}
+
+.appui-chat-budget__reading {
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-secondary);
+}
+
+/* The bar reads through Progress's own --progress-color custom property, which is a colour and so
+   is safe to publish as a custom property (a length would silently resolve to 0). */
+.appui-chat-budget__bar {
+    --progress-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+/* An exhausted budget turns destructive so it cannot be mistaken for a full one. */
+.appui-chat-budget--exhausted > .appui-chat-budget__header > .appui-chat-budget__reading {
+    color: var(--appui-alias-semantic-destructive);
+    -unity-font-style: bold;
+}
+
+.appui-chat-budget--exhausted > .appui-chat-budget__bar {
+    --progress-color: var(--appui-alias-semantic-destructive);
+}
+
+/* CreditsPill */
+.appui-credits-pill {
+    flex-direction: row;
+    align-items: center;
+    align-self: flex-start;
+    flex-shrink: 0;
+    background-color: var(--appui-alias-surface-subtle);
+    border-radius: var(--appui-border-radius-full);
+    padding: var(--appui-sizing-25) var(--appui-sizing-160);
+}
+
+.appui--rtl .appui-credits-pill {
+    flex-direction: row-reverse;
+}
+
+.appui-credits-pill > * {
+    margin-left: var(--appui-sizing-75);
+}
+
+.appui-credits-pill > .appui-credits-pill__icon {
+    margin-left: 0;
+}
+
+.appui--rtl .appui-credits-pill > * {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-75);
+}
+
+.appui--rtl .appui-credits-pill > .appui-credits-pill__icon {
+    margin-right: 0;
+}
+
+.appui-credits-pill__icon {
+    --unity-image-tint-color: var(--appui-alias-text-disabled);
+}
+
+.appui-credits-pill__value {
+    font-size: var(--appui-font-sizes-75);
+    -unity-font-style: bold;
+    color: var(--appui-alias-text-secondary);
+}
+
+.appui-credits-pill__warning {
+    --unity-image-tint-color: var(--appui-alias-semantic-warning);
+}
+
+/* BudgetIndicator */
+.appui-budget-indicator {
+    flex-direction: row;
+    align-items: center;
+    align-self: flex-start;
+    flex-shrink: 0;
+}
+
+.appui--rtl .appui-budget-indicator {
+    flex-direction: row-reverse;
+}
+
+.appui-budget-indicator > * {
+    margin-left: var(--appui-sizing-75);
+}
+
+.appui-budget-indicator > .appui-budget-indicator__amount {
+    margin-left: 0;
+}
+
+.appui--rtl .appui-budget-indicator > * {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-75);
+}
+
+.appui--rtl .appui-budget-indicator > .appui-budget-indicator__amount {
+    margin-right: 0;
+}
+
+.appui-budget-indicator__amount,
+.appui-budget-indicator__percent {
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-disabled);
+}
+
+.appui-budget-indicator__ring {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+    --progress-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+.appui-budget-indicator--exhausted > .appui-budget-indicator__amount,
+.appui-budget-indicator--exhausted > .appui-budget-indicator__percent {
+    color: var(--appui-alias-semantic-destructive);
+}
+
+.appui-budget-indicator--exhausted > .appui-budget-indicator__ring {
+    --progress-color: var(--appui-alias-semantic-destructive);
+}

@@ -1,0 +1,62 @@
+/* ChatStreamingIndicator */
+.appui-chat-streaming-indicator {
+    flex-direction: row;
+    align-items: center;
+    align-self: flex-start;
+    flex-shrink: 0;
+}
+
+.appui--rtl .appui-chat-streaming-indicator {
+    flex-direction: row-reverse;
+}
+
+.appui-chat-streaming-indicator > * {
+    margin-left: var(--appui-sizing-75);
+}
+
+.appui-chat-streaming-indicator > .appui-chat-streaming-indicator__logo {
+    margin-left: 0;
+}
+
+.appui--rtl .appui-chat-streaming-indicator > * {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-75);
+}
+
+.appui--rtl .appui-chat-streaming-indicator > .appui-chat-streaming-indicator__logo {
+    margin-right: 0;
+}
+
+/* A custom mark takes the logo's place at the leading edge, so it carries no leading gap either. */
+.appui-chat-streaming-indicator > .appui-chat-streaming-indicator__icon {
+    margin-left: 0;
+}
+
+.appui--rtl .appui-chat-streaming-indicator > .appui-chat-streaming-indicator__icon {
+    margin-right: 0;
+}
+
+/* A rendered verb may be a plain element, which `> *` does not reliably match, so it carries its own
+   gap. */
+.appui-chat-streaming-indicator > .appui-chat-streaming-indicator__verb {
+    margin-left: var(--appui-sizing-75);
+}
+
+.appui--rtl .appui-chat-streaming-indicator > .appui-chat-streaming-indicator__verb {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-75);
+}
+
+/* The verb is a Shimmer, so its resting colour is the shimmer base rather than `color`: the
+   driver writes an inline colour while the turn runs, and both ends of the loop come from the
+   stylesheet. */
+.appui-chat-streaming-indicator__label {
+    font-size: var(--appui-font-sizes-75);
+    --shimmer-base-color: var(--appui-alias-text-secondary);
+}
+
+/* The stats trail the verb quietly: same size, dimmed, so they read as an aside. */
+.appui-chat-streaming-indicator__stats {
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-disabled);
+}

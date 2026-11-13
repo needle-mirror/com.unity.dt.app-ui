@@ -1,0 +1,93 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+.appui--cloud-light {
+  --appui-alias-control-background-color-default: #f0f0f0;
+  --appui-alias-control-border-color-default: #d9d9d9;
+  --appui-alias-actions-selected-background-color-default: rgba(10, 110, 200, 0.28);
+  --appui-alias-actions-selected-background-color-hover: rgba(10, 110, 200, 0.4);
+  --appui-alias-actions-accent-background-color-hover: #0060b8;
+  --appui-alias-text-tertiary: #686868; /** Dim live text, AA (4.5:1) on every surface */
+  --appui-alias-field-background-color-default: #f9f9f9;
+  --appui-alias-field-background-color-hover: #f0f0f0;
+  --appui-alias-field-border-color-default: #d9d9d9;
+  --appui-alias-surface-default: #f9f9f9;
+  --appui-alias-surface-sunken: #fcfcfc;
+  --appui-alias-surface-card: #f0f0f0;
+  --appui-alias-surface-muted: #e8e8e8;
+  --appui-dockview-drag-over-background-color: rgba(10, 110, 200, 0.5);
+  --appui-neutral-25: #202020;
+  --appui-neutral-50: #202020;
+  --appui-neutral-100: #202020;
+  --appui-neutral-200: #646464;
+  --appui-neutral-300: #646464;
+  --appui-neutral-400: #838383;
+  --appui-neutral-500: #8d8d8d;
+  --appui-neutral-600: #bbbbbb;
+  --appui-neutral-700: #bbbbbb;
+  --appui-neutral-800: #cecece;
+  --appui-neutral-900: #e0e0e0;
+  --appui-neutral-1000: #e8e8e8;
+  --appui-neutral-1100: #f9f9f9;
+  --appui-neutral-1200: #f9f9f9;
+  --appui-backgrounds-50: #fcfcfc; /** Canvas */
+  --appui-base-100: #f9f9f9;
+  --appui-accent-25: #0a6ec8; /** Active / Focus */
+  --appui-accent-50: #0f70cb; /** Hover */
+  --appui-accent-100: #0f70cb;
+  --appui-accent-200: #0f70cb;
+  --appui-accent-300: #7aace8;
+  --appui-destructive-25: #ce2c31; /** Active / Focus */
+  --appui-destructive-50: #ce2c31; /** Hover */
+  --appui-destructive-100: #dc3e42;
+  --appui-destructive-200: #e5484d;
+  --appui-destructive-300: #eb8e90;
+  --appui-warning-25: #ab6400; /** Active / Focus */
+  --appui-warning-50: #ab6400; /** Hover */
+  --appui-warning-100: #ffba18;
+  --appui-warning-200: #ffc53d;
+  --appui-warning-300: #e2a336;
+  --appui-positive-25: #218358; /** Active / Focus */
+  --appui-positive-50: #218358; /** Hover */
+  --appui-positive-100: #2b9a66;
+  --appui-positive-200: #30a46c;
+  --appui-positive-300: #5bb98b;
+  --appui-informative-25: #3e63dd;
+  --appui-informative-50: #3a5bc7;
+  --appui-informative-100: #3a5bc7;
+  --appui-informative-200: #3a5bc7;
+  --appui-informative-300: #8da4ef;
+  --appui-alias-actions-accent-background-color-default: var(--appui-accent-25);
+  --appui-alias-actions-accent-background-color-active: var(--appui-accent-300);
+  --appui-alias-actions-destructive-hover: var(--appui-destructive-100);
+  --appui-alias-actions-destructive-active: var(--appui-destructive-300);
+  --appui-alias-field-border-color-focus: var(--appui-accent-25);
+  --appui-alias-semantic-positive: var(--appui-positive-200);
+  --appui-alias-semantic-destructive: var(--appui-destructive-200);
+  --appui-alias-semantic-warning: var(--appui-warning-200);
+  --appui-alias-overlay-backdrop: var(--appui-color-transparent-black-300);
+  --appui-alias-link-default: var(--appui-accent-25);
+  --appui-neutral-15: var(--appui-color-black);
+  --appui-neutral-1300: var(--appui-color-white);
+  --appui-backgrounds-100: var(--appui-neutral-1000); /** App Background */
+  --appui-backgrounds-200: var(--appui-neutral-900); /** Subtle */
+  --appui-backgrounds-300: var(--appui-neutral-800); /** Borders */
+  --appui-foregrounds-25: var(--appui-neutral-400); /** Disabled Text */
+  --appui-foregrounds-50: var(--appui-neutral-200); /** Placeholder / Secondary */
+  --appui-foregrounds-100: var(--appui-neutral-100); /** Primary Text / Icon / Element */
+  --appui-foregrounds-200: var(--appui-neutral-50); /** High Contrast / Text on Hover */
+  --appui-base-25: var(--appui-neutral-1100);
+  --appui-base-50: var(--appui-neutral-1000); /** UI Element Pressed */
+  --appui-base-200: var(--appui-neutral-800); /** UI Element Hover */
+  --appui-base-300: var(--appui-neutral-700); /** UI Element Active / Selected */
+  --appui-base-400: var(--appui-neutral-600); /** UI Element Border */
+  --appui-alias-control-background-color-hover: var(--appui-backgrounds-100);
+  --appui-alias-control-background-color-active: var(--appui-backgrounds-200);
+  --appui-alias-control-border-color-hover: var(--appui-base-300);
+  --appui-alias-semantic-warning-foreground: var(--appui-foregrounds-100);
+  --appui-alias-surface-subtle: var(--appui-backgrounds-100);
+  --appui-alias-surface-raised: var(--appui-base-50);
+  --appui-alias-surface-overlay: var(--appui-neutral-1300);
+  --appui-base-500: var(--appui-backgrounds-300); /** UI Element Border Hover */
+}

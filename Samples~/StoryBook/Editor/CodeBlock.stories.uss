@@ -1,6 +1,6 @@
 /* ---------------------------------------------------------------------- *
  *  CodeBlock story — story-only styles, all values pulled from App UI     *
- *  design tokens (--appui-spacing-*, --appui-alias-control-*).            *
+ *  design tokens (--appui-sizing-*, --appui-alias-control-*).            *
  *  No hardcoded numbers or colors.                                        *
  * ---------------------------------------------------------------------- */
 

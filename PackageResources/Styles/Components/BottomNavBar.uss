@@ -4,7 +4,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: var(--appui-spacing-100) var(--appui-spacing-200);
+    padding: var(--appui-static-sizing-100) var(--appui-static-sizing-200);
     flex-shrink: 0;
 }
 
@@ -22,7 +22,7 @@
     border-radius: var(--appui-alias-control-border-radius);
     background-color: rgba(0,0,0,0);
     transition: background-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-125);
-    padding: var(--appui-spacing-50);
+    padding: var(--appui-static-sizing-50);
 }
 
 .appui-bottom-navbar-item .appui-bottom-navbar-item__icon {
@@ -40,10 +40,10 @@
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-75);
     color: var(--appui-foregrounds-100);
-    padding-left: var(--appui-spacing-200);
-    padding-right: var(--appui-spacing-200);
+    padding-left: var(--appui-static-sizing-200);
+    padding-right: var(--appui-static-sizing-200);
 }
 
 .appui-bottom-navbar-item.is-hovered {

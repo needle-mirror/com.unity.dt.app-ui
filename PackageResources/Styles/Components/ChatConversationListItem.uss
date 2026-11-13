@@ -1,0 +1,92 @@
+/* ChatConversationListItem */
+.appui-chat-conversation-list-item {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: var(--appui-alias-control-border-radius);
+    transition: background-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-200);
+}
+
+.appui--rtl .appui-chat-conversation-list-item {
+    flex-direction: row-reverse;
+}
+
+.appui-chat-conversation-list-item:hover {
+    background-color: var(--appui-alias-surface-muted);
+}
+
+/* The active conversation keeps the selected tint whether or not the pointer is over it. */
+.appui-chat-conversation-list-item.is-selected,
+.appui-chat-conversation-list-item.is-selected:hover {
+    background-color: var(--appui-alias-actions-selected-background-color-default);
+}
+
+.appui-chat-conversation-list-item__body {
+    flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    padding: var(--appui-sizing-160) var(--appui-sizing-160);
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+.appui-chat-conversation-list-item__title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-secondary);
+}
+
+.appui-chat-conversation-list-item:hover > .appui-chat-conversation-list-item__body > .appui-chat-conversation-list-item__title,
+.appui-chat-conversation-list-item.is-selected > .appui-chat-conversation-list-item__body > .appui-chat-conversation-list-item__title {
+    color: var(--appui-alias-text-primary);
+}
+
+.appui-chat-conversation-list-item__subtitle {
+    margin-top: var(--appui-sizing-25);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-tertiary);
+}
+
+/* On the selected tint the tertiary grey loses contrast; lift the subtitle to secondary. */
+.appui-chat-conversation-list-item.is-selected > .appui-chat-conversation-list-item__body > .appui-chat-conversation-list-item__subtitle,
+.appui-chat-conversation-list-item.is-selected:hover > .appui-chat-conversation-list-item__body > .appui-chat-conversation-list-item__subtitle {
+    color: var(--appui-alias-text-secondary);
+}
+
+.appui-chat-conversation-list-item.is-selected > .appui-chat-conversation-list-item__favorite-button:enabled .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-text-primary);
+}
+
+/* The star is quiet until the row is reached for, or the conversation is already a favourite. It
+   fades rather than being removed from the layout, so it stays focusable for a keyboard user and
+   revealing it never reflows the row. */
+.appui-chat-conversation-list-item__favorite-button {
+    flex-shrink: 0;
+    opacity: 0;
+    margin-right: var(--appui-sizing-75);
+    transition: opacity var(--appui-animation-easing-ease-out) var(--appui-animation-duration-200);
+}
+
+.appui--rtl .appui-chat-conversation-list-item__favorite-button {
+    margin-right: 0;
+    margin-left: var(--appui-sizing-75);
+}
+
+.appui-chat-conversation-list-item:hover > .appui-chat-conversation-list-item__favorite-button,
+.appui-chat-conversation-list-item__favorite-button:focus,
+.appui-chat-conversation-list-item--favorite > .appui-chat-conversation-list-item__favorite-button {
+    opacity: 1;
+}
+
+.appui-chat-conversation-list-item--favorite > .appui-chat-conversation-list-item__favorite-button .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-semantic-warning);
+}
+
+.appui-chat-conversation-list-item.is-selected.appui-chat-conversation-list-item--favorite > .appui-chat-conversation-list-item__favorite-button:enabled .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-semantic-warning);
+}

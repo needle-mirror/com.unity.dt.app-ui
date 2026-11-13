@@ -127,9 +127,15 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Default constructor.
         /// </summary>
+        /// <remarks>
+        /// A breadcrumb defaults to <see cref="LinkSize.Sm"/>, the registry's <c>text-sm</c> crumbs,
+        /// rather than <see cref="Link"/>'s <see cref="LinkSize.Base"/>. Set <see cref="Link.size"/>
+        /// to change it.
+        /// </remarks>
         public BreadcrumbItem()
         {
             AddToClassList(ussClassName);
+            size = LinkSize.Sm;
         }
 
     }

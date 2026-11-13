@@ -10,6 +10,10 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => ThreadComposer.ussClassName;
 
+        // Handed over to ThreadComposerSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:ThreadComposer />",

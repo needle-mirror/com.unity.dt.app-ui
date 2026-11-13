@@ -1,0 +1,8 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--animation-animator-controller--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<rect x="1" y="1" width="6" height="6" rx="1" fill="white"/>
+<rect x="0.5" y="0.5" width="7" height="7" rx="1.5" stroke="#979797" stroke-opacity="0.498415"/>
+<rect x="9" y="9" width="6" height="6" rx="1" fill="white"/>
+<rect x="8.5" y="8.5" width="7" height="7" rx="1.5" stroke="#979797" stroke-opacity="0.498415"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M11 4H7V5H11V8H12V5C12 4.44772 11.5523 4 11 4Z" fill="#0F7686"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M5 12H9V11H5V8H4V11C4 11.5523 4.44772 12 5 12Z" fill="#0F7686"/>
+</svg>

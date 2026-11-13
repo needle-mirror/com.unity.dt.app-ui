@@ -20,6 +20,13 @@ namespace Unity.AppUI.UI
 
         Tooltip m_Tooltip;
 
+        // True between a pointer press and its release, so the focus that press gives a control
+        // does not open a tooltip (the registry's Radix trigger skips focus that follows a pointer down).
+        bool m_PointerPressed;
+
+        // True while the shown or pending tooltip was opened by keyboard focus rather than hover.
+        bool m_OpenedByFocus;
+
         /// <summary>
         /// If true, this manipulator will force the picked tooltip to be displayed, no matter the context.
         /// </summary>
@@ -44,6 +51,8 @@ namespace Unity.AppUI.UI
             rootElement?.RegisterCallback<PointerUpEvent>(OnPointerUp, TrickleDown.TrickleDown);
             rootElement?.RegisterCallback<PointerCancelEvent>(OnPointerCanceled, TrickleDown.TrickleDown);
             rootElement?.RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
+            rootElement?.RegisterCallback<FocusInEvent>(OnFocusIn, TrickleDown.TrickleDown);
+            rootElement?.RegisterCallback<FocusOutEvent>(OnFocusOut, TrickleDown.TrickleDown);
         }
 
         protected override void UnregisterCallbacksFromTarget()
@@ -53,15 +62,58 @@ namespace Unity.AppUI.UI
             rootElement?.UnregisterCallback<PointerUpEvent>(OnPointerUp, TrickleDown.TrickleDown);
             rootElement?.UnregisterCallback<PointerCancelEvent>(OnPointerCanceled, TrickleDown.TrickleDown);
             rootElement?.UnregisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
+            rootElement?.UnregisterCallback<FocusInEvent>(OnFocusIn, TrickleDown.TrickleDown);
+            rootElement?.UnregisterCallback<FocusOutEvent>(OnFocusOut, TrickleDown.TrickleDown);
         }
 
         void OnKeyDown(KeyDownEvent evt)
         {
+            // Any key, Escape included, dismisses the tooltip. Tab hides the current one here,
+            // then the focus it moves opens the next control's tooltip in OnFocusIn.
+            // Keyboard input also ends any press: a captured drag that stops its release (a
+            // Draggable slider, a Canvas pan) never reaches OnPointerUp, and focus moved from here
+            // on is keyboard focus.
+            m_PointerPressed = false;
             HideTooltip();
+        }
+
+        void OnFocusIn(FocusInEvent evt)
+        {
+            // Keyboard or programmatic focus opens the tooltip at once, like the registry's
+            // Radix trigger. Focus that comes from a pointer press does not, and a disabled
+            // control gets no focus tooltip (it keeps its hover tooltip).
+            if (m_PointerPressed)
+                return;
+            if (evt.target is not VisualElement focused || !focused.enabledInHierarchy)
+                return;
+            // Nested App UI panels share one root; only the panel nearest the control answers.
+            if (focused != target && focused.GetFirstAncestorOfType<Panel>() != target)
+                return;
+
+            var tooltipElement = GetTooltipElement(focused);
+            if (tooltipElement == null)
+                return;
+
+            HideTooltip();
+            m_AnchorElement = tooltipElement;
+            if (PrepareContent())
+            {
+                m_OpenedByFocus = true;
+                ShowTooltip(0);
+            }
+        }
+
+        void OnFocusOut(FocusOutEvent evt)
+        {
+            if (!m_OpenedByFocus)
+                return;
+            HideTooltip();
+            m_AnchorElement = null;
         }
 
         void OnPointerDown(PointerDownEvent evt)
         {
+            m_PointerPressed = true;
             HideTooltip();
             if (evt.pointerType == PointerType.touch)
             {
@@ -72,22 +124,7 @@ namespace Unity.AppUI.UI
                 if (m_AnchorElement == tooltipElement)
                     return;
                 m_AnchorElement = tooltipElement;
-                var hasTooltip = false;
-                m_Tooltip.SetContent(null);
-                m_Tooltip.SetText(null);
-                if (m_AnchorElement?.GetTooltipTemplate() is { } template)
-                {
-                    m_Tooltip.SetContent(template);
-                    m_AnchorElement.RegisterTooltipTemplateChangedCallback(OnTooltipTemplateOrContentChanged);
-                    m_AnchorElement.RegisterTooltipContentChangedCallback(OnTooltipTemplateOrContentChanged);
-                    OnTooltipTemplateOrContentChanged();
-                    hasTooltip = true;
-                }
-                else if (CanDisplayTooltipInCurrentContext(m_AnchorElement) && GetTooltipText(m_AnchorElement) is {} text)
-                {
-                    m_Tooltip.SetText(text);
-                    hasTooltip = true;
-                }
+                var hasTooltip = PrepareContent();
                 if (hasTooltip)
                     ShowTooltip(tooltipDelayMs);
             }
@@ -95,12 +132,14 @@ namespace Unity.AppUI.UI
 
         void OnPointerUp(PointerUpEvent evt)
         {
+            m_PointerPressed = false;
             if (evt.pointerType == PointerType.touch && m_ScheduledItem is {isActive: true})
                 HideTooltip();
         }
 
         void OnPointerCanceled(PointerCancelEvent evt)
         {
+            m_PointerPressed = false;
             if (evt.pointerType == PointerType.touch && m_ScheduledItem is {isActive: true})
                 HideTooltip();
         }
@@ -129,12 +168,23 @@ namespace Unity.AppUI.UI
             var tooltipElement = GetTooltipElement(pickedElement);
             if (m_AnchorElement == tooltipElement)
                 return;
+            // A keyboard-focus tooltip stays open while the pointer moves over nothing with a tooltip.
+            if (tooltipElement == null && m_OpenedByFocus)
+                return;
+            // 3 - New tooltip to display, hide the visual tooltip first (before taking the new
+            // anchor, since hiding a focus tooltip clears the anchor)
+            HideTooltip();
             m_AnchorElement = tooltipElement;
 
-            // 3 - New tooltip to display, hide the visual tooltip first
-            HideTooltip();
+            var hasTooltip = PrepareContent();
 
-            var hasTooltip = false;
+            // 4 - If the tne new tooltip is not null, start delay
+            if (hasTooltip)
+                ShowTooltip(tooltipDelayMs);
+        }
+
+        bool PrepareContent()
+        {
             m_Tooltip.SetContent(null);
             m_Tooltip.SetText(null);
             if (m_AnchorElement?.GetTooltipTemplate() is { } template)
@@ -143,17 +193,14 @@ namespace Unity.AppUI.UI
                 m_AnchorElement.RegisterTooltipTemplateChangedCallback(OnTooltipTemplateOrContentChanged);
                 m_AnchorElement.RegisterTooltipContentChangedCallback(OnTooltipTemplateOrContentChanged);
                 OnTooltipTemplateOrContentChanged();
-                hasTooltip = true;
+                return true;
             }
-            else if (CanDisplayTooltipInCurrentContext(m_AnchorElement) && GetTooltipText(m_AnchorElement) is {} text)
+            if (CanDisplayTooltipInCurrentContext(m_AnchorElement) && GetTooltipText(m_AnchorElement) is {} text)
             {
                 m_Tooltip.SetText(text);
-                hasTooltip = true;
+                return true;
             }
-
-            // 4 - If the tne new tooltip is not null, start delay
-            if (hasTooltip)
-                ShowTooltip(tooltipDelayMs);
+            return false;
         }
 
         void OnTooltipTemplateOrContentChanged()
@@ -201,10 +248,16 @@ namespace Unity.AppUI.UI
 
         void HideTooltip()
         {
+            var openedByFocus = m_OpenedByFocus;
+            m_OpenedByFocus = false;
             m_ScheduledItem?.Pause();
             m_AnchorElement?.UnregisterTooltipContentChangedCallback(OnTooltipTemplateOrContentChanged);
             m_AnchorElement?.UnregisterTooltipTemplateChangedCallback(OnTooltipTemplateOrContentChanged);
             m_Tooltip?.Dismiss();
+            // A focus anchor is not under the pointer, so keeping it would make the next hover
+            // onto that control look like "same tooltip, nothing to do".
+            if (openedByFocus)
+                m_AnchorElement = null;
         }
 
         static VisualElement GetTooltipElement(VisualElement element)

@@ -1,0 +1,193 @@
+/* Sidebar */
+
+/* The nav surface. Everything here is a token: the card surface, the control border colour and the
+   density-aware sizing ramp. The width is NOT set here — the registry's `w-60` (240px) has no App UI
+   sizing step, so Sidebar.width writes it as an inline style instead of inventing a token. */
+.appui-sidebar {
+    flex-direction: column;
+    flex-shrink: 0;
+    background-color: var(--appui-alias-surface-card);
+    color: var(--appui-alias-text-primary);
+    padding: var(--appui-sizing-160);
+    border-right-width: var(--appui-alias-control-border-width);
+    border-right-color: var(--appui-alias-control-border-color-default);
+}
+
+/* UITK has no `gap`, so the rhythm between header / content / footer is a leading margin, zeroed on
+   the first child through the marker SidebarSlot maintains. */
+.appui-sidebar > * {
+    margin-top: var(--appui-sizing-160);
+}
+
+.appui-sidebar > .unity-first-child {
+    margin-top: 0;
+}
+
+/* Header */
+.appui-sidebar__header {
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.appui-sidebar__header > * {
+    margin-top: var(--appui-sizing-75);
+}
+
+.appui-sidebar__header > .unity-first-child {
+    margin-top: 0;
+}
+
+/* Content — the only part that grows and scrolls, so the header and footer stay pinned. */
+.appui-sidebar__content {
+    flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
+}
+
+.appui-sidebar__content-scroll-view {
+    flex-grow: 1;
+}
+
+.appui-sidebar__content .unity-scroll-view__content-container {
+    flex-direction: column;
+}
+
+.appui-sidebar__content .unity-scroll-view__content-container > * {
+    margin-top: var(--appui-sizing-250);
+}
+
+.appui-sidebar__content .unity-scroll-view__content-container > .unity-first-child {
+    margin-top: 0;
+}
+
+/* Footer — pinned to the bottom edge whatever the content height. */
+.appui-sidebar__footer {
+    flex-direction: column;
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
+.appui-sidebar__footer > * {
+    margin-top: var(--appui-sizing-75);
+}
+
+.appui-sidebar__footer > .unity-first-child {
+    margin-top: 0;
+}
+
+/* Section */
+.appui-sidebar__section {
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.appui-sidebar__section-container {
+    flex-direction: column;
+}
+
+.appui-sidebar__section-container > * {
+    margin-top: var(--appui-sizing-25);
+}
+
+.appui-sidebar__section-container > .unity-first-child {
+    margin-top: 0;
+}
+
+.appui-sidebar__section-heading {
+    padding-left: var(--appui-sizing-160);
+    padding-right: var(--appui-sizing-160);
+    padding-top: var(--appui-sizing-75);
+    padding-bottom: var(--appui-sizing-75);
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-disabled);
+    -unity-font-definition: var(--appui-font-weights-200);
+}
+
+/* Item. A full-width row: leading icon, flexible label, trailing shortcut. The row height comes from
+   the medium control-sizing alias, so it tracks density with every other control. */
+.appui-sidebar__item {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    height: var(--appui-alias-control-sizing-md-height);
+    padding-left: var(--appui-sizing-160);
+    padding-right: var(--appui-sizing-160);
+    border-radius: var(--appui-border-radius-md);
+    background-color: var(--appui-color-transparent-black-0);
+    color: var(--appui-alias-text-secondary);
+    cursor: var(--appui-alias-control-cursor-pointer);
+    --outline-width: var(--appui-alias-control-outline-width);
+    --outline-color: var(--appui-alias-control-outline-color);
+    --outline-offset: var(--appui-alias-control-outline-offset);
+    transition: background-color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-200), color var(--appui-animation-easing-ease-out) var(--appui-animation-duration-200);
+}
+
+.appui-sidebar__item.is-hovered {
+    background-color: var(--appui-alias-control-background-color-hover);
+    color: var(--appui-alias-text-primary);
+}
+
+/* The registry paints the current item `bg-surface-subtle text-foreground`. */
+.appui-sidebar__item.is-active {
+    background-color: var(--appui-alias-surface-subtle);
+    color: var(--appui-alias-text-primary);
+}
+
+.appui-sidebar__item-icon {
+    flex-shrink: 0;
+    width: var(--appui-alias-control-sizing-icon-md);
+    height: var(--appui-alias-control-sizing-icon-md);
+    margin-right: var(--appui-sizing-160);
+}
+
+.appui-sidebar__item-label {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    font-size: var(--appui-font-sizes-200);
+    -unity-text-align: middle-left;
+    overflow: hidden;
+    -unity-text-overflow-position: end;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.appui-sidebar__item-shortcut {
+    flex-shrink: 0;
+    margin-left: var(--appui-sizing-160);
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-disabled);
+    -unity-text-align: middle-right;
+    white-space: nowrap;
+}
+
+/* RTL mirrors the whole row and moves the border to the opposite edge. */
+.appui--rtl .appui-sidebar {
+    border-right-width: 0;
+    border-left-width: var(--appui-alias-control-border-width);
+    border-left-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui--rtl .appui-sidebar__item {
+    flex-direction: row-reverse;
+}
+
+.appui--rtl .appui-sidebar__item-icon {
+    margin-right: 0;
+    margin-left: var(--appui-sizing-160);
+}
+
+.appui--rtl .appui-sidebar__item-shortcut {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-160);
+    -unity-text-align: middle-left;
+}
+
+.appui--rtl .appui-sidebar__item-label {
+    -unity-text-align: middle-right;
+}
+
+.appui--rtl .appui-sidebar__section-heading {
+    -unity-text-align: middle-right;
+}

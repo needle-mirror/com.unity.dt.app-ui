@@ -14,7 +14,8 @@
         "GUID:84651a3751eca9349aac36a66bba901b",
         "GUID:28b0f5aedab614a1805e0c9db8369c81",
         "GUID:a5a86f181c5e41f49b43345f8b0cfaf5",
-        "GUID:b5a2a0714d82449fb51fd2056880e65a"
+        "GUID:b5a2a0714d82449fb51fd2056880e65a",
+        "Unity.UI.TestFramework.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -48,6 +49,16 @@
             "name": "Unity",
             "expression": "6000.5.0a1",
             "define": "ENABLE_PANEL_RENDERER"
+        },
+        {
+            "name": "com.unity.ui.test-framework",
+            "expression": "",
+            "define": "APPUI_UITF_PRESENT"
+        },
+        {
+            "name": "com.unity.ui.test-framework",
+            "expression": "6.7",
+            "define": "APPUI_UITF_PINNED_PANEL"
         }
     ],
     "noEngineReferences": false

@@ -1,0 +1,5 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--animation-inspector--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M3 6V4L1 7L3 10V8H6.5V6H3Z" fill="#0F7686"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10 13H12L9 15L6 13H8V11H10V13Z" fill="#0F7686"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M5 3C5 2.44772 5.44772 2 6 2H13C13.5523 2 14 2.44772 14 3V10C14 10.5523 13.5523 11 13 11H6C5.44772 11 5 10.5523 5 10V3Z" fill="#555555"/>
+</svg>

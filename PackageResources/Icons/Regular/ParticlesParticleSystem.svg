@@ -1,0 +1,8 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--particles-particle-system--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8 14C9.65685 14 11 12.6569 11 11C11 9.34315 9.65685 8 8 8C6.34315 8 5 9.34315 5 11C5 12.6569 6.34315 14 8 14Z" fill="#0C6CCB"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M5 8C6.10457 8 7 7.10457 7 6C7 4.89543 6.10457 4 5 4C3.89543 4 3 4.89543 3 6C3 7.10457 3.89543 8 5 8Z" fill="#0C6CCB"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M11 8C12.1046 8 13 7.10457 13 6C13 4.89543 12.1046 4 11 4C9.89543 4 9 4.89543 9 6C9 7.10457 9.89543 8 11 8Z" fill="#0C6CCB"/>
+<rect x="2" y="2" width="2" height="2" rx="1" fill="#0C6CCB"/>
+<rect x="7" y="2" width="2" height="2" rx="1" fill="#0C6CCB"/>
+<rect x="12" y="2" width="2" height="2" rx="1" fill="#0C6CCB"/>
+</svg>

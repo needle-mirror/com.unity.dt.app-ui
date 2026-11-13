@@ -1,0 +1,6 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--plastic-check-out-local--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<g id="Plastic/CheckOutLocal">
+<rect id="Rectangle 2369" x="2" y="2" width="12" height="12" rx="1" fill="#000000"/>
+<path id="Subtract" fill-rule="evenodd" clip-rule="evenodd" d="M3 2C2.44772 2 2 2.44772 2 3V12.5883L6.58805 8.00022L4.49957 8C4.22343 7.99997 3.99959 7.77609 3.99962 7.49995L3.99973 6.49995C3.99976 6.2238 4.22364 5.99997 4.49978 6L9.50026 6.00053C9.77638 6.00056 10.0002 6.22441 10.0002 6.50053V11.5005C10.0002 11.7766 9.77635 12.0005 9.5002 12.0005H8.5002C8.22406 12.0005 8.0002 11.7766 8.0002 11.5005V9.41649L3.4167 14H13C13.5523 14 14 13.5523 14 13V3C14 2.44772 13.5523 2 13 2H3Z" fill="#673AB7"/>
+</g>
+</svg>

@@ -9,9 +9,9 @@ namespace Unity.AppUI.VisualDoc
         [VisualDocDemo("searchbar")]
         static VisualElement Sizes()
         {
-            var small = new SearchBar { size = Size.S };
-            var medium = new SearchBar { size = Size.M };
-            var large = new SearchBar { size = Size.L };
+            var small = new SearchBar { size = Size.Sm };
+            var medium = new SearchBar { size = Size.Md };
+            var large = new SearchBar { size = Size.Lg };
 
             small.AddToClassList("demo-field");
             medium.AddToClassList("demo-field");

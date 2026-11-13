@@ -8,5 +8,9 @@ namespace Unity.AppUI.Tests.UI
     class DoubleFieldTests : VisualElementTests<DoubleField>
     {
         protected override string mainUssClassName => DoubleField.ussClassName;
+
+        // Handed over to DoubleFieldSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
     }
 }

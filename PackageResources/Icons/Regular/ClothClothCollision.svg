@@ -1,0 +1,5 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--cloth-cloth-collision--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8 5C9.38071 5 10 4.10457 10 3H11H11.3843L14 3.8L13.1333 7H11V9.92857L8 12.5L5 10.7857V7H2.86667L2 3.8L4.6366 3H5H6C6 4.10457 6.61929 5 8 5Z" fill="#555555"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M15 8V11.5L11.5 8H15Z" fill="#008126"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8 13.8632L13.5344 8.82373L14.0344 9.82373L8 15.3632L1.90952 11.2749C1.67538 11.1177 1.59446 10.8111 1.72058 10.5588C1.86975 10.2605 2.24488 10.1577 2.52534 10.3382L8 13.8632Z" fill="#008126"/>
+</svg>

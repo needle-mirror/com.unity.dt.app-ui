@@ -8,6 +8,48 @@ using Unity.Properties;
 namespace Unity.AppUI.UI
 {
     /// <summary>
+    /// The visual variant of a <see cref="MenuItem"/>.
+    /// </summary>
+    /// <remarks>
+    /// The variants mirror the App UI web design system one-for-one, so a menu row authored in
+    /// UI Toolkit and the same row authored on the web carry the same name and the same emphasis.
+    /// </remarks>
+    public enum MenuItemVariant
+    {
+        /// <summary>
+        /// The standard menu row, using the neutral control foreground.
+        /// </summary>
+        Default,
+
+        /// <summary>
+        /// A row for an action with irreversible consequences, such as deleting data. It is tinted
+        /// with the semantic destructive colour, label, icon and all.
+        /// </summary>
+        Destructive,
+    }
+
+    /// <summary>
+    /// The leading indicator a <see cref="MenuItem"/> shows when it is <see cref="MenuItem.selectable"/>.
+    /// </summary>
+    /// <remarks>
+    /// This is what separates the web registry's <c>CheckboxItem</c> from its <c>RadioItem</c>: both are
+    /// selectable rows, they only differ in the glyph that reports the selection. A
+    /// <see cref="MenuRadioGroup"/> sets <see cref="Radio"/> on its rows for you.
+    /// </remarks>
+    public enum MenuItemIndicator
+    {
+        /// <summary>
+        /// A checkmark. The right indicator for an independent on/off row.
+        /// </summary>
+        Checkmark,
+
+        /// <summary>
+        /// A filled bullet. The right indicator for one row of a mutually exclusive set.
+        /// </summary>
+        Radio,
+    }
+
+    /// <summary>
     /// An interactive item within a menu that triggers actions or displays sub-menus.
     /// </summary>
     /// <remarks>
@@ -22,6 +64,13 @@ namespace Unity.AppUI.UI
     ///
     /// When a MenuItem has a sub-menu attached, a small caret icon appears automatically as a visual indicator. The
     /// sub-menu opens on click or hover, and can be navigated with keyboard controls.
+    ///
+    /// A selectable item reports its state with the glyph named by <see cref="indicator"/>: a checkmark for an
+    /// independent on/off row, or a bullet for one row of a mutually exclusive set. Put the latter inside a
+    /// <see cref="MenuRadioGroup"/>, which sets the indicator and enforces the exclusivity for you.
+    ///
+    /// <see cref="variant"/> tints the whole row, label, icon and indicator, with the semantic destructive colour.
+    /// Use it for actions with irreversible consequences such as deleting data.
     /// </remarks>
     /// <example>
     /// <para>Basic Menu Items &#8212; Standard menu items with labels, icons, and shortcuts.</para>
@@ -38,6 +87,20 @@ namespace Unity.AppUI.UI
     ///     <ui:MenuItem label="Word Wrap" selectable="true" value="true" />
     ///     <ui:MenuItem label="Show Line Numbers" selectable="true" value="false" />
     ///     <ui:MenuItem label="Show Minimap" selectable="true" value="true" />
+    /// </ui:Menu>
+    /// ]]></code>
+    /// <para>Radio and Destructive Items &#8212; A mutually exclusive set, and an irreversible action.</para>
+    /// <code lang="xml"><![CDATA[
+    /// <ui:Menu>
+    ///     <ui:MenuSection title="Density">
+    ///         <ui:MenuRadioGroup value="normal">
+    ///             <ui:MenuItem key="compact" label="Compact" />
+    ///             <ui:MenuItem key="normal" label="Normal" />
+    ///             <ui:MenuItem key="comfort" label="Comfort" />
+    ///         </ui:MenuRadioGroup>
+    ///     </ui:MenuSection>
+    ///     <ui:MenuDivider />
+    ///     <ui:MenuItem label="Delete" icon="trash" shortcut="Del" variant="Destructive" />
     /// </ui:Menu>
     /// ]]></code>
     /// <para>Menu with Sub-menus &#8212; Creating nested menus for hierarchical actions.</para>
@@ -106,6 +169,12 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId clickableProperty = new BindingId(nameof(clickable));
 
+        internal static readonly BindingId variantProperty = new BindingId(nameof(variant));
+
+        internal static readonly BindingId indicatorProperty = new BindingId(nameof(indicator));
+
+        internal static readonly BindingId keyProperty = new BindingId(nameof(key));
+
 
         const int k_DefaultOpenSubMenuDelay = 300;
 
@@ -139,6 +208,23 @@ namespace Unity.AppUI.UI
         /// The MenuItem checkmark styling class.
         /// </summary>
         public const string checkmarkUssClassName = ussClassName + "__checkmark";
+
+        /// <summary>
+        /// The MenuItem radio bullet styling class.
+        /// </summary>
+        public const string radioUssClassName = ussClassName + "__radio";
+
+        /// <summary>
+        /// The MenuItem variant styling class prefix.
+        /// </summary>
+        [EnumName("GetVariantUssClassName", typeof(MenuItemVariant))]
+        public const string variantUssClassName = ussClassName + "--";
+
+        /// <summary>
+        /// The MenuItem indicator styling class prefix.
+        /// </summary>
+        [EnumName("GetIndicatorUssClassName", typeof(MenuItemIndicator))]
+        public const string indicatorUssClassName = ussClassName + "--indicator-";
 
         /// <summary>
         /// The MenuItem submenu mode styling class.
@@ -186,6 +272,12 @@ namespace Unity.AppUI.UI
 
         Pressable m_Clickable;
 
+        MenuItemVariant m_Variant;
+
+        MenuItemIndicator m_Indicator;
+
+        string m_Key;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -198,17 +290,20 @@ namespace Unity.AppUI.UI
             tabIndex = 0;
             clickable = new Pressable(OnClick);
 
-            var checkmark = new Icon { name = checkmarkUssClassName, iconName = checkmarkIconName, pickingMode = PickingMode.Ignore };
+            var checkmark = new Icon { primary = true, name = checkmarkUssClassName, iconName = checkmarkIconName, pickingMode = PickingMode.Ignore };
             checkmark.AddToClassList(checkmarkUssClassName);
-            m_Icon = new Icon { name = iconUssClassName, pickingMode = PickingMode.Ignore };
+            m_Icon = new Icon { primary = true, name = iconUssClassName, pickingMode = PickingMode.Ignore };
             m_Icon.AddToClassList(iconUssClassName);
             m_Label = new LocalizedTextElement { name = labelUssClassName, pickingMode = PickingMode.Ignore };
             m_Label.AddToClassList(labelUssClassName);
             m_Shortcut = new LocalizedTextElement { name = shortcutUssClassName, pickingMode = PickingMode.Ignore };
             m_Shortcut.AddToClassList(shortcutUssClassName);
-            var subMenuIcon = new Icon { name = subMenuIconUssClassname, iconName = k_SubMenuIconName, pickingMode = PickingMode.Ignore };
+            var subMenuIcon = new Icon { primary = true, name = subMenuIconUssClassname, iconName = k_SubMenuIconName, pickingMode = PickingMode.Ignore };
             subMenuIcon.AddToClassList(subMenuIconUssClassname);
+            var radio = new VisualElement { name = radioUssClassName, pickingMode = PickingMode.Ignore };
+            radio.AddToClassList(radioUssClassName);
             hierarchy.Add(checkmark);
+            hierarchy.Add(radio);
             hierarchy.Add(m_Icon);
             hierarchy.Add(m_Label);
             hierarchy.Add(m_Shortcut);
@@ -221,6 +316,8 @@ namespace Unity.AppUI.UI
 
             selectable = false;
             active = false;
+            AddToClassList(GetVariantUssClassName(m_Variant));
+            AddToClassList(GetIndicatorUssClassName(m_Indicator));
             icon = null;
             label = null;
             subMenu = null;
@@ -251,14 +348,12 @@ namespace Unity.AppUI.UI
             switch (evt.keyCode)
             {
                 case KeyCode.DownArrow:
-                    evt.StopPropagation();
-                    if (menu.lastMenuItem != this)
-                        focusController.FocusNextInDirectionEx(this, VisualElementFocusChangeDirection.right);
-                    break;
                 case KeyCode.UpArrow:
+                case KeyCode.Home:
+                case KeyCode.End:
+                    // Down/Up wrap and Home/End jump to the ends, over the rows that can take focus.
                     evt.StopPropagation();
-                    if (menu.firstMenuItem != this)
-                        focusController.FocusNextInDirectionEx(this, VisualElementFocusChangeDirection.left);
+                    menu?.WalkRows(this, evt.keyCode);
                     break;
                 case KeyCode.RightArrow when dir is Dir.Ltr:
                 case KeyCode.LeftArrow when dir is Dir.Rtl:
@@ -444,6 +539,70 @@ namespace Unity.AppUI.UI
                 this.AddManipulator(m_Clickable);
                 if (changed)
                     NotifyPropertyChanged(in clickableProperty);
+            }
+        }
+
+        /// <summary>
+        /// The visual variant of the item. Defaults to <see cref="MenuItemVariant.Default"/>.
+        /// </summary>
+        [CreateProperty]
+        [UxmlAttribute]
+        public MenuItemVariant variant
+        {
+            get => m_Variant;
+            set
+            {
+                var changed = m_Variant != value;
+                RemoveFromClassList(GetVariantUssClassName(m_Variant));
+                m_Variant = value;
+                AddToClassList(GetVariantUssClassName(m_Variant));
+
+                if (changed)
+                    NotifyPropertyChanged(in variantProperty);
+            }
+        }
+
+        /// <summary>
+        /// The glyph shown for the item's selection state. Defaults to
+        /// <see cref="MenuItemIndicator.Checkmark"/>.
+        /// </summary>
+        /// <remarks>Only visible while the item is <see cref="selectable"/>.</remarks>
+        [CreateProperty]
+        [UxmlAttribute]
+        public MenuItemIndicator indicator
+        {
+            get => m_Indicator;
+            set
+            {
+                var changed = m_Indicator != value;
+                RemoveFromClassList(GetIndicatorUssClassName(m_Indicator));
+                m_Indicator = value;
+                AddToClassList(GetIndicatorUssClassName(m_Indicator));
+
+                if (changed)
+                    NotifyPropertyChanged(in indicatorProperty);
+            }
+        }
+
+        /// <summary>
+        /// A stable identifier for this item inside a <see cref="MenuRadioGroup"/>.
+        /// </summary>
+        /// <remarks>
+        /// Mirrors <see cref="Radio.key"/>: the group's value is the key of its selected row, so the
+        /// selection survives the rows being rebuilt or reordered. Ignored outside a group.
+        /// </remarks>
+        [CreateProperty]
+        [UxmlAttribute]
+        public string key
+        {
+            get => m_Key;
+            set
+            {
+                var changed = m_Key != value;
+                m_Key = value;
+
+                if (changed)
+                    NotifyPropertyChanged(in keyProperty);
             }
         }
 

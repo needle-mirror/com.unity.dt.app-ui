@@ -1,0 +1,48 @@
+/* ChatMessageActions */
+.appui-chat-message-actions {
+    flex-direction: row;
+    align-items: center;
+    align-self: flex-start;
+    flex-shrink: 0;
+}
+
+.appui--rtl .appui-chat-message-actions {
+    flex-direction: row-reverse;
+}
+
+.appui-chat-message-actions > * {
+    margin-left: var(--appui-sizing-25);
+}
+
+.appui-chat-message-actions > .appui-chat-message-actions__copy-button {
+    margin-left: 0;
+}
+
+.appui--rtl .appui-chat-message-actions > * {
+    margin-left: 0;
+    margin-right: var(--appui-sizing-25);
+}
+
+.appui--rtl .appui-chat-message-actions > .appui-chat-message-actions__copy-button {
+    margin-right: 0;
+}
+
+.appui-chat-message-actions .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-text-disabled);
+}
+
+.appui-chat-message-actions .appui-button:hover .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-text-primary);
+}
+
+/* The rated direction stays lit in the accent colour, so a past rating is visible without a
+   tooltip. */
+.appui-chat-message-actions__thumbs-up-button.is-selected .appui-icon,
+.appui-chat-message-actions__thumbs-down-button.is-selected .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+/* The copy control confirms in the positive colour for a couple of seconds. */
+.appui-chat-message-actions__copy-button--copied .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-semantic-positive);
+}

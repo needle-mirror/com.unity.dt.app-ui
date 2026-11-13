@@ -37,7 +37,7 @@ namespace Unity.AppUI.UI
     ///     variant="Determinate"
     ///     value="0.4"
     ///     bufferValue="0.6"
-    ///     size="M"
+    ///     size="Md"
     ///     roundedProgressCorners="true"
     /// />
     /// ]]></code>
@@ -46,7 +46,7 @@ namespace Unity.AppUI.UI
     /// var progress = new LinearProgress();
     /// progress.variant = Variant.Determinate;
     /// progress.value = 0.75f;
-    /// progress.size = Size.L;
+    /// progress.size = Size.Lg;
     /// progress.colorOverride = new Color(0.2f, 0.6f, 1f, 1f);
     /// ]]></code>
     /// <para>Styling with USS: Customizing the appearance using USS styles</para>

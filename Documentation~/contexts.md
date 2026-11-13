@@ -25,12 +25,59 @@ For example, if the current theme is `dark`, the context will be defined as `dar
 and the corresponding USS class `appui--dark` will be applied to the context provider element
 that sets the context.
 
-Currently, App UI provides four themes:
+Currently, App UI provides six themes:
 
 - `light`
 - `dark` (default)
 - `editor-light`
 - `editor-dark`
+- `cloud-light`
+- `cloud-dark`
+
+#### Light and dark contexts
+
+Alongside `appui--<theme>`, the element also gets one of two marker classes, `dark` or `light`.
+The two answer different questions:
+
+| Class | Question it answers |
+| --- | --- |
+| `appui--editor-dark` | *Which* theme is this? |
+| `dark` | What *kind* of surface is this? |
+
+The marker means a stylesheet can target every dark theme with one selector, instead of listing
+`appui--dark, appui--editor-dark, appui--cloud-dark` and still missing custom themes. A theme counts
+as dark when its name ends in `dark`, so `acme-dark` gets the `dark` marker for free.
+
+```css
+/* Applies under dark, editor-dark, cloud-dark, acme-dark, ... */
+.dark {
+    --my-illustration: url("project:/Assets/Art/diagram-dark.svg");
+}
+
+.light {
+    --my-illustration: url("project:/Assets/Art/diagram-light.svg");
+}
+```
+
+The two markers are mutually exclusive: an element never carries both. Because they are applied to
+the element that *provides* the theme context, a nested
+[ContextProvider](xref:Unity.AppUI.UI.ContextProvider) carries its own marker, and USS variables
+resolve from the nearest ancestor that sets them:
+
+```xml
+<appui:Panel theme="dark">                        <!-- dark  -->
+  <appui:ContextProvider theme-override="light">  <!-- light -->
+    <appui:Icon name="core-prefab" />             <!-- light artwork -->
+  </appui:ContextProvider>
+</appui:Panel>
+```
+
+> [!IMPORTANT]
+> Never declare the same variable in both a `.dark` (or `.light`) rule and an unconditional `.appui`
+> rule. They are both single-class selectors matching the same element, so which one wins would come
+> down to USS declaration order. Declare the variable in the marker rules only.
+
+App UI uses this for icon artwork: see [Iconography](xref:iconography).
 
 ### Language
 

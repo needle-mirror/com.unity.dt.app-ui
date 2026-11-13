@@ -1,0 +1,6 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--mouse-mouse-right--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path d="M8 1C10.2091 1 12 2.79086 12 5V7H8L8.0007 6.9144C8.58293 6.70828 9 6.15285 9 5.5V3.5C9 2.84715 8.58293 2.29172 8.0007 2.0856L8 1Z" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M12 8V11C12 13.2091 10.2091 15 8 15H7C4.79086 15 3 13.2091 3 11V8H12Z" fill="#FFFFFF" fill-opacity="0.5"/>
+<path d="M8 3.5C8 3.22386 7.77614 3 7.5 3C7.22386 3 7 3.22386 7 3.5V5.53052C7 5.80666 7.22386 6.03052 7.5 6.03052C7.77614 6.03052 8 5.80666 8 5.53052V3.5Z" fill="#FFFFFF" fill-opacity="0.5"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M7 1L7.00029 2.08525C6.41754 2.29109 6 2.84678 6 3.5V5.5C6 6.15322 6.41754 6.70891 7.00029 6.91475L7 7H3V5C3 2.79086 4.79086 1 7 1Z" fill="#FFFFFF"/>
+</svg>

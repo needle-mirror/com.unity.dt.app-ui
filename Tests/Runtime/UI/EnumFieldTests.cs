@@ -11,6 +11,10 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => EnumField.ussClassName;
 
+        // Handed over to EnumFieldSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
         protected override IEnumerable<Story> stories
         {
             get

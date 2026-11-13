@@ -4,6 +4,32 @@ using Unity.Properties;
 namespace Unity.AppUI.UI
 {
     /// <summary>
+    /// The size of a <see cref="Link"/>.
+    /// </summary>
+    /// <remarks>
+    /// Mirrors the registry's `linkVariants` size axis, which is `sm | base | lg` — deliberately
+    /// narrower than <see cref="TextSize"/>. Every step here has a matching `--size-*` rule in
+    /// `Link.uss`, so no value silently renders unstyled.
+    /// </remarks>
+    public enum LinkSize
+    {
+        /// <summary>
+        /// Small — `--appui-font-sizes-100`.
+        /// </summary>
+        Sm,
+
+        /// <summary>
+        /// The default link size — `--appui-font-sizes-200`.
+        /// </summary>
+        Base,
+
+        /// <summary>
+        /// Large — `--appui-font-sizes-400`.
+        /// </summary>
+        Lg,
+    }
+
+    /// <summary>
     /// A clickable text element that can navigate to a URL or trigger an action.
     /// </summary>
     /// <remarks>
@@ -25,9 +51,9 @@ namespace Unity.AppUI.UI
     /// <para>Size Variants. Links with different sizes.</para>
     /// <code lang="xml"><![CDATA[
     /// <VerticalStack spacing="10">
-    ///     <Link text="Small Link" size="S" />
-    ///     <Link text="Medium Link" size="M" />
-    ///     <Link text="Large Link" size="L" />
+    ///     <Link text="Small Link" size="Sm" />
+    ///     <Link text="Default Link" size="Base" />
+    ///     <Link text="Large Link" size="Lg" />
     /// </VerticalStack>
     /// ]]></code>
     /// <para>Custom Click Handler. Link with custom click behavior.</para>
@@ -63,12 +89,12 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The Link's size USS class name.
         /// </summary>
-        [EnumName("GetSizeUssClassName", typeof(TextSize))]
+        [EnumName("GetSizeUssClassName", typeof(LinkSize))]
         public const string sizeUssClassName = ussClassName + "--size-";
 
         Pressable m_Clickable;
 
-        TextSize m_Size;
+        LinkSize m_Size;
 
         string m_Url;
 
@@ -96,9 +122,14 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// The size of the link.
         /// </summary>
+        /// <remarks>
+        /// `Base` by default, matching the registry's `defaultVariants: { size: 'base' }`. Each step
+        /// binds to an `--appui-font-sizes-*` token in `Link.uss`, so links rescale with
+        /// <see cref="Panel.density"/> like <see cref="Text"/> does.
+        /// </remarks>
         [CreateProperty]
         [UxmlAttribute]
-        public TextSize size
+        public LinkSize size
         {
             get => m_Size;
             set
@@ -159,7 +190,7 @@ namespace Unity.AppUI.UI
             tabIndex = 0;
 
             this.url = url;
-            size = TextSize.M;
+            size = LinkSize.Base;
 
             this.AddManipulator(new KeyboardFocusController());
         }

@@ -1,0 +1,6 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--physics-character-joint--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8.00002 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8.00002 2C5.38758 2 3.1651 3.66962 2.34143 6H4.53515C5.22677 4.8044 6.51945 4 8.00002 4C10.2092 4 12 5.79086 12 8C12 10.2091 10.2092 12 8.00002 12C6.51945 12 5.22677 11.1956 4.53515 10H2.34143C3.1651 12.3304 5.38758 14 8.00002 14Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M15 7L12 7V9H15V7Z" fill="#2E7D32"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8 7H1V9H8V7Z" fill="#2E7D32"/>
+</svg>

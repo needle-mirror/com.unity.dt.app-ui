@@ -1,0 +1,95 @@
+/* CurveEditor */
+.appui-curveeditor {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    min-width: var(--appui-sizing-3200);
+    padding: var(--appui-alias-control-gap-md);
+    background-color: var(--appui-base-100);
+    border-radius: var(--appui-alias-control-border-radius);
+}
+
+/* Painter2D stroke settings, read back by CurveEditor.cs so generateVisualContent never paints
+   a literal — the same contract AnimationCurveField.uss has with AnimationCurveField.cs. Both widths are
+   deliberately unitless: a CustomStyleProperty<float> silently resolves a px length to 0
+   (PORTING-GUIDE.md, failure mode 4).
+   Markers sit at absolute pixel offsets inside this element and hang half outside it at the
+   domain edges, so it must not clip. */
+.appui-curveeditor__graph {
+    position: relative;
+    flex-shrink: 0;
+    min-height: var(--appui-sizing-3200);
+    overflow: visible;
+    border-width: var(--appui-alias-control-border-width);
+    border-radius: var(--appui-alias-control-border-radius);
+    border-color: var(--appui-alias-field-border-color-default);
+    background-color: var(--appui-base-50);
+    --curve-color: var(--appui-alias-semantic-positive);
+    --curve-width: 2;
+    --grid-color: var(--appui-alias-control-border-color-default);
+    --grid-width: 1;
+}
+
+.appui-curveeditor__key {
+    position: absolute;
+    width: var(--appui-sizing-250);
+    height: var(--appui-sizing-250);
+    border-width: var(--appui-alias-control-border-width);
+    border-radius: var(--appui-sizing-250);
+    border-color: var(--appui-alias-semantic-positive);
+    background-color: var(--appui-base-100);
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+.appui-curveeditor__key--selected {
+    background-color: var(--appui-alias-semantic-positive);
+}
+
+.appui-curveeditor__handle {
+    position: absolute;
+    width: var(--appui-sizing-200);
+    height: var(--appui-sizing-200);
+    border-width: var(--appui-alias-control-border-width);
+    border-color: var(--appui-alias-semantic-positive);
+    background-color: var(--appui-base-100);
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+.appui-curveeditor__toolbar {
+    flex-direction: row;
+    align-items: center;
+    margin-top: var(--appui-alias-control-gap-md);
+}
+
+.appui-curveeditor__tangent-dropdown {
+    flex-grow: 1;
+}
+
+.appui-curveeditor__presets {
+    flex-direction: row;
+    align-items: center;
+    margin-top: var(--appui-alias-control-gap-sm);
+}
+
+.appui-curveeditor__preset {
+    width: var(--appui-sizing-750);
+    height: var(--appui-alias-control-sizing-sm-height);
+    margin-right: var(--appui-alias-control-gap-sm);
+    padding: var(--appui-alias-control-gap-sm);
+    border-width: var(--appui-alias-control-border-width);
+    border-radius: var(--appui-alias-control-border-radius);
+    border-color: var(--appui-alias-control-border-color-default);
+    background-color: var(--appui-base-200);
+    cursor: var(--appui-alias-control-cursor-pointer);
+    --curve-color: var(--appui-alias-text-secondary);
+    --curve-width: 1.5;
+}
+
+.appui-curveeditor__preset.is-hovered {
+    border-color: var(--appui-alias-control-border-color-hover);
+    --curve-color: var(--appui-alias-text-primary);
+}
+
+.appui-curveeditor__preset-glyph {
+    flex-grow: 1;
+}

@@ -122,7 +122,79 @@ namespace Unity.AppUI.UI
                 return;
 
             evt.StopPropagation();
-            firstMenuItem?.Focus();
+
+            // Focus on the surface itself: Up and End start from the last row, anything else
+            // from the first, as the registry's walkRows does.
+            // Through the same filtered rows as the walk, so a row that cannot take focus is never
+            // handed focus; a Picker's menu has no MenuItem rows and keeps its PickerItem fallback.
+            var rows = GetFocusableRows();
+            var last = evt.keyCode is KeyCode.UpArrow or KeyCode.End;
+            if (rows.Count > 0)
+                rows[last ? rows.Count - 1 : 0].Focus();
+            else if (last)
+                lastMenuItem?.Focus();
+            else
+                firstMenuItem?.Focus();
+        }
+
+        /// <summary>
+        /// The rows the arrow keys walk, in order: this menu's own <see cref="MenuItem"/>s that can
+        /// take focus. A disabled, invisible or non-focusable row is skipped because it cannot be
+        /// focused, a row under a <c>display: none</c> ancestor because it is not on screen, and a
+        /// sub-menu's rows because they belong to that sub-menu.
+        /// </summary>
+        internal List<MenuItem> GetFocusableRows()
+        {
+            var rows = new List<MenuItem>();
+            this.Query<MenuItem>().ForEach(item =>
+            {
+                if (item.canGrabFocus && item.enabledInHierarchy && IsDisplayed(item) &&
+                    item.GetFirstAncestorOfType<Menu>() == this)
+                    rows.Add(item);
+            });
+            return rows;
+        }
+
+        bool IsDisplayed(VisualElement element)
+        {
+            for (var e = element; e != null && e != this; e = e.hierarchy.parent)
+            {
+                if (e.resolvedStyle.display == DisplayStyle.None)
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// The menu keyboard contract, mirroring the registry's <c>walkRows</c>: Down and Up step
+        /// through the focusable rows and wrap, Home and End jump to the ends.
+        /// </summary>
+        /// <param name="current">The row focus is on.</param>
+        /// <param name="keyCode">The key pressed.</param>
+        /// <returns>True when the key belongs to the walk.</returns>
+        internal bool WalkRows(MenuItem current, KeyCode keyCode)
+        {
+            if (keyCode is not (KeyCode.DownArrow or KeyCode.UpArrow or KeyCode.Home or KeyCode.End))
+                return false;
+
+            var rows = GetFocusableRows();
+            if (rows.Count == 0)
+                return true;
+
+            var index = rows.IndexOf(current);
+            int next;
+            if (keyCode == KeyCode.Home)
+                next = 0;
+            else if (keyCode == KeyCode.End)
+                next = rows.Count - 1;
+            else if (index == -1)
+                next = keyCode == KeyCode.DownArrow ? 0 : rows.Count - 1;
+            else
+                next = (index + (keyCode == KeyCode.DownArrow ? 1 : -1) + rows.Count) % rows.Count;
+
+            rows[next].Focus();
+            return true;
         }
 
         /// <summary>

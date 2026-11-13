@@ -1,0 +1,9 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--lights-directional-light--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M8 11L5 14L9 15L8 11Z" fill="#C99700"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M14 5L11 8L15 9L14 5Z" fill="#C99700"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13 10L10 13L14 14L13 10Z" fill="#C99700"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M1.49995 8.50008C1.22381 8.77622 1.22381 9.22393 1.49995 9.50008C1.7761 9.77622 2.22381 9.77622 2.49995 9.50008L9.49995 2.50007C9.7761 2.22393 9.7761 1.77622 9.49995 1.50008C9.22381 1.22393 8.7761 1.22393 8.49995 1.50008L1.49995 8.50008Z" fill="#555555"/>
+<path d="M12.5 12.5L6.5 6.5" stroke="#C99700"/>
+<path d="M13 7L9.5 3.5" stroke="#C99700"/>
+<path d="M7 13L3.5 9.5" stroke="#C99700"/>
+</svg>

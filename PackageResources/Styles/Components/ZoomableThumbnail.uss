@@ -1,0 +1,82 @@
+/* ZoomableThumbnail */
+
+/* The thumbnail is a positioning context and nothing else: the caller sizes it, because a thumbnail
+   is as big as the cell it lives in. */
+.appui-zoomablethumbnail {
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.appui-zoomablethumbnail__image {
+    flex-grow: 1;
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+/* Centres its own content: the caller commonly stretches the thumbnail to fill a grid cell, and once
+   it does, the fallback has to centre itself rather than inherit someone else's alignment. */
+.appui-zoomablethumbnail__fallback {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--appui-alias-text-disabled);
+}
+
+/* Corner mode — a small control tucked into the top corner, on the overlay surface with a hairline
+   so it reads against any picture. */
+.appui-zoomablethumbnail--corner .appui-zoomablethumbnail__trigger {
+    position: absolute;
+    top: var(--appui-sizing-75);
+    right: var(--appui-sizing-75);
+    background-color: var(--appui-alias-surface-overlay);
+    border-top-width: var(--appui-alias-control-border-width);
+    border-bottom-width: var(--appui-alias-control-border-width);
+    border-left-width: var(--appui-alias-control-border-width);
+    border-right-width: var(--appui-alias-control-border-width);
+    border-top-color: var(--appui-alias-control-border-color-default);
+    border-bottom-color: var(--appui-alias-control-border-color-default);
+    border-left-color: var(--appui-alias-control-border-color-default);
+    border-right-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui-zoomablethumbnail--corner .appui-zoomablethumbnail__trigger .appui-icon {
+    width: var(--appui-alias-control-sizing-icon-xs);
+    height: var(--appui-alias-control-sizing-icon-xs);
+    --unity-image-tint-color: var(--appui-alias-text-secondary);
+}
+
+/* RTL puts the control in the other corner, since "top corner" means the trailing one. */
+.appui--rtl .appui-zoomablethumbnail--corner .appui-zoomablethumbnail__trigger {
+    right: auto;
+    left: var(--appui-sizing-75);
+}
+
+/* Whole mode — the picture is the button. The scrim only appears on hover or focus, which is what
+   says so; at rest the glyph and the scrim are both invisible. */
+.appui-zoomablethumbnail--whole .appui-zoomablethumbnail__trigger {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    background-color: var(--appui-color-transparent-black-400);
+}
+
+.appui-zoomablethumbnail--whole .appui-zoomablethumbnail__trigger .appui-icon {
+    width: var(--appui-alias-control-sizing-icon-sm);
+    height: var(--appui-alias-control-sizing-icon-sm);
+    --unity-image-tint-color: var(--appui-alias-text-primary);
+}
+
+.appui--rtl .appui-zoomablethumbnail--whole .appui-zoomablethumbnail__trigger {
+    left: 0;
+    right: 0;
+}

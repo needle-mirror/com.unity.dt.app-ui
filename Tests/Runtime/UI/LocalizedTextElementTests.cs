@@ -20,6 +20,20 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => LocalizedTextElement.ussClassName;
 
+        protected override IEnumerable<Story> stories
+        {
+            get
+            {
+                yield return new Story("Default", (ctx) => new LocalizedTextElement("Hello"));
+                yield return new Story("Disabled", (ctx) =>
+                {
+                    var element = new LocalizedTextElement("Hello");
+                    element.SetEnabled(false);
+                    return element;
+                });
+            }
+        }
+
         protected override IEnumerable<string> uxmlTestCases
         {
             get
@@ -27,6 +41,7 @@ namespace Unity.AppUI.Tests.UI
                 yield return "<appui:LocalizedTextElement/>";
                 yield return "<appui:LocalizedTextElement text=\"Hello\"/>";
                 yield return "<appui:LocalizedTextElement text=\"@UI:hello\" />";
+                yield return "<appui:LocalizedTextElement text=\"Hello\" enabled=\"false\"/>";
             }
         }
 

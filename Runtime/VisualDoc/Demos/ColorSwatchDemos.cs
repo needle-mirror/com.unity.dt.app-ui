@@ -10,8 +10,8 @@ namespace Unity.AppUI.VisualDoc
         [VisualDocDemo("colorswatch")]
         static VisualElement Variants()
         {
-            var red = new ColorSwatch { size = Size.M, color = Color.red };
-            var greenRound = new ColorSwatch { size = Size.M, color = Color.green, round = true };
+            var red = new ColorSwatch { size = Size.Md, color = Color.red };
+            var greenRound = new ColorSwatch { size = Size.Md, color = Color.green, round = true };
 
             var gradient = new Gradient();
             gradient.SetKeys(
@@ -25,7 +25,7 @@ namespace Unity.AppUI.VisualDoc
                     new GradientAlphaKey(1, 0),
                     new GradientAlphaKey(1, 1)
                 });
-            var gradientSwatch = new ColorSwatch { size = Size.M, value = gradient };
+            var gradientSwatch = new ColorSwatch { size = Size.Md, value = gradient };
 
             return DemoUtils.Row(red, greenRound, gradientSwatch);
         }

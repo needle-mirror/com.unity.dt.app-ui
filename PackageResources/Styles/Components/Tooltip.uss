@@ -24,7 +24,7 @@
 .appui-tooltip__container {
     background-color: var(--appui-backgrounds-300);
     border-radius: var(--appui-alias-control-border-radius);
-    padding: var(--appui-spacing-150);
+    padding: var(--appui-static-sizing-150);
 
     --box-shadow-offset-y: 8;
     --box-shadow-spread: 16;
@@ -47,6 +47,7 @@
 }
 
 .appui-tooltip__content {
+    font-size: var(--appui-font-sizes-100);
     color: var(--appui-foregrounds-100);
     -unity-text-align: middle-left;
 }

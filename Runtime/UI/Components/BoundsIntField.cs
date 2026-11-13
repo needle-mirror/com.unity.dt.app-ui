@@ -39,7 +39,7 @@ namespace Unity.AppUI.UI
     /// <code lang="xml"><![CDATA[
     /// <UXML xmlns:appui="Unity.AppUI.UI">
     ///     <appui:BoundsIntField
-    ///         size="M"
+    ///         size="Md"
     ///         value="0,0,0,1,1,1"
     ///         name="myBoundsField"
     ///     />
@@ -204,7 +204,7 @@ namespace Unity.AppUI.UI
             hierarchy.Add(centerRow);
             hierarchy.Add(sizeRow);
 
-            size = Size.M;
+            size = Size.Md;
             SetValueWithoutNotify(new BoundsInt());
 
             m_CXField.RegisterValueChangedCallback(OnCXFieldChanged);

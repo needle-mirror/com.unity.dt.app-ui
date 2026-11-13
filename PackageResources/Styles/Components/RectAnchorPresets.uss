@@ -1,0 +1,68 @@
+/* RectAnchorPresets
+   The grid is authored on the static sizing ramp: a preset glyph is a diagram at a fixed scale, not
+   a control, so it must not rescale with density or the arrowhead tips stop landing on the frame. */
+.appui-rect-anchor-presets {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.appui-rect-anchor-presets__grid {
+    flex-direction: column;
+}
+
+.appui-rect-anchor-presets__row {
+    flex-direction: row;
+}
+
+.appui--rtl .appui-rect-anchor-presets__row {
+    flex-direction: row-reverse;
+}
+
+/* Each cell is a button in everything but name: the glyph inside it is painted, so there is no
+   ActionButton content model that would carry it. */
+.appui-rect-anchor-presets__cell {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: var(--appui-static-sizing-50);
+    margin: var(--appui-static-sizing-25);
+    border-radius: var(--appui-alias-control-border-radius);
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+.appui-rect-anchor-presets__cell:hover {
+    background-color: var(--appui-alias-control-background-color-hover);
+}
+
+.appui-rect-anchor-presets__cell:focus {
+    background-color: var(--appui-alias-control-background-color-hover);
+}
+
+.appui-rect-anchor-presets__cell.is-selected {
+    background-color: var(--appui-alias-actions-selected-background-color-default);
+}
+
+/* The glyph paints itself, so its colours have to be custom properties — and UITK only surfaces a
+   custom property that a rule matching *this* element declares. Putting them on the cell and reading
+   them from the child resolves to nothing at all, silently. So the glyph's own rules carry them, and
+   the cell's state selects which rule wins. */
+.appui-rect-anchor-preset-glyph {
+    width: var(--appui-static-sizing-250);
+    height: var(--appui-static-sizing-250);
+    flex-shrink: 0;
+    --rect-glyph-color: var(--appui-alias-text-disabled);
+    --rect-anchor: var(--appui-alias-editor-anchor);
+}
+
+.appui-rect-anchor-presets__cell:hover .appui-rect-anchor-preset-glyph,
+.appui-rect-anchor-presets__cell:focus .appui-rect-anchor-preset-glyph,
+.appui-rect-anchor-presets__cell.is-selected .appui-rect-anchor-preset-glyph {
+    --rect-glyph-color: var(--appui-alias-text-primary);
+}
+
+.appui-rect-anchor-presets__hint {
+    font-size: var(--appui-font-sizes-75);
+    color: var(--appui-alias-text-disabled);
+    margin-top: var(--appui-static-sizing-25);
+    margin-left: var(--appui-static-sizing-50);
+}

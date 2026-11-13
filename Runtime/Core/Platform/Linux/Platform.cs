@@ -28,6 +28,7 @@ namespace Unity.AppUI.Core
         }
 
         [DllImport("AppUINativePlugin")]
+        [return: MarshalAs(UnmanagedType.I1)]
         static extern bool NativeAppUI_Initialize(IntPtr configData);
 
         [DllImport("AppUINativePlugin")]

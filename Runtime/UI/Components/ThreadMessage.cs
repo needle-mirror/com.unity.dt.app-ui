@@ -204,7 +204,7 @@ namespace Unity.AppUI.UI
             var header = new VisualElement { name = headerUssClassName, pickingMode = PickingMode.Ignore };
             header.AddToClassList(headerUssClassName);
 
-            m_AvatarElement = new Avatar { name = avatarUssClassName, size = Size.S, variant = AvatarVariant.Circular, pickingMode = PickingMode.Ignore };
+            m_AvatarElement = new Avatar { name = avatarUssClassName, size = Size.Sm, variant = AvatarVariant.Circular, pickingMode = PickingMode.Ignore };
             m_AvatarElement.AddToClassList(avatarUssClassName);
 
             m_AvatarElement.autoLabelColor = true;
@@ -228,7 +228,7 @@ namespace Unity.AppUI.UI
             {
                 name = actionButtonUssClassName,
                 quiet = true,
-                size = Size.S,
+                size = Size.Sm,
                 icon = "dots-three",
                 iconVariant = IconVariant.Bold
             };
@@ -263,11 +263,11 @@ namespace Unity.AppUI.UI
             m_FooterContainer = new VisualElement { name = footerUssClassName, pickingMode = PickingMode.Ignore };
             m_FooterContainer.AddToClassList(footerUssClassName);
 
-            m_LikeButton = new ActionButton { name = likeBtnUssClassName, quiet = true, icon = "thumbs-up", size = Size.M };
+            m_LikeButton = new ActionButton { name = likeBtnUssClassName, quiet = true, icon = "thumbs-up", size = Size.Md };
             m_LikeButton.AddToClassList(likeBtnUssClassName);
             m_LikeButton.clicked += OnLikeClicked;
 
-            m_DislikeButton = new ActionButton { name = dislikeBtnUssClassName, quiet = true, icon = "thumbs-down", size = Size.M };
+            m_DislikeButton = new ActionButton { name = dislikeBtnUssClassName, quiet = true, icon = "thumbs-down", size = Size.Md };
             m_DislikeButton.AddToClassList(dislikeBtnUssClassName);
             m_DislikeButton.clicked += OnDislikeClicked;
 
@@ -589,6 +589,7 @@ namespace Unity.AppUI.UI
         {
             if (string.IsNullOrEmpty(m_RawMessage))
             {
+                m_ContentElement.enableRichText = false;
                 m_ContentElement.text = m_RawMessage;
                 return;
             }
@@ -598,12 +599,18 @@ namespace Unity.AppUI.UI
                 // ResolveContent is responsible for sanitizing user content
                 // and producing trusted rich text output.
                 m_ContentElement.pickingMode = PickingMode.Position;
+                m_ContentElement.enableRichText = true;
                 m_ContentElement.text = mentionProvider.ConvertToRichText(m_RawMessage);
             }
             else
             {
-                // No provider — wrap in <noparse> to prevent rich text injection.
-                m_ContentElement.text = "<noparse>" + m_RawMessage + "</noparse>";
+                // No provider — the message is raw, untrusted text. A `<noparse>` wrapper is not
+                // enough here: UI Toolkit's noparse regions do not nest and end at the first
+                // closing marker the parser sees, so a message containing its own `</noparse>`
+                // (in any casing or with inner whitespace) re-enables tag interpretation for
+                // everything that follows. Turning rich text off entirely removes the bypass.
+                m_ContentElement.enableRichText = false;
+                m_ContentElement.text = m_RawMessage;
             }
         }
 

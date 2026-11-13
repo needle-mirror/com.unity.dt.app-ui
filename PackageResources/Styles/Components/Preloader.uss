@@ -11,7 +11,7 @@
 .appui-circular-progress.appui-preloader__circular-progress {
     width: 100px;
     height: 100px;
-    --progress-color: var(--appui-primary-500);
+    --progress-color: var(--appui-base-300);
     display: flex;
     align-items: center;
     justify-content: center;

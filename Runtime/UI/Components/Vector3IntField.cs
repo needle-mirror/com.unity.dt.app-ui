@@ -27,7 +27,7 @@ namespace Unity.AppUI.UI
     /// <example>
     /// <para>Basic usage in UXML: Creating a basic vector field with default values</para>
     /// <code lang="xml"><![CDATA[
-    /// <ui:Vector3IntField name="position-field" size="M" value="0,0,0" />
+    /// <ui:Vector3IntField name="position-field" size="Md" value="0,0,0" />
     /// ]]></code>
     /// <para>Setting up validation and handling value changes: Complex example showing validation and event handling</para>
     /// <code lang="csharp"><![CDATA[
@@ -150,7 +150,7 @@ namespace Unity.AppUI.UI
 
             hierarchy.Add(container);
 
-            size = Size.M;
+            size = Size.Md;
             SetValueWithoutNotify(Vector3Int.zero);
 
             m_XField.RegisterValueChangingCallback(OnXFieldChanging);

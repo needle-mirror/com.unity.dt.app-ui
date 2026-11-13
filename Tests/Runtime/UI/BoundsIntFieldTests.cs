@@ -10,6 +10,10 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => BoundsIntField.ussClassName;
 
+        // Handed over to BoundsIntFieldSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
         protected override IEnumerable<Story> stories
         {
             get
@@ -21,7 +25,7 @@ namespace Unity.AppUI.Tests.UI
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:BoundsIntField />",
-            @"<appui:BoundsIntField value=""0,0,100,100"" size=""M"" invalid=""false"" />"
+            @"<appui:BoundsIntField value=""0,0,100,100"" size=""Md"" invalid=""false"" />"
         };
     }
 }

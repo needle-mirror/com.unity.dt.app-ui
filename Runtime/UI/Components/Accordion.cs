@@ -137,7 +137,7 @@ namespace Unity.AppUI.UI
             trailingContainer = new VisualElement { name = trailingContainerUssClassName, pickingMode = PickingMode.Ignore };
             trailingContainer.AddToClassList(trailingContainerUssClassName);
 
-            m_HeaderIndicatorElement = new Icon { name = indicatorUssClassName, iconName = k_IndicatorIconName, pickingMode = PickingMode.Ignore };
+            m_HeaderIndicatorElement = new Icon { primary = true, name = indicatorUssClassName, iconName = k_IndicatorIconName, pickingMode = PickingMode.Ignore };
             m_HeaderIndicatorElement.AddToClassList(indicatorUssClassName);
 
             m_HeaderElement = new ExVisualElement

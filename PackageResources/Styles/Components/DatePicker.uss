@@ -1,13 +1,13 @@
 /* DatePicker */
-.appui--small {
-    --appui-date-picker-width: 210px;
-}
-
-.appui--medium {
+.appui--normal {
     --appui-date-picker-width: 290px;
 }
 
-.appui--large {
+.appui--compact {
+    --appui-date-picker-width: 210px;
+}
+
+.appui--comfort {
     --appui-date-picker-width: 360px;
 }
 

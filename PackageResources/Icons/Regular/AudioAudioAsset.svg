@@ -1,0 +1,7 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--audio-audio-asset--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M4 14C5.10457 14 6 13.1046 6 12C6 10.8954 5.10457 10 4 10C2.89543 10 2 10.8954 2 12C2 13.1046 2.89543 14 4 14Z" fill="#C99700"/>
+<rect x="5" y="4" width="1" height="8" fill="#C99700"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10 13C11.1046 13 12 12.1046 12 11C12 9.89543 11.1046 9 10 9C8.89543 9 8 9.89543 8 11C8 12.1046 8.89543 13 10 13Z" fill="#C99700"/>
+<rect x="11" y="3" width="1" height="8" fill="#C99700"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M5 3.33333L12 2V4.66667L5 6V3.33333Z" fill="#C99700"/>
+</svg>

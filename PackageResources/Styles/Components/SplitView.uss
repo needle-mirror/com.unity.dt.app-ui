@@ -13,7 +13,7 @@
 }
 
 .appui-splitview > .unity-two-pane-split-view__dragline-anchor:hover {
-    background-color: var(--appui-primary-400);
+    background-color: var(--appui-base-200);
 }
 
 .appui-splitview > .unity-two-pane-split-view__dragline-anchor--horizontal {
@@ -113,7 +113,52 @@
     cursor: initial;
 }
 
-.appui-splitter--collapsed > .appui-splitter__anchor {
+/*
+ * Splitter indicator. Both shapes are always in the tree; the SplitView's `indicator` picks
+ * the default, and a theme or scoped stylesheet can override it by setting
+ * --appui-resizable-handle-stretch-display / --appui-resizable-handle-centered-display
+ * (`flex` or `none`) on the SplitView or an ancestor. Same contract as the registry's
+ * ResizableHandle.
+ */
+.appui-splitview--indicator-stretch > .appui-splitview__splitter-container > .appui-splitter > .appui-splitter__anchor {
+    display: var(--appui-resizable-handle-stretch-display, flex);
+}
+
+.appui-splitview--indicator-stretch > .appui-splitview__splitter-container > .appui-splitter > .appui-splitter__grip {
+    display: var(--appui-resizable-handle-centered-display, none);
+}
+
+.appui-splitview--indicator-centered > .appui-splitview__splitter-container > .appui-splitter > .appui-splitter__anchor {
+    display: var(--appui-resizable-handle-stretch-display, none);
+}
+
+.appui-splitview--indicator-centered > .appui-splitview__splitter-container > .appui-splitter > .appui-splitter__grip {
+    display: var(--appui-resizable-handle-centered-display, flex);
+}
+
+.appui-splitter__grip {
+    position: absolute;
+    border-radius: var(--appui-splitview-splitter-anchor-size);
+    background-color: var(--appui-color-transparent-black-0);
+}
+
+.appui-splitview--direction-horizontal > .appui-splitview__splitter-container > .appui-splitter > .appui-splitter__grip {
+    width: var(--appui-splitview-splitter-anchor-size);
+    height: 25%;
+}
+
+.appui-splitview--direction-vertical > .appui-splitview__splitter-container > .appui-splitter > .appui-splitter__grip {
+    height: var(--appui-splitview-splitter-anchor-size);
+    width: 25%;
+}
+
+.appui-splitter:hover > .appui-splitter__grip,
+.appui-splitter.is-active > .appui-splitter__grip {
+    background-color: var(--appui-alias-control-border-color-hover);
+}
+
+.appui-splitview > .appui-splitview__splitter-container > .appui-splitter--collapsed > .appui-splitter__anchor,
+.appui-splitview > .appui-splitview__splitter-container > .appui-splitter--collapsed > .appui-splitter__grip {
     display: none;
 }
 

@@ -74,7 +74,7 @@ namespace Unity.AppUI.Redux.DevTools
                             if (isPaused)
                                 return ComputePausedAction();
 
-                            if (options.maxAge >= 0 && stagedActionIds.Count >= options.maxAge)
+                            if (options.maxAge > 0 && stagedActionIds.Count >= options.maxAge)
                                 CommitExcessActions(stagedActionIds.Count - options.maxAge + 1);
 
                             if (currentStateIndex == stagedActionIds.Count -1)
@@ -230,17 +230,18 @@ namespace Unity.AppUI.Redux.DevTools
                 void CommitExcessActions(int n)
                 {
                     // Auto-commits n-number of excess actions.
-                    var excess = n;
                     if (stagedActionIds.Count <= 1)
                         return;
 
-                    var idsToDelete = stagedActionIds.GetRange(1, Mathf.Max(0, excess - 1));
+                    // the init action at index 0 is never committed
+                    var excess = Mathf.Min(n, stagedActionIds.Count - 1);
+                    var idsToDelete = stagedActionIds.GetRange(1, excess);
                     for (var i = 0; i < idsToDelete.Count; i++)
                     {
                         if (computedStates[i + 1].exception != null)
                         {
                             excess = i;
-                            idsToDelete = stagedActionIds.GetRange(1, Mathf.Max(0, excess - 1));
+                            idsToDelete = stagedActionIds.GetRange(1, excess);
                             break;
                         }
 

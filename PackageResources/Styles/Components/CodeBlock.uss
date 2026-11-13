@@ -27,8 +27,8 @@
     border-width: 1px;
     border-color: var(--appui-alias-control-border-color-default);
     background-color: var(--appui-backgrounds-50);
-    margin-top: var(--appui-spacing-50);
-    margin-bottom: var(--appui-spacing-150);
+    margin-top: var(--appui-static-sizing-50);
+    margin-bottom: var(--appui-static-sizing-150);
 
     /* Default theme — overridden by .appui--light below. */
     --codeblock-theme: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Themes/dark-plus.tmTheme.json");
@@ -71,16 +71,24 @@
     --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/html.tmLanguage.json");
 }
 
+.appui-code-block--lang-hlsl {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/hlsl.tmLanguage.json");
+}
+
+.appui-code-block--lang-wgsl {
+    --codeblock-grammar: url("project:/Packages/com.unity.dt.app-ui/PackageResources/SyntaxHighlighting/Grammars/wgsl.tmLanguage.json");
+}
+
 /* ---- Anatomy --------------------------------------------------------- */
 
 .appui-code-block__header {
     flex-direction: row;
     align-items: center;
     flex-shrink: 0;
-    padding-top: var(--appui-spacing-50);
-    padding-bottom: var(--appui-spacing-50);
-    padding-left: var(--appui-spacing-100);
-    padding-right: var(--appui-spacing-50);
+    padding-top: var(--appui-static-sizing-50);
+    padding-bottom: var(--appui-static-sizing-50);
+    padding-left: var(--appui-static-sizing-100);
+    padding-right: var(--appui-static-sizing-50);
     background-color: var(--appui-backgrounds-200);
     border-bottom-width: 1px;
     border-bottom-color: var(--appui-alias-control-border-color-default);
@@ -119,7 +127,7 @@
 .appui-code-block__viewport {
     flex-direction: row;
     align-items: flex-start;
-    padding: var(--appui-spacing-125);
+    padding: var(--appui-static-sizing-125);
 }
 
 .appui-code-block__line-numbers {
@@ -130,8 +138,8 @@
     -unity-font-definition: var(--appui-code-font-family);
     -unity-text-align: upper-right;
     flex-shrink: 0;
-    padding-right: var(--appui-spacing-125);
-    margin-right: var(--appui-spacing-100);
+    padding-right: var(--appui-static-sizing-125);
+    margin-right: var(--appui-static-sizing-100);
     border-right-width: 1px;
     border-right-color: var(--appui-alias-control-border-color-default);
 }

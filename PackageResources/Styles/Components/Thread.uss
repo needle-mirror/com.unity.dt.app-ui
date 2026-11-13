@@ -42,6 +42,14 @@
     margin-right: auto;
 }
 
+/* Mirrors the ThreadMessage rule: the actions button is hidden until the thread is hovered, and
+   stays visible while its menu is open so the button does not vanish from under the pointer.
+   Without this the `display: none` above is never lifted and the button can never be shown. */
+.appui-thread:hover > .appui-thread__header > .appui-thread__actions,
+.appui-thread--actions-open > .appui-thread__header > .appui-thread__actions {
+    display: flex;
+}
+
 .appui-thread__header > .appui-thread__resolve-btn.is-selected {
     background-color: rgba(0, 0, 0, 0);
     border-color: rgba(0, 0, 0, 0);

@@ -113,7 +113,8 @@ namespace Unity.AppUI.MVVM
             }
 
             rootVisualElement = null;
-            SetCurrentApp(null);
+            if (current == this)
+                SetCurrentApp(null);
             m_Disposed = true;
         }
 

@@ -16,7 +16,7 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId tooltipDelayMsOverrideProperty = nameof(tooltipDelayMsOverride);
 
-        internal static readonly BindingId scaleOverrideProperty = nameof(scaleOverride);
+        internal static readonly BindingId densityOverrideProperty = nameof(densityOverride);
 
         internal static readonly BindingId themeOverrideProperty = nameof(themeOverride);
 
@@ -39,37 +39,37 @@ namespace Unity.AppUI.UI
         {
             preferredTooltipPlacementOverride = OptionalEnum<PopoverPlacement>.none;
             tooltipDelayMsOverride = Optional<int>.none;
-            scaleOverride = Optional<string>.none;
+            densityOverride = Optional<string>.none;
             themeOverride = Optional<string>.none;
             langOverride = Optional<string>.none;
             layoutDirectionOverride = OptionalEnum<Dir>.none;
         }
 
         /// <summary>
-        /// The scale to use in this part of the UI.
+        /// The density to use in this part of the UI.
         /// </summary>
-        [Tooltip("The scale to use in this part of the UI.")]
+        [Tooltip("The density to use in this part of the UI.")]
         [CreateProperty]
-        [UxmlAttribute("scale")]
-        [OptionalScaleDrawer]
-        public Optional<string> scaleOverride
+        [UxmlAttribute("density")]
+        [OptionalDensityDrawer]
+        public Optional<string> densityOverride
         {
-            get => this.GetSelfContext<ScaleContext>() is {} ctx ?
-                ctx.scale : Optional<string>.none;
+            get => this.GetSelfContext<DensityContext>() is {} ctx ?
+                ctx.density : Optional<string>.none;
             set
             {
-                var previous = this.GetSelfContext<ScaleContext>();
-                var newCtx = value.IsSet ? new ScaleContext(value.Value) : null;
+                var previous = this.GetSelfContext<DensityContext>();
+                var newCtx = value.IsSet ? new DensityContext(value.Value) : null;
 
                 if (previous == newCtx)
                     return;
 
-                if (!string.IsNullOrEmpty(previous?.scale))
-                    RemoveFromClassList(MemoryUtils.Concatenate(Panel.contextPrefix, previous.scale));
-                if (!string.IsNullOrEmpty(newCtx?.scale))
-                    AddToClassList(MemoryUtils.Concatenate(Panel.contextPrefix, newCtx.scale));
+                if (!string.IsNullOrEmpty(previous?.density))
+                    RemoveFromClassList(MemoryUtils.Concatenate(Panel.contextPrefix, previous.density));
+                if (!string.IsNullOrEmpty(newCtx?.density))
+                    AddToClassList(MemoryUtils.Concatenate(Panel.contextPrefix, newCtx.density));
                 this.ProvideContext(newCtx);
-                NotifyPropertyChanged(in scaleOverrideProperty);
+                NotifyPropertyChanged(in densityOverrideProperty);
             }
         }
 
@@ -92,10 +92,7 @@ namespace Unity.AppUI.UI
                 if (previous == newCtx)
                     return;
 
-                if (!string.IsNullOrEmpty(previous?.theme))
-                    RemoveFromClassList(MemoryUtils.Concatenate(Panel.contextPrefix, previous.theme));
-                if (!string.IsNullOrEmpty(newCtx?.theme))
-                    AddToClassList(MemoryUtils.Concatenate(Panel.contextPrefix, newCtx.theme));
+                Panel.SwapThemeClasses(this, previous?.theme, newCtx?.theme);
                 this.ProvideContext(newCtx);
                 NotifyPropertyChanged(in themeOverrideProperty);
             }

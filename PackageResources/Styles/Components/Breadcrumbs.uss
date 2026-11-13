@@ -36,6 +36,11 @@
 }
 
 .appui-breadcrumb-separator {
+    /* The separator matches the crumbs' default LinkSize.Sm, the registry's text-sm. */
+    font-size: var(--appui-font-sizes-100);
     color: var(--appui-foregrounds-100);
-    padding: 0 var(--appui-spacing-100);
+    padding: 0 var(--appui-static-sizing-100);
+    /* A cramped bar ellipsizes the crumb labels instead of squashing the
+       separators to nothing. */
+    flex-shrink: 0;
 }

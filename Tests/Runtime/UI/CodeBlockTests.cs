@@ -12,6 +12,10 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => CodeBlock.ussClassName;
 
+        // Handed over to CodeBlockSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:CodeBlock />",

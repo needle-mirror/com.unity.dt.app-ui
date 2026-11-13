@@ -97,10 +97,11 @@ namespace Unity.AppUI.Redux
                 {
                     if (sCase.actionCreatorOrMatcher == null)
                         defaultCases.Add(sCase);
+                    // Every matching case reduces the state returned by the previous one.
                     if (CaseMatch(sCase, action))
                     {
                         anyMatch = true;
-                        newState = sCase.reducer(state, action);
+                        newState = sCase.reducer(newState, action);
                     }
                 }
 
@@ -108,7 +109,7 @@ namespace Unity.AppUI.Redux
                 {
                     foreach (var sCase in defaultCases)
                     {
-                        newState = sCase.reducer(state, action);
+                        newState = sCase.reducer(newState, action);
                     }
                 }
 

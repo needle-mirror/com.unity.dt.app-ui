@@ -138,6 +138,49 @@ namespace Unity.AppUI.MVVM
         }
 
         /// <summary>
+        /// Adds a singleton service of the type specified in <typeparamref name="TService"/> created by the supplied factory.
+        /// The factory receives the <see cref="IServiceProvider"/> resolving the service, so it can forward to another registration.
+        /// </summary>
+        /// <param name="serviceCollection"> The <see cref="IServiceCollection"/> to add the service to. </param>
+        /// <param name="factory"> The factory used to create the service. </param>
+        /// <typeparam name="TService"> The type of the service to add. </typeparam>
+        /// <returns> The <see cref="IServiceCollection"/> so that additional calls can be chained. </returns>
+        /// <exception cref="ArgumentNullException"> Thrown when <paramref name="serviceCollection"/> or <paramref name="factory"/> is null. </exception>
+        public static IServiceCollection AddSingleton<TService>(this IServiceCollection serviceCollection, Func<IServiceProvider, TService> factory)
+            where TService : class
+        {
+            if (serviceCollection == null)
+                throw new ArgumentNullException(nameof(serviceCollection));
+
+            if (factory == null)
+                throw new ArgumentNullException(nameof(factory));
+
+            return Add(serviceCollection, ServiceDescriptor.Singleton(factory));
+        }
+
+        /// <summary>
+        /// Adds a singleton service of the type specified in <paramref name="serviceType"/> created by the supplied factory.
+        /// </summary>
+        /// <param name="serviceCollection"> The <see cref="IServiceCollection"/> to add the service to. </param>
+        /// <param name="serviceType"> The type of the service to add. </param>
+        /// <param name="factory"> The factory used to create the service. </param>
+        /// <returns> The <see cref="IServiceCollection"/> so that additional calls can be chained. </returns>
+        /// <exception cref="ArgumentNullException"> Thrown when <paramref name="serviceCollection"/>, <paramref name="serviceType"/> or <paramref name="factory"/> is null. </exception>
+        public static IServiceCollection AddSingleton(this IServiceCollection serviceCollection, Type serviceType, Func<IServiceProvider, object> factory)
+        {
+            if (serviceCollection == null)
+                throw new ArgumentNullException(nameof(serviceCollection));
+
+            if (serviceType == null)
+                throw new ArgumentNullException(nameof(serviceType));
+
+            if (factory == null)
+                throw new ArgumentNullException(nameof(factory));
+
+            return Add(serviceCollection, ServiceDescriptor.Singleton(serviceType, factory));
+        }
+
+        /// <summary>
         /// Adds a transient service of the type specified in <typeparamref name="TService"/> to the specified
         /// <see cref="IServiceCollection"/>.
         /// </summary>
@@ -290,6 +333,49 @@ namespace Unity.AppUI.MVVM
         }
 
         /// <summary>
+        /// Adds a scoped service of the type specified in <typeparamref name="TService"/> created by the supplied factory.
+        /// The factory receives the <see cref="IServiceProvider"/> resolving the service, so it can forward to another registration.
+        /// </summary>
+        /// <param name="serviceCollection"> The <see cref="IServiceCollection"/> to add the service to. </param>
+        /// <param name="factory"> The factory used to create the service. </param>
+        /// <typeparam name="TService"> The type of the service to add. </typeparam>
+        /// <returns> The <see cref="IServiceCollection"/> so that additional calls can be chained. </returns>
+        /// <exception cref="ArgumentNullException"> Thrown when <paramref name="serviceCollection"/> or <paramref name="factory"/> is null. </exception>
+        public static IServiceCollection AddScoped<TService>(this IServiceCollection serviceCollection, Func<IServiceProvider, TService> factory)
+            where TService : class
+        {
+            if (serviceCollection == null)
+                throw new ArgumentNullException(nameof(serviceCollection));
+
+            if (factory == null)
+                throw new ArgumentNullException(nameof(factory));
+
+            return Add(serviceCollection, ServiceDescriptor.Scoped(factory));
+        }
+
+        /// <summary>
+        /// Adds a scoped service of the type specified in <paramref name="serviceType"/> created by the supplied factory.
+        /// </summary>
+        /// <param name="serviceCollection"> The <see cref="IServiceCollection"/> to add the service to. </param>
+        /// <param name="serviceType"> The type of the service to add. </param>
+        /// <param name="factory"> The factory used to create the service. </param>
+        /// <returns> The <see cref="IServiceCollection"/> so that additional calls can be chained. </returns>
+        /// <exception cref="ArgumentNullException"> Thrown when <paramref name="serviceCollection"/>, <paramref name="serviceType"/> or <paramref name="factory"/> is null. </exception>
+        public static IServiceCollection AddScoped(this IServiceCollection serviceCollection, Type serviceType, Func<IServiceProvider, object> factory)
+        {
+            if (serviceCollection == null)
+                throw new ArgumentNullException(nameof(serviceCollection));
+
+            if (serviceType == null)
+                throw new ArgumentNullException(nameof(serviceType));
+
+            if (factory == null)
+                throw new ArgumentNullException(nameof(factory));
+
+            return Add(serviceCollection, ServiceDescriptor.Scoped(serviceType, factory));
+        }
+
+        /// <summary>
         /// Try to add a scoped service of a given type to the specified <see cref="IServiceCollection"/>.
         /// </summary>
         /// <param name="serviceCollection"> The <see cref="IServiceCollection"/> to add the service to. </param>
@@ -338,7 +424,7 @@ namespace Unity.AppUI.MVVM
             if (serviceType == null)
                 throw new ArgumentNullException(nameof(serviceType));
 
-            return serviceCollection.AddScoped(serviceType, serviceType);
+            return serviceCollection.TryAddScoped(serviceType, serviceType);
         }
 
         /// <summary>
@@ -444,6 +530,49 @@ namespace Unity.AppUI.MVVM
         }
 
         /// <summary>
+        /// Adds a transient service of the type specified in <typeparamref name="TService"/> created by the supplied factory.
+        /// The factory receives the <see cref="IServiceProvider"/> resolving the service, so it can forward to another registration.
+        /// </summary>
+        /// <param name="serviceCollection"> The <see cref="IServiceCollection"/> to add the service to. </param>
+        /// <param name="factory"> The factory used to create the service. </param>
+        /// <typeparam name="TService"> The type of the service to add. </typeparam>
+        /// <returns> The <see cref="IServiceCollection"/> so that additional calls can be chained. </returns>
+        /// <exception cref="ArgumentNullException"> Thrown when <paramref name="serviceCollection"/> or <paramref name="factory"/> is null. </exception>
+        public static IServiceCollection AddTransient<TService>(this IServiceCollection serviceCollection, Func<IServiceProvider, TService> factory)
+            where TService : class
+        {
+            if (serviceCollection == null)
+                throw new ArgumentNullException(nameof(serviceCollection));
+
+            if (factory == null)
+                throw new ArgumentNullException(nameof(factory));
+
+            return Add(serviceCollection, ServiceDescriptor.Transient(factory));
+        }
+
+        /// <summary>
+        /// Adds a transient service of the type specified in <paramref name="serviceType"/> created by the supplied factory.
+        /// </summary>
+        /// <param name="serviceCollection"> The <see cref="IServiceCollection"/> to add the service to. </param>
+        /// <param name="serviceType"> The type of the service to add. </param>
+        /// <param name="factory"> The factory used to create the service. </param>
+        /// <returns> The <see cref="IServiceCollection"/> so that additional calls can be chained. </returns>
+        /// <exception cref="ArgumentNullException"> Thrown when <paramref name="serviceCollection"/>, <paramref name="serviceType"/> or <paramref name="factory"/> is null. </exception>
+        public static IServiceCollection AddTransient(this IServiceCollection serviceCollection, Type serviceType, Func<IServiceProvider, object> factory)
+        {
+            if (serviceCollection == null)
+                throw new ArgumentNullException(nameof(serviceCollection));
+
+            if (serviceType == null)
+                throw new ArgumentNullException(nameof(serviceType));
+
+            if (factory == null)
+                throw new ArgumentNullException(nameof(factory));
+
+            return Add(serviceCollection, ServiceDescriptor.Transient(serviceType, factory));
+        }
+
+        /// <summary>
         /// Try to add a transient service of a given type to the specified <see cref="IServiceCollection"/>.
         /// </summary>
         /// <param name="serviceCollection"> The <see cref="IServiceCollection"/> to add the service to. </param>
@@ -456,7 +585,7 @@ namespace Unity.AppUI.MVVM
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
 
-            return serviceCollection.TryAddScoped(typeof(TService), typeof(TService));
+            return serviceCollection.TryAddTransient(typeof(TService), typeof(TService));
         }
 
         /// <summary>
@@ -474,7 +603,7 @@ namespace Unity.AppUI.MVVM
             if (serviceCollection == null)
                 throw new ArgumentNullException(nameof(serviceCollection));
 
-            return serviceCollection.TryAddScoped(typeof(TService), typeof(TImplementation));
+            return serviceCollection.TryAddTransient(typeof(TService), typeof(TImplementation));
         }
 
         /// <summary>
@@ -492,7 +621,7 @@ namespace Unity.AppUI.MVVM
             if (serviceType == null)
                 throw new ArgumentNullException(nameof(serviceType));
 
-            return serviceCollection.AddScoped(serviceType, serviceType);
+            return serviceCollection.TryAddTransient(serviceType, serviceType);
         }
 
         /// <summary>

@@ -1,0 +1,5 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--mouse--regular"><rect x="0" y="0" width="32" height="32" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M20 5.5H12C10.067 5.5 8.5 7.067 8.5 9V22C8.5 23.933 10.067 25.5 12 25.5H20C21.933 25.5 23.5 23.933 23.5 22V9C23.5 7.067 21.933 5.5 20 5.5ZM12 4C9.23858 4 7 6.23858 7 9V22C7 24.7614 9.23858 27 12 27H20C22.7614 27 25 24.7614 25 22V9C25 6.23858 22.7614 4 20 4H12Z" fill="#FFFFFF"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M24 11.75H8V10.25H24V11.75Z" fill="#FFFFFF"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M15.25 10.5V4.5H16.75V10.5H15.25Z" fill="#FFFFFF"/>
+</svg>

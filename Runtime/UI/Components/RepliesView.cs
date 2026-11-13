@@ -7,7 +7,7 @@ namespace Unity.AppUI.UI
 {
     /// <summary>
     /// A simple replies container backed by a <see cref="ScrollView"/>. Drop-in
-    /// replacement for the subset of <see cref="ListView"/> used by
+    /// replacement for the subset of <see cref="UnityEngine.UIElements.ListView"/> used by
     /// <see cref="Thread"/>: supports makeItem / bindItem / unbindItem /
     /// destroyItem, an itemsSource, and a manual <see cref="RefreshItems"/>.
     /// Items are realized eagerly — there is no virtualization — which keeps
@@ -72,13 +72,13 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// Accepted for API compatibility with <see cref="ListView"/> but has no effect;
+        /// Accepted for API compatibility with <see cref="UnityEngine.UIElements.ListView"/> but has no effect;
         /// <see cref="RepliesView"/> always realizes items eagerly.
         /// </summary>
         public CollectionVirtualizationMethod virtualizationMethod { get; set; }
 
         /// <summary>
-        /// Accepted for API compatibility with <see cref="ListView"/> but has no effect;
+        /// Accepted for API compatibility with <see cref="UnityEngine.UIElements.ListView"/> but has no effect;
         /// <see cref="RepliesView"/> does not support item selection.
         /// </summary>
         public SelectionType selectionType { get; set; }

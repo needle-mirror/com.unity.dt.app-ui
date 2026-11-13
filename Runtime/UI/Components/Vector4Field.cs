@@ -27,7 +27,7 @@ namespace Unity.AppUI.UI
     /// <para>Basic usage with UXML. Basic UXML declaration of a Vector4Field.</para>
     /// <code lang="xml"><![CDATA[
     /// <ui:Vector4Field name="myVector4Field"
-    ///                size="M"
+    ///                size="Md"
     ///                value="1 2 3 4"
     ///                format-string="F2" />
     /// ]]></code>
@@ -35,7 +35,7 @@ namespace Unity.AppUI.UI
     /// <code lang="csharp"><![CDATA[
     /// var vector4Field = new Vector4Field {
     ///     value = new Vector4(1, 2, 3, 4),
-    ///     size = Size.M,
+    ///     size = Size.Md,
     ///     formatString = "F2",
     ///     validateValue = (v) => v.magnitude <= 1.0f
     /// };
@@ -180,7 +180,7 @@ namespace Unity.AppUI.UI
             hierarchy.Add(xyRow);
             hierarchy.Add(zwRow);
 
-            size = Size.M;
+            size = Size.Md;
             SetValueWithoutNotify(Vector4.zero);
 
             m_XField.RegisterValueChangingCallback(OnXFieldChanging);

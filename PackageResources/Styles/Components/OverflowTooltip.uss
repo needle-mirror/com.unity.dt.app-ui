@@ -1,0 +1,8 @@
+/* OverflowTooltip — a label that ellipsizes, and only then publishes a tooltip. */
+.appui-overflow-tooltip {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1;
+    min-width: 0;
+}

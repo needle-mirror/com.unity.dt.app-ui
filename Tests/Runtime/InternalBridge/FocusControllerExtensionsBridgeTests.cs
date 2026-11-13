@@ -11,6 +11,8 @@ namespace Unity.AppUI.Tests.Bridge
 {
     [TestFixture]
     [TestOf(typeof(FocusControllerExtensionsBridge))]
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     class FocusControllerExtensionsBridgeTests
     {
         UIDocument m_Document;

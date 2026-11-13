@@ -299,8 +299,8 @@ private Label m_TitleLabel;
 
 ```css
 /* Spacing */
---appui-spacing-100
---appui-spacing-200
+--appui-sizing-100
+--appui-sizing-200
 
 /* Colors */
 --appui-primary-100

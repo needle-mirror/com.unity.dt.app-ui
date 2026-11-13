@@ -19,7 +19,7 @@
 
 .appui-attachment:hover,
 .appui-attachment.is-hovered {
-    background-color: var(--appui-primary-400);
+    background-color: var(--appui-base-200);
 }
 
 .appui-attachment:active,
@@ -88,7 +88,7 @@
 }
 
 .appui-attachment__title {
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-100);
     color: var(--appui-foregrounds-100);
     white-space: nowrap;
     overflow: hidden;
@@ -97,7 +97,7 @@
 }
 
 .appui-attachment__subtitle {
-    font-size: var(--appui-font-sizes-body-xs);
+    font-size: var(--appui-font-sizes-75);
     color: var(--appui-foregrounds-50);
     white-space: nowrap;
     overflow: hidden;

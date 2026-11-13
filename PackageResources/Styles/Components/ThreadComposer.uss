@@ -10,7 +10,7 @@
     display: none;
     align-items: center;
     flex-shrink: 0;
-    margin-top: var(--appui-spacing-50);
+    margin-top: var(--appui-static-sizing-50);
     margin-right: var(--appui-alias-control-gap-sm);
 }
 

@@ -8,10 +8,8 @@
     /* Nothing */ /* converted from : border-style: var(--appui-control-border-style); */
     border-radius: var(--appui-alias-control-border-radius);
     cursor: var(--appui-alias-control-cursor-pointer);
-    font-size: var(--appui-font-sizes-body-md);
-    background-color: var(--appui-alias-actions-background-color-default);
-    border-color: var(--appui-alias-actions-border-color-default);
-    color: var(--appui-foregrounds-100);
+    font-size: var(--appui-font-sizes-200);
+    color: var(--appui-alias-text-primary);
     flex-shrink: 0;
     transition-property: background-color, border-color, color;
     transition-duration: var(--appui-animation-duration-500);
@@ -22,19 +20,21 @@
     flex-direction: row-reverse;
 }
 
+/* The root's padding is the whole horizontal inset. USS has no gap and no sibling selectors, so
+   each icon container carries the gap on its inner edge; a hidden container takes its gap with it. */
 .appui-button__leadingcontainer {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin-left: var(--appui-alias-control-gap-md); /* todo remove this when gap will be supported */
-    margin-right: 0; /* todo remove this when gap will be supported */
+    margin-left: 0; /* todo remove this when gap will be supported */
+    margin-right: var(--appui-sizing-160); /* todo remove this when gap will be supported */
 }
 
 .appui--rtl .appui-button__leadingcontainer {
     flex-direction: row-reverse;
-    margin-left: 0; /* todo remove this when gap will be supported */
-    margin-right: var(--appui-alias-control-gap-md); /* todo remove this when gap will be supported */
+    margin-left: var(--appui-sizing-160); /* todo remove this when gap will be supported */
+    margin-right: 0; /* todo remove this when gap will be supported */
 }
 
 .appui-button__titlecontainer {
@@ -43,8 +43,8 @@
     flex-direction: column;
     align-items: center;
     /* Nothing */ /* converted from : gap: var(--appui-control-semi-gap); */
-    margin-left: var(--appui-alias-control-gap-md); /* converted from : margin-inline-start: var(--appui-alias-control-gap-md); */
-    margin-right: var(--appui-alias-control-gap-md); /* converted from : margin-inline-end: var(--appui-alias-control-gap-md); */
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .appui-button__trailingcontainer {
@@ -52,14 +52,14 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin-left: 0; /* todo remove this when gap will be supported */
-    margin-right: var(--appui-alias-control-gap-md); /* todo remove this when gap will be supported */
+    margin-left: var(--appui-sizing-160); /* todo remove this when gap will be supported */
+    margin-right: 0; /* todo remove this when gap will be supported */
 }
 
 .appui--rtl .appui-button__trailingcontainer {
     flex-direction: row-reverse;
-    margin-left: var(--appui-alias-control-gap-md); /* todo remove this when gap will be supported */
-    margin-right: 0; /* todo remove this when gap will be supported */
+    margin-left: 0; /* todo remove this when gap will be supported */
+    margin-right: var(--appui-sizing-160); /* todo remove this when gap will be supported */
 }
 
 .appui-button__title {
@@ -70,7 +70,7 @@
 }
 
 .appui-button__subtitle {
-    font-size: var(--appui-font-sizes-body-sm);
+    font-size: var(--appui-font-sizes-75);
     color: var(--appui-foregrounds-50);
     transition-property: color;
     transition-duration: var(--appui-animation-duration-100);
@@ -81,42 +81,49 @@
     --unity-image-tint-color: var(--appui-foregrounds-100); /* converted from : fill: inherit; */
 }
 
-.appui-button--size-s {
+.appui-button--size-sm {
     min-height: var(--appui-alias-control-sizing-sm-height);
     min-width: var(--appui-alias-control-sizing-sm-height);
-    padding-top: var(--appui-spacing-25);
-    padding-bottom: var(--appui-spacing-25);
+    padding-top: var(--appui-static-sizing-25);
+    padding-bottom: var(--appui-static-sizing-25);
+    padding-left: var(--appui-alias-actions-padding-horizontal-sm);
+    padding-right: var(--appui-alias-actions-padding-horizontal-sm);
+    font-size: var(--appui-font-sizes-100);
 }
 
-.appui-button--size-m {
+.appui-button--size-md {
     min-height: var(--appui-alias-control-sizing-md-height);
     min-width: var(--appui-alias-control-sizing-md-height);
-    padding-top: var(--appui-spacing-50);
-    padding-bottom: var(--appui-spacing-50);
+    padding-top: var(--appui-static-sizing-50);
+    padding-bottom: var(--appui-static-sizing-50);
+    padding-left: var(--appui-alias-actions-padding-horizontal-md);
+    padding-right: var(--appui-alias-actions-padding-horizontal-md);
 }
 
-.appui-button--size-l {
+.appui-button--size-lg {
     min-height: var(--appui-alias-control-sizing-lg-height);
     min-width: var(--appui-alias-control-sizing-lg-height);
-    padding-top: var(--appui-spacing-100);
-    padding-bottom: var(--appui-spacing-100);
+    padding-top: var(--appui-static-sizing-100);
+    padding-bottom: var(--appui-static-sizing-100);
+    padding-left: var(--appui-alias-actions-padding-horizontal-lg);
+    padding-right: var(--appui-alias-actions-padding-horizontal-lg);
 }
 
-.appui-button--icon-only.appui-button--size-s {
+.appui-button--icon-only.appui-button--size-sm {
     min-height: auto;
     min-width: auto;
     height: var(--appui-alias-control-sizing-sm-height);
     width: var(--appui-alias-control-sizing-sm-height);
 }
 
-.appui-button--icon-only.appui-button--size-m {
+.appui-button--icon-only.appui-button--size-md {
     min-height: auto;
     min-width: auto;
     height: var(--appui-alias-control-sizing-md-height);
     width: var(--appui-alias-control-sizing-md-height);
 }
 
-.appui-button--icon-only.appui-button--size-l {
+.appui-button--icon-only.appui-button--size-lg {
     min-height: auto;
     min-width: auto;
     height: var(--appui-alias-control-sizing-lg-height);
@@ -127,79 +134,194 @@
     padding: 0;
 }
 
-.appui-button--icon-only > .appui-button__leadingcontainer {
+.appui-button--icon-only > .appui-button__leadingcontainer,
+.appui-button--icon-only > .appui-button__trailingcontainer {
     margin-left: 0; /* todo remove this when gap will be supported */
     margin-right: 0; /* todo remove this when gap will be supported */
 }
 
-.appui-button--accent,
-.appui-button--primary {
-    background-color: var(--appui-accent-100);
+/* --------------------------------------------------------------------------
+   Variants. One rule per member of ButtonVariant, mirroring the `buttonVariants`
+   cva in the web registry (registry/default/ui/button.tsx). Tokens only.
+   -------------------------------------------------------------------------- */
+
+/* Default — solid accent fill, the highest-emphasis button. */
+.appui-button--default {
     border-width: 0;
-}
-
-.appui-button--destructive {
-    border-width: 0;
-    background-color: var(--appui-alias-actions-destructive-default);
-}
-
-.appui-button--quiet {
-    border-color: var(--appui-alias-actions-quiet-border-color-default);
-    background-color: var(--appui-alias-actions-quiet-background-color-default);
-}
-
-.appui-button--accent,
-.appui-button--primary,
-.appui-button--destructive {
+    background-color: var(--appui-alias-actions-accent-background-color-default);
     color: var(--appui-alias-actions-accent-foreground-color-default);
 }
 
-.appui-button--accent.appui-button--quiet,
-.appui-button--primary.appui-button--quiet,
-.appui-button--destructive.appui-button--quiet {
-    color: var(--appui-foregrounds-100);
+.appui-button--default.is-hovered {
+    background-color: var(--appui-alias-actions-accent-background-color-hover);
+    color: var(--appui-alias-actions-accent-foreground-color-hover);
 }
 
-.appui-button--accent .appui-button__subtitle,
-.appui-button--primary .appui-button__subtitle,
-.appui-button--destructive .appui-button__subtitle {
+.appui-button--default.is-active {
+    background-color: var(--appui-alias-actions-accent-background-color-active);
+    color: var(--appui-alias-actions-accent-foreground-color-active);
+}
+
+.appui-button--default .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default);
+}
+
+.appui-button--default .appui-button__subtitle {
     color: var(--appui-color-transparent-white-600);
 }
 
-.appui-button--accent.appui-button--quiet .appui-button__subtitle,
-.appui-button--primary.appui-button--quiet .appui-button__subtitle,
-.appui-button--destructive.appui-button--quiet .appui-button__subtitle {
-    color: var(--appui-foregrounds-50);
-}
-
-.appui-button--accent .appui-icon,
-.appui-button--primary .appui-icon,
-.appui-button--destructive .appui-icon {
-    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default); /* converted from : fill: var(--appui-alias-actions-accent-foreground-color-default); */
-}
-
-.appui-button--accent.appui-button--quiet .appui-icon,
-.appui-button--primary.appui-button--quiet .appui-icon,
-.appui-button--destructive.appui-button--quiet .appui-icon {
-    --unity-image-tint-color: var(--appui-foregrounds-100); /* converted from : fill: var(--appui-foregrounds-100); */
-}
-
-.appui-button.is-hovered {
-    background-color: var(--appui-alias-actions-background-color-hover);
-    border-color: var(--appui-alias-actions-border-color-hover);
-    color: var(--appui-foregrounds-200);
-}
-
-.appui-button--accent.is-hovered,
-.appui-button--primary.is-hovered {
-    background-color: var(--appui-accent-50);
-    color: var(--appui-alias-actions-accent-foreground-color-hover);
+/* Destructive — solid destructive fill, for irreversible actions. */
+.appui-button--destructive {
+    border-width: 0;
+    background-color: var(--appui-alias-semantic-destructive);
+    color: var(--appui-alias-semantic-destructive-foreground);
 }
 
 .appui-button--destructive.is-hovered {
     background-color: var(--appui-alias-actions-destructive-hover);
-    color: var(--appui-alias-actions-accent-foreground-color-hover);
 }
+
+.appui-button--destructive.is-active {
+    background-color: var(--appui-alias-actions-destructive-active);
+}
+
+.appui-button--destructive .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-semantic-destructive-foreground);
+}
+
+.appui-button--destructive .appui-button__subtitle {
+    color: var(--appui-color-transparent-white-600);
+}
+
+/* Outline — a border over the page surface, no fill of its own. */
+.appui-button--outline {
+    background-color: var(--appui-alias-surface-default);
+    border-color: var(--appui-base-500);
+    color: var(--appui-alias-text-primary);
+}
+
+.appui-button--outline.is-hovered {
+    background-color: var(--appui-alias-control-background-color-hover);
+    border-color: var(--appui-alias-control-border-color-hover);
+}
+
+.appui-button--outline.is-active {
+    background-color: var(--appui-alias-control-background-color-active);
+    border-color: var(--appui-alias-control-border-color-active);
+}
+
+.appui-button--outline .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-text-primary);
+}
+
+.appui-button--outline .appui-button__subtitle {
+    color: var(--appui-alias-text-secondary);
+}
+
+/* Secondary — bordered over the neutral control fill. */
+.appui-button--secondary {
+    background-color: var(--appui-alias-control-background-color-default);
+    border-color: var(--appui-base-500);
+    color: var(--appui-alias-control-foreground-color-default);
+}
+
+.appui-button--secondary.is-hovered {
+    background-color: var(--appui-alias-control-background-color-hover);
+    border-color: var(--appui-alias-control-border-color-hover);
+}
+
+.appui-button--secondary.is-active {
+    background-color: var(--appui-alias-control-background-color-active);
+    border-color: var(--appui-alias-control-border-color-active);
+}
+
+.appui-button--secondary .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-control-foreground-color-default);
+}
+
+.appui-button--secondary .appui-button__subtitle {
+    color: var(--appui-alias-text-secondary);
+}
+
+/* Ghost — the former `quiet` treatment: transparent until hovered. */
+.appui-button--ghost {
+    background-color: var(--appui-alias-actions-quiet-background-color-default);
+    border-color: var(--appui-alias-actions-quiet-border-color-default);
+    color: var(--appui-alias-text-primary);
+}
+
+.appui-button--ghost.is-hovered {
+    background-color: var(--appui-alias-actions-quiet-background-color-hover);
+    border-color: var(--appui-alias-actions-quiet-border-color-hover);
+}
+
+.appui-button--ghost.is-active {
+    background-color: var(--appui-alias-actions-quiet-background-color-active);
+    border-color: var(--appui-alias-actions-quiet-border-color-active);
+}
+
+.appui-button--ghost .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-text-primary);
+}
+
+.appui-button--ghost .appui-button__subtitle {
+    color: var(--appui-alias-text-secondary);
+}
+
+/* Link — reads as an <appui:Link>, so it reuses the exact Link tokens. */
+.appui-button--link {
+    border-width: 0;
+    background-color: var(--appui-alias-actions-quiet-background-color-default);
+    color: var(--appui-accent-100);
+}
+
+.appui-button--link.is-hovered {
+    color: var(--appui-accent-200);
+}
+
+.appui-button--link.is-active {
+    color: var(--appui-accent-50);
+}
+
+.appui-button--link .appui-icon {
+    --unity-image-tint-color: var(--appui-accent-100);
+}
+
+.appui-button--link.is-hovered .appui-icon {
+    --unity-image-tint-color: var(--appui-accent-200);
+}
+
+.appui-button--link.is-active .appui-icon {
+    --unity-image-tint-color: var(--appui-accent-50);
+}
+
+.appui-button--link .appui-button__subtitle {
+    color: var(--appui-alias-text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   Selected — IconButton's pressed / toggle state, mirroring the registry's
+   `selected` variant on icon-button.tsx. The selected role's own fill, and its
+   selected hover alias rather than the variant's hover fill, which would take
+   the pressed state back under the pointer. After the variants so it wins ties.
+   -------------------------------------------------------------------------- */
+
+.appui-button--icon-only.is-selected {
+    background-color: var(--appui-alias-actions-selected-background-color-default);
+    color: var(--appui-alias-text-primary);
+}
+
+.appui-button--icon-only.is-selected.is-hovered {
+    background-color: var(--appui-alias-actions-selected-background-color-hover);
+}
+
+.appui-button--icon-only.is-selected .appui-icon {
+    --unity-image-tint-color: var(--appui-alias-text-primary);
+}
+
+/* --------------------------------------------------------------------------
+   Focus
+   -------------------------------------------------------------------------- */
 
 .appui-button.keyboard-focus {
     /* converted from : outline-width: var(--appui-alias-control-outline-width); */
@@ -211,70 +333,44 @@
     /* converted from : outline-style: var(--appui-alias-control-outline-style); */
 }
 
-.appui-button.is-active {
-    background-color: var(--appui-alias-actions-background-color-active);
-    border-color: var(--appui-alias-actions-border-color-active);
-    color: var(--appui-foregrounds-200);
-}
-
-.appui-button--accent.is-active,
-.appui-button--primary.is-active {
-    background-color: var(--appui-accent-25);
-    color: var(--appui-alias-actions-accent-foreground-color-active);
-}
-
-.appui-button--destructive.is-active {
-    background-color: var(--appui-alias-actions-destructive-active);
-    color: var(--appui-alias-actions-accent-foreground-color-active);
-}
-
-.appui-button--accent.is-hovered .appui-icon,
-.appui-button--primary.is-hovered .appui-icon,
-.appui-button--destructive.is-hovered .appui-icon,
-.appui-button--accent.is-active .appui-icon,
-.appui-button--primary.is-active .appui-icon,
-.appui-button--destructive.is-active .appui-icon {
-    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default); /* converted from : fill: var(--appui-alias-actions-accent-foreground-color-default); */
-}
+/* --------------------------------------------------------------------------
+   Disabled — one filled treatment, one transparent treatment.
+   -------------------------------------------------------------------------- */
 
 .appui-button:disabled {
-    background-color: var(--appui-alias-actions-background-color-disabled);
-    border-color: var(--appui-alias-actions-border-color-disabled);
     cursor: var(--appui-alias-control-cursor-disabled);
     color: var(--appui-foregrounds-25);
 }
 
-.appui-button--accent:disabled,
-.appui-button--primary:disabled {
+.appui-button--default:disabled,
+.appui-button--destructive:disabled,
+.appui-button--outline:disabled,
+.appui-button--secondary:disabled {
     background-color: var(--appui-alias-actions-background-color-disabled);
     border-color: var(--appui-alias-actions-border-color-disabled);
-    cursor: var(--appui-alias-control-cursor-disabled);
     color: var(--appui-foregrounds-25);
 }
 
-.appui-button--destructive:disabled {
-    background-color: var(--appui-alias-actions-background-color-disabled);
-    border-color: var(--appui-alias-actions-border-color-disabled);
-    cursor: var(--appui-alias-control-cursor-disabled);
-    color: var(--appui-foregrounds-25);
-}
-
-.appui-button--quiet:disabled,
-.appui-button--quiet.unity-disabled {
+.appui-button--ghost:disabled,
+.appui-button--link:disabled {
     background-color: var(--appui-alias-actions-quiet-background-color-disabled);
     border-color: var(--appui-alias-actions-quiet-border-color-disabled);
+    color: var(--appui-foregrounds-25);
 }
 
 .appui-button:disabled .appui-icon {
     --unity-image-tint-color: var(--appui-foregrounds-25); /* converted from : fill: var(--appui-foregrounds-25); */
 }
 
-.appui-button--accent:disabled .appui-icon,
-.appui-button--primary:disabled .appui-icon,
-.appui-button--destructive:disabled .appui-icon {
-    --unity-image-tint-color: var(--appui-foregrounds-25); /* converted from : fill: var(--appui-foregrounds-25); */
-}
-
 .appui-button:disabled .appui-button__subtitle {
     color: var(--appui-foregrounds-25);
+}
+
+/* A disabled selected IconButton drops the selected fill, as ActionButton does. */
+.appui-button--icon-only.is-selected:disabled {
+    background-color: var(--appui-alias-actions-background-color-disabled);
+}
+
+.appui-button--icon-only.is-selected:disabled .appui-icon {
+    --unity-image-tint-color: var(--appui-foregrounds-25);
 }

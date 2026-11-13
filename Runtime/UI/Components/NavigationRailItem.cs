@@ -130,7 +130,7 @@ namespace Unity.AppUI.UI
             clickable = new Pressable();
             this.AddManipulator(clickable);
 
-            m_IconElement = new Icon { name = iconUssClassName, pickingMode = PickingMode.Ignore };
+            m_IconElement = new Icon { primary = true, name = iconUssClassName, pickingMode = PickingMode.Ignore };
             m_IconElement.AddToClassList(iconUssClassName);
             hierarchy.Add(m_IconElement);
 

@@ -1,0 +1,93 @@
+/* GradientEditor */
+.appui-gradienteditor {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    min-width: var(--appui-sizing-3200);
+    padding: var(--appui-alias-control-gap-md);
+    background-color: var(--appui-base-100);
+    border-radius: var(--appui-alias-control-border-radius);
+}
+
+/* Both rails deliberately carry no padding and no border. Markers are positioned as a
+   percentage of the rail, while the drag maths reads the rail's content rect; padding or a
+   border would offset one and not the other, and every stop would land slightly off the
+   time under the cursor. GradientEditorTests.Rails_CarryNoPaddingOrBorder pins this. */
+.appui-gradienteditor__alpha-rail,
+.appui-gradienteditor__color-rail {
+    position: relative;
+    flex-shrink: 0;
+    height: var(--appui-sizing-250);
+    padding: 0;
+    border-width: 0;
+    overflow: visible;
+}
+
+.appui-gradienteditor__marker {
+    position: absolute;
+    top: 0;
+    width: var(--appui-sizing-250);
+    height: var(--appui-sizing-250);
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+/* The chip is tinted from C# with the stop's own value — user data, not a design color. The
+   rim around it is the design color and comes from a token. */
+.appui-gradienteditor__marker-chip {
+    flex-grow: 1;
+    border-width: var(--appui-alias-control-border-width);
+    border-radius: var(--appui-alias-control-border-radius);
+    border-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui-gradienteditor__marker--selected .appui-gradienteditor__marker-chip {
+    border-color: var(--appui-alias-actions-accent-background-color-default);
+}
+
+.appui-gradienteditor__strip {
+    flex-shrink: 0;
+    width: auto;
+    height: var(--appui-alias-control-sizing-md-height);
+    border-width: var(--appui-alias-control-border-width);
+    border-radius: var(--appui-alias-control-border-radius);
+    border-color: var(--appui-alias-field-border-color-default);
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+.appui-gradienteditor__inspector {
+    flex-direction: column;
+    margin-top: var(--appui-alias-control-gap-md);
+    padding: var(--appui-alias-control-gap-sm);
+    border-width: var(--appui-alias-control-border-width);
+    border-radius: var(--appui-alias-control-border-radius);
+    border-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui-gradienteditor__row {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: var(--appui-alias-control-gap-sm);
+}
+
+.appui-gradienteditor__label {
+    color: var(--appui-alias-text-secondary);
+    font-size: var(--appui-font-sizes-75);
+    margin-right: var(--appui-alias-control-gap-sm);
+}
+
+.appui-gradienteditor__mode-dropdown {
+    flex-grow: 1;
+    margin-right: var(--appui-alias-control-gap-md);
+}
+
+.appui-gradienteditor__location-field {
+    width: var(--appui-sizing-1400);
+}
+
+.appui-gradienteditor__color-field {
+    flex-grow: 1;
+}
+
+.appui-gradienteditor__alpha-slider {
+    flex-grow: 1;
+}

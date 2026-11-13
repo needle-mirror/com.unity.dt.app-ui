@@ -10,6 +10,8 @@ namespace Unity.AppUI.Tests.MVVM
 {
     [TestFixture]
     [TestOf(typeof(UIToolkitAppBuilder<>))]
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     public class UIToolkitAppBuilderPanelRendererTests
     {
         PanelRenderer m_PanelRenderer;

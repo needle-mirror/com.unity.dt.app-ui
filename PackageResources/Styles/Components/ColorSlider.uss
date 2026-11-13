@@ -16,6 +16,19 @@
 }
 
 .appui-color-slider > .appui-slider__slider-control > .appui-slider__thumbs-container > .appui-thumb > .appui-thumb__content {
-    border-color: var(--appui-color-gray-1500);
+    border-color: var(--appui-backgrounds-300);
     border-width: var(--appui-sizing-50);
+}
+
+/* Checker backing under the thumb colour, so a translucent value never reads as an empty thumb. */
+.appui-color-slider .appui-color-slider__thumb-swatch {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: auto;
+    border-width: 0;
+    border-radius: 100%;
 }

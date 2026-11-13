@@ -40,7 +40,7 @@ namespace Unity.AppUI.UI
     /// var fab = new FloatingActionButton(() => {
     ///     Debug.Log("FAB clicked!");
     /// });
-    /// fab.size = Size.L;
+    /// fab.size = Size.Lg;
     /// fab.accent = true;
     /// fab.Add(new Icon { name = "add" });
     /// parentElement.Add(fab);
@@ -200,7 +200,7 @@ namespace Unity.AppUI.UI
 
             passMask = Passes.Clear | Passes.OutsetShadows;
             elevation = 12;
-            size = Size.M;
+            size = Size.Md;
 
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocus, OnPointerFocus));
         }

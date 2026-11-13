@@ -30,7 +30,7 @@ namespace Unity.AppUI.UI
     /// {
     ///     title = "Project Assets",
     ///     subtitle = "Contains 42 files",
-    ///     size = Size.M
+    ///     size = Size.Md
     /// };
     /// ]]></code>
     /// <para>Advanced usage with custom content and loading state — Creating a rich list item with custom content,
@@ -61,7 +61,7 @@ namespace Unity.AppUI.UI
     ///     <ui:ListViewItem
     ///         title="Settings"
     ///         subtitle="Configure application preferences"
-    ///         size="L"
+    ///         size="Lg"
     ///     />
     /// </UXML>
     /// ]]></code>
@@ -257,7 +257,15 @@ namespace Unity.AppUI.UI
 
             isLoading = false;
             thumbnail = null;
-            size = Size.M;
+            size = Size.Md;
+
+            this.RegisterContextChangedCallback<SizeContext>(OnSizeContextChanged);
+        }
+
+        void OnSizeContextChanged(ContextChangedEvent<SizeContext> evt)
+        {
+            if (evt.context != null)
+                size = evt.context.size;
         }
     }
 }

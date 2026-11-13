@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 using Unity.AppUI.Core;
 using UnityEngine;
@@ -73,6 +74,16 @@ namespace Unity.AppUI.Tests.Core
         {
             var gesture = new PinchGesture(1.0f, GestureRecognizerState.Recognized);
             Assert.AreEqual(gesture.GetHashCode(), new PinchGesture(1.0f, GestureRecognizerState.Recognized).GetHashCode());
+        }
+
+        [Test]
+        public void GetHashCode_ShouldMatch_WhenGesturesAreApproximatelyEqual()
+        {
+            var gesture1 = new PinchGesture(1.0f, GestureRecognizerState.Changed);
+            var gesture2 = new PinchGesture(1.0000001f, GestureRecognizerState.Changed);
+            Assert.IsTrue(gesture1 == gesture2);
+            Assert.AreEqual(gesture1.GetHashCode(), gesture2.GetHashCode());
+            Assert.IsTrue(new HashSet<PinchGesture> { gesture1 }.Contains(gesture2));
         }
     }
 }

@@ -25,6 +25,29 @@ namespace Unity.AppUI.UI
     }
 
     /// <summary>
+    /// How the visible indicator fills a SplitView's splitter.
+    /// </summary>
+    /// <remarks>
+    /// Both indicators are always in the tree and this picks the one that shows. A theme or a scoped
+    /// stylesheet can pick instead by setting <c>--appui-resizable-handle-stretch-display</c> and
+    /// <c>--appui-resizable-handle-centered-display</c> (<c>flex</c> to show it, <c>none</c> to hide
+    /// it) on the SplitView or an ancestor. Where neither is set, this value decides.
+    /// </remarks>
+    [GenerateLowerCaseStrings]
+    public enum SplitterIndicator
+    {
+        /// <summary>
+        /// A thin divider line spanning the full length of the splitter.
+        /// </summary>
+        Stretch,
+
+        /// <summary>
+        /// A rounded grip spanning a quarter of the splitter's length, centered. It shows on hover and drag.
+        /// </summary>
+        Centered
+    }
+
+    /// <summary>
     /// A resizable multi-pane layout component that allows users to adjust the size of each pane using
     /// draggable splitters.
     /// </summary>
@@ -107,6 +130,10 @@ namespace Unity.AppUI.UI
 
         internal static readonly BindingId showExpandButtonsProperty = nameof(showExpandButtons);
 
+        internal static readonly BindingId indicatorProperty = nameof(indicator);
+
+        SplitterIndicator m_Indicator = SplitterIndicator.Stretch;
+
         Direction m_Direction = Direction.Horizontal;
 
         bool m_RealtimeResize = true;
@@ -167,6 +194,12 @@ namespace Unity.AppUI.UI
         public const string withExpandButtonsUssClassName = ussClassName + "--with-expand-buttons";
 
         /// <summary>
+        /// The USS class name prefix of the SplitView for its splitter indicator.
+        /// </summary>
+        [EnumName("GetIndicatorUssClassName", typeof(SplitterIndicator))]
+        public const string indicatorUssClassName = ussClassName + "--indicator-";
+
+        /// <summary>
         /// Child elements are added to it, usually this is the same as the element itself.
         /// </summary>
         public override VisualElement contentContainer => m_PaneContainer;
@@ -185,6 +218,28 @@ namespace Unity.AppUI.UI
                 EnableInClassList(withExpandButtonsUssClassName, value);
                 if (changed)
                     NotifyPropertyChanged(in showExpandButtonsProperty);
+            }
+        }
+
+        /// <summary>
+        /// How the visible indicator fills each splitter: a full-length line (<see cref="SplitterIndicator.Stretch"/>,
+        /// the default) or a centered grip (<see cref="SplitterIndicator.Centered"/>). A theme can override this
+        /// choice through the <c>--appui-resizable-handle-*-display</c> custom properties.
+        /// </summary>
+        [CreateProperty]
+        [UxmlAttribute]
+        public SplitterIndicator indicator
+        {
+            get => m_Indicator;
+            set
+            {
+                var changed = m_Indicator != value;
+                RemoveFromClassList(GetIndicatorUssClassName(m_Indicator));
+                m_Indicator = value;
+                AddToClassList(GetIndicatorUssClassName(m_Indicator));
+
+                if (changed)
+                    NotifyPropertyChanged(in indicatorProperty);
             }
         }
 
@@ -258,6 +313,7 @@ namespace Unity.AppUI.UI
         public SplitView(Direction direction)
         {
             AddToClassList(ussClassName);
+            AddToClassList(GetIndicatorUssClassName(m_Indicator));
             pickingMode = PickingMode.Ignore;
 
             m_PaneContainer = new VisualElement
@@ -1027,6 +1083,11 @@ namespace Unity.AppUI.UI
         public const string anchorUssClassName = ussClassName + "__anchor";
 
         /// <summary>
+        /// The USS class name of the centered grip of the Splitter.
+        /// </summary>
+        public const string gripUssClassName = ussClassName + "__grip";
+
+        /// <summary>
         /// The USS class name of the expand button of the Splitter.
         /// </summary>
         public const string expandButtonUssClassName = ussClassName + "__expand-button";
@@ -1090,6 +1151,14 @@ namespace Unity.AppUI.UI
             };
             m_Anchor.AddToClassList(anchorUssClassName);
             hierarchy.Add(m_Anchor);
+
+            var grip = new VisualElement
+            {
+                pickingMode = PickingMode.Ignore,
+                name = gripUssClassName
+            };
+            grip.AddToClassList(gripUssClassName);
+            hierarchy.Add(grip);
 
             m_ExpandButton = new VisualElement
             {

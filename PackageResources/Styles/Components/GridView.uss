@@ -1,7 +1,7 @@
 /* GridView */
 .appui {
-    --appui-grid-view-half-gutter: var(--appui-spacing-50);
-    --appui-grid-view-scroller-gutter: var(--appui-spacing-100);
+    --appui-grid-view-half-gutter: var(--appui-static-sizing-50);
+    --appui-grid-view-scroller-gutter: var(--appui-static-sizing-100);
 }
 
 .appui-grid-view__row {

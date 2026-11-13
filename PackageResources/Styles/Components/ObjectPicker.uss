@@ -1,0 +1,162 @@
+/* ObjectPicker */
+
+/* Frameless by design: the host (Popover, Dialog, FloatingWindow) owns the frame, so the
+   picker has no border and no radius of its own and never double-borders a rounded corner. */
+.appui-objectpicker {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+    overflow: hidden;
+    background-color: var(--appui-alias-surface-default);
+}
+
+.appui-objectpicker__header {
+    flex-shrink: 0;
+    flex-direction: row;
+    align-items: center;
+    padding: var(--appui-alias-control-gap-md) var(--appui-alias-control-gap-lg);
+    border-bottom-width: var(--appui-alias-control-border-width);
+    border-bottom-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui-objectpicker__title {
+    flex-grow: 1;
+    -unity-text-align: middle-center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--appui-alias-text-primary);
+    font-size: var(--appui-font-sizes-100);
+    -unity-font-style: bold;
+}
+
+.appui-objectpicker__close-button {
+    flex-shrink: 0;
+}
+
+.appui-objectpicker__search {
+    flex-shrink: 0;
+    margin: var(--appui-alias-control-gap-md) var(--appui-alias-control-gap-md) 0
+        var(--appui-alias-control-gap-md);
+}
+
+.appui-objectpicker__toolbar {
+    flex-shrink: 0;
+    flex-direction: row;
+    align-items: center;
+    padding: var(--appui-alias-control-gap-md);
+    border-bottom-width: var(--appui-alias-control-border-width);
+    border-bottom-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui-objectpicker__tabs {
+    flex-shrink: 1;
+}
+
+.appui-objectpicker__size-slider {
+    flex-shrink: 0;
+    width: var(--appui-sizing-1200);
+    margin-left: auto;
+}
+
+.appui-objectpicker__toolbar-slot {
+    flex-shrink: 0;
+    flex-direction: row;
+    align-items: center;
+    margin-left: var(--appui-alias-control-gap-lg);
+}
+
+.appui-objectpicker__split-view {
+    flex-grow: 1;
+    min-height: 0;
+}
+
+.appui-objectpicker__list {
+    flex-direction: column;
+    padding: var(--appui-alias-control-gap-sm);
+}
+
+.appui-objectpicker__no-results {
+    padding: var(--appui-alias-control-gap-xl) var(--appui-alias-control-gap-md);
+    -unity-text-align: middle-center;
+    color: var(--appui-alias-text-disabled);
+    font-size: var(--appui-font-sizes-100);
+}
+
+.appui-objectpicker__row {
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    padding: var(--appui-alias-control-gap-sm) var(--appui-alias-control-gap-md);
+    border-radius: var(--appui-alias-control-border-radius);
+    cursor: var(--appui-alias-control-cursor-pointer);
+}
+
+.appui-objectpicker__row.is-hovered {
+    background-color: var(--appui-alias-control-background-color-hover);
+}
+
+.appui-objectpicker__row.is-selected {
+    background-color: var(--appui-alias-actions-selected-background-color-default);
+}
+
+.appui-objectpicker__row.is-selected.is-hovered {
+    background-color: var(--appui-alias-actions-selected-background-color-hover);
+}
+
+/* Asset thumbnails have no control-sizing equivalent, so they take raw sizing steps —
+   the same exemption the checkbox box and the toggle track use. */
+.appui-objectpicker__row__thumbnail {
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: var(--appui-alias-control-border-radius);
+    margin-right: var(--appui-alias-control-gap-md);
+    background-color: var(--appui-alias-surface-raised);
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.appui-objectpicker--thumb-sm .appui-objectpicker__row__thumbnail {
+    width: var(--appui-sizing-300);
+    height: var(--appui-sizing-300);
+}
+
+.appui-objectpicker--thumb-md .appui-objectpicker__row__thumbnail {
+    width: var(--appui-sizing-350);
+    height: var(--appui-sizing-350);
+}
+
+.appui-objectpicker--thumb-lg .appui-objectpicker__row__thumbnail {
+    width: var(--appui-sizing-500);
+    height: var(--appui-sizing-500);
+}
+
+.appui-objectpicker__row__label {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--appui-alias-text-primary);
+    font-size: var(--appui-font-sizes-200);
+}
+
+/* The none row is only a placeholder when it carries no icon. With one it IS an asset to
+   the user — a named engine fallback — so it keeps the regular row treatment. */
+.appui-objectpicker__row--none .appui-objectpicker__row__label {
+    color: var(--appui-alias-text-disabled);
+    -unity-font-style: italic;
+}
+
+.appui-objectpicker__row--none .appui-objectpicker__row__thumbnail {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.appui-objectpicker__row.is-selected .appui-objectpicker__row__label {
+    color: var(--appui-alias-text-callout);
+    -unity-font-style: normal;
+}
+
+.appui-objectpicker__preview {
+    flex-basis: 30%;
+}

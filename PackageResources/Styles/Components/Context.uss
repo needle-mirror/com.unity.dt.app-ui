@@ -1,7 +1,7 @@
 /* Context */
 .appui {
   -unity-font-definition: var(--appui-font-weights-100);
-  font-size: var(--appui-font-sizes-100);
+  font-size: var(--appui-font-sizes-200);
   color: var(--appui-foregrounds-100);
   background-color: var(--appui-backgrounds-100);
   display: flex;

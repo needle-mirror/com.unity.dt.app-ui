@@ -63,10 +63,14 @@ namespace Unity.AppUI.Navigation
 
             if (args != null)
             {
-                // Add the new arguments
+                // Add the new arguments, replacing any default argument with the same name
                 foreach (var argument in args)
                 {
-                    mergedArgs.Add(new Argument(argument.name, argument.value));
+                    var existingArgIdx = mergedArgs.FindIndex(a => a.name == argument.name);
+                    if (existingArgIdx >= 0)
+                        mergedArgs[existingArgIdx] = new Argument(argument.name, argument.value);
+                    else
+                        mergedArgs.Add(new Argument(argument.name, argument.value));
                 }
             }
 

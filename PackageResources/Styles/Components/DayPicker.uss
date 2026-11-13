@@ -8,7 +8,7 @@
     justify-content: space-between;
     align-items: center;
     padding-bottom: var(--appui-alias-control-gap-lg);
-    border-bottom-color: var(--appui-primary-500);
+    border-bottom-color: var(--appui-base-300);
     border-bottom-width: var(--appui-alias-control-border-width);
     margin-bottom: var(--appui-alias-control-gap-md);
 }

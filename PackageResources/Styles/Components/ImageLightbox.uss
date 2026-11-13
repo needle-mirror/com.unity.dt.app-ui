@@ -1,0 +1,91 @@
+/* ImageLightbox */
+
+/* The viewer's *look* is all here and all on tokens. Its *size* is not: the registry sizes it in
+   viewport units, which UI Toolkit does not have, so ImageLightbox measures the panel and writes
+   max-width / max-height inline. See the class remarks for why a percentage cannot do it. */
+.appui-imagelightbox {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--appui-sizing-250);
+    background-color: var(--appui-alias-surface-raised);
+    border-radius: var(--appui-border-radius-lg);
+}
+
+/* Holds the image. It only ever scrolls for a tall image, whose max-height C# caps to the image
+   share of the panel; anything else already fits. */
+.appui-imagelightbox__scroll {
+    flex-shrink: 1;
+    flex-grow: 0;
+}
+
+/* The drawn size is written inline by C#: the natural size times a uniform shrink factor. Painting
+   it as a background at `scale-to-fit` then costs nothing, because the box already has the image's
+   own aspect ratio — there is no letterboxing left to do. */
+.appui-imagelightbox__image {
+    flex-shrink: 0;
+    align-self: center;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.appui-imagelightbox__fallback {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Step buttons either side of the title. Without a set the buttons are hidden and the title stands
+   alone, centred. */
+.appui-imagelightbox__footer {
+    margin-top: var(--appui-sizing-200);
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    max-width: 100%;
+}
+
+.appui-imagelightbox--navigation .appui-imagelightbox__footer {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.appui-imagelightbox__title {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 1;
+    min-width: 0;
+    margin-left: var(--appui-sizing-200);
+    margin-right: var(--appui-sizing-200);
+}
+
+/* The caption doubles as the viewer's title, so it is quiet rather than a heading. */
+.appui-imagelightbox__caption {
+    flex-shrink: 1;
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-secondary);
+    -unity-text-align: middle-center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -unity-text-overflow-position: end;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+/* The position leads the caption and reads stronger than it. */
+.appui-imagelightbox__position {
+    flex-shrink: 0;
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-primary);
+    white-space: nowrap;
+}
+
+.appui-imagelightbox__separator {
+    flex-shrink: 0;
+    font-size: var(--appui-font-sizes-100);
+    color: var(--appui-alias-text-secondary);
+    margin-left: var(--appui-sizing-100);
+    margin-right: var(--appui-sizing-100);
+}

@@ -11,6 +11,8 @@ namespace Unity.AppUI.Tests.Navigation
 {
     [TestFixture]
     [TestOf(typeof(NavHost))]
+    [PrebuildSetup(typeof(ThemeResourceSetup))]
+    [PostBuildCleanup(typeof(ThemeResourceSetup))]
     class NavHostTests
     {
         class TestableVisualController : INavVisualController
@@ -122,6 +124,35 @@ namespace Unity.AppUI.Tests.Navigation
             yield return new WaitForSeconds(0.5f);
 
             Assert.AreEqual("start", controller.currentDestination.name);
+        }
+
+        [UnityTest]
+        public IEnumerator NavController_CanNavigateToMultiSegmentDeepLink()
+        {
+            var panel = new Panel();
+            m_Document.rootVisualElement.Add(panel);
+            panel.StretchToParentSize();
+
+            var host = new NavHost();
+            host.navController.SetGraph(Utils.navGraphTestAsset);
+            host.visualController = new TestableVisualController();
+            host.StretchToParentSize();
+            panel.Add(host);
+
+            yield return null;
+
+            var controller = host.navController;
+
+            Assert.IsTrue(controller.Navigate(new System.Uri("myapp://host/start/other")));
+
+            yield return new WaitForSeconds(0.5f);
+
+            Assert.AreEqual("other", controller.currentDestination.name);
+            Assert.AreEqual("start", controller.currentBackStackEntry.destination.name);
+
+            Assert.IsTrue(controller.Navigate(new System.Uri("myapp://host/start/other/")));
+            Assert.IsFalse(controller.Navigate(new System.Uri("myapp://host/start/nosuch")));
+            Assert.IsFalse(controller.Navigate(new System.Uri("myapp://host/nosuch/other")));
         }
     }
 }

@@ -1,0 +1,7 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--network-network-mananger-hud--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M3.22522 13.7441C3.10576 13.8798 2.89427 13.8798 2.77481 13.7441L1.15848 11.9076C1.0583 11.7937 1.01519 11.6406 1.04127 11.4912L2.00002 6H4.00002L4.95876 11.4912C4.98484 11.6406 4.94173 11.7937 4.84155 11.9076L3.22522 13.7441Z" fill="#CD237F"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M1.2194 2.65811C1.11148 2.33435 1.35246 2 1.69374 2L4.30631 2C4.64759 2 4.88858 2.33435 4.78065 2.65811L4.00003 5H2.00003L1.2194 2.65811Z" fill="#CD237F"/>
+<rect x="6" y="4" width="9" height="2" rx="1" fill="#555555"/>
+<rect x="6" y="7" width="9" height="2" rx="1" fill="#555555"/>
+<rect x="6" y="10" width="9" height="2" rx="1" fill="#555555"/>
+</svg>

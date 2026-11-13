@@ -40,7 +40,7 @@ namespace Unity.AppUI.UI
             pickingMode = PickingMode.Position;
             focusable = false;
 
-            m_IconElement = new Icon { name = iconUssClassName, pickingMode = PickingMode.Ignore };
+            m_IconElement = new Icon { primary = true, name = iconUssClassName, pickingMode = PickingMode.Ignore };
             m_IconElement.AddToClassList(iconUssClassName);
             hierarchy.Add(m_IconElement);
 

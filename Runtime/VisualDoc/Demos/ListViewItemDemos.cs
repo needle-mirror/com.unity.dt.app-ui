@@ -10,8 +10,8 @@ namespace Unity.AppUI.VisualDoc
         static VisualElement Basic()
         {
             return DemoUtils.Column(
-                new ListViewItem { title = "Project Assets", subtitle = "Contains 42 files", size = Size.M },
-                new ListViewItem { title = "Documentation", subtitle = "Last updated: Today", size = Size.M },
+                new ListViewItem { title = "Project Assets", subtitle = "Contains 42 files", size = Size.Md },
+                new ListViewItem { title = "Documentation", subtitle = "Last updated: Today", size = Size.Md },
                 new ListViewItem { title = "Loading item", subtitle = "Fetching data...", isLoading = true });
         }
     }

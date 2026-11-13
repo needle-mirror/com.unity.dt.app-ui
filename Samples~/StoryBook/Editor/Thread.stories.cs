@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Unity.AppUI.Core;
@@ -54,11 +55,22 @@ namespace Unity.AppUI.Editor
 
         public string ConvertToRichText(string rawContent)
         {
-            return k_MentionRegex.Replace(rawContent, match =>
+            // Every segment here is untrusted message text, so both the text around the mentions
+            // and the captured display name are escaped before they reach the rich text renderer.
+            var sb = new StringBuilder();
+            var index = 0;
+
+            foreach (Match match in k_MentionRegex.Matches(rawContent))
             {
-                var displayName = match.Groups[2].Value;
-                return "<a href=\"https://google.com\"><b>@" + displayName + "</b></a>";
-            });
+                sb.Append(RichTextUtils.Escape(rawContent.Substring(index, match.Index - index)));
+                sb.Append("<a href=\"https://google.com\"><b>@");
+                sb.Append(RichTextUtils.Escape(match.Groups[2].Value));
+                sb.Append("</b></a>");
+                index = match.Index + match.Length;
+            }
+
+            sb.Append(RichTextUtils.Escape(rawContent.Substring(index)));
+            return sb.ToString();
         }
 
         public string GetDisplayName(object mention)
@@ -74,7 +86,7 @@ namespace Unity.AppUI.Editor
             var item = new ListViewItem();
             var avatar = new Avatar
             {
-                size = Size.M,
+                size = Size.Md,
                 backgroundColor = Color.black,
                 autoLabelColor = true,
                 labelColor = Color.white,

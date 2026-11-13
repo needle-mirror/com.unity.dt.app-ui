@@ -322,7 +322,7 @@ namespace Unity.AppUI.UI
             m_DeleteButton.AddToClassList(deleteButtonUssClassName);
             hierarchy.Add(m_DeleteButton);
 
-            m_DeleteIcon = new Icon { name = deleteIconUssClassName, pickingMode = PickingMode.Ignore };
+            m_DeleteIcon = new Icon { primary = true, name = deleteIconUssClassName, pickingMode = PickingMode.Ignore };
             m_DeleteIcon.AddToClassList(deleteIconUssClassName);
             m_DeleteButton.hierarchy.Add(m_DeleteIcon);
 

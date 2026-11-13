@@ -1,0 +1,7 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="appui-icon--rendergraph-resources--regular"><rect x="0" y="0" width="16" height="16" fill="#FFFFFF" fill-opacity="0"/>
+<path d="M3 3H7V5H3V3Z" fill="#FFFFFF"/>
+<path d="M7 6H3V9H7V6Z" fill="#FFFFFF"/>
+<path d="M3 10H7V13H3V10Z" fill="#FFFFFF"/>
+<path d="M13 6H8V11H13V6Z" fill="#FFFFFF"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M2 1C1.44772 1 1 1.44772 1 2V14C1 14.5523 1.44772 15 2 15H14C14.5523 15 15 14.5523 15 14V2C15 1.44772 14.5523 1 14 1H2ZM14 2H2V14H14V2Z" fill="#FFFFFF"/>
+</svg>

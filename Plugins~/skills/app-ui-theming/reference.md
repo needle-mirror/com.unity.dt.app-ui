@@ -58,14 +58,11 @@ Purpose:
 
     /* Semantic color assignments */
     --appui-base-500: #1976D2;
-
-    /* Component-specific overrides */
-    --appui-spacing-100: 8px;
 }
 
 /* Custom component styles */
 .appui-mycomponent {
-    padding: var(--appui-spacing-200);
+    padding: var(--appui-sizing-200);
     background-color: var(--appui-backgrounds-100);
     border-radius: var(--appui-radius-m);
 }
@@ -80,21 +77,52 @@ App UI.tss
 ├── App UI - Dark.uss (default dark theme)
 ├── App UI - Light.uss (default light theme)
 ├── App UI - Editor Dark.uss (editor UI optimization - dark)
-└── App UI - Editor Light.uss (editor UI optimization - light)
+├── App UI - Editor Light.uss (editor UI optimization - light)
+├── App UI - Cloud Dark.uss (Cloud branding - dark)
+└── App UI - Cloud Light.uss (Cloud branding - light)
 ```
+
+### Light and Dark Context Markers
+
+The element providing the theme context carries two classes: `appui--<theme>`, naming the specific
+theme, and one of `dark` / `light`, naming the kind of surface. The marker lets one selector cover
+every dark theme - built-in or custom - instead of enumerating them:
+
+```css
+/* dark, editor-dark, cloud-dark, acme-dark, ... */
+.dark {
+    --my-illustration: url("project:/Assets/Art/diagram-dark.svg");
+}
+
+.light {
+    --my-illustration: url("project:/Assets/Art/diagram-light.svg");
+}
+```
+
+A theme counts as dark when its name ends in `dark`, so name custom dark themes accordingly. The two
+markers are mutually exclusive, and because they sit on the providing element, a nested
+`ContextProvider` carries its own - variables resolve from the nearest ancestor that sets them.
+
+> **Important:** Never declare the same variable in both a marker rule and an unconditional `.appui`
+> rule. Both are single-class selectors matching the same element, so the winner would depend on USS
+> declaration order. Declare it in the marker rules only.
+
+App UI uses this for the colored Editor icons, which ship separate light and dark artwork.
 
 ### Theme Variants
 
-Each theme has three scale variants:
+> **Note:** The separate small/medium/large *scale* dimension has been removed.
+> Density is no longer an independent axis — the `Editor` themes are **compact**
+> and the runtime themes use the **default** density. Sections below that still
+> describe a standalone "scale context" are deprecated.
+
+One theme per color scheme:
 
 ```
-App UI - Dark - Small.tss    (small scale, dark)
-App UI - Dark - Medium.tss   (medium scale, dark) [default for dark]
-App UI - Dark - Large.tss    (large scale, dark)
-
-App UI - Light - Small.tss   (small scale, light)
-App UI - Light - Medium.tss  (medium scale, light)
-App UI - Light - Large.tss   (large scale, light)
+App UI - Dark.tss          (dark, default density)
+App UI - Light.tss         (light, default density)
+App UI - Editor Dark.tss   (dark, compact density)
+App UI - Editor Light.tss  (light, compact density)
 ```
 
 ### Selecting Themes in PanelSettings
@@ -104,14 +132,14 @@ App UI - Light - Large.tss   (large scale, light)
 Path: Packages/com.unity.dt.app-ui/PackageResources/Styles/Themes/App UI.tss
 ```
 
-**Custom Dark Theme (Medium):**
+**Custom Dark Theme:**
 ```
-Path: Packages/com.unity.dt.app-ui/PackageResources/Styles/Themes/App UI - Dark - Medium.tss
+Path: Packages/com.unity.dt.app-ui/PackageResources/Styles/Themes/App UI - Dark.tss
 ```
 
-**Custom Light Theme (Large):**
+**Compact Editor Theme:**
 ```
-Path: Packages/com.unity.dt.app-ui/PackageResources/Styles/Themes/App UI - Light - Large.tss
+Path: Packages/com.unity.dt.app-ui/PackageResources/Styles/Themes/App UI - Editor Dark.tss
 ```
 
 ## USS Design Tokens
@@ -133,7 +161,7 @@ App UI organizes tokens in a hierarchical structure:
 ```
 --appui-{category}-{subcategory}-{density}
 --appui-primary-100
---appui-spacing-200
+--appui-sizing-200
 --appui-font-weights-100
 ```
 
@@ -237,18 +265,19 @@ Available color palettes:
 
 ```css
 :root {
-    --appui-spacing-50: 2px;      /* Extra tight */
-    --appui-spacing-75: 4px;
-    --appui-spacing-100: 8px;     /* Tight */
-    --appui-spacing-150: 12px;
-    --appui-spacing-200: 16px;    /* Standard */
-    --appui-spacing-250: 20px;
-    --appui-spacing-300: 24px;    /* Relaxed */
-    --appui-spacing-400: 32px;
-    --appui-spacing-500: 40px;    /* Loose */
-    --appui-spacing-600: 48px;
-    --appui-spacing-700: 56px;
-    --appui-spacing-800: 64px;    /* Very loose */
+    /* Shipped default-density values, from App UI - Globals.uss */
+    --appui-sizing-50: 2px;      /* Extra tight */
+    --appui-sizing-75: 4px;
+    --appui-sizing-100: 5px;     /* Tight */
+    --appui-sizing-150: 7px;
+    --appui-sizing-200: 10px;    /* Standard */
+    --appui-sizing-250: 12px;
+    --appui-sizing-300: 14px;    /* Relaxed */
+    --appui-sizing-400: 20px;
+    --appui-sizing-500: 24px;    /* Loose */
+    --appui-sizing-600: 30px;
+    --appui-sizing-700: 34px;
+    --appui-sizing-800: 38px;    /* Very loose */
 }
 ```
 
@@ -256,9 +285,9 @@ Available color palettes:
 
 ```css
 .appui-mycomponent {
-    padding: var(--appui-spacing-200);          /* 16px */
-    margin-bottom: var(--appui-spacing-300);    /* 24px */
-    gap: var(--appui-spacing-100);              /* 8px */
+    padding: var(--appui-sizing-200);          /* 10px */
+    margin-bottom: var(--appui-sizing-300);    /* 14px */
+    gap: var(--appui-sizing-100);              /* 5px */
 }
 ```
 
@@ -355,7 +384,7 @@ Brand Primary Color: #0066CC
 
 /* Custom component styles */
 .appui-brandsection {
-    padding: var(--appui-spacing-300);
+    padding: var(--appui-sizing-300);
     background-color: var(--appui-backgrounds-100);
     border-left: 4px solid var(--appui-accent-300);
 }
@@ -406,7 +435,7 @@ public class ThemeSwitcher : MonoBehaviour
 
     public void SwitchToCustomTheme()
     {
-        _rootElement.ProvideContext(new ThemeContext("appui--custombrand"));
+        _rootElement.ProvideContext(new ThemeContext("custombrand"));
     }
 
     public void GetCurrentTheme()
@@ -527,9 +556,9 @@ Scale files override base spacing and typography:
 ```css
 /* App UI - Large.uss */
 :root {
-    --appui-spacing-100: 12px;      /* Increased from 8px */
-    --appui-spacing-200: 20px;      /* Increased from 16px */
-    --appui-spacing-300: 32px;      /* Increased from 24px */
+    --appui-sizing-100: 7px;       /* Increased from 5px */
+    --appui-sizing-200: 12px;      /* Increased from 10px */
+    --appui-sizing-300: 17px;      /* Increased from 14px */
 
     /* Font sizes also increased */
     --appui-font-size-caption: 14px; /* Increased from 12px */
@@ -571,14 +600,14 @@ Modifier: Variation of a block or element
 ```css
 /* Block */
 .appui-card {
-    padding: var(--appui-spacing-300);
+    padding: var(--appui-sizing-300);
     background-color: var(--appui-backgrounds-50);
     border-radius: 8px;
 }
 
 /* Element: header */
 .appui-card__header {
-    margin-bottom: var(--appui-spacing-200);
+    margin-bottom: var(--appui-sizing-200);
     border-bottom: 1px solid var(--appui-primary-200);
 }
 
@@ -601,7 +630,7 @@ Modifier: Variation of a block or element
 
 /* Modifier: compact */
 .appui-card--compact {
-    padding: var(--appui-spacing-200);
+    padding: var(--appui-sizing-200);
 }
 
 /* Combined: element with modifier */
@@ -825,7 +854,7 @@ element.ProvideContext(new ThemeContext("dark"));
 element.ProvideContext(new ThemeContext("light"));
 
 // Set to custom theme
-element.ProvideContext(new ThemeContext("appui--custombrand"));
+element.ProvideContext(new ThemeContext("custombrand"));
 
 // Remove context
 element.ProvideContext<ThemeContext>(null);
@@ -935,14 +964,14 @@ void OnScaleChanged(ContextChangedEvent<ScaleContext> evt)
 
 /* Custom section component */
 .appui-section {
-    padding: var(--appui-spacing-300);
-    margin-bottom: var(--appui-spacing-200);
+    padding: var(--appui-sizing-300);
+    margin-bottom: var(--appui-sizing-200);
     background-color: var(--appui-backgrounds-50);
     border-radius: 8px;
 }
 
 .appui-section__header {
-    margin-bottom: var(--appui-spacing-200);
+    margin-bottom: var(--appui-sizing-200);
 }
 
 .appui-section__title {

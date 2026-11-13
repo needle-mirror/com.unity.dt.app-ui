@@ -69,7 +69,7 @@ namespace Unity.AppUI.UI
 
             pickingMode = PickingMode.Ignore;
 
-            m_IconElement = new Icon { name = iconUssClassName, pickingMode = PickingMode.Ignore };
+            m_IconElement = new Icon { primary = true, name = iconUssClassName, pickingMode = PickingMode.Ignore };
             m_IconElement.AddToClassList(iconUssClassName);
 
             m_MessageElement = new LocalizedTextElement
@@ -86,7 +86,7 @@ namespace Unity.AppUI.UI
             message = msg;
             this.variant = variant;
             iconName = icon;
-            size = Size.S;
+            size = Size.Md;
         }
 
         /// <summary>

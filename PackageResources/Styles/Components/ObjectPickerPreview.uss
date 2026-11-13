@@ -1,0 +1,128 @@
+/* ObjectPickerPreview */
+.appui-objectpickerpreview {
+    flex-grow: 1;
+    overflow: hidden;
+    background-color: var(--appui-alias-surface-card);
+    border-top-width: var(--appui-alias-control-border-width);
+    border-top-color: var(--appui-alias-control-border-color-default);
+}
+
+.appui-objectpickerpreview__thumbnail {
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: var(--appui-alias-control-border-radius);
+    background-color: var(--appui-alias-surface-raised);
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.appui-objectpickerpreview__thumbnail-icon {
+    --unity-image-tint-color: var(--appui-alias-text-disabled);
+}
+
+.appui-objectpickerpreview__meta {
+    flex-direction: column;
+    min-width: 0;
+    flex-shrink: 1;
+}
+
+.appui-objectpickerpreview__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--appui-alias-text-primary);
+    font-size: var(--appui-font-sizes-200);
+    -unity-font-style: bold;
+}
+
+.appui-objectpickerpreview__type {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--appui-alias-text-secondary);
+    font-size: var(--appui-font-sizes-100);
+}
+
+.appui-objectpickerpreview__path {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--appui-alias-text-disabled);
+    font-size: var(--appui-font-sizes-75);
+}
+
+.appui-objectpickerpreview__empty {
+    flex-grow: 1;
+    -unity-text-align: middle-center;
+    color: var(--appui-alias-text-disabled);
+    font-size: var(--appui-font-sizes-100);
+}
+
+/* compact — one-line strip: small thumb, name, type, then the path pushed to the far edge. */
+.appui-objectpickerpreview--context-compact {
+    flex-direction: row;
+    align-items: center;
+    padding: 0 var(--appui-alias-control-gap-lg);
+}
+
+.appui-objectpickerpreview--context-compact .appui-objectpickerpreview__thumbnail {
+    width: var(--appui-sizing-450);
+    height: var(--appui-sizing-450);
+    margin-right: var(--appui-alias-control-gap-lg);
+}
+
+.appui-objectpickerpreview--context-compact .appui-objectpickerpreview__meta {
+    flex-direction: row;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.appui-objectpickerpreview--context-compact .appui-objectpickerpreview__name {
+    font-size: var(--appui-font-sizes-100);
+}
+
+.appui-objectpickerpreview--context-compact .appui-objectpickerpreview__type {
+    margin-left: var(--appui-alias-control-gap-md);
+}
+
+.appui-objectpickerpreview--context-compact .appui-objectpickerpreview__path {
+    margin-left: auto;
+    padding-left: var(--appui-alias-control-gap-lg);
+}
+
+/* normal — thumb on the leading edge, metadata beside it. */
+.appui-objectpickerpreview--context-normal {
+    flex-direction: row;
+    align-items: center;
+    padding: var(--appui-alias-control-gap-lg);
+}
+
+.appui-objectpickerpreview--context-normal .appui-objectpickerpreview__thumbnail {
+    width: var(--appui-sizing-1000);
+    height: var(--appui-sizing-1000);
+    margin-right: var(--appui-alias-control-gap-xl);
+}
+
+/* large — a big centred thumb with the metadata stacked beneath. */
+.appui-objectpickerpreview--context-large {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--appui-alias-control-gap-xl);
+}
+
+.appui-objectpickerpreview--context-large .appui-objectpickerpreview__thumbnail {
+    flex-grow: 1;
+    flex-shrink: 1;
+    width: var(--appui-sizing-1600);
+    max-width: 100%;
+    margin-bottom: var(--appui-alias-control-gap-lg);
+}
+
+.appui-objectpickerpreview--context-large .appui-objectpickerpreview__meta {
+    align-items: center;
+}
+
+.appui-objectpickerpreview--context-large .appui-objectpickerpreview__name,
+.appui-objectpickerpreview--context-large .appui-objectpickerpreview__type,
+.appui-objectpickerpreview--context-large .appui-objectpickerpreview__path {
+    -unity-text-align: middle-center;
+}

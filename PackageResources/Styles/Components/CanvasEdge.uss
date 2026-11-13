@@ -1,0 +1,16 @@
+/* CanvasEdge
+   The edge paints itself with Painter2D, and C# can only read a colour the stylesheet hands it. So
+   every colour the painter uses is declared here as a custom property on the element's own rule —
+   a :root-level alias is not readable from a probe element — and bound to an App UI token. This is
+   the same pattern as Progress's --progress-color. */
+.appui-canvas-edge {
+    position: absolute;
+    --edge-color: var(--appui-base-500);
+    --edge-highlight-color: var(--appui-alias-actions-accent-background-color-default);
+    /* A patch cable is a pale cord over a dark outline. The registry paints the cord a fixed warm
+       beige, which has no App UI token; the theme-adaptive secondary text neutral is used instead,
+       so the cord reads as pale in a dark theme and dark in a light one. See the slice report. */
+    --edge-cable-color: var(--appui-alias-text-secondary);
+    --edge-cable-outline-color: var(--appui-alias-surface-sunken);
+    --edge-cable-outline-highlight-color: var(--appui-alias-text-primary);
+}

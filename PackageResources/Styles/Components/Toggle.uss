@@ -1,22 +1,23 @@
 /* Toggle */
 :root {
-    --appui-toggle__box-width-sm: var(--appui-sizing-400);
-    --appui-toggle__box-width-md: var(--appui-sizing-500);
-    --appui-toggle__box-width-lg: var(--appui-sizing-600);
+    --appui-toggle__box-width-sm: var(--appui-sizing-500);
+    --appui-toggle__box-width-md: var(--appui-sizing-600);
+    --appui-toggle__box-width-lg: var(--appui-sizing-700);
 
-    --appui-toggle__box-height-sm: var(--appui-sizing-250);
-    --appui-toggle__box-height-md: var(--appui-sizing-300);
-    --appui-toggle__box-height-lg: var(--appui-sizing-375);
+    --appui-toggle__box-height-sm: var(--appui-sizing-300);
+    --appui-toggle__box-height-md: var(--appui-sizing-350);
+    --appui-toggle__box-height-lg: var(--appui-sizing-400);
 
-    --appui-toggle__box-border-radius-sm: var(--appui-sizing-125);
-    --appui-toggle__box-border-radius-md: var(--appui-sizing-150);
+    --appui-toggle__box-border-radius-sm: var(--appui-sizing-150);
+    --appui-toggle__box-border-radius-md: var(--appui-sizing-175);
     --appui-toggle__box-border-radius-lg: var(--appui-sizing-200);
 
     --appui-toggle__checkmark-size-sm: var(--appui-sizing-150);
     --appui-toggle__checkmark-size-md: var(--appui-sizing-200);
     --appui-toggle__checkmark-size-lg: var(--appui-sizing-250);
 
-    --appui-toggle__box-gap: var(--appui-spacing-50);
+    /* Inset of the thumb inside the track, equal on every side; density-scaled. */
+    --appui-toggle-thumb-inset: var(--appui-border-width-xs);
 }
 
 .appui-toggle {
@@ -98,7 +99,7 @@
 
 .appui-toggle__boxpadded {
     position: relative;
-    margin: 0 var(--appui-toggle__box-gap);
+    margin: 0 var(--appui-toggle-thumb-inset);
     height: 100%;
 }
 
@@ -155,16 +156,16 @@
 }
 
 .appui-toggle__label {
-    font-size: var(--appui-font-sizes-body-md);
+    font-size: var(--appui-font-sizes-100);
     color: var(--appui-foregrounds-100);
 }
 
 .appui--ltr .appui-toggle__label {
-    margin-left: var(--appui-alias-control-gap-md); /*margin-inline-start: var(--appui-alias-control-gap-md);*/
+    margin-left: var(--appui-sizing-160); /*margin-inline-start: var(--appui-sizing-160);*/
 }
 
 .appui--rtl .appui-toggle__label {
-    margin-right: var(--appui-alias-control-gap-md); /*margin-inline-end: var(--appui-alias-control-gap-md);*/
+    margin-right: var(--appui-sizing-160); /*margin-inline-end: var(--appui-sizing-160);*/
 }
 
 .appui-toggle:disabled {

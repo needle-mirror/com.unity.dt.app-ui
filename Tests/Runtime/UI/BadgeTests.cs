@@ -11,6 +11,10 @@ namespace Unity.AppUI.Tests.UI
     {
         protected override string mainUssClassName => Badge.ussClassName;
 
+        // Handed over to BadgeSnapshotTests where the framework harness compiles; see
+        // VisualElementTests.capturesSnapshotsElsewhere.
+        protected override bool capturesSnapshotsElsewhere => true;
+
         protected override IEnumerable<string> uxmlTestCases => new[]
         {
             @"<appui:Badge />",

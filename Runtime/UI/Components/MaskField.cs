@@ -8,6 +8,22 @@ using Unity.Properties;
 namespace Unity.AppUI.UI
 {
     /// <summary>
+    /// How a <see cref="MaskField"/> describes a value with several named bits set.
+    /// </summary>
+    public enum MaskFieldSummary
+    {
+        /// <summary>
+        /// Show the mixed label.
+        /// </summary>
+        Mixed,
+
+        /// <summary>
+        /// List the display names of the set bits, separated by commas.
+        /// </summary>
+        List,
+    }
+
+    /// <summary>
     /// MaskField UI element.
     /// </summary>
     [UxmlElement]
@@ -18,6 +34,31 @@ namespace Unity.AppUI.UI
         internal static readonly BindingId getMaskValueProperty = nameof(getMaskValue);
 
         internal static readonly BindingId getDisplayNameProperty = nameof(getDisplayName);
+
+        internal static readonly BindingId everythingValueProperty = nameof(everythingValue);
+
+        internal static readonly BindingId summaryProperty = nameof(summary);
+
+        internal static readonly BindingId nothingLabelProperty = nameof(nothingLabel);
+
+        internal static readonly BindingId everythingLabelProperty = nameof(everythingLabel);
+
+        internal static readonly BindingId mixedLabelProperty = nameof(mixedLabel);
+
+        int m_RawValue;
+
+        // The item bits the current selection was made against.
+        int m_KnownBits;
+
+        int m_EverythingValue;
+
+        MaskFieldSummary m_Summary = MaskFieldSummary.Mixed;
+
+        string m_NothingLabel;
+
+        string m_EverythingLabel;
+
+        string m_MixedLabel;
 
         /// <summary>
         /// The main styling class for the MaskField.
@@ -31,7 +72,7 @@ namespace Unity.AppUI.UI
         GetMaskValueDelegate m_GetMaskValue;
 
         const string k_NothingMessage =
-#if UNITY_LOCALIZATIONkPRESENT
+#if UNITY_LOCALIZATION_PRESENT
             "@AppUI:nothing";
 #else
             "Nothing";
@@ -102,6 +143,7 @@ namespace Unity.AppUI.UI
         /// <param name="newValue"> The new value to set. </param>
         public void SetValueWithoutNotify(int newValue)
         {
+            m_RawValue = newValue;
             var indices = ConvertMaskValueToIndices(newValue);
             base.SetValueWithoutNotify(indices);
         }
@@ -110,6 +152,8 @@ namespace Unity.AppUI.UI
         protected override void OnValueSet()
         {
             base.OnValueSet();
+            // Keep the full mask in step with the selection, so it survives a change of items.
+            m_RawValue = value;
             if (validateValue != null)
                 invalid = !validateValue(value);
         }
@@ -122,9 +166,10 @@ namespace Unity.AppUI.UI
             get
             {
                 var indices = base.value;
-                if (indices == null)
+                if (indices == null || !HasValidDataBindings())
                     return 0;
-                var result = 0;
+                // Bits no item names are kept from the last value written; the named bits follow the selection.
+                var result = m_RawValue & ~m_KnownBits;
                 foreach (var index in indices)
                 {
                     var itemValue = GetItemValue(index);
@@ -139,7 +184,12 @@ namespace Unity.AppUI.UI
                     return;
                 using var evt = ChangeEvent<int>.GetPooled(previousValue, value);
                 evt.target = this;
+                m_RawValue = value;
                 base.value = ConvertMaskValueToIndices(value);
+                // The selection does not change when only unnamed bits do, so refresh and validate here.
+                RefreshTitleUI();
+                if (validateValue != null)
+                    invalid = !validateValue(value);
                 SendEvent(evt);
 
                 NotifyPropertyChanged(in maskValueProperty);
@@ -214,18 +264,141 @@ namespace Unity.AppUI.UI
             }
         }
 
+        /// <summary>
+        /// The value that means every bit. The Everything row writes it and the field reads it back as Everything.
+        /// When 0 (the default), it is the OR of the item values. Set it when the mask has a sentinel wider than its
+        /// items, such as -1 for a layer mask whose every bit is set, including bits no item names yet.
+        /// </summary>
+        [UxmlAttribute("everything-value")]
+        [CreateProperty]
+        public int everythingValue
+        {
+            get => m_EverythingValue;
+            set
+            {
+                if (m_EverythingValue == value)
+                    return;
+                m_EverythingValue = value;
+                Refresh();
+                NotifyPropertyChanged(in everythingValueProperty);
+            }
+        }
+
+        /// <summary>
+        /// How the field describes several set bits: <see cref="MaskFieldSummary.Mixed"/> (the default) shows the
+        /// mixed label, <see cref="MaskFieldSummary.List"/> lists the display names. Either way, a set bit no item
+        /// names reads as mixed.
+        /// </summary>
+        [UxmlAttribute]
+        [CreateProperty]
+        public MaskFieldSummary summary
+        {
+            get => m_Summary;
+            set
+            {
+                if (m_Summary == value)
+                    return;
+                m_Summary = value;
+                Refresh();
+                NotifyPropertyChanged(in summaryProperty);
+            }
+        }
+
+        /// <summary>
+        /// The text for a value with no bits set, on the field and its Nothing row. Null uses the default "Nothing".
+        /// </summary>
+        [UxmlAttribute]
+        [CreateProperty]
+        public string nothingLabel
+        {
+            get => m_NothingLabel;
+            set
+            {
+                if (m_NothingLabel == value)
+                    return;
+                m_NothingLabel = value;
+                Refresh();
+                NotifyPropertyChanged(in nothingLabelProperty);
+            }
+        }
+
+        /// <summary>
+        /// The text for a value with every bit set, on the field and its Everything row. Null uses the default
+        /// "Everything".
+        /// </summary>
+        [UxmlAttribute]
+        [CreateProperty]
+        public string everythingLabel
+        {
+            get => m_EverythingLabel;
+            set
+            {
+                if (m_EverythingLabel == value)
+                    return;
+                m_EverythingLabel = value;
+                Refresh();
+                NotifyPropertyChanged(in everythingLabelProperty);
+            }
+        }
+
+        /// <summary>
+        /// The text for a value with several bits set when <see cref="summary"/> is
+        /// <see cref="MaskFieldSummary.Mixed"/>, or with a bit no item names. Null uses the default "Mixed...".
+        /// </summary>
+        [UxmlAttribute]
+        [CreateProperty]
+        public string mixedLabel
+        {
+            get => m_MixedLabel;
+            set
+            {
+                if (m_MixedLabel == value)
+                    return;
+                m_MixedLabel = value;
+                Refresh();
+                NotifyPropertyChanged(in mixedLabelProperty);
+            }
+        }
+
+        string nothingText => m_NothingLabel ?? k_NothingMessage;
+
+        string everythingText => m_EverythingLabel ?? k_EverythingMessage;
+
+        string mixedText => m_MixedLabel ?? k_MixedMessage;
+
+        int GetAllItemBits()
+        {
+            var result = 0;
+            if (sourceItems == null)
+                return result;
+            for (var i = 0; i < sourceItems.Count; i++)
+                result |= GetItemValue(i);
+            return result;
+        }
+
+        int GetEverythingValue() => m_EverythingValue != 0 ? m_EverythingValue : GetAllItemBits();
+
         /// <inheritdoc />
         protected override void OnPickerItemsCreated()
         {
             base.OnPickerItemsCreated();
 
-            var everythingContent = new DropdownItem { label = k_EverythingMessage };
+            // Reselect against the new items, so a bit an added item now names stays set.
+            var fullValue = m_RawValue;
+            m_KnownBits = HasValidDataBindings() ? GetAllItemBits() : 0;
+            if (HasValidDataBindings())
+            {
+                m_RawValue = fullValue;
+                base.SetValueWithoutNotify(ConvertMaskValueToIndices(fullValue));
+            }
+
+            var everythingContent = new DropdownItem { label = everythingText };
             var everythingItem = new PickerItem {index = -2};
             everythingItem.clickable.clickedWithEventInfo += OnEverythingClicked;
             everythingItem.Add(everythingContent);
             m_Items.Insert(0, everythingItem);
 
-            var nothingContent = new DropdownItem { label = k_NothingMessage };
+            var nothingContent = new DropdownItem { label = nothingText };
             var nothingItem = new PickerItem {index = -1};
             nothingItem.clickable.clickedWithEventInfo += OnNothingClicked;
             nothingItem.Add(nothingContent);
@@ -249,12 +422,7 @@ namespace Unity.AppUI.UI
 
         void OnEverythingClicked(EventBase evt)
         {
-            var newValue = 0;
-            for (var i = 0; i < sourceItems.Count; i++)
-            {
-                newValue |= GetItemValue(i);
-            }
-            value = newValue;
+            value = GetEverythingValue();
         }
 
         void OnNothingClicked(EventBase evt)
@@ -292,38 +460,31 @@ namespace Unity.AppUI.UI
 
         void OnBindTitle(DropdownItem item, IEnumerable<int> indices)
         {
-            using var enumerator = indices?.GetEnumerator();
-
-            var lastIndex = -1;
-            var count = 0;
-            if (enumerator != null)
+            var names = new List<string>();
+            var mask = HasValidDataBindings() ? m_RawValue & ~m_KnownBits : 0;
+            var hasUnnamedBits = mask != 0;
+            if (indices != null)
             {
-                while (enumerator.MoveNext())
+                foreach (var index in indices)
                 {
-                    lastIndex = enumerator.Current;
-                    count++;
+                    mask |= GetItemValue(index);
+                    names.Add(GetDisplayName(index));
                 }
             }
 
-            if (count == 0)
-            {
-                item.label = k_NothingMessage;
-                return;
-            }
-
-            if (count == sourceItems.Count)
-            {
-                item.label = k_EverythingMessage;
-                return;
-            }
-
-            if (count > 1)
-            {
-                item.label = k_MixedMessage;
-                return;
-            }
-
-            item.label = GetDisplayName(lastIndex);
+            var everything = GetEverythingValue();
+            if (mask == 0)
+                item.label = nothingText;
+            else if (everything != 0 && mask == everything)
+                item.label = everythingText;
+            else if (hasUnnamedBits)
+                item.label = mixedText;
+            else if (names.Count == 1)
+                item.label = names[0];
+            else if (summary == MaskFieldSummary.List && names.Count > 0)
+                item.label = string.Join(", ", names);
+            else
+                item.label = mixedText;
         }
 
         string GetDisplayName(int index)

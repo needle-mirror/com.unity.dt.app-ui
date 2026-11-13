@@ -21,7 +21,7 @@ namespace Unity.AppUI.UI
     ///
     /// Key features:
     /// - Four distinct UI layers: main container, popup container, notification container, and tooltip container
-    /// - Global context providers for theme, scale, language, and layout direction
+    /// - Global context providers for theme, density, language, and layout direction
     /// - Automatic DPI scaling support for different displays
     /// - Integrated tooltip management system
     /// - RTL (Right-to-Left) layout support
@@ -43,11 +43,11 @@ namespace Unity.AppUI.UI
     ///     </Box>
     /// </Panel>
     /// ]]></code>
-    /// <para>Panel with custom theme and scale: Configuring panel appearance and scale.</para>
+    /// <para>Panel with custom theme and density: Configuring panel appearance and density.</para>
     /// <code lang="xml"><![CDATA[
-    /// <Panel theme="light" scale="large" lang="en">
+    /// <Panel theme="light" density="comfort" lang="en">
     ///     <Box>
-    ///         <Text text="This panel uses a light theme with large scale" />
+    ///         <Text text="This panel uses a light theme with comfort density" />
     ///     </Box>
     /// </Panel>
     /// ]]></code>
@@ -76,7 +76,7 @@ namespace Unity.AppUI.UI
     [VisualDocPage("layouts")]
     public partial class Panel : VisualElement
     {
-        internal static readonly BindingId scaleProperty = nameof(scale);
+        internal static readonly BindingId densityProperty = nameof(density);
 
         internal static readonly BindingId themeProperty = nameof(theme);
 
@@ -100,6 +100,24 @@ namespace Unity.AppUI.UI
         /// </summary>
         [EnumName("GetLayoutDirectionUssClassName", typeof(Dir))]
         public const string contextPrefix = "appui--";
+
+        /// <summary>
+        /// USS class applied alongside <see cref="contextPrefix"/> whenever the provided theme is a
+        /// dark one, so a stylesheet can target any dark theme with a single selector.
+        /// </summary>
+        /// <remarks>
+        /// Unlike <c>appui--dark</c>, which names one specific theme, this class marks the *kind* of
+        /// surface and therefore also matches <c>editor-dark</c>, <c>cloud-dark</c> and any custom
+        /// theme whose name ends in <c>dark</c>. It is mutually exclusive with
+        /// <see cref="lightContextUssClassName"/>.
+        /// </remarks>
+        public const string darkContextUssClassName = "dark";
+
+        /// <summary>
+        /// USS class applied alongside <see cref="contextPrefix"/> whenever the provided theme is a
+        /// light one. The light counterpart of <see cref="darkContextUssClassName"/>.
+        /// </summary>
+        public const string lightContextUssClassName = "light";
 
         /// <summary>
         /// The name of the main UI layer.
@@ -127,9 +145,9 @@ namespace Unity.AppUI.UI
         internal const string defaultLang = "en";
 
         /// <summary>
-        /// The default scale for this panel.
+        /// The default density for this panel.
         /// </summary>
-        internal const string defaultScale = "medium";
+        internal const string defaultDensity = "normal";
 
         /// <summary>
         /// The default theme for this panel.
@@ -143,7 +161,7 @@ namespace Unity.AppUI.UI
 
         string m_PreviousTheme;
 
-        string m_PreviousScale;
+        string m_PreviousDensity;
 
         Dir m_PreviousDir;
 
@@ -210,16 +228,60 @@ namespace Unity.AppUI.UI
             RegisterCallback<PointerLeaveEvent>(OnPointerLeft);
 
             this.RegisterContextChangedCallback<ThemeContext>(OnThemeContextChanged);
-            this.RegisterContextChangedCallback<ScaleContext>(OnScaleContextChanged);
+            this.RegisterContextChangedCallback<DensityContext>(OnDensityContextChanged);
             this.RegisterContextChangedCallback<DirContext>(OnDirContextChanged);
             this.RegisterContextChangedCallback<LangContext>(OnLangContextChanged);
 
             lang = defaultLang;
-            scale = defaultScale;
+            density = defaultDensity;
             theme = defaultTheme;
             layoutDirection = defaultDir;
             preferredTooltipPlacement = Tooltip.defaultPlacement;
             tooltipDelayMs = TooltipManipulator.defaultDelayMs;
+        }
+
+        /// <summary>
+        /// Whether <paramref name="theme"/> names a dark theme.
+        /// </summary>
+        /// <remarks>
+        /// Theme names are free-form, so darkness is read off the name's suffix rather than a fixed
+        /// list. This matches the default <c>dark</c> theme as well as <c>editor-dark</c>,
+        /// <c>cloud-dark</c> and a consumer's own <c>acme-dark</c>.
+        /// </remarks>
+        /// <param name="theme"> The theme name. </param>
+        /// <returns> True if the theme is a dark one, false otherwise. </returns>
+        internal static bool IsDarkTheme(string theme)
+        {
+            return !string.IsNullOrEmpty(theme) && theme.EndsWith("dark", StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Swap the theme USS classes on <paramref name="element"/>, replacing those of
+        /// <paramref name="previousTheme"/> with those of <paramref name="newTheme"/>.
+        /// </summary>
+        /// <remarks>
+        /// Every element that provides a <see cref="ThemeContext"/> carries two classes: the
+        /// theme-specific <c>appui--&lt;theme&gt;</c>, and one of
+        /// <see cref="darkContextUssClassName"/> / <see cref="lightContextUssClassName"/> marking the
+        /// kind of surface. The two markers are mutually exclusive - stylesheets rely on never
+        /// matching both on one element, since that would make the outcome depend on USS source
+        /// order.
+        /// </remarks>
+        /// <param name="element"> The element providing the theme context. </param>
+        /// <param name="previousTheme"> The theme being replaced, if any. </param>
+        /// <param name="newTheme"> The theme being applied, if any. </param>
+        internal static void SwapThemeClasses(VisualElement element, string previousTheme, string newTheme)
+        {
+            if (!string.IsNullOrEmpty(previousTheme))
+                element.RemoveFromClassList(MemoryUtils.Concatenate(contextPrefix, previousTheme));
+            if (!string.IsNullOrEmpty(newTheme))
+                element.AddToClassList(MemoryUtils.Concatenate(contextPrefix, newTheme));
+
+            // Keep the markers exclusive: drop both, then re-add the single one that applies.
+            element.RemoveFromClassList(darkContextUssClassName);
+            element.RemoveFromClassList(lightContextUssClassName);
+            if (!string.IsNullOrEmpty(newTheme))
+                element.AddToClassList(IsDarkTheme(newTheme) ? darkContextUssClassName : lightContextUssClassName);
         }
 
         void OnThemeContextChanged(ContextChangedEvent<ThemeContext> evt)
@@ -231,30 +293,26 @@ namespace Unity.AppUI.UI
             var newTheme = evt.context?.theme;
             if (m_PreviousTheme != newTheme)
             {
-                if (m_PreviousTheme != null)
-                    RemoveFromClassList(MemoryUtils.Concatenate(contextPrefix, m_PreviousTheme));
-                if (newTheme != null)
-                    AddToClassList(MemoryUtils.Concatenate(contextPrefix, newTheme));
-
+                SwapThemeClasses(this, m_PreviousTheme, newTheme);
                 m_PreviousTheme = newTheme;
             }
         }
 
-        void OnScaleContextChanged(ContextChangedEvent<ScaleContext> evt)
+        void OnDensityContextChanged(ContextChangedEvent<DensityContext> evt)
         {
             // only handle the event if it comes from this panel
-            if (this.GetContextProvider<ScaleContext>() != this)
+            if (this.GetContextProvider<DensityContext>() != this)
                 return;
 
-            var newScale = evt.context?.scale;
-            if (m_PreviousScale != newScale)
+            var newDensity = evt.context?.density;
+            if (m_PreviousDensity != newDensity)
             {
-                if (m_PreviousScale != null)
-                    RemoveFromClassList(MemoryUtils.Concatenate(contextPrefix, m_PreviousScale));
-                if (newScale != null)
-                    AddToClassList(MemoryUtils.Concatenate(contextPrefix, newScale));
+                if (m_PreviousDensity != null)
+                    RemoveFromClassList(MemoryUtils.Concatenate(contextPrefix, m_PreviousDensity));
+                if (newDensity != null)
+                    AddToClassList(MemoryUtils.Concatenate(contextPrefix, newDensity));
 
-                m_PreviousScale = newScale;
+                m_PreviousDensity = newDensity;
             }
         }
 
@@ -315,23 +373,23 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
-        /// The default scale for this panel.
+        /// The default density for this panel.
         /// </summary>
-        [Tooltip("The default scale for this panel.")]
+        [Tooltip("The default density for this panel.")]
         [CreateProperty]
         [UxmlAttribute]
-        public string scale
+        public string density
         {
-            get => this.GetSelfContext<ScaleContext>()?.scale ?? defaultScale;
+            get => this.GetSelfContext<DensityContext>()?.density ?? defaultDensity;
             set
             {
                 if (string.IsNullOrEmpty(value))
-                    throw new ArgumentException("Scale cannot be null or empty on a Panel element.");
-                var previous = this.GetSelfContext<ScaleContext>();
-                if (previous?.scale != value)
+                    throw new ArgumentException("Density cannot be null or empty on a Panel element.");
+                var previous = this.GetSelfContext<DensityContext>();
+                if (previous?.density != value)
                 {
-                    this.ProvideContext(new ScaleContext(value));
-                    NotifyPropertyChanged(in scaleProperty);
+                    this.ProvideContext(new DensityContext(value));
+                    NotifyPropertyChanged(in densityProperty);
                 }
             }
         }

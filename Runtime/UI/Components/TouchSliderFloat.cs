@@ -41,7 +41,7 @@ namespace Unity.AppUI.UI
     ///     step="0.5"
     ///     shift-step="2.0"
     ///     format-string="F1"
-    ///     size="L"
+    ///     size="Lg"
     /// />
     /// ]]></code>
     /// <para>Vertical slider with custom styling — creates a vertical slider with a range from 0 to 100 and custom

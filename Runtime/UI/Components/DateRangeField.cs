@@ -26,7 +26,7 @@ namespace Unity.AppUI.UI
     /// range.</para>
     /// <code lang="xml"><![CDATA[
     /// <DateRangeField name="bookingDates"
-    ///              size="M"
+    ///              size="Md"
     ///              format-string="MM/dd/yyyy"
     ///              value="2023-12-25,2023-12-31" />
     /// ]]></code>
@@ -34,7 +34,7 @@ namespace Unity.AppUI.UI
     /// selection is between 2 and 14 days and logs changes.</para>
     /// <code lang="csharp"><![CDATA[
     /// var dateRangeField = new DateRangeField {
-    ///     size = Size.M,
+    ///     size = Size.Md,
     ///     formatString = "MM/dd/yyyy",
     ///     validateValue = range => {
     ///         var minStay = 2;
@@ -171,7 +171,7 @@ namespace Unity.AppUI.UI
             };
             m_PickerButton.AddToClassList(pickerButtonUssClassName);
             m_PickerButton.AddManipulator(new Pressable(OnClick));
-            var icon = new Icon { iconName = "calendar", pickingMode = PickingMode.Ignore };
+            var icon = new Icon { primary = true, iconName = "calendar", pickingMode = PickingMode.Ignore };
             m_PickerButton.Add(icon);
 
             inputContainer.Add(m_StartInputElement);
@@ -180,7 +180,7 @@ namespace Unity.AppUI.UI
             hierarchy.Add(inputContainer);
             hierarchy.Add(m_PickerButton);
 
-            size = Size.M;
+            size = Size.Md;
             SetValueWithoutNotify(new DateRange(Date.now, new Date(DateTime.Now.AddDays(1))));
             formatString = "yyyy-MM-dd";
             this.AddManipulator(new KeyboardFocusController(OnKeyboardFocusIn, OnPointerFocusIn));

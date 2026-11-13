@@ -177,11 +177,14 @@ namespace Unity.AppUI.Core
                 var tcs = s_Instance.m_ReadQueue.Dequeue();
                 try
                 {
-                    if (dataPtr != IntPtr.Zero && length > 0)
+                    // `length` is an unsigned 32-bit count coming from JavaScript. Reject anything
+                    // that cannot be expressed as a positive Int32 up front, and use a checked cast
+                    // so an out-of-range value fails loudly instead of wrapping to a negative index.
+                    if (dataPtr != IntPtr.Zero && length > 0 && length <= int.MaxValue)
                     {
                         // Copy data from unmanaged memory
                         byte[] data = new byte[length];
-                        Marshal.Copy(dataPtr, data, 0, (int)length);
+                        Marshal.Copy(dataPtr, data, 0, checked((int)length));
                         tcs.TrySetResult(data);
                     }
                     else
@@ -241,10 +244,11 @@ namespace Unity.AppUI.Core
                 var tcs = s_Instance.m_ReadImageQueue.Dequeue();
                 try
                 {
-                    if (dataPtr != IntPtr.Zero && length > 0)
+                    // See OnReadComplete: bound the JavaScript-supplied length before allocating.
+                    if (dataPtr != IntPtr.Zero && length > 0 && length <= int.MaxValue)
                     {
                         byte[] data = new byte[length];
-                        Marshal.Copy(dataPtr, data, 0, (int)length);
+                        Marshal.Copy(dataPtr, data, 0, checked((int)length));
                         tcs.TrySetResult(data);
                     }
                     else
