@@ -37,7 +37,7 @@ namespace Unity.AppUI.UI
         GetMaskValueDelegate m_GetMaskValue;
 
         const string k_NothingMessage =
-#if UNITY_LOCALIZATIONkPRESENT
+#if UNITY_LOCALIZATION_PRESENT
             "@AppUI:nothing";
 #else
             "Nothing";
