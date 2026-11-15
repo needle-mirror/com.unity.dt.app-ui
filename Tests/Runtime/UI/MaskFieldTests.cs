@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 using Unity.AppUI.UI;
 using UnityEngine.TestTools;
@@ -33,6 +34,21 @@ namespace Unity.AppUI.Tests.UI
             {
                 yield return "<appui:MaskField />";
             }
+        }
+
+        [TestCase("k_NothingMessage", "nothing", "Nothing")]
+        [TestCase("k_EverythingMessage", "everything", "Everything")]
+        [TestCase("k_MixedMessage", "mixed", "Mixed...")]
+        public void MaskField_DefaultTexts_ShouldFollowLocalizationDefine(string fieldName, string key, string plain)
+        {
+            var field = typeof(MaskField).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(field, $"{fieldName} not found");
+            var text = (string)field.GetRawConstantValue();
+#if UNITY_LOCALIZATION_PRESENT
+            Assert.AreEqual("@AppUI:" + key, text);
+#else
+            Assert.AreEqual(plain, text);
+#endif
         }
 
         [UnityTest, Order(3)]

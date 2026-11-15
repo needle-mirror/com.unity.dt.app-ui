@@ -1,7 +1,7 @@
 {
   "name": "com.unity.dt.app-ui",
   "displayName": "App UI",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "unity": "2021.3",
   "category": "UI",
   "keywords": [
@@ -77,15 +77,15 @@
     }
   ],
   "_upm": {
-    "changelog": "### Fixed\n\n- `SwitchBuilder` runs every matching reducer case on the state returned by the previous one, so a slice no longer keeps only the last case's result. Several `AddDefault` calls now chain the same way.\n- `Action<TPayload>` instances with different payloads, and async thunk actions with different `meta` or creators, no longer compare as equal through `IEquatable<Action>`.\n- `StoreFactory.ComposeEnhancers` returns the identity enhancer when it is called with no enhancers instead of throwing.\n- The Redux DevTools no longer keep committed actions in `actionsById` when `maxAge` is set, and `Dispatch` accepts a `maxAge` of 0 or 1.\n- Async thunks run when DevTools is enabled through `StoreFactory.DefaultEnhancer`.\n- `IThunkAPI.Abort` cancels the async thunk instead of throwing when it is called on the main thread or from another thread, and so do `RejectWithValue` and `FulFillWithValue`.\n- `TryAddTransient` registers a transient service, and `TryAddTransient(Type)` and `TryAddScoped(Type)` add it only once.\n- `NavController.Navigate(Uri)` resolves deep links with two or more path segments.\n- `GradientExtensions.TryParse` returns false for a gradient key with a single value instead of throwing, and accepts keys with surrounding spaces.\n- `PinchGesture.GetHashCode` is equal for gestures that compare equal."
+    "changelog": "### Fixed\n\n- `MaskField` shows its localized Nothing text when Unity Localization is installed, like its Everything and Mixed texts.\n- The Linux TextMateLib plugin exports only its `textmate_*` C API. It used to export about 1,100 symbols (oniguruma, libstdc++ instantiations, rapidjson) into the Editor process, which could interfere with the Editor's own native code."
   },
   "upmCi": {
-    "footprint": "a1a6526d0330fa0c08940b9b71a576d68c488dac"
+    "footprint": "70529f9c6fe2f8c7dfadf536708760604295ad32"
   },
   "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.dt.app-ui@2.2/manual/index.html",
   "repository": {
     "url": "https://github.com/Unity-Technologies/unity-app-ui.git",
     "type": "git",
-    "revision": "c29c7d1d01602fffba37f681502b5f0d64c44061"
+    "revision": "5381c5f031af917a7bc74199b3947d0e5e45f36e"
   }
 }
