@@ -125,12 +125,16 @@
     background-color: var(--appui-alias-actions-selected-background-color-active);
 }
 
+/*
+ * The selected fill is a tint, light in the light themes, so the label reads the selected
+ * foreground rather than the accent foreground, which is white everywhere.
+ */
 .appui-split-button__main.is-selected > .appui-split-button__label {
-    color: var(--appui-alias-actions-accent-foreground-color-default);
+    color: var(--appui-alias-actions-foreground-color-selected);
 }
 
 .appui-split-button__main.is-selected > .appui-split-button__icon {
-    --unity-image-tint-color: var(--appui-alias-actions-accent-foreground-color-default);
+    --unity-image-tint-color: var(--appui-alias-actions-foreground-color-selected);
 }
 
 .appui-split-button__main.keyboard-focus,

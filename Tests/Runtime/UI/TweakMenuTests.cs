@@ -89,7 +89,7 @@ namespace Unity.AppUI.Tests.UI
         public void Themes_CoverEverySupportedTheme()
         {
             CollectionAssert.AreEquivalent(
-                new[] { "dark", "light", "editor-dark", "editor-light", "cloud-dark", "cloud-light" },
+                new[] { "dark", "light", "editor-dark", "editor-light", "editor-7-dark", "editor-7-light", "cloud-dark", "cloud-light" },
                 TweakMenu.themes,
                 "TweakMenu must offer every App UI theme.");
         }

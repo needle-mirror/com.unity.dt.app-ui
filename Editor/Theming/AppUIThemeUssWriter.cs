@@ -15,7 +15,7 @@ namespace Unity.AppUI.Editor.Theming
         /// <summary>The themes App UI ships, which a custom theme may not shadow by accident.</summary>
         public static readonly string[] builtInThemes =
         {
-            "dark", "light", "editor-dark", "editor-light", "cloud-dark", "cloud-light",
+            "dark", "light", "editor-dark", "editor-light", "editor-7-dark", "editor-7-light", "cloud-dark", "cloud-light",
         };
 
         // A CSS identifier: letters, digits, hyphen and underscore, not starting with a digit, and

@@ -521,6 +521,18 @@ namespace Unity.AppUI.Editor
                     EditorPrefs.SetString(k_StorybookThemePrefKey, m_CurrentTheme);
                     panel.theme = m_CurrentTheme;
                 });
+                menu.AddItem(new GUIContent("Editor 7 Dark"), m_CurrentTheme == "editor-7-dark", () =>
+                {
+                    m_CurrentTheme = "editor-7-dark";
+                    EditorPrefs.SetString(k_StorybookThemePrefKey, m_CurrentTheme);
+                    panel.theme = m_CurrentTheme;
+                });
+                menu.AddItem(new GUIContent("Editor 7 Light"), m_CurrentTheme == "editor-7-light", () =>
+                {
+                    m_CurrentTheme = "editor-7-light";
+                    EditorPrefs.SetString(k_StorybookThemePrefKey, m_CurrentTheme);
+                    panel.theme = m_CurrentTheme;
+                });
                 menu.DropDown(m_ThemeDropdown.worldBound);
             });
             toolbar.Add(m_ThemeDropdown);

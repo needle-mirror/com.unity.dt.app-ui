@@ -21,17 +21,17 @@
   --appui-alias-actions-border-color-hover: #b2b2b2;
   --appui-alias-actions-border-color-active: #939393;
   --appui-alias-actions-border-color-focus: #1d5087;
-  --appui-alias-actions-border-color-disabled: #b0b0b0;
-  --appui-alias-actions-border-color-selected: #b0b0b0;
+  --appui-alias-actions-border-color-disabled: #b2b2b2;
+  --appui-alias-actions-border-color-selected: #b2b2b2;
   --appui-alias-actions-selected-background-color-default: #96c3fb;
   --appui-alias-actions-selected-background-color-hover: #b0d2fc;
-  --appui-alias-actions-selected-background-color-active: #5a90d3;
+  --appui-alias-actions-selected-background-color-active: #b0d2fc;
   --appui-alias-actions-selected-background-color-focus: #6ba2e6;
   --appui-alias-actions-selected-background-color-disabled: rgba(150, 195, 251, 0.5);
   --appui-alias-actions-accent-background-color-default: #0892ff;
   --appui-alias-actions-accent-background-color-hover: #0780df;
   --appui-alias-actions-accent-background-color-active: #066ebf;
-  --appui-alias-actions-accent-background-color-focus: #b0d2fc;
+  --appui-alias-actions-accent-background-color-focus: #066ebf;
   --appui-alias-text-primary: #090909;
   --appui-alias-text-secondary: #161616;
   --appui-alias-text-tertiary: #4c4c4c; /** Dim live text, AA (4.5:1) on every surface */
@@ -41,7 +41,7 @@
   --appui-alias-field-background-color-focus: #f0f0f0;
   --appui-alias-field-background-color-disabled: rgba(240, 240, 240, 0.5);
   --appui-alias-field-border-color-default: #b7b7b7;
-  --appui-alias-field-border-color-hover: #656565;
+  --appui-alias-field-border-color-hover: #6c6c6c;
   --appui-alias-field-border-color-active: #a0a0a0;
   --appui-alias-field-border-color-focus: #1d5087;
   --appui-alias-field-border-color-disabled: rgba(176, 176, 176, 0.5);

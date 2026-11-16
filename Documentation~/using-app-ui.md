@@ -37,6 +37,8 @@ These themes are designed to be used with the UI Builder, one per color scheme. 
 - `App UI - Light.tss`
 - `App UI - Editor Dark.tss` (compact)
 - `App UI - Editor Light.tss` (compact)
+- `App UI - Editor 7 Dark.tss` (compact, Unity 7 Editor colours)
+- `App UI - Editor 7 Light.tss` (compact, Unity 7 Editor colours)
 
 ## Root Panel Element
 

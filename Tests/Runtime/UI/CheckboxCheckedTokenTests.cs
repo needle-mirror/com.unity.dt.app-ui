@@ -136,7 +136,7 @@ namespace Unity.AppUI.Tests.UI
             m_TestUI = null;
         }
 
-        static readonly string[] k_Themes = { "dark", "light", "editor-dark", "editor-light", "cloud-dark", "cloud-light" };
+        static readonly string[] k_Themes = { "dark", "light", "editor-dark", "editor-light", "editor-7-dark", "editor-7-light", "cloud-dark", "cloud-light" };
 
         static readonly CheckboxState[] k_CheckedStates = { CheckboxState.Checked, CheckboxState.Intermediate };
 

@@ -11,7 +11,7 @@ namespace Unity.AppUI.UI
     /// TweakMenu is a developer and design-review affordance: a gear button pinned to a corner of the
     /// screen that opens a menu of every App UI theme and every density step. Drop one into a sample,
     /// a test scene or a debug overlay and the whole panel restyles live, which is the fastest way to
-    /// check a component under all six themes and all three densities without rebuilding.
+    /// check a component under all eight themes and all three densities without rebuilding.
     ///
     /// It writes straight through to the two context providers that matter, <see cref="Panel.theme"/>
     /// and <see cref="Panel.density"/>, so every descendant of the panel follows. On attach it reads
@@ -78,6 +78,8 @@ namespace Unity.AppUI.UI
             "light",
             "editor-dark",
             "editor-light",
+            "editor-7-dark",
+            "editor-7-light",
             "cloud-dark",
             "cloud-light",
         };
@@ -98,6 +100,8 @@ namespace Unity.AppUI.UI
             "Light",
             "Editor Dark",
             "Editor Light",
+            "Editor 7 Dark",
+            "Editor 7 Light",
             "Cloud Dark",
             "Cloud Light",
         };

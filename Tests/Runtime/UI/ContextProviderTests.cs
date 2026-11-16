@@ -35,6 +35,8 @@ namespace Unity.AppUI.Tests.UI
         [TestCase("cloud-dark", true)]
         [TestCase("light", false)]
         [TestCase("editor-light", false)]
+        [TestCase("editor-7-dark", true)]
+        [TestCase("editor-7-light", false)]
         public void ContextProvider_WithThemeOverride_ShouldHaveContextMarker(string theme, bool isDark)
         {
             var provider = new ContextProvider { themeOverride = theme };

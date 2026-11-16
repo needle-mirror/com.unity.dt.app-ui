@@ -11,6 +11,8 @@
 @import url("App UI - Light.class.uss");
 @import url("App UI - Editor Dark.class.uss");
 @import url("App UI - Editor Light.class.uss");
+@import url("App UI - Editor 7 Dark.class.uss");
+@import url("App UI - Editor 7 Light.class.uss");
 @import url("App UI - Cloud Dark.class.uss");
 @import url("App UI - Cloud Light.class.uss");
 @import url("App UI - Normal.class.uss");

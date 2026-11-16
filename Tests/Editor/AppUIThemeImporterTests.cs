@@ -47,7 +47,7 @@ namespace Unity.AppUI.Tests.Editor
             // cloud-light even though both ship and are wired into App UI.tss.
             Assert.That(AppUIThemeUssWriter.builtInThemes, Is.EquivalentTo(new[]
             {
-                "dark", "light", "editor-dark", "editor-light", "cloud-dark", "cloud-light",
+                "dark", "light", "editor-dark", "editor-light", "editor-7-dark", "editor-7-light", "cloud-dark", "cloud-light",
             }));
         }
 

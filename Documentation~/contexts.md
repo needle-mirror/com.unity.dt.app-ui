@@ -25,12 +25,14 @@ For example, if the current theme is `dark`, the context will be defined as `dar
 and the corresponding USS class `appui--dark` will be applied to the context provider element
 that sets the context.
 
-Currently, App UI provides six themes:
+Currently, App UI provides eight themes:
 
 - `light`
 - `dark` (default)
 - `editor-light`
 - `editor-dark`
+- `editor-7-light`
+- `editor-7-dark`
 - `cloud-light`
 - `cloud-dark`
 
