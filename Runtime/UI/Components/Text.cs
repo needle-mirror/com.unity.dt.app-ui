@@ -49,6 +49,13 @@ namespace Unity.AppUI.UI
         /// Triple extra-large — `--appui-font-sizes-900`.
         /// </summary>
         XXXL,
+
+        /// <summary>
+        /// Removed step. It now maps to <see cref="XS"/>, the smallest text size.
+        /// </summary>
+        [Obsolete("Use TextSize.XS instead.")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        XXS = XS,
     }
 
     /// <summary>

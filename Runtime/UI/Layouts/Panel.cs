@@ -395,6 +395,33 @@ namespace Unity.AppUI.UI
         }
 
         /// <summary>
+        /// The default scale for this panel. Obsolete: the sizing axis is now <see cref="density"/>.
+        /// </summary>
+        /// <remarks>
+        /// Maps the old scale names onto densities: <c>small</c> to <c>compact</c>, <c>medium</c> to
+        /// <c>normal</c> and <c>large</c> to <c>comfort</c>. Any other value is passed through unchanged.
+        /// </remarks>
+        [Obsolete("Use density instead (small → compact, medium → normal, large → comfort).")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public string scale
+        {
+            get => density switch
+            {
+                "compact" => "small",
+                "normal" => "medium",
+                "comfort" => "large",
+                var other => other
+            };
+            set => density = value switch
+            {
+                "small" => "compact",
+                "medium" => "normal",
+                "large" => "comfort",
+                var other => other
+            };
+        }
+
+        /// <summary>
         /// The default theme for this panel.
         /// </summary>
         [Tooltip("The default theme for this panel.")]

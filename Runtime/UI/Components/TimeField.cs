@@ -217,9 +217,9 @@ namespace Unity.AppUI.UI
             set
             {
                 var changed = m_Size != value;
-                RemoveFromClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                RemoveFromClassList(sizeUssClassName + m_Size.ToUssSuffix());
                 m_Size = value;
-                AddToClassList(sizeUssClassName + m_Size.ToString().ToLower());
+                AddToClassList(sizeUssClassName + m_Size.ToUssSuffix());
 
                 if (changed)
                     NotifyPropertyChanged(in sizeProperty);

@@ -105,7 +105,7 @@ namespace Unity.AppUI.Tests.UI
                 yield return null;
                 yield return null;
 
-                Assert.IsTrue(mask.ClassListContains(Picker.sizeUssClassName + size.ToString().ToLower()),
+                Assert.IsTrue(mask.ClassListContains(Picker.sizeUssClassName + Utils.CurrentEnumName(size).ToLower()),
                     $"A {size} MaskField must carry the Picker's size class.");
                 Assert.Greater(mask.resolvedStyle.paddingLeft, 0f, $"A {size} MaskField lost its inset.");
                 Assert.AreEqual(dropdown.resolvedStyle.paddingLeft, mask.resolvedStyle.paddingLeft,

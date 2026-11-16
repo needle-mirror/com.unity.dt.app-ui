@@ -36,7 +36,42 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Large. Matches <see cref="Size.Lg"/>.
         /// </summary>
-        Lg
+        Lg,
+
+        /// <summary>
+        /// Extra extra small. Obsolete name of <see cref="Xxs"/>.
+        /// </summary>
+        [Obsolete("Use IconSize.Xxs instead.")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        XXS = Xxs,
+
+        /// <summary>
+        /// Extra small. Obsolete name of <see cref="Xs"/>.
+        /// </summary>
+        [Obsolete("Use IconSize.Xs instead.")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        XS = Xs,
+
+        /// <summary>
+        /// Small. Obsolete name of <see cref="Sm"/>.
+        /// </summary>
+        [Obsolete("Use IconSize.Sm instead.")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        S = Sm,
+
+        /// <summary>
+        /// Medium. Obsolete name of <see cref="Md"/>.
+        /// </summary>
+        [Obsolete("Use IconSize.Md instead.")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        M = Md,
+
+        /// <summary>
+        /// Large. Obsolete name of <see cref="Lg"/>.
+        /// </summary>
+        [Obsolete("Use IconSize.Lg instead.")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        L = Lg,
     }
 
     /// <summary>

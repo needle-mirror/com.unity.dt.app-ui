@@ -20,13 +20,13 @@ namespace Unity.AppUI.Tests.UI
         {
             get
             {
-                foreach (ButtonVariant variant in Enum.GetValues(typeof(ButtonVariant)))
+                foreach (var (variant, name) in Utils.CurrentEnumMembers<ButtonVariant>())
                 {
                     var v = variant;
-                    yield return new Story(v.ToString(), (ctx) => new Button
+                    yield return new Story(name, (ctx) => new Button
                     {
                         variant = v,
-                        title = v.ToString(),
+                        title = name,
                         leadingIcon = "info",
                     });
                 }

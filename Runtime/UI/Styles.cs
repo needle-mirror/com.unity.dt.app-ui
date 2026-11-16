@@ -20,7 +20,28 @@ namespace Unity.AppUI.UI
         /// <summary>
         /// Large
         /// </summary>
-        Lg
+        Lg,
+
+        /// <summary>
+        /// Small. Obsolete name of <see cref="Sm"/>.
+        /// </summary>
+        [Obsolete("Use Size.Sm instead.")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        S = Sm,
+
+        /// <summary>
+        /// Medium. Obsolete name of <see cref="Md"/>.
+        /// </summary>
+        [Obsolete("Use Size.Md instead.")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        M = Md,
+
+        /// <summary>
+        /// Large. Obsolete name of <see cref="Lg"/>.
+        /// </summary>
+        [Obsolete("Use Size.Lg instead.")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        L = Lg,
     }
 
     /// <summary>
@@ -148,6 +169,31 @@ namespace Unity.AppUI.UI
         /// The styling class used to set a "keyboard-focus" pseudo-state on a element.
         /// </summary>
         public const string keyboardFocusUssClassName = "keyboard-focus";
+
+        /// <summary>
+        /// The lowercase USS class suffix for a <see cref="Size"/>: <c>sm</c>, <c>md</c> or <c>lg</c>.
+        /// </summary>
+        /// <remarks>
+        /// Use this instead of <c>ToString()</c>. <see cref="Size"/> keeps obsolete aliases that share
+        /// values with the current members, so <c>ToString()</c> may return either name.
+        /// </remarks>
+        /// <param name="size"> The size to convert. </param>
+        /// <returns> The USS class suffix, or the numeric value for an undefined <see cref="Size"/>. </returns>
+        internal static string ToUssSuffix(this Size size)
+        {
+            switch (size)
+            {
+                case Size.Sm:
+                    return "sm";
+                case Size.Md:
+                    return "md";
+                case Size.Lg:
+                    return "lg";
+                default:
+                    // An unset field holds (Size)0, which callers remove before the first assignment.
+                    return ((int)size).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            }
+        }
 
         /// <summary>
         /// Converts a <see cref="Size"/> to a <see cref="IconSize"/>.

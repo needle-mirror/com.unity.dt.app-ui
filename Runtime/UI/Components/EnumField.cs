@@ -85,8 +85,26 @@ namespace Unity.AppUI.UI
 
             if (!k_EnumData.ContainsKey(m_EnumType))
             {
-                var values = Enum.GetValues(m_EnumType);
-                var names = Enum.GetNames(m_EnumType);
+                // Skip an [Obsolete] alias when a current member has the same value: listing both
+                // would show the same choice twice and make the selected index ambiguous. An
+                // obsolete member with a value of its own stays, so it remains selectable and an
+                // enum whose members are all obsolete still has items.
+                var allFields = m_EnumType.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                var currentValues = new HashSet<object>();
+                foreach (var f in allFields)
+                {
+                    if (!f.IsDefined(typeof(ObsoleteAttribute), false))
+                        currentValues.Add(f.GetValue(null));
+                }
+                var fields = Array.FindAll(allFields,
+                    f => !f.IsDefined(typeof(ObsoleteAttribute), false) || !currentValues.Contains(f.GetValue(null)));
+                var values = Array.CreateInstance(m_EnumType, fields.Length);
+                var names = new string[fields.Length];
+                for (var i = 0; i < fields.Length; i++)
+                {
+                    values.SetValue(fields[i].GetValue(null), i);
+                    names[i] = fields[i].Name;
+                }
                 k_EnumData[m_EnumType] = (values, names);
             }
             sourceItems = k_EnumData[m_EnumType].values;

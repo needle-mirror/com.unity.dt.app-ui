@@ -22,13 +22,13 @@ namespace Unity.AppUI.Tests.UI
         {
             get
             {
-                foreach (ButtonVariant variant in Enum.GetValues(typeof(ButtonVariant)))
+                foreach (var (variant, name) in Utils.CurrentEnumMembers<ButtonVariant>())
                 {
                     var v = variant;
-                    yield return new Story(v.ToString(), (ctx) => new Button
+                    yield return new Story(name, (ctx) => new Button
                     {
                         variant = v,
-                        title = v.ToString(),
+                        title = name,
                         leadingIcon = "info",
                     });
                 }
@@ -80,7 +80,7 @@ namespace Unity.AppUI.Tests.UI
             // The shadcn registry `buttonVariants` cva declares exactly these six variants.
             CollectionAssert.AreEquivalent(
                 k_AllVariants,
-                Enum.GetValues(typeof(ButtonVariant)).Cast<ButtonVariant>().ToArray());
+                Utils.CurrentEnumMembers<ButtonVariant>().Select(m => m.value).ToArray());
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace Unity.AppUI.Tests.UI
         [Test]
         public void Variant_ShouldProduceALowercaseUssClassName([ValueSource(nameof(k_AllVariants))] ButtonVariant variant)
         {
-            var expected = Button.ussClassName + "--" + variant.ToString().ToLowerInvariant();
+            var expected = Button.ussClassName + "--" + Utils.CurrentEnumName(variant).ToLowerInvariant();
             Assert.AreEqual(expected, Button.GetVariantUssClassName(variant));
         }
 
@@ -164,9 +164,11 @@ namespace Unity.AppUI.Tests.UI
         [Test]
         public void Variant_ShouldNotBeAQuietBooleanAnymore()
         {
-            // `quiet` folded into ButtonVariant.Ghost — no bool property, no `--quiet` class.
-            Assert.IsNull(typeof(Button).GetProperty("quiet"),
-                "Button.quiet must be gone; the quiet treatment is now ButtonVariant.Ghost.");
+            // `quiet` folded into ButtonVariant.Ghost. The bool survives only as an [Obsolete] shim
+            // for v3 callers (see ObsoleteApiTests), with no `--quiet` class of its own.
+            var quiet = typeof(Button).GetProperty("quiet");
+            Assert.IsTrue(quiet == null || quiet.IsDefined(typeof(System.ObsoleteAttribute), false),
+                "Button.quiet may only exist as an [Obsolete] shim; the quiet treatment is ButtonVariant.Ghost.");
             var button = new Button { variant = ButtonVariant.Ghost };
             Assert.IsFalse(button.ClassListContains(Button.ussClassName + "--quiet"));
             Assert.IsTrue(button.ClassListContains(Button.GetVariantUssClassName(ButtonVariant.Ghost)));

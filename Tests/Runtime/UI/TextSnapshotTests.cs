@@ -26,8 +26,8 @@ namespace Unity.AppUI.Tests.UI
                 yield return new Story("Sizes", (ctx) =>
                 {
                     var root = new VisualElement();
-                    foreach (TextSize size in System.Enum.GetValues(typeof(TextSize)))
-                        root.Add(new Text(size.ToString()) { size = size });
+                    foreach (var (size, name) in Utils.CurrentEnumMembers<TextSize>())
+                        root.Add(new Text(name) { size = size });
                     return root;
                 });
                 yield return new Story("Variants", (ctx) =>

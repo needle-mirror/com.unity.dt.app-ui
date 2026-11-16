@@ -47,6 +47,13 @@ namespace Unity.AppUI.UI
         /// A button that reads as a <see cref="Link"/>: accent-coloured text with no fill and no border.
         /// </summary>
         Link,
+
+        /// <summary>
+        /// Removed variant. The accent fill is now <see cref="Default"/>.
+        /// </summary>
+        [Obsolete("Use ButtonVariant.Default instead.")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        Accent = Default,
     }
 
     /// <summary>
@@ -327,6 +334,29 @@ namespace Unity.AppUI.UI
 
                 if (changed)
                     NotifyPropertyChanged(in variantProperty);
+            }
+        }
+
+        /// <summary>
+        /// Whether the Button is borderless and fill-less. Obsolete: the quiet look is now
+        /// <see cref="ButtonVariant.Ghost"/>.
+        /// </summary>
+        /// <remarks>
+        /// Setting it to <see langword="true"/> sets <see cref="variant"/> to <see cref="ButtonVariant.Ghost"/>.
+        /// Setting it to <see langword="false"/> on a Ghost button sets <see cref="variant"/> back to
+        /// <see cref="ButtonVariant.Default"/>, and leaves any other variant alone.
+        /// </remarks>
+        [Obsolete("Set variant to ButtonVariant.Ghost instead.")]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public bool quiet
+        {
+            get => variant == ButtonVariant.Ghost;
+            set
+            {
+                if (value)
+                    variant = ButtonVariant.Ghost;
+                else if (variant == ButtonVariant.Ghost)
+                    variant = ButtonVariant.Default;
             }
         }
 

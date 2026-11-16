@@ -29,6 +29,29 @@ namespace Unity.AppUI.Tests
         static bool s_ConditionalIgnoresRegistered;
 
         /// <summary>
+        /// The current members of an enum, in declaration order, without its [Obsolete] aliases.
+        /// </summary>
+        /// <remarks>
+        /// An obsolete alias such as <c>Size.S = Sm</c> shares its value with a current member, so
+        /// <see cref="Enum.GetValues(Type)"/> lists that value twice and <c>ToString()</c> may return
+        /// either name. Read the name from here instead.
+        /// </remarks>
+        internal static IEnumerable<(T value, string name)> CurrentEnumMembers<T>() where T : struct, Enum
+        {
+            foreach (var field in typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static))
+            {
+                if (!field.IsDefined(typeof(ObsoleteAttribute), false))
+                    yield return ((T)field.GetValue(null), field.Name);
+            }
+        }
+
+        /// <summary>
+        /// The current (non-obsolete) name of an enum value. See <see cref="CurrentEnumMembers{T}"/>.
+        /// </summary>
+        internal static string CurrentEnumName<T>(T value) where T : struct, Enum =>
+            CurrentEnumMembers<T>().First(m => EqualityComparer<T>.Default.Equals(m.value, value)).name;
+
+        /// <summary>
         /// Registers the <c>IgnoreInEditor</c> / <c>IgnoreInPlayer</c> conditions that
         /// <see cref="ConditionalIgnoreAttribute"/> resolves against.
         /// </summary>
