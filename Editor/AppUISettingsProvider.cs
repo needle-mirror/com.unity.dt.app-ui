@@ -2,12 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Unity.Scripting.LifecycleManagement;
 using UnityEditor;
 using Unity.AppUI.Core;
 using UnityEngine;
 
 namespace Unity.AppUI.Editor
 {
+    [NoAutoStaticsCleanup]
     class AppUISettingsProvider : SettingsProvider, IDisposable
     {
         public const string kSettingsPath = "Project/App UI";

@@ -1,10 +1,12 @@
 using System.Globalization;
 using NUnit.Framework;
 using Unity.AppUI.UI;
+using Unity.Scripting.LifecycleManagement;
 
 namespace Unity.AppUI.Tests.UI
 {
     [TestFixture]
+    [NoAutoStaticsCleanup]
     class SingleExtensionsTests
     {
         static readonly (float val, CultureInfo culture, string expected)[] k_Cases = new[]

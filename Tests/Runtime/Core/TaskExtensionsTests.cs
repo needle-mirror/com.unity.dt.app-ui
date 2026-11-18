@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Unity.AppUI.Core;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.TestTools;
 using TaskExtensions = Unity.AppUI.Core.TaskExtensions;
@@ -12,6 +13,7 @@ namespace Unity.AppUI.Tests.Core
 {
     [TestFixture]
     [TestOf(typeof(TaskExtensions))]
+    [NoAutoStaticsCleanup]
     public class TaskExtensionsTests
     {
         [Test]

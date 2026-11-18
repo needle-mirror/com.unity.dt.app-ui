@@ -1,5 +1,6 @@
 using System;
 using Unity.AppUI.UI;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
@@ -13,6 +14,7 @@ namespace Unity.AppUI.Navigation
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
+    [NoAutoStaticsCleanup]
     public partial class NavHost : VisualElement
     {
         /// <summary>

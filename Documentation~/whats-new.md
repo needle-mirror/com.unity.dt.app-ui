@@ -10,10 +10,10 @@ For a complete list of changes made, refer to the **Changelog** page.
 
 The main updates in this release include:
 
-## [2.3.2] - 2026-11-15
+## [2.3.3] - 2026-11-18
 
 ### Fixed
 
-- `MaskField` shows its localized Nothing text when Unity Localization is installed, like its Everything and Mixed texts.
-- The Linux TextMateLib plugin exports only its `textmate_*` C API. It used to export about 1,100 symbols (oniguruma, libstdc++ instantiations, rapidjson) into the Editor process, which could interfere with the Editor's own native code.
+- Marked every App UI type that holds static state with `[NoAutoStaticsCleanup]`, so Unity 6.5 and later no longer log UAL0010 and UAL0013 warnings when domain reload is off. Older editors get an internal stand-in for the attribute.
+- Added the missing `ScriptedImporter` block to 93 `.uss`, `.tss` and `.uxml` metas, which Unity 6.6 and later reported as "below the supported minimum (2)".
 

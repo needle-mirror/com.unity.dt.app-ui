@@ -1,3 +1,4 @@
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System;
@@ -103,6 +104,7 @@ namespace Unity.AppUI.Core
     /// }
     /// </code>
     /// </example>
+    [NoAutoStaticsCleanup]
     public static class DragAndDrop
     {
         static readonly HashSet<object> k_DraggedObjects = new HashSet<object>();

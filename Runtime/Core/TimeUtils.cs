@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -9,6 +10,7 @@ namespace Unity.AppUI.Core
     /// <summary>
     /// Utility class for time related operations.
     /// </summary>
+    [NoAutoStaticsCleanup]
     static class TimeUtils
     {
         /// <summary>

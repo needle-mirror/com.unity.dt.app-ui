@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.AppUI.Core;
+using Unity.Scripting.LifecycleManagement;
 
 namespace Unity.AppUI.Navigation
 {
@@ -8,6 +9,7 @@ namespace Unity.AppUI.Navigation
     /// The NavController manages navigation within a NavHost. It is responsible for
     /// keeping track of the navigation stack and the current destination.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public class NavController
     {
         const int k_ActionNavigate = 1234;

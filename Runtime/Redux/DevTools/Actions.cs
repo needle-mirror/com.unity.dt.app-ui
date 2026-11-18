@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Unity.AppUI.Core;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace Unity.AppUI.Redux.DevTools
@@ -8,6 +9,7 @@ namespace Unity.AppUI.Redux.DevTools
     /// <summary>
     /// Base class for all DevTools UI-specific actions.
     /// </summary>
+    [NoAutoStaticsCleanup]
     class DevToolsUIAction : IAction
     {
         /// <summary>

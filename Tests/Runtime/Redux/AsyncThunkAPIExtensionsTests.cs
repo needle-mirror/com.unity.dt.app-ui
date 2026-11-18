@@ -2,11 +2,13 @@ using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Unity.AppUI.Redux;
+using Unity.Scripting.LifecycleManagement;
 
 namespace Unity.AppUI.Tests.Redux
 {
     [TestFixture]
     [TestOf(typeof(AsyncThunkAPIExtensions))]
+    [NoAutoStaticsCleanup]
     class AsyncThunkAPIExtensionsTests
     {
         const string dummySliceName = "dummySlice";

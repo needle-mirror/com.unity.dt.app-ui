@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
+using Unity.Scripting.LifecycleManagement;
 
 namespace Unity.AppUI.Core
 {
     /// <summary>
     /// Extensions for the <see cref="Task"/>.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public static class TaskExtensions
     {
         const int CONTINUED_TASK = 1;

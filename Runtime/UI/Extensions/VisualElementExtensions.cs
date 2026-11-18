@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.AppUI.Core;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Runtime.CompilerServices;
@@ -12,6 +13,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Extensions for <see cref="VisualElement"/> class.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public static class VisualElementExtensions
     {
 #if !UNITY_EDITOR && ENABLE_IL2CPP && !CONDITIONAL_WEAK_TABLE_IL2CPP

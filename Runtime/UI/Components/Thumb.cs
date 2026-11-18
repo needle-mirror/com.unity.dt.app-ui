@@ -1,4 +1,5 @@
 using Unity.AppUI.Core;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -7,6 +8,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Thumb UI element.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public partial class Thumb : VisualElement
     {
         /// <summary>

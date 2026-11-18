@@ -1,7 +1,9 @@
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.Bridge
 {
+    [NoAutoStaticsCleanup]
     static class PointerMoveEventExtensionsBridge
     {
 #if APPUI_USE_INTERNAL_API_BRIDGE

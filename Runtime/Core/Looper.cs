@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -9,6 +10,7 @@ namespace Unity.AppUI.Core
     /// An object that contains its own message queue and its own running loop for dequeuing messages to pass
     /// them to <see cref="Handler"/> targets.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public class Looper
     {
         const int k_MaxMessagesPerFrame = 100;

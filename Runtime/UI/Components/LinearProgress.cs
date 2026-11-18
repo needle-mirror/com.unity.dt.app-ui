@@ -1,4 +1,5 @@
 using Unity.AppUI.Core;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 #if UNITY_EDITOR
@@ -16,6 +17,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
+    [NoAutoStaticsCleanup]
     public partial class LinearProgress : Progress
     {
         static readonly int k_Start = Shader.PropertyToID("_Start");

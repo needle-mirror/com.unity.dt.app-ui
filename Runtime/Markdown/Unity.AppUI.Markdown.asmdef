@@ -2,7 +2,8 @@
     "name": "Unity.AppUI.Markdown",
     "rootNamespace": "Unity.AppUI.Markdown",
     "references": [
-        "GUID:2f101f87087d58f4ba92ca00188e763d"
+        "GUID:2f101f87087d58f4ba92ca00188e763d",
+        "GUID:1d0cfa0a4b984e0eb4f9a1d48aea0ce9"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

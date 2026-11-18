@@ -1,4 +1,5 @@
 using System;
+using Unity.Scripting.LifecycleManagement;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace Unity.AppUI.Navigation.Editor
     /// <summary>
     /// Editor window for creating and editing <see cref="NavGraphViewAsset"/> objects.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public class NavigationGraphWindow : EditorWindow
     {
         static NavigationGraphWindow s_Instance;

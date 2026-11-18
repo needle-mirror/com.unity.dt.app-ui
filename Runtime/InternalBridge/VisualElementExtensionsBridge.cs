@@ -1,4 +1,5 @@
 using System;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -28,6 +29,7 @@ namespace Unity.AppUI.Bridge
     }
 #endif
 
+    [NoAutoStaticsCleanup]
     static class VisualElementExtensionsBridge
     {
 #if APPUI_USE_INTERNAL_API_BRIDGE

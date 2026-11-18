@@ -1,11 +1,13 @@
 using System;
 using NUnit.Framework;
 using Unity.AppUI.Redux;
+using Unity.Scripting.LifecycleManagement;
 
 namespace Unity.AppUI.Tests.Redux
 {
     [TestFixture]
     [TestOf(typeof(StoreExtensions))]
+    [NoAutoStaticsCleanup]
     class StoreExtensionsTests
     {
         const string dummySliceName = "dummySlice";

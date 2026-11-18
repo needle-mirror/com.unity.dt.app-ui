@@ -1,11 +1,13 @@
 using System;
 using System.Runtime.CompilerServices;
+using Unity.Scripting.LifecycleManagement;
 
 namespace Unity.AppUI.Core
 {
     /// <summary>
     /// Utility class for memory operations.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public static class MemoryUtils
     {
         internal const int bufferSize = 8 * 1024;

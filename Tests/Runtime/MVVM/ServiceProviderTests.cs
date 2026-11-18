@@ -1,10 +1,12 @@
 using NUnit.Framework;
 using Unity.AppUI.MVVM;
+using Unity.Scripting.LifecycleManagement;
 
 namespace Unity.AppUI.Tests.MVVM
 {
     [TestFixture]
     [TestOf(typeof(ServiceProvider))]
+    [NoAutoStaticsCleanup]
     class ServiceProviderTests
     {
         [Test]

@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using AOT;
 
 namespace Unity.AppUI.Core
 {
+    [NoAutoStaticsCleanup]
     class IOSPlatformImpl : PlatformImpl
     {
         static IOSPlatformImpl s_Instance;

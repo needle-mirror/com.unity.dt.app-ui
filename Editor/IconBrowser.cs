@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Unity.AppUI.UI;
+using Unity.Scripting.LifecycleManagement;
 using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
 using UnityEditor.UIElements;
@@ -17,6 +18,7 @@ using Toggle = UnityEngine.UIElements.Toggle;
 
 namespace Unity.AppUI.Editor
 {
+    [NoAutoStaticsCleanup]
     class IconBrowser : EditorWindow
     {
         const string k_RegularVariant = "regular";

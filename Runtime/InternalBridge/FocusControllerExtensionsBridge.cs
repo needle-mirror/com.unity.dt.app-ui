@@ -1,3 +1,4 @@
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine.UIElements;
 #if FOCUSABLE_AS_VISUALELEMENT
 using Focusable = UnityEngine.UIElements.VisualElement;
@@ -5,6 +6,7 @@ using Focusable = UnityEngine.UIElements.VisualElement;
 
 namespace Unity.AppUI.Bridge
 {
+    [NoAutoStaticsCleanup]
     static class FocusControllerExtensionsBridge
     {
 #if APPUI_USE_INTERNAL_API_BRIDGE

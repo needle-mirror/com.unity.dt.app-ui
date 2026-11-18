@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using Unity.AppUI.Navigation;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
@@ -23,6 +24,7 @@ using UnityEngine.Localization.Settings;
 
 namespace Unity.AppUI.Tests
 {
+    [NoAutoStaticsCleanup]
     static class Utils
     {
         static readonly MethodInfo k_ImportXmlFromString;

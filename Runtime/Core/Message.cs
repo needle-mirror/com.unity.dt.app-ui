@@ -1,10 +1,12 @@
 using System;
+using Unity.Scripting.LifecycleManagement;
 
 namespace Unity.AppUI.Core
 {
     /// <summary>
     /// An object passed in a message queue.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public class Message
     {
         const int k_MaxPoolSize = 50;

@@ -3,10 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AOT;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace Unity.AppUI.Core
 {
+    [NoAutoStaticsCleanup]
     class LinuxPlatformImpl : PlatformImpl
     {
         static LinuxPlatformImpl s_Instance;

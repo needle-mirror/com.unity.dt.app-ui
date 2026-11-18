@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using Unity.AppUI.Core;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -9,6 +10,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Extensions for the <see cref="TextField"/> class.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public static class TextFieldExtensions
     {
         /// <summary>

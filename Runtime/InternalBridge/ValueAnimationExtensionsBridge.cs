@@ -1,8 +1,10 @@
 using System.Reflection;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine.UIElements.Experimental;
 
 namespace Unity.AppUI.Bridge
 {
+    [NoAutoStaticsCleanup]
     static class ValueAnimationExtensionsBridge
     {
         // We have to use Reflection since the field is private and there is no public API to check if an animation is recycled.

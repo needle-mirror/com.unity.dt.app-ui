@@ -1,5 +1,6 @@
 // #define APPUI_PLATFORM_EDITOR_ONLY
 using System;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace Unity.AppUI.Core
@@ -11,6 +12,7 @@ namespace Unity.AppUI.Core
     /// A single instance of this class should be present.
     /// </remarks>
     [DisallowMultipleComponent]
+    [NoAutoStaticsCleanup]
     public class AppUIManagerBehaviour : MonoBehaviour
     {
         internal static AppUIManagerBehaviour instance { get; private set; }

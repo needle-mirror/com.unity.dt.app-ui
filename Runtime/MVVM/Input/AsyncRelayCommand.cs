@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Unity.Scripting.LifecycleManagement;
 
 namespace Unity.AppUI.MVVM
 {
@@ -33,6 +34,7 @@ namespace Unity.AppUI.MVVM
     /// action, and providing an <see cref="executionTask"/> property that notifies changes when
     /// <see cref="ExecuteAsync"/> is invoked and when the returned <see cref="Task"/> completes.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public class AsyncRelayCommand : IAsyncRelayCommand
     {
         readonly Func<Task>? m_Execute;

@@ -1,4 +1,5 @@
 using Unity.AppUI.Core;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UIElements;
@@ -11,6 +12,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// A CanvasBackground is a VisualElement used as the background of a Canvas.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public class CanvasBackground : BaseVisualElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS

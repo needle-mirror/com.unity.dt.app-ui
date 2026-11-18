@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace Unity.AppUI.Redux.DevTools
@@ -79,6 +80,7 @@ namespace Unity.AppUI.Redux.DevTools
     /// <summary>
     /// A class that provides a set of tools for debugging and inspecting the state of the store.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public class DevToolsService : IDevToolsService
     {
         static readonly Lazy<DevToolsService> k_Instance = new Lazy<DevToolsService>(() => new DevToolsService());

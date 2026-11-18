@@ -21,6 +21,11 @@
             "name": "Unity",
             "expression": "6000.2.0a6",
             "define": "UI_DOCUMENT_ROOT_ELEMENT_TYPE_EXISTS"
+        },
+        {
+            "name": "Unity",
+            "expression": "6000.5.0a8",
+            "define": "ENABLE_STATICS_CLEANUP_ATTRIBUTES"
         }
     ],
     "noEngineReferences": false

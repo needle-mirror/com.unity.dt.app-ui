@@ -1,4 +1,5 @@
 using Unity.AppUI.Core;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -13,6 +14,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
+    [NoAutoStaticsCleanup]
     public abstract partial class Progress : BaseVisualElement, ISizeableElement
     {
 #if ENABLE_RUNTIME_DATA_BINDINGS

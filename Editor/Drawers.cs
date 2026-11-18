@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.AppUI.Core;
 using Unity.AppUI.UI;
+using Unity.Scripting.LifecycleManagement;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -323,6 +324,7 @@ namespace Unity.AppUI.Editor
     /// <summary>
     /// Custom Field for <see cref="Panel.scale"/> and <see cref="BaseVisualElement.scaleOverride"/> property.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public class ScaleField : DropdownField
     {
         static readonly List<string> k_ScaleOptions = new List<string> { "small", "medium", "large" };
@@ -341,6 +343,7 @@ namespace Unity.AppUI.Editor
     /// <summary>
     /// Custom Field for <see cref="Panel.theme"/> and <see cref="BaseVisualElement.themeOverride"/> property.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public class ThemeField : DropdownField
     {
         static readonly List<string> k_ScaleOptions = new List<string> { "dark", "light", "editor-dark", "editor-light" };

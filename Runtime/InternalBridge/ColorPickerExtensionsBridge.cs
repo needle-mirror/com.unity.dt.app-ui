@@ -1,9 +1,11 @@
 using System;
 using System.Reflection;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace Unity.AppUI.Bridge
 {
+    [NoAutoStaticsCleanup]
     static class ColorPickerExtensionsBridge
     {
 

@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using AOT;
 
 namespace Unity.AppUI.Core
 {
+    [NoAutoStaticsCleanup]
     class WebGLPlatformImpl : PlatformImpl
     {
         // Delegates for callbacks

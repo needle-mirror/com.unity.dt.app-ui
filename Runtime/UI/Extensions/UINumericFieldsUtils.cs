@@ -1,4 +1,5 @@
 using System;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace Unity.AppUI.UI
@@ -6,6 +7,7 @@ namespace Unity.AppUI.UI
     /// <summary>
     /// Utility class for the numeric fields.
     /// </summary>
+    [NoAutoStaticsCleanup]
     static class UINumericFieldsUtils
     {
         public const string k_AllowedCharactersForFloat = "inftynaeINFTYNAE0123456789.,-*/+%^()cosqrludxvRL=pP#";

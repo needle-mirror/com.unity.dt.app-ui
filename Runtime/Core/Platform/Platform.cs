@@ -2,6 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace Unity.AppUI.Core
@@ -12,6 +13,7 @@ namespace Unity.AppUI.Core
 #if UNITY_EDITOR
     [UnityEditor.InitializeOnLoad]
 #endif
+    [NoAutoStaticsCleanup]
     public static class Platform
     {
         static IPlatformImpl s_Impl;

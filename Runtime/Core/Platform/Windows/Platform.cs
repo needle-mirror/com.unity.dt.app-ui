@@ -2,11 +2,13 @@
 using System;
 using System.Runtime.InteropServices;
 using AOT;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace Unity.AppUI.Core
 {
+    [NoAutoStaticsCleanup]
     class WindowsPlatformImpl : PlatformImpl
     {
         static WindowsPlatformImpl s_Instance;

@@ -2,6 +2,7 @@ using System.Collections;
 using NUnit.Framework;
 using Unity.AppUI.Core;
 using Unity.AppUI.UI;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
@@ -11,6 +12,7 @@ namespace Unity.AppUI.Tests.UI
 {
     [TestFixture]
     [TestOf(typeof(FloatField))]
+    [NoAutoStaticsCleanup]
     class FloatFieldTests : NumericalFieldTests<FloatField, float>
     {
         protected override string mainUssClassName => FloatField.ussClassName;

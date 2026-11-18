@@ -1,4 +1,5 @@
 using Markdig;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine.UIElements;
 using Unity.AppUI.Markdown;
 #if ENABLE_RUNTIME_DATA_BINDINGS
@@ -15,6 +16,7 @@ namespace Unity.AppUI.UI
 #if ENABLE_UXML_SERIALIZED_DATA
     [UxmlElement]
 #endif
+    [NoAutoStaticsCleanup]
     public partial class MarkdownView : BaseVisualElement
     {
         /// <summary>

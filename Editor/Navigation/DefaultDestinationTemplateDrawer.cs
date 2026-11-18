@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Scripting.LifecycleManagement;
 using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
@@ -7,6 +8,7 @@ using UnityEditor.UIElements;
 namespace Unity.AppUI.Navigation.Editor
 {
     [CustomPropertyDrawer(typeof(DefaultDestinationTemplate))]
+    [NoAutoStaticsCleanup]
     class DefaultDestinationTemplateDrawer : PropertyDrawer
     {
         static readonly Dictionary<string, string> k_Templates = TypeCache

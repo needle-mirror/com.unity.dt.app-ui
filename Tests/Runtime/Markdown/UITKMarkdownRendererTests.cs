@@ -5,12 +5,14 @@ using NUnit.Framework;
 using Unity.AppUI.Markdown;
 using Unity.AppUI.Markdown.Renderers.Blocks;
 using Unity.AppUI.UI;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.Tests.Markdown
 {
     [TestFixture]
     [TestOf(typeof(UITKMarkdownRenderer))]
+    [NoAutoStaticsCleanup]
     class UITKMarkdownRendererTests
     {
         static readonly MarkdownPipeline s_Pipeline =

@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Reflection;
+using Unity.Scripting.LifecycleManagement;
 using UnityEditor;
 using Unity.AppUI.Core;
 using UnityEngine;
 
 namespace Unity.AppUI.Editor
 {
+    [NoAutoStaticsCleanup]
     static class Utils
     {
         internal static bool AddItemInArray(SerializedProperty array, Object item)

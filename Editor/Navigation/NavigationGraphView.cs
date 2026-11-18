@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Scripting.LifecycleManagement;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -13,6 +14,7 @@ namespace Unity.AppUI.Navigation.Editor
     /// <summary>
     /// The Navigation Graph View.
     /// </summary>
+    [NoAutoStaticsCleanup]
     class NavigationGraphView : GraphView
     {
         /// <summary>

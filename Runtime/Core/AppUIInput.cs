@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace Unity.AppUI.Core
@@ -7,6 +8,7 @@ namespace Unity.AppUI.Core
     /// <summary>
     /// Additional input management for AppUI.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public static class AppUIInput
     {
         static readonly Dictionary<Type,IGestureRecognizer> k_Recognizers = new Dictionary<Type, IGestureRecognizer>();

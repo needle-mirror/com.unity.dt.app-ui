@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Unity.AppUI")]
+[assembly: InternalsVisibleTo("Unity.AppUI.Markdown")]
 [assembly: InternalsVisibleTo("Unity.AppUI.MVVM")]
 [assembly: InternalsVisibleTo("Unity.AppUI.Navigation")]
 [assembly: InternalsVisibleTo("Unity.AppUI.Redux")]

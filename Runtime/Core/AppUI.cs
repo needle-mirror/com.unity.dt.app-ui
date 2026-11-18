@@ -1,4 +1,5 @@
 using System;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UIElements;
@@ -23,6 +24,7 @@ namespace Unity.AppUI.Core
 #if UNITY_EDITOR
     [InitializeOnLoad]
 #endif
+    [NoAutoStaticsCleanup]
     public static class AppUI
     {
         /// <summary>

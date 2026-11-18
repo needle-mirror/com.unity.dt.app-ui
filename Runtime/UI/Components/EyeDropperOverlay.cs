@@ -1,8 +1,10 @@
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.UI
 {
+    [NoAutoStaticsCleanup]
     class EyeDropperOverlay : Image, INotifyValueChanging<Color>
     {
         new const string ussClassName = "appui-eye-dropper-overlay";

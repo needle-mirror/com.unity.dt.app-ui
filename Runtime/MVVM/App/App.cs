@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.AppUI.UI;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.MVVM
@@ -8,6 +9,7 @@ namespace Unity.AppUI.MVVM
     /// <summary>
     /// A base class to implement an App instance using UI Toolkit.
     /// </summary>
+    [NoAutoStaticsCleanup]
     public class App : IUIToolkitApp
     {
         /// <summary>

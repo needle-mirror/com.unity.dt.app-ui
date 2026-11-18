@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using Unity.AppUI.Core;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine.UIElements;
 
 namespace Unity.AppUI.UI
 {
+    [NoAutoStaticsCleanup]
     sealed class DayPicker : BaseDatePickerPane
     {
         public static readonly string previousYearButtonUssClassName = ussClassName + "__previous-year-button";

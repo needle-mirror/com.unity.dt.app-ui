@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AOT;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.Pool;
 
 namespace Unity.AppUI.Core
 {
+    [NoAutoStaticsCleanup]
     class OSXPlatformImpl : PlatformImpl
     {
         static OSXPlatformImpl s_Instance;
